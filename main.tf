@@ -112,7 +112,7 @@ resource "aws_vpc_endpoint" "ep" {
 resource "aws_vpc_endpoint_route_table_association" "private_s3" {
   count           = "${var.enable_s3_endpoint ? length(var.private_subnets) : 0}"
   vpc_endpoint_id = "${aws_vpc_endpoint.ep.id}"
-  route_table_id = "${element(aws_route_table.private.*.id, count.index)}"
+  route_table_id  = "${element(aws_route_table.private.*.id, count.index)}"
 }
 
 resource "aws_vpc_endpoint_route_table_association" "public_s3" {

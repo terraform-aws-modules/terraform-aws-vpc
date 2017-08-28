@@ -14,12 +14,12 @@ variable "instance_tenancy" {
 }
 
 variable "public_subnets" {
-  description = "A list of public subnets inside the VPC."
+  description = "A list of public subnets inside the VPC"
   default     = []
 }
 
 variable "private_subnets" {
-  description = "A list of private subnets inside the VPC."
+  description = "A list of private subnets inside the VPC"
   default     = []
 }
 
@@ -64,18 +64,19 @@ variable "enable_s3_endpoint" {
   description = "should be true if you want to provision an S3 endpoint to the VPC"
   default     = false
 }
+
 variable "map_public_ip_on_launch" {
   description = "should be false if you do not want to auto-assign public IP on launch"
   default     = true
 }
 
 variable "private_propagating_vgws" {
-  description = "A list of VGWs the private route table should propagate."
+  description = "A list of VGWs the private route table should propagate"
   default     = []
 }
 
 variable "public_propagating_vgws" {
-  description = "A list of VGWs the public route table should propagate."
+  description = "A list of VGWs the public route table should propagate"
   default     = []
 }
 
