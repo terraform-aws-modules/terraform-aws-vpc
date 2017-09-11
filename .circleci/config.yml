@@ -1,0 +1,42 @@
+version: 2
+
+terraform: &terraform
+  docker:
+    - image: hashicorp/terraform:0.10.4
+  working_directory: /tmp/workspace/terraform
+
+jobs:
+  validate:
+    <<: *terraform
+    steps:
+      - checkout
+      - run:
+          name: Add github.com to ~/.ssh/known_hosts
+          command: mkdir ~/.ssh && ssh-keyscan -t rsa github.com >> ~/.ssh/known_hosts
+      - run:
+          name: terraform init
+          command: terraform init -input=false
+      - run:
+          name: Validate Terraform configurations
+          command: find . -type f -name "*.tf" -exec dirname {} \;|sort -u | while read m; do (terraform validate -check-variables=false "$m" && echo "√ $m") || exit 1 ; done
+      - run:
+          name: Check if Terraform configurations are properly formatted
+          command: if [[ -n "$(terraform fmt -write=false)" ]]; then echo "Some terraform files need be formatted, run 'terraform fmt' to fix"; exit 1; fi
+      - run:
+          name: Install tflint
+          command: curl -L -o /tmp/tflint.zip https://github.com/wata727/tflint/releases/download/v0.4.2/tflint_linux_amd64.zip && unzip /tmp/tflint.zip -d /usr/local/bin
+      - run:
+          name: Check Terraform configurations with tflint
+          command: tflint
+      - persist_to_workspace:
+          root: .
+          paths: .
+
+workflows:
+  version: 2
+  build:
+    jobs:
+      - validate
+#      - plan_examples
+#      - approve
+#      - release

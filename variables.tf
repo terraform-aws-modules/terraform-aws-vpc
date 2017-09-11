@@ -35,6 +35,11 @@ variable "elasticache_subnets" {
   default     = []
 }
 
+variable "create_database_subnet_group" {
+  description = "Controls, if should database subnet group be created."
+  default     = true
+}
+
 variable "azs" {
   description = "A list of Availability zones in the region"
   default     = []
@@ -57,6 +62,11 @@ variable "enable_nat_gateway" {
 
 variable "single_nat_gateway" {
   description = "should be true if you want to provision a single shared NAT Gateway across all of your private networks"
+  default     = false
+}
+
+variable "enable_dynamodb_endpoint" {
+  description = "should be true if you want to provision an DynamoDB endpoint to the VPC"
   default     = false
 }
 
