@@ -32,7 +32,7 @@ module "vpc" {
 
   enable_nat_gateway = true
 
-  tags {
+  tags = {
     Terraform = "true"
     Environment = "dev"
   }
@@ -40,18 +40,18 @@ module "vpc" {
 ```
 
 Examples
-========
+--------
 
-* [simple-vpc](examples/simple-vpc)
-* [complete-vpc](examples/complete-vpc)
+* [Simple VPC](https://github.com/terraform-aws-modules/terraform-aws-vpc/tree/master/examples/simple-vpc)
+* [Complete VPC](https://github.com/terraform-aws-modules/terraform-aws-vpc/tree/master/examples/complete-vpc)
 
 Authors
-=======
+-------
 
 Migrated from `terraform-community-modules/tf_aws_vpc`, where it was maintained by [these awesome contributors](https://github.com/terraform-community-modules/tf_aws_vpc/graphs/contributors).
 Module managed by [Anton Babenko](https://github.com/antonbabenko).
 
 License
-=======
+-------
 
 Apache 2 Licensed. See LICENSE for full details.
