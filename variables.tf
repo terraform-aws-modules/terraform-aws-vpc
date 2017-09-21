@@ -105,6 +105,16 @@ variable "private_subnet_tags" {
   default     = {}
 }
 
+variable "public_route_table_tags" {
+  description = "Additional tags for the public route tables"
+  default     = {}
+}
+
+variable "private_route_table_tags" {
+  description = "Additional tags for the private route tables"
+  default     = {}
+}
+
 variable "database_subnet_tags" {
   description = "Additional tags for the database subnets"
   default     = {}

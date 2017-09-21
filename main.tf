@@ -30,7 +30,7 @@ resource "aws_route_table" "public" {
   vpc_id           = "${aws_vpc.this.id}"
   propagating_vgws = ["${var.public_propagating_vgws}"]
 
-  tags = "${merge(var.tags, map("Name", format("%s-public", var.name)))}"
+  tags = "${merge(var.tags, var.public_route_table_tags, map("Name", format("%s-public", var.name)))}"
 }
 
 resource "aws_route" "public_internet_gateway" {
@@ -50,7 +50,7 @@ resource "aws_route_table" "private" {
   vpc_id           = "${aws_vpc.this.id}"
   propagating_vgws = ["${var.private_propagating_vgws}"]
 
-  tags = "${merge(var.tags, map("Name", format("%s-private-%s", var.name, element(var.azs, count.index))))}"
+  tags = "${merge(var.tags, var.private_route_table_tags, map("Name", format("%s-private-%s", var.name, element(var.azs, count.index))))}"
 }
 
 ################
