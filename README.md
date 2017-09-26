@@ -6,7 +6,7 @@ Terraform module which creates VPC resources on AWS.
 These types of resources are supported:
 
 * [VPC](https://www.terraform.io/docs/providers/aws/r/vpc.html)
-* [Subnet](https://www.terraform.io/docs/providers/aws/r/aws_subnet.html)
+* [Subnet](https://www.terraform.io/docs/providers/aws/r/subnet.html)
 * [Route](https://www.terraform.io/docs/providers/aws/r/route.html)
 * [Route table](https://www.terraform.io/docs/providers/aws/r/route_table.html)
 * [Internet Gateway](https://www.terraform.io/docs/providers/aws/r/internet_gateway.html) 
