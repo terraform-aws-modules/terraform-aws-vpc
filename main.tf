@@ -182,6 +182,8 @@ resource "aws_vpc_endpoint_route_table_association" "public_s3" {
 # VPC Endpoint for DynamoDB
 ############################
 data "aws_vpc_endpoint_service" "dynamodb" {
+  count = "${var.enable_dynamodb_endpoint}"
+
   service = "dynamodb"
 }
 
