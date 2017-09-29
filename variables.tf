@@ -36,47 +36,47 @@ variable "elasticache_subnets" {
 }
 
 variable "create_database_subnet_group" {
-  description = "Controls, if should database subnet group be created."
+  description = "Controls if database subnet group should be created"
   default     = true
 }
 
 variable "azs" {
-  description = "A list of Availability zones in the region"
+  description = "A list of availability zones in the region"
   default     = []
 }
 
 variable "enable_dns_hostnames" {
-  description = "should be true if you want to use private DNS within the VPC"
+  description = "Should be true if you want to use private DNS within the VPC"
   default     = false
 }
 
 variable "enable_dns_support" {
-  description = "should be true if you want to use private DNS within the VPC"
+  description = "Should be true if you want to use private DNS within the VPC"
   default     = false
 }
 
 variable "enable_nat_gateway" {
-  description = "should be true if you want to provision NAT Gateways for each of your private networks"
+  description = "Should be true if you want to provision NAT Gateways for each of your private networks"
   default     = false
 }
 
 variable "single_nat_gateway" {
-  description = "should be true if you want to provision a single shared NAT Gateway across all of your private networks"
+  description = "Should be true if you want to provision a single shared NAT Gateway across all of your private networks"
   default     = false
 }
 
 variable "enable_dynamodb_endpoint" {
-  description = "should be true if you want to provision an DynamoDB endpoint to the VPC"
+  description = "Should be true if you want to provision a DynamoDB endpoint to the VPC"
   default     = false
 }
 
 variable "enable_s3_endpoint" {
-  description = "should be true if you want to provision an S3 endpoint to the VPC"
+  description = "Should be true if you want to provision an S3 endpoint to the VPC"
   default     = false
 }
 
 variable "map_public_ip_on_launch" {
-  description = "should be false if you do not want to auto-assign public IP on launch"
+  description = "Should be false if you do not want to auto-assign public IP on launch"
   default     = true
 }
 
@@ -101,7 +101,7 @@ variable "public_subnet_tags" {
 }
 
 variable "private_subnet_tags" {
-  description = "Additional tags for the public subnets"
+  description = "Additional tags for the private subnets"
   default     = {}
 }
 
