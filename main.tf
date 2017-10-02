@@ -158,7 +158,7 @@ data "aws_vpc_endpoint_service" "s3" {
 }
 
 resource "aws_vpc_endpoint" "s3" {
-  count = "${var.enable_s3_endpoint}"
+  count = "${var.enable_s3_endpoint ? length(var.private_subnets) : 0}"
 
   vpc_id       = "${aws_vpc.this.id}"
   service_name = "${data.aws_vpc_endpoint_service.s3.service_name}"
@@ -167,14 +167,14 @@ resource "aws_vpc_endpoint" "s3" {
 resource "aws_vpc_endpoint_route_table_association" "private_s3" {
   count = "${var.enable_s3_endpoint ? length(var.private_subnets) : 0}"
 
-  vpc_endpoint_id = "${aws_vpc_endpoint.s3.id}"
+  vpc_endpoint_id = "${element(aws_vpc_endpoint.s3.*.id, count.index)}"
   route_table_id  = "${element(aws_route_table.private.*.id, count.index)}"
 }
 
 resource "aws_vpc_endpoint_route_table_association" "public_s3" {
   count = "${var.enable_s3_endpoint ? length(var.public_subnets) : 0}"
 
-  vpc_endpoint_id = "${aws_vpc_endpoint.s3.id}"
+  vpc_endpoint_id = "${element(aws_vpc_endpoint.s3.*.id, count.index)}"
   route_table_id  = "${aws_route_table.public.id}"
 }
 
@@ -182,13 +182,11 @@ resource "aws_vpc_endpoint_route_table_association" "public_s3" {
 # VPC Endpoint for DynamoDB
 ############################
 data "aws_vpc_endpoint_service" "dynamodb" {
-  count = "${var.enable_dynamodb_endpoint}"
-
   service = "dynamodb"
 }
 
 resource "aws_vpc_endpoint" "dynamodb" {
-  count = "${var.enable_dynamodb_endpoint}"
+  count = "${var.enable_dynamodb_endpoint ? length(var.private_subnets) : 0}"
 
   vpc_id       = "${aws_vpc.this.id}"
   service_name = "${data.aws_vpc_endpoint_service.dynamodb.service_name}"
@@ -197,14 +195,14 @@ resource "aws_vpc_endpoint" "dynamodb" {
 resource "aws_vpc_endpoint_route_table_association" "private_dynamodb" {
   count = "${var.enable_dynamodb_endpoint ? length(var.private_subnets) : 0}"
 
-  vpc_endpoint_id = "${aws_vpc_endpoint.dynamodb.id}"
+  vpc_endpoint_id = "${element(aws_vpc_endpoint.dynamodb.*.id, count.index)}"
   route_table_id  = "${element(aws_route_table.private.*.id, count.index)}"
 }
 
 resource "aws_vpc_endpoint_route_table_association" "public_dynamodb" {
   count = "${var.enable_dynamodb_endpoint ? length(var.public_subnets) : 0}"
 
-  vpc_endpoint_id = "${aws_vpc_endpoint.dynamodb.id}"
+  vpc_endpoint_id = "${element(aws_vpc_endpoint.dynamodb.*.id, count.index)}"
   route_table_id  = "${aws_route_table.public.id}"
 }
 
