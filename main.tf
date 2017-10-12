@@ -154,6 +154,8 @@ resource "aws_route" "private_nat_gateway" {
 # VPC Endpoint for S3
 ######################
 data "aws_vpc_endpoint_service" "s3" {
+  count = "${var.enable_s3_endpoint}"
+
   service = "s3"
 }
 
