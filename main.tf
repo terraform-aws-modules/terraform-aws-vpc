@@ -139,6 +139,8 @@ resource "aws_nat_gateway" "this" {
   allocation_id = "${element(aws_eip.nat.*.id, (var.single_nat_gateway ? 0 : count.index))}"
   subnet_id     = "${element(aws_subnet.public.*.id, (var.single_nat_gateway ? 0 : count.index))}"
 
+  tags = "${merge(var.tags, map("Name", format("%s", var.name)))}"
+
   depends_on = ["aws_internet_gateway.this"]
 }
 
