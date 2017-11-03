@@ -45,6 +45,11 @@ output "database_subnets" {
   value       = ["${aws_subnet.database.*.id}"]
 }
 
+output "database_subnets_cidr_blocks" {
+  description = "List of cidr_blocks of database subnets"
+  value       = ["${aws_subnet.database.*.cidr_block}"]
+}
+
 output "database_subnet_group" {
   description = "ID of database subnet group"
   value       = "${aws_db_subnet_group.database.id}"
@@ -53,6 +58,11 @@ output "database_subnet_group" {
 output "elasticache_subnets" {
   description = "List of IDs of elasticache subnets"
   value       = ["${aws_subnet.elasticache.*.id}"]
+}
+
+output "elasticache_subnets_cidr_blocks" {
+  description = "List of cidr_blocks of elasticache subnets"
+  value       = ["${aws_subnet.elasticache.*.cidr_block}"]
 }
 
 output "elasticache_subnet_group" {
