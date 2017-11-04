@@ -124,3 +124,36 @@ variable "elasticache_subnet_tags" {
   description = "Additional tags for the elasticache subnets"
   default     = {}
 }
+
+variable "enable_dhcp_options" {
+  description = "Should be true if you want to specify a DHCP options set with a custom domain name, DNS servers, NTP servers, netbios servers, and/or netbios server type"
+  default     = false
+}
+
+variable "dhcp_options_domain_name" {
+  description = "Specifies DNS name for DHCP options set"
+  default     = ""
+}
+
+variable "dhcp_options_dns_servers" {
+  type        = "list"
+  description = "Specify a list of DNS server addresses for DHCP options set, default to AWS provided"
+  default     = ["AmazonProvidedDNS"]
+}
+
+variable "dhcp_options_ntp_servers" {
+  type        = "list"
+  description = "Specify a list of NTP servers for DHCP options set"
+  default     = []
+}
+
+variable "dhcp_options_netbios_servers" {
+  type        = "list"
+  description = "Specify a list of netbios servers for DHCP options set"
+  default     = []
+}
+
+variable "dhcp_options_netbios_node_type" {
+  description = "Specify netbios node_type for DHCP options set"
+  default     = ""
+}
