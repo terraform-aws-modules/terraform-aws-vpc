@@ -124,3 +124,13 @@ variable "elasticache_subnet_tags" {
   description = "Additional tags for the elasticache subnets"
   default     = {}
 }
+
+variable "enable_ipv6" {
+  description = "Enable ipv6 in this VPC"
+  default     = false
+}
+
+variable "assign_ipv6_address_on_creation" {
+  description = "True to assign ipv6 dynamically, this is the ipv6 equivalent of map_public_ip_on_launch"
+  default     = true
+}

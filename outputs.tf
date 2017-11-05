@@ -30,6 +30,21 @@ output "private_subnets_cidr_blocks" {
   value       = ["${aws_subnet.private.*.cidr_block}"]
 }
 
+output "ipv6_enabled_private_subnets" {
+  description = "List of IDs of private subnets in an ipv6 enabled VPC"
+  value       = ["${aws_subnet.private_ipv6.*.id}"]
+}
+
+output "ipv6_enabled_private_subnets_ipv4_cidr_blocks" {
+  description = "Map of List of ipv4 cidr_blocks of private subnets in an ipv6 enabled VPC"
+  value       = ["${aws_subnet.private_ipv6.*.cidr_block}"]
+}
+
+output "ipv6_enabled_private_subnets_ipv6_cidr_blocks" {
+  description = "Map of List of ipv6 cidr_blocks of private subnets in an ipv6 enabled VPC"
+  value       = ["${aws_subnet.private_ipv6.*.ipv6_cidr_block}"]
+}
+
 output "public_subnets" {
   description = "List of IDs of public subnets"
   value       = ["${aws_subnet.public.*.id}"]
@@ -38,6 +53,21 @@ output "public_subnets" {
 output "public_subnets_cidr_blocks" {
   description = "List of cidr_blocks of public subnets"
   value       = ["${aws_subnet.public.*.cidr_block}"]
+}
+
+output "ipv6_enabled_public_subnets" {
+  description = "List of IDs of public subnets in an ipv6 enabled VPC"
+  value       = ["${aws_subnet.public_ipv6.*.id}"]
+}
+
+output "ipv6_enabled_public_subnets_ipv4_cidr_blocks" {
+  description = "Map of List of ipv4 cidr_blocks of public subnets in an ipv6 enabled VPC"
+  value       = ["${aws_subnet.public_ipv6.*.cidr_block}"]
+}
+
+output "ipv6_enabled_public_subnets_ipv6_cidr_blocks" {
+  description = "Map of List of ipv6 cidr_blocks of public subnets in an ipv6 enabled VPC"
+  value       = ["${aws_subnet.public_ipv6.*.ipv6_cidr_block}"]
 }
 
 output "database_subnets" {
@@ -100,6 +130,11 @@ output "natgw_ids" {
 output "igw_id" {
   description = "The ID of the Internet Gateway"
   value       = "${aws_internet_gateway.this.id}"
+}
+
+output "ipv6_egress_only_igw_id" {
+  description = "The ID of the egress only Internet Gateway"
+  value       = "${aws_egress_only_internet_gateway.this.id}"
 }
 
 # VPC Endpoints

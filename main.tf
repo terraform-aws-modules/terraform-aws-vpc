@@ -2,12 +2,12 @@
 # VPC
 ######
 resource "aws_vpc" "this" {
-  cidr_block           = "${var.cidr}"
-  instance_tenancy     = "${var.instance_tenancy}"
-  enable_dns_hostnames = "${var.enable_dns_hostnames}"
-  enable_dns_support   = "${var.enable_dns_support}"
-
-  tags = "${merge(var.tags, map("Name", format("%s", var.name)))}"
+  cidr_block                       = "${var.cidr}"
+  instance_tenancy                 = "${var.instance_tenancy}"
+  enable_dns_hostnames             = "${var.enable_dns_hostnames}"
+  enable_dns_support               = "${var.enable_dns_support}"
+  assign_generated_ipv6_cidr_block = "${var.enable_ipv6}"
+  tags                             = "${merge(var.tags, map("Name", format("%s", var.name)))}"
 }
 
 ###################
@@ -41,6 +41,14 @@ resource "aws_route" "public_internet_gateway" {
   gateway_id             = "${aws_internet_gateway.this.id}"
 }
 
+resource "aws_route" "public_internet_gateway_ipv6" {
+  count = "${var.enable_ipv6 ? (length(var.public_subnets) > 0 ? 1 : 0) : 0}"
+
+  route_table_id              = "${aws_route_table.public.id}"
+  destination_ipv6_cidr_block = "::/0"
+  gateway_id                  = "${aws_internet_gateway.this.id}"
+}
+
 #################
 # Private routes
 #################
@@ -57,7 +65,7 @@ resource "aws_route_table" "private" {
 # Public subnet
 ################
 resource "aws_subnet" "public" {
-  count = "${length(var.public_subnets)}"
+  count = "${!var.enable_ipv6 ? length(var.public_subnets) : 0}"
 
   vpc_id                  = "${aws_vpc.this.id}"
   cidr_block              = "${var.public_subnets[count.index]}"
@@ -67,15 +75,40 @@ resource "aws_subnet" "public" {
   tags = "${merge(var.tags, var.public_subnet_tags, map("Name", format("%s-public-%s", var.name, element(var.azs, count.index))))}"
 }
 
+resource "aws_subnet" "public_ipv6" {
+  count = "${ var.enable_ipv6 ? length(var.public_subnets) : 0}"
+
+  vpc_id                          = "${aws_vpc.this.id}"
+  cidr_block                      = "${var.public_subnets[count.index]}"
+  ipv6_cidr_block                 = "${cidrsubnet(aws_vpc.this.ipv6_cidr_block,8,count.index)}"
+  availability_zone               = "${element(var.azs, count.index)}"
+  map_public_ip_on_launch         = "${var.map_public_ip_on_launch}"
+  assign_ipv6_address_on_creation = "${var.assign_ipv6_address_on_creation}"
+
+  tags = "${merge(var.tags, var.public_subnet_tags, map("Name", format("%s-public-%s", var.name, element(var.azs, count.index))))}"
+}
+
 #################
 # Private subnet
 #################
 resource "aws_subnet" "private" {
-  count = "${length(var.private_subnets)}"
+  count = "${!var.enable_ipv6 ? length(var.private_subnets) : 0}"
 
   vpc_id            = "${aws_vpc.this.id}"
   cidr_block        = "${var.private_subnets[count.index]}"
   availability_zone = "${element(var.azs, count.index)}"
+
+  tags = "${merge(var.tags, var.private_subnet_tags, map("Name", format("%s-private-%s", var.name, element(var.azs, count.index))))}"
+}
+
+resource "aws_subnet" "private_ipv6" {
+  count = "${var.enable_ipv6 ? length(var.private_subnets) : 0}"
+
+  vpc_id                          = "${aws_vpc.this.id}"
+  cidr_block                      = "${var.private_subnets[count.index]}"
+  ipv6_cidr_block                 = "${cidrsubnet(aws_vpc.this.ipv6_cidr_block,8,count.index+32)}"
+  availability_zone               = "${element(var.azs, count.index)}"
+  assign_ipv6_address_on_creation = "${var.assign_ipv6_address_on_creation}"
 
   tags = "${merge(var.tags, var.private_subnet_tags, map("Name", format("%s-private-%s", var.name, element(var.azs, count.index))))}"
 }
@@ -144,12 +177,26 @@ resource "aws_nat_gateway" "this" {
   depends_on = ["aws_internet_gateway.this"]
 }
 
+resource "aws_egress_only_internet_gateway" "this" {
+  count = "${var.enable_ipv6 ? 1 : 0}"
+
+  vpc_id = "${aws_vpc.this.id}"
+}
+
 resource "aws_route" "private_nat_gateway" {
   count = "${var.enable_nat_gateway ? length(var.azs) : 0}"
 
   route_table_id         = "${element(aws_route_table.private.*.id, count.index)}"
   destination_cidr_block = "0.0.0.0/0"
   nat_gateway_id         = "${element(aws_nat_gateway.this.*.id, count.index)}"
+}
+
+resource "aws_route" "private_nat_gateway_ipv6" {
+  count = "${var.enable_ipv6 ? length(var.azs) : 0}"
+
+  route_table_id              = "${element(aws_route_table.private.*.id, count.index)}"
+  destination_ipv6_cidr_block = "::/0"
+  egress_only_gateway_id      = "${aws_egress_only_internet_gateway.this.id}"
 }
 
 ######################
@@ -216,9 +263,16 @@ resource "aws_vpc_endpoint_route_table_association" "public_dynamodb" {
 # Route table association
 ##########################
 resource "aws_route_table_association" "private" {
-  count = "${length(var.private_subnets)}"
+  count = "${!var.enable_ipv6 ? length(var.private_subnets) : 0}"
 
   subnet_id      = "${element(aws_subnet.private.*.id, count.index)}"
+  route_table_id = "${element(aws_route_table.private.*.id, count.index)}"
+}
+
+resource "aws_route_table_association" "private_ipv6" {
+  count = "${var.enable_ipv6 ? length(var.private_subnets) : 0}"
+
+  subnet_id      = "${element(aws_subnet.private_ipv6.*.id, count.index)}"
   route_table_id = "${element(aws_route_table.private.*.id, count.index)}"
 }
 
@@ -237,8 +291,15 @@ resource "aws_route_table_association" "elasticache" {
 }
 
 resource "aws_route_table_association" "public" {
-  count = "${length(var.public_subnets)}"
+  count = "${!var.enable_ipv6 ? length(var.public_subnets) : 0}"
 
   subnet_id      = "${element(aws_subnet.public.*.id, count.index)}"
+  route_table_id = "${aws_route_table.public.id}"
+}
+
+resource "aws_route_table_association" "public_ipv6" {
+  count = "${var.enable_ipv6 ? length(var.public_subnets) : 0}"
+
+  subnet_id      = "${element(aws_subnet.public_ipv6.*.id, count.index)}"
   route_table_id = "${aws_route_table.public.id}"
 }
