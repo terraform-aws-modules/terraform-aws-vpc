@@ -80,6 +80,11 @@ variable "map_public_ip_on_launch" {
   default     = true
 }
 
+variable "enable_vpn_gateway" {
+  description = "Should be true if you want to create a new VPN Gateway resource and attach it to the VPC"
+  default     = false
+}
+
 variable "private_propagating_vgws" {
   description = "A list of VGWs the private route table should propagate"
   default     = []

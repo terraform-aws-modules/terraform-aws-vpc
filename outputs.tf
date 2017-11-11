@@ -112,3 +112,9 @@ output "vpc_endpoint_dynamodb_id" {
   description = "The ID of VPC endpoint for DynamoDB"
   value       = "${aws_vpc_endpoint.dynamodb.id}"
 }
+
+# VPN Gateway
+output "vgw_id" {
+  description = "The ID of the VPN Gateway"
+  value       = "${aws_vpn_gateway.this.id}"
+}
