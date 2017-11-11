@@ -135,21 +135,21 @@ variable "dhcp_options_domain_name" {
   default     = ""
 }
 
-variable "dhcp_options_dns_servers" {
-  type        = "list"
+variable "dhcp_options_domain_name_servers" {
   description = "Specify a list of DNS server addresses for DHCP options set, default to AWS provided"
+  type        = "list"
   default     = ["AmazonProvidedDNS"]
 }
 
 variable "dhcp_options_ntp_servers" {
-  type        = "list"
   description = "Specify a list of NTP servers for DHCP options set"
+  type        = "list"
   default     = []
 }
 
-variable "dhcp_options_netbios_servers" {
-  type        = "list"
+variable "dhcp_options_netbios_name_servers" {
   description = "Specify a list of netbios servers for DHCP options set"
+  type        = "list"
   default     = []
 }
 
