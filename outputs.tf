@@ -36,12 +36,12 @@ output "ipv6_enabled_private_subnets" {
 }
 
 output "ipv6_enabled_private_subnets_ipv4_cidr_blocks" {
-  description = "Map of List of ipv4 cidr_blocks of private subnets in an ipv6 enabled VPC"
+  description = "List of ipv4 cidr_blocks of private subnets in an ipv6 enabled VPC"
   value       = ["${aws_subnet.private_ipv6.*.cidr_block}"]
 }
 
 output "ipv6_enabled_private_subnets_ipv6_cidr_blocks" {
-  description = "Map of List of ipv6 cidr_blocks of private subnets in an ipv6 enabled VPC"
+  description = "List of ipv6 cidr_blocks of private subnets in an ipv6 enabled VPC"
   value       = ["${aws_subnet.private_ipv6.*.ipv6_cidr_block}"]
 }
 
@@ -61,12 +61,12 @@ output "ipv6_enabled_public_subnets" {
 }
 
 output "ipv6_enabled_public_subnets_ipv4_cidr_blocks" {
-  description = "Map of List of ipv4 cidr_blocks of public subnets in an ipv6 enabled VPC"
+  description = "List of ipv4 cidr_blocks of public subnets in an ipv6 enabled VPC"
   value       = ["${aws_subnet.public_ipv6.*.cidr_block}"]
 }
 
 output "ipv6_enabled_public_subnets_ipv6_cidr_blocks" {
-  description = "Map of List of ipv6 cidr_blocks of public subnets in an ipv6 enabled VPC"
+  description = "List of ipv6 cidr_blocks of public subnets in an ipv6 enabled VPC"
   value       = ["${aws_subnet.public_ipv6.*.ipv6_cidr_block}"]
 }
 

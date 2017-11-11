@@ -7,7 +7,8 @@ resource "aws_vpc" "this" {
   enable_dns_hostnames             = "${var.enable_dns_hostnames}"
   enable_dns_support               = "${var.enable_dns_support}"
   assign_generated_ipv6_cidr_block = "${var.enable_ipv6}"
-  tags                             = "${merge(var.tags, map("Name", format("%s", var.name)))}"
+
+  tags = "${merge(var.tags, map("Name", format("%s", var.name)))}"
 }
 
 ###################
@@ -42,7 +43,7 @@ resource "aws_route" "public_internet_gateway" {
 }
 
 resource "aws_route" "public_internet_gateway_ipv6" {
-  count = "${var.enable_ipv6 ? (length(var.public_subnets) > 0 ? 1 : 0) : 0}"
+  count = "${var.enable_ipv6 && length(var.public_subnets) > 0 ? 1 : 0}"
 
   route_table_id              = "${aws_route_table.public.id}"
   destination_ipv6_cidr_block = "::/0"
@@ -76,7 +77,7 @@ resource "aws_subnet" "public" {
 }
 
 resource "aws_subnet" "public_ipv6" {
-  count = "${ var.enable_ipv6 ? length(var.public_subnets) : 0}"
+  count = "${var.enable_ipv6 ? length(var.public_subnets) : 0}"
 
   vpc_id                          = "${aws_vpc.this.id}"
   cidr_block                      = "${var.public_subnets[count.index]}"
