@@ -31,7 +31,6 @@ resource "aws_vpc_dhcp_options_association" "this" {
 
   vpc_id          = "${aws_vpc.this.id}"
   dhcp_options_id = "${aws_vpc_dhcp_options.this.id}"
-  depends_on      = ["aws_vpc.this", "aws_vpc_dhcp_options.this"]
 }
 
 ###################
