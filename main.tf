@@ -242,3 +242,14 @@ resource "aws_route_table_association" "public" {
   subnet_id      = "${element(aws_subnet.public.*.id, count.index)}"
   route_table_id = "${aws_route_table.public.id}"
 }
+
+##############
+# VPN Gateway
+##############
+resource "aws_vpn_gateway" "this" {
+  count = "${var.enable_vpn_gateway ? 1 : 0}"
+
+  vpc_id = "${aws_vpc.this.id}"
+
+  tags = "${merge(var.tags, map("Name", format("%s", var.name)))}"
+}

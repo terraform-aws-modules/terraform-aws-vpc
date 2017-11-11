@@ -11,6 +11,7 @@ These types of resources are supported:
 * [Route table](https://www.terraform.io/docs/providers/aws/r/route_table.html)
 * [Internet Gateway](https://www.terraform.io/docs/providers/aws/r/internet_gateway.html) 
 * [NAT Gateway](https://www.terraform.io/docs/providers/aws/r/nat_gateway.html)
+* [VPN Gateway](https://www.terraform.io/docs/providers/aws/r/vpn_gateway.html)
 * [VPC Endpoint](https://www.terraform.io/docs/providers/aws/r/vpc_endpoint.html) (S3 and DynamoDB)
 * [RDS DB Subnet Group](https://www.terraform.io/docs/providers/aws/r/db_subnet_group.html) 
 * [ElastiCache Subnet Group](https://www.terraform.io/docs/providers/aws/r/elasticache_subnet_group.html) 
@@ -30,6 +31,7 @@ module "vpc" {
   public_subnets  = ["10.0.101.0/24", "10.0.102.0/24", "10.0.103.0/24"]
 
   enable_nat_gateway = true
+  enable_vpn_gateway = true
 
   tags = {
     Terraform = "true"
