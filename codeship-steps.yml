@@ -1,0 +1,28 @@
+# Build helpers
+# Prepare /artifacts/packer-vars.json for packer, this is a standard packer vars file.
+# It contains image_family named after beautifiedbranch
+# You can find it's content in tmp/packer-vars.json after running 'jet steps'
+- service: python-helper
+  name: create packer vars config
+  command: python ./format.py
+
+- type: serial
+  name: infra with terraform
+  steps:
+
+    - service: terraform
+      name: terraform lint
+      command: /src/scripts/lint.sh
+
+    - service: terraform_unittests
+      name: terraform unit tests
+      command: /src/scripts/unittests.sh
+
+    - service: aws
+      name: upload artifacts
+      command: /src/scripts/deploy.sh
+
+    - service: aws
+      name: cleanup dev artifacts
+      command: -c "aws s3 rm --recursive s3://907136348507-firebricks/terraform-modules/providers/aws-dev-$(cat /artifacts/packer-vars.txt)"
+      tag: master

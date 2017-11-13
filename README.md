@@ -1,3 +1,5 @@
+[ ![Codeship Status for AtomicConductor/terraform-aws-vpc](https://app.codeship.com/projects/88c20860-aad7-0135-8b14-6a76a17523bb/status?branch=master)](https://app.codeship.com/projects/256621)
+
 AWS VPC Terraform module
 ========================
 
