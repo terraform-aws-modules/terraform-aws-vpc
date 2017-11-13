@@ -1,4 +1,15 @@
-.terraform
-terraform.tfstate
-*.tfstate*
-terraform.tfvars
+# Compiled files
+*.tfstate
+*.tfstate.backup
+
+# Module directory
+.terraform/
+
+# Stuff
+.vscode
+.DS_Store
+*.swp
+build*.env
+codeship*.aes
+*.zip
+tmp

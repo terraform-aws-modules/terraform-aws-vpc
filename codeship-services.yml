@@ -1,0 +1,45 @@
+# If you change anything above, make sure you rebuild base image
+# When run locallly, images below use tag latest
+
+terraform:
+  image: hashicorp/terraform:0.10.6
+  volumes:
+    - .:/src
+    - ./tmp:/artifacts
+  encrypted_env_file: build-prod.env.encrypted
+  entrypoint: "/bin/sh"
+  cached: true
+
+# Helpers
+data:
+  image: busybox
+  volumes:
+    - .:/src
+    - ./tmp:/artifacts
+  encrypted_env_file: build-prod.env.encrypted
+  cached: true
+
+aws:
+  entrypoint: "/bin/sh"
+  build: ./scripts/amazonlinux
+  volumes:
+    - .:/src
+    - ./tmp:/artifacts
+  encrypted_env_file: build-prod.env.encrypted
+  cached: true
+
+terraform_unittests:
+  build: ./scripts/terraform_unittests
+  volumes:
+    - .:/src
+    - ./tmp:/artifacts
+  cached: true
+
+# Slugify branch names
+python-helper:
+  volumes:
+    - .:/src
+    - ./tmp:/artifacts
+  build:
+    dockerfile_path: ./scripts/slugify/Dockerfile
+  cached: true
