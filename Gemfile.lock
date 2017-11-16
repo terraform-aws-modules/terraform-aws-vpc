@@ -217,11 +217,11 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  aws-sdk!
   awspec!
   kitchen-terraform (~> 2.0)!
   kitchen-verifier-awspec!
   rhcl!
-  test-kitchen!
 
 RUBY VERSION
    ruby 2.4.2p198

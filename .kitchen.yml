@@ -1,7 +1,7 @@
 ---
 driver:
   name: "terraform"
-  directory: "examples/simple-vpc"
+  directory: "examples/test_fixture"
 
 provisioner:
   name: "terraform"
@@ -17,4 +17,4 @@ suites:
     verifier:
       name: "awspec"
       patterns:
-      - "test/integration/default/simple_vpc.rb"
+      - "test/integration/default/test_vpc.rb"
