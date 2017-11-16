@@ -1,0 +1,20 @@
+---
+driver:
+  name: "terraform"
+  directory: "examples/simple-vpc"
+
+provisioner:
+  name: "terraform"
+
+platforms:
+  - name: "aws"
+
+verifier:
+  name: "awspec"
+
+suites:
+  - name: "default"
+    verifier:
+      name: "awspec"
+      patterns:
+      - "test/integration/default/simple_vpc.rb"

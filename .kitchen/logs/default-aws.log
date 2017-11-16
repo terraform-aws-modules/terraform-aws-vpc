@@ -1,0 +1,607 @@
+I, [2017-11-15T17:09:43.829526 #53161]  INFO -- default-aws: -----> Cleaning up any prior instances of <default-aws>
+I, [2017-11-15T17:09:43.830704 #53161]  INFO -- default-aws: -----> Destroying <default-aws>...
+I, [2017-11-15T17:09:43.936392 #53161]  INFO -- default-aws: [0m[1mCopying configuration[0m from "/Users/boconnor/Development/git/github.com/newcontext-oss/terraform-aws-vpc/examples/simple-vpc"...[0m
+I, [2017-11-15T17:09:43.945106 #53161]  INFO -- default-aws: [0m[1mUpgrading modules...[0m
+I, [2017-11-15T17:09:43.947196 #53161]  INFO -- default-aws: Get: file:///Users/boconnor/Development/git/github.com/newcontext-oss/terraform-aws-vpc (update)
+I, [2017-11-15T17:09:44.143325 #53161]  INFO -- default-aws: 
+I, [2017-11-15T17:09:44.143572 #53161]  INFO -- default-aws: [0m[1mInitializing provider plugins...[0m
+I, [2017-11-15T17:09:44.143825 #53161]  INFO -- default-aws: - Checking for available provider plugins on https://releases.hashicorp.com...
+I, [2017-11-15T17:09:44.892696 #53161]  INFO -- default-aws: - Downloading plugin for provider "aws" (1.2.0)...
+I, [2017-11-15T17:09:48.863861 #53161]  INFO -- default-aws: 
+I, [2017-11-15T17:09:48.864024 #53161]  INFO -- default-aws: The following providers do not have any version constraints in configuration,
+I, [2017-11-15T17:09:48.864149 #53161]  INFO -- default-aws: so the latest version was installed.
+I, [2017-11-15T17:09:48.864292 #53161]  INFO -- default-aws: 
+I, [2017-11-15T17:09:48.864421 #53161]  INFO -- default-aws: To prevent automatic upgrades to new major versions that may contain breaking
+I, [2017-11-15T17:09:48.864496 #53161]  INFO -- default-aws: changes, it is recommended to add version = "..." constraints to the
+I, [2017-11-15T17:09:48.864564 #53161]  INFO -- default-aws: corresponding provider blocks in configuration, with the constraint strings
+I, [2017-11-15T17:09:48.864631 #53161]  INFO -- default-aws: suggested below.
+I, [2017-11-15T17:09:48.864717 #53161]  INFO -- default-aws: 
+I, [2017-11-15T17:09:48.864776 #53161]  INFO -- default-aws: * provider.aws: version = "~> 1.2"
+I, [2017-11-15T17:09:48.864837 #53161]  INFO -- default-aws: 
+I, [2017-11-15T17:09:48.864911 #53161]  INFO -- default-aws: [0m[1m[32mTerraform has been successfully initialized![0m[32m[0m
+I, [2017-11-15T17:09:48.864970 #53161]  INFO -- default-aws: [0m[32m
+I, [2017-11-15T17:09:48.865028 #53161]  INFO -- default-aws: You may now begin working with Terraform. Try running "terraform plan" to see
+I, [2017-11-15T17:09:48.865883 #53161]  INFO -- default-aws: any changes that are required for your infrastructure. All Terraform commands
+I, [2017-11-15T17:09:48.865973 #53161]  INFO -- default-aws: should now work.
+I, [2017-11-15T17:09:48.866049 #53161]  INFO -- default-aws: 
+I, [2017-11-15T17:09:48.866109 #53161]  INFO -- default-aws: If you ever set or change modules or backend configuration for Terraform,
+I, [2017-11-15T17:09:48.866170 #53161]  INFO -- default-aws: rerun this command to reinitialize your working directory. If you forget, other
+I, [2017-11-15T17:09:48.866230 #53161]  INFO -- default-aws: commands will detect it and remind you to do so if necessary.[0m
+I, [2017-11-15T17:09:53.781715 #53161]  INFO -- default-aws: [0m[1maws_vpc.this: Refreshing state... (ID: vpc-77526210)[0m
+I, [2017-11-15T17:09:53.783842 #53161]  INFO -- default-aws: [0m[1maws_eip.nat: Refreshing state... (ID: eipalloc-7e729343)[0m
+I, [2017-11-15T17:10:04.491343 #53161]  INFO -- default-aws: [0m[1maws_route_table.private[2]: Refreshing state... (ID: rtb-b0ddb4d6)[0m
+I, [2017-11-15T17:10:04.493082 #53161]  INFO -- default-aws: [0m[1maws_route_table.private[0]: Refreshing state... (ID: rtb-0ad0b96c)[0m
+I, [2017-11-15T17:10:04.494549 #53161]  INFO -- default-aws: [0m[1maws_route_table.private[1]: Refreshing state... (ID: rtb-c2d3baa4)[0m
+I, [2017-11-15T17:10:04.495384 #53161]  INFO -- default-aws: [0m[1maws_internet_gateway.this: Refreshing state... (ID: igw-4afc0f2d)[0m
+I, [2017-11-15T17:10:04.496752 #53161]  INFO -- default-aws: [0m[1maws_route_table.public: Refreshing state... (ID: rtb-8fd5bce9)[0m
+I, [2017-11-15T17:10:04.498632 #53161]  INFO -- default-aws: [0m[1maws_subnet.public[2]: Refreshing state... (ID: subnet-59583b02)[0m
+I, [2017-11-15T17:10:04.498762 #53161]  INFO -- default-aws: [0m[1maws_subnet.public[1]: Refreshing state... (ID: subnet-ea123aa3)[0m
+I, [2017-11-15T17:10:04.499034 #53161]  INFO -- default-aws: [0m[1maws_subnet.public[0]: Refreshing state... (ID: subnet-6d6c4a0a)[0m
+I, [2017-11-15T17:10:04.504210 #53161]  INFO -- default-aws: [0m[1maws_subnet.private[2]: Refreshing state... (ID: subnet-39a1c262)[0m
+I, [2017-11-15T17:10:04.505696 #53161]  INFO -- default-aws: [0m[1maws_subnet.private[0]: Refreshing state... (ID: subnet-22755345)[0m
+I, [2017-11-15T17:10:05.394521 #53161]  INFO -- default-aws: [0m[1maws_subnet.private[1]: Refreshing state... (ID: subnet-7e143c37)[0m
+I, [2017-11-15T17:10:05.609229 #53161]  INFO -- default-aws: [0m[1maws_route.public_internet_gateway: Refreshing state... (ID: r-rtb-8fd5bce91080289494)[0m
+I, [2017-11-15T17:10:05.665339 #53161]  INFO -- default-aws: [0m[1maws_route_table_association.public[1]: Refreshing state... (ID: rtbassoc-8d074df4)[0m
+I, [2017-11-15T17:10:05.665675 #53161]  INFO -- default-aws: [0m[1maws_route_table_association.public[0]: Refreshing state... (ID: rtbassoc-6e1e5417)[0m
+I, [2017-11-15T17:10:05.665812 #53161]  INFO -- default-aws: [0m[1maws_route_table_association.public[2]: Refreshing state... (ID: rtbassoc-7e1b5107)[0m
+I, [2017-11-15T17:10:05.666231 #53161]  INFO -- default-aws: [0m[1maws_nat_gateway.this: Refreshing state... (ID: nat-005713adf5caadbe1)[0m
+I, [2017-11-15T17:10:06.482754 #53161]  INFO -- default-aws: [0m[1maws_route_table_association.private[2]: Refreshing state... (ID: rtbassoc-6c054f15)[0m
+I, [2017-11-15T17:10:06.482874 #53161]  INFO -- default-aws: [0m[1maws_route_table_association.private[1]: Refreshing state... (ID: rtbassoc-8a074df3)[0m
+I, [2017-11-15T17:10:06.483050 #53161]  INFO -- default-aws: [0m[1maws_route_table_association.private[0]: Refreshing state... (ID: rtbassoc-a21e54db)[0m
+I, [2017-11-15T17:10:06.788568 #53161]  INFO -- default-aws: [0m[1maws_route.private_nat_gateway[1]: Refreshing state... (ID: r-rtb-c2d3baa41080289494)[0m
+I, [2017-11-15T17:10:06.788691 #53161]  INFO -- default-aws: [0m[1maws_route.private_nat_gateway[0]: Refreshing state... (ID: r-rtb-0ad0b96c1080289494)[0m
+I, [2017-11-15T17:10:06.788734 #53161]  INFO -- default-aws: [0m[1maws_route.private_nat_gateway[2]: Refreshing state... (ID: r-rtb-b0ddb4d61080289494)[0m
+I, [2017-11-15T17:10:11.237810 #53161]  INFO -- default-aws: [0m[1mmodule.vpc.aws_route.private_nat_gateway[1]: Destroying... (ID: r-rtb-c2d3baa41080289494)[0m[0m
+I, [2017-11-15T17:10:11.238004 #53161]  INFO -- default-aws: [0m[1mmodule.vpc.aws_route_table_association.public[2]: Destroying... (ID: rtbassoc-7e1b5107)[0m[0m
+I, [2017-11-15T17:10:11.240723 #53161]  INFO -- default-aws: [0m[1mmodule.vpc.aws_route_table_association.public[1]: Destroying... (ID: rtbassoc-8d074df4)[0m[0m
+I, [2017-11-15T17:10:11.240855 #53161]  INFO -- default-aws: [0m[1mmodule.vpc.aws_route_table_association.public[0]: Destroying... (ID: rtbassoc-6e1e5417)[0m[0m
+I, [2017-11-15T17:10:11.240922 #53161]  INFO -- default-aws: [0m[1mmodule.vpc.aws_route_table_association.private[2]: Destroying... (ID: rtbassoc-6c054f15)[0m[0m
+I, [2017-11-15T17:10:11.240998 #53161]  INFO -- default-aws: [0m[1mmodule.vpc.aws_route.public_internet_gateway: Destroying... (ID: r-rtb-8fd5bce91080289494)[0m[0m
+I, [2017-11-15T17:10:11.241055 #53161]  INFO -- default-aws: [0m[1mmodule.vpc.aws_route.private_nat_gateway[0]: Destroying... (ID: r-rtb-0ad0b96c1080289494)[0m[0m
+I, [2017-11-15T17:10:11.241146 #53161]  INFO -- default-aws: [0m[1mmodule.vpc.aws_route_table_association.private[1]: Destroying... (ID: rtbassoc-8a074df3)[0m[0m
+I, [2017-11-15T17:10:11.241196 #53161]  INFO -- default-aws: [0m[1mmodule.vpc.aws_route_table_association.private[0]: Destroying... (ID: rtbassoc-a21e54db)[0m[0m
+I, [2017-11-15T17:10:11.244473 #53161]  INFO -- default-aws: [0m[1mmodule.vpc.aws_route.private_nat_gateway[2]: Destroying... (ID: r-rtb-b0ddb4d61080289494)[0m[0m
+I, [2017-11-15T17:10:12.025717 #53161]  INFO -- default-aws: [0m[1mmodule.vpc.aws_route.private_nat_gateway[1]: Destruction complete after 1s[0m[0m
+I, [2017-11-15T17:10:12.183795 #53161]  INFO -- default-aws: [0m[1mmodule.vpc.aws_route_table_association.public[2]: Destruction complete after 1s[0m[0m
+I, [2017-11-15T17:10:12.218245 #53161]  INFO -- default-aws: [0m[1mmodule.vpc.aws_route.private_nat_gateway[0]: Destruction complete after 1s[0m[0m
+I, [2017-11-15T17:10:12.328684 #53161]  INFO -- default-aws: [0m[1mmodule.vpc.aws_route_table_association.private[2]: Destruction complete after 1s[0m[0m
+I, [2017-11-15T17:10:12.356367 #53161]  INFO -- default-aws: [0m[1mmodule.vpc.aws_route_table_association.public[0]: Destruction complete after 1s[0m[0m
+I, [2017-11-15T17:10:12.362390 #53161]  INFO -- default-aws: [0m[1mmodule.vpc.aws_route.private_nat_gateway[2]: Destruction complete after 1s[0m[0m
+I, [2017-11-15T17:10:12.381621 #53161]  INFO -- default-aws: [0m[1mmodule.vpc.aws_nat_gateway.this: Destroying... (ID: nat-005713adf5caadbe1)[0m[0m
+I, [2017-11-15T17:10:12.406194 #53161]  INFO -- default-aws: [0m[1mmodule.vpc.aws_route_table_association.public[1]: Destruction complete after 1s[0m[0m
+I, [2017-11-15T17:10:12.428668 #53161]  INFO -- default-aws: [0m[1mmodule.vpc.aws_route_table_association.private[0]: Destruction complete after 1s[0m[0m
+I, [2017-11-15T17:10:12.439362 #53161]  INFO -- default-aws: [0m[1mmodule.vpc.aws_route.public_internet_gateway: Destruction complete after 1s[0m[0m
+I, [2017-11-15T17:10:12.451444 #53161]  INFO -- default-aws: [0m[1mmodule.vpc.aws_route_table.public: Destroying... (ID: rtb-8fd5bce9)[0m[0m
+I, [2017-11-15T17:10:13.318743 #53161]  INFO -- default-aws: [0m[1mmodule.vpc.aws_route_table_association.private[1]: Destruction complete after 2s[0m[0m
+I, [2017-11-15T17:10:13.325838 #53161]  INFO -- default-aws: [0m[1mmodule.vpc.aws_subnet.private[2]: Destroying... (ID: subnet-39a1c262)[0m[0m
+I, [2017-11-15T17:10:13.325956 #53161]  INFO -- default-aws: [0m[1mmodule.vpc.aws_subnet.private[1]: Destroying... (ID: subnet-7e143c37)[0m[0m
+I, [2017-11-15T17:10:13.326020 #53161]  INFO -- default-aws: [0m[1mmodule.vpc.aws_route_table.private[2]: Destroying... (ID: rtb-b0ddb4d6)[0m[0m
+I, [2017-11-15T17:10:13.326344 #53161]  INFO -- default-aws: [0m[1mmodule.vpc.aws_route_table.private[1]: Destroying... (ID: rtb-c2d3baa4)[0m[0m
+I, [2017-11-15T17:10:13.326413 #53161]  INFO -- default-aws: [0m[1mmodule.vpc.aws_route_table.private[0]: Destroying... (ID: rtb-0ad0b96c)[0m[0m
+I, [2017-11-15T17:10:13.326473 #53161]  INFO -- default-aws: [0m[1mmodule.vpc.aws_subnet.private[0]: Destroying... (ID: subnet-22755345)[0m[0m
+I, [2017-11-15T17:10:14.477886 #53161]  INFO -- default-aws: [0m[1mmodule.vpc.aws_subnet.private[0]: Destruction complete after 1s[0m[0m
+I, [2017-11-15T17:10:14.546215 #53161]  INFO -- default-aws: [0m[1mmodule.vpc.aws_subnet.private[2]: Destruction complete after 2s[0m[0m
+I, [2017-11-15T17:10:14.621462 #53161]  INFO -- default-aws: [0m[1mmodule.vpc.aws_subnet.private[1]: Destruction complete after 2s[0m[0m
+I, [2017-11-15T17:10:15.793689 #53161]  INFO -- default-aws: [0m[1mmodule.vpc.aws_route_table.public: Destruction complete after 4s[0m[0m
+I, [2017-11-15T17:10:16.427767 #53161]  INFO -- default-aws: [0m[1mmodule.vpc.aws_route_table.private[2]: Destruction complete after 3s[0m[0m
+I, [2017-11-15T17:10:16.564648 #53161]  INFO -- default-aws: [0m[1mmodule.vpc.aws_route_table.private[1]: Destruction complete after 4s[0m[0m
+I, [2017-11-15T17:10:16.785177 #53161]  INFO -- default-aws: [0m[1mmodule.vpc.aws_route_table.private[0]: Destruction complete after 4s[0m[0m
+I, [2017-11-15T17:10:22.380546 #53161]  INFO -- default-aws: [0m[1mmodule.vpc.aws_nat_gateway.this: Still destroying... (ID: nat-005713adf5caadbe1, 10s elapsed)[0m[0m
+I, [2017-11-15T17:10:32.381483 #53161]  INFO -- default-aws: [0m[1mmodule.vpc.aws_nat_gateway.this: Still destroying... (ID: nat-005713adf5caadbe1, 20s elapsed)[0m[0m
+I, [2017-11-15T17:10:42.381162 #53161]  INFO -- default-aws: [0m[1mmodule.vpc.aws_nat_gateway.this: Still destroying... (ID: nat-005713adf5caadbe1, 30s elapsed)[0m[0m
+I, [2017-11-15T17:10:52.381626 #53161]  INFO -- default-aws: [0m[1mmodule.vpc.aws_nat_gateway.this: Still destroying... (ID: nat-005713adf5caadbe1, 40s elapsed)[0m[0m
+I, [2017-11-15T17:11:02.381423 #53161]  INFO -- default-aws: [0m[1mmodule.vpc.aws_nat_gateway.this: Still destroying... (ID: nat-005713adf5caadbe1, 50s elapsed)[0m[0m
+I, [2017-11-15T17:11:08.990593 #53161]  INFO -- default-aws: [0m[1mmodule.vpc.aws_nat_gateway.this: Destruction complete after 57s[0m[0m
+I, [2017-11-15T17:11:09.000585 #53161]  INFO -- default-aws: [0m[1mmodule.vpc.aws_subnet.public[0]: Destroying... (ID: subnet-6d6c4a0a)[0m[0m
+I, [2017-11-15T17:11:09.000723 #53161]  INFO -- default-aws: [0m[1mmodule.vpc.aws_eip.nat: Destroying... (ID: eipalloc-7e729343)[0m[0m
+I, [2017-11-15T17:11:09.001162 #53161]  INFO -- default-aws: [0m[1mmodule.vpc.aws_internet_gateway.this: Destroying... (ID: igw-4afc0f2d)[0m[0m
+I, [2017-11-15T17:11:09.001669 #53161]  INFO -- default-aws: [0m[1mmodule.vpc.aws_subnet.public[2]: Destroying... (ID: subnet-59583b02)[0m[0m
+I, [2017-11-15T17:11:09.001754 #53161]  INFO -- default-aws: [0m[1mmodule.vpc.aws_subnet.public[1]: Destroying... (ID: subnet-ea123aa3)[0m[0m
+I, [2017-11-15T17:11:09.848133 #53161]  INFO -- default-aws: [0m[1mmodule.vpc.aws_subnet.public[2]: Destruction complete after 1s[0m[0m
+I, [2017-11-15T17:11:10.268211 #53161]  INFO -- default-aws: [0m[1mmodule.vpc.aws_subnet.public[1]: Destruction complete after 1s[0m[0m
+I, [2017-11-15T17:11:10.353527 #53161]  INFO -- default-aws: [0m[1mmodule.vpc.aws_subnet.public[0]: Destruction complete after 1s[0m[0m
+I, [2017-11-15T17:11:11.564085 #53161]  INFO -- default-aws: [0m[1mmodule.vpc.aws_eip.nat: Destruction complete after 3s[0m[0m
+I, [2017-11-15T17:11:18.998615 #53161]  INFO -- default-aws: [0m[1mmodule.vpc.aws_internet_gateway.this: Still destroying... (ID: igw-4afc0f2d, 10s elapsed)[0m[0m
+I, [2017-11-15T17:11:21.381293 #53161]  INFO -- default-aws: [0m[1mmodule.vpc.aws_internet_gateway.this: Destruction complete after 12s[0m[0m
+I, [2017-11-15T17:11:21.387345 #53161]  INFO -- default-aws: [0m[1mmodule.vpc.aws_vpc.this: Destroying... (ID: vpc-77526210)[0m[0m
+I, [2017-11-15T17:11:22.758939 #53161]  INFO -- default-aws: [0m[1mmodule.vpc.aws_vpc.this: Destruction complete after 2s[0m[0m
+I, [2017-11-15T17:11:22.770610 #53161]  INFO -- default-aws: [0m[1m[32m
+I, [2017-11-15T17:11:22.770882 #53161]  INFO -- default-aws: Destroy complete! Resources: 24 destroyed.[0m
+I, [2017-11-15T17:11:22.851004 #53161]  INFO -- default-aws: Finished destroying <default-aws> (1m39.01s).
+I, [2017-11-15T17:11:22.852882 #53161]  INFO -- default-aws: -----> Testing <default-aws>
+I, [2017-11-15T17:11:22.854073 #53161]  INFO -- default-aws: -----> Creating <default-aws>...
+I, [2017-11-15T17:11:22.923231 #53161]  INFO -- default-aws: [0m[1mCopying configuration[0m from "/Users/boconnor/Development/git/github.com/newcontext-oss/terraform-aws-vpc/examples/simple-vpc"...[0m
+I, [2017-11-15T17:11:22.927925 #53161]  INFO -- default-aws: [0m[1mUpgrading modules...[0m
+I, [2017-11-15T17:11:22.930385 #53161]  INFO -- default-aws: Get: file:///Users/boconnor/Development/git/github.com/newcontext-oss/terraform-aws-vpc (update)
+I, [2017-11-15T17:11:22.965430 #53161]  INFO -- default-aws: 
+I, [2017-11-15T17:11:22.965551 #53161]  INFO -- default-aws: [0m[1mInitializing provider plugins...[0m
+I, [2017-11-15T17:11:22.965734 #53161]  INFO -- default-aws: - Checking for available provider plugins on https://releases.hashicorp.com...
+I, [2017-11-15T17:11:23.572870 #53161]  INFO -- default-aws: - Downloading plugin for provider "aws" (1.2.0)...
+I, [2017-11-15T17:11:27.394260 #53161]  INFO -- default-aws: 
+I, [2017-11-15T17:11:27.394469 #53161]  INFO -- default-aws: The following providers do not have any version constraints in configuration,
+I, [2017-11-15T17:11:27.394901 #53161]  INFO -- default-aws: so the latest version was installed.
+I, [2017-11-15T17:11:27.394987 #53161]  INFO -- default-aws: 
+I, [2017-11-15T17:11:27.395209 #53161]  INFO -- default-aws: To prevent automatic upgrades to new major versions that may contain breaking
+I, [2017-11-15T17:11:27.395284 #53161]  INFO -- default-aws: changes, it is recommended to add version = "..." constraints to the
+I, [2017-11-15T17:11:27.395347 #53161]  INFO -- default-aws: corresponding provider blocks in configuration, with the constraint strings
+I, [2017-11-15T17:11:27.395402 #53161]  INFO -- default-aws: suggested below.
+I, [2017-11-15T17:11:27.395459 #53161]  INFO -- default-aws: 
+I, [2017-11-15T17:11:27.395516 #53161]  INFO -- default-aws: * provider.aws: version = "~> 1.2"
+I, [2017-11-15T17:11:27.395566 #53161]  INFO -- default-aws: 
+I, [2017-11-15T17:11:27.395742 #53161]  INFO -- default-aws: [0m[1m[32mTerraform has been successfully initialized![0m[32m[0m
+I, [2017-11-15T17:11:27.396106 #53161]  INFO -- default-aws: [0m[32m
+I, [2017-11-15T17:11:27.396167 #53161]  INFO -- default-aws: You may now begin working with Terraform. Try running "terraform plan" to see
+I, [2017-11-15T17:11:27.396244 #53161]  INFO -- default-aws: any changes that are required for your infrastructure. All Terraform commands
+I, [2017-11-15T17:11:27.396310 #53161]  INFO -- default-aws: should now work.
+I, [2017-11-15T17:11:27.396356 #53161]  INFO -- default-aws: 
+I, [2017-11-15T17:11:27.396396 #53161]  INFO -- default-aws: If you ever set or change modules or backend configuration for Terraform,
+I, [2017-11-15T17:11:27.396449 #53161]  INFO -- default-aws: rerun this command to reinitialize your working directory. If you forget, other
+I, [2017-11-15T17:11:27.396488 #53161]  INFO -- default-aws: commands will detect it and remind you to do so if necessary.[0m
+I, [2017-11-15T17:11:36.544340 #53161]  INFO -- default-aws: [0m[1mmodule.vpc.aws_eip.nat: Creating...[0m
+I, [2017-11-15T17:11:36.544529 #53161]  INFO -- default-aws:   allocation_id:     "" => "<computed>"
+I, [2017-11-15T17:11:36.544603 #53161]  INFO -- default-aws:   association_id:    "" => "<computed>"
+I, [2017-11-15T17:11:36.545077 #53161]  INFO -- default-aws:   domain:            "" => "<computed>"
+I, [2017-11-15T17:11:36.545170 #53161]  INFO -- default-aws:   instance:          "" => "<computed>"
+I, [2017-11-15T17:11:36.545242 #53161]  INFO -- default-aws:   network_interface: "" => "<computed>"
+I, [2017-11-15T17:11:36.545324 #53161]  INFO -- default-aws:   private_ip:        "" => "<computed>"
+I, [2017-11-15T17:11:36.545393 #53161]  INFO -- default-aws:   public_ip:         "" => "<computed>"
+I, [2017-11-15T17:11:36.545458 #53161]  INFO -- default-aws:   vpc:               "" => "true"[0m
+I, [2017-11-15T17:11:36.545524 #53161]  INFO -- default-aws: [0m[1mmodule.vpc.aws_vpc.this: Creating...[0m
+I, [2017-11-15T17:11:36.545582 #53161]  INFO -- default-aws:   assign_generated_ipv6_cidr_block: "" => "false"
+I, [2017-11-15T17:11:36.547580 #53161]  INFO -- default-aws:   cidr_block:                       "" => "10.0.0.0/16"
+I, [2017-11-15T17:11:36.547720 #53161]  INFO -- default-aws:   default_network_acl_id:           "" => "<computed>"
+I, [2017-11-15T17:11:36.547773 #53161]  INFO -- default-aws:   default_route_table_id:           "" => "<computed>"
+I, [2017-11-15T17:11:36.547835 #53161]  INFO -- default-aws:   default_security_group_id:        "" => "<computed>"
+I, [2017-11-15T17:11:36.547877 #53161]  INFO -- default-aws:   dhcp_options_id:                  "" => "<computed>"
+I, [2017-11-15T17:11:36.547927 #53161]  INFO -- default-aws:   enable_classiclink:               "" => "<computed>"
+I, [2017-11-15T17:11:36.547985 #53161]  INFO -- default-aws:   enable_classiclink_dns_support:   "" => "<computed>"
+I, [2017-11-15T17:11:36.548026 #53161]  INFO -- default-aws:   enable_dns_hostnames:             "" => "false"
+I, [2017-11-15T17:11:36.548077 #53161]  INFO -- default-aws:   enable_dns_support:               "" => "false"
+I, [2017-11-15T17:11:36.548136 #53161]  INFO -- default-aws:   instance_tenancy:                 "" => "default"
+I, [2017-11-15T17:11:36.548179 #53161]  INFO -- default-aws:   ipv6_association_id:              "" => "<computed>"
+I, [2017-11-15T17:11:36.548217 #53161]  INFO -- default-aws:   ipv6_cidr_block:                  "" => "<computed>"
+I, [2017-11-15T17:11:36.548255 #53161]  INFO -- default-aws:   main_route_table_id:              "" => "<computed>"
+I, [2017-11-15T17:11:36.548293 #53161]  INFO -- default-aws:   tags.%:                           "" => "3"
+I, [2017-11-15T17:11:36.548338 #53161]  INFO -- default-aws:   tags.Environment:                 "" => "dev"
+I, [2017-11-15T17:11:36.548389 #53161]  INFO -- default-aws:   tags.Name:                        "" => "simple-example"
+I, [2017-11-15T17:11:36.548509 #53161]  INFO -- default-aws:   tags.Owner:                       "" => "user"[0m
+I, [2017-11-15T17:11:38.603490 #53161]  INFO -- default-aws: [0m[1mmodule.vpc.aws_eip.nat: Creation complete after 2s (ID: eipalloc-9d7f9ea0)[0m[0m
+I, [2017-11-15T17:11:46.544079 #53161]  INFO -- default-aws: [0m[1mmodule.vpc.aws_vpc.this: Still creating... (10s elapsed)[0m[0m
+I, [2017-11-15T17:11:51.794375 #53161]  INFO -- default-aws: [0m[1mmodule.vpc.aws_vpc.this: Creation complete after 15s (ID: vpc-a45969c3)[0m[0m
+I, [2017-11-15T17:11:51.807524 #53161]  INFO -- default-aws: [0m[1mmodule.vpc.aws_route_table.private[0]: Creating...[0m
+I, [2017-11-15T17:11:51.807653 #53161]  INFO -- default-aws:   route.#:          "" => "<computed>"
+I, [2017-11-15T17:11:51.807720 #53161]  INFO -- default-aws:   tags.%:           "" => "3"
+I, [2017-11-15T17:11:51.807788 #53161]  INFO -- default-aws:   tags.Environment: "" => "dev"
+I, [2017-11-15T17:11:51.807849 #53161]  INFO -- default-aws:   tags.Name:        "" => "simple-example-private-eu-west-1a"
+I, [2017-11-15T17:11:51.808266 #53161]  INFO -- default-aws:   tags.Owner:       "" => "user"
+I, [2017-11-15T17:11:51.808336 #53161]  INFO -- default-aws:   vpc_id:           "" => "vpc-a45969c3"[0m
+I, [2017-11-15T17:11:51.808396 #53161]  INFO -- default-aws: [0m[1mmodule.vpc.aws_subnet.private[0]: Creating...[0m
+I, [2017-11-15T17:11:51.808462 #53161]  INFO -- default-aws:   assign_ipv6_address_on_creation: "" => "false"
+I, [2017-11-15T17:11:51.808523 #53161]  INFO -- default-aws:   availability_zone:               "" => "eu-west-1a"
+I, [2017-11-15T17:11:51.808584 #53161]  INFO -- default-aws:   cidr_block:                      "" => "10.0.1.0/24"
+I, [2017-11-15T17:11:51.808642 #53161]  INFO -- default-aws:   ipv6_cidr_block:                 "" => "<computed>"
+I, [2017-11-15T17:11:51.808700 #53161]  INFO -- default-aws:   ipv6_cidr_block_association_id:  "" => "<computed>"
+I, [2017-11-15T17:11:51.809079 #53161]  INFO -- default-aws:   map_public_ip_on_launch:         "" => "false"
+I, [2017-11-15T17:11:51.809147 #53161]  INFO -- default-aws:   tags.%:                          "" => "3"
+I, [2017-11-15T17:11:51.809208 #53161]  INFO -- default-aws:   tags.Environment:                "" => "dev"
+I, [2017-11-15T17:11:51.809269 #53161]  INFO -- default-aws:   tags.Name:                       "" => "simple-example-private-eu-west-1a"
+I, [2017-11-15T17:11:51.809330 #53161]  INFO -- default-aws:   tags.Owner:                      "" => "user"
+I, [2017-11-15T17:11:51.809392 #53161]  INFO -- default-aws:   vpc_id:                          "" => "vpc-a45969c3"[0m
+I, [2017-11-15T17:11:51.809458 #53161]  INFO -- default-aws: [0m[1mmodule.vpc.aws_subnet.public[1]: Creating...[0m
+I, [2017-11-15T17:11:51.809518 #53161]  INFO -- default-aws:   assign_ipv6_address_on_creation: "" => "false"
+I, [2017-11-15T17:11:51.809577 #53161]  INFO -- default-aws:   availability_zone:               "" => "eu-west-1b"
+I, [2017-11-15T17:11:51.813346 #53161]  INFO -- default-aws:   cidr_block:                      "" => "10.0.102.0/24"
+I, [2017-11-15T17:11:51.813464 #53161]  INFO -- default-aws:   ipv6_cidr_block:                 "" => "<computed>"
+I, [2017-11-15T17:11:51.813547 #53161]  INFO -- default-aws:   ipv6_cidr_block_association_id:  "" => "<computed>"
+I, [2017-11-15T17:11:51.813644 #53161]  INFO -- default-aws:   map_public_ip_on_launch:         "" => "true"
+I, [2017-11-15T17:11:51.813713 #53161]  INFO -- default-aws:   tags.%:                          "" => "3"
+I, [2017-11-15T17:11:51.813778 #53161]  INFO -- default-aws:   tags.Environment:                "" => "dev"
+I, [2017-11-15T17:11:51.813846 #53161]  INFO -- default-aws:   tags.Name:                       "" => "simple-example-public-eu-west-1b"
+I, [2017-11-15T17:11:51.813913 #53161]  INFO -- default-aws:   tags.Owner:                      "" => "user"
+I, [2017-11-15T17:11:51.813982 #53161]  INFO -- default-aws:   vpc_id:                          "" => "vpc-a45969c3"[0m
+I, [2017-11-15T17:11:51.814051 #53161]  INFO -- default-aws: [0m[1mmodule.vpc.aws_route_table.private[1]: Creating...[0m
+I, [2017-11-15T17:11:51.814135 #53161]  INFO -- default-aws:   route.#:          "" => "<computed>"
+I, [2017-11-15T17:11:51.814198 #53161]  INFO -- default-aws:   tags.%:           "" => "3"
+I, [2017-11-15T17:11:51.814380 #53161]  INFO -- default-aws:   tags.Environment: "" => "dev"
+I, [2017-11-15T17:11:51.814467 #53161]  INFO -- default-aws:   tags.Name:        "" => "simple-example-private-eu-west-1b"
+I, [2017-11-15T17:11:51.814540 #53161]  INFO -- default-aws:   tags.Owner:       "" => "user"
+I, [2017-11-15T17:11:51.814612 #53161]  INFO -- default-aws:   vpc_id:           "" => "vpc-a45969c3"[0m
+I, [2017-11-15T17:11:51.814680 #53161]  INFO -- default-aws: [0m[1mmodule.vpc.aws_route_table.private[2]: Creating...[0m
+I, [2017-11-15T17:11:51.814765 #53161]  INFO -- default-aws:   route.#:          "" => "<computed>"
+I, [2017-11-15T17:11:51.814852 #53161]  INFO -- default-aws:   tags.%:           "" => "3"
+I, [2017-11-15T17:11:51.815073 #53161]  INFO -- default-aws:   tags.Environment: "" => "dev"
+I, [2017-11-15T17:11:51.815148 #53161]  INFO -- default-aws:   tags.Name:        "" => "simple-example-private-eu-west-1c"
+I, [2017-11-15T17:11:51.815221 #53161]  INFO -- default-aws:   tags.Owner:       "" => "user"
+I, [2017-11-15T17:11:51.815283 #53161]  INFO -- default-aws:   vpc_id:           "" => "vpc-a45969c3"[0m
+I, [2017-11-15T17:11:51.815352 #53161]  INFO -- default-aws: [0m[1mmodule.vpc.aws_internet_gateway.this: Creating...[0m
+I, [2017-11-15T17:11:51.815414 #53161]  INFO -- default-aws:   tags.%:           "0" => "3"
+I, [2017-11-15T17:11:51.815474 #53161]  INFO -- default-aws:   tags.Environment: "" => "dev"
+I, [2017-11-15T17:11:51.817166 #53161]  INFO -- default-aws:   tags.Name:        "" => "simple-example"
+I, [2017-11-15T17:11:51.817338 #53161]  INFO -- default-aws:   tags.Owner:       "" => "user"
+I, [2017-11-15T17:11:51.817423 #53161]  INFO -- default-aws:   vpc_id:           "" => "vpc-a45969c3"[0m
+I, [2017-11-15T17:11:51.817485 #53161]  INFO -- default-aws: [0m[1mmodule.vpc.aws_subnet.public[0]: Creating...[0m
+I, [2017-11-15T17:11:51.817543 #53161]  INFO -- default-aws:   assign_ipv6_address_on_creation: "" => "false"
+I, [2017-11-15T17:11:51.817595 #53161]  INFO -- default-aws:   availability_zone:               "" => "eu-west-1a"
+I, [2017-11-15T17:11:51.817648 #53161]  INFO -- default-aws:   cidr_block:                      "" => "10.0.101.0/24"
+I, [2017-11-15T17:11:51.817707 #53161]  INFO -- default-aws:   ipv6_cidr_block:                 "" => "<computed>"
+I, [2017-11-15T17:11:51.817961 #53161]  INFO -- default-aws:   ipv6_cidr_block_association_id:  "" => "<computed>"
+I, [2017-11-15T17:11:51.818027 #53161]  INFO -- default-aws:   map_public_ip_on_launch:         "" => "true"
+I, [2017-11-15T17:11:51.818081 #53161]  INFO -- default-aws:   tags.%:                          "" => "3"
+I, [2017-11-15T17:11:51.818133 #53161]  INFO -- default-aws:   tags.Environment:                "" => "dev"
+I, [2017-11-15T17:11:51.821994 #53161]  INFO -- default-aws:   tags.Name:                       "" => "simple-example-public-eu-west-1a"
+I, [2017-11-15T17:11:51.822143 #53161]  INFO -- default-aws:   tags.Owner:                      "" => "user"
+I, [2017-11-15T17:11:51.822230 #53161]  INFO -- default-aws:   vpc_id:                          "" => "vpc-a45969c3"[0m
+I, [2017-11-15T17:11:51.822315 #53161]  INFO -- default-aws: [0m[1mmodule.vpc.aws_subnet.private[1]: Creating...[0m
+I, [2017-11-15T17:11:51.822400 #53161]  INFO -- default-aws:   assign_ipv6_address_on_creation: "" => "false"
+I, [2017-11-15T17:11:51.822484 #53161]  INFO -- default-aws:   availability_zone:               "" => "eu-west-1b"
+I, [2017-11-15T17:11:51.822588 #53161]  INFO -- default-aws:   cidr_block:                      "" => "10.0.2.0/24"
+I, [2017-11-15T17:11:51.822727 #53161]  INFO -- default-aws:   ipv6_cidr_block:                 "" => "<computed>"
+I, [2017-11-15T17:11:51.822988 #53161]  INFO -- default-aws:   ipv6_cidr_block_association_id:  "" => "<computed>"
+I, [2017-11-15T17:11:51.823039 #53161]  INFO -- default-aws:   map_public_ip_on_launch:         "" => "false"
+I, [2017-11-15T17:11:51.823093 #53161]  INFO -- default-aws:   tags.%:                          "" => "3"
+I, [2017-11-15T17:11:51.823134 #53161]  INFO -- default-aws:   tags.Environment:                "" => "dev"
+I, [2017-11-15T17:11:51.823175 #53161]  INFO -- default-aws:   tags.Name:                       "" => "simple-example-private-eu-west-1b"
+I, [2017-11-15T17:11:51.823222 #53161]  INFO -- default-aws:   tags.Owner:                      "" => "user"
+I, [2017-11-15T17:11:51.823268 #53161]  INFO -- default-aws:   vpc_id:                          "" => "vpc-a45969c3"[0m
+I, [2017-11-15T17:11:51.823310 #53161]  INFO -- default-aws: [0m[1mmodule.vpc.aws_route_table.public: Creating...[0m
+I, [2017-11-15T17:11:51.823351 #53161]  INFO -- default-aws:   route.#:          "" => "<computed>"
+I, [2017-11-15T17:11:51.823389 #53161]  INFO -- default-aws:   tags.%:           "" => "3"
+I, [2017-11-15T17:11:51.823430 #53161]  INFO -- default-aws:   tags.Environment: "" => "dev"
+I, [2017-11-15T17:11:51.823469 #53161]  INFO -- default-aws:   tags.Name:        "" => "simple-example-public"
+I, [2017-11-15T17:11:51.823508 #53161]  INFO -- default-aws:   tags.Owner:       "" => "user"
+I, [2017-11-15T17:11:51.823544 #53161]  INFO -- default-aws:   vpc_id:           "" => "vpc-a45969c3"[0m
+I, [2017-11-15T17:11:51.823587 #53161]  INFO -- default-aws: [0m[1mmodule.vpc.aws_subnet.public[2]: Creating...[0m
+I, [2017-11-15T17:11:51.823734 #53161]  INFO -- default-aws:   assign_ipv6_address_on_creation: "" => "false"
+I, [2017-11-15T17:11:51.823773 #53161]  INFO -- default-aws:   availability_zone:               "" => "eu-west-1c"
+I, [2017-11-15T17:11:51.823807 #53161]  INFO -- default-aws:   cidr_block:                      "" => "10.0.103.0/24"
+I, [2017-11-15T17:11:51.823839 #53161]  INFO -- default-aws:   ipv6_cidr_block:                 "" => "<computed>"
+I, [2017-11-15T17:11:51.823872 #53161]  INFO -- default-aws:   ipv6_cidr_block_association_id:  "" => "<computed>"
+I, [2017-11-15T17:11:51.823904 #53161]  INFO -- default-aws:   map_public_ip_on_launch:         "" => "true"
+I, [2017-11-15T17:11:51.823940 #53161]  INFO -- default-aws:   tags.%:                          "" => "3"
+I, [2017-11-15T17:11:51.823988 #53161]  INFO -- default-aws:   tags.Environment:                "" => "dev"
+I, [2017-11-15T17:11:51.824022 #53161]  INFO -- default-aws:   tags.Name:                       "" => "simple-example-public-eu-west-1c"
+I, [2017-11-15T17:11:51.824059 #53161]  INFO -- default-aws:   tags.Owner:                      "" => "user"
+I, [2017-11-15T17:11:51.824099 #53161]  INFO -- default-aws:   vpc_id:                          "" => "vpc-a45969c3"[0m
+I, [2017-11-15T17:11:55.721133 #53161]  INFO -- default-aws: [0m[1mmodule.vpc.aws_route_table.private[2]: Creation complete after 4s (ID: rtb-6b224a0d)[0m[0m
+I, [2017-11-15T17:11:55.725905 #53161]  INFO -- default-aws: [0m[1mmodule.vpc.aws_subnet.private[2]: Creating...[0m
+I, [2017-11-15T17:11:55.726031 #53161]  INFO -- default-aws:   assign_ipv6_address_on_creation: "" => "false"
+I, [2017-11-15T17:11:55.726093 #53161]  INFO -- default-aws:   availability_zone:               "" => "eu-west-1c"
+I, [2017-11-15T17:11:55.726301 #53161]  INFO -- default-aws:   cidr_block:                      "" => "10.0.3.0/24"
+I, [2017-11-15T17:11:55.726682 #53161]  INFO -- default-aws:   ipv6_cidr_block:                 "" => "<computed>"
+I, [2017-11-15T17:11:55.726769 #53161]  INFO -- default-aws:   ipv6_cidr_block_association_id:  "" => "<computed>"
+I, [2017-11-15T17:11:55.726840 #53161]  INFO -- default-aws:   map_public_ip_on_launch:         "" => "false"
+I, [2017-11-15T17:11:55.726912 #53161]  INFO -- default-aws:   tags.%:                          "" => "3"
+I, [2017-11-15T17:11:55.726963 #53161]  INFO -- default-aws:   tags.Environment:                "" => "dev"
+I, [2017-11-15T17:11:55.727003 #53161]  INFO -- default-aws:   tags.Name:                       "" => "simple-example-private-eu-west-1c"
+I, [2017-11-15T17:11:55.727040 #53161]  INFO -- default-aws:   tags.Owner:                      "" => "user"
+I, [2017-11-15T17:11:55.727433 #53161]  INFO -- default-aws:   vpc_id:                          "" => "vpc-a45969c3"[0m
+I, [2017-11-15T17:11:55.798516 #53161]  INFO -- default-aws: [0m[1mmodule.vpc.aws_route_table.public: Creation complete after 4s (ID: rtb-4920482f)[0m[0m
+I, [2017-11-15T17:11:55.892335 #53161]  INFO -- default-aws: [0m[1mmodule.vpc.aws_route_table.private[1]: Creation complete after 4s (ID: rtb-db2f47bd)[0m[0m
+I, [2017-11-15T17:11:56.150336 #53161]  INFO -- default-aws: [0m[1mmodule.vpc.aws_subnet.private[1]: Creation complete after 4s (ID: subnet-5be0c812)[0m[0m
+I, [2017-11-15T17:11:56.463626 #53161]  INFO -- default-aws: [0m[1mmodule.vpc.aws_subnet.private[0]: Creation complete after 4s (ID: subnet-d17f59b6)[0m[0m
+I, [2017-11-15T17:11:56.846434 #53161]  INFO -- default-aws: [0m[1mmodule.vpc.aws_route_table.private[0]: Creation complete after 5s (ID: rtb-182b437e)[0m[0m
+I, [2017-11-15T17:11:56.894477 #53161]  INFO -- default-aws: [0m[1mmodule.vpc.aws_internet_gateway.this: Creation complete after 5s (ID: igw-a8e714cf)[0m[0m
+I, [2017-11-15T17:11:56.899947 #53161]  INFO -- default-aws: [0m[1mmodule.vpc.aws_route.public_internet_gateway: Creating...[0m
+I, [2017-11-15T17:11:56.900172 #53161]  INFO -- default-aws:   destination_cidr_block:     "" => "0.0.0.0/0"
+I, [2017-11-15T17:11:56.900264 #53161]  INFO -- default-aws:   destination_prefix_list_id: "" => "<computed>"
+I, [2017-11-15T17:11:56.900336 #53161]  INFO -- default-aws:   egress_only_gateway_id:     "" => "<computed>"
+I, [2017-11-15T17:11:56.900542 #53161]  INFO -- default-aws:   gateway_id:                 "" => "igw-a8e714cf"
+I, [2017-11-15T17:11:56.900647 #53161]  INFO -- default-aws:   instance_id:                "" => "<computed>"
+I, [2017-11-15T17:11:56.901304 #53161]  INFO -- default-aws:   instance_owner_id:          "" => "<computed>"
+I, [2017-11-15T17:11:56.901451 #53161]  INFO -- default-aws:   nat_gateway_id:             "" => "<computed>"
+I, [2017-11-15T17:11:56.901579 #53161]  INFO -- default-aws:   network_interface_id:       "" => "<computed>"
+I, [2017-11-15T17:11:56.901662 #53161]  INFO -- default-aws:   origin:                     "" => "<computed>"
+I, [2017-11-15T17:11:56.901720 #53161]  INFO -- default-aws:   route_table_id:             "" => "rtb-4920482f"
+I, [2017-11-15T17:11:56.901794 #53161]  INFO -- default-aws:   state:                      "" => "<computed>"[0m
+I, [2017-11-15T17:11:57.026095 #53161]  INFO -- default-aws: [0m[1mmodule.vpc.aws_subnet.public[2]: Creation complete after 5s (ID: subnet-22b3d079)[0m[0m
+I, [2017-11-15T17:11:57.318449 #53161]  INFO -- default-aws: [0m[1mmodule.vpc.aws_subnet.public[0]: Creation complete after 5s (ID: subnet-3b71575c)[0m[0m
+I, [2017-11-15T17:11:57.439712 #53161]  INFO -- default-aws: [0m[1mmodule.vpc.aws_subnet.public[1]: Creation complete after 5s (ID: subnet-50eec619)[0m[0m
+I, [2017-11-15T17:11:57.445082 #53161]  INFO -- default-aws: [0m[1mmodule.vpc.aws_route_table_association.public[0]: Creating...[0m
+I, [2017-11-15T17:11:57.445195 #53161]  INFO -- default-aws:   route_table_id: "" => "rtb-4920482f"
+I, [2017-11-15T17:11:57.445281 #53161]  INFO -- default-aws:   subnet_id:      "" => "subnet-3b71575c"[0m
+I, [2017-11-15T17:11:57.445341 #53161]  INFO -- default-aws: [0m[1mmodule.vpc.aws_nat_gateway.this: Creating...[0m
+I, [2017-11-15T17:11:57.445638 #53161]  INFO -- default-aws:   allocation_id:        "" => "eipalloc-9d7f9ea0"
+I, [2017-11-15T17:11:57.445701 #53161]  INFO -- default-aws:   network_interface_id: "" => "<computed>"
+I, [2017-11-15T17:11:57.445754 #53161]  INFO -- default-aws:   private_ip:           "" => "<computed>"
+I, [2017-11-15T17:11:57.445835 #53161]  INFO -- default-aws:   public_ip:            "" => "<computed>"
+I, [2017-11-15T17:11:57.445893 #53161]  INFO -- default-aws:   subnet_id:            "" => "subnet-3b71575c"
+I, [2017-11-15T17:11:57.445948 #53161]  INFO -- default-aws:   tags.%:               "" => "3"
+I, [2017-11-15T17:11:57.446117 #53161]  INFO -- default-aws:   tags.Environment:     "" => "dev"
+I, [2017-11-15T17:11:57.446177 #53161]  INFO -- default-aws:   tags.Name:            "" => "simple-example-eu-west-1a"
+I, [2017-11-15T17:11:57.446231 #53161]  INFO -- default-aws:   tags.Owner:           "" => "user"[0m
+I, [2017-11-15T17:11:57.446755 #53161]  INFO -- default-aws: [0m[1mmodule.vpc.aws_route_table_association.public[2]: Creating...[0m
+I, [2017-11-15T17:11:57.446841 #53161]  INFO -- default-aws:   route_table_id: "" => "rtb-4920482f"
+I, [2017-11-15T17:11:57.446904 #53161]  INFO -- default-aws:   subnet_id:      "" => "subnet-22b3d079"[0m
+I, [2017-11-15T17:11:57.447158 #53161]  INFO -- default-aws: [0m[1mmodule.vpc.aws_route_table_association.public[1]: Creating...[0m
+I, [2017-11-15T17:11:57.447231 #53161]  INFO -- default-aws:   route_table_id: "" => "rtb-4920482f"
+I, [2017-11-15T17:11:57.447285 #53161]  INFO -- default-aws:   subnet_id:      "" => "subnet-50eec619"[0m
+I, [2017-11-15T17:11:58.400540 #53161]  INFO -- default-aws: [0m[1mmodule.vpc.aws_route_table_association.public[0]: Creation complete after 1s (ID: rtbassoc-4a286233)[0m[0m
+I, [2017-11-15T17:11:58.444026 #53161]  INFO -- default-aws: [0m[1mmodule.vpc.aws_route_table_association.public[2]: Creation complete after 1s (ID: rtbassoc-7523690c)[0m[0m
+I, [2017-11-15T17:11:58.634958 #53161]  INFO -- default-aws: [0m[1mmodule.vpc.aws_route_table_association.public[1]: Creation complete after 2s (ID: rtbassoc-f92e6480)[0m[0m
+I, [2017-11-15T17:11:59.033142 #53161]  INFO -- default-aws: [0m[1mmodule.vpc.aws_route.public_internet_gateway: Creation complete after 2s (ID: r-rtb-4920482f1080289494)[0m[0m
+I, [2017-11-15T17:11:59.992444 #53161]  INFO -- default-aws: [0m[1mmodule.vpc.aws_subnet.private[2]: Creation complete after 4s (ID: subnet-72b3d029)[0m[0m
+I, [2017-11-15T17:12:00.001067 #53161]  INFO -- default-aws: [0m[1mmodule.vpc.aws_route_table_association.private[0]: Creating...[0m
+I, [2017-11-15T17:12:00.001189 #53161]  INFO -- default-aws:   route_table_id: "" => "rtb-182b437e"
+I, [2017-11-15T17:12:00.001253 #53161]  INFO -- default-aws:   subnet_id:      "" => "subnet-d17f59b6"[0m
+I, [2017-11-15T17:12:00.001626 #53161]  INFO -- default-aws: [0m[1mmodule.vpc.aws_route_table_association.private[1]: Creating...[0m
+I, [2017-11-15T17:12:00.002062 #53161]  INFO -- default-aws:   route_table_id: "" => "rtb-db2f47bd"
+I, [2017-11-15T17:12:00.002152 #53161]  INFO -- default-aws:   subnet_id:      "" => "subnet-5be0c812"[0m
+I, [2017-11-15T17:12:00.002724 #53161]  INFO -- default-aws: [0m[1mmodule.vpc.aws_route_table_association.private[2]: Creating...[0m
+I, [2017-11-15T17:12:00.002797 #53161]  INFO -- default-aws:   route_table_id: "" => "rtb-6b224a0d"
+I, [2017-11-15T17:12:00.002835 #53161]  INFO -- default-aws:   subnet_id:      "" => "subnet-72b3d029"[0m
+I, [2017-11-15T17:12:00.998922 #53161]  INFO -- default-aws: [0m[1mmodule.vpc.aws_route_table_association.private[1]: Creation complete after 1s (ID: rtbassoc-542d672d)[0m[0m
+I, [2017-11-15T17:12:01.008249 #53161]  INFO -- default-aws: [0m[1mmodule.vpc.aws_route_table_association.private[0]: Creation complete after 1s (ID: rtbassoc-db2f65a2)[0m[0m
+I, [2017-11-15T17:12:01.184674 #53161]  INFO -- default-aws: [0m[1mmodule.vpc.aws_route_table_association.private[2]: Creation complete after 1s (ID: rtbassoc-832f65fa)[0m[0m
+I, [2017-11-15T17:12:07.445739 #53161]  INFO -- default-aws: [0m[1mmodule.vpc.aws_nat_gateway.this: Still creating... (10s elapsed)[0m[0m
+I, [2017-11-15T17:12:17.446632 #53161]  INFO -- default-aws: [0m[1mmodule.vpc.aws_nat_gateway.this: Still creating... (20s elapsed)[0m[0m
+I, [2017-11-15T17:12:27.447481 #53161]  INFO -- default-aws: [0m[1mmodule.vpc.aws_nat_gateway.this: Still creating... (30s elapsed)[0m[0m
+I, [2017-11-15T17:12:37.448435 #53161]  INFO -- default-aws: [0m[1mmodule.vpc.aws_nat_gateway.this: Still creating... (40s elapsed)[0m[0m
+I, [2017-11-15T17:12:47.449254 #53161]  INFO -- default-aws: [0m[1mmodule.vpc.aws_nat_gateway.this: Still creating... (50s elapsed)[0m[0m
+I, [2017-11-15T17:12:57.450244 #53161]  INFO -- default-aws: [0m[1mmodule.vpc.aws_nat_gateway.this: Still creating... (1m0s elapsed)[0m[0m
+I, [2017-11-15T17:13:07.450903 #53161]  INFO -- default-aws: [0m[1mmodule.vpc.aws_nat_gateway.this: Still creating... (1m10s elapsed)[0m[0m
+I, [2017-11-15T17:13:17.451163 #53161]  INFO -- default-aws: [0m[1mmodule.vpc.aws_nat_gateway.this: Still creating... (1m20s elapsed)[0m[0m
+I, [2017-11-15T17:13:27.451207 #53161]  INFO -- default-aws: [0m[1mmodule.vpc.aws_nat_gateway.this: Still creating... (1m30s elapsed)[0m[0m
+I, [2017-11-15T17:13:37.451404 #53161]  INFO -- default-aws: [0m[1mmodule.vpc.aws_nat_gateway.this: Still creating... (1m40s elapsed)[0m[0m
+I, [2017-11-15T17:13:47.452064 #53161]  INFO -- default-aws: [0m[1mmodule.vpc.aws_nat_gateway.this: Still creating... (1m50s elapsed)[0m[0m
+I, [2017-11-15T17:13:49.451380 #53161]  INFO -- default-aws: [0m[1mmodule.vpc.aws_nat_gateway.this: Creation complete after 1m52s (ID: nat-0893b972c8eb77069)[0m[0m
+I, [2017-11-15T17:13:49.459724 #53161]  INFO -- default-aws: [0m[1mmodule.vpc.aws_route.private_nat_gateway[1]: Creating...[0m
+I, [2017-11-15T17:13:49.459863 #53161]  INFO -- default-aws:   destination_cidr_block:     "" => "0.0.0.0/0"
+I, [2017-11-15T17:13:49.459950 #53161]  INFO -- default-aws:   destination_prefix_list_id: "" => "<computed>"
+I, [2017-11-15T17:13:49.460304 #53161]  INFO -- default-aws:   egress_only_gateway_id:     "" => "<computed>"
+I, [2017-11-15T17:13:49.460389 #53161]  INFO -- default-aws:   gateway_id:                 "" => "<computed>"
+I, [2017-11-15T17:13:49.460463 #53161]  INFO -- default-aws:   instance_id:                "" => "<computed>"
+I, [2017-11-15T17:13:49.460538 #53161]  INFO -- default-aws:   instance_owner_id:          "" => "<computed>"
+I, [2017-11-15T17:13:49.460607 #53161]  INFO -- default-aws:   nat_gateway_id:             "" => "nat-0893b972c8eb77069"
+I, [2017-11-15T17:13:49.460830 #53161]  INFO -- default-aws:   network_interface_id:       "" => "<computed>"
+I, [2017-11-15T17:13:49.461298 #53161]  INFO -- default-aws:   origin:                     "" => "<computed>"
+I, [2017-11-15T17:13:49.461408 #53161]  INFO -- default-aws:   route_table_id:             "" => "rtb-db2f47bd"
+I, [2017-11-15T17:13:49.461478 #53161]  INFO -- default-aws:   state:                      "" => "<computed>"[0m
+I, [2017-11-15T17:13:49.461552 #53161]  INFO -- default-aws: [0m[1mmodule.vpc.aws_route.private_nat_gateway[0]: Creating...[0m
+I, [2017-11-15T17:13:49.461649 #53161]  INFO -- default-aws:   destination_cidr_block:     "" => "0.0.0.0/0"
+I, [2017-11-15T17:13:49.461711 #53161]  INFO -- default-aws:   destination_prefix_list_id: "" => "<computed>"
+I, [2017-11-15T17:13:49.461772 #53161]  INFO -- default-aws:   egress_only_gateway_id:     "" => "<computed>"
+I, [2017-11-15T17:13:49.461828 #53161]  INFO -- default-aws:   gateway_id:                 "" => "<computed>"
+I, [2017-11-15T17:13:49.461887 #53161]  INFO -- default-aws:   instance_id:                "" => "<computed>"
+I, [2017-11-15T17:13:49.461948 #53161]  INFO -- default-aws:   instance_owner_id:          "" => "<computed>"
+I, [2017-11-15T17:13:49.462485 #53161]  INFO -- default-aws:   nat_gateway_id:             "" => "nat-0893b972c8eb77069"
+I, [2017-11-15T17:13:49.462557 #53161]  INFO -- default-aws:   network_interface_id:       "" => "<computed>"
+I, [2017-11-15T17:13:49.462617 #53161]  INFO -- default-aws:   origin:                     "" => "<computed>"
+I, [2017-11-15T17:13:49.462676 #53161]  INFO -- default-aws:   route_table_id:             "" => "rtb-182b437e"
+I, [2017-11-15T17:13:49.462783 #53161]  INFO -- default-aws:   state:                      "" => "<computed>"[0m
+I, [2017-11-15T17:13:49.462854 #53161]  INFO -- default-aws: [0m[1mmodule.vpc.aws_route.private_nat_gateway[2]: Creating...[0m
+I, [2017-11-15T17:13:49.462918 #53161]  INFO -- default-aws:   destination_cidr_block:     "" => "0.0.0.0/0"
+I, [2017-11-15T17:13:49.462982 #53161]  INFO -- default-aws:   destination_prefix_list_id: "" => "<computed>"
+I, [2017-11-15T17:13:49.463100 #53161]  INFO -- default-aws:   egress_only_gateway_id:     "" => "<computed>"
+I, [2017-11-15T17:13:49.463172 #53161]  INFO -- default-aws:   gateway_id:                 "" => "<computed>"
+I, [2017-11-15T17:13:49.463556 #53161]  INFO -- default-aws:   instance_id:                "" => "<computed>"
+I, [2017-11-15T17:13:49.463603 #53161]  INFO -- default-aws:   instance_owner_id:          "" => "<computed>"
+I, [2017-11-15T17:13:49.463639 #53161]  INFO -- default-aws:   nat_gateway_id:             "" => "nat-0893b972c8eb77069"
+I, [2017-11-15T17:13:49.463729 #53161]  INFO -- default-aws:   network_interface_id:       "" => "<computed>"
+I, [2017-11-15T17:13:49.463768 #53161]  INFO -- default-aws:   origin:                     "" => "<computed>"
+I, [2017-11-15T17:13:49.463803 #53161]  INFO -- default-aws:   route_table_id:             "" => "rtb-6b224a0d"
+I, [2017-11-15T17:13:49.463837 #53161]  INFO -- default-aws:   state:                      "" => "<computed>"[0m
+I, [2017-11-15T17:13:51.105167 #53161]  INFO -- default-aws: [0m[1mmodule.vpc.aws_route.private_nat_gateway[2]: Creation complete after 2s (ID: r-rtb-6b224a0d1080289494)[0m[0m
+I, [2017-11-15T17:13:51.559786 #53161]  INFO -- default-aws: [0m[1mmodule.vpc.aws_route.private_nat_gateway[0]: Creation complete after 3s (ID: r-rtb-182b437e1080289494)[0m[0m
+I, [2017-11-15T17:13:51.672128 #53161]  INFO -- default-aws: [0m[1mmodule.vpc.aws_route.private_nat_gateway[1]: Creation complete after 3s (ID: r-rtb-db2f47bd1080289494)[0m[0m
+I, [2017-11-15T17:13:51.680771 #53161]  INFO -- default-aws: [0m[1m[32m
+I, [2017-11-15T17:13:51.682126 #53161]  INFO -- default-aws: Apply complete! Resources: 24 added, 0 changed, 0 destroyed.[0m
+I, [2017-11-15T17:13:51.682255 #53161]  INFO -- default-aws: [0m
+I, [2017-11-15T17:13:51.682881 #53161]  INFO -- default-aws: The state of your infrastructure has been saved to the path
+I, [2017-11-15T17:13:51.682977 #53161]  INFO -- default-aws: below. This state is required to modify and destroy your
+I, [2017-11-15T17:13:51.683034 #53161]  INFO -- default-aws: infrastructure, so keep it safe. To inspect the complete state
+I, [2017-11-15T17:13:51.683091 #53161]  INFO -- default-aws: use the `terraform show` command.
+I, [2017-11-15T17:13:51.683145 #53161]  INFO -- default-aws: 
+I, [2017-11-15T17:13:51.683375 #53161]  INFO -- default-aws: State path: /Users/boconnor/Development/git/github.com/newcontext-oss/terraform-aws-vpc/.kitchen/kitchen-terraform/default-aws/terraform.tfstate[0m
+I, [2017-11-15T17:13:51.683434 #53161]  INFO -- default-aws: [0m[1m[32m
+I, [2017-11-15T17:13:51.683487 #53161]  INFO -- default-aws: Outputs:
+I, [2017-11-15T17:13:51.683615 #53161]  INFO -- default-aws: 
+I, [2017-11-15T17:13:51.683688 #53161]  INFO -- default-aws: nat_public_ips = [
+I, [2017-11-15T17:13:51.683745 #53161]  INFO -- default-aws:     34.253.75.100
+I, [2017-11-15T17:13:51.683799 #53161]  INFO -- default-aws: ]
+I, [2017-11-15T17:13:51.683859 #53161]  INFO -- default-aws: private_subnets = [
+I, [2017-11-15T17:13:51.683918 #53161]  INFO -- default-aws:     subnet-d17f59b6,
+I, [2017-11-15T17:13:51.683977 #53161]  INFO -- default-aws:     subnet-5be0c812,
+I, [2017-11-15T17:13:51.684066 #53161]  INFO -- default-aws:     subnet-72b3d029
+I, [2017-11-15T17:13:51.684128 #53161]  INFO -- default-aws: ]
+I, [2017-11-15T17:13:51.684187 #53161]  INFO -- default-aws: public_subnets = [
+I, [2017-11-15T17:13:51.685356 #53161]  INFO -- default-aws:     subnet-3b71575c,
+I, [2017-11-15T17:13:51.685486 #53161]  INFO -- default-aws:     subnet-50eec619,
+I, [2017-11-15T17:13:51.685537 #53161]  INFO -- default-aws:     subnet-22b3d079
+I, [2017-11-15T17:13:51.685661 #53161]  INFO -- default-aws: ]
+I, [2017-11-15T17:13:51.685715 #53161]  INFO -- default-aws: vpc_id = vpc-a45969c3[0m
+I, [2017-11-15T17:13:51.709387 #53161]  INFO -- default-aws: Finished creating <default-aws> (2m28.85s).
+I, [2017-11-15T17:13:51.709861 #53161]  INFO -- default-aws: -----> Converging <default-aws>...
+I, [2017-11-15T17:13:51.767698 #53161]  INFO -- default-aws: [0m[1mCopying configuration[0m from "/Users/boconnor/Development/git/github.com/newcontext-oss/terraform-aws-vpc/examples/simple-vpc"...[0m
+I, [2017-11-15T17:13:51.771126 #53161]  INFO -- default-aws: [0m[1mUpgrading modules...[0m
+I, [2017-11-15T17:13:51.772690 #53161]  INFO -- default-aws: Get: file:///Users/boconnor/Development/git/github.com/newcontext-oss/terraform-aws-vpc (update)
+I, [2017-11-15T17:13:51.803512 #53161]  INFO -- default-aws: 
+I, [2017-11-15T17:13:51.803715 #53161]  INFO -- default-aws: [0m[1mInitializing provider plugins...[0m
+I, [2017-11-15T17:13:51.804118 #53161]  INFO -- default-aws: - Checking for available provider plugins on https://releases.hashicorp.com...
+I, [2017-11-15T17:13:52.360931 #53161]  INFO -- default-aws: - Downloading plugin for provider "aws" (1.2.0)...
+I, [2017-11-15T17:13:55.955469 #53161]  INFO -- default-aws: 
+I, [2017-11-15T17:13:55.955705 #53161]  INFO -- default-aws: The following providers do not have any version constraints in configuration,
+I, [2017-11-15T17:13:55.955783 #53161]  INFO -- default-aws: so the latest version was installed.
+I, [2017-11-15T17:13:55.955941 #53161]  INFO -- default-aws: 
+I, [2017-11-15T17:13:55.956253 #53161]  INFO -- default-aws: To prevent automatic upgrades to new major versions that may contain breaking
+I, [2017-11-15T17:13:55.956361 #53161]  INFO -- default-aws: changes, it is recommended to add version = "..." constraints to the
+I, [2017-11-15T17:13:55.956419 #53161]  INFO -- default-aws: corresponding provider blocks in configuration, with the constraint strings
+I, [2017-11-15T17:13:55.956476 #53161]  INFO -- default-aws: suggested below.
+I, [2017-11-15T17:13:55.956529 #53161]  INFO -- default-aws: 
+I, [2017-11-15T17:13:55.956581 #53161]  INFO -- default-aws: * provider.aws: version = "~> 1.2"
+I, [2017-11-15T17:13:55.956630 #53161]  INFO -- default-aws: 
+I, [2017-11-15T17:13:55.956696 #53161]  INFO -- default-aws: [0m[1m[32mTerraform has been successfully initialized![0m[32m[0m
+I, [2017-11-15T17:13:55.957077 #53161]  INFO -- default-aws: [0m[32m
+I, [2017-11-15T17:13:55.957138 #53161]  INFO -- default-aws: You may now begin working with Terraform. Try running "terraform plan" to see
+I, [2017-11-15T17:13:55.957232 #53161]  INFO -- default-aws: any changes that are required for your infrastructure. All Terraform commands
+I, [2017-11-15T17:13:55.957285 #53161]  INFO -- default-aws: should now work.
+I, [2017-11-15T17:13:55.957325 #53161]  INFO -- default-aws: 
+I, [2017-11-15T17:13:55.957365 #53161]  INFO -- default-aws: If you ever set or change modules or backend configuration for Terraform,
+I, [2017-11-15T17:13:55.957404 #53161]  INFO -- default-aws: rerun this command to reinitialize your working directory. If you forget, other
+I, [2017-11-15T17:13:55.957440 #53161]  INFO -- default-aws: commands will detect it and remind you to do so if necessary.[0m
+I, [2017-11-15T17:13:59.993707 #53161]  INFO -- default-aws: [0m[1maws_eip.nat: Refreshing state... (ID: eipalloc-9d7f9ea0)[0m
+I, [2017-11-15T17:13:59.994725 #53161]  INFO -- default-aws: [0m[1maws_vpc.this: Refreshing state... (ID: vpc-a45969c3)[0m
+I, [2017-11-15T17:14:10.903811 #53161]  INFO -- default-aws: [0m[1maws_route_table.public: Refreshing state... (ID: rtb-4920482f)[0m
+I, [2017-11-15T17:14:10.905914 #53161]  INFO -- default-aws: [0m[1maws_internet_gateway.this: Refreshing state... (ID: igw-a8e714cf)[0m
+I, [2017-11-15T17:14:10.906897 #53161]  INFO -- default-aws: [0m[1maws_subnet.private[1]: Refreshing state... (ID: subnet-5be0c812)[0m
+I, [2017-11-15T17:14:10.907010 #53161]  INFO -- default-aws: [0m[1maws_subnet.private[0]: Refreshing state... (ID: subnet-d17f59b6)[0m
+I, [2017-11-15T17:14:10.908842 #53161]  INFO -- default-aws: [0m[1maws_subnet.private[2]: Refreshing state... (ID: subnet-72b3d029)[0m
+I, [2017-11-15T17:14:10.911987 #53161]  INFO -- default-aws: [0m[1maws_route_table.private[1]: Refreshing state... (ID: rtb-db2f47bd)[0m
+I, [2017-11-15T17:14:10.912115 #53161]  INFO -- default-aws: [0m[1maws_route_table.private[2]: Refreshing state... (ID: rtb-6b224a0d)[0m
+I, [2017-11-15T17:14:10.912187 #53161]  INFO -- default-aws: [0m[1maws_route_table.private[0]: Refreshing state... (ID: rtb-182b437e)[0m
+I, [2017-11-15T17:14:10.912544 #53161]  INFO -- default-aws: [0m[1maws_subnet.public[2]: Refreshing state... (ID: subnet-22b3d079)[0m
+I, [2017-11-15T17:14:10.912728 #53161]  INFO -- default-aws: [0m[1maws_subnet.public[0]: Refreshing state... (ID: subnet-3b71575c)[0m
+I, [2017-11-15T17:14:11.624838 #53161]  INFO -- default-aws: [0m[1maws_subnet.public[1]: Refreshing state... (ID: subnet-50eec619)[0m
+I, [2017-11-15T17:14:12.063134 #53161]  INFO -- default-aws: [0m[1maws_route.public_internet_gateway: Refreshing state... (ID: r-rtb-4920482f1080289494)[0m
+I, [2017-11-15T17:14:12.083295 #53161]  INFO -- default-aws: [0m[1maws_route_table_association.private[0]: Refreshing state... (ID: rtbassoc-db2f65a2)[0m
+I, [2017-11-15T17:14:12.083425 #53161]  INFO -- default-aws: [0m[1maws_route_table_association.private[1]: Refreshing state... (ID: rtbassoc-542d672d)[0m
+I, [2017-11-15T17:14:12.083502 #53161]  INFO -- default-aws: [0m[1maws_route_table_association.private[2]: Refreshing state... (ID: rtbassoc-832f65fa)[0m
+I, [2017-11-15T17:14:12.831471 #53161]  INFO -- default-aws: [0m[1maws_nat_gateway.this: Refreshing state... (ID: nat-0893b972c8eb77069)[0m
+I, [2017-11-15T17:14:12.833600 #53161]  INFO -- default-aws: [0m[1maws_route_table_association.public[0]: Refreshing state... (ID: rtbassoc-4a286233)[0m
+I, [2017-11-15T17:14:12.833724 #53161]  INFO -- default-aws: [0m[1maws_route_table_association.public[1]: Refreshing state... (ID: rtbassoc-f92e6480)[0m
+I, [2017-11-15T17:14:12.833835 #53161]  INFO -- default-aws: [0m[1maws_route_table_association.public[2]: Refreshing state... (ID: rtbassoc-7523690c)[0m
+I, [2017-11-15T17:14:14.953028 #53161]  INFO -- default-aws: [0m[1maws_route.private_nat_gateway[1]: Refreshing state... (ID: r-rtb-db2f47bd1080289494)[0m
+I, [2017-11-15T17:14:14.953176 #53161]  INFO -- default-aws: [0m[1maws_route.private_nat_gateway[0]: Refreshing state... (ID: r-rtb-182b437e1080289494)[0m
+I, [2017-11-15T17:14:14.953262 #53161]  INFO -- default-aws: [0m[1maws_route.private_nat_gateway[2]: Refreshing state... (ID: r-rtb-6b224a0d1080289494)[0m
+I, [2017-11-15T17:14:19.220365 #53161]  INFO -- default-aws: [0m[1m[32m
+I, [2017-11-15T17:14:19.220554 #53161]  INFO -- default-aws: Apply complete! Resources: 0 added, 0 changed, 0 destroyed.[0m
+I, [2017-11-15T17:14:19.220735 #53161]  INFO -- default-aws: [0m[1m[32m
+I, [2017-11-15T17:14:19.220827 #53161]  INFO -- default-aws: Outputs:
+I, [2017-11-15T17:14:19.220987 #53161]  INFO -- default-aws: 
+I, [2017-11-15T17:14:19.221166 #53161]  INFO -- default-aws: nat_public_ips = [
+I, [2017-11-15T17:14:19.221239 #53161]  INFO -- default-aws:     34.253.75.100
+I, [2017-11-15T17:14:19.221306 #53161]  INFO -- default-aws: ]
+I, [2017-11-15T17:14:19.221372 #53161]  INFO -- default-aws: private_subnets = [
+I, [2017-11-15T17:14:19.221514 #53161]  INFO -- default-aws:     subnet-d17f59b6,
+I, [2017-11-15T17:14:19.221556 #53161]  INFO -- default-aws:     subnet-5be0c812,
+I, [2017-11-15T17:14:19.221594 #53161]  INFO -- default-aws:     subnet-72b3d029
+I, [2017-11-15T17:14:19.221647 #53161]  INFO -- default-aws: ]
+I, [2017-11-15T17:14:19.221698 #53161]  INFO -- default-aws: public_subnets = [
+I, [2017-11-15T17:14:19.221742 #53161]  INFO -- default-aws:     subnet-3b71575c,
+I, [2017-11-15T17:14:19.221777 #53161]  INFO -- default-aws:     subnet-50eec619,
+I, [2017-11-15T17:14:19.221823 #53161]  INFO -- default-aws:     subnet-22b3d079
+I, [2017-11-15T17:14:19.221857 #53161]  INFO -- default-aws: ]
+I, [2017-11-15T17:14:19.221922 #53161]  INFO -- default-aws: vpc_id = vpc-a45969c3[0m
+I, [2017-11-15T17:14:19.250529 #53161]  INFO -- default-aws: Finished converging <default-aws> (0m27.54s).
+I, [2017-11-15T17:14:19.251004 #53161]  INFO -- default-aws: -----> Setting up <default-aws>...
+I, [2017-11-15T17:14:19.252142 #53161]  INFO -- default-aws: Finished setting up <default-aws> (0m0.00s).
+I, [2017-11-15T17:14:19.252326 #53161]  INFO -- default-aws: -----> Verifying <default-aws>...
+I, [2017-11-15T17:14:19.252879 #53161]  INFO -- default-aws: [Awspec] Verify on instance=#<Kitchen::Instance:0x00007fceb00c5720> with state={:last_action=>"setup", :last_error=>nil}
+I, [2017-11-15T17:14:19.254645 #53161]  INFO -- default-aws: Environment variable KITCHEN_LAST_ACTION value setup
+I, [2017-11-15T17:14:19.254853 #53161]  INFO -- default-aws: Environment variable KITCHEN_LAST_ERROR value 
+I, [2017-11-15T17:14:19.254984 #53161]  INFO -- default-aws: Transport Environment variable KITCHEN_USERNAME value root
+I, [2017-11-15T17:14:19.255136 #53161]  INFO -- default-aws: Transport Environment variable KITCHEN_PORT value 22
+I, [2017-11-15T17:14:19.255477 #53161]  INFO -- default-aws: Installing bundler and awspec locally on workstation
+I, [2017-11-15T17:14:21.215599 #53161]  INFO -- default-aws: Running Awspec
+I, [2017-11-15T17:14:21.215782 #53161]  INFO -- default-aws: Running command: rspec -c -f documentation --default-path  /Users/boconnor/Development/git/github.com/newcontext-oss/terraform-aws-vpc  -P test/integration/default/simple_vpc.rb
+I, [2017-11-15T17:14:29.750722 #53161]  INFO -- default-aws: Finished verifying <default-aws> (0m10.50s).
+I, [2017-11-15T17:14:29.752428 #53161]  INFO -- default-aws: -----> Destroying <default-aws>...
+I, [2017-11-15T17:14:29.802989 #53161]  INFO -- default-aws: [0m[1mCopying configuration[0m from "/Users/boconnor/Development/git/github.com/newcontext-oss/terraform-aws-vpc/examples/simple-vpc"...[0m
+I, [2017-11-15T17:14:29.806710 #53161]  INFO -- default-aws: [0m[1mUpgrading modules...[0m
+I, [2017-11-15T17:14:29.807931 #53161]  INFO -- default-aws: Get: file:///Users/boconnor/Development/git/github.com/newcontext-oss/terraform-aws-vpc (update)
+I, [2017-11-15T17:14:29.859416 #53161]  INFO -- default-aws: 
+I, [2017-11-15T17:14:29.859535 #53161]  INFO -- default-aws: [0m[1mInitializing provider plugins...[0m
+I, [2017-11-15T17:14:29.859610 #53161]  INFO -- default-aws: - Checking for available provider plugins on https://releases.hashicorp.com...
+I, [2017-11-15T17:14:30.395340 #53161]  INFO -- default-aws: - Downloading plugin for provider "aws" (1.2.0)...
+I, [2017-11-15T17:14:34.031765 #53161]  INFO -- default-aws: 
+I, [2017-11-15T17:14:34.031915 #53161]  INFO -- default-aws: The following providers do not have any version constraints in configuration,
+I, [2017-11-15T17:14:34.032264 #53161]  INFO -- default-aws: so the latest version was installed.
+I, [2017-11-15T17:14:34.032364 #53161]  INFO -- default-aws: 
+I, [2017-11-15T17:14:34.032695 #53161]  INFO -- default-aws: To prevent automatic upgrades to new major versions that may contain breaking
+I, [2017-11-15T17:14:34.032785 #53161]  INFO -- default-aws: changes, it is recommended to add version = "..." constraints to the
+I, [2017-11-15T17:14:34.032866 #53161]  INFO -- default-aws: corresponding provider blocks in configuration, with the constraint strings
+I, [2017-11-15T17:14:34.032989 #53161]  INFO -- default-aws: suggested below.
+I, [2017-11-15T17:14:34.033064 #53161]  INFO -- default-aws: 
+I, [2017-11-15T17:14:34.033134 #53161]  INFO -- default-aws: * provider.aws: version = "~> 1.2"
+I, [2017-11-15T17:14:34.033238 #53161]  INFO -- default-aws: 
+I, [2017-11-15T17:14:34.033317 #53161]  INFO -- default-aws: [0m[1m[32mTerraform has been successfully initialized![0m[32m[0m
+I, [2017-11-15T17:14:34.033386 #53161]  INFO -- default-aws: [0m[32m
+I, [2017-11-15T17:14:34.033459 #53161]  INFO -- default-aws: You may now begin working with Terraform. Try running "terraform plan" to see
+I, [2017-11-15T17:14:34.033540 #53161]  INFO -- default-aws: any changes that are required for your infrastructure. All Terraform commands
+I, [2017-11-15T17:14:34.033616 #53161]  INFO -- default-aws: should now work.
+I, [2017-11-15T17:14:34.033679 #53161]  INFO -- default-aws: 
+I, [2017-11-15T17:14:34.034335 #53161]  INFO -- default-aws: If you ever set or change modules or backend configuration for Terraform,
+I, [2017-11-15T17:14:34.034422 #53161]  INFO -- default-aws: rerun this command to reinitialize your working directory. If you forget, other
+I, [2017-11-15T17:14:34.034490 #53161]  INFO -- default-aws: commands will detect it and remind you to do so if necessary.[0m
+I, [2017-11-15T17:14:38.301252 #53161]  INFO -- default-aws: [0m[1maws_vpc.this: Refreshing state... (ID: vpc-a45969c3)[0m
+I, [2017-11-15T17:14:38.302920 #53161]  INFO -- default-aws: [0m[1maws_eip.nat: Refreshing state... (ID: eipalloc-9d7f9ea0)[0m
+I, [2017-11-15T17:14:47.829761 #53161]  INFO -- default-aws: [0m[1maws_route_table.public: Refreshing state... (ID: rtb-4920482f)[0m
+I, [2017-11-15T17:14:47.829889 #53161]  INFO -- default-aws: [0m[1maws_route_table.private[2]: Refreshing state... (ID: rtb-6b224a0d)[0m
+I, [2017-11-15T17:14:47.832305 #53161]  INFO -- default-aws: [0m[1maws_route_table.private[1]: Refreshing state... (ID: rtb-db2f47bd)[0m
+I, [2017-11-15T17:14:47.832451 #53161]  INFO -- default-aws: [0m[1maws_route_table.private[0]: Refreshing state... (ID: rtb-182b437e)[0m
+I, [2017-11-15T17:14:47.835823 #53161]  INFO -- default-aws: [0m[1maws_internet_gateway.this: Refreshing state... (ID: igw-a8e714cf)[0m
+I, [2017-11-15T17:14:47.835953 #53161]  INFO -- default-aws: [0m[1maws_subnet.private[1]: Refreshing state... (ID: subnet-5be0c812)[0m
+I, [2017-11-15T17:14:47.836030 #53161]  INFO -- default-aws: [0m[1maws_subnet.private[0]: Refreshing state... (ID: subnet-d17f59b6)[0m
+I, [2017-11-15T17:14:47.836094 #53161]  INFO -- default-aws: [0m[1maws_subnet.private[2]: Refreshing state... (ID: subnet-72b3d029)[0m
+I, [2017-11-15T17:14:47.836421 #53161]  INFO -- default-aws: [0m[1maws_subnet.public[1]: Refreshing state... (ID: subnet-50eec619)[0m
+I, [2017-11-15T17:14:47.836750 #53161]  INFO -- default-aws: [0m[1maws_subnet.public[2]: Refreshing state... (ID: subnet-22b3d079)[0m
+I, [2017-11-15T17:14:48.520646 #53161]  INFO -- default-aws: [0m[1maws_subnet.public[0]: Refreshing state... (ID: subnet-3b71575c)[0m
+I, [2017-11-15T17:14:48.973618 #53161]  INFO -- default-aws: [0m[1maws_route.public_internet_gateway: Refreshing state... (ID: r-rtb-4920482f1080289494)[0m
+I, [2017-11-15T17:14:49.553397 #53161]  INFO -- default-aws: [0m[1maws_nat_gateway.this: Refreshing state... (ID: nat-0893b972c8eb77069)[0m
+I, [2017-11-15T17:14:49.556892 #53161]  INFO -- default-aws: [0m[1maws_route_table_association.public[0]: Refreshing state... (ID: rtbassoc-4a286233)[0m
+I, [2017-11-15T17:14:49.557148 #53161]  INFO -- default-aws: [0m[1maws_route_table_association.public[1]: Refreshing state... (ID: rtbassoc-f92e6480)[0m
+I, [2017-11-15T17:14:49.557449 #53161]  INFO -- default-aws: [0m[1maws_route_table_association.public[2]: Refreshing state... (ID: rtbassoc-7523690c)[0m
+I, [2017-11-15T17:14:49.748690 #53161]  INFO -- default-aws: [0m[1maws_route_table_association.private[1]: Refreshing state... (ID: rtbassoc-542d672d)[0m
+I, [2017-11-15T17:14:49.748831 #53161]  INFO -- default-aws: [0m[1maws_route_table_association.private[0]: Refreshing state... (ID: rtbassoc-db2f65a2)[0m
+I, [2017-11-15T17:14:49.749043 #53161]  INFO -- default-aws: [0m[1maws_route_table_association.private[2]: Refreshing state... (ID: rtbassoc-832f65fa)[0m
+I, [2017-11-15T17:14:50.366354 #53161]  INFO -- default-aws: [0m[1maws_route.private_nat_gateway[0]: Refreshing state... (ID: r-rtb-182b437e1080289494)[0m
+I, [2017-11-15T17:14:50.366620 #53161]  INFO -- default-aws: [0m[1maws_route.private_nat_gateway[1]: Refreshing state... (ID: r-rtb-db2f47bd1080289494)[0m
+I, [2017-11-15T17:14:50.366721 #53161]  INFO -- default-aws: [0m[1maws_route.private_nat_gateway[2]: Refreshing state... (ID: r-rtb-6b224a0d1080289494)[0m
+I, [2017-11-15T17:14:54.793614 #53161]  INFO -- default-aws: [0m[1mmodule.vpc.aws_route.private_nat_gateway[1]: Destroying... (ID: r-rtb-db2f47bd1080289494)[0m[0m
+I, [2017-11-15T17:14:54.796560 #53161]  INFO -- default-aws: [0m[1mmodule.vpc.aws_route_table_association.private[0]: Destroying... (ID: rtbassoc-db2f65a2)[0m[0m
+I, [2017-11-15T17:14:54.796812 #53161]  INFO -- default-aws: [0m[1mmodule.vpc.aws_route_table_association.private[2]: Destroying... (ID: rtbassoc-832f65fa)[0m[0m
+I, [2017-11-15T17:14:54.796958 #53161]  INFO -- default-aws: [0m[1mmodule.vpc.aws_route_table_association.public[0]: Destroying... (ID: rtbassoc-4a286233)[0m[0m
+I, [2017-11-15T17:14:54.797055 #53161]  INFO -- default-aws: [0m[1mmodule.vpc.aws_route_table_association.public[2]: Destroying... (ID: rtbassoc-7523690c)[0m[0m
+I, [2017-11-15T17:14:54.800119 #53161]  INFO -- default-aws: [0m[1mmodule.vpc.aws_route.public_internet_gateway: Destroying... (ID: r-rtb-4920482f1080289494)[0m[0m
+I, [2017-11-15T17:14:54.800310 #53161]  INFO -- default-aws: [0m[1mmodule.vpc.aws_route_table_association.public[1]: Destroying... (ID: rtbassoc-f92e6480)[0m[0m
+I, [2017-11-15T17:14:54.800392 #53161]  INFO -- default-aws: [0m[1mmodule.vpc.aws_route.private_nat_gateway[0]: Destroying... (ID: r-rtb-182b437e1080289494)[0m[0m
+I, [2017-11-15T17:14:54.800511 #53161]  INFO -- default-aws: [0m[1mmodule.vpc.aws_route_table_association.private[1]: Destroying... (ID: rtbassoc-542d672d)[0m[0m
+I, [2017-11-15T17:14:54.800586 #53161]  INFO -- default-aws: [0m[1mmodule.vpc.aws_route.private_nat_gateway[2]: Destroying... (ID: r-rtb-6b224a0d1080289494)[0m[0m
+I, [2017-11-15T17:14:55.517554 #53161]  INFO -- default-aws: [0m[1mmodule.vpc.aws_route.private_nat_gateway[2]: Destruction complete after 1s[0m[0m
+I, [2017-11-15T17:14:55.631670 #53161]  INFO -- default-aws: [0m[1mmodule.vpc.aws_route_table_association.private[0]: Destruction complete after 1s[0m[0m
+I, [2017-11-15T17:14:55.647141 #53161]  INFO -- default-aws: [0m[1mmodule.vpc.aws_route.public_internet_gateway: Destruction complete after 1s[0m[0m
+I, [2017-11-15T17:14:55.653933 #53161]  INFO -- default-aws: [0m[1mmodule.vpc.aws_route_table_association.private[1]: Destruction complete after 1s[0m[0m
+I, [2017-11-15T17:14:55.669178 #53161]  INFO -- default-aws: [0m[1mmodule.vpc.aws_route_table_association.private[2]: Destruction complete after 1s[0m[0m
+I, [2017-11-15T17:14:55.691329 #53161]  INFO -- default-aws: [0m[1mmodule.vpc.aws_subnet.private[2]: Destroying... (ID: subnet-72b3d029)[0m[0m
+I, [2017-11-15T17:14:55.691577 #53161]  INFO -- default-aws: [0m[1mmodule.vpc.aws_subnet.private[1]: Destroying... (ID: subnet-5be0c812)[0m[0m
+I, [2017-11-15T17:14:55.691681 #53161]  INFO -- default-aws: [0m[1mmodule.vpc.aws_subnet.private[0]: Destroying... (ID: subnet-d17f59b6)[0m[0m
+I, [2017-11-15T17:14:55.710935 #53161]  INFO -- default-aws: [0m[1mmodule.vpc.aws_route_table_association.public[2]: Destruction complete after 1s[0m[0m
+I, [2017-11-15T17:14:55.896243 #53161]  INFO -- default-aws: [0m[1mmodule.vpc.aws_route_table_association.public[0]: Destruction complete after 1s[0m[0m
+I, [2017-11-15T17:14:55.906892 #53161]  INFO -- default-aws: [0m[1mmodule.vpc.aws_route_table_association.public[1]: Destruction complete after 1s[0m[0m
+I, [2017-11-15T17:14:55.913029 #53161]  INFO -- default-aws: [0m[1mmodule.vpc.aws_route_table.public: Destroying... (ID: rtb-4920482f)[0m[0m
+I, [2017-11-15T17:14:55.925507 #53161]  INFO -- default-aws: [0m[1mmodule.vpc.aws_route.private_nat_gateway[1]: Destruction complete after 1s[0m[0m
+I, [2017-11-15T17:14:55.995429 #53161]  INFO -- default-aws: [0m[1mmodule.vpc.aws_route.private_nat_gateway[0]: Destruction complete after 1s[0m[0m
+I, [2017-11-15T17:14:56.020840 #53161]  INFO -- default-aws: [0m[1mmodule.vpc.aws_route_table.private[2]: Destroying... (ID: rtb-6b224a0d)[0m[0m
+I, [2017-11-15T17:14:56.020977 #53161]  INFO -- default-aws: [0m[1mmodule.vpc.aws_nat_gateway.this: Destroying... (ID: nat-0893b972c8eb77069)[0m[0m
+I, [2017-11-15T17:14:56.022264 #53161]  INFO -- default-aws: [0m[1mmodule.vpc.aws_route_table.private[0]: Destroying... (ID: rtb-182b437e)[0m[0m
+I, [2017-11-15T17:14:56.022813 #53161]  INFO -- default-aws: [0m[1mmodule.vpc.aws_route_table.private[1]: Destroying... (ID: rtb-db2f47bd)[0m[0m
+I, [2017-11-15T17:14:56.715252 #53161]  INFO -- default-aws: [0m[1mmodule.vpc.aws_subnet.private[0]: Destruction complete after 1s[0m[0m
+I, [2017-11-15T17:14:56.869968 #53161]  INFO -- default-aws: [0m[1mmodule.vpc.aws_subnet.private[1]: Destruction complete after 1s[0m[0m
+I, [2017-11-15T17:14:56.878251 #53161]  INFO -- default-aws: [0m[1mmodule.vpc.aws_subnet.private[2]: Destruction complete after 1s[0m[0m
+I, [2017-11-15T17:14:58.229359 #53161]  INFO -- default-aws: [0m[1mmodule.vpc.aws_route_table.public: Destruction complete after 2s[0m[0m
+I, [2017-11-15T17:14:58.859703 #53161]  INFO -- default-aws: [0m[1mmodule.vpc.aws_route_table.private[0]: Destruction complete after 3s[0m[0m
+I, [2017-11-15T17:14:58.932576 #53161]  INFO -- default-aws: [0m[1mmodule.vpc.aws_route_table.private[2]: Destruction complete after 3s[0m[0m
+I, [2017-11-15T17:14:59.038405 #53161]  INFO -- default-aws: [0m[1mmodule.vpc.aws_route_table.private[1]: Destruction complete after 3s[0m[0m
+I, [2017-11-15T17:15:06.022790 #53161]  INFO -- default-aws: [0m[1mmodule.vpc.aws_nat_gateway.this: Still destroying... (ID: nat-0893b972c8eb77069, 10s elapsed)[0m[0m
+I, [2017-11-15T17:15:16.021403 #53161]  INFO -- default-aws: [0m[1mmodule.vpc.aws_nat_gateway.this: Still destroying... (ID: nat-0893b972c8eb77069, 20s elapsed)[0m[0m
+I, [2017-11-15T17:15:26.021142 #53161]  INFO -- default-aws: [0m[1mmodule.vpc.aws_nat_gateway.this: Still destroying... (ID: nat-0893b972c8eb77069, 30s elapsed)[0m[0m
+I, [2017-11-15T17:15:36.023154 #53161]  INFO -- default-aws: [0m[1mmodule.vpc.aws_nat_gateway.this: Still destroying... (ID: nat-0893b972c8eb77069, 40s elapsed)[0m[0m
+I, [2017-11-15T17:15:46.021886 #53161]  INFO -- default-aws: [0m[1mmodule.vpc.aws_nat_gateway.this: Still destroying... (ID: nat-0893b972c8eb77069, 50s elapsed)[0m[0m
+I, [2017-11-15T17:15:56.021710 #53161]  INFO -- default-aws: [0m[1mmodule.vpc.aws_nat_gateway.this: Still destroying... (ID: nat-0893b972c8eb77069, 1m0s elapsed)[0m[0m
+I, [2017-11-15T17:16:03.905725 #53161]  INFO -- default-aws: [0m[1mmodule.vpc.aws_nat_gateway.this: Destruction complete after 1m8s[0m[0m
+I, [2017-11-15T17:16:03.915929 #53161]  INFO -- default-aws: [0m[1mmodule.vpc.aws_subnet.public[2]: Destroying... (ID: subnet-22b3d079)[0m[0m
+I, [2017-11-15T17:16:03.916425 #53161]  INFO -- default-aws: [0m[1mmodule.vpc.aws_subnet.public[0]: Destroying... (ID: subnet-3b71575c)[0m[0m
+I, [2017-11-15T17:16:03.916513 #53161]  INFO -- default-aws: [0m[1mmodule.vpc.aws_eip.nat: Destroying... (ID: eipalloc-9d7f9ea0)[0m[0m
+I, [2017-11-15T17:16:03.916836 #53161]  INFO -- default-aws: [0m[1mmodule.vpc.aws_subnet.public[1]: Destroying... (ID: subnet-50eec619)[0m[0m
+I, [2017-11-15T17:16:03.916934 #53161]  INFO -- default-aws: [0m[1mmodule.vpc.aws_internet_gateway.this: Destroying... (ID: igw-a8e714cf)[0m[0m
+I, [2017-11-15T17:16:04.999408 #53161]  INFO -- default-aws: [0m[1mmodule.vpc.aws_subnet.public[0]: Destruction complete after 1s[0m[0m
+I, [2017-11-15T17:16:05.185555 #53161]  INFO -- default-aws: [0m[1mmodule.vpc.aws_subnet.public[2]: Destruction complete after 1s[0m[0m
+I, [2017-11-15T17:16:05.216912 #53161]  INFO -- default-aws: [0m[1mmodule.vpc.aws_subnet.public[1]: Destruction complete after 1s[0m[0m
+I, [2017-11-15T17:16:06.199124 #53161]  INFO -- default-aws: [0m[1mmodule.vpc.aws_eip.nat: Destruction complete after 2s[0m[0m
+I, [2017-11-15T17:16:13.916567 #53161]  INFO -- default-aws: [0m[1mmodule.vpc.aws_internet_gateway.this: Still destroying... (ID: igw-a8e714cf, 10s elapsed)[0m[0m
+I, [2017-11-15T17:16:16.441128 #53161]  INFO -- default-aws: [0m[1mmodule.vpc.aws_internet_gateway.this: Destruction complete after 12s[0m[0m
+I, [2017-11-15T17:16:16.447097 #53161]  INFO -- default-aws: [0m[1mmodule.vpc.aws_vpc.this: Destroying... (ID: vpc-a45969c3)[0m[0m
+I, [2017-11-15T17:16:17.642088 #53161]  INFO -- default-aws: [0m[1mmodule.vpc.aws_vpc.this: Destruction complete after 2s[0m[0m
+I, [2017-11-15T17:16:17.649760 #53161]  INFO -- default-aws: [0m[1m[32m
+I, [2017-11-15T17:16:17.649964 #53161]  INFO -- default-aws: Destroy complete! Resources: 24 destroyed.[0m
+I, [2017-11-15T17:16:17.704104 #53161]  INFO -- default-aws: Finished destroying <default-aws> (1m47.95s).
+I, [2017-11-15T17:16:17.704819 #53161]  INFO -- default-aws: Finished testing <default-aws> (6m33.88s).
