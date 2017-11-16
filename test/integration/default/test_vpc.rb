@@ -2,14 +2,13 @@ require 'awspec'
 require 'rhcl'
 require 'aws-sdk'
 
-# should strive to randomize the region for better testing
+# should strive to randomize the region for more robust testing
 example_main = Rhcl.parse(File.open('examples/test_fixture/main.tf'))
 
 vpc_name = example_main['module']['vpc']['name']
 user_tag = example_main['module']['vpc']['tags']['Owner']
 environment_tag = example_main['module']['vpc']['tags']['Environment']
 
-# outputs can potentially be useful for tests
 tf_state = JSON.parse(File.open('.kitchen/kitchen-terraform/default-aws/terraform.tfstate').read)
 
 region = tf_state['modules'][0]['outputs']['region']['value']
