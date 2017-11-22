@@ -21,8 +21,9 @@ Usage
 -----
 
 ```hcl
-provider {
+provider "aws" {
   version = "~> 1.0.0"
+  region  = "eu-west-1"
 }
 
 module "vpc" {
