@@ -21,6 +21,10 @@ Usage
 -----
 
 ```hcl
+provider {
+  version = "~> 1.0.0"
+}
+
 module "vpc" {
   source = "terraform-aws-modules/vpc/aws"
 
@@ -40,6 +44,11 @@ module "vpc" {
   }
 }
 ```
+
+Terraform version
+-----------------
+
+Terraform version 1.0.0 or newer is required for this version to work.
 
 Examples
 --------
