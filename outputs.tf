@@ -128,13 +128,3 @@ output "vgw_id" {
   description = "The ID of the VPN Gateway"
   value       = "${element(concat(aws_vpn_gateway.this.*.id, list("")), 0)}"
 }
-
-output "management_subnets" {
-  description = "List of IDs of management subnets"
-  value       = ["${aws_subnet.management.*.id}"]
-}
-
-output "management_subnets_cidr_blocks" {
-  description = "List of cidr_blocks of management subnets"
-  value       = ["${aws_subnet.management.*.cidr_block}"]
-}
