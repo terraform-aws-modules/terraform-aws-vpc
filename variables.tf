@@ -35,12 +35,18 @@ variable "elasticache_subnets" {
   default     = []
 }
 
+variable "management_subnets" {
+  type        = "list"
+  description = "A list of management subnets"
+  default     = []
+}
+
 variable "create_database_subnet_group" {
   description = "Controls if database subnet group should be created"
   default     = true
 }
 
-variable "azs" {
+variable "zones" {
   description = "A list of availability zones in the region"
   default     = []
 }
@@ -127,6 +133,11 @@ variable "database_subnet_tags" {
 
 variable "elasticache_subnet_tags" {
   description = "Additional tags for the elasticache subnets"
+  default     = {}
+}
+
+variable "management_subnet_tags" {
+  description = "Additional tags for the management subnets"
   default     = {}
 }
 

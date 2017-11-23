@@ -70,6 +70,16 @@ output "elasticache_subnet_group" {
   value       = "${element(concat(aws_elasticache_subnet_group.elasticache.*.id, list("")), 0)}"
 }
 
+output "management_subnets" {
+  description = "List of IDs of management subnets"
+  value       = ["${aws_subnet.management.*.id}"]
+}
+
+output "management_subnets_cidr_blocks" {
+  description = "List of cidr_blocks of management subnets"
+  value       = ["${aws_subnet.management.*.cidr_block}"]
+}
+
 # Route tables
 output "public_route_table_ids" {
   description = "List of IDs of public route tables"
