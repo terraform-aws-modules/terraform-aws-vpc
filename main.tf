@@ -103,6 +103,29 @@ resource "aws_db_subnet_group" "database" {
   tags = "${merge(var.tags, map("Name", format("%s", var.name)))}"
 }
 
+##################
+# Redshift subnet
+##################
+resource "aws_subnet" "redshift" {
+  count = "${length(var.redshift_subnets)}"
+
+  vpc_id            = "${aws_vpc.this.id}"
+  cidr_block        = "${var.redshift_subnets[count.index]}"
+  availability_zone = "${element(var.azs, count.index)}"
+
+  tags = "${merge(var.tags, var.redshift_subnet_tags, map("Name", format("%s-db-%s", var.name, element(var.azs, count.index))))}"
+}
+
+resource "aws_redshift_subnet_group" "redshift" {
+  count = "${length(var.redshift_subnets) > 0 ? 1 : 0}"
+
+  name        = "${var.name}"
+  description = "Redshift subnet group for ${var.name}"
+  subnet_ids  = ["${aws_subnet.redshift.*.id}"]
+
+  tags = "${merge(var.tags, map("Name", format("%s", var.name)))}"
+}
+
 #####################
 # ElastiCache subnet
 #####################
