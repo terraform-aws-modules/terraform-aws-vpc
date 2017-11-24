@@ -113,7 +113,7 @@ resource "aws_subnet" "redshift" {
   cidr_block        = "${var.redshift_subnets[count.index]}"
   availability_zone = "${element(var.azs, count.index)}"
 
-  tags = "${merge(var.tags, var.redshift_subnet_tags, map("Name", format("%s-db-%s", var.name, element(var.azs, count.index))))}"
+  tags = "${merge(var.tags, var.redshift_subnet_tags, map("Name", format("%s-redshift-%s", var.name, element(var.azs, count.index))))}"
 }
 
 resource "aws_redshift_subnet_group" "redshift" {
