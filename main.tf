@@ -252,6 +252,13 @@ resource "aws_route_table_association" "database" {
   route_table_id = "${element(aws_route_table.private.*.id, count.index)}"
 }
 
+resource "aws_route_table_association" "redshift" {
+  count = "${length(var.redshift_subnets)}"
+
+  subnet_id      = "${element(aws_subnet.redshift.*.id, count.index)}"
+  route_table_id = "${element(aws_route_table.private.*.id, count.index)}"
+}
+
 resource "aws_route_table_association" "elasticache" {
   count = "${length(var.elasticache_subnets)}"
 
