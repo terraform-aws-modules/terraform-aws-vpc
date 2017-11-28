@@ -52,13 +52,13 @@ variable "azs" {
 }
 
 variable "enable_dns_hostnames" {
-  description = "Should be true if you want to use private DNS within the VPC"
+  description = "Should be true to enable DNS hostnames in the VPC"
   default     = false
 }
 
 variable "enable_dns_support" {
-  description = "Should be true if you want to use private DNS within the VPC"
-  default     = false
+  description = "Should be true to enable DNS support in the VPC"
+  default     = true
 }
 
 variable "enable_nat_gateway" {
@@ -84,6 +84,11 @@ variable "enable_s3_endpoint" {
 variable "map_public_ip_on_launch" {
   description = "Should be false if you do not want to auto-assign public IP on launch"
   default     = true
+}
+
+variable "enable_vpn_gateway" {
+  description = "Should be true if you want to create a new VPN Gateway resource and attach it to the VPC"
+  default     = false
 }
 
 variable "private_propagating_vgws" {
@@ -134,4 +139,37 @@ variable "redshift_subnet_tags" {
 variable "elasticache_subnet_tags" {
   description = "Additional tags for the elasticache subnets"
   default     = {}
+}
+
+variable "enable_dhcp_options" {
+  description = "Should be true if you want to specify a DHCP options set with a custom domain name, DNS servers, NTP servers, netbios servers, and/or netbios server type"
+  default     = false
+}
+
+variable "dhcp_options_domain_name" {
+  description = "Specifies DNS name for DHCP options set"
+  default     = ""
+}
+
+variable "dhcp_options_domain_name_servers" {
+  description = "Specify a list of DNS server addresses for DHCP options set, default to AWS provided"
+  type        = "list"
+  default     = ["AmazonProvidedDNS"]
+}
+
+variable "dhcp_options_ntp_servers" {
+  description = "Specify a list of NTP servers for DHCP options set"
+  type        = "list"
+  default     = []
+}
+
+variable "dhcp_options_netbios_name_servers" {
+  description = "Specify a list of netbios servers for DHCP options set"
+  type        = "list"
+  default     = []
+}
+
+variable "dhcp_options_netbios_node_type" {
+  description = "Specify netbios node_type for DHCP options set"
+  default     = ""
 }
