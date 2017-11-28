@@ -70,7 +70,7 @@ resource "aws_route" "public_internet_gateway" {
 # Private routes
 #################
 resource "aws_route_table" "private" {
-  count = "${length(var.azs)}"
+  count = "${length(var.private_subnets)}"
 
   vpc_id           = "${aws_vpc.this.id}"
   propagating_vgws = ["${var.private_propagating_vgws}"]
