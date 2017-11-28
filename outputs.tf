@@ -67,7 +67,7 @@ output "redshift_subnets_cidr_blocks" {
 
 output "redshift_subnet_group" {
   description = "ID of redshift subnet group"
-  value       = "${aws_redshift_subnet_group.redshift.id}"
+  value       = "${element(concat(aws_redshift_subnet_group.redshift.id, list("")), 0)}"
 }
 
 output "elasticache_subnets" {
@@ -125,7 +125,7 @@ output "vpc_endpoint_s3_id" {
 
 output "vpc_endpoint_s3_pl_id" {
   description = "The prefix list for the S3 VPC endpoint."
-  value       = "${aws_vpc_endpoint.s3.prefix_list_id}"
+  value       = "${element(concat(aws_vpc_endpoint.s3.prefix_list_id, list("")), 0)}"
 }
 
 output "vpc_endpoint_dynamodb_id" {
@@ -141,5 +141,5 @@ output "vgw_id" {
 
 output "vpc_endpoint_dynamodb_pl_id" {
   description = "The prefix list for the DynamoDB VPC endpoint."
-  value       = "${aws_vpc_endpoint.dynamodb.prefix_list_id}"
+  value       = "${element(concat(aws_vpc_endpoint.dynamodb.prefix_list_id, list("")), 0)}"
 }
