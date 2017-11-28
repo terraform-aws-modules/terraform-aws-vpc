@@ -123,7 +123,17 @@ output "vpc_endpoint_s3_id" {
   value       = "${aws_vpc_endpoint.s3.id}"
 }
 
+output "vpc_endpoint_s3_pl_id" {
+  description = "The prefix list for the S3 VPC endpoint."
+  value       = "${aws_vpc_endpoint.s3.prefix_list_id}"
+}
+
 output "vpc_endpoint_dynamodb_id" {
   description = "The ID of VPC endpoint for DynamoDB"
   value       = "${aws_vpc_endpoint.dynamodb.id}"
+}
+
+output "vpc_endpoint_dynamodb_pl_id" {
+  description = "The prefix list for the DynamoDB VPC endpoint."
+  value       = "${aws_vpc_endpoint.dynamodb.prefix_list_id}"
 }
