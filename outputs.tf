@@ -19,6 +19,11 @@ output "default_network_acl_id" {
   value       = "${aws_vpc.this.default_network_acl_id}"
 }
 
+output "default_route_table_id" {
+  description = "The ID of the default route table"
+  value       = "${aws_vpc.this.default_route_table_id}"
+}
+
 # Subnets
 output "private_subnets" {
   description = "List of IDs of private subnets"
