@@ -22,7 +22,7 @@ resource "aws_vpc_dhcp_options" "this" {
   netbios_name_servers = "${var.dhcp_options_netbios_name_servers}"
   netbios_node_type    = "${var.dhcp_options_netbios_node_type}"
 
-  tags = "${merge(var.tags, map("Name", format("%s", var.name)))}"
+  tags = "${merge(var.tags, var.dhcp_options_tags, map("Name", format("%s", var.name)))}"
 }
 
 ###############################
