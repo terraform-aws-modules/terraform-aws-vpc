@@ -135,6 +135,11 @@ variable "elasticache_subnet_tags" {
   default     = {}
 }
 
+variable "dhcp_options_tags" {
+  description = "Additional tags for the DHCP option set"
+  default     = {}
+}
+
 variable "enable_dhcp_options" {
   description = "Should be true if you want to specify a DHCP options set with a custom domain name, DNS servers, NTP servers, netbios servers, and/or netbios server type"
   default     = false
