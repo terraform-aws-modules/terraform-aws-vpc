@@ -100,6 +100,11 @@ variable "tags" {
   default     = {}
 }
 
+variable "vpc_tags" {
+  description = "Additional tags for the VPC"
+  default     = {}
+}
+
 variable "public_subnet_tags" {
   description = "Additional tags for the public subnets"
   default     = {}
