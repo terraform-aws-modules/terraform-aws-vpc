@@ -46,9 +46,10 @@ module "vpc" {
 }
 ```
 
-### External NAT Gateway IPs
+External NAT Gateway IPs
+------------------------
 
-By default this module will provision new IPs for the VPC's NAT Gateways.
+By default this module will provision new Elastic IPs for the VPC's NAT Gateways.
 This means that when creating a new VPC, new IPs are allocated, and when that VPC is destroyed those IPs are released.
 Sometimes it is handy to keep the same IPs even after the VPC is destroyed and re-created.
 To that end, it is possible to assign existing IPs to the NAT Gateways.
@@ -56,12 +57,8 @@ This prevents the destruction of the VPC from releasing those IPs, while making 
 
 To achieve this, allocate the IPs outside the VPC module declaration.
 ```hcl
-variable "nat_ip_count" {
-  default = 3
-}
-
 resource "aws_eip" "nat" {
-  count = "${var.nat_ip_count}"
+  count = 3
 
   vpc = true
 }
@@ -72,33 +69,22 @@ Then, pass the allocated IPs as a parameter to this module.
 module "vpc" {
   source = "terraform-aws-modules/vpc/aws"
 
-  name = "my-vpc"
-  cidr = "10.0.0.0/16"
+  # The rest of arguments are omitted for brevity
 
-  azs             = ["eu-west-1a", "eu-west-1b", "eu-west-1c"]
-  private_subnets = ["10.0.1.0/24", "10.0.2.0/24", "10.0.3.0/24"]
-  public_subnets  = ["10.0.101.0/24", "10.0.102.0/24", "10.0.103.0/24"]
-
-  enable_nat_gateway = true
-  enable_vpn_gateway = true
-
-  external_nat_ip_ids = ["${data.aws_eip.nat.*.id}"]   # <= IPs specified here as input to the module
-
-  tags = {
-    Terraform = "true"
-    Environment = "dev"
-  }
+  enable_nat_gateway  = true
+  single_nat_gateway  = false
+  external_nat_ip_ids = ["${resource.aws_eip.nat.*.id}"]   # <= IPs specified here as input to the module
 }
 ```
 
-Note that in the example we allocates 3 IPs because we will be provisioning 3 NAT Gateways (due to `single_nat_gateway = false` and having 3 subnets).
+Note that in the example we allocate 3 IPs because we will be provisioning 3 NAT Gateways (due to `single_nat_gateway = false` and having 3 subnets).
 If, on the other hand, `single_nat_gateway = true`, then `aws_eip.nat` would only need to allocate 1 IP.
-Passing the IPs into the module is done by setting variable `external_nat_ip_ids = ["${data.aws_eip.nat.*.id}"]`.
+Passing the IPs into the module is done by setting variable `external_nat_ip_ids = ["${resource.aws_eip.nat.*.id}"]`.
 
 Terraform version
 -----------------
 
-Terraform version 1.0.0 or newer is required for this version to work.
+Terraform version 0.10.13 or newer is required for this module to work.
 
 Examples
 --------
