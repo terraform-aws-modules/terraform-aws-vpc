@@ -72,9 +72,10 @@ resource "aws_route" "public_internet_gateway" {
 
 #################
 # Private routes
+# There are so many route-tables as the largest amount of subnets of each type (really?)
 #################
 resource "aws_route_table" "private" {
-  count = "${length(var.private_subnets)}"
+  count = "${max(length(var.private_subnets), length(var.elasticache_subnets), length(var.database_subnets))}"
 
   vpc_id           = "${aws_vpc.this.id}"
   propagating_vgws = ["${var.private_propagating_vgws}"]
