@@ -1,9 +1,9 @@
-Issue 46 - VPC
+Issue 44 - VPC
 ==============
 
 Configuration in this directory creates set of VPC resources to cover issues reported on GitHub:
 
-* https://github.com/terraform-aws-modules/terraform-aws-vpc/issues/46
+* https://github.com/terraform-aws-modules/terraform-aws-vpc/issues/44
 
 Usage
 =====
