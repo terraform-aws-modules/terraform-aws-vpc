@@ -84,7 +84,7 @@ Passing the IPs into the module is done by setting variable `external_nat_ip_ids
 Terraform version
 -----------------
 
-Terraform version 0.10.13 or newer is required for this module to work.
+Terraform version 0.10.3 or newer is required for this module to work.
 
 Examples
 --------
