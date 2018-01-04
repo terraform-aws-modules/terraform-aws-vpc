@@ -29,6 +29,12 @@ variable "database_subnets" {
   default     = []
 }
 
+variable "redshift_subnets" {
+  type        = "list"
+  description = "A list of redshift subnets"
+  default     = []
+}
+
 variable "elasticache_subnets" {
   type        = "list"
   description = "A list of elasticache subnets"
@@ -138,6 +144,11 @@ variable "private_route_table_tags" {
 
 variable "database_subnet_tags" {
   description = "Additional tags for the database subnets"
+  default     = {}
+}
+
+variable "redshift_subnet_tags" {
+  description = "Additional tags for the redshift subnets"
   default     = {}
 }
 
