@@ -88,12 +88,12 @@ output "private_route_table_ids" {
 
 output "nat_ids" {
   description = "List of allocation ID of Elastic IPs created for AWS NAT Gateway"
-  value       = ["${aws_eip.nat.*.id}"]
+  value       = ["${aws_eip.nateip.*.id}"]
 }
 
 output "nat_public_ips" {
   description = "List of public Elastic IPs created for AWS NAT Gateway"
-  value       = ["${aws_eip.nat.*.public_ip}"]
+  value       = ["${aws_eip.nateip.*.public_ip}"]
 }
 
 output "natgw_ids" {

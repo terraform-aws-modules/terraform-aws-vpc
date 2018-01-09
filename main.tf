@@ -168,14 +168,14 @@ resource "aws_elasticache_subnet_group" "elasticache" {
 #
 # The logical expression would be
 #
-#    nat_gateway_ips = var.reuse_nat_ips ? var.external_nat_ip_ids : aws_eip.nat.*.id
+#    nat_gateway_ips = var.reuse_nat_ips ? var.external_nat_ip_ids : aws_eip.nateip.*.id
 #
-# but then when count of aws_eip.nat.*.id is zero,.mod.would throw a resource not found error on aws_eip.nat.*.id.
+# but then when count of aws_eip.nateip.*.id is zero,.mod.would throw a resource not found error on aws_eip.nateip.*.id.
 locals {
-  nat_gateway_ips = "${split(",", (var.reuse_nat_ips ? join(",", var.external_nat_ip_ids) : join(",", aws_eip.nat.*.id)))}"
+  nat_gateway_ips = "${split(",", (var.reuse_nat_ips ? join(",", var.external_nat_ip_ids) : join(",", aws_eip.nateip.*.id)))}"
 }
 
-resource "aws_eip" "nat" {
+resource "aws_eip" "nateip" {
   count = "${(var.enable_nat_gateway && !var.reuse_nat_ips) ? (var.single_nat_gateway ? 1 : length(var.azs)) : 0}"
 
   vpc = true
