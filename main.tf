@@ -5,7 +5,7 @@ terraform {
 ######
 # VPC
 ######
-resource "aws_vpc" "this" {
+resource "aws_vpc" "mod" {
   cidr_block           = "${var.cidr}"
   instance_tenancy     = "${var.instance_tenancy}"
   enable_dns_hostnames = "${var.enable_dns_hostnames}"
@@ -17,7 +17,7 @@ resource "aws_vpc" "this" {
 ###################
 # DHCP Options Set
 ###################
-resource "aws_vpc_dhcp_options" "this" {
+resource "aws_vpc_dhcp_options" "mod" {
   count = "${var.enable_dhcp_options ? 1 : 0}"
 
   domain_name          = "${var.dhcp_options_domain_name}"
@@ -32,20 +32,20 @@ resource "aws_vpc_dhcp_options" "this" {
 ###############################
 # DHCP Options Set Association
 ###############################
-resource "aws_vpc_dhcp_options_association" "this" {
+resource "aws_vpc_dhcp_options_association" "mod" {
   count = "${var.enable_dhcp_options ? 1 : 0}"
 
-  vpc_id          = "${aws_vpc.this.id}"
-  dhcp_options_id = "${aws_vpc_dhcp_options.this.id}"
+  vpc_id          = "${aws_vpc.mod.id}"
+  dhcp_options_id = "${aws_vpc_dhcp_options.mod.id}"
 }
 
 ###################
 # Internet Gateway
 ###################
-resource "aws_internet_gateway" "this" {
+resource "aws_internet_gateway" "mod" {
   count = "${length(var.public_subnets) > 0 ? 1 : 0}"
 
-  vpc_id = "${aws_vpc.this.id}"
+  vpc_id = "${aws_vpc.mod.id}"
 
   tags = "${merge(var.tags, map("Name", format("%s", var.name)))}"
 }
@@ -56,7 +56,7 @@ resource "aws_internet_gateway" "this" {
 resource "aws_route_table" "public" {
   count = "${length(var.public_subnets) > 0 ? 1 : 0}"
 
-  vpc_id           = "${aws_vpc.this.id}"
+  vpc_id           = "${aws_vpc.mod.id}"
   propagating_vgws = ["${var.public_propagating_vgws}"]
 
   tags = "${merge(var.tags, var.public_route_table_tags, map("Name", format("%s-public", var.name)))}"
@@ -67,7 +67,7 @@ resource "aws_route" "public_internet_gateway" {
 
   route_table_id         = "${aws_route_table.public.id}"
   destination_cidr_block = "0.0.0.0/0"
-  gateway_id             = "${aws_internet_gateway.this.id}"
+  gateway_id             = "${aws_internet_gateway.mod.id}"
 }
 
 #################
@@ -77,7 +77,7 @@ resource "aws_route" "public_internet_gateway" {
 resource "aws_route_table" "private" {
   count = "${max(length(var.private_subnets), length(var.elasticache_subnets), length(var.database_subnets))}"
 
-  vpc_id           = "${aws_vpc.this.id}"
+  vpc_id           = "${aws_vpc.mod.id}"
   propagating_vgws = ["${var.private_propagating_vgws}"]
 
   tags = "${merge(var.tags, var.private_route_table_tags, map("Name", format("%s-private-%s", var.name, element(var.azs, count.index))))}"
@@ -95,7 +95,7 @@ resource "aws_route_table" "private" {
 resource "aws_subnet" "public" {
   count = "${length(var.public_subnets)}"
 
-  vpc_id                  = "${aws_vpc.this.id}"
+  vpc_id                  = "${aws_vpc.mod.id}"
   cidr_block              = "${var.public_subnets[count.index]}"
   availability_zone       = "${element(var.azs, count.index)}"
   map_public_ip_on_launch = "${var.map_public_ip_on_launch}"
@@ -109,7 +109,7 @@ resource "aws_subnet" "public" {
 resource "aws_subnet" "private" {
   count = "${length(var.private_subnets)}"
 
-  vpc_id            = "${aws_vpc.this.id}"
+  vpc_id            = "${aws_vpc.mod.id}"
   cidr_block        = "${var.private_subnets[count.index]}"
   availability_zone = "${element(var.azs, count.index)}"
 
@@ -122,7 +122,7 @@ resource "aws_subnet" "private" {
 resource "aws_subnet" "database" {
   count = "${length(var.database_subnets)}"
 
-  vpc_id            = "${aws_vpc.this.id}"
+  vpc_id            = "${aws_vpc.mod.id}"
   cidr_block        = "${var.database_subnets[count.index]}"
   availability_zone = "${element(var.azs, count.index)}"
 
@@ -145,7 +145,7 @@ resource "aws_db_subnet_group" "database" {
 resource "aws_subnet" "elasticache" {
   count = "${length(var.elasticache_subnets)}"
 
-  vpc_id            = "${aws_vpc.this.id}"
+  vpc_id            = "${aws_vpc.mod.id}"
   cidr_block        = "${var.elasticache_subnets[count.index]}"
   availability_zone = "${element(var.azs, count.index)}"
 
@@ -168,20 +168,20 @@ resource "aws_elasticache_subnet_group" "elasticache" {
 #
 # The logical expression would be
 #
-#    nat_gateway_ips = var.reuse_nat_ips ? var.external_nat_ip_ids : aws_eip.nat.*.id
+#    nat_gateway_ips = var.reuse_nat_ips ? var.external_nat_ip_ids : aws_eip.nateip.*.id
 #
-# but then when count of aws_eip.nat.*.id is zero, this would throw a resource not found error on aws_eip.nat.*.id.
+# but then when count of aws_eip.nateip.*.id is zero,.mod.would throw a resource not found error on aws_eip.nateip.*.id.
 locals {
-  nat_gateway_ips = "${split(",", (var.reuse_nat_ips ? join(",", var.external_nat_ip_ids) : join(",", aws_eip.nat.*.id)))}"
+  nat_gateway_ips = "${split(",", (var.reuse_nat_ips ? join(",", var.external_nat_ip_ids) : join(",", aws_eip.nateip.*.id)))}"
 }
 
-resource "aws_eip" "nat" {
+resource "aws_eip" "nateip" {
   count = "${(var.enable_nat_gateway && !var.reuse_nat_ips) ? (var.single_nat_gateway ? 1 : length(var.azs)) : 0}"
 
   vpc = true
 }
 
-resource "aws_nat_gateway" "this" {
+resource "aws_nat_gateway" "natgw" {
   count = "${var.enable_nat_gateway ? (var.single_nat_gateway ? 1 : length(var.azs)) : 0}"
 
   allocation_id = "${element(local.nat_gateway_ips, (var.single_nat_gateway ? 0 : count.index))}"
@@ -189,7 +189,7 @@ resource "aws_nat_gateway" "this" {
 
   tags = "${merge(var.tags, map("Name", format("%s-%s", var.name, element(var.azs, (var.single_nat_gateway ? 0 : count.index)))))}"
 
-  depends_on = ["aws_internet_gateway.this"]
+  depends_on = ["aws_internet_gateway.mod"]
 }
 
 resource "aws_route" "private_nat_gateway" {
@@ -197,7 +197,7 @@ resource "aws_route" "private_nat_gateway" {
 
   route_table_id         = "${element(aws_route_table.private.*.id, count.index)}"
   destination_cidr_block = "0.0.0.0/0"
-  nat_gateway_id         = "${element(aws_nat_gateway.this.*.id, count.index)}"
+  nat_gateway_id         = "${element(aws_nat_gateway.natgw.*.id, count.index)}"
 }
 
 ######################
@@ -212,7 +212,7 @@ data "aws_vpc_endpoint_service" "s3" {
 resource "aws_vpc_endpoint" "s3" {
   count = "${var.enable_s3_endpoint}"
 
-  vpc_id       = "${aws_vpc.this.id}"
+  vpc_id       = "${aws_vpc.mod.id}"
   service_name = "${data.aws_vpc_endpoint_service.s3.service_name}"
 }
 
@@ -242,7 +242,7 @@ data "aws_vpc_endpoint_service" "dynamodb" {
 resource "aws_vpc_endpoint" "dynamodb" {
   count = "${var.enable_dynamodb_endpoint}"
 
-  vpc_id       = "${aws_vpc.this.id}"
+  vpc_id       = "${aws_vpc.mod.id}"
   service_name = "${data.aws_vpc_endpoint_service.dynamodb.service_name}"
 }
 
@@ -294,10 +294,10 @@ resource "aws_route_table_association" "public" {
 ##############
 # VPN Gateway
 ##############
-resource "aws_vpn_gateway" "this" {
+resource "aws_vpn_gateway" "mod" {
   count = "${var.enable_vpn_gateway ? 1 : 0}"
 
-  vpc_id = "${aws_vpc.this.id}"
+  vpc_id = "${aws_vpc.mod.id}"
 
   tags = "${merge(var.tags, map("Name", format("%s", var.name)))}"
 }
