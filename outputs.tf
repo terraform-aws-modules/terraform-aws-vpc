@@ -1,27 +1,27 @@
 # VPC
 output "vpc_id" {
   description = "The ID of the VPC"
-  value       = "${aws_vpc.this.id}"
+  value       = "${aws_vpc.mod.id}"
 }
 
 output "vpc_cidr_block" {
   description = "The CIDR block of the VPC"
-  value       = "${aws_vpc.this.cidr_block}"
+  value       = "${aws_vpc.mod.cidr_block}"
 }
 
 output "default_security_group_id" {
   description = "The ID of the security group created by default on VPC creation"
-  value       = "${aws_vpc.this.default_security_group_id}"
+  value       = "${aws_vpc.mod.default_security_group_id}"
 }
 
 output "default_network_acl_id" {
   description = "The ID of the default network ACL"
-  value       = "${aws_vpc.this.default_network_acl_id}"
+  value       = "${aws_vpc.mod.default_network_acl_id}"
 }
 
 output "default_route_table_id" {
   description = "The ID of the default route table"
-  value       = "${aws_vpc.this.default_route_table_id}"
+  value       = "${aws_vpc.mod.default_route_table_id}"
 }
 
 # Subnets
@@ -98,13 +98,13 @@ output "nat_public_ips" {
 
 output "natgw_ids" {
   description = "List of NAT Gateway IDs"
-  value       = ["${aws_nat_gateway.this.*.id}"]
+  value       = ["${aws_nat_gateway.natgw.*.id}"]
 }
 
 # Internet Gateway
 output "igw_id" {
   description = "The ID of the Internet Gateway"
-  value       = "${element(concat(aws_internet_gateway.this.*.id, list("")), 0)}"
+  value       = "${element(concat(aws_internet_gateway.mod.*.id, list("")), 0)}"
 }
 
 # VPC Endpoints
@@ -121,5 +121,5 @@ output "vpc_endpoint_dynamodb_id" {
 # VPN Gateway
 output "vgw_id" {
   description = "The ID of the VPN Gateway"
-  value       = "${element(concat(aws_vpn_gateway.this.*.id, list("")), 0)}"
+  value       = "${element(concat(aws_vpn_gateway.mod.*.id, list("")), 0)}"
 }
