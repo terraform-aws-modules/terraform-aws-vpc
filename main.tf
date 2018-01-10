@@ -160,6 +160,20 @@ resource "aws_elasticache_subnet_group" "elasticache" {
   subnet_ids  = ["${aws_subnet.elasticache.*.id}"]
 }
 
+#####################
+# Lambda subnet
+#####################
+resource "aws_subnet" "lambda" {
+  count = "${length(var.lambda_subnets)}"
+
+  vpc_id            = "${aws_vpc.this.id}"
+  cidr_block        = "${var.lambda_subnets[count.index]}"
+  availability_zone = "${element(var.azs, count.index)}"
+
+  tags = "${merge(var.tags, var.lambda_subnet_tags, map("Name", format("%s-lambda-%s", var.name, element(var.azs, count.index))))}"
+}
+
+
 ##############
 # NAT Gateway
 ##############
@@ -281,6 +295,13 @@ resource "aws_route_table_association" "elasticache" {
   count = "${length(var.elasticache_subnets)}"
 
   subnet_id      = "${element(aws_subnet.elasticache.*.id, count.index)}"
+  route_table_id = "${element(aws_route_table.private.*.id, count.index)}"
+}
+
+resource "aws_route_table_association" "lambda" {
+  count = "${length(var.lambda_subnets)}"
+
+  subnet_id      = "${element(aws_subnet.lambda.*.id, count.index)}"
   route_table_id = "${element(aws_route_table.private.*.id, count.index)}"
 }
 
