@@ -21,7 +21,7 @@ resource "aws_vpc_dhcp_options" "this" {
   count = "${var.enable_dhcp_options ? 1 : 0}"
 
   domain_name          = "${var.dhcp_options_domain_name}"
-  domain_name_servers  = [ "${var.dhcp_options_domain_name_servers}" ]
+  domain_name_servers  = "${var.dhcp_options_domain_name_servers}"
   ntp_servers          = "${var.dhcp_options_ntp_servers}"
   netbios_name_servers = "${var.dhcp_options_netbios_name_servers}"
   netbios_node_type    = "${var.dhcp_options_netbios_node_type}"
@@ -75,7 +75,7 @@ resource "aws_route" "public_internet_gateway" {
 # There are so many route-tables as the largest amount of subnets of each type (really?)
 #################
 resource "aws_route_table" "private" {
-  count = "${max(length(var.private_subnets), length(var.elasticache_subnets), length(var.database_subnets))}"
+  count = "${max(length(var.private_subnets), length(var.elasticache_subnets), length(var.database_subnets), length(var.redshift_subnets))}"
 
   vpc_id           = "${aws_vpc.this.id}"
   propagating_vgws = ["${var.private_propagating_vgws}"]
