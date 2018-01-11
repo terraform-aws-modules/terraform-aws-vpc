@@ -75,7 +75,7 @@ resource "aws_route" "public_internet_gateway" {
 # There are so many route-tables as the largest amount of subnets of each type (really?)
 #################
 resource "aws_route_table" "private" {
-  count = "${max(length(var.private_subnets), length(var.elasticache_subnets), length(var.database_subnets))}"
+  count = "${max(length(var.private_subnets), length(var.elasticache_subnets), length(var.database_subnets), length(var.redshift_subnets))}"
 
   vpc_id           = "${aws_vpc.this.id}"
   propagating_vgws = ["${var.private_propagating_vgws}"]
@@ -135,6 +135,29 @@ resource "aws_db_subnet_group" "database" {
   name        = "${var.name}"
   description = "Database subnet group for ${var.name}"
   subnet_ids  = ["${aws_subnet.database.*.id}"]
+
+  tags = "${merge(var.tags, map("Name", format("%s", var.name)))}"
+}
+
+##################
+# Redshift subnet
+##################
+resource "aws_subnet" "redshift" {
+  count = "${length(var.redshift_subnets)}"
+
+  vpc_id            = "${aws_vpc.this.id}"
+  cidr_block        = "${var.redshift_subnets[count.index]}"
+  availability_zone = "${element(var.azs, count.index)}"
+
+  tags = "${merge(var.tags, var.redshift_subnet_tags, map("Name", format("%s-redshift-%s", var.name, element(var.azs, count.index))))}"
+}
+
+resource "aws_redshift_subnet_group" "redshift" {
+  count = "${length(var.redshift_subnets) > 0 ? 1 : 0}"
+
+  name        = "${var.name}"
+  description = "Redshift subnet group for ${var.name}"
+  subnet_ids  = ["${aws_subnet.redshift.*.id}"]
 
   tags = "${merge(var.tags, map("Name", format("%s", var.name)))}"
 }
@@ -274,6 +297,13 @@ resource "aws_route_table_association" "database" {
   count = "${length(var.database_subnets)}"
 
   subnet_id      = "${element(aws_subnet.database.*.id, count.index)}"
+  route_table_id = "${element(aws_route_table.private.*.id, count.index)}"
+}
+
+resource "aws_route_table_association" "redshift" {
+  count = "${length(var.redshift_subnets)}"
+
+  subnet_id      = "${element(aws_subnet.redshift.*.id, count.index)}"
   route_table_id = "${element(aws_route_table.private.*.id, count.index)}"
 }
 
