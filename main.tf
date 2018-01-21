@@ -200,6 +200,7 @@ locals {
 
 resource "aws_eip" "nat" {
   count = "${(var.enable_nat_gateway && !var.reuse_nat_ips) ? (var.single_nat_gateway ? 1 : length(var.azs)) : 0}"
+  tags  = "${merge(var.tags, map("Name", format("%s-%s", var.name, element(var.azs, (var.single_nat_gateway ? 0 : count.index)))))}"
 
   vpc = true
 }
