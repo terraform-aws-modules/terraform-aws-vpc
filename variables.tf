@@ -3,6 +3,11 @@ variable "name" {
   default     = ""
 }
 
+variable "aws_region" {
+  description = "Region where the VPC is being deployed"
+  default     = ""
+}
+
 variable "cidr" {
   description = "The CIDR block for the VPC"
   default     = ""
