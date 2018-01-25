@@ -2,6 +2,11 @@ terraform {
   required_version = ">= 0.10.3" # introduction of Local Values configuration language feature
 }
 
+provider "aws" {
+  version = ">= 1.7.0"
+  region = "${var.aws_region}"
+}
+
 ######
 # VPC
 ######
