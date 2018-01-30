@@ -76,13 +76,14 @@ module "vpc" {
 
   enable_nat_gateway  = true
   single_nat_gateway  = false
+  reuse_nat_ips       = true                      # <= Skip creation of EIPs for the NAT Gateways
   external_nat_ip_ids = ["${aws_eip.nat.*.id}"]   # <= IPs specified here as input to the module
 }
 ```
 
 Note that in the example we allocate 3 IPs because we will be provisioning 3 NAT Gateways (due to `single_nat_gateway = false` and having 3 subnets).
 If, on the other hand, `single_nat_gateway = true`, then `aws_eip.nat` would only need to allocate 1 IP.
-Passing the IPs into the module is done by setting variable `external_nat_ip_ids = ["${aws_eip.nat.*.id}"]`.
+Passing the IPs into the module is done by setting two variables `reuse_nat_ips = true` and `external_nat_ip_ids = ["${aws_eip.nat.*.id}"]`.
 
 Terraform version
 -----------------
