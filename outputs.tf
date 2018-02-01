@@ -19,6 +19,11 @@ output "default_network_acl_id" {
   value       = "${aws_vpc.this.default_network_acl_id}"
 }
 
+output "default_route_table_id" {
+  description = "The ID of the default route table"
+  value       = "${aws_vpc.this.default_route_table_id}"
+}
+
 # Subnets
 output "private_subnets" {
   description = "List of IDs of private subnets"
@@ -52,7 +57,22 @@ output "database_subnets_cidr_blocks" {
 
 output "database_subnet_group" {
   description = "ID of database subnet group"
-  value       = "${aws_db_subnet_group.database.id}"
+  value       = "${element(concat(aws_db_subnet_group.database.*.id, list("")), 0)}"
+}
+
+output "redshift_subnets" {
+  description = "List of IDs of redshift subnets"
+  value       = ["${aws_subnet.redshift.*.id}"]
+}
+
+output "redshift_subnets_cidr_blocks" {
+  description = "List of cidr_blocks of redshift subnets"
+  value       = ["${aws_subnet.redshift.*.cidr_block}"]
+}
+
+output "redshift_subnet_group" {
+  description = "ID of redshift subnet group"
+  value       = "${element(concat(aws_redshift_subnet_group.redshift.*.id, list("")), 0)}"
 }
 
 output "elasticache_subnets" {
@@ -67,7 +87,12 @@ output "elasticache_subnets_cidr_blocks" {
 
 output "elasticache_subnet_group" {
   description = "ID of elasticache subnet group"
-  value       = "${aws_elasticache_subnet_group.elasticache.id}"
+  value       = "${element(concat(aws_elasticache_subnet_group.elasticache.*.id, list("")), 0)}"
+}
+
+output "elasticache_subnet_group_name" {
+  description = "Name of elasticache subnet group"
+  value       = "${element(concat(aws_elasticache_subnet_group.elasticache.*.name, list("")), 0)}"
 }
 
 # Route tables
@@ -99,22 +124,32 @@ output "natgw_ids" {
 # Internet Gateway
 output "igw_id" {
   description = "The ID of the Internet Gateway"
-  value       = "${aws_internet_gateway.this.id}"
+  value       = "${element(concat(aws_internet_gateway.this.*.id, list("")), 0)}"
 }
 
 # VPC Endpoints
 output "vpc_endpoint_s3_id" {
   description = "The ID of VPC endpoint for S3"
-  value       = "${aws_vpc_endpoint.s3.id}"
+  value       = "${element(concat(aws_vpc_endpoint.s3.*.id, list("")), 0)}"
+}
+
+output "vpc_endpoint_s3_pl_id" {
+  description = "The prefix list for the S3 VPC endpoint."
+  value       = "${element(concat(aws_vpc_endpoint.s3.*.prefix_list_id, list("")), 0)}"
 }
 
 output "vpc_endpoint_dynamodb_id" {
   description = "The ID of VPC endpoint for DynamoDB"
-  value       = "${aws_vpc_endpoint.dynamodb.id}"
+  value       = "${element(concat(aws_vpc_endpoint.dynamodb.*.id, list("")), 0)}"
 }
 
 # VPN Gateway
 output "vgw_id" {
   description = "The ID of the VPN Gateway"
-  value       = "${aws_vpn_gateway.this.id}"
+  value       = "${element(concat(aws_vpn_gateway.this.*.id, list("")), 0)}"
+}
+
+output "vpc_endpoint_dynamodb_pl_id" {
+  description = "The prefix list for the DynamoDB VPC endpoint."
+  value       = "${element(concat(aws_vpc_endpoint.dynamodb.*.prefix_list_id, list("")), 0)}"
 }
