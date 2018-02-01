@@ -1,3 +1,4 @@
 .terraform
 *.tfstate*
 .kitchen
+Gemfile.lock
