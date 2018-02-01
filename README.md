@@ -102,13 +102,13 @@ Tests
 -------
 
 This module has been packaged with [awspec](https://github.com/k1LoW/awspec) tests through test kitchen. To run them:
+
 1. Install [rvm](https://rvm.io/rvm/install) and the ruby version specified in the [Gemfile](https://github.com/terraform-aws-modules/terraform-aws-vpc/tree/master/Gemfile).
 2. Install bundler and the gems from our Gemfile:
 ```
 gem install bundler; bundle install
 ```
-3. Ensure your AWS environment is configured (i.e. credentials and region) for test and set TF_VAR_region to a valid AWS region (e.g. `export TF_VAR_region=${AWS_REGION}`).
-4. Test using `kitchen test` from the root of the repo.
+3. Test using `bundle exec kitchen test` from the root of the repo.
 
 
 Authors
