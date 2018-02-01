@@ -9,7 +9,7 @@ vpc_name = example_main['module']['vpc']['name']
 user_tag = example_main['module']['vpc']['tags']['Owner']
 environment_tag = example_main['module']['vpc']['tags']['Environment']
 
-tf_state = JSON.parse(File.open('.kitchen/kitchen-terraform/default-aws/terraform.tfstate').read)
+tf_state = JSON.parse(File.open('terraform.tfstate.d/kitchen-terraform-default-aws/terraform.tfstate').read)
 
 region = tf_state['modules'][0]['outputs']['region']['value']
 ENV['AWS_REGION'] = region
@@ -26,7 +26,7 @@ describe vpc("#{vpc_name}") do
   it { should have_tag('Environment').value("#{environment_tag}") }
   it { should have_route_table("#{vpc_name}-public") }
   zone_names.each do |az|
-    it { should have_route_table("#{vpc_name}-private-#{az}") } 
+    it { should have_route_table("#{vpc_name}-private-#{az}") }
   end
 end
 
