@@ -57,7 +57,6 @@ resource "aws_route_table" "public" {
   count = "${length(var.public_subnets) > 0 ? 1 : 0}"
 
   vpc_id           = "${aws_vpc.this.id}"
-  propagating_vgws = ["${var.public_propagating_vgws}"]
 
   tags = "${merge(var.tags, var.public_route_table_tags, map("Name", format("%s-public", var.name)))}"
 }
@@ -78,7 +77,6 @@ resource "aws_route_table" "private" {
   count = "${max(length(var.private_subnets), length(var.elasticache_subnets), length(var.database_subnets), length(var.redshift_subnets))}"
 
   vpc_id           = "${aws_vpc.this.id}"
-  propagating_vgws = ["${var.private_propagating_vgws}"]
 
   tags = "${merge(var.tags, var.private_route_table_tags, map("Name", format("%s-private-%s", var.name, element(var.azs, count.index))))}"
 
@@ -332,4 +330,25 @@ resource "aws_vpn_gateway" "this" {
   vpc_id = "${aws_vpc.this.id}"
 
   tags = "${merge(var.tags, map("Name", format("%s", var.name)))}"
+}
+
+resource "aws_vpn_gateway_attachment" "vgw" {
+  count = "${var.attach_vpn_gateway != "default" ? 1 : 0}"
+
+  vpc_id         = "${aws_vpc.this.id}"
+  vpn_gateway_id = "${var.attach_vpn_gateway}"
+}
+
+resource "aws_vpn_gateway_route_propagation" "public" {
+  count = "${var.public_propagating_vgws && var.enable_vpn_gateway || var.public_propagating_vgws && var.attach_vpn_gateway != "default " ? length(var.public_subnets) : 0}"
+
+  route_table_id = "${element(aws_route_table.public.*.id, count.index)}"
+  vpn_gateway_id = "${element(concat(aws_vpn_gateway.this.*.id, aws_vpn_gateway_attachment.vgw.*.vpn_gateway_id), count.index)}"
+}
+
+resource "aws_vpn_gateway_route_propagation" "private" {
+  count = "${var.private_propagating_vgws && var.enable_vpn_gateway || var.private_propagating_vgws && var.attach_vpn_gateway != "default" ? length(var.private_subnets) : 0}"
+
+  route_table_id = "${element(aws_route_table.private.*.id, count.index)}"
+  vpn_gateway_id = "${element(concat(aws_vpn_gateway.this.*.id, aws_vpn_gateway_attachment.vgw.*.vpn_gateway_id), count.index)}"
 }
