@@ -97,6 +97,20 @@ Examples
 * [Complete VPC](https://github.com/terraform-aws-modules/terraform-aws-vpc/tree/master/examples/complete-vpc)
 * Few tests and edge cases examples: [#46](https://github.com/terraform-aws-modules/terraform-aws-vpc/tree/master/examples/issue-46-no-private-subnets), [#44](https://github.com/terraform-aws-modules/terraform-aws-vpc/tree/master/examples/issue-44-asymmetric-private-subnets)
 
+
+Tests
+-------
+
+This module has been packaged with [awspec](https://github.com/k1LoW/awspec) tests through test kitchen. To run them:
+
+1. Install [rvm](https://rvm.io/rvm/install) and the ruby version specified in the [Gemfile](https://github.com/terraform-aws-modules/terraform-aws-vpc/tree/master/Gemfile).
+2. Install bundler and the gems from our Gemfile:
+```
+gem install bundler; bundle install
+```
+3. Test using `bundle exec kitchen test` from the root of the repo.
+
+
 Authors
 -------
 
