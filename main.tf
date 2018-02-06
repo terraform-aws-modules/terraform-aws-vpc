@@ -51,6 +51,19 @@ resource "aws_internet_gateway" "this" {
 }
 
 ################
+# Default Route Table
+################
+resource "aws_route_table" "default" {
+  vpc_id = "${aws_vpc.this.id}"
+  tags = "${merge(var.tags, var.default_route_table_tags, map("Name", format("%s-default", var.name)))}"
+}
+
+resource "aws_main_route_table_association" "default" {
+  vpc_id          = "${aws_vpc.this.id}"
+  route_table_id  = "${aws_route_table.default.id}"
+}
+
+################
 # Publiс routes
 ################
 resource "aws_route_table" "public" {
