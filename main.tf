@@ -334,7 +334,6 @@ resource "aws_vpn_gateway" "this" {
   tags = "${merge(var.tags, map("Name", format("%s", var.name)))}"
 }
 
-
 ###########
 # Defaults
 ###########
