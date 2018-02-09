@@ -204,3 +204,33 @@ variable "dhcp_options_netbios_node_type" {
   description = "Specify netbios node_type for DHCP options set"
   default     = ""
 }
+
+variable "manage_default_vpc" {
+  description = "Should be true to adopt and manage Default VPC"
+  default     = false
+}
+
+variable "default_vpc_name" {
+  description = "Name to be used on the Default VPC"
+  default     = ""
+}
+
+variable "default_vpc_enable_dns_support" {
+  description = "Should be true to enable DNS support in the Default VPC"
+  default     = true
+}
+
+variable "default_vpc_enable_dns_hostnames" {
+  description = "Should be true to enable DNS hostnames in the Default VPC"
+  default     = false
+}
+
+variable "default_vpc_enable_classiclink" {
+  description = "Should be true to enable ClassicLink in the Default VPC"
+  default     = false
+}
+
+variable "default_vpc_tags" {
+  description = "Additional tags for the Default VPC"
+  default     = {}
+}

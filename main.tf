@@ -343,7 +343,17 @@ resource "aws_vpn_gateway" "this" {
 ###########
 # Defaults
 ###########
-resource "aws_default_route_table" "default" {
+resource "aws_default_vpc" "this" {
+  count = "${var.manage_default_vpc ? 1 : 0}"
+
+  enable_dns_support   = "${var.default_vpc_enable_dns_support}"
+  enable_dns_hostnames = "${var.default_vpc_enable_dns_hostnames}"
+  enable_classiclink   = "${var.default_vpc_enable_classiclink}"
+
+  tags = "${merge(var.tags, var.default_vpc_tags, map("Name", format("%s", var.default_vpc_name)))}"
+}
+
+resource "aws_default_route_table" "this" {
   count = "${var.create_vpc ? 1 : 0}"
 
   default_route_table_id = "${aws_vpc.this.default_route_table_id}"
@@ -351,9 +361,9 @@ resource "aws_default_route_table" "default" {
   tags = "${merge(var.tags, var.default_route_table_tags, map("Name", format("%s-default", var.name)))}"
 }
 
-resource "aws_main_route_table_association" "default" {
+resource "aws_main_route_table_association" "this" {
   count = "${var.create_vpc ? 1 : 0}"
 
   vpc_id         = "${aws_vpc.this.id}"
-  route_table_id = "${aws_default_route_table.default.default_route_table_id}"
+  route_table_id = "${aws_default_route_table.this.default_route_table_id}"
 }
