@@ -19,16 +19,13 @@ These types of resources are supported:
 * [ElastiCache Subnet Group](https://www.terraform.io/docs/providers/aws/r/elasticache_subnet_group.html)
 * [Redshift Subnet Group](https://www.terraform.io/docs/providers/aws/r/redshift_subnet_group.html)
 * [DHCP Options Set](https://www.terraform.io/docs/providers/aws/r/vpc_dhcp_options.html)
+* [Main VPC Routing Table](https://www.terraform.io/docs/providers/aws/r/main_route_table_assoc.html)
+* [Default VPC Routing Table](https://www.terraform.io/docs/providers/aws/r/default_route_table.html)
 
 Usage
 -----
 
 ```hcl
-provider "aws" {
-  version = "~> 1.0.0"
-  region  = "eu-west-1"
-}
-
 module "vpc" {
   source = "terraform-aws-modules/vpc/aws"
 
@@ -84,6 +81,21 @@ module "vpc" {
 Note that in the example we allocate 3 IPs because we will be provisioning 3 NAT Gateways (due to `single_nat_gateway = false` and having 3 subnets).
 If, on the other hand, `single_nat_gateway = true`, then `aws_eip.nat` would only need to allocate 1 IP.
 Passing the IPs into the module is done by setting two variables `reuse_nat_ips = true` and `external_nat_ip_ids = ["${aws_eip.nat.*.id}"]`.
+
+Conditional creation
+--------------------
+
+Sometimes you need to have a way to create VPC resources conditionally but Terraform does not allow to use `count` inside `module` block, so the solution is to specify argument `create_vpc`.
+
+```hcl
+# This VPC will not be created
+module "vpc" {
+  source = "terraform-aws-modules/vpc/aws"
+
+  create_vpc = false
+  # ... omitted
+}
+```
 
 Terraform version
 -----------------
