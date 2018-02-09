@@ -1,27 +1,27 @@
 # VPC
 output "vpc_id" {
   description = "The ID of the VPC"
-  value       = "${aws_vpc.this.id}"
+  value       = "${element(concat(aws_vpc.this.*.id, list("")), 0)}"
 }
 
 output "vpc_cidr_block" {
   description = "The CIDR block of the VPC"
-  value       = "${aws_vpc.this.cidr_block}"
+  value       = "${element(concat(aws_vpc.this.*.cidr_block, list("")), 0)}"
 }
 
 output "default_security_group_id" {
   description = "The ID of the security group created by default on VPC creation"
-  value       = "${aws_vpc.this.default_security_group_id}"
+  value       = "${element(concat(aws_vpc.this.*.default_security_group_id, list("")), 0)}"
 }
 
 output "default_network_acl_id" {
   description = "The ID of the default network ACL"
-  value       = "${aws_vpc.this.default_network_acl_id}"
+  value       = "${element(concat(aws_vpc.this.*.default_network_acl_id, list("")), 0)}"
 }
 
 output "default_route_table_id" {
   description = "The ID of the default route table"
-  value       = "${aws_vpc.this.default_route_table_id}"
+  value       = "${element(concat(aws_vpc.this.*.default_route_table_id, list("")), 0)}"
 }
 
 # Subnets
