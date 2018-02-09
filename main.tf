@@ -63,7 +63,6 @@ resource "aws_route_table" "public" {
   count = "${var.create_vpc && length(var.public_subnets) > 0 ? 1 : 0}"
 
   vpc_id           = "${aws_vpc.this.id}"
-  propagating_vgws = ["${var.public_propagating_vgws}"]
 
   tags = "${merge(var.tags, var.public_route_table_tags, map("Name", format("%s-public", var.name)))}"
 }
@@ -76,6 +75,13 @@ resource "aws_route" "public_internet_gateway" {
   gateway_id             = "${aws_internet_gateway.this.id}"
 }
 
+resource "aws_vpn_gateway_route_propagation" "public" {
+  count = "${length(var.public_propagating_vgws)}"
+
+  route_table_id = "${aws_route_table.public.id}"
+  vpn_gateway_id = "${element(var.public_propagating_vgws, count.index)}"
+}
+
 #################
 # Private routes
 # There are so many routing tables as the largest amount of subnets of each type (really?)
@@ -84,7 +90,6 @@ resource "aws_route_table" "private" {
   count = "${var.create_vpc && local.max_subnet_length > 0 ? local.max_subnet_length : 0}"
 
   vpc_id           = "${aws_vpc.this.id}"
-  propagating_vgws = ["${var.private_propagating_vgws}"]
 
   tags = "${merge(var.tags, var.private_route_table_tags, map("Name", format("%s-private-%s", var.name, element(var.azs, count.index))))}"
 
@@ -93,6 +98,13 @@ resource "aws_route_table" "private" {
     # resources that manipulate the attributes of the routing table (typically for the private subnets)
     ignore_changes = ["propagating_vgws"]
   }
+}
+
+resource "aws_vpn_gateway_route_propagation" "private" {
+  count = "${length(var.private_propagating_vgws)}"
+
+  route_table_id = "${aws_route_table.private.id}"
+  vpn_gateway_id = "${element(var.private_propagating_vgws, count.index)}"
 }
 
 ################
