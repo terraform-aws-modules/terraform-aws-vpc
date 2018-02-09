@@ -51,14 +51,6 @@ resource "aws_internet_gateway" "this" {
 }
 
 ################
-# Default Route Table
-################
-resource "aws_default_route_table" "default" {
-  default_route_table_id = "${aws_vpc.this.default_route_table_id}"
-  tags = "${merge(var.tags, var.default_route_table_tags, map("Name", format("%s-default", var.name)))}"
-}
-
-################
 # Publiс routes
 ################
 resource "aws_route_table" "public" {
@@ -340,4 +332,19 @@ resource "aws_vpn_gateway" "this" {
   vpc_id = "${aws_vpc.this.id}"
 
   tags = "${merge(var.tags, map("Name", format("%s", var.name)))}"
+}
+
+
+###########
+# Defaults
+###########
+resource "aws_default_route_table" "default" {
+  default_route_table_id = "${aws_vpc.this.default_route_table_id}"
+
+  tags = "${merge(var.tags, var.default_route_table_tags, map("Name", format("%s-default", var.name)))}"
+}
+
+resource "aws_main_route_table_association" "default" {
+  vpc_id         = "${aws_vpc.this.id}"
+  route_table_id = "${aws_default_route_table.default.default_route_table_id}"
 }
