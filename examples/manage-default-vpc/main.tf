@@ -5,9 +5,9 @@ provider "aws" {
 module "vpc" {
   source = "../../"
 
-  create_vpc = true
-  cidr       = "10.0.0.0/20"
+  create_vpc = false
 
   manage_default_vpc               = true
+  default_vpc_name                 = "default"
   default_vpc_enable_dns_hostnames = true
 }
