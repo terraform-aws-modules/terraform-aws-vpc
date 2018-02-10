@@ -39,10 +39,10 @@ output "vpc_enable_dns_hostnames" {
   value       = "${element(concat(aws_vpc.this.*.enable_dns_hostnames, list("")), 0)}"
 }
 
-output "vpc_enable_classiclink" {
-  description = "Whether or not the VPC has Classiclink enabled"
-  value       = "${element(concat(aws_vpc.this.*.enable_classiclink, list("")), 0)}"
-}
+//output "vpc_enable_classiclink" {
+//  description = "Whether or not the VPC has Classiclink enabled"
+//  value       = "${element(concat(aws_vpc.this.*.enable_classiclink, list("")), 0)}"
+//}
 
 output "vpc_main_route_table_id" {
   description = "The ID of the main route table associated with this VPC"
@@ -230,10 +230,10 @@ output "default_vpc_enable_dns_hostnames" {
   value       = "${element(concat(aws_default_vpc.this.*.enable_dns_hostnames, list("")), 0)}"
 }
 
-output "default_vpc_enable_classiclink" {
-  description = "Whether or not the VPC has Classiclink enabled"
-  value       = "${element(concat(aws_default_vpc.this.*.enable_classiclink, list("")), 0)}"
-}
+//output "default_vpc_enable_classiclink" {
+//  description = "Whether or not the VPC has Classiclink enabled"
+//  value       = "${element(concat(aws_default_vpc.this.*.enable_classiclink, list("")), 0)}"
+//}
 
 output "default_vpc_main_route_table_id" {
   description = "The ID of the main route table associated with this VPC"
