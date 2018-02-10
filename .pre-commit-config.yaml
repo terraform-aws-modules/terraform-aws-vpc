@@ -1,0 +1,9 @@
+repos:
+- repo: git://github.com/antonbabenko/pre-commit-terraform
+  sha: v1.4.0
+  hooks:
+    - id: terraform_fmt
+- repo: git://github.com/pre-commit/pre-commit-hooks
+  sha: v1.2.0
+  hooks:
+    - id: check-merge-conflict

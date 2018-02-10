@@ -19,16 +19,14 @@ These types of resources are supported:
 * [ElastiCache Subnet Group](https://www.terraform.io/docs/providers/aws/r/elasticache_subnet_group.html)
 * [Redshift Subnet Group](https://www.terraform.io/docs/providers/aws/r/redshift_subnet_group.html)
 * [DHCP Options Set](https://www.terraform.io/docs/providers/aws/r/vpc_dhcp_options.html)
+* [Main VPC Routing Table](https://www.terraform.io/docs/providers/aws/r/main_route_table_assoc.html)
+* [Default VPC Routing Table](https://www.terraform.io/docs/providers/aws/r/default_route_table.html)
+* [Default VPC](https://www.terraform.io/docs/providers/aws/r/default_vpc.html)
 
 Usage
 -----
 
 ```hcl
-provider "aws" {
-  version = "~> 1.0.0"
-  region  = "eu-west-1"
-}
-
 module "vpc" {
   source = "terraform-aws-modules/vpc/aws"
 
@@ -85,6 +83,21 @@ Note that in the example we allocate 3 IPs because we will be provisioning 3 NAT
 If, on the other hand, `single_nat_gateway = true`, then `aws_eip.nat` would only need to allocate 1 IP.
 Passing the IPs into the module is done by setting two variables `reuse_nat_ips = true` and `external_nat_ip_ids = ["${aws_eip.nat.*.id}"]`.
 
+Conditional creation
+--------------------
+
+Sometimes you need to have a way to create VPC resources conditionally but Terraform does not allow to use `count` inside `module` block, so the solution is to specify argument `create_vpc`.
+
+```hcl
+# This VPC will not be created
+module "vpc" {
+  source = "terraform-aws-modules/vpc/aws"
+
+  create_vpc = false
+  # ... omitted
+}
+```
+
 Terraform version
 -----------------
 
@@ -95,7 +108,22 @@ Examples
 
 * [Simple VPC](https://github.com/terraform-aws-modules/terraform-aws-vpc/tree/master/examples/simple-vpc)
 * [Complete VPC](https://github.com/terraform-aws-modules/terraform-aws-vpc/tree/master/examples/complete-vpc)
+* [Manage Default VPC](https://github.com/terraform-aws-modules/terraform-aws-vpc/tree/master/examples/manage-default-vpc)
 * Few tests and edge cases examples: [#46](https://github.com/terraform-aws-modules/terraform-aws-vpc/tree/master/examples/issue-46-no-private-subnets), [#44](https://github.com/terraform-aws-modules/terraform-aws-vpc/tree/master/examples/issue-44-asymmetric-private-subnets)
+
+
+Tests
+-------
+
+This module has been packaged with [awspec](https://github.com/k1LoW/awspec) tests through test kitchen. To run them:
+
+1. Install [rvm](https://rvm.io/rvm/install) and the ruby version specified in the [Gemfile](https://github.com/terraform-aws-modules/terraform-aws-vpc/tree/master/Gemfile).
+2. Install bundler and the gems from our Gemfile:
+```
+gem install bundler; bundle install
+```
+3. Test using `bundle exec kitchen test` from the root of the repo.
+
 
 Authors
 -------

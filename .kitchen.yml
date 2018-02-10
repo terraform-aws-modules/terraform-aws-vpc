@@ -1,0 +1,20 @@
+---
+driver:
+  name: "terraform"
+  root_module_directory: "examples/test_fixture"
+
+provisioner:
+  name: "terraform"
+
+platforms:
+  - name: "aws"
+
+verifier:
+  name: "awspec"
+
+suites:
+  - name: "default"
+    verifier:
+      name: "awspec"
+      patterns:
+      - "test/integration/default/test_vpc.rb"
