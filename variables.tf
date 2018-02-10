@@ -107,14 +107,19 @@ variable "enable_vpn_gateway" {
   default     = false
 }
 
-variable "private_propagating_vgws" {
-  description = "A list of VGWs the private route table should propagate"
-  default     = []
+variable "vpn_gateway_id" {
+  description = "ID of VPN Gateway to attach to the VPC"
+  default     = ""
 }
 
-variable "public_propagating_vgws" {
-  description = "A list of VGWs the public route table should propagate"
-  default     = []
+variable "propagate_private_route_tables_vgw" {
+  description = "Should be true if you want route table propagation"
+  default     = false
+}
+
+variable "propagate_public_route_tables_vgw" {
+  description = "Should be true if you want route table propagation"
+  default     = false
 }
 
 variable "tags" {

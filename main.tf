@@ -62,8 +62,7 @@ resource "aws_internet_gateway" "this" {
 resource "aws_route_table" "public" {
   count = "${var.create_vpc && length(var.public_subnets) > 0 ? 1 : 0}"
 
-  vpc_id           = "${aws_vpc.this.id}"
-  propagating_vgws = ["${var.public_propagating_vgws}"]
+  vpc_id = "${aws_vpc.this.id}"
 
   tags = "${merge(var.tags, var.public_route_table_tags, map("Name", format("%s-public", var.name)))}"
 }
@@ -83,8 +82,7 @@ resource "aws_route" "public_internet_gateway" {
 resource "aws_route_table" "private" {
   count = "${var.create_vpc && local.max_subnet_length > 0 ? local.max_subnet_length : 0}"
 
-  vpc_id           = "${aws_vpc.this.id}"
-  propagating_vgws = ["${var.private_propagating_vgws}"]
+  vpc_id = "${aws_vpc.this.id}"
 
   tags = "${merge(var.tags, var.private_route_table_tags, map("Name", format("%s-private-%s", var.name, element(var.azs, count.index))))}"
 
@@ -338,6 +336,27 @@ resource "aws_vpn_gateway" "this" {
   vpc_id = "${aws_vpc.this.id}"
 
   tags = "${merge(var.tags, map("Name", format("%s", var.name)))}"
+}
+
+resource "aws_vpn_gateway_attachment" "this" {
+  count = "${var.vpn_gateway_id != "" ? 1 : 0}"
+
+  vpc_id         = "${aws_vpc.this.id}"
+  vpn_gateway_id = "${var.vpn_gateway_id}"
+}
+
+resource "aws_vpn_gateway_route_propagation" "public" {
+  count = "${var.create_vpc && var.propagate_public_route_tables_vgw && (var.enable_vpn_gateway  || var.vpn_gateway_id != "") ? 1 : 0}"
+
+  route_table_id = "${element(aws_route_table.public.*.id, count.index)}"
+  vpn_gateway_id = "${element(concat(aws_vpn_gateway.this.*.id, aws_vpn_gateway_attachment.this.*.vpn_gateway_id), count.index)}"
+}
+
+resource "aws_vpn_gateway_route_propagation" "private" {
+  count = "${var.create_vpc && var.propagate_private_route_tables_vgw && (var.enable_vpn_gateway || var.vpn_gateway_id != "") ? length(var.private_subnets) : 0}"
+
+  route_table_id = "${element(aws_route_table.private.*.id, count.index)}"
+  vpn_gateway_id = "${element(concat(aws_vpn_gateway.this.*.id, aws_vpn_gateway_attachment.this.*.vpn_gateway_id), count.index)}"
 }
 
 ###########
