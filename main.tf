@@ -283,7 +283,7 @@ resource "aws_vpc_endpoint_route_table_association" "private_dynamodb" {
 }
 
 resource "aws_vpc_endpoint_route_table_association" "public_dynamodb" {
-  count = "${var.create_vpc && var.enable_dynamodb_endpoint ? length(var.public_subnets) : 0}"
+  count = "${var.create_vpc && var.enable_dynamodb_endpoint && length(var.public_subnets) > 0 ? 1 : 0}"
 
   vpc_endpoint_id = "${aws_vpc_endpoint.dynamodb.id}"
   route_table_id  = "${aws_route_table.public.id}"
