@@ -9,8 +9,8 @@ variable "name" {
 }
 
 variable "cidr" {
-  description = "The CIDR block for the VPC"
-  default     = ""
+  description = "The CIDR block for the VPC. Default value is a valid CIDR, but not acceptable by AWS and should be overriden"
+  default     = "0.0.0.0/0"
 }
 
 variable "instance_tenancy" {
