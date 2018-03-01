@@ -359,6 +359,13 @@ resource "aws_vpn_gateway_route_propagation" "private" {
   vpn_gateway_id = "${element(concat(aws_vpn_gateway.this.*.id, aws_vpn_gateway_attachment.this.*.vpn_gateway_id), count.index)}"
 }
 
+resource "aws_vpn_gateway_route_propagation" "default" {
+  count = "${var.create_vpc && var.propagate_default_route_tables_vgw && (var.enable_vpn_gateway || var.vpn_gateway_id != "") ? 1 : 0}"
+
+  route_table_id = "${element(aws_default_route_table.this.*.id, count.index)}"
+  vpn_gateway_id = "${element(concat(aws_vpn_gateway.this.*.id, aws_vpn_gateway_attachment.this.*.vpn_gateway_id), count.index)}"
+}
+
 ###########
 # Defaults
 ###########
@@ -378,6 +385,12 @@ resource "aws_default_route_table" "this" {
   default_route_table_id = "${aws_vpc.this.default_route_table_id}"
 
   tags = "${merge(var.tags, var.default_route_table_tags, map("Name", format("%s-default", var.name)))}"
+
+  lifecycle {
+    # When attaching VPN gateways it is common to define aws_vpn_gateway_route_propagation
+    # resources that manipulate the attributes of the routing table (typically for the private subnets)
+    ignore_changes = ["propagating_vgws"]
+  }
 }
 
 resource "aws_main_route_table_association" "this" {
