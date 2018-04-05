@@ -371,18 +371,3 @@ resource "aws_default_vpc" "this" {
 
   tags = "${merge(var.tags, var.default_vpc_tags, map("Name", format("%s", var.default_vpc_name)))}"
 }
-
-resource "aws_default_route_table" "this" {
-  count = "${var.create_vpc ? 1 : 0}"
-
-  default_route_table_id = "${aws_vpc.this.default_route_table_id}"
-
-  tags = "${merge(var.tags, var.default_route_table_tags, map("Name", format("%s-default", var.name)))}"
-}
-
-resource "aws_main_route_table_association" "this" {
-  count = "${var.create_vpc ? 1 : 0}"
-
-  vpc_id         = "${aws_vpc.this.id}"
-  route_table_id = "${aws_default_route_table.this.default_route_table_id}"
-}
