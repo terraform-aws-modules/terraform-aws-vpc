@@ -78,7 +78,6 @@ resource "aws_route" "public_internet_gateway" {
   timeouts {
     create = "5m"
   }
-
 }
 
 #################
@@ -237,7 +236,6 @@ resource "aws_route" "private_nat_gateway" {
   timeouts {
     create = "5m"
   }
-
 }
 
 ######################
