@@ -235,6 +235,11 @@ variable "default_vpc_enable_classiclink" {
   default     = false
 }
 
+variable "default_vpc_enable_classiclink_dns_support" {
+  description = "Should be true to enable ClassicLink DNS in the Default VPC"
+  default     = false
+}
+
 variable "default_vpc_tags" {
   description = "Additional tags for the Default VPC"
   default     = {}
