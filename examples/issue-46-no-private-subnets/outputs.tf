@@ -25,11 +25,6 @@ output "elasticache_subnets" {
   value       = ["${module.vpc.elasticache_subnets}"]
 }
 
-output "redshift_subnets" {
-  description = "List of IDs of redshift subnets"
-  value       = ["${module.vpc.redshift_subnets}"]
-}
-
 # NAT gateways
 output "nat_public_ips" {
   description = "List of public Elastic IPs created for AWS NAT Gateway"
