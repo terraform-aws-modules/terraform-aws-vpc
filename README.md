@@ -1,5 +1,4 @@
-AWS VPC Terraform module
-========================
+# AWS VPC Terraform module
 
 [![Help Contribute to Open Source](https://www.codetriage.com/terraform-aws-modules/terraform-aws-vpc/badges/users.svg)](https://www.codetriage.com/terraform-aws-modules/terraform-aws-vpc)
 
@@ -21,8 +20,7 @@ These types of resources are supported:
 * [DHCP Options Set](https://www.terraform.io/docs/providers/aws/r/vpc_dhcp_options.html)
 * [Default VPC](https://www.terraform.io/docs/providers/aws/r/default_vpc.html)
 
-Usage
------
+## Usage
 
 ```hcl
 module "vpc" {
@@ -45,8 +43,7 @@ module "vpc" {
 }
 ```
 
-External NAT Gateway IPs
-------------------------
+## External NAT Gateway IPs
 
 By default this module will provision new Elastic IPs for the VPC's NAT Gateways.
 This means that when creating a new VPC, new IPs are allocated, and when that VPC is destroyed those IPs are released.
@@ -81,8 +78,7 @@ Note that in the example we allocate 3 IPs because we will be provisioning 3 NAT
 If, on the other hand, `single_nat_gateway = true`, then `aws_eip.nat` would only need to allocate 1 IP.
 Passing the IPs into the module is done by setting two variables `reuse_nat_ips = true` and `external_nat_ip_ids = ["${aws_eip.nat.*.id}"]`.
 
-Conditional creation
---------------------
+## Conditional creation
 
 Sometimes you need to have a way to create VPC resources conditionally but Terraform does not allow to use `count` inside `module` block, so the solution is to specify argument `create_vpc`.
 
@@ -96,22 +92,122 @@ module "vpc" {
 }
 ```
 
-Terraform version
------------------
+## Terraform version
 
 Terraform version 0.10.3 or newer is required for this module to work.
 
-Examples
---------
+## Examples
 
 * [Simple VPC](https://github.com/terraform-aws-modules/terraform-aws-vpc/tree/master/examples/simple-vpc)
 * [Complete VPC](https://github.com/terraform-aws-modules/terraform-aws-vpc/tree/master/examples/complete-vpc)
 * [Manage Default VPC](https://github.com/terraform-aws-modules/terraform-aws-vpc/tree/master/examples/manage-default-vpc)
 * Few tests and edge cases examples: [#46](https://github.com/terraform-aws-modules/terraform-aws-vpc/tree/master/examples/issue-46-no-private-subnets), [#44](https://github.com/terraform-aws-modules/terraform-aws-vpc/tree/master/examples/issue-44-asymmetric-private-subnets), [#108](https://github.com/terraform-aws-modules/terraform-aws-vpc/tree/master/examples/issue-108-route-already-exists)
 
+<!-- BEGINNING OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
 
-Tests
--------
+## Inputs
+
+| Name | Description | Type | Default | Required |
+|------|-------------|:----:|:-----:|:-----:|
+| azs | A list of availability zones in the region | string | `<list>` | no |
+| cidr | The CIDR block for the VPC. Default value is a valid CIDR, but not acceptable by AWS and should be overriden | string | `0.0.0.0/0` | no |
+| create_database_subnet_group | Controls if database subnet group should be created | string | `true` | no |
+| create_vpc | Controls if VPC should be created (it affects almost all resources) | string | `true` | no |
+| database_subnet_tags | Additional tags for the database subnets | string | `<map>` | no |
+| database_subnets | A list of database subnets | list | `<list>` | no |
+| default_route_table_tags | Additional tags for the default route table | string | `<map>` | no |
+| default_vpc_enable_classiclink | Should be true to enable ClassicLink in the Default VPC | string | `false` | no |
+| default_vpc_enable_dns_hostnames | Should be true to enable DNS hostnames in the Default VPC | string | `false` | no |
+| default_vpc_enable_dns_support | Should be true to enable DNS support in the Default VPC | string | `true` | no |
+| default_vpc_name | Name to be used on the Default VPC | string | `` | no |
+| default_vpc_tags | Additional tags for the Default VPC | string | `<map>` | no |
+| dhcp_options_domain_name | Specifies DNS name for DHCP options set | string | `` | no |
+| dhcp_options_domain_name_servers | Specify a list of DNS server addresses for DHCP options set, default to AWS provided | list | `<list>` | no |
+| dhcp_options_netbios_name_servers | Specify a list of netbios servers for DHCP options set | list | `<list>` | no |
+| dhcp_options_netbios_node_type | Specify netbios node_type for DHCP options set | string | `` | no |
+| dhcp_options_ntp_servers | Specify a list of NTP servers for DHCP options set | list | `<list>` | no |
+| dhcp_options_tags | Additional tags for the DHCP option set | string | `<map>` | no |
+| elasticache_subnet_tags | Additional tags for the elasticache subnets | string | `<map>` | no |
+| elasticache_subnets | A list of elasticache subnets | list | `<list>` | no |
+| enable_dhcp_options | Should be true if you want to specify a DHCP options set with a custom domain name, DNS servers, NTP servers, netbios servers, and/or netbios server type | string | `false` | no |
+| enable_dns_hostnames | Should be true to enable DNS hostnames in the VPC | string | `false` | no |
+| enable_dns_support | Should be true to enable DNS support in the VPC | string | `true` | no |
+| enable_dynamodb_endpoint | Should be true if you want to provision a DynamoDB endpoint to the VPC | string | `false` | no |
+| enable_nat_gateway | Should be true if you want to provision NAT Gateways for each of your private networks | string | `false` | no |
+| enable_s3_endpoint | Should be true if you want to provision an S3 endpoint to the VPC | string | `false` | no |
+| enable_vpn_gateway | Should be true if you want to create a new VPN Gateway resource and attach it to the VPC | string | `false` | no |
+| external_nat_ip_ids | List of EIP IDs to be assigned to the NAT Gateways (used in combination with reuse_nat_ips) | list | `<list>` | no |
+| instance_tenancy | A tenancy option for instances launched into the VPC | string | `default` | no |
+| manage_default_vpc | Should be true to adopt and manage Default VPC | string | `false` | no |
+| map_public_ip_on_launch | Should be false if you do not want to auto-assign public IP on launch | string | `true` | no |
+| name | Name to be used on all the resources as identifier | string | `` | no |
+| private_route_table_tags | Additional tags for the private route tables | string | `<map>` | no |
+| private_subnet_tags | Additional tags for the private subnets | string | `<map>` | no |
+| private_subnets | A list of private subnets inside the VPC | string | `<list>` | no |
+| propagate_private_route_tables_vgw | Should be true if you want route table propagation | string | `false` | no |
+| propagate_public_route_tables_vgw | Should be true if you want route table propagation | string | `false` | no |
+| public_route_table_tags | Additional tags for the public route tables | string | `<map>` | no |
+| public_subnet_tags | Additional tags for the public subnets | string | `<map>` | no |
+| public_subnets | A list of public subnets inside the VPC | string | `<list>` | no |
+| redshift_subnet_tags | Additional tags for the redshift subnets | string | `<map>` | no |
+| redshift_subnets | A list of redshift subnets | list | `<list>` | no |
+| reuse_nat_ips | Should be true if you don't want EIPs to be created for your NAT Gateways and will instead pass them in via the 'external_nat_ip_ids' variable | string | `false` | no |
+| single_nat_gateway | Should be true if you want to provision a single shared NAT Gateway across all of your private networks | string | `false` | no |
+| tags | A map of tags to add to all resources | string | `<map>` | no |
+| vpc_tags | Additional tags for the VPC | string | `<map>` | no |
+| vpn_gateway_id | ID of VPN Gateway to attach to the VPC | string | `` | no |
+
+## Outputs
+
+| Name | Description |
+|------|-------------|
+| database_subnet_group | ID of database subnet group |
+| database_subnets | List of IDs of database subnets |
+| database_subnets_cidr_blocks | List of cidr_blocks of database subnets |
+| default_network_acl_id | The ID of the default network ACL |
+| default_route_table_id | The ID of the default route table |
+| default_security_group_id | The ID of the security group created by default on VPC creation |
+| default_vpc_cidr_block | The CIDR block of the VPC |
+| default_vpc_default_network_acl_id | The ID of the default network ACL |
+| default_vpc_default_route_table_id | The ID of the default route table |
+| default_vpc_default_security_group_id | The ID of the security group created by default on VPC creation |
+| default_vpc_enable_dns_hostnames | Whether or not the VPC has DNS hostname support |
+| default_vpc_enable_dns_support | Whether or not the VPC has DNS support |
+| default_vpc_id | Default VPC |
+| default_vpc_instance_tenancy | Tenancy of instances spin up within VPC |
+| default_vpc_main_route_table_id | The ID of the main route table associated with this VPC |
+| elasticache_subnet_group | ID of elasticache subnet group |
+| elasticache_subnet_group_name | Name of elasticache subnet group |
+| elasticache_subnets | List of IDs of elasticache subnets |
+| elasticache_subnets_cidr_blocks | List of cidr_blocks of elasticache subnets |
+| igw_id | Internet Gateway |
+| nat_ids | List of allocation ID of Elastic IPs created for AWS NAT Gateway |
+| nat_public_ips | List of public Elastic IPs created for AWS NAT Gateway |
+| natgw_ids | List of NAT Gateway IDs |
+| private_route_table_ids | List of IDs of private route tables |
+| private_subnets | Subnets |
+| private_subnets_cidr_blocks | List of cidr_blocks of private subnets |
+| public_route_table_ids | Route tables |
+| public_subnets | List of IDs of public subnets |
+| public_subnets_cidr_blocks | List of cidr_blocks of public subnets |
+| redshift_subnet_group | ID of redshift subnet group |
+| redshift_subnets | List of IDs of redshift subnets |
+| redshift_subnets_cidr_blocks | List of cidr_blocks of redshift subnets |
+| vgw_id | VPN Gateway |
+| vpc_cidr_block | The CIDR block of the VPC |
+| vpc_enable_dns_hostnames | Whether or not the VPC has DNS hostname support |
+| vpc_enable_dns_support | Whether or not the VPC has DNS support |
+| vpc_endpoint_dynamodb_id | The ID of VPC endpoint for DynamoDB |
+| vpc_endpoint_dynamodb_pl_id | The prefix list for the DynamoDB VPC endpoint. |
+| vpc_endpoint_s3_id | VPC Endpoints |
+| vpc_endpoint_s3_pl_id | The prefix list for the S3 VPC endpoint. |
+| vpc_id | VPC |
+| vpc_instance_tenancy | Tenancy of instances spin up within VPC |
+| vpc_main_route_table_id | The ID of the main route table associated with this VPC |
+
+<!-- END OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
+
+## Tests
 
 This module has been packaged with [awspec](https://github.com/k1LoW/awspec) tests through test kitchen. To run them:
 
@@ -123,13 +219,11 @@ gem install bundler; bundle install
 3. Test using `bundle exec kitchen test` from the root of the repo.
 
 
-Authors
--------
+## Authors
 
 Migrated from `terraform-community-modules/tf_aws_vpc`, where it was maintained by [these awesome contributors](https://github.com/terraform-community-modules/tf_aws_vpc/graphs/contributors).
 Module managed by [Anton Babenko](https://github.com/antonbabenko).
 
-License
--------
+## License
 
 Apache 2 Licensed. See LICENSE for full details.
