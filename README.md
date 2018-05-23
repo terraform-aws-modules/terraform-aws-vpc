@@ -82,24 +82,31 @@ Passing the IPs into the module is done by setting two variables `reuse_nat_ips 
 
 This module supports three scenarios for creating NAT gateways. Each will be explained in further detail in the corresponding sections.
 
-* One NAT Gateway per subnet (default behavior)
+* One NAT Gateway per availability zone (default behavior)
     * `enable_nat_gateway = true`
+    * `one_nat_gateway_per_az = true`
     * `single_nat_gateway = false`
+* One NAT Gateway per subnet
+    * `enable_nat_gateway = true`
     * `one_nat_gateway_per_az = false`
+    * `single_nat_gateway = false`
 * Single NAT Gateway
     * `enable_nat_gateway = true`
-    * `single_nat_gateway = true`
     * `one_nat_gateway_per_az = false`
-* One NAT Gateway per availability zone
-    * `enable_nat_gateway = true`
-    * `single_nat_gateway = false`
-    * `one_nat_gateway_per_az = true`
+    * `single_nat_gateway = true`
 
 If both `single_nat_gateway` and `one_nat_gateway_per_az` are set to `true`, then `single_nat_gateway` takes precedence.
 
-### One NAT Gateway per subnet (default)
+### One NAT Gateway per availability zone (default)
 
-By default, the module will determine the number of NAT Gateways to create based on the the `max()` of the private subnet lists (`database_subnets`, `elasticache_subnets`, `private_subnets`, and `redshift_subnets`). For example, if your configuration looks like the following:
+By default, the module will place one NAT gateway in each availability zone you specify in `var.azs`. There are some requirements around this default behavior:
+
+* The variable `var.azs` **must** be specified.
+* The number of public subnet CIDR blocks specified in `public_subnets` **must** be greater than or equal to the number of availability zones specified in `var.azs`. This is to ensure that each NAT Gateway has a dedicated public subnet to deploy to.
+
+### One NAT Gateway per subnet
+
+If you set `one_nat_gateway_per_az = false`, then the module will determine the number of NAT Gateways to create based on the the `max()` of the private subnet lists (`database_subnets`, `elasticache_subnets`, `private_subnets`, and `redshift_subnets`). For example, if your configuration looks like the following:
 
 ```hcl
 database_subnets    = ["10.0.21.0/24", "10.0.22.0/24"]
@@ -112,14 +119,7 @@ Then `5` NAT Gateways will be created since `5` private subnet CIDR blocks were 
 
 ### Single NAT Gateway
 
-If `single_nat_gateway = true`, then all private subnets will route their Internet traffic through this single NAT gateway. The NAT gateway will be placed in the first public subnet in your `public_subnets` block.
-
-### One NAT Gateway per availability zone
-
-If `one_nat_gateway_per_az = true` and `single_nat_gateway = false`, then the module will place one NAT gateway in each availability zone you specify in `var.azs`. There are some requirements around using this feature flag:
-
-* The variable `var.azs` **must** be specified.
-* The number of public subnet CIDR blocks specified in `public_subnets` **must** be greater than or equal to the number of availability zones specified in `var.azs`. This is to ensure that each NAT Gateway has a dedicated public subnet to deploy to.
+If `single_nat_gateway = true`, then the two previous NAT Gateway configurations are overridden, and all private subnets will route their Internet traffic through this single NAT gateway. The NAT gateway will be placed in the first public subnet in your `public_subnets` block.
 
 ## Conditional creation
 
@@ -152,7 +152,7 @@ Terraform version 0.10.3 or newer is required for this module to work.
 
 | Name | Description | Type | Default | Required |
 |------|-------------|:----:|:-----:|:-----:|
-| azs | A list of availability zones in the region | string | `<list>` | no |
+| azs | A list of availability zones in the region | string | `<list>` | yes |
 | cidr | The CIDR block for the VPC. Default value is a valid CIDR, but not acceptable by AWS and should be overriden | string | `0.0.0.0/0` | no |
 | create_database_subnet_group | Controls if database subnet group should be created | string | `true` | no |
 | create_vpc | Controls if VPC should be created (it affects almost all resources) | string | `true` | no |
@@ -192,7 +192,7 @@ Terraform version 0.10.3 or newer is required for this module to work.
 | propagate_public_route_tables_vgw | Should be true if you want route table propagation | string | `false` | no |
 | public_route_table_tags | Additional tags for the public route tables | string | `<map>` | no |
 | public_subnet_tags | Additional tags for the public subnets | string | `<map>` | no |
-| public_subnets | A list of public subnets inside the VPC | string | `<list>` | no |
+| public_subnets | A list of public subnets inside the VPC | string | `<list>` | yes |
 | redshift_subnet_tags | Additional tags for the redshift subnets | string | `<map>` | no |
 | redshift_subnets | A list of redshift subnets | list | `<list>` | no |
 | reuse_nat_ips | Should be true if you don't want EIPs to be created for your NAT Gateways and will instead pass them in via the 'external_nat_ip_ids' variable | string | `false` | no |
