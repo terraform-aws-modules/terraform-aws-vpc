@@ -184,7 +184,7 @@ Terraform version 0.10.3 or newer is required for this module to work.
 | manage_default_vpc | Should be true to adopt and manage Default VPC | string | `false` | no |
 | map_public_ip_on_launch | Should be false if you do not want to auto-assign public IP on launch | string | `true` | no |
 | name | Name to be used on all the resources as identifier | string | `` | no |
-| one_nat_gateway_per_az | Should be true if you want only one NAT Gateway per availability zone. Requires the input `azs` to be set, and the number of `public_subnets` created to be greater than or equal to the number of availability zones specified in `azs`. | string | `false` | no |
+| one_nat_gateway_per_az | Should be true if you want only one NAT Gateway per availability zone. Requires `var.azs` to be set, and the number of `public_subnets` created to be greater than or equal to the number of availability zones specified in `var.azs`. | string | `false` | no |
 | private_route_table_tags | Additional tags for the private route tables | string | `<map>` | no |
 | private_subnet_tags | Additional tags for the private subnets | string | `<map>` | no |
 | private_subnets | A list of private subnets inside the VPC | string | `<list>` | no |
@@ -265,8 +265,7 @@ gem install bundler; bundle install
 
 ## Authors
 
-Migrated from `terraform-community-modules/tf_aws_vpc`, where it was maintained by [these awesome contributors](https://github.com/terraform-community-modules/tf_aws_vpc/graphs/contributors).
-Module managed by [Anton Babenko](https://github.com/antonbabenko).
+Module is maintained by [Anton Babenko](https://github.com/antonbabenko) with help from [these awesome contributors](https://github.com/terraform-aws-modules/terraform-aws-vpc/graphs/contributors).
 
 ## License
 
