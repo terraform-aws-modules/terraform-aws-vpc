@@ -4,7 +4,7 @@ terraform {
 
 locals {
   max_subnet_length = "${max(length(var.private_subnets), length(var.elasticache_subnets), length(var.database_subnets), length(var.redshift_subnets))}"
-  nat_gateway_count = "${var.single_nat_gateway ? 1 : local.max_subnet_length}"
+  nat_gateway_count = "${var.single_nat_gateway ? 1 : (var.one_nat_gateway_per_az ? length(var.azs) : local.max_subnet_length)}"
 }
 
 ######
@@ -102,7 +102,7 @@ resource "aws_route_table" "private" {
 # Public subnet
 ################
 resource "aws_subnet" "public" {
-  count = "${var.create_vpc && length(var.public_subnets) > 0 ? length(var.public_subnets) : 0}"
+  count = "${var.create_vpc && length(var.public_subnets) > 0 && (!var.one_nat_gateway_per_az || length(var.public_subnets) >= length(var.azs)) ? length(var.public_subnets) : 0}"
 
   vpc_id                  = "${aws_vpc.this.id}"
   cidr_block              = "${var.public_subnets[count.index]}"

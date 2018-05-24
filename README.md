@@ -78,6 +78,49 @@ Note that in the example we allocate 3 IPs because we will be provisioning 3 NAT
 If, on the other hand, `single_nat_gateway = true`, then `aws_eip.nat` would only need to allocate 1 IP.
 Passing the IPs into the module is done by setting two variables `reuse_nat_ips = true` and `external_nat_ip_ids = ["${aws_eip.nat.*.id}"]`.
 
+## NAT Gateway Scenarios
+
+This module supports three scenarios for creating NAT gateways. Each will be explained in further detail in the corresponding sections.
+
+* One NAT Gateway per subnet (default behavior)
+    * `enable_nat_gateway = true`
+    * `single_nat_gateway = false`
+    * `one_nat_gateway_per_az = false`
+* Single NAT Gateway
+    * `enable_nat_gateway = true`
+    * `single_nat_gateway = true`
+    * `one_nat_gateway_per_az = false`
+* One NAT Gateway per availability zone
+    * `enable_nat_gateway = true`
+    * `single_nat_gateway = false`
+    * `one_nat_gateway_per_az = true`
+
+If both `single_nat_gateway` and `one_nat_gateway_per_az` are set to `true`, then `single_nat_gateway` takes precedence.
+
+### One NAT Gateway per subnet (default)
+
+By default, the module will determine the number of NAT Gateways to create based on the the `max()` of the private subnet lists (`database_subnets`, `elasticache_subnets`, `private_subnets`, and `redshift_subnets`). For example, if your configuration looks like the following:
+
+```hcl
+database_subnets    = ["10.0.21.0/24", "10.0.22.0/24"]
+elasticache_subnets = ["10.0.31.0/24", "10.0.32.0/24"]
+private_subnets     = ["10.0.1.0/24", "10.0.2.0/24", "10.0.3.0/24", "10.0.4.0/24", "10.0.5.0/24"]
+redshift_subnets    = ["10.0.41.0/24", "10.0.42.0/24"]
+```
+
+Then `5` NAT Gateways will be created since `5` private subnet CIDR blocks were specified.
+
+### Single NAT Gateway
+
+If `single_nat_gateway = true`, then all private subnets will route their Internet traffic through this single NAT gateway. The NAT gateway will be placed in the first public subnet in your `public_subnets` block.
+
+### One NAT Gateway per availability zone
+
+If `one_nat_gateway_per_az = true` and `single_nat_gateway = false`, then the module will place one NAT gateway in each availability zone you specify in `var.azs`. There are some requirements around using this feature flag:
+
+* The variable `var.azs` **must** be specified.
+* The number of public subnet CIDR blocks specified in `public_subnets` **must** be greater than or equal to the number of availability zones specified in `var.azs`. This is to ensure that each NAT Gateway has a dedicated public subnet to deploy to.
+
 ## Conditional creation
 
 Sometimes you need to have a way to create VPC resources conditionally but Terraform does not allow to use `count` inside `module` block, so the solution is to specify argument `create_vpc`.
@@ -141,6 +184,7 @@ Terraform version 0.10.3 or newer is required for this module to work.
 | manage_default_vpc | Should be true to adopt and manage Default VPC | string | `false` | no |
 | map_public_ip_on_launch | Should be false if you do not want to auto-assign public IP on launch | string | `true` | no |
 | name | Name to be used on all the resources as identifier | string | `` | no |
+| one_nat_gateway_per_az | Should be true if you want only one NAT Gateway per availability zone. Requires the input `azs` to be set, and the number of `public_subnets` created to be greater than or equal to the number of availability zones specified in `azs`. | string | `false` | no |
 | private_route_table_tags | Additional tags for the private route tables | string | `<map>` | no |
 | private_subnet_tags | Additional tags for the private subnets | string | `<map>` | no |
 | private_subnets | A list of private subnets inside the VPC | string | `<list>` | no |
@@ -227,3 +271,4 @@ Module managed by [Anton Babenko](https://github.com/antonbabenko).
 ## License
 
 Apache 2 Licensed. See LICENSE for full details.
+
