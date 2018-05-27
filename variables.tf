@@ -162,6 +162,21 @@ variable "private_route_table_tags" {
   default     = {}
 }
 
+variable "database_route_table_tags" {
+  description = "Additional tags for the private route tables"
+  default     = {}
+}
+
+variable "redshift_route_table_tags" {
+  description = "Additional tags for the private route tables"
+  default     = {}
+}
+
+variable "elasticache_route_table_tags" {
+  description = "Additional tags for the private route tables"
+  default     = {}
+}
+
 variable "database_subnet_tags" {
   description = "Additional tags for the database subnets"
   default     = {}
