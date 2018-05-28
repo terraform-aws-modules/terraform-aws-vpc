@@ -46,6 +46,21 @@ variable "elasticache_subnets" {
   default     = []
 }
 
+variable "create_database_route_table" {
+  description = "Controls if saperate route table for database should be created"
+  default     = false
+}
+
+variable "create_redshift_route_table" {
+  description = "Controls if saperate route table for redshift should be created"
+  default     = false
+}
+
+variable "create_elasticache_route_table" {
+  description = "Controls if saperate route table for elasticache should be created"
+  default     = false
+}
+
 variable "create_database_subnet_group" {
   description = "Controls if database subnet group should be created"
   default     = true
@@ -158,6 +173,21 @@ variable "public_route_table_tags" {
 }
 
 variable "private_route_table_tags" {
+  description = "Additional tags for the private route tables"
+  default     = {}
+}
+
+variable "database_route_table_tags" {
+  description = "Additional tags for the private route tables"
+  default     = {}
+}
+
+variable "redshift_route_table_tags" {
+  description = "Additional tags for the private route tables"
+  default     = {}
+}
+
+variable "elasticache_route_table_tags" {
   description = "Additional tags for the private route tables"
   default     = {}
 }
