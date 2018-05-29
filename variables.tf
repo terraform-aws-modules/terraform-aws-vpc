@@ -102,6 +102,11 @@ variable "enable_nat_gateway" {
   default     = false
 }
 
+variable "enable_classiclink" {
+  description = "Should be true to enable ClassicLink in the created VPC"
+  default     = false
+}
+
 variable "single_nat_gateway" {
   description = "Should be true if you want to provision a single shared NAT Gateway across all of your private networks"
   default     = false
