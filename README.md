@@ -52,6 +52,7 @@ To that end, it is possible to assign existing IPs to the NAT Gateways.
 This prevents the destruction of the VPC from releasing those IPs, while making it possible that a re-created VPC uses the same IPs.
 
 To achieve this, allocate the IPs outside the VPC module declaration.
+
 ```hcl
 resource "aws_eip" "nat" {
   count = 3
@@ -61,6 +62,7 @@ resource "aws_eip" "nat" {
 ```
 
 Then, pass the allocated IPs as a parameter to this module.
+
 ```hcl
 module "vpc" {
   source = "terraform-aws-modules/vpc/aws"
@@ -83,17 +85,17 @@ Passing the IPs into the module is done by setting two variables `reuse_nat_ips 
 This module supports three scenarios for creating NAT gateways. Each will be explained in further detail in the corresponding sections.
 
 * One NAT Gateway per subnet (default behavior)
-    * `enable_nat_gateway = true`
-    * `single_nat_gateway = false`
-    * `one_nat_gateway_per_az = false`
+  * `enable_nat_gateway = true`
+  * `single_nat_gateway = false`
+  * `one_nat_gateway_per_az = false`
 * Single NAT Gateway
-    * `enable_nat_gateway = true`
-    * `single_nat_gateway = true`
-    * `one_nat_gateway_per_az = false`
+  * `enable_nat_gateway = true`
+  * `single_nat_gateway = true`
+  * `one_nat_gateway_per_az = false`
 * One NAT Gateway per availability zone
-    * `enable_nat_gateway = true`
-    * `single_nat_gateway = false`
-    * `one_nat_gateway_per_az = true`
+  * `enable_nat_gateway = true`
+  * `single_nat_gateway = false`
+  * `one_nat_gateway_per_az = true`
 
 If both `single_nat_gateway` and `one_nat_gateway_per_az` are set to `true`, then `single_nat_gateway` takes precedence.
 
@@ -189,6 +191,7 @@ Terraform version 0.10.3 or newer is required for this module to work.
 | elasticache_route_table_tags | Additional tags for the elasticache route tables | string | `<map>` | no |
 | elasticache_subnet_tags | Additional tags for the elasticache subnets | string | `<map>` | no |
 | elasticache_subnets | A list of elasticache subnets | list | `<list>` | no |
+| enable_classiclink | Should be true to enable ClassicLink in the created VPC | string | `false` | no |
 | enable_dhcp_options | Should be true if you want to specify a DHCP options set with a custom domain name, DNS servers, NTP servers, netbios servers, and/or netbios server type | string | `false` | no |
 | enable_dns_hostnames | Should be true to enable DNS hostnames in the VPC | string | `false` | no |
 | enable_dns_support | Should be true to enable DNS support in the VPC | string | `true` | no |
@@ -289,13 +292,14 @@ Terraform version 0.10.3 or newer is required for this module to work.
 
 This module has been packaged with [awspec](https://github.com/k1LoW/awspec) tests through test kitchen. To run them:
 
-1. Install [rvm](https://rvm.io/rvm/install) and the ruby version specified in the [Gemfile](https://github.com/terraform-aws-modules/terraform-aws-vpc/tree/master/Gemfile).
-2. Install bundler and the gems from our Gemfile:
+1.  Install [rvm](https://rvm.io/rvm/install) and the ruby version specified in the [Gemfile](https://github.com/terraform-aws-modules/terraform-aws-vpc/tree/master/Gemfile).
+2.  Install bundler and the gems from our Gemfile:
+
 ```
 gem install bundler; bundle install
 ```
-3. Test using `bundle exec kitchen test` from the root of the repo.
 
+3.  Test using `bundle exec kitchen test` from the root of the repo.
 
 ## Authors
 
@@ -304,4 +308,3 @@ Module is maintained by [Anton Babenko](https://github.com/antonbabenko) with he
 ## License
 
 Apache 2 Licensed. See LICENSE for full details.
-
