@@ -46,6 +46,12 @@ variable "elasticache_subnets" {
   default     = []
 }
 
+variable "lambda_subnets" {
+  type        = "list"
+  description = "A list of lambda subnets"
+  default     = []
+}
+
 variable "create_database_subnet_group" {
   description = "Controls if database subnet group should be created"
   default     = true
@@ -174,6 +180,11 @@ variable "redshift_subnet_tags" {
 
 variable "elasticache_subnet_tags" {
   description = "Additional tags for the elasticache subnets"
+  default     = {}
+}
+
+variable "lambda_subnet_tags" {
+  description = "Additional tags for the lambda subnets"
   default     = {}
 }
 
