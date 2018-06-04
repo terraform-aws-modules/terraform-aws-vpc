@@ -120,14 +120,14 @@ output "elasticache_subnets_cidr_blocks" {
   value       = ["${aws_subnet.elasticache.*.cidr_block}"]
 }
 
-output "infra_subnets" {
-  description = "List of IDs of infra subnets"
-  value       = ["${aws_subnet.infra.*.id}"]
+output "intra_subnets" {
+  description = "List of IDs of intra subnets"
+  value       = ["${aws_subnet.intra.*.id}"]
 }
 
-output "infra_subnets_cidr_blocks" {
-  description = "List of cidr_blocks of infra subnets"
-  value       = ["${aws_subnet.infra.*.cidr_block}"]
+output "intra_subnets_cidr_blocks" {
+  description = "List of cidr_blocks of intra subnets"
+  value       = ["${aws_subnet.intra.*.cidr_block}"]
 }
 
 output "elasticache_subnet_group" {

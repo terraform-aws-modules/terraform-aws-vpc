@@ -193,16 +193,16 @@ resource "aws_elasticache_subnet_group" "elasticache" {
 }
 
 #####################################################
-# infra subnets - private subnet with no NAT gateway
+# intra subnets - private subnet with no NAT gateway
 #####################################################
-resource "aws_subnet" "infra" {
-  count = "${var.create_vpc && length(var.infra_subnets) > 0 ? length(var.infra_subnets) : 0}"
+resource "aws_subnet" "intra" {
+  count = "${var.create_vpc && length(var.intra_subnets) > 0 ? length(var.intra_subnets) : 0}"
 
   vpc_id            = "${aws_vpc.this.id}"
-  cidr_block        = "${var.infra_subnets[count.index]}"
+  cidr_block        = "${var.intra_subnets[count.index]}"
   availability_zone = "${element(var.azs, count.index)}"
 
-  tags = "${merge(var.tags, var.infra_subnet_tags, map("Name", format("%s-infra-%s", var.name, element(var.azs, count.index))))}"
+  tags = "${merge(var.tags, var.intra_subnet_tags, map("Name", format("%s-intra-%s", var.name, element(var.azs, count.index))))}"
 }
 
 ##############
@@ -342,10 +342,10 @@ resource "aws_route_table_association" "elasticache" {
   route_table_id = "${element(aws_route_table.private.*.id, (var.single_nat_gateway ? 0 : count.index))}"
 }
 
-resource "aws_route_table_association" "infra" {
-  count = "${var.create_vpc && length(var.infra_subnets) > 0 ? length(var.infra_subnets) : 0}"
+resource "aws_route_table_association" "intra" {
+  count = "${var.create_vpc && length(var.intra_subnets) > 0 ? length(var.intra_subnets) : 0}"
 
-  subnet_id      = "${element(aws_subnet.infra.*.id, count.index)}"
+  subnet_id      = "${element(aws_subnet.intra.*.id, count.index)}"
   route_table_id = "${element(aws_route_table.private.*.id, (var.single_nat_gateway ? 0 : count.index))}"
 }
 
