@@ -120,12 +120,12 @@ output "elasticache_subnets_cidr_blocks" {
   value       = ["${aws_subnet.elasticache.*.cidr_block}"]
 }
 
-output "lambda_subnets" {
+output "infra_subnets" {
   description = "List of IDs of lambda subnets"
   value       = ["${aws_subnet.lambda.*.id}"]
 }
 
-output "lambda_subnets_cidr_blocks" {
+output "infra_subnets_cidr_blocks" {
   description = "List of cidr_blocks of lambda subnets"
   value       = ["${aws_subnet.lambda.*.cidr_block}"]
 }
@@ -259,3 +259,4 @@ output "default_vpc_main_route_table_id" {
 //  description = "The IPv6 CIDR block"
 //  value       = "${element(concat(aws_default_vpc.this.*.ipv6_cidr_block, list("")), 0)}"
 //}
+

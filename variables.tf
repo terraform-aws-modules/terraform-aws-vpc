@@ -46,9 +46,9 @@ variable "elasticache_subnets" {
   default     = []
 }
 
-variable "lambda_subnets" {
+variable "infra_subnets" {
   type        = "list"
-  description = "A list of lambda subnets"
+  description = "A list of infra subnets"
   default     = []
 }
 
@@ -183,8 +183,8 @@ variable "elasticache_subnet_tags" {
   default     = {}
 }
 
-variable "lambda_subnet_tags" {
-  description = "Additional tags for the lambda subnets"
+variable "infra_subnet_tags" {
+  description = "Additional tags for the infra subnets"
   default     = {}
 }
 

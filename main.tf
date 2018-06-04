@@ -192,19 +192,18 @@ resource "aws_elasticache_subnet_group" "elasticache" {
   subnet_ids  = ["${aws_subnet.elasticache.*.id}"]
 }
 
-#####################
-# Lambdas subnet
-#####################
-resource "aws_subnet" "lambda" {
-  count = "${var.create_vpc && length(var.lambda_subnets) > 0 ? length(var.lambda_subnets) : 0}"
+#####################################################
+# infra subnets - private subnet with no NAT gateway
+#####################################################
+resource "aws_subnet" "infra" {
+  count = "${var.create_vpc && length(var.infra_subnets) > 0 ? length(var.infra_subnets) : 0}"
 
   vpc_id            = "${aws_vpc.this.id}"
-  cidr_block        = "${var.lambda_subnets[count.index]}"
+  cidr_block        = "${var.infra_subnets[count.index]}"
   availability_zone = "${element(var.azs, count.index)}"
 
-  tags = "${merge(var.tags, var.lambda_subnet_tags, map("Name", format("%s-lambda-%s", var.name, element(var.azs, count.index))))}"
+  tags = "${merge(var.tags, var.infra_subnet_tags, map("Name", format("%s-infra-%s", var.name, element(var.azs, count.index))))}"
 }
-
 
 ##############
 # NAT Gateway
@@ -340,6 +339,13 @@ resource "aws_route_table_association" "elasticache" {
   count = "${var.create_vpc && length(var.elasticache_subnets) > 0 ? length(var.elasticache_subnets) : 0}"
 
   subnet_id      = "${element(aws_subnet.elasticache.*.id, count.index)}"
+  route_table_id = "${element(aws_route_table.private.*.id, (var.single_nat_gateway ? 0 : count.index))}"
+}
+
+resource "aws_route_table_association" "infra" {
+  count = "${var.create_vpc && length(var.infra_subnets) > 0 ? length(var.infra_subnets) : 0}"
+
+  subnet_id      = "${element(aws_subnet.infra.*.id, count.index)}"
   route_table_id = "${element(aws_route_table.private.*.id, (var.single_nat_gateway ? 0 : count.index))}"
 }
 
