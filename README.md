@@ -99,13 +99,14 @@ If both `single_nat_gateway` and `one_nat_gateway_per_az` are set to `true`, the
 
 ### One NAT Gateway per subnet (default)
 
-By default, the module will determine the number of NAT Gateways to create based on the the `max()` of the private subnet lists (`database_subnets`, `elasticache_subnets`, `private_subnets`, and `redshift_subnets`). For example, if your configuration looks like the following:
+By default, the module will determine the number of NAT Gateways to create based on the the `max()` of the private subnet lists (`database_subnets`, `elasticache_subnets`, `private_subnets`, and `redshift_subnets`). The module **does not** take into account the number of `intra_subnets`, since the latter are designed to have no Internet access via NAT Gateway.  For example, if your configuration looks like the following:
 
 ```hcl
 database_subnets    = ["10.0.21.0/24", "10.0.22.0/24"]
 elasticache_subnets = ["10.0.31.0/24", "10.0.32.0/24"]
 private_subnets     = ["10.0.1.0/24", "10.0.2.0/24", "10.0.3.0/24", "10.0.4.0/24", "10.0.5.0/24"]
 redshift_subnets    = ["10.0.41.0/24", "10.0.42.0/24"]
+intra_subnets       = ["10.0.51.0/24", "10.0.52.0/24", "10.0.53.0/24"]
 ```
 
 Then `5` NAT Gateways will be created since `5` private subnet CIDR blocks were specified.
@@ -120,6 +121,10 @@ If `one_nat_gateway_per_az = true` and `single_nat_gateway = false`, then the mo
 
 * The variable `var.azs` **must** be specified.
 * The number of public subnet CIDR blocks specified in `public_subnets` **must** be greater than or equal to the number of availability zones specified in `var.azs`. This is to ensure that each NAT Gateway has a dedicated public subnet to deploy to.
+
+## Private Versus Intra Subnets ##
+
+By default, if NAT Gateways are enabled, `private` subnets will be configured with routes for Internet traffic that point at the NAT Gateways configured by use of the above options.  If you need private subnets that should have no Internet routing (in the sense of RFC1918 Category 1 subnets), `intra_subnets` are available.  An example use case is configuration of Lambda functions within a VPC, where the Lambda functions only need to pass traffic to internal resources or VPC endpoints for AWS services.  Since Lambda functions allocate Elastic Network Interfaces in proportion to the traffic received, it can be useful to allocate a large private subnet for such allocations, while keeping the traffic they generate entirely internal to the VPC.  You can add additional tags with `intra_subnet_tags` as with other subnet types.
 
 ## Conditional creation
 
@@ -181,6 +186,8 @@ Terraform version 0.10.3 or newer is required for this module to work.
 | enable_vpn_gateway | Should be true if you want to create a new VPN Gateway resource and attach it to the VPC | string | `false` | no |
 | external_nat_ip_ids | List of EIP IDs to be assigned to the NAT Gateways (used in combination with reuse_nat_ips) | list | `<list>` | no |
 | instance_tenancy | A tenancy option for instances launched into the VPC | string | `default` | no |
+| intra_subnet_tags | Additional tags for the intra subnets | string | `<map>` | no |
+| intra_subnets | A list of intra subnets | list | `<list>` | no |
 | manage_default_vpc | Should be true to adopt and manage Default VPC | string | `false` | no |
 | map_public_ip_on_launch | Should be false if you do not want to auto-assign public IP on launch | string | `true` | no |
 | name | Name to be used on all the resources as identifier | string | `` | no |
@@ -225,6 +232,8 @@ Terraform version 0.10.3 or newer is required for this module to work.
 | elasticache_subnets | List of IDs of elasticache subnets |
 | elasticache_subnets_cidr_blocks | List of cidr_blocks of elasticache subnets |
 | igw_id | Internet Gateway |
+| intra_subnets | List of IDs of intra subnets |
+| intra_subnets_cidr_blocks | List of cidr_blocks of intra subnets |
 | nat_ids | List of allocation ID of Elastic IPs created for AWS NAT Gateway |
 | nat_public_ips | List of public Elastic IPs created for AWS NAT Gateway |
 | natgw_ids | List of NAT Gateway IDs |
