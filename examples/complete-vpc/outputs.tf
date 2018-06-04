@@ -30,6 +30,11 @@ output "redshift_subnets" {
   value       = ["${module.vpc.redshift_subnets}"]
 }
 
+output "intra_subnets" {
+  description = "List of IDs of intra subnets"
+  value       = ["${module.vpc.intra_subnets}"]
+}
+
 # NAT gateways
 output "nat_public_ips" {
   description = "List of public Elastic IPs created for AWS NAT Gateway"

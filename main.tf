@@ -98,6 +98,17 @@ resource "aws_route_table" "private" {
   }
 }
 
+#################
+# Intra routes
+#################
+resource "aws_route_table" "intra" {
+  count = "${var.create_vpc && length(var.intra_subnets) > 0 ? 1 : 0}"
+
+  vpc_id = "${aws_vpc.this.id}"
+
+  tags = "${merge(var.tags, var.intra_route_table_tags, map("Name", "${var.name}-intra"))}"
+}
+
 ################
 # Public subnet
 ################
@@ -274,6 +285,13 @@ resource "aws_vpc_endpoint_route_table_association" "private_s3" {
   route_table_id  = "${element(aws_route_table.private.*.id, count.index)}"
 }
 
+resource "aws_vpc_endpoint_route_table_association" "intra_s3" {
+  count = "${var.create_vpc && var.enable_s3_endpoint ? 1 : 0}"
+
+  vpc_endpoint_id = "${aws_vpc_endpoint.s3.id}"
+  route_table_id  = "${element(aws_route_table.intra.*.id, 0)}"
+}
+
 resource "aws_vpc_endpoint_route_table_association" "public_s3" {
   count = "${var.create_vpc && var.enable_s3_endpoint && length(var.public_subnets) > 0 ? 1 : 0}"
 
@@ -302,6 +320,13 @@ resource "aws_vpc_endpoint_route_table_association" "private_dynamodb" {
 
   vpc_endpoint_id = "${aws_vpc_endpoint.dynamodb.id}"
   route_table_id  = "${element(aws_route_table.private.*.id, count.index)}"
+}
+
+resource "aws_vpc_endpoint_route_table_association" "intra_dynamodb" {
+  count = "${var.create_vpc && var.enable_dynamodb_endpoint ? 1 : 0}"
+
+  vpc_endpoint_id = "${aws_vpc_endpoint.dynamodb.id}"
+  route_table_id  = "${element(aws_route_table.intra.*.id, 0)}"
 }
 
 resource "aws_vpc_endpoint_route_table_association" "public_dynamodb" {
@@ -346,7 +371,7 @@ resource "aws_route_table_association" "intra" {
   count = "${var.create_vpc && length(var.intra_subnets) > 0 ? length(var.intra_subnets) : 0}"
 
   subnet_id      = "${element(aws_subnet.intra.*.id, count.index)}"
-  route_table_id = "${element(aws_route_table.private.*.id, (var.single_nat_gateway ? 0 : count.index))}"
+  route_table_id = "${element(aws_route_table.intra.*.id, 0)}"
 }
 
 resource "aws_route_table_association" "public" {
@@ -375,7 +400,7 @@ resource "aws_vpn_gateway_attachment" "this" {
 }
 
 resource "aws_vpn_gateway_route_propagation" "public" {
-  count = "${var.create_vpc && var.propagate_public_route_tables_vgw && (var.enable_vpn_gateway  || var.vpn_gateway_id != "") ? 1 : 0}"
+  count = "${var.create_vpc && var.propagate_public_route_tables_vgw && (var.enable_vpn_gateway || var.vpn_gateway_id != "") ? 1 : 0}"
 
   route_table_id = "${element(aws_route_table.public.*.id, count.index)}"
   vpn_gateway_id = "${element(concat(aws_vpn_gateway.this.*.id, aws_vpn_gateway_attachment.this.*.vpn_gateway_id), count.index)}"

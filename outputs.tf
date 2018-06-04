@@ -151,6 +151,11 @@ output "private_route_table_ids" {
   value       = ["${aws_route_table.private.*.id}"]
 }
 
+output "intra_route_table_ids" {
+  description = "List of IDs of intra route tables"
+  value       = ["${aws_route_table.intra.*.id}"]
+}
+
 output "nat_ids" {
   description = "List of allocation ID of Elastic IPs created for AWS NAT Gateway"
   value       = ["${aws_eip.nat.*.id}"]

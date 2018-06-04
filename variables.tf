@@ -168,6 +168,11 @@ variable "private_route_table_tags" {
   default     = {}
 }
 
+variable "intra_route_table_tags" {
+  description = "Additional tags for the intra route tables"
+  default     = {}
+}
+
 variable "database_subnet_tags" {
   description = "Additional tags for the database subnets"
   default     = {}
