@@ -167,6 +167,7 @@ Terraform version 0.10.3 or newer is required for this module to work.
 | cidr | The CIDR block for the VPC. Default value is a valid CIDR, but not acceptable by AWS and should be overriden | string | `0.0.0.0/0` | no |
 | create_database_subnet_group | Controls if database subnet group should be created | string | `true` | no |
 | create_vpc | Controls if VPC should be created (it affects almost all resources) | string | `true` | no |
+| database_subnet_group_tags | Additional tags for the database subnet group | string | `<map>` | no |
 | database_subnet_tags | Additional tags for the database subnets | string | `<map>` | no |
 | database_subnets | A list of database subnets | list | `<list>` | no |
 | default_route_table_tags | Additional tags for the default route table | string | `<map>` | no |
@@ -191,6 +192,7 @@ Terraform version 0.10.3 or newer is required for this module to work.
 | enable_s3_endpoint | Should be true if you want to provision an S3 endpoint to the VPC | string | `false` | no |
 | enable_vpn_gateway | Should be true if you want to create a new VPN Gateway resource and attach it to the VPC | string | `false` | no |
 | external_nat_ip_ids | List of EIP IDs to be assigned to the NAT Gateways (used in combination with reuse_nat_ips) | list | `<list>` | no |
+| igw_tags | Additional tags for the internet gateway | string | `<map>` | no |
 | instance_tenancy | A tenancy option for instances launched into the VPC | string | `default` | no |
 | intra_route_table_tags | Additional tags for the intra route tables | string | `<map>` | no |
 | intra_subnet_tags | Additional tags for the intra subnets | string | `<map>` | no |
@@ -198,7 +200,8 @@ Terraform version 0.10.3 or newer is required for this module to work.
 | manage_default_vpc | Should be true to adopt and manage Default VPC | string | `false` | no |
 | map_public_ip_on_launch | Should be false if you do not want to auto-assign public IP on launch | string | `true` | no |
 | name | Name to be used on all the resources as identifier | string | `` | no |
-| nat_gateway_tags | Additional tags for the nat gateways | string | `<map>` | no |
+| nat_eip_tags | Additional tags for the NAT EIP | string | `<map>` | no |
+| nat_gateway_tags | Additional tags for the NAT gateways | string | `<map>` | no |
 | one_nat_gateway_per_az | Should be true if you want only one NAT Gateway per availability zone. Requires `var.azs` to be set, and the number of `public_subnets` created to be greater than or equal to the number of availability zones specified in `var.azs`. | string | `false` | no |
 | private_route_table_tags | Additional tags for the private route tables | string | `<map>` | no |
 | private_subnet_tags | Additional tags for the private subnets | string | `<map>` | no |
@@ -208,6 +211,7 @@ Terraform version 0.10.3 or newer is required for this module to work.
 | public_route_table_tags | Additional tags for the public route tables | string | `<map>` | no |
 | public_subnet_tags | Additional tags for the public subnets | string | `<map>` | no |
 | public_subnets | A list of public subnets inside the VPC | string | `<list>` | no |
+| redshift_subnet_group_tags | Additional tags for the redshift subnet group | string | `<map>` | no |
 | redshift_subnet_tags | Additional tags for the redshift subnets | string | `<map>` | no |
 | redshift_subnets | A list of redshift subnets | list | `<list>` | no |
 | reuse_nat_ips | Should be true if you don't want EIPs to be created for your NAT Gateways and will instead pass them in via the 'external_nat_ip_ids' variable | string | `false` | no |
@@ -215,6 +219,7 @@ Terraform version 0.10.3 or newer is required for this module to work.
 | tags | A map of tags to add to all resources | string | `<map>` | no |
 | vpc_tags | Additional tags for the VPC | string | `<map>` | no |
 | vpn_gateway_id | ID of VPN Gateway to attach to the VPC | string | `` | no |
+| vpn_gateway_tags | Additional tags for the VPN gateway | string | `<map>` | no |
 
 ## Outputs
 

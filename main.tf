@@ -54,7 +54,7 @@ resource "aws_internet_gateway" "this" {
 
   vpc_id = "${aws_vpc.this.id}"
 
-  tags = "${merge(map("Name", format("%s", var.name)), var.tags)}"
+  tags = "${merge(map("Name", format("%s", var.name)), var.igw_tags, var.tags)}"
 }
 
 ################
@@ -156,7 +156,7 @@ resource "aws_db_subnet_group" "database" {
   description = "Database subnet group for ${var.name}"
   subnet_ids  = ["${aws_subnet.database.*.id}"]
 
-  tags = "${merge(map("Name", format("%s", var.name)), var.tags)}"
+  tags = "${merge(map("Name", format("%s", var.name)), var.database_subnet_group_tags, var.tags)}"
 }
 
 ##################
@@ -179,7 +179,7 @@ resource "aws_redshift_subnet_group" "redshift" {
   description = "Redshift subnet group for ${var.name}"
   subnet_ids  = ["${aws_subnet.redshift.*.id}"]
 
-  tags = "${merge(map("Name", format("%s", var.name)), var.tags)}"
+  tags = "${merge(map("Name", format("%s", var.name)), var.redshift_subnet_group_tags, var.tags)}"
 }
 
 #####################
@@ -236,7 +236,7 @@ resource "aws_eip" "nat" {
 
   vpc = true
 
-  tags = "${merge(map("Name", format("%s-%s", var.name, element(var.azs, (var.single_nat_gateway ? 0 : count.index)))), var.tags)}"
+  tags = "${merge(map("Name", format("%s-%s", var.name, element(var.azs, (var.single_nat_gateway ? 0 : count.index)))), var.nat_eip_tags, var.tags)}"
 }
 
 resource "aws_nat_gateway" "this" {
@@ -389,7 +389,7 @@ resource "aws_vpn_gateway" "this" {
 
   vpc_id = "${aws_vpc.this.id}"
 
-  tags = "${merge(map("Name", format("%s", var.name)), var.tags)}"
+  tags = "${merge(map("Name", format("%s", var.name)), var.vpn_gateway_tags, var.tags)}"
 }
 
 resource "aws_vpn_gateway_attachment" "this" {
