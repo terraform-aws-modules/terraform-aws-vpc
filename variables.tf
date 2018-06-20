@@ -143,6 +143,11 @@ variable "vpc_tags" {
   default     = {}
 }
 
+variable "igw_tags" {
+  description = "Additional tags for the internet gateway"
+  default     = {}
+}
+
 variable "public_subnet_tags" {
   description = "Additional tags for the public subnets"
   default     = {}
@@ -178,8 +183,18 @@ variable "database_subnet_tags" {
   default     = {}
 }
 
+variable "database_subnet_group_tags" {
+  description = "Additional tags for the database subnet group"
+  default     = {}
+}
+
 variable "redshift_subnet_tags" {
   description = "Additional tags for the redshift subnets"
+  default     = {}
+}
+
+variable "redshift_subnet_group_tags" {
+  description = "Additional tags for the redshift subnet group"
   default     = {}
 }
 
@@ -199,7 +214,17 @@ variable "dhcp_options_tags" {
 }
 
 variable "nat_gateway_tags" {
-  description = "Additional tags for the nat gateways"
+  description = "Additional tags for the NAT gateways"
+  default     = {}
+}
+
+variable "nat_eip_tags" {
+  description = "Additional tags for the NAT EIP"
+  default     = {}
+}
+
+variable "vpn_gateway_tags" {
+  description = "Additional tags for the VPN gateway"
   default     = {}
 }
 
