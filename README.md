@@ -170,7 +170,6 @@ Terraform version 0.10.3 or newer is required for this module to work.
 | database_subnet_group_tags | Additional tags for the database subnet group | string | `<map>` | no |
 | database_subnet_tags | Additional tags for the database subnets | string | `<map>` | no |
 | database_subnets | A list of database subnets | list | `<list>` | no |
-| default_route_table_tags | Additional tags for the default route table | string | `<map>` | no |
 | default_vpc_enable_classiclink | Should be true to enable ClassicLink in the Default VPC | string | `false` | no |
 | default_vpc_enable_dns_hostnames | Should be true to enable DNS hostnames in the Default VPC | string | `false` | no |
 | default_vpc_enable_dns_support | Should be true to enable DNS support in the Default VPC | string | `true` | no |
