@@ -425,3 +425,23 @@ resource "aws_default_vpc" "this" {
 
   tags = "${merge(map("Name", format("%s", var.default_vpc_name)), var.default_vpc_tags, var.tags)}"
 }
+
+data "aws_route_table" "default" {
+  count = "${var.manage_default_vpc ? 1 : 0}"
+
+  vpc_id = "${element(aws_default_vpc.this.*.id, 0)}"
+
+  filter {
+    name   = "association.main"
+    values = ["true"]
+  }
+}
+
+resource "aws_default_route_table" "this" {
+  count = "${var.manage_default_vpc ? 1 : 0}"
+
+  default_route_table_id = "${element(data.aws_route_table.default.*.route_table_id, 0)}"
+  route                  = ["${data.aws_route_table.default.*.routes[0]}"]
+
+  tags = "${merge(map("Name", format("%s", var.default_vpc_name)), var.default_route_table_tags, var.tags)}"
+}
