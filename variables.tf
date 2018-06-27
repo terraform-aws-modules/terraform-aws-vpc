@@ -46,17 +46,17 @@ variable "elasticache_subnets" {
   default     = []
 }
 
-variable "create_database_route_table" {
+variable "create_database_subnet_route_table" {
   description = "Controls if saperate route table for database should be created"
-  default     = false
+  default     = true
 }
 
-variable "create_redshift_route_table" {
+variable "create_redshift_subnet_route_table" {
   description = "Controls if saperate route table for redshift should be created"
-  default     = false
+  default     = true
 }
 
-variable "create_elasticache_route_table" {
+variable "create_elasticache_subnet_route_table" {
   description = "Controls if saperate route table for elasticache should be created"
   default     = false
 }

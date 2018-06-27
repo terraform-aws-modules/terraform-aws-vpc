@@ -1,8 +1,8 @@
-# vpc saperate private db cache route table
+# VPC with separate private route tables
 
 Configuration in this directory creates set of VPC resources which may be sufficient for staging or production environment (look into [simple-vpc](../simple-vpc) for more simplified setup). 
 
-There are public, private, database, ElastiCache subnets, NAT Gateways created in each availability zone. **It sets up saperate private route for db, elasticache and redshift subnets.**.
+There are public, private, database, ElastiCache subnets, NAT Gateways created in each availability zone. **It sets up separate private route for db, elasticache and redshift subnets.**.
 
 ## Usage
 
@@ -24,10 +24,10 @@ Note that this example may create resources which can cost money (AWS Elastic IP
 |------|-------------|
 | database_subnets | List of IDs of database subnets |
 | elasticache_subnets | List of IDs of elasticache subnets |
+| redshift_subnets | List of IDs of redshift subnets |
 | nat_public_ips | NAT gateways |
 | private_subnets | Subnets |
 | public_subnets | List of IDs of public subnets |
-| database_subnets | List of IDs of redshift subnets |
 | vpc_id | VPC |
 
 <!-- END OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
