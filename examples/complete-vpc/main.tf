@@ -15,10 +15,13 @@ module "vpc" {
   database_subnets    = ["10.10.21.0/24", "10.10.22.0/24", "10.10.23.0/24"]
   elasticache_subnets = ["10.10.31.0/24", "10.10.32.0/24", "10.10.33.0/24"]
   redshift_subnets    = ["10.10.41.0/24", "10.10.42.0/24", "10.10.43.0/24"]
+  intra_subnets       = ["10.10.51.0/24", "10.10.52.0/24", "10.10.53.0/24"]
 
   create_database_subnet_group = false
 
   enable_nat_gateway = true
+  single_nat_gateway = true
+
   enable_vpn_gateway = true
 
   enable_s3_endpoint       = true

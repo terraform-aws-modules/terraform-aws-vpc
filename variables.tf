@@ -61,6 +61,12 @@ variable "create_elasticache_subnet_route_table" {
   default     = false
 }
 
+variable "intra_subnets" {
+  type        = "list"
+  description = "A list of intra subnets"
+  default     = []
+}
+
 variable "create_database_subnet_group" {
   description = "Controls if database subnet group should be created"
   default     = true
@@ -192,6 +198,11 @@ variable "elasticache_route_table_tags" {
   default     = {}
 }
 
+variable "intra_route_table_tags" {
+  description = "Additional tags for the intra route tables"
+  default     = {}
+}
+
 variable "database_subnet_tags" {
   description = "Additional tags for the database subnets"
   default     = {}
@@ -204,6 +215,11 @@ variable "redshift_subnet_tags" {
 
 variable "elasticache_subnet_tags" {
   description = "Additional tags for the elasticache subnets"
+  default     = {}
+}
+
+variable "intra_subnet_tags" {
+  description = "Additional tags for the intra subnets"
   default     = {}
 }
 
