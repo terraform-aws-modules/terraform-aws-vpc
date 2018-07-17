@@ -164,7 +164,7 @@ Terraform version 0.10.3 or newer is required for this module to work.
 | Name | Description | Type | Default | Required |
 |------|-------------|:----:|:-----:|:-----:|
 | azs | A list of availability zones in the region | string | `<list>` | no |
-| cidr | The CIDR block for the VPC. Default value is a valid CIDR, but not acceptable by AWS and should be overriden | string | `0.0.0.0/0` | no |
+| cidr | The CIDR block for the VPC. Default value is a valid CIDR, but not acceptable by AWS and should be overridden | string | `0.0.0.0/0` | no |
 | create_database_subnet_group | Controls if database subnet group should be created | string | `true` | no |
 | create_vpc | Controls if VPC should be created (it affects almost all resources) | string | `true` | no |
 | database_subnet_group_tags | Additional tags for the database subnet group | string | `<map>` | no |
