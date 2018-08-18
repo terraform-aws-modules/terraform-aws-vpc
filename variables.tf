@@ -47,17 +47,17 @@ variable "elasticache_subnets" {
 }
 
 variable "create_database_subnet_route_table" {
-  description = "Controls if saperate route table for database should be created"
-  default     = true
+  description = "Controls if separate route table for database should be created"
+  default     = false
 }
 
 variable "create_redshift_subnet_route_table" {
-  description = "Controls if saperate route table for redshift should be created"
-  default     = true
+  description = "Controls if separate route table for redshift should be created"
+  default     = false
 }
 
 variable "create_elasticache_subnet_route_table" {
-  description = "Controls if saperate route table for elasticache should be created"
+  description = "Controls if separate route table for elasticache should be created"
   default     = false
 }
 
@@ -184,17 +184,17 @@ variable "private_route_table_tags" {
 }
 
 variable "database_route_table_tags" {
-  description = "Additional tags for the private route tables"
+  description = "Additional tags for the database route tables"
   default     = {}
 }
 
 variable "redshift_route_table_tags" {
-  description = "Additional tags for the private route tables"
+  description = "Additional tags for the redshift route tables"
   default     = {}
 }
 
 variable "elasticache_route_table_tags" {
-  description = "Additional tags for the private route tables"
+  description = "Additional tags for the elasticache route tables"
   default     = {}
 }
 

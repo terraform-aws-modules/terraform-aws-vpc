@@ -99,8 +99,10 @@ resource "aws_route_table" "private" {
 }
 
 #################
+# Database routes
+#################
 resource "aws_route_table" "database" {
-  count = "${var.create_vpc &&  var.create_database_subnet_route_table && length(var.database_subnets) > 0 ? 1 : 0}"
+  count = "${var.create_vpc && var.create_database_subnet_route_table && length(var.database_subnets) > 0 ? 1 : 0}"
 
   vpc_id = "${aws_vpc.this.id}"
 
@@ -114,14 +116,16 @@ resource "aws_route_table" "redshift" {
   count = "${var.create_vpc && var.create_redshift_subnet_route_table && length(var.redshift_subnets) > 0 ? 1 : 0}"
 
   vpc_id = "${aws_vpc.this.id}"
-  tags   = "${merge(var.tags, var.redshift_route_table_tags, map("Name", "${var.name}-redshift"))}"
+
+  tags = "${merge(var.tags, var.redshift_route_table_tags, map("Name", "${var.name}-redshift"))}"
 }
 
 #################
 # Elasticache routes
 #################
 resource "aws_route_table" "elasticache" {
-  count  = "${var.create_vpc && var.create_elasticache_subnet_route_table && length(var.elasticache_subnets) > 0 ? 1 : 0}"
+  count = "${var.create_vpc && var.create_elasticache_subnet_route_table && length(var.elasticache_subnets) > 0 ? 1 : 0}"
+
   vpc_id = "${aws_vpc.this.id}"
 
   tags = "${merge(var.tags, var.elasticache_route_table_tags, map("Name", "${var.name}-elasticache"))}"

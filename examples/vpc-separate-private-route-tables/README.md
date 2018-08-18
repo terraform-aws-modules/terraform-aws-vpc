@@ -2,7 +2,7 @@
 
 Configuration in this directory creates set of VPC resources which may be sufficient for staging or production environment (look into [simple-vpc](../simple-vpc) for more simplified setup). 
 
-There are public, private, database, ElastiCache subnets, NAT Gateways created in each availability zone. **It sets up separate private route for db, elasticache and redshift subnets.**.
+There are public, private, database, ElastiCache, Redshift subnets, NAT Gateways created in each availability zone. **This examples sets up separate private route for database, elasticache and redshift subnets.**.
 
 ## Usage
 
