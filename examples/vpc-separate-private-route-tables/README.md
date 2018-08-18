@@ -24,10 +24,10 @@ Note that this example may create resources which can cost money (AWS Elastic IP
 |------|-------------|
 | database_subnets | List of IDs of database subnets |
 | elasticache_subnets | List of IDs of elasticache subnets |
-| redshift_subnets | List of IDs of redshift subnets |
 | nat_public_ips | NAT gateways |
 | private_subnets | Subnets |
 | public_subnets | List of IDs of public subnets |
+| redshift_subnets | List of IDs of elasticache subnets |
 | vpc_id | VPC |
 
 <!-- END OF PRE-COMMIT-TERRAFORM DOCS HOOK -->

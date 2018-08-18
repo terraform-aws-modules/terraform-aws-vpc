@@ -18,7 +18,7 @@ module "vpc" {
 
   create_database_subnet_route_table    = true
   create_elasticache_subnet_route_table = true
-  create_redshift_subnet_route_table    = false
+  create_redshift_subnet_route_table    = true
   single_nat_gateway                    = true
   enable_nat_gateway                    = true
 
