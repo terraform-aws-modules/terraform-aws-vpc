@@ -18,7 +18,7 @@ resource "aws_vpc" "this" {
   enable_dns_hostnames = "${var.enable_dns_hostnames}"
   enable_dns_support   = "${var.enable_dns_support}"
 
-  tags = "${merge(var.tags, var.vpc_tags, map("Name", format("%s", var.name)))}"
+  tags = "${merge(map("Name", format("%s", var.name)), var.vpc_tags, var.tags)}"
 }
 
 ###################
@@ -33,7 +33,7 @@ resource "aws_vpc_dhcp_options" "this" {
   netbios_name_servers = ["${var.dhcp_options_netbios_name_servers}"]
   netbios_node_type    = "${var.dhcp_options_netbios_node_type}"
 
-  tags = "${merge(var.tags, var.dhcp_options_tags, map("Name", format("%s", var.name)))}"
+  tags = "${merge(map("Name", format("%s", var.name)), var.dhcp_options_tags, var.tags)}"
 }
 
 ###############################
@@ -54,7 +54,7 @@ resource "aws_internet_gateway" "this" {
 
   vpc_id = "${aws_vpc.this.id}"
 
-  tags = "${merge(var.tags, map("Name", format("%s", var.name)))}"
+  tags = "${merge(map("Name", format("%s", var.name)), var.igw_tags, var.tags)}"
 }
 
 ################
@@ -65,7 +65,7 @@ resource "aws_route_table" "public" {
 
   vpc_id = "${aws_vpc.this.id}"
 
-  tags = "${merge(var.tags, var.public_route_table_tags, map("Name", format("%s-public", var.name)))}"
+  tags = "${merge(map("Name", format("%s-public", var.name)), var.public_route_table_tags, var.tags)}"
 }
 
 resource "aws_route" "public_internet_gateway" {
@@ -89,7 +89,7 @@ resource "aws_route_table" "private" {
 
   vpc_id = "${aws_vpc.this.id}"
 
-  tags = "${merge(var.tags, var.private_route_table_tags, map("Name", (var.single_nat_gateway ? "${var.name}-private" : format("%s-private-%s", var.name, element(var.azs, count.index)))))}"
+  tags = "${merge(map("Name", (var.single_nat_gateway ? "${var.name}-private" : format("%s-private-%s", var.name, element(var.azs, count.index)))), var.private_route_table_tags, var.tags)}"
 
   lifecycle {
     # When attaching VPN gateways it is common to define aws_vpn_gateway_route_propagation
@@ -139,7 +139,7 @@ resource "aws_route_table" "intra" {
 
   vpc_id = "${aws_vpc.this.id}"
 
-  tags = "${merge(var.tags, var.intra_route_table_tags, map("Name", "${var.name}-intra"))}"
+  tags = "${merge(map("Name", "${var.name}-intra"), var.intra_route_table_tags, var.tags)}"
 }
 
 ################
@@ -153,7 +153,7 @@ resource "aws_subnet" "public" {
   availability_zone       = "${element(var.azs, count.index)}"
   map_public_ip_on_launch = "${var.map_public_ip_on_launch}"
 
-  tags = "${merge(var.tags, var.public_subnet_tags, map("Name", format("%s-public-%s", var.name, element(var.azs, count.index))))}"
+  tags = "${merge(map("Name", format("%s-public-%s", var.name, element(var.azs, count.index))), var.public_subnet_tags, var.tags)}"
 }
 
 #################
@@ -166,7 +166,7 @@ resource "aws_subnet" "private" {
   cidr_block        = "${var.private_subnets[count.index]}"
   availability_zone = "${element(var.azs, count.index)}"
 
-  tags = "${merge(var.tags, var.private_subnet_tags, map("Name", format("%s-private-%s", var.name, element(var.azs, count.index))))}"
+  tags = "${merge(map("Name", format("%s-private-%s", var.name, element(var.azs, count.index))), var.private_subnet_tags, var.tags)}"
 }
 
 ##################
@@ -179,7 +179,7 @@ resource "aws_subnet" "database" {
   cidr_block        = "${var.database_subnets[count.index]}"
   availability_zone = "${element(var.azs, count.index)}"
 
-  tags = "${merge(var.tags, var.database_subnet_tags, map("Name", format("%s-db-%s", var.name, element(var.azs, count.index))))}"
+  tags = "${merge(map("Name", format("%s-db-%s", var.name, element(var.azs, count.index))), var.database_subnet_tags, var.tags)}"
 }
 
 resource "aws_db_subnet_group" "database" {
@@ -189,7 +189,7 @@ resource "aws_db_subnet_group" "database" {
   description = "Database subnet group for ${var.name}"
   subnet_ids  = ["${aws_subnet.database.*.id}"]
 
-  tags = "${merge(var.tags, map("Name", format("%s", var.name)))}"
+  tags = "${merge(map("Name", format("%s", var.name)), var.database_subnet_group_tags, var.tags)}"
 }
 
 ##################
@@ -202,7 +202,7 @@ resource "aws_subnet" "redshift" {
   cidr_block        = "${var.redshift_subnets[count.index]}"
   availability_zone = "${element(var.azs, count.index)}"
 
-  tags = "${merge(var.tags, var.redshift_subnet_tags, map("Name", format("%s-redshift-%s", var.name, element(var.azs, count.index))))}"
+  tags = "${merge(map("Name", format("%s-redshift-%s", var.name, element(var.azs, count.index))), var.redshift_subnet_tags, var.tags)}"
 }
 
 resource "aws_redshift_subnet_group" "redshift" {
@@ -212,7 +212,7 @@ resource "aws_redshift_subnet_group" "redshift" {
   description = "Redshift subnet group for ${var.name}"
   subnet_ids  = ["${aws_subnet.redshift.*.id}"]
 
-  tags = "${merge(var.tags, map("Name", format("%s", var.name)))}"
+  tags = "${merge(map("Name", format("%s", var.name)), var.redshift_subnet_group_tags, var.tags)}"
 }
 
 #####################
@@ -225,7 +225,7 @@ resource "aws_subnet" "elasticache" {
   cidr_block        = "${var.elasticache_subnets[count.index]}"
   availability_zone = "${element(var.azs, count.index)}"
 
-  tags = "${merge(var.tags, var.elasticache_subnet_tags, map("Name", format("%s-elasticache-%s", var.name, element(var.azs, count.index))))}"
+  tags = "${merge(map("Name", format("%s-elasticache-%s", var.name, element(var.azs, count.index))), var.elasticache_subnet_tags, var.tags)}"
 }
 
 resource "aws_elasticache_subnet_group" "elasticache" {
@@ -237,7 +237,7 @@ resource "aws_elasticache_subnet_group" "elasticache" {
 }
 
 #####################################################
-# intra subnets - private subnet with no NAT gateway
+# intra subnets - private subnet without NAT gateway
 #####################################################
 resource "aws_subnet" "intra" {
   count = "${var.create_vpc && length(var.intra_subnets) > 0 ? length(var.intra_subnets) : 0}"
@@ -246,7 +246,7 @@ resource "aws_subnet" "intra" {
   cidr_block        = "${var.intra_subnets[count.index]}"
   availability_zone = "${element(var.azs, count.index)}"
 
-  tags = "${merge(var.tags, var.intra_subnet_tags, map("Name", format("%s-intra-%s", var.name, element(var.azs, count.index))))}"
+  tags = "${merge(map("Name", format("%s-intra-%s", var.name, element(var.azs, count.index))), var.intra_subnet_tags, var.tags)}"
 }
 
 ##############
@@ -269,7 +269,7 @@ resource "aws_eip" "nat" {
 
   vpc = true
 
-  tags = "${merge(var.tags, map("Name", format("%s-%s", var.name, element(var.azs, (var.single_nat_gateway ? 0 : count.index)))))}"
+  tags = "${merge(map("Name", format("%s-%s", var.name, element(var.azs, (var.single_nat_gateway ? 0 : count.index)))), var.nat_eip_tags, var.tags)}"
 }
 
 resource "aws_nat_gateway" "this" {
@@ -278,7 +278,7 @@ resource "aws_nat_gateway" "this" {
   allocation_id = "${element(local.nat_gateway_ips, (var.single_nat_gateway ? 0 : count.index))}"
   subnet_id     = "${element(aws_subnet.public.*.id, (var.single_nat_gateway ? 0 : count.index))}"
 
-  tags = "${merge(var.tags, map("Name", format("%s-%s", var.name, element(var.azs, (var.single_nat_gateway ? 0 : count.index)))))}"
+  tags = "${merge(map("Name", format("%s-%s", var.name, element(var.azs, (var.single_nat_gateway ? 0 : count.index)))), var.nat_gateway_tags, var.tags)}"
 
   depends_on = ["aws_internet_gateway.this"]
 }
@@ -422,7 +422,7 @@ resource "aws_vpn_gateway" "this" {
 
   vpc_id = "${aws_vpc.this.id}"
 
-  tags = "${merge(var.tags, map("Name", format("%s", var.name)))}"
+  tags = "${merge(map("Name", format("%s", var.name)), var.vpn_gateway_tags, var.tags)}"
 }
 
 resource "aws_vpn_gateway_attachment" "this" {
@@ -456,5 +456,5 @@ resource "aws_default_vpc" "this" {
   enable_dns_hostnames = "${var.default_vpc_enable_dns_hostnames}"
   enable_classiclink   = "${var.default_vpc_enable_classiclink}"
 
-  tags = "${merge(var.tags, var.default_vpc_tags, map("Name", format("%s", var.default_vpc_name)))}"
+  tags = "${merge(map("Name", format("%s", var.default_vpc_name)), var.default_vpc_tags, var.tags)}"
 }

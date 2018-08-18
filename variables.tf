@@ -9,7 +9,7 @@ variable "name" {
 }
 
 variable "cidr" {
-  description = "The CIDR block for the VPC. Default value is a valid CIDR, but not acceptable by AWS and should be overriden"
+  description = "The CIDR block for the VPC. Default value is a valid CIDR, but not acceptable by AWS and should be overridden"
   default     = "0.0.0.0/0"
 }
 
@@ -158,6 +158,11 @@ variable "vpc_tags" {
   default     = {}
 }
 
+variable "igw_tags" {
+  description = "Additional tags for the internet gateway"
+  default     = {}
+}
+
 variable "public_subnet_tags" {
   description = "Additional tags for the public subnets"
   default     = {}
@@ -165,11 +170,6 @@ variable "public_subnet_tags" {
 
 variable "private_subnet_tags" {
   description = "Additional tags for the private subnets"
-  default     = {}
-}
-
-variable "default_route_table_tags" {
-  description = "Additional tags for the default route table"
   default     = {}
 }
 
@@ -208,8 +208,18 @@ variable "database_subnet_tags" {
   default     = {}
 }
 
+variable "database_subnet_group_tags" {
+  description = "Additional tags for the database subnet group"
+  default     = {}
+}
+
 variable "redshift_subnet_tags" {
   description = "Additional tags for the redshift subnets"
+  default     = {}
+}
+
+variable "redshift_subnet_group_tags" {
+  description = "Additional tags for the redshift subnet group"
   default     = {}
 }
 
@@ -225,6 +235,21 @@ variable "intra_subnet_tags" {
 
 variable "dhcp_options_tags" {
   description = "Additional tags for the DHCP option set"
+  default     = {}
+}
+
+variable "nat_gateway_tags" {
+  description = "Additional tags for the NAT gateways"
+  default     = {}
+}
+
+variable "nat_eip_tags" {
+  description = "Additional tags for the NAT EIP"
+  default     = {}
+}
+
+variable "vpn_gateway_tags" {
+  description = "Additional tags for the VPN gateway"
   default     = {}
 }
 
