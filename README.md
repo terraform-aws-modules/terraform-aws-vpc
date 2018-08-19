@@ -279,8 +279,6 @@ Terraform version 0.10.3 or newer is required for this module to work.
 | vpc_endpoint_s3_pl_id | The prefix list for the S3 VPC endpoint. |
 | vpc_id | VPC |
 | vpc_instance_tenancy | Tenancy of instances spin up within VPC |
-| vpc_ipv6_association_id | The association ID for the IPv6 CIDR block |
-| vpc_ipv6_cidr_block | The IPv6 CIDR block |
 | vpc_main_route_table_id | The ID of the main route table associated with this VPC |
 
 <!-- END OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
