@@ -421,7 +421,8 @@ resource "aws_route_table_association" "public" {
 resource "aws_vpn_gateway" "this" {
   count = "${var.create_vpc && var.enable_vpn_gateway ? 1 : 0}"
 
-  vpc_id = "${aws_vpc.this.id}"
+  vpc_id          = "${aws_vpc.this.id}"
+  amazon_side_asn = "${var.amazon_side_asn}"
 
   tags = "${merge(map("Name", format("%s", var.name)), var.vpn_gateway_tags, var.tags)}"
 }
