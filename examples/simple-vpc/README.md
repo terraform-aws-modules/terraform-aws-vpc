@@ -25,6 +25,8 @@ Note that this example may create resources which can cost money (AWS Elastic IP
 | nat_public_ips | NAT gateways |
 | private_subnets | Subnets |
 | public_subnets | List of IDs of public subnets |
+| vpc_cidr_block | CIDR blocks |
 | vpc_id | VPC |
+| vpc_ipv6_cidr_block | The IPv6 CIDR block |
 
 <!-- END OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
