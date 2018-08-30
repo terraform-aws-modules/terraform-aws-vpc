@@ -20,7 +20,7 @@ variable "assign_generated_ipv6_cidr_block" {
 
 variable "secondary_cidr_blocks" {
   type = "list"
-  description = "Seceibdary CIDR blocks to associate with the VPC to extend the IP Address pool."
+  description = "Secondary CIDR blocks to associate with the VPC to extend the IP Address pool."
   default = []
 }
 
