@@ -18,6 +18,12 @@ variable "assign_generated_ipv6_cidr_block" {
   default     = false
 }
 
+variable "secondary_cidr_blocks" {
+  type = "list"
+  description = "Secondary CIDR blocks to associate with the VPC to extend the IP Address pool."
+  default = []
+}
+
 variable "instance_tenancy" {
   description = "A tenancy option for instances launched into the VPC"
   default     = "default"
