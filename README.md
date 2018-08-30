@@ -166,7 +166,8 @@ Terraform version 0.10.3 or newer is required for this module to work.
 | assign_generated_ipv6_cidr_block | Requests an Amazon-provided IPv6 CIDR block with a /56 prefix length for the VPC. You cannot specify the range of IP addresses, or the size of the CIDR block | string | `false` | no |
 | azs | A list of availability zones in the region | string | `<list>` | no |
 | cidr | The CIDR block for the VPC. Default value is a valid CIDR, but not acceptable by AWS and should be overridden | string | `0.0.0.0/0` | no |
-| create_database_subnet_group | Controls if database subnet group should be created | string | `true` | no |
+  secondary_cidr_blocks | A List of secondary CIDR blocks to add to the vpc. Will append the CIDR blocks before subnet operations are applied | string | `<list>` | no |
+  create_database_subnet_group | Controls if database subnet group should be created | string | `true` | no |
 | create_database_subnet_route_table | Controls if separate route table for database should be created | string | `false` | no |
 | create_elasticache_subnet_route_table | Controls if separate route table for elasticache should be created | string | `false` | no |
 | create_redshift_subnet_route_table | Controls if separate route table for redshift should be created | string | `false` | no |

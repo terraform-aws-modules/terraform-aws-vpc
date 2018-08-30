@@ -5,6 +5,7 @@ terraform {
 locals {
   max_subnet_length = "${max(length(var.private_subnets), length(var.elasticache_subnets), length(var.database_subnets), length(var.redshift_subnets))}"
   nat_gateway_count = "${var.single_nat_gateway ? 1 : (var.one_nat_gateway_per_az ? length(var.azs) : local.max_subnet_length)}"
+  vpc_id = "${length(var.secondary_cidr_blocks) > 0 ? element(concat(aws_vpc_ipv4_cidr_block_association.this.*.vpc_id, list("")), 0) : aws_vpc.this.id}"
 }
 
 ######
@@ -20,6 +21,14 @@ resource "aws_vpc" "this" {
   assign_generated_ipv6_cidr_block = "${var.assign_generated_ipv6_cidr_block}"
 
   tags = "${merge(map("Name", format("%s", var.name)), var.vpc_tags, var.tags)}"
+}
+
+resource "aws_vpc_ipv4_cidr_block_association" "this" {
+  count = "${length(var.secondary_cidr_blocks)}"
+
+  vpc_id = "${aws_vpc.this.id}"
+
+  cidr_block = "${element(var.secondary_cidr_blocks, count.index)}"
 }
 
 ###################
@@ -43,7 +52,7 @@ resource "aws_vpc_dhcp_options" "this" {
 resource "aws_vpc_dhcp_options_association" "this" {
   count = "${var.create_vpc && var.enable_dhcp_options ? 1 : 0}"
 
-  vpc_id          = "${aws_vpc.this.id}"
+  vpc_id          = "${local.vpc_id}"
   dhcp_options_id = "${aws_vpc_dhcp_options.this.id}"
 }
 
@@ -53,7 +62,7 @@ resource "aws_vpc_dhcp_options_association" "this" {
 resource "aws_internet_gateway" "this" {
   count = "${var.create_vpc && length(var.public_subnets) > 0 ? 1 : 0}"
 
-  vpc_id = "${aws_vpc.this.id}"
+  vpc_id = "${local.vpc_id}"
 
   tags = "${merge(map("Name", format("%s", var.name)), var.igw_tags, var.tags)}"
 }
@@ -64,7 +73,7 @@ resource "aws_internet_gateway" "this" {
 resource "aws_route_table" "public" {
   count = "${var.create_vpc && length(var.public_subnets) > 0 ? 1 : 0}"
 
-  vpc_id = "${aws_vpc.this.id}"
+  vpc_id = "${local.vpc_id}"
 
   tags = "${merge(map("Name", format("%s-public", var.name)), var.public_route_table_tags, var.tags)}"
 }
@@ -88,7 +97,7 @@ resource "aws_route" "public_internet_gateway" {
 resource "aws_route_table" "private" {
   count = "${var.create_vpc && local.max_subnet_length > 0 ? local.nat_gateway_count : 0}"
 
-  vpc_id = "${aws_vpc.this.id}"
+  vpc_id = "${local.vpc_id}"
 
   tags = "${merge(map("Name", (var.single_nat_gateway ? "${var.name}-private" : format("%s-private-%s", var.name, element(var.azs, count.index)))), var.private_route_table_tags, var.tags)}"
 
@@ -105,7 +114,7 @@ resource "aws_route_table" "private" {
 resource "aws_route_table" "database" {
   count = "${var.create_vpc && var.create_database_subnet_route_table && length(var.database_subnets) > 0 ? 1 : 0}"
 
-  vpc_id = "${aws_vpc.this.id}"
+  vpc_id = "${local.vpc_id}"
 
   tags = "${merge(var.tags, var.database_route_table_tags, map("Name", "${var.name}-database"))}"
 }
@@ -116,7 +125,7 @@ resource "aws_route_table" "database" {
 resource "aws_route_table" "redshift" {
   count = "${var.create_vpc && var.create_redshift_subnet_route_table && length(var.redshift_subnets) > 0 ? 1 : 0}"
 
-  vpc_id = "${aws_vpc.this.id}"
+  vpc_id = "${local.vpc_id}"
 
   tags = "${merge(var.tags, var.redshift_route_table_tags, map("Name", "${var.name}-redshift"))}"
 }
@@ -127,7 +136,7 @@ resource "aws_route_table" "redshift" {
 resource "aws_route_table" "elasticache" {
   count = "${var.create_vpc && var.create_elasticache_subnet_route_table && length(var.elasticache_subnets) > 0 ? 1 : 0}"
 
-  vpc_id = "${aws_vpc.this.id}"
+  vpc_id = "${local.vpc_id}"
 
   tags = "${merge(var.tags, var.elasticache_route_table_tags, map("Name", "${var.name}-elasticache"))}"
 }
@@ -138,7 +147,7 @@ resource "aws_route_table" "elasticache" {
 resource "aws_route_table" "intra" {
   count = "${var.create_vpc && length(var.intra_subnets) > 0 ? 1 : 0}"
 
-  vpc_id = "${aws_vpc.this.id}"
+  vpc_id = "${local.vpc_id}"
 
   tags = "${merge(map("Name", "${var.name}-intra"), var.intra_route_table_tags, var.tags)}"
 }
@@ -149,7 +158,7 @@ resource "aws_route_table" "intra" {
 resource "aws_subnet" "public" {
   count = "${var.create_vpc && length(var.public_subnets) > 0 && (!var.one_nat_gateway_per_az || length(var.public_subnets) >= length(var.azs)) ? length(var.public_subnets) : 0}"
 
-  vpc_id                  = "${aws_vpc.this.id}"
+  vpc_id                  = "${local.vpc_id}"
   cidr_block              = "${var.public_subnets[count.index]}"
   availability_zone       = "${element(var.azs, count.index)}"
   map_public_ip_on_launch = "${var.map_public_ip_on_launch}"
@@ -163,7 +172,7 @@ resource "aws_subnet" "public" {
 resource "aws_subnet" "private" {
   count = "${var.create_vpc && length(var.private_subnets) > 0 ? length(var.private_subnets) : 0}"
 
-  vpc_id            = "${aws_vpc.this.id}"
+  vpc_id            = "${local.vpc_id}"
   cidr_block        = "${var.private_subnets[count.index]}"
   availability_zone = "${element(var.azs, count.index)}"
 
@@ -176,7 +185,7 @@ resource "aws_subnet" "private" {
 resource "aws_subnet" "database" {
   count = "${var.create_vpc && length(var.database_subnets) > 0 ? length(var.database_subnets) : 0}"
 
-  vpc_id            = "${aws_vpc.this.id}"
+  vpc_id            = "${local.vpc_id}"
   cidr_block        = "${var.database_subnets[count.index]}"
   availability_zone = "${element(var.azs, count.index)}"
 
@@ -199,7 +208,7 @@ resource "aws_db_subnet_group" "database" {
 resource "aws_subnet" "redshift" {
   count = "${var.create_vpc && length(var.redshift_subnets) > 0 ? length(var.redshift_subnets) : 0}"
 
-  vpc_id            = "${aws_vpc.this.id}"
+  vpc_id            = "${local.vpc_id}"
   cidr_block        = "${var.redshift_subnets[count.index]}"
   availability_zone = "${element(var.azs, count.index)}"
 
@@ -222,7 +231,7 @@ resource "aws_redshift_subnet_group" "redshift" {
 resource "aws_subnet" "elasticache" {
   count = "${var.create_vpc && length(var.elasticache_subnets) > 0 ? length(var.elasticache_subnets) : 0}"
 
-  vpc_id            = "${aws_vpc.this.id}"
+  vpc_id            = "${local.vpc_id}"
   cidr_block        = "${var.elasticache_subnets[count.index]}"
   availability_zone = "${element(var.azs, count.index)}"
 
@@ -243,7 +252,7 @@ resource "aws_elasticache_subnet_group" "elasticache" {
 resource "aws_subnet" "intra" {
   count = "${var.create_vpc && length(var.intra_subnets) > 0 ? length(var.intra_subnets) : 0}"
 
-  vpc_id            = "${aws_vpc.this.id}"
+  vpc_id            = "${local.vpc_id}"
   cidr_block        = "${var.intra_subnets[count.index]}"
   availability_zone = "${element(var.azs, count.index)}"
 
@@ -308,7 +317,7 @@ data "aws_vpc_endpoint_service" "s3" {
 resource "aws_vpc_endpoint" "s3" {
   count = "${var.create_vpc && var.enable_s3_endpoint ? 1 : 0}"
 
-  vpc_id       = "${aws_vpc.this.id}"
+  vpc_id       = "${local.vpc_id}"
   service_name = "${data.aws_vpc_endpoint_service.s3.service_name}"
 }
 
@@ -345,7 +354,7 @@ data "aws_vpc_endpoint_service" "dynamodb" {
 resource "aws_vpc_endpoint" "dynamodb" {
   count = "${var.create_vpc && var.enable_dynamodb_endpoint ? 1 : 0}"
 
-  vpc_id       = "${aws_vpc.this.id}"
+  vpc_id       = "${local.vpc_id}"
   service_name = "${data.aws_vpc_endpoint_service.dynamodb.service_name}"
 }
 
@@ -421,7 +430,7 @@ resource "aws_route_table_association" "public" {
 resource "aws_vpn_gateway" "this" {
   count = "${var.create_vpc && var.enable_vpn_gateway ? 1 : 0}"
 
-  vpc_id = "${aws_vpc.this.id}"
+  vpc_id = "${local.vpc_id}"
 
   tags = "${merge(map("Name", format("%s", var.name)), var.vpn_gateway_tags, var.tags)}"
 }
@@ -429,7 +438,7 @@ resource "aws_vpn_gateway" "this" {
 resource "aws_vpn_gateway_attachment" "this" {
   count = "${var.vpn_gateway_id != "" ? 1 : 0}"
 
-  vpc_id         = "${aws_vpc.this.id}"
+  vpc_id         = "${local.vpc_id}"
   vpn_gateway_id = "${var.vpn_gateway_id}"
 }
 
