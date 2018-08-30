@@ -13,6 +13,11 @@ variable "cidr" {
   default     = "0.0.0.0/0"
 }
 
+variable "secondary_cidrs" {
+  description = "The secondary CIDR blocks for the VPC. Optional."
+  default     = []
+}
+
 variable "assign_generated_ipv6_cidr_block" {
   description = "Requests an Amazon-provided IPv6 CIDR block with a /56 prefix length for the VPC. You cannot specify the range of IP addresses, or the size of the CIDR block"
   default     = false
