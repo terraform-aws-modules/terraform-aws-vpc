@@ -221,6 +221,7 @@ Terraform version 0.10.3 or newer is required for this module to work.
 | redshift_subnet_tags | Additional tags for the redshift subnets | string | `<map>` | no |
 | redshift_subnets | A list of redshift subnets | list | `<list>` | no |
 | reuse_nat_ips | Should be true if you don't want EIPs to be created for your NAT Gateways and will instead pass them in via the 'external_nat_ip_ids' variable | string | `false` | no |
+| secondary_cidr_blocks | List of secondary CIDR blocks to associate with the VPC to extend the IP Address pool | string | `<list>` | no |
 | single_nat_gateway | Should be true if you want to provision a single shared NAT Gateway across all of your private networks | string | `false` | no |
 | tags | A map of tags to add to all resources | string | `<map>` | no |
 | vpc_tags | Additional tags for the VPC | string | `<map>` | no |
@@ -280,6 +281,7 @@ Terraform version 0.10.3 or newer is required for this module to work.
 | vpc_id | VPC |
 | vpc_instance_tenancy | Tenancy of instances spin up within VPC |
 | vpc_main_route_table_id | The ID of the main route table associated with this VPC |
+| vpc_secondary_cidr_blocks | List of secondary CIDR blocks of the VPC |
 
 <!-- END OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
 
