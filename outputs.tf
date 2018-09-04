@@ -59,6 +59,11 @@ output "vpc_main_route_table_id" {
 //  value       = "${element(concat(aws_vpc.this.*.ipv6_cidr_block, list("")), 0)}"
 //}
 
+output "vpc_secondary_cidr_blocks" {
+  description = "List of secondary CIDR blocks of the VPC"
+  value       = ["${aws_vpc_ipv4_cidr_block_association.this.*.cidr_block}"]
+}
+
 # Subnets
 output "private_subnets" {
   description = "List of IDs of private subnets"
@@ -229,11 +234,6 @@ output "default_vpc_id" {
 output "default_vpc_cidr_block" {
   description = "The CIDR block of the VPC"
   value       = "${element(concat(aws_default_vpc.this.*.cidr_block, list("")), 0)}"
-}
-
-output "vpc_secondary_cidr_blocks" {
-  description = "Secondary CIDR blocks of the VPC"
-  value       = ["${aws_vpc_ipv4_cidr_block_association.this.*.cidr_block}"]
 }
 
 output "default_vpc_default_security_group_id" {
