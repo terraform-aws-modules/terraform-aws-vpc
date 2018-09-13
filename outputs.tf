@@ -151,6 +151,11 @@ output "private_route_table_ids" {
   value       = ["${aws_route_table.private.*.id}"]
 }
 
+output "all_private_public_route_table_ids" {
+  description = "List of public and private route tables concatenated"
+  value       = ["${concat(aws_route_table.private.*.id, aws_route_table.public.*.id)}"]
+}
+
 output "intra_route_table_ids" {
   description = "List of IDs of intra route tables"
   value       = ["${aws_route_table.intra.*.id}"]
