@@ -40,7 +40,7 @@ variable "private_subnet_suffix" {
 
 variable "database_subnet_suffix" {
   description = "Suffix to append to database subnets name"
-  default     = "database"
+  default     = "db"
 }
 
 variable "redshift_subnet_suffix" {
