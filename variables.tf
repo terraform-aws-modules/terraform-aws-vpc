@@ -28,6 +28,31 @@ variable "instance_tenancy" {
   default     = "default"
 }
 
+variable "public_subnet_suffix" {
+  description = "Suffix to append to public subnets name"
+  default     = "public"
+}
+
+variable "private_subnet_suffix" {
+  description = "Suffix to append to private subnets name"
+  default     = "private"
+}
+
+variable "database_subnet_suffix" {
+  description = "Suffix to append to database subnets name"
+  default     = "db"
+}
+
+variable "redshift_subnet_suffix" {
+  description = "Suffix to append to redshift subnets name"
+  default     = "redshift"
+}
+
+variable "elasticache_subnet_suffix" {
+  description = "Suffix to append to elasticache subnets name"
+  default     = "elasticache"
+}
+
 variable "public_subnets" {
   description = "A list of public subnets inside the VPC"
   default     = []
