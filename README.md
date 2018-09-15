@@ -20,6 +20,10 @@ These types of resources are supported:
 * [DHCP Options Set](https://www.terraform.io/docs/providers/aws/r/vpc_dhcp_options.html)
 * [Default VPC](https://www.terraform.io/docs/providers/aws/r/default_vpc.html)
 
+Sponsored by [Cloudcraft - the best way to draw AWS diagrams](https://cloudcraft.co)
+
+<a href="https://cloudcraft.co/" target="_blank"><img src="https://raw.githubusercontent.com/antonbabenko/modules.tf-lambda/master/misc/cloudcraft-logo.png" alt="Cloudcraft - the best way to draw AWS diagrams" width="211" height="56" align="right" /></a>
+
 ## Usage
 
 ```hcl
