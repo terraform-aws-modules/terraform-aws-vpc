@@ -1,4 +1,3 @@
-# VPC
 output "vpc_id" {
   description = "The ID of the VPC"
   value       = "${element(concat(aws_vpc.this.*.id, list("")), 0)}"
@@ -64,7 +63,6 @@ output "vpc_secondary_cidr_blocks" {
   value       = ["${aws_vpc_ipv4_cidr_block_association.this.*.cidr_block}"]
 }
 
-# Subnets
 output "private_subnets" {
   description = "List of IDs of private subnets"
   value       = ["${aws_subnet.private.*.id}"]
@@ -145,7 +143,6 @@ output "elasticache_subnet_group_name" {
   value       = "${element(concat(aws_elasticache_subnet_group.elasticache.*.name, list("")), 0)}"
 }
 
-# Route tables
 output "public_route_table_ids" {
   description = "List of IDs of public route tables"
   value       = ["${aws_route_table.public.*.id}"]
@@ -176,7 +173,6 @@ output "intra_route_table_ids" {
   value       = ["${aws_route_table.intra.*.id}"]
 }
 
-# Nat gateway
 output "nat_ids" {
   description = "List of allocation ID of Elastic IPs created for AWS NAT Gateway"
   value       = ["${aws_eip.nat.*.id}"]
@@ -192,13 +188,11 @@ output "natgw_ids" {
   value       = ["${aws_nat_gateway.this.*.id}"]
 }
 
-# Internet Gateway
 output "igw_id" {
   description = "The ID of the Internet Gateway"
   value       = "${element(concat(aws_internet_gateway.this.*.id, list("")), 0)}"
 }
 
-# VPC Endpoints
 output "vpc_endpoint_s3_id" {
   description = "The ID of VPC endpoint for S3"
   value       = "${element(concat(aws_vpc_endpoint.s3.*.id, list("")), 0)}"
@@ -214,7 +208,6 @@ output "vpc_endpoint_dynamodb_id" {
   value       = "${element(concat(aws_vpc_endpoint.dynamodb.*.id, list("")), 0)}"
 }
 
-# VPN Gateway
 output "vgw_id" {
   description = "The ID of the VPN Gateway"
   value       = "${element(concat(aws_vpn_gateway.this.*.id, aws_vpn_gateway_attachment.this.*.vpn_gateway_id, list("")), 0)}"
@@ -225,7 +218,6 @@ output "vpc_endpoint_dynamodb_pl_id" {
   value       = "${element(concat(aws_vpc_endpoint.dynamodb.*.prefix_list_id, list("")), 0)}"
 }
 
-# Default VPC
 output "default_vpc_id" {
   description = "The ID of the VPC"
   value       = "${element(concat(aws_default_vpc.this.*.id, list("")), 0)}"
