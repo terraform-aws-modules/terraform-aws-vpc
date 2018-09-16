@@ -265,7 +265,7 @@ Terraform version 0.10.3 or newer is required for this module to work.
 | nat_public_ips | List of public Elastic IPs created for AWS NAT Gateway |
 | natgw_ids | List of NAT Gateway IDs |
 | private_route_table_ids | List of IDs of private route tables |
-| private_subnets | Subnets |
+| private_subnets | List of IDs of private subnets |
 | private_subnets_cidr_blocks | List of cidr_blocks of private subnets |
 | public_route_table_ids | Route tables |
 | public_subnets | List of IDs of public subnets |
