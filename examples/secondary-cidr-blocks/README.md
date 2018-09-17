@@ -1,6 +1,6 @@
-# Simple VPC
+# Simple VPC with secondary CIDR blocks
 
-Configuration in this directory creates set of VPC resources which may be sufficient for development environment.
+Configuration in this directory creates set of VPC resources across multiple CIDR blocks.
 
 There is a public and private subnet created per availability zone in addition to single NAT Gateway shared between all 3 availability zones.
 
@@ -27,5 +27,6 @@ Note that this example may create resources which can cost money (AWS Elastic IP
 | public_subnets | List of IDs of public subnets |
 | vpc_cidr_block | CIDR blocks |
 | vpc_id | VPC |
+| vpc_secondary_cidr_blocks | List of secondary CIDR blocks of the VPC |
 
-<!-- END OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
+ <!-- END OF PRE-COMMIT-TERRAFORM DOCS HOOK -->

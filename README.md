@@ -20,6 +20,10 @@ These types of resources are supported:
 * [DHCP Options Set](https://www.terraform.io/docs/providers/aws/r/vpc_dhcp_options.html)
 * [Default VPC](https://www.terraform.io/docs/providers/aws/r/default_vpc.html)
 
+Sponsored by [Cloudcraft - the best way to draw AWS diagrams](https://cloudcraft.co/?utm_source=terraform-aws-vpc)
+
+<a href="https://cloudcraft.co/?utm_source=terraform-aws-vpc" target="_blank"><img src="https://raw.githubusercontent.com/antonbabenko/modules.tf-lambda/master/misc/cloudcraft-logo.png" alt="Cloudcraft - the best way to draw AWS diagrams" width="211" height="56" /></a>
+
 ## Usage
 
 ```hcl
@@ -163,11 +167,17 @@ Terraform version 0.10.3 or newer is required for this module to work.
 
 | Name | Description | Type | Default | Required |
 |------|-------------|:----:|:-----:|:-----:|
+| assign_generated_ipv6_cidr_block | Requests an Amazon-provided IPv6 CIDR block with a /56 prefix length for the VPC. You cannot specify the range of IP addresses, or the size of the CIDR block | string | `false` | no |
 | azs | A list of availability zones in the region | string | `<list>` | no |
-| cidr | The CIDR block for the VPC. Default value is a valid CIDR, but not acceptable by AWS and should be overriden | string | `0.0.0.0/0` | no |
+| cidr | The CIDR block for the VPC. Default value is a valid CIDR, but not acceptable by AWS and should be overridden | string | `0.0.0.0/0` | no |
 | create_database_subnet_group | Controls if database subnet group should be created | string | `true` | no |
+| create_database_subnet_route_table | Controls if separate route table for database should be created | string | `false` | no |
+| create_elasticache_subnet_route_table | Controls if separate route table for elasticache should be created | string | `false` | no |
+| create_redshift_subnet_route_table | Controls if separate route table for redshift should be created | string | `false` | no |
 | create_vpc | Controls if VPC should be created (it affects almost all resources) | string | `true` | no |
+| database_route_table_tags | Additional tags for the database route tables | string | `<map>` | no |
 | database_subnet_group_tags | Additional tags for the database subnet group | string | `<map>` | no |
+| database_subnet_suffix | Suffix to append to database subnets name | string | `db` | no |
 | database_subnet_tags | Additional tags for the database subnets | string | `<map>` | no |
 | database_subnets | A list of database subnets | list | `<list>` | no |
 | default_vpc_enable_classiclink | Should be true to enable ClassicLink in the Default VPC | string | `false` | no |
@@ -181,6 +191,8 @@ Terraform version 0.10.3 or newer is required for this module to work.
 | dhcp_options_netbios_node_type | Specify netbios node_type for DHCP options set | string | `` | no |
 | dhcp_options_ntp_servers | Specify a list of NTP servers for DHCP options set | list | `<list>` | no |
 | dhcp_options_tags | Additional tags for the DHCP option set | string | `<map>` | no |
+| elasticache_route_table_tags | Additional tags for the elasticache route tables | string | `<map>` | no |
+| elasticache_subnet_suffix | Suffix to append to elasticache subnets name | string | `elasticache` | no |
 | elasticache_subnet_tags | Additional tags for the elasticache subnets | string | `<map>` | no |
 | elasticache_subnets | A list of elasticache subnets | list | `<list>` | no |
 | enable_dhcp_options | Should be true if you want to specify a DHCP options set with a custom domain name, DNS servers, NTP servers, netbios servers, and/or netbios server type | string | `false` | no |
@@ -203,17 +215,22 @@ Terraform version 0.10.3 or newer is required for this module to work.
 | nat_gateway_tags | Additional tags for the NAT gateways | string | `<map>` | no |
 | one_nat_gateway_per_az | Should be true if you want only one NAT Gateway per availability zone. Requires `var.azs` to be set, and the number of `public_subnets` created to be greater than or equal to the number of availability zones specified in `var.azs`. | string | `false` | no |
 | private_route_table_tags | Additional tags for the private route tables | string | `<map>` | no |
+| private_subnet_suffix | Suffix to append to private subnets name | string | `private` | no |
 | private_subnet_tags | Additional tags for the private subnets | string | `<map>` | no |
 | private_subnets | A list of private subnets inside the VPC | string | `<list>` | no |
 | propagate_private_route_tables_vgw | Should be true if you want route table propagation | string | `false` | no |
 | propagate_public_route_tables_vgw | Should be true if you want route table propagation | string | `false` | no |
 | public_route_table_tags | Additional tags for the public route tables | string | `<map>` | no |
+| public_subnet_suffix | Suffix to append to public subnets name | string | `public` | no |
 | public_subnet_tags | Additional tags for the public subnets | string | `<map>` | no |
 | public_subnets | A list of public subnets inside the VPC | string | `<list>` | no |
+| redshift_route_table_tags | Additional tags for the redshift route tables | string | `<map>` | no |
 | redshift_subnet_group_tags | Additional tags for the redshift subnet group | string | `<map>` | no |
+| redshift_subnet_suffix | Suffix to append to redshift subnets name | string | `redshift` | no |
 | redshift_subnet_tags | Additional tags for the redshift subnets | string | `<map>` | no |
 | redshift_subnets | A list of redshift subnets | list | `<list>` | no |
 | reuse_nat_ips | Should be true if you don't want EIPs to be created for your NAT Gateways and will instead pass them in via the 'external_nat_ip_ids' variable | string | `false` | no |
+| secondary_cidr_blocks | List of secondary CIDR blocks to associate with the VPC to extend the IP Address pool | string | `<list>` | no |
 | single_nat_gateway | Should be true if you want to provision a single shared NAT Gateway across all of your private networks | string | `false` | no |
 | tags | A map of tags to add to all resources | string | `<map>` | no |
 | vpc_tags | Additional tags for the VPC | string | `<map>` | no |
@@ -224,6 +241,7 @@ Terraform version 0.10.3 or newer is required for this module to work.
 
 | Name | Description |
 |------|-------------|
+| database_route_table_ids | List of IDs of database route tables |
 | database_subnet_group | ID of database subnet group |
 | database_subnets | List of IDs of database subnets |
 | database_subnets_cidr_blocks | List of cidr_blocks of database subnets |
@@ -236,14 +254,15 @@ Terraform version 0.10.3 or newer is required for this module to work.
 | default_vpc_default_security_group_id | The ID of the security group created by default on VPC creation |
 | default_vpc_enable_dns_hostnames | Whether or not the VPC has DNS hostname support |
 | default_vpc_enable_dns_support | Whether or not the VPC has DNS support |
-| default_vpc_id | Default VPC |
+| default_vpc_id | The ID of the VPC |
 | default_vpc_instance_tenancy | Tenancy of instances spin up within VPC |
 | default_vpc_main_route_table_id | The ID of the main route table associated with this VPC |
+| elasticache_route_table_ids | List of IDs of elasticache route tables |
 | elasticache_subnet_group | ID of elasticache subnet group |
 | elasticache_subnet_group_name | Name of elasticache subnet group |
 | elasticache_subnets | List of IDs of elasticache subnets |
 | elasticache_subnets_cidr_blocks | List of cidr_blocks of elasticache subnets |
-| igw_id | Internet Gateway |
+| igw_id | The ID of the Internet Gateway |
 | intra_route_table_ids | List of IDs of intra route tables |
 | intra_subnets | List of IDs of intra subnets |
 | intra_subnets_cidr_blocks | List of cidr_blocks of intra subnets |
@@ -251,25 +270,27 @@ Terraform version 0.10.3 or newer is required for this module to work.
 | nat_public_ips | List of public Elastic IPs created for AWS NAT Gateway |
 | natgw_ids | List of NAT Gateway IDs |
 | private_route_table_ids | List of IDs of private route tables |
-| private_subnets | Subnets |
+| private_subnets | List of IDs of private subnets |
 | private_subnets_cidr_blocks | List of cidr_blocks of private subnets |
-| public_route_table_ids | Route tables |
+| public_route_table_ids | List of IDs of public route tables |
 | public_subnets | List of IDs of public subnets |
 | public_subnets_cidr_blocks | List of cidr_blocks of public subnets |
+| redshift_route_table_ids | List of IDs of redshift route tables |
 | redshift_subnet_group | ID of redshift subnet group |
 | redshift_subnets | List of IDs of redshift subnets |
 | redshift_subnets_cidr_blocks | List of cidr_blocks of redshift subnets |
-| vgw_id | VPN Gateway |
+| vgw_id | The ID of the VPN Gateway |
 | vpc_cidr_block | The CIDR block of the VPC |
 | vpc_enable_dns_hostnames | Whether or not the VPC has DNS hostname support |
 | vpc_enable_dns_support | Whether or not the VPC has DNS support |
 | vpc_endpoint_dynamodb_id | The ID of VPC endpoint for DynamoDB |
 | vpc_endpoint_dynamodb_pl_id | The prefix list for the DynamoDB VPC endpoint. |
-| vpc_endpoint_s3_id | VPC Endpoints |
+| vpc_endpoint_s3_id | The ID of VPC endpoint for S3 |
 | vpc_endpoint_s3_pl_id | The prefix list for the S3 VPC endpoint. |
-| vpc_id | VPC |
+| vpc_id | The ID of the VPC |
 | vpc_instance_tenancy | Tenancy of instances spin up within VPC |
 | vpc_main_route_table_id | The ID of the main route table associated with this VPC |
+| vpc_secondary_cidr_blocks | List of secondary CIDR blocks of the VPC |
 
 <!-- END OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
 

@@ -9,13 +9,48 @@ variable "name" {
 }
 
 variable "cidr" {
-  description = "The CIDR block for the VPC. Default value is a valid CIDR, but not acceptable by AWS and should be overriden"
+  description = "The CIDR block for the VPC. Default value is a valid CIDR, but not acceptable by AWS and should be overridden"
   default     = "0.0.0.0/0"
+}
+
+variable "assign_generated_ipv6_cidr_block" {
+  description = "Requests an Amazon-provided IPv6 CIDR block with a /56 prefix length for the VPC. You cannot specify the range of IP addresses, or the size of the CIDR block"
+  default     = false
+}
+
+variable "secondary_cidr_blocks" {
+  description = "List of secondary CIDR blocks to associate with the VPC to extend the IP Address pool"
+  default     = []
 }
 
 variable "instance_tenancy" {
   description = "A tenancy option for instances launched into the VPC"
   default     = "default"
+}
+
+variable "public_subnet_suffix" {
+  description = "Suffix to append to public subnets name"
+  default     = "public"
+}
+
+variable "private_subnet_suffix" {
+  description = "Suffix to append to private subnets name"
+  default     = "private"
+}
+
+variable "database_subnet_suffix" {
+  description = "Suffix to append to database subnets name"
+  default     = "db"
+}
+
+variable "redshift_subnet_suffix" {
+  description = "Suffix to append to redshift subnets name"
+  default     = "redshift"
+}
+
+variable "elasticache_subnet_suffix" {
+  description = "Suffix to append to elasticache subnets name"
+  default     = "elasticache"
 }
 
 variable "public_subnets" {
@@ -44,6 +79,21 @@ variable "elasticache_subnets" {
   type        = "list"
   description = "A list of elasticache subnets"
   default     = []
+}
+
+variable "create_database_subnet_route_table" {
+  description = "Controls if separate route table for database should be created"
+  default     = false
+}
+
+variable "create_redshift_subnet_route_table" {
+  description = "Controls if separate route table for redshift should be created"
+  default     = false
+}
+
+variable "create_elasticache_subnet_route_table" {
+  description = "Controls if separate route table for elasticache should be created"
+  default     = false
 }
 
 variable "intra_subnets" {
@@ -165,6 +215,21 @@ variable "public_route_table_tags" {
 
 variable "private_route_table_tags" {
   description = "Additional tags for the private route tables"
+  default     = {}
+}
+
+variable "database_route_table_tags" {
+  description = "Additional tags for the database route tables"
+  default     = {}
+}
+
+variable "redshift_route_table_tags" {
+  description = "Additional tags for the redshift route tables"
+  default     = {}
+}
+
+variable "elasticache_route_table_tags" {
+  description = "Additional tags for the elasticache route tables"
   default     = {}
 }
 
