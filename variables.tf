@@ -418,6 +418,21 @@ variable "intra_subnet_tags" {
   default     = {}
 }
 
+variable "public_acl_tags" {
+  description = "Additional tags for the public subnets network ACLs"
+  default     = {}
+}
+
+variable "private_acl_tags" {
+  description = "Additional tags for the private subnets network ACLs"
+  default     = {}
+}
+
+variable "intra_acl_tags" {
+  description = "Additional tags for the intra subnets network ACLs"
+  default     = {}
+}
+
 variable "dhcp_options_tags" {
   description = "Additional tags for the DHCP option set"
   default     = {}
