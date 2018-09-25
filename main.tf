@@ -284,6 +284,16 @@ resource "aws_subnet" "intra" {
   tags = "${merge(map("Name", format("%s-${var.intra_subnet_suffix}-%s", var.name, element(var.azs, count.index))), var.tags, var.intra_subnet_tags)}"
 }
 
+#######################
+# Default Network ACLs
+#######################
+
+resource "aws_default_network_acl" "default" {
+  count = "${var.create_vpc ? 1 : 0}"
+
+  default_network_acl_id = "${element(concat(aws_vpc.this.*.default_network_acl_id, list("")), 0)}"
+}
+
 ########################
 # Public Network ACLs
 ########################
