@@ -287,7 +287,6 @@ resource "aws_subnet" "intra" {
 #######################
 # Default Network ACLs
 #######################
-
 resource "aws_default_network_acl" "default" {
   count = "${var.create_vpc ? 1 : 0}"
 
@@ -297,7 +296,6 @@ resource "aws_default_network_acl" "default" {
 ########################
 # Public Network ACLs
 ########################
-
 resource "aws_network_acl" "public" {
   count = "${var.create_vpc ? 1 : 0}"
 
@@ -338,7 +336,6 @@ resource "aws_network_acl_rule" "public_outbound" {
 #######################
 # Private Network ACLs
 #######################
-
 resource "aws_network_acl" "private" {
   count = "${var.create_vpc ? 1 : 0}"
 
@@ -379,7 +376,6 @@ resource "aws_network_acl_rule" "private_outbound" {
 ########################
 # Intra Network ACLs
 ########################
-
 resource "aws_network_acl" "intra" {
   count = "${var.create_vpc ? 1 : 0}"
 
