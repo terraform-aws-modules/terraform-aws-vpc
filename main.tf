@@ -433,6 +433,7 @@ resource "aws_vpn_gateway" "this" {
   count = "${var.create_vpc && var.enable_vpn_gateway ? 1 : 0}"
 
   vpc_id = "${local.vpc_id}"
+  amazon_side_asn = "${var.amazon_side_asn}"
 
   tags = "${merge(map("Name", format("%s", var.name)), var.tags, var.vpn_gateway_tags)}"
 }
