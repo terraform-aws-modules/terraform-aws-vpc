@@ -173,6 +173,11 @@ variable "vpn_gateway_id" {
   default     = ""
 }
 
+variable "amazon_side_asn" {
+  description = "The Autonomous System Number (ASN) for the Amazon side of the gateway. By default the virtual private gateway is created with the current default Amazon ASN."
+  default     = "64512"
+}
+
 variable "propagate_private_route_tables_vgw" {
   description = "Should be true if you want route table propagation"
   default     = false
