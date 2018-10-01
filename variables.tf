@@ -144,8 +144,8 @@ variable "vpn_gateway_id" {
 }
 
 variable "amazon_side_asn" {
-  description = "The Autonomous System Number (ASN) for the Amazon side of the gateway. If you don't specify an ASN, the virtual private gateway is created with the default ASN."
-  default     = ""                                                                                                                                                                 # Error: module.vpc.aws_vpn_gateway.this: "amazon_side_asn" ("") must be a 64-bit integer
+  description = "The Autonomous System Number (ASN) for the Amazon side of the gateway. By default the virtual private gateway is created with the current default Amazon ASN."
+  default     = "64512"
 }
 
 variable "propagate_private_route_tables_vgw" {
