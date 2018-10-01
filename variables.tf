@@ -173,6 +173,11 @@ variable "vpn_gateway_id" {
   default     = ""
 }
 
+variable "amazon_side_asn" {
+  description = "A private Autonomous System Number (ASN) for the Amazon side of a BGP session. If you're using a 16-bit ASN, it must be in the 64512 to 65534 range. If you're using a 32-bit ASN, it must be in the 4200000000 to 4294967294 range."
+  default     = 64512
+}
+
 variable "propagate_private_route_tables_vgw" {
   description = "Should be true if you want route table propagation"
   default     = false
