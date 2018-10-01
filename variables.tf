@@ -18,9 +18,39 @@ variable "assign_generated_ipv6_cidr_block" {
   default     = false
 }
 
+variable "secondary_cidr_blocks" {
+  description = "List of secondary CIDR blocks to associate with the VPC to extend the IP Address pool"
+  default     = []
+}
+
 variable "instance_tenancy" {
   description = "A tenancy option for instances launched into the VPC"
   default     = "default"
+}
+
+variable "public_subnet_suffix" {
+  description = "Suffix to append to public subnets name"
+  default     = "public"
+}
+
+variable "private_subnet_suffix" {
+  description = "Suffix to append to private subnets name"
+  default     = "private"
+}
+
+variable "database_subnet_suffix" {
+  description = "Suffix to append to database subnets name"
+  default     = "db"
+}
+
+variable "redshift_subnet_suffix" {
+  description = "Suffix to append to redshift subnets name"
+  default     = "redshift"
+}
+
+variable "elasticache_subnet_suffix" {
+  description = "Suffix to append to elasticache subnets name"
+  default     = "elasticache"
 }
 
 variable "public_subnets" {
