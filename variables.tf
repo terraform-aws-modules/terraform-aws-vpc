@@ -433,6 +433,21 @@ variable "intra_acl_tags" {
   default     = {}
 }
 
+variable "database_acl_tags" {
+  description = "Additional tags for the database subnets network ACLs"
+  default     = {}
+}
+
+variable "redshift_acl_tags" {
+  description = "Additional tags for the redshift subnets network ACLs"
+  default     = {}
+}
+
+variable "elasticache_acl_tags" {
+  description = "Additional tags for the elasticache subnets network ACLs"
+  default     = {}
+}
+
 variable "dhcp_options_tags" {
   description = "Additional tags for the DHCP option set"
   default     = {}
