@@ -13,7 +13,7 @@ module "vpc" {
   private_subnets = ["10.0.1.0/24", "10.0.2.0/24", "10.0.3.0/24"]
   public_subnets  = ["10.0.101.0/24", "10.0.102.0/24", "10.0.103.0/24"]
 
-  public_inbound_acls = [
+  public_inbound_acl_rules = [
     "100", "allow", 80,    80,    "tcp", "0.0.0.0/0",       "Allows inbound HTTP traffic from any IPv4 address",
     "110", "allow", 443,   443,   "tcp", "0.0.0.0/0",       "Allows inbound HTTPS traffic from any IPv4 address",
     "120", "allow", 22,    22,    "tcp", "0.0.0.0/0",       "Allows inbound SSH traffic from any IPv4 address",
@@ -21,7 +21,7 @@ module "vpc" {
     "140", "allow", 1024,  65535, "tcp", "0.0.0.0/0",       "Allows inbound return traffic from hosts"
   ]
 
-  public_outbound_acls = [
+  public_outbound_acl_rules = [
     "100", "allow", 80,    80,    "tcp", "0.0.0.0/0",       "Allows outbound HTTP traffic from the subnet to the Internet",
     "110", "allow", 443,   443,   "tcp", "0.0.0.0/0",       "Allows outbound HTTPS traffic from the subnet to the Internet",
     "120", "allow", 1433,  1433,  "tcp", "10.0.100.0/22",   "Allows outbound MS SQL access to database servers in the private subnet",

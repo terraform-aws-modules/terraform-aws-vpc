@@ -306,31 +306,31 @@ resource "aws_network_acl" "public" {
 }
 
 resource "aws_network_acl_rule" "public_inbound" {
-  count = "${var.create_vpc ? length(var.public_inbound_acls) / 7 : 0}"
+  count = "${var.create_vpc ? length(var.public_inbound_acl_rules) / 7 : 0}"
 
   network_acl_id = "${aws_network_acl.public.id}"
 
   egress      = false
-  rule_number = "${element(var.public_inbound_acls, count.index * 7 + 0)}"
-  rule_action = "${element(var.public_inbound_acls, count.index * 7 + 1)}"
-  from_port   = "${element(var.public_inbound_acls, count.index * 7 + 2)}"
-  to_port     = "${element(var.public_inbound_acls, count.index * 7 + 3)}"
-  protocol    = "${element(var.public_inbound_acls, count.index * 7 + 4)}"
-  cidr_block  = "${element(var.public_inbound_acls, count.index * 7 + 5)}"
+  rule_number = "${element(var.public_inbound_acl_rules, count.index * 7 + 0)}"
+  rule_action = "${element(var.public_inbound_acl_rules, count.index * 7 + 1)}"
+  from_port   = "${element(var.public_inbound_acl_rules, count.index * 7 + 2)}"
+  to_port     = "${element(var.public_inbound_acl_rules, count.index * 7 + 3)}"
+  protocol    = "${element(var.public_inbound_acl_rules, count.index * 7 + 4)}"
+  cidr_block  = "${element(var.public_inbound_acl_rules, count.index * 7 + 5)}"
 }
 
 resource "aws_network_acl_rule" "public_outbound" {
-  count = "${var.create_vpc ? length(var.public_outbound_acls) / 7 : 0}"
+  count = "${var.create_vpc ? length(var.public_outbound_acl_rules) / 7 : 0}"
 
   network_acl_id = "${aws_network_acl.public.id}"
 
   egress      = true
-  rule_number = "${element(var.public_outbound_acls, count.index * 7 + 0)}"
-  rule_action = "${element(var.public_outbound_acls, count.index * 7 + 1)}"
-  from_port   = "${element(var.public_outbound_acls, count.index * 7 + 2)}"
-  to_port     = "${element(var.public_outbound_acls, count.index * 7 + 3)}"
-  protocol    = "${element(var.public_outbound_acls, count.index * 7 + 4)}"
-  cidr_block  = "${element(var.public_outbound_acls, count.index * 7 + 5)}"
+  rule_number = "${element(var.public_outbound_acl_rules, count.index * 7 + 0)}"
+  rule_action = "${element(var.public_outbound_acl_rules, count.index * 7 + 1)}"
+  from_port   = "${element(var.public_outbound_acl_rules, count.index * 7 + 2)}"
+  to_port     = "${element(var.public_outbound_acl_rules, count.index * 7 + 3)}"
+  protocol    = "${element(var.public_outbound_acl_rules, count.index * 7 + 4)}"
+  cidr_block  = "${element(var.public_outbound_acl_rules, count.index * 7 + 5)}"
 }
 
 #######################
@@ -346,31 +346,31 @@ resource "aws_network_acl" "private" {
 }
 
 resource "aws_network_acl_rule" "private_inbound" {
-  count = "${var.create_vpc ? length(var.private_inbound_acls) / 7 : 0}"
+  count = "${var.create_vpc ? length(var.private_inbound_acl_rules) / 7 : 0}"
 
   network_acl_id = "${aws_network_acl.private.id}"
 
   egress      = false
-  rule_number = "${element(var.private_inbound_acls, count.index * 7 + 0)}"
-  rule_action = "${element(var.private_inbound_acls, count.index * 7 + 1)}"
-  from_port   = "${element(var.private_inbound_acls, count.index * 7 + 2)}"
-  to_port     = "${element(var.private_inbound_acls, count.index * 7 + 3)}"
-  protocol    = "${element(var.private_inbound_acls, count.index * 7 + 4)}"
-  cidr_block  = "${element(var.private_inbound_acls, count.index * 7 + 5)}"
+  rule_number = "${element(var.private_inbound_acl_rules, count.index * 7 + 0)}"
+  rule_action = "${element(var.private_inbound_acl_rules, count.index * 7 + 1)}"
+  from_port   = "${element(var.private_inbound_acl_rules, count.index * 7 + 2)}"
+  to_port     = "${element(var.private_inbound_acl_rules, count.index * 7 + 3)}"
+  protocol    = "${element(var.private_inbound_acl_rules, count.index * 7 + 4)}"
+  cidr_block  = "${element(var.private_inbound_acl_rules, count.index * 7 + 5)}"
 }
 
 resource "aws_network_acl_rule" "private_outbound" {
-  count = "${var.create_vpc ? length(var.private_outbound_acls) / 7 : 0}"
+  count = "${var.create_vpc ? length(var.private_outbound_acl_rules) / 7 : 0}"
 
   network_acl_id = "${aws_network_acl.private.id}"
 
   egress      = true
-  rule_number = "${element(var.private_outbound_acls, count.index * 7 + 0)}"
-  rule_action = "${element(var.private_outbound_acls, count.index * 7 + 1)}"
-  from_port   = "${element(var.private_outbound_acls, count.index * 7 + 2)}"
-  to_port     = "${element(var.private_outbound_acls, count.index * 7 + 3)}"
-  protocol    = "${element(var.private_outbound_acls, count.index * 7 + 4)}"
-  cidr_block  = "${element(var.private_outbound_acls, count.index * 7 + 5)}"
+  rule_number = "${element(var.private_outbound_acl_rules, count.index * 7 + 0)}"
+  rule_action = "${element(var.private_outbound_acl_rules, count.index * 7 + 1)}"
+  from_port   = "${element(var.private_outbound_acl_rules, count.index * 7 + 2)}"
+  to_port     = "${element(var.private_outbound_acl_rules, count.index * 7 + 3)}"
+  protocol    = "${element(var.private_outbound_acl_rules, count.index * 7 + 4)}"
+  cidr_block  = "${element(var.private_outbound_acl_rules, count.index * 7 + 5)}"
 }
 
 ########################
@@ -386,31 +386,31 @@ resource "aws_network_acl" "intra" {
 }
 
 resource "aws_network_acl_rule" "intra_inbound" {
-  count = "${var.create_vpc ? length(var.intra_inbound_acls) / 7 : 0}"
+  count = "${var.create_vpc ? length(var.intra_inbound_acl_rules) / 7 : 0}"
 
   network_acl_id = "${aws_network_acl.intra.id}"
 
   egress      = false
-  rule_number = "${element(var.intra_inbound_acls, count.index * 7 + 0)}"
-  rule_action = "${element(var.intra_inbound_acls, count.index * 7 + 1)}"
-  from_port   = "${element(var.intra_inbound_acls, count.index * 7 + 2)}"
-  to_port     = "${element(var.intra_inbound_acls, count.index * 7 + 3)}"
-  protocol    = "${element(var.intra_inbound_acls, count.index * 7 + 4)}"
-  cidr_block  = "${element(var.intra_inbound_acls, count.index * 7 + 5)}"
+  rule_number = "${element(var.intra_inbound_acl_rules, count.index * 7 + 0)}"
+  rule_action = "${element(var.intra_inbound_acl_rules, count.index * 7 + 1)}"
+  from_port   = "${element(var.intra_inbound_acl_rules, count.index * 7 + 2)}"
+  to_port     = "${element(var.intra_inbound_acl_rules, count.index * 7 + 3)}"
+  protocol    = "${element(var.intra_inbound_acl_rules, count.index * 7 + 4)}"
+  cidr_block  = "${element(var.intra_inbound_acl_rules, count.index * 7 + 5)}"
 }
 
 resource "aws_network_acl_rule" "intra_outbound" {
-  count = "${var.create_vpc ? length(var.intra_outbound_acls) / 7 : 0}"
+  count = "${var.create_vpc ? length(var.intra_outbound_acl_rules) / 7 : 0}"
 
   network_acl_id = "${aws_network_acl.intra.id}"
 
   egress      = true
-  rule_number = "${element(var.intra_outbound_acls, count.index * 7 + 0)}"
-  rule_action = "${element(var.intra_outbound_acls, count.index * 7 + 1)}"
-  from_port   = "${element(var.intra_outbound_acls, count.index * 7 + 2)}"
-  to_port     = "${element(var.intra_outbound_acls, count.index * 7 + 3)}"
-  protocol    = "${element(var.intra_outbound_acls, count.index * 7 + 4)}"
-  cidr_block  = "${element(var.intra_outbound_acls, count.index * 7 + 5)}"
+  rule_number = "${element(var.intra_outbound_acl_rules, count.index * 7 + 0)}"
+  rule_action = "${element(var.intra_outbound_acl_rules, count.index * 7 + 1)}"
+  from_port   = "${element(var.intra_outbound_acl_rules, count.index * 7 + 2)}"
+  to_port     = "${element(var.intra_outbound_acl_rules, count.index * 7 + 3)}"
+  protocol    = "${element(var.intra_outbound_acl_rules, count.index * 7 + 4)}"
+  cidr_block  = "${element(var.intra_outbound_acl_rules, count.index * 7 + 5)}"
 }
 
 ##############
