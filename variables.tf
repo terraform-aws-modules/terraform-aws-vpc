@@ -419,32 +419,32 @@ variable "intra_subnet_tags" {
 }
 
 variable "public_acl_tags" {
-  description = "Additional tags for the public subnets network ACLs"
+  description = "Additional tags for the public subnets network ACL"
   default     = {}
 }
 
 variable "private_acl_tags" {
-  description = "Additional tags for the private subnets network ACLs"
+  description = "Additional tags for the private subnets network ACL"
   default     = {}
 }
 
 variable "intra_acl_tags" {
-  description = "Additional tags for the intra subnets network ACLs"
+  description = "Additional tags for the intra subnets network ACL"
   default     = {}
 }
 
 variable "database_acl_tags" {
-  description = "Additional tags for the database subnets network ACLs"
+  description = "Additional tags for the database subnets network ACL"
   default     = {}
 }
 
 variable "redshift_acl_tags" {
-  description = "Additional tags for the redshift subnets network ACLs"
+  description = "Additional tags for the redshift subnets network ACL"
   default     = {}
 }
 
 variable "elasticache_acl_tags" {
-  description = "Additional tags for the elasticache subnets network ACLs"
+  description = "Additional tags for the elasticache subnets network ACL"
   default     = {}
 }
 
