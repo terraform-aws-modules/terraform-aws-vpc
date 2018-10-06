@@ -161,7 +161,7 @@ resource "aws_subnet" "public" {
   count = "${var.create_vpc && length(var.public_subnets) > 0 && (!var.one_nat_gateway_per_az || length(var.public_subnets) >= length(var.azs)) ? length(var.public_subnets) : 0}"
 
   vpc_id                  = "${local.vpc_id}"
-  cidr_block              = "${var.public_subnets[count.index]}"
+  cidr_block              = "${element(concat(var.public_subnets, list("")), count.index)}"
   availability_zone       = "${element(var.azs, count.index)}"
   map_public_ip_on_launch = "${var.map_public_ip_on_launch}"
 
