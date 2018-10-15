@@ -172,6 +172,7 @@ Terraform version 0.10.3 or newer is required for this module to work.
 | azs | A list of availability zones in the region | string | `<list>` | no |
 | cidr | The CIDR block for the VPC. Default value is a valid CIDR, but not acceptable by AWS and should be overridden | string | `0.0.0.0/0` | no |
 | create_database_subnet_group | Controls if database subnet group should be created | string | `true` | no |
+| create_database_internet_gateway_route | Controls if an internet gateway route for public database access should be created | string | `false` | no |
 | create_database_subnet_route_table | Controls if separate route table for database should be created | string | `false` | no |
 | create_elasticache_subnet_route_table | Controls if separate route table for elasticache should be created | string | `false` | no |
 | create_redshift_subnet_route_table | Controls if separate route table for redshift should be created | string | `false` | no |
