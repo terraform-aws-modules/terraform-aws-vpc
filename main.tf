@@ -405,27 +405,7 @@ resource "aws_vpc_endpoint" "kms" {
   vpc_endpoint_type   = "Interface"
   private_dns_enabled = "${var.enable_dns_hostnames && var.enable_dns_support ? true : false}"
   security_group_ids  = ["${data.aws_security_group.default.id}"]
-}
-
-resource "aws_vpc_endpoint_route_table_association" "private_kms" {
-  count = "${var.create_vpc && var.enable_kms_endpoint ? local.nat_gateway_count : 0}"
-
-  vpc_endpoint_id = "${aws_vpc_endpoint.kms.id}"
-  route_table_id  = "${element(aws_route_table.private.*.id, count.index)}"
-}
-
-resource "aws_vpc_endpoint_route_table_association" "intra_kms" {
-  count = "${var.create_vpc && var.enable_kms_endpoint && length(var.intra_subnets) > 0 ? 1 : 0}"
-
-  vpc_endpoint_id = "${aws_vpc_endpoint.kms.id}"
-  route_table_id  = "${element(aws_route_table.intra.*.id, 0)}"
-}
-
-resource "aws_vpc_endpoint_route_table_association" "public_kms" {
-  count = "${var.create_vpc && var.enable_kms_endpoint && length(var.public_subnets) > 0 ? 1 : 0}"
-
-  vpc_endpoint_id = "${aws_vpc_endpoint.kms.id}"
-  route_table_id  = "${aws_route_table.public.id}"
+  subnet_ids          = ["${aws_subnet.public.*.id}", "${aws_subnet.intra.*.id}", "${aws_subnet.private.*.id}"]
 }
 
 ##########################
