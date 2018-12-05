@@ -158,6 +158,11 @@ variable "enable_s3_endpoint" {
   default     = false
 }
 
+variable "enable_kms_endpoint" {
+  description = "Should be true if you want to provision a KMS endpoint to the VPC"
+  default     = false
+}
+
 variable "map_public_ip_on_launch" {
   description = "Should be false if you do not want to auto-assign public IP on launch"
   default     = true

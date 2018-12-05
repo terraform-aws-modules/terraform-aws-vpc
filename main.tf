@@ -381,6 +381,43 @@ resource "aws_vpc_endpoint_route_table_association" "public_dynamodb" {
   route_table_id  = "${aws_route_table.public.id}"
 }
 
+######################
+# VPC Endpoint for KMS
+######################
+data "aws_vpc_endpoint_service" "kms" {
+  count = "${var.create_vpc && var.enable_kms_endpoint ? 1 : 0}"
+
+  service = "kms"
+}
+
+resource "aws_vpc_endpoint" "kms" {
+  count = "${var.create_vpc && var.enable_kms_endpoint ? 1 : 0}"
+
+  vpc_id       = "${local.vpc_id}"
+  service_name = "${data.aws_vpc_endpoint_service.kms.service_name}"
+}
+
+resource "aws_vpc_endpoint_route_table_association" "private_kms" {
+  count = "${var.create_vpc && var.enable_kms_endpoint ? local.nat_gateway_count : 0}"
+
+  vpc_endpoint_id = "${aws_vpc_endpoint.kms.id}"
+  route_table_id  = "${element(aws_route_table.private.*.id, count.index)}"
+}
+
+resource "aws_vpc_endpoint_route_table_association" "intra_kms" {
+  count = "${var.create_vpc && var.enable_kms_endpoint && length(var.intra_subnets) > 0 ? 1 : 0}"
+
+  vpc_endpoint_id = "${aws_vpc_endpoint.kms.id}"
+  route_table_id  = "${element(aws_route_table.intra.*.id, 0)}"
+}
+
+resource "aws_vpc_endpoint_route_table_association" "public_kms" {
+  count = "${var.create_vpc && var.enable_kms_endpoint && length(var.public_subnets) > 0 ? 1 : 0}"
+
+  vpc_endpoint_id = "${aws_vpc_endpoint.kms.id}"
+  route_table_id  = "${aws_route_table.public.id}"
+}
+
 ##########################
 # Route table association
 ##########################
