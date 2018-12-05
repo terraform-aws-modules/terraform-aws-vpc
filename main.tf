@@ -405,7 +405,7 @@ resource "aws_vpc_endpoint" "kms" {
   vpc_endpoint_type   = "Interface"
   private_dns_enabled = "${var.enable_dns_hostnames && var.enable_dns_support ? true : false}"
   security_group_ids  = ["${data.aws_security_group.default.id}"]
-  subnet_ids          = ["${aws_subnet.public.*.id}", "${aws_subnet.intra.*.id}", "${aws_subnet.private.*.id}"]
+  subnet_ids          = ["${aws_subnet.public[0].id}", "${aws_subnet.intra[0].id}", "${aws_subnet.private[0].id}"]
 }
 
 ##########################
