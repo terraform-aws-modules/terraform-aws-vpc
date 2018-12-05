@@ -393,8 +393,10 @@ data "aws_vpc_endpoint_service" "kms" {
 resource "aws_vpc_endpoint" "kms" {
   count = "${var.create_vpc && var.enable_kms_endpoint ? 1 : 0}"
 
-  vpc_id       = "${local.vpc_id}"
-  service_name = "${data.aws_vpc_endpoint_service.kms.service_name}"
+  vpc_id              = "${local.vpc_id}"
+  service_name        = "${data.aws_vpc_endpoint_service.kms.service_name}"
+  vpc_endpoint_type   = "Interface"
+  private_dns_enabled = "${var.enable_dns_hostnames && var.enable_dns_support ? true : false}"
 }
 
 resource "aws_vpc_endpoint_route_table_association" "private_kms" {
