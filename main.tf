@@ -393,7 +393,7 @@ data "aws_vpc_endpoint_service" "kms" {
 data "aws_security_group" "default" {
   count = "${var.create_vpc && var.enable_kms_endpoint ? 1 : 0}"
 
-  vpc_id = "${aws_vpc.this.*.id}"
+  vpc_id = "${local.vpc_id}"
   name = "default"
 }
 
