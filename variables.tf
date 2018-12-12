@@ -107,6 +107,11 @@ variable "create_database_subnet_group" {
   default     = true
 }
 
+variable "create_database_internet_gateway_route" {
+  description = "Controls if an internet gateway route for public database access should be created"
+  default     = false
+}
+
 variable "azs" {
   description = "A list of availability zones in the region"
   default     = []

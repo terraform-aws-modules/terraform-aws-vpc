@@ -121,6 +121,18 @@ resource "aws_route_table" "database" {
   tags = "${merge(var.tags, var.database_route_table_tags, map("Name", "${var.name}-${var.database_subnet_suffix}"))}"
 }
 
+resource "aws_route" "database_internet_gateway" {
+  count = "${var.create_vpc && var.create_database_subnet_route_table && length(var.database_subnets) > 0 && var.create_database_internet_gateway_route ? 1 : 0}"
+
+  route_table_id         = "${aws_route_table.database.id}"
+  destination_cidr_block = "0.0.0.0/0"
+  gateway_id             = "${aws_internet_gateway.this.id}"
+
+  timeouts {
+    create = "5m"
+  }
+}
+
 #################
 # Redshift routes
 #################

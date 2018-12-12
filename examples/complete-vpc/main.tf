@@ -17,12 +17,17 @@ module "vpc" {
   redshift_subnets    = ["10.10.41.0/24", "10.10.42.0/24", "10.10.43.0/24"]
   intra_subnets       = ["10.10.51.0/24", "10.10.52.0/24", "10.10.53.0/24"]
 
-  create_database_subnet_group = false
+  create_database_subnet_group           = true
+  create_database_subnet_route_table     = true
+  create_database_internet_gateway_route = true
 
   enable_nat_gateway = true
   single_nat_gateway = true
 
   enable_vpn_gateway = true
+
+  enable_dns_hostnames = true
+  enable_dns_support   = true
 
   enable_s3_endpoint       = true
   enable_dynamodb_endpoint = true
