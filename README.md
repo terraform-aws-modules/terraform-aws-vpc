@@ -150,6 +150,19 @@ module "vpc" {
 }
 ```
 
+## Public access to RDS instances
+
+Sometimes it is handy to have public access to RDS instances (it is not recommended for production) by specifying these arguments:
+
+```hcl
+  create_database_subnet_group           = true
+  create_database_subnet_route_table     = true
+  create_database_internet_gateway_route = true
+
+  enable_dns_hostnames = true
+  enable_dns_support   = true
+```
+
 ## Terraform version
 
 Terraform version 0.10.3 or newer is required for this module to work.
@@ -170,6 +183,7 @@ Terraform version 0.10.3 or newer is required for this module to work.
 | assign\_generated\_ipv6\_cidr\_block | Requests an Amazon-provided IPv6 CIDR block with a /56 prefix length for the VPC. You cannot specify the range of IP addresses, or the size of the CIDR block | string | `false` | no |
 | azs | A list of availability zones in the region | list | `[]` | no |
 | cidr | The CIDR block for the VPC. Default value is a valid CIDR, but not acceptable by AWS and should be overridden | string | `0.0.0.0/0` | no |
+| create\_database\_internet\_gateway\_route | Controls if an internet gateway route for public database access should be created | string | `false` | no |
 | create\_database\_subnet\_group | Controls if database subnet group should be created | string | `true` | no |
 | create\_database\_subnet\_route\_table | Controls if separate route table for database should be created | string | `false` | no |
 | create\_elasticache\_subnet\_route\_table | Controls if separate route table for elasticache should be created | string | `false` | no |
