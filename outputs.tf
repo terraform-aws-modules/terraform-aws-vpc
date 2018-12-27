@@ -278,3 +278,7 @@ output "default_vpc_main_route_table_id" {
 //  value       = "${element(concat(aws_default_vpc.this.*.ipv6_cidr_block, list("")), 0)}"
 //}
 
+output "azs" {
+  description = "A list of availability zones spefified as argument to this module"
+  value       = "${var.azs}"
+}
