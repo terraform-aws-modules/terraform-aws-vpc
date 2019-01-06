@@ -171,6 +171,7 @@ variable "enable_ssm_endpoint" {
 variable "ssm_endpoint_security_group_ids" {
   description = "List of security group IDs applied to the SSM interface endpoint."
   type        = "list"
+  default     = []
 }
 
 variable "map_public_ip_on_launch" {
