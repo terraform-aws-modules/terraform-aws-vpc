@@ -163,6 +163,16 @@ variable "enable_s3_endpoint" {
   default     = false
 }
 
+variable "enable_ssm_endpoint" {
+  description = "Should be true if you want to provision an SSM interface endpoint to the VPC"
+  default     = false
+}
+
+variable "ssm_endpoint_security_group_ids" {
+  description = "List of security group IDs applied to the SSM interface endpoint."
+  type        = "list"
+}
+
 variable "map_public_ip_on_launch" {
   description = "Should be false if you do not want to auto-assign public IP on launch"
   default     = true

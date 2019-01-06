@@ -393,6 +393,29 @@ resource "aws_vpc_endpoint_route_table_association" "public_dynamodb" {
   route_table_id  = "${aws_route_table.public.id}"
 }
 
+#######################
+# VPC Endpoint for SSM
+#######################
+data "aws_vpc_endpoint_service" "ssm" {
+  count = "${var.create_vpc && var.enable_ssm_endpoint && var.enable_dns_hostnames && var.enable_dns_support ? 1 : 0}"
+
+  service = "ssm"
+}
+
+resource "aws_vpc_endpoint" "ssm" {
+  count = "${var.create_vpc && var.enable_ssm_endpoint ? 1 : 0}"
+
+  vpc_id            = "${local.vpc_id}"
+  service_name      = "${data.aws_vpc_endpoint_service.ssm.service_name}"
+  vpc_endpoint_type = "Interface"
+
+  security_group_ids = [ "${var.ssm_endpoint_security_group_ids}" ]
+
+  # Only a single subnet within an AZ is supported.
+  subnet_ids          = [ "${concat(aws_subnet.private.*.id)}" ]
+  private_dns_enabled = true
+}
+
 ##########################
 # Route table association
 ##########################

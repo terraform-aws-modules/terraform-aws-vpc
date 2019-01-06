@@ -208,6 +208,11 @@ output "vpc_endpoint_dynamodb_id" {
   value       = "${element(concat(aws_vpc_endpoint.dynamodb.*.id, list("")), 0)}"
 }
 
+output "vpc_endpoint_ssm_id" {
+  description = "The ID of VPC endpoint for SSM"
+  value       = "${element(concat(aws_vpc_endpoint.ssm.*.id, list("")), 0)}"
+}
+
 output "vgw_id" {
   description = "The ID of the VPN Gateway"
   value       = "${element(concat(aws_vpn_gateway.this.*.id, aws_vpn_gateway_attachment.this.*.vpn_gateway_id, list("")), 0)}"
