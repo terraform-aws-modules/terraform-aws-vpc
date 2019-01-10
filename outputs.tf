@@ -279,6 +279,6 @@ output "default_vpc_main_route_table_id" {
 //}
 
 output "azs" {
-  description = "A list of availability zones spefified as argument to this module"
+  description = "A list of availability zones specified as argument to this module"
   value       = "${var.azs}"
 }

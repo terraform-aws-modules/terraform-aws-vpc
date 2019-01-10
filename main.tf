@@ -230,7 +230,7 @@ resource "aws_subnet" "redshift" {
 }
 
 resource "aws_redshift_subnet_group" "redshift" {
-  count = "${var.create_vpc && length(var.redshift_subnets) > 0 ? 1 : 0}"
+  count = "${var.create_vpc && length(var.redshift_subnets) > 0 && var.create_redshift_subnet_group ? 1 : 0}"
 
   name        = "${lower(var.name)}"
   description = "Redshift subnet group for ${var.name}"
@@ -253,7 +253,7 @@ resource "aws_subnet" "elasticache" {
 }
 
 resource "aws_elasticache_subnet_group" "elasticache" {
-  count = "${var.create_vpc && length(var.elasticache_subnets) > 0 ? 1 : 0}"
+  count = "${var.create_vpc && length(var.elasticache_subnets) > 0 && var.create_elasticache_subnet_group ? 1 : 0}"
 
   name        = "${var.name}"
   description = "ElastiCache subnet group for ${var.name}"
