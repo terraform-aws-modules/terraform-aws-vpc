@@ -255,7 +255,7 @@ Terraform version 0.10.3 or newer is required for this module to work.
 
 | Name | Description |
 |------|-------------|
-| azs | A list of availability zones spefified as argument to this module |
+| azs | A list of availability zones specified as argument to this module |
 | database\_route\_table\_ids | List of IDs of database route tables |
 | database\_subnet\_group | ID of database subnet group |
 | database\_subnets | List of IDs of database subnets |
