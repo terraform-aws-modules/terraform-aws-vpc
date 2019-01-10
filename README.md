@@ -186,7 +186,9 @@ Terraform version 0.10.3 or newer is required for this module to work.
 | create\_database\_internet\_gateway\_route | Controls if an internet gateway route for public database access should be created | string | `false` | no |
 | create\_database\_subnet\_group | Controls if database subnet group should be created | string | `true` | no |
 | create\_database\_subnet\_route\_table | Controls if separate route table for database should be created | string | `false` | no |
+| create\_elasticache\_subnet\_group | Controls if elasticache subnet group should be created | string | `true` | no |
 | create\_elasticache\_subnet\_route\_table | Controls if separate route table for elasticache should be created | string | `false` | no |
+| create\_redshift\_subnet\_group | Controls if redshift subnet group should be created | string | `true` | no |
 | create\_redshift\_subnet\_route\_table | Controls if separate route table for redshift should be created | string | `false` | no |
 | create\_vpc | Controls if VPC should be created (it affects almost all resources) | string | `true` | no |
 | database\_route\_table\_tags | Additional tags for the database route tables | map | `{}` | no |
@@ -255,7 +257,7 @@ Terraform version 0.10.3 or newer is required for this module to work.
 
 | Name | Description |
 |------|-------------|
-| azs | A list of availability zones spefified as argument to this module |
+| azs | A list of availability zones specified as argument to this module |
 | database\_route\_table\_ids | List of IDs of database route tables |
 | database\_subnet\_group | ID of database subnet group |
 | database\_subnets | List of IDs of database subnets |
