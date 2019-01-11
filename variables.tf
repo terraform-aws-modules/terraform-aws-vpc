@@ -122,6 +122,11 @@ variable "create_database_internet_gateway_route" {
   default     = false
 }
 
+variable "create_database_nat_gateway_route" {
+  description = "Controls if a nat gateway route should be created to give internet access to the database subnets"
+  default     = false
+}
+
 variable "azs" {
   description = "A list of availability zones in the region"
   default     = []
