@@ -173,6 +173,46 @@ variable "enable_s3_endpoint" {
   default     = false
 }
 
+variable "enable_ssm_endpoint" {
+  description = "Should be true if you want to provision an SSM endpoint to the VPC"
+  default     = false
+}
+
+variable "ssm_endpoint_security_group_ids" {
+  description = "The ID of one or more security groups to associate with the network interface for SSM endpoint"
+  default     = []
+}
+
+variable "ssm_endpoint_subnet_ids" {
+  description = "The ID of one or more subnets in which to create a network interface for SSM endpoint. Only a single subnet within an AZ is supported. If omitted, private subnets will be used."
+  default     = []
+}
+
+variable "ssm_endpoint_private_dns_enabled" {
+  description = "Whether or not to associate a private hosted zone with the specified VPC for SSM endpoint"
+  default     = false
+}
+
+variable "enable_ec2_endpoint" {
+  description = "Should be true if you want to provision an EC2 endpoint to the VPC"
+  default     = false
+}
+
+variable "ec2_endpoint_security_group_ids" {
+  description = "The ID of one or more security groups to associate with the network interface for EC2 endpoint"
+  default     = []
+}
+
+variable "ec2_endpoint_private_dns_enabled" {
+  description = "Whether or not to associate a private hosted zone with the specified VPC for EC2 endpoint"
+  default     = false
+}
+
+variable "ec2_endpoint_subnet_ids" {
+  description = "The ID of one or more subnets in which to create a network interface for EC2 endpoint. Only a single subnet within an AZ is supported. If omitted, private subnets will be used."
+  default     = []
+}
+
 variable "map_public_ip_on_launch" {
   description = "Should be false if you do not want to auto-assign public IP on launch"
   default     = true

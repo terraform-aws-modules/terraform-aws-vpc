@@ -393,6 +393,48 @@ resource "aws_vpc_endpoint_route_table_association" "public_dynamodb" {
   route_table_id  = "${aws_route_table.public.id}"
 }
 
+######################
+# VPC Endpoint for SSM
+######################
+data "aws_vpc_endpoint_service" "ssm" {
+  count = "${var.create_vpc && var.enable_ssm_endpoint ? 1 : 0}"
+
+  service = "ssm"
+}
+
+resource "aws_vpc_endpoint" "ssm" {
+  count = "${var.create_vpc && var.enable_ssm_endpoint ? 1 : 0}"
+
+  vpc_id            = "${local.vpc_id}"
+  service_name      = "${data.aws_vpc_endpoint_service.ssm.service_name}"
+  vpc_endpoint_type = "Interface"
+
+  security_group_ids  = ["${var.ssm_endpoint_security_group_ids}"]
+  subnet_ids          = ["${coalescelist(var.ssm_endpoint_subnet_ids, aws_subnet.private.*.id)}"]
+  private_dns_enabled = "${var.ssm_endpoint_private_dns_enabled}"
+}
+
+######################
+# VPC Endpoint for EC2
+######################
+data "aws_vpc_endpoint_service" "ec2" {
+  count = "${var.create_vpc && var.enable_ec2_endpoint ? 1 : 0}"
+
+  service = "ec2"
+}
+
+resource "aws_vpc_endpoint" "ec2" {
+  count = "${var.create_vpc && var.enable_ec2_endpoint ? 1 : 0}"
+
+  vpc_id            = "${local.vpc_id}"
+  service_name      = "${data.aws_vpc_endpoint_service.ec2.service_name}"
+  vpc_endpoint_type = "Interface"
+
+  security_group_ids  = ["${var.ec2_endpoint_security_group_ids}"]
+  subnet_ids          = ["${coalescelist(var.ec2_endpoint_subnet_ids, aws_subnet.private.*.id)}"]
+  private_dns_enabled = "${var.ec2_endpoint_private_dns_enabled}"
+}
+
 ##########################
 # Route table association
 ##########################
