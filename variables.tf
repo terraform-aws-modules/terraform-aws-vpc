@@ -198,6 +198,26 @@ variable "ssm_endpoint_private_dns_enabled" {
   default     = false
 }
 
+variable "enable_ssmmessages_endpoint" {
+  description = "Should be true if you want to provision a SSMMESSAGES endpoint to the VPC"
+  default     = false
+}
+
+variable "ssmmessages_endpoint_security_group_ids" {
+  description = "The ID of one or more security groups to associate with the network interface for SSMMESSAGES endpoint"
+  default     = []
+}
+
+variable "ssmmessages_endpoint_subnet_ids" {
+  description = "The ID of one or more subnets in which to create a network interface for SSMMESSAGES endpoint. Only a single subnet within an AZ is supported. If omitted, private subnets will be used."
+  default     = []
+}
+
+variable "ssmmessages_endpoint_private_dns_enabled" {
+  description = "Whether or not to associate a private hosted zone with the specified VPC for SSMMESSAGES endpoint"
+  default     = false
+}
+
 variable "enable_ec2_endpoint" {
   description = "Should be true if you want to provision an EC2 endpoint to the VPC"
   default     = false
@@ -215,6 +235,26 @@ variable "ec2_endpoint_private_dns_enabled" {
 
 variable "ec2_endpoint_subnet_ids" {
   description = "The ID of one or more subnets in which to create a network interface for EC2 endpoint. Only a single subnet within an AZ is supported. If omitted, private subnets will be used."
+  default     = []
+}
+
+variable "enable_ec2messages_endpoint" {
+  description = "Should be true if you want to provision an EC2MESSAGES endpoint to the VPC"
+  default     = false
+}
+
+variable "ec2messages_endpoint_security_group_ids" {
+  description = "The ID of one or more security groups to associate with the network interface for EC2MESSAGES endpoint"
+  default     = []
+}
+
+variable "ec2messages_endpoint_private_dns_enabled" {
+  description = "Whether or not to associate a private hosted zone with the specified VPC for EC2MESSAGES endpoint"
+  default     = false
+}
+
+variable "ec2messages_endpoint_subnet_ids" {
+  description = "The ID of one or more subnets in which to create a network interface for EC2MESSAGES endpoint. Only a single subnet within an AZ is supported. If omitted, private subnets will be used."
   default     = []
 }
 

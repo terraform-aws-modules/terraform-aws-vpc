@@ -294,6 +294,21 @@ output "vpc_endpoint_ssm_dns_entry" {
   value       = "${flatten(aws_vpc_endpoint.ssm.*.dns_entry)}"
 }
 
+output "vpc_endpoint_ssmmessages_id" {
+  description = "The ID of VPC endpoint for SSMMESSAGES"
+  value       = "${element(concat(aws_vpc_endpoint.ssmmessages.*.id, list("")), 0)}"
+}
+
+output "vpc_endpoint_ssmmessages_network_interface_ids" {
+  description = "One or more network interfaces for the VPC Endpoint for SSMMESSAGS."
+  value       = "${flatten(aws_vpc_endpoint.ssmmessages.*.network_interface_ids)}"
+}
+
+output "vpc_endpoint_ssmmessages_dns_entry" {
+  description = "The DNS entries for the VPC Endpoint for SSMMESSAGES."
+  value       = "${flatten(aws_vpc_endpoint.ssmmessages.*.dns_entry)}"
+}
+
 output "vpc_endpoint_ec2_id" {
   description = "The ID of VPC endpoint for EC2"
   value       = "${element(concat(aws_vpc_endpoint.ec2.*.id, list("")), 0)}"
@@ -307,6 +322,21 @@ output "vpc_endpoint_ec2_network_interface_ids" {
 output "vpc_endpoint_ec2_dns_entry" {
   description = "The DNS entries for the VPC Endpoint for EC2."
   value       = "${flatten(aws_vpc_endpoint.ec2.*.dns_entry)}"
+}
+
+output "vpc_endpoint_ec2messages_id" {
+  description = "The ID of VPC endpoint for EC2MESSAGES"
+  value       = "${element(concat(aws_vpc_endpoint.ec2messages.*.id, list("")), 0)}"
+}
+
+output "vpc_endpoint_ec2messages_network_interface_ids" {
+  description = "One or more network interfaces for the VPC Endpoint for EC2MESSAGES"
+  value       = "${flatten(aws_vpc_endpoint.ec2messages.*.network_interface_ids)}"
+}
+
+output "vpc_endpoint_ec2messages_dns_entry" {
+  description = "The DNS entries for the VPC Endpoint for EC2MESSAGES."
+  value       = "${flatten(aws_vpc_endpoint.ec2messages.*.dns_entry)}"
 }
 
 # Static values (arguments)
