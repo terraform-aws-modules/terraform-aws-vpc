@@ -300,7 +300,7 @@ output "vpc_endpoint_ssmmessages_id" {
 }
 
 output "vpc_endpoint_ssmmessages_network_interface_ids" {
-  description = "One or more network interfaces for the VPC Endpoint for SSMMESSAGS."
+  description = "One or more network interfaces for the VPC Endpoint for SSMMESSAGES."
   value       = "${flatten(aws_vpc_endpoint.ssmmessages.*.network_interface_ids)}"
 }
 
