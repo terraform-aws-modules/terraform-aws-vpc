@@ -81,6 +81,12 @@ variable "elasticache_subnets" {
   default     = []
 }
 
+variable "intra_subnets" {
+  type        = "list"
+  description = "A list of intra subnets"
+  default     = []
+}
+
 variable "create_database_subnet_route_table" {
   description = "Controls if separate route table for database should be created"
   default     = false
@@ -96,19 +102,28 @@ variable "create_elasticache_subnet_route_table" {
   default     = false
 }
 
-variable "intra_subnets" {
-  type        = "list"
-  description = "A list of intra subnets"
-  default     = []
-}
-
 variable "create_database_subnet_group" {
   description = "Controls if database subnet group should be created"
   default     = true
 }
 
+variable "create_elasticache_subnet_group" {
+  description = "Controls if elasticache subnet group should be created"
+  default     = true
+}
+
+variable "create_redshift_subnet_group" {
+  description = "Controls if redshift subnet group should be created"
+  default     = true
+}
+
 variable "create_database_internet_gateway_route" {
   description = "Controls if an internet gateway route for public database access should be created"
+  default     = false
+}
+
+variable "create_database_nat_gateway_route" {
+  description = "Controls if a nat gateway route should be created to give internet access to the database subnets"
   default     = false
 }
 
@@ -161,6 +176,46 @@ variable "enable_dynamodb_endpoint" {
 variable "enable_s3_endpoint" {
   description = "Should be true if you want to provision an S3 endpoint to the VPC"
   default     = false
+}
+
+variable "enable_ssm_endpoint" {
+  description = "Should be true if you want to provision an SSM endpoint to the VPC"
+  default     = false
+}
+
+variable "ssm_endpoint_security_group_ids" {
+  description = "The ID of one or more security groups to associate with the network interface for SSM endpoint"
+  default     = []
+}
+
+variable "ssm_endpoint_subnet_ids" {
+  description = "The ID of one or more subnets in which to create a network interface for SSM endpoint. Only a single subnet within an AZ is supported. If omitted, private subnets will be used."
+  default     = []
+}
+
+variable "ssm_endpoint_private_dns_enabled" {
+  description = "Whether or not to associate a private hosted zone with the specified VPC for SSM endpoint"
+  default     = false
+}
+
+variable "enable_ec2_endpoint" {
+  description = "Should be true if you want to provision an EC2 endpoint to the VPC"
+  default     = false
+}
+
+variable "ec2_endpoint_security_group_ids" {
+  description = "The ID of one or more security groups to associate with the network interface for EC2 endpoint"
+  default     = []
+}
+
+variable "ec2_endpoint_private_dns_enabled" {
+  description = "Whether or not to associate a private hosted zone with the specified VPC for EC2 endpoint"
+  default     = false
+}
+
+variable "ec2_endpoint_subnet_ids" {
+  description = "The ID of one or more subnets in which to create a network interface for EC2 endpoint. Only a single subnet within an AZ is supported. If omitted, private subnets will be used."
+  default     = []
 }
 
 variable "map_public_ip_on_launch" {

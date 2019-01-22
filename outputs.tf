@@ -193,29 +193,9 @@ output "igw_id" {
   value       = "${element(concat(aws_internet_gateway.this.*.id, list("")), 0)}"
 }
 
-output "vpc_endpoint_s3_id" {
-  description = "The ID of VPC endpoint for S3"
-  value       = "${element(concat(aws_vpc_endpoint.s3.*.id, list("")), 0)}"
-}
-
-output "vpc_endpoint_s3_pl_id" {
-  description = "The prefix list for the S3 VPC endpoint."
-  value       = "${element(concat(aws_vpc_endpoint.s3.*.prefix_list_id, list("")), 0)}"
-}
-
-output "vpc_endpoint_dynamodb_id" {
-  description = "The ID of VPC endpoint for DynamoDB"
-  value       = "${element(concat(aws_vpc_endpoint.dynamodb.*.id, list("")), 0)}"
-}
-
 output "vgw_id" {
   description = "The ID of the VPN Gateway"
   value       = "${element(concat(aws_vpn_gateway.this.*.id, aws_vpn_gateway_attachment.this.*.vpn_gateway_id, list("")), 0)}"
-}
-
-output "vpc_endpoint_dynamodb_pl_id" {
-  description = "The prefix list for the DynamoDB VPC endpoint."
-  value       = "${element(concat(aws_vpc_endpoint.dynamodb.*.prefix_list_id, list("")), 0)}"
 }
 
 output "default_vpc_id" {
@@ -278,3 +258,59 @@ output "default_vpc_main_route_table_id" {
 //  value       = "${element(concat(aws_default_vpc.this.*.ipv6_cidr_block, list("")), 0)}"
 //}
 
+# VPC Endpoints
+output "vpc_endpoint_s3_id" {
+  description = "The ID of VPC endpoint for S3"
+  value       = "${element(concat(aws_vpc_endpoint.s3.*.id, list("")), 0)}"
+}
+
+output "vpc_endpoint_s3_pl_id" {
+  description = "The prefix list for the S3 VPC endpoint."
+  value       = "${element(concat(aws_vpc_endpoint.s3.*.prefix_list_id, list("")), 0)}"
+}
+
+output "vpc_endpoint_dynamodb_id" {
+  description = "The ID of VPC endpoint for DynamoDB"
+  value       = "${element(concat(aws_vpc_endpoint.dynamodb.*.id, list("")), 0)}"
+}
+
+output "vpc_endpoint_dynamodb_pl_id" {
+  description = "The prefix list for the DynamoDB VPC endpoint."
+  value       = "${element(concat(aws_vpc_endpoint.dynamodb.*.prefix_list_id, list("")), 0)}"
+}
+
+output "vpc_endpoint_ssm_id" {
+  description = "The ID of VPC endpoint for SSM"
+  value       = "${element(concat(aws_vpc_endpoint.ssm.*.id, list("")), 0)}"
+}
+
+output "vpc_endpoint_ssm_network_interface_ids" {
+  description = "One or more network interfaces for the VPC Endpoint for SSM."
+  value       = "${flatten(aws_vpc_endpoint.ssm.*.network_interface_ids)}"
+}
+
+output "vpc_endpoint_ssm_dns_entry" {
+  description = "The DNS entries for the VPC Endpoint for SSM."
+  value       = "${flatten(aws_vpc_endpoint.ssm.*.dns_entry)}"
+}
+
+output "vpc_endpoint_ec2_id" {
+  description = "The ID of VPC endpoint for EC2"
+  value       = "${element(concat(aws_vpc_endpoint.ec2.*.id, list("")), 0)}"
+}
+
+output "vpc_endpoint_ec2_network_interface_ids" {
+  description = "One or more network interfaces for the VPC Endpoint for EC2"
+  value       = "${flatten(aws_vpc_endpoint.ec2.*.network_interface_ids)}"
+}
+
+output "vpc_endpoint_ec2_dns_entry" {
+  description = "The DNS entries for the VPC Endpoint for EC2."
+  value       = "${flatten(aws_vpc_endpoint.ec2.*.dns_entry)}"
+}
+
+# Static values (arguments)
+output "azs" {
+  description = "A list of availability zones specified as argument to this module"
+  value       = "${var.azs}"
+}

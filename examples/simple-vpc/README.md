@@ -21,6 +21,7 @@ Note that this example may create resources which can cost money (AWS Elastic IP
 
 | Name | Description |
 |------|-------------|
+| azs | A list of availability zones spefified as argument to this module |
 | nat\_public\_ips | List of public Elastic IPs created for AWS NAT Gateway |
 | private\_subnets | List of IDs of private subnets |
 | public\_subnets | List of IDs of public subnets |
