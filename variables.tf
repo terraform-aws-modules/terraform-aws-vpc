@@ -107,6 +107,11 @@ variable "create_database_subnet_group" {
   default     = true
 }
 
+variable "create_database_subnet_group_with_old_naming" {
+  description = "Controls if database subnet group should be created with the old naming convention adding -rds-subnet-group to var.name"
+  default     = false
+}
+
 variable "create_elasticache_subnet_group" {
   description = "Controls if elasticache subnet group should be created"
   default     = true
