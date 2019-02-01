@@ -25,7 +25,7 @@ This will destroy any existing test resources, create the resources afresh, run 
 
 | Name | Description | Type | Default | Required |
 |------|-------------|:----:|:-----:|:-----:|
-| region |  | string | `"eu-west-1"` | no |
+| region | - | string | `eu-west-1` | no |
 
 ## Outputs
 
