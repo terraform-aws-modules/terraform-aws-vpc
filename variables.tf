@@ -183,6 +183,11 @@ variable "enable_ecr_api_endpoint" {
   default     = false
 }
 
+variable "ecr_api_endpoint_subnet_ids" {
+  description = "The ID of one or more subnets in which to create a network interface for ECR api endpoint. If omitted, private subnets will be used."
+  default     = []
+}
+
 variable "ecr_api_endpoint_private_dns_enabled" {
   description = "Whether or not to associate a private hosted zone with the specified VPC for ECR API endpoint"
   default     = false
@@ -196,6 +201,11 @@ variable "ecr_api_endpoint_security_group_ids" {
 variable "enable_ecr_dkr_endpoint" {
   description = "Should be true if you want to provision an ecr dkr endpoint to the VPC"
   default     = false
+}
+
+variable "ecr_dkr_endpoint_subnet_ids" {
+  description = "The ID of one or more subnets in which to create a network interface for ECR dkr endpoint. If omitted, private subnets will be used."
+  default     = []
 }
 
 variable "ecr_dkr_endpoint_private_dns_enabled" {

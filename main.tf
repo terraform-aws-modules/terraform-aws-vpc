@@ -382,6 +382,7 @@ resource "aws_vpc_endpoint" "ecr_api" {
   vpc_endpoint_type = "Interface"
   vpc_id       = "${local.vpc_id}"
   security_group_ids = ["${var.ecr_api_endpoint_security_group_ids}"]
+  subnet_ids          = ["${coalescelist(var.ecr_api_endpoint_subnet_ids, aws_subnet.private.*.id)}"]
   service_name = "${data.aws_vpc_endpoint_service.ecr_api.service_name}"
   private_dns_enabled = "${var.ecr_api_endpoint_private_dns_enabled}"
 }
@@ -401,6 +402,7 @@ resource "aws_vpc_endpoint" "ecr_dkr" {
   vpc_endpoint_type = "Interface"
   vpc_id       = "${local.vpc_id}"
   security_group_ids = ["${var.ecr_dkr_endpoint_security_group_ids}"]
+  subnet_ids          = ["${coalescelist(var.ecr_dkr_endpoint_subnet_ids, aws_subnet.private.*.id)}"]
   service_name = "${data.aws_vpc_endpoint_service.ecr_dkr.service_name}"
   private_dns_enabled = "${var.ecr_dkr_endpoint_private_dns_enabled}"
 }
