@@ -73,6 +73,16 @@ output "private_subnets_cidr_blocks" {
   value       = ["${aws_subnet.private.*.cidr_block}"]
 }
 
+output "lambda_subnets" {
+  description = "List of IDs of lambda subnets"
+  value       = ["${aws_subnet.lambda.*.id}"]
+}
+
+output "lambda_subnets_cidr_blocks" {
+  description = "List of cidr_blocks of lambda subnets"
+  value       = ["${aws_subnet.lambda.*.cidr_block}"]
+}
+
 output "public_subnets" {
   description = "List of IDs of public subnets"
   value       = ["${aws_subnet.public.*.id}"]
@@ -151,6 +161,11 @@ output "public_route_table_ids" {
 output "private_route_table_ids" {
   description = "List of IDs of private route tables"
   value       = ["${aws_route_table.private.*.id}"]
+}
+
+output "lambda_route_table_ids" {
+  description = "List of IDs of lambda route tables"
+  value       = ["${aws_route_table.lambda.*.id}"]
 }
 
 output "database_route_table_ids" {

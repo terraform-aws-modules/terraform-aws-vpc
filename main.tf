@@ -111,6 +111,24 @@ resource "aws_route_table" "private" {
 }
 
 #################
+# Lambda routes
+# There are so many routing tables as the largest amount of subnets of each type (really?)
+#################
+resource "aws_route_table" "lambda" {
+  count = "${var.create_vpc && local.max_subnet_length > 0 ? local.nat_gateway_count : 0}"
+
+  vpc_id = "${local.vpc_id}"
+
+  tags = "${merge(map("Name", (var.single_nat_gateway ? "${var.name}-${var.lambda_subnet_suffix}" : format("%s-${var.lambda_subnet_suffix}-%s", var.name, element(var.azs, count.index)))), var.tags, var.lambda_route_table_tags)}"
+
+  lifecycle {
+    # When attaching VPN gateways it is common to define aws_vpn_gateway_route_propagation
+    # resources that manipulate the attributes of the routing table (typically for the private subnets)
+    ignore_changes = ["propagating_vgws"]
+  }
+}
+
+#################
 # Database routes
 #################
 resource "aws_route_table" "database" {
@@ -202,6 +220,19 @@ resource "aws_subnet" "private" {
   availability_zone = "${element(var.azs, count.index)}"
 
   tags = "${merge(map("Name", format("%s-${var.private_subnet_suffix}-%s", var.name, element(var.azs, count.index))), var.tags, var.private_subnet_tags)}"
+}
+
+#################
+# Lambda subnet
+#################
+resource "aws_subnet" "lambda" {
+  count = "${var.create_vpc && length(var.lambda_subnets) > 0 ? length(var.lambda_subnets) : 0}"
+
+  vpc_id            = "${local.vpc_id}"
+  cidr_block        = "${var.lambda_subnets[count.index]}"
+  availability_zone = "${element(var.azs, count.index)}"
+
+  tags = "${merge(map("Name", format("%s-${var.lambda_subnet_suffix}-%s", var.name, element(var.azs, count.index))), var.tags, var.lambda_subnet_tags)}"
 }
 
 ##################
@@ -456,6 +487,13 @@ resource "aws_route_table_association" "private" {
   route_table_id = "${element(aws_route_table.private.*.id, (var.single_nat_gateway ? 0 : count.index))}"
 }
 
+resource "aws_route_table_association" "lambda" {
+  count = "${var.create_vpc && length(var.lambda_subnets) > 0 ? length(var.lambda_subnets) : 0}"
+
+  subnet_id      = "${element(aws_subnet.lambda.*.id, count.index)}"
+  route_table_id = "${element(aws_route_table.lambda.*.id, (var.single_nat_gateway ? 0 : count.index))}"
+}
+
 resource "aws_route_table_association" "database" {
   count = "${var.create_vpc && length(var.database_subnets) > 0 ? length(var.database_subnets) : 0}"
 
@@ -519,6 +557,13 @@ resource "aws_vpn_gateway_route_propagation" "public" {
 
 resource "aws_vpn_gateway_route_propagation" "private" {
   count = "${var.create_vpc && var.propagate_private_route_tables_vgw && (var.enable_vpn_gateway || var.vpn_gateway_id != "") ? length(var.private_subnets) : 0}"
+
+  route_table_id = "${element(aws_route_table.private.*.id, count.index)}"
+  vpn_gateway_id = "${element(concat(aws_vpn_gateway.this.*.id, aws_vpn_gateway_attachment.this.*.vpn_gateway_id), count.index)}"
+}
+
+resource "aws_vpn_gateway_route_propagation" "lambda" {
+  count = "${var.create_vpc && var.propagate_lambda_route_tables_vgw && (var.enable_vpn_gateway || var.vpn_gateway_id != "") ? length(var.lambda_subnets) : 0}"
 
   route_table_id = "${element(aws_route_table.private.*.id, count.index)}"
   vpn_gateway_id = "${element(concat(aws_vpn_gateway.this.*.id, aws_vpn_gateway_attachment.this.*.vpn_gateway_id), count.index)}"

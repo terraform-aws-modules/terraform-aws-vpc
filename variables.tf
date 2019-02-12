@@ -38,6 +38,11 @@ variable "private_subnet_suffix" {
   default     = "private"
 }
 
+variable "lambda_subnet_suffix" {
+  description = "Suffix to append to private subnets name"
+  default     = "lambda"
+}
+
 variable "database_subnet_suffix" {
   description = "Suffix to append to database subnets name"
   default     = "db"
@@ -59,6 +64,11 @@ variable "public_subnets" {
 }
 
 variable "private_subnets" {
+  description = "A list of private subnets inside the VPC"
+  default     = []
+}
+
+variable "lambda_subnets" {
   description = "A list of private subnets inside the VPC"
   default     = []
 }
@@ -243,6 +253,11 @@ variable "propagate_private_route_tables_vgw" {
   default     = false
 }
 
+variable "propagate_lambda_route_tables_vgw" {
+  description = "Should be true if you want route table propagation"
+  default     = false
+}
+
 variable "propagate_public_route_tables_vgw" {
   description = "Should be true if you want route table propagation"
   default     = false
@@ -273,6 +288,11 @@ variable "private_subnet_tags" {
   default     = {}
 }
 
+variable "lambda_subnet_tags" {
+  description = "Additional tags for the lambda function subnets"
+  default     = {}
+}
+
 variable "public_route_table_tags" {
   description = "Additional tags for the public route tables"
   default     = {}
@@ -280,6 +300,11 @@ variable "public_route_table_tags" {
 
 variable "private_route_table_tags" {
   description = "Additional tags for the private route tables"
+  default     = {}
+}
+
+variable "lambda_route_table_tags" {
+  description = "Additional tags for the lambda route tables"
   default     = {}
 }
 
