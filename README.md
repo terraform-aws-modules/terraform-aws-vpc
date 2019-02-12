@@ -108,7 +108,8 @@ By default, the module will determine the number of NAT Gateways to create based
 ```hcl
 database_subnets    = ["10.0.21.0/24", "10.0.22.0/24"]
 elasticache_subnets = ["10.0.31.0/24", "10.0.32.0/24"]
-private_subnets     = ["10.0.1.0/24", "10.0.2.0/24", "10.0.3.0/24", "10.0.4.0/24", "10.0.5.0/24"]
+private_subnets     = ["10.0.1.0/24", "10.0.2.0/24", "10.0.3.0/24" , "10.0.4.0/24", "10.0.5.0/24"]
+lambda_subnets      = ["10.0.1.0/24", "10.0.2.0/24", "10.0.3.0/24"]
 redshift_subnets    = ["10.0.41.0/24", "10.0.42.0/24"]
 intra_subnets       = ["10.0.51.0/24", "10.0.52.0/24", "10.0.53.0/24"]
 ```
@@ -130,9 +131,9 @@ If `one_nat_gateway_per_az = true` and `single_nat_gateway = false`, then the mo
 
 By default, if NAT Gateways are enabled, private subnets will be configured with routes for Internet traffic that point at the NAT Gateways configured by use of the above options.
 
-If you need private subnets that should have no Internet routing (in the sense of [RFC1918 Category 1 subnets](https://tools.ietf.org/html/rfc1918)), `intra_subnets` should be specified. An example use case is configuration of AWS Lambda functions within a VPC, where AWS Lambda functions only need to pass traffic to internal resources or VPC endpoints for AWS services.
+If you need private subnets that should have no Internet routing (in the sense of [RFC1918 Category 1 subnets](https://tools.ietf.org/html/rfc1918)), `intra_subnets` should be specified. An example use case is configuration of AWS Lambda functions within a VPC, where AWS Lambda functions only need to pass traffic to internal resources or VPC endpoints for AWS services. 
  
-Since AWS Lambda functions allocate Elastic Network Interfaces in proportion to the traffic received ([read more](https://docs.aws.amazon.com/lambda/latest/dg/vpc.html)), it can be useful to allocate a large private subnet for such allocations, while keeping the traffic they generate entirely internal to the VPC.
+Since AWS Lambda functions allocate Elastic Network Interfaces in proportion to the traffic received ([read more](https://docs.aws.amazon.com/lambda/latest/dg/vpc.html)), it can be useful to allocate a large private subnet for such allocations, while keeping the traffic they generate entirely internal to the VPC.  For this purpose, we have also added the optional `lambda_subnets` option per best practices ([read more](https://docs.aws.amazon.com/lambda/latest/dg/best-practices.html#lambda-vpc)).  
 
 You can add additional tags with `intra_subnet_tags` as with other subnet types.
 
@@ -241,6 +242,11 @@ Terraform version 0.10.3 or newer is required for this module to work.
 | private\_subnet\_tags | Additional tags for the private subnets | map | `{}` | no |
 | private\_subnets | A list of private subnets inside the VPC | list | `[]` | no |
 | propagate\_private\_route\_tables\_vgw | Should be true if you want route table propagation | string | `"false"` | no |
+| lambda\_route\_table\_tags | Additional tags for the lambda route tables | map | `{}` | no |
+| lambda\_subnet\_suffix | Suffix to append to lambda subnets name | string | `"lambda"` | no |
+| lambda\_subnet\_tags | Additional tags for the lambda subnets | map | `{}` | no |
+| lambda\_subnets | A list of lambda subnets inside the VPC | list | `[]` | no |
+| propagate\lambda\_route\_tables\_vgw | Should be true if you want route table propagation | string | `"false"` | no |
 | propagate\_public\_route\_tables\_vgw | Should be true if you want route table propagation | string | `"false"` | no |
 | public\_route\_table\_tags | Additional tags for the public route tables | map | `{}` | no |
 | public\_subnet\_suffix | Suffix to append to public subnets name | string | `"public"` | no |
@@ -298,6 +304,9 @@ Terraform version 0.10.3 or newer is required for this module to work.
 | private\_route\_table\_ids | List of IDs of private route tables |
 | private\_subnets | List of IDs of private subnets |
 | private\_subnets\_cidr\_blocks | List of cidr_blocks of private subnets |
+| lambda\_route\_table\_ids | List of IDs of lambda route tables |
+| lambda\_subnets | List of IDs of lambda subnets |
+| lambda\_subnets\_cidr\_blocks | List of cidr_blocks of lambda subnets |
 | public\_route\_table\_ids | List of IDs of public route tables |
 | public\_subnets | List of IDs of public subnets |
 | public\_subnets\_cidr\_blocks | List of cidr_blocks of public subnets |
