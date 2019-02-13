@@ -177,7 +177,6 @@ resource "aws_route_table" "intra" {
   tags = "${merge(map("Name", "${var.name}-intra"), var.tags, var.intra_route_table_tags)}"
 }
 
-
 #################
 # Shared routes
 #################
