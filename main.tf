@@ -177,6 +177,18 @@ resource "aws_route_table" "intra" {
   tags = "${merge(map("Name", "${var.name}-intra"), var.tags, var.intra_route_table_tags)}"
 }
 
+
+#################
+# Shared routes
+#################
+resource "aws_route_table" "shared" {
+  count = "${var.create_vpc && length(var.shared_subnets) > 0 ? 1 : 0}"
+
+  vpc_id = "${local.vpc_id}"
+
+  tags = "${merge(var.tags, var.shared_route_table_tags, map("Name", "${var.name}-${var.shared_subnet_suffix}"))}"
+}
+
 ################
 # Public subnet
 ################
@@ -282,6 +294,19 @@ resource "aws_subnet" "intra" {
   availability_zone = "${element(var.azs, count.index)}"
 
   tags = "${merge(map("Name", format("%s-intra-%s", var.name, element(var.azs, count.index))), var.tags, var.intra_subnet_tags)}"
+}
+
+#####################
+# Shared subnet
+#####################
+resource "aws_subnet" "shared" {
+  count = "${var.create_vpc && length(var.shared_subnets) > 0 ? length(var.shared_subnets) : 0}"
+
+  vpc_id            = "${local.vpc_id}"
+  cidr_block        = "${var.shared_subnets[count.index]}"
+  availability_zone = "${element(var.azs, count.index)}"
+
+  tags = "${merge(map("Name", format("%s-${var.shared_subnet_suffix}-%s", var.name, element(var.azs, count.index))), var.tags, var.shared_subnet_tags)}"
 }
 
 ##############
@@ -484,6 +509,13 @@ resource "aws_route_table_association" "intra" {
   route_table_id = "${element(aws_route_table.intra.*.id, 0)}"
 }
 
+resource "aws_route_table_association" "shared" {
+  count = "${var.create_vpc && length(var.shared_subnets) > 0 ? length(var.shared_subnets) : 0}"
+
+  subnet_id      = "${element(aws_subnet.shared.*.id, count.index)}"
+  route_table_id = "${element(aws_route_table.shared.*.id, 0)}"
+}
+
 resource "aws_route_table_association" "public" {
   count = "${var.create_vpc && length(var.public_subnets) > 0 ? length(var.public_subnets) : 0}"
 
@@ -521,6 +553,13 @@ resource "aws_vpn_gateway_route_propagation" "private" {
   count = "${var.create_vpc && var.propagate_private_route_tables_vgw && (var.enable_vpn_gateway || var.vpn_gateway_id != "") ? length(var.private_subnets) : 0}"
 
   route_table_id = "${element(aws_route_table.private.*.id, count.index)}"
+  vpn_gateway_id = "${element(concat(aws_vpn_gateway.this.*.id, aws_vpn_gateway_attachment.this.*.vpn_gateway_id), count.index)}"
+}
+
+resource "aws_vpn_gateway_route_propagation" "shared" {
+  count = "${var.create_vpc && var.propagate_shared_route_tables_vgw && (var.enable_vpn_gateway || var.vpn_gateway_id != "") ? 1 : 0}"
+
+  route_table_id = "${element(aws_route_table.shared.*.id, count.index)}"
   vpn_gateway_id = "${element(concat(aws_vpn_gateway.this.*.id, aws_vpn_gateway_attachment.this.*.vpn_gateway_id), count.index)}"
 }
 

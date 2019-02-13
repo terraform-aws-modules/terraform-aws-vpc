@@ -53,6 +53,11 @@ variable "elasticache_subnet_suffix" {
   default     = "elasticache"
 }
 
+variable "shared_subnet_suffix" {
+  description = "Suffix to append to elasticache subnets name"
+  default     = "shared"
+}
+
 variable "public_subnets" {
   description = "A list of public subnets inside the VPC"
   default     = []
@@ -87,6 +92,12 @@ variable "intra_subnets" {
   default     = []
 }
 
+variable "shared_subnets" {
+  type        = "list"
+  description = "A list of intra subnets"
+  default     = []
+}
+
 variable "create_database_subnet_route_table" {
   description = "Controls if separate route table for database should be created"
   default     = false
@@ -99,6 +110,11 @@ variable "create_redshift_subnet_route_table" {
 
 variable "create_elasticache_subnet_route_table" {
   description = "Controls if separate route table for elasticache should be created"
+  default     = false
+}
+
+variable "create_shared_subnet_route_table" {
+  description = "Controls if separate route table for shared should be created"
   default     = false
 }
 
@@ -248,6 +264,11 @@ variable "propagate_public_route_tables_vgw" {
   default     = false
 }
 
+variable "propagate_shared_route_tables_vgw" {
+  description = "Should be true if you want route table propagation"
+  default     = false
+}
+
 variable "tags" {
   description = "A map of tags to add to all resources"
   default     = {}
@@ -303,6 +324,11 @@ variable "intra_route_table_tags" {
   default     = {}
 }
 
+variable "shared_route_table_tags" {
+  description = "Additional tags for the shared route tables"
+  default     = {}
+}
+
 variable "database_subnet_tags" {
   description = "Additional tags for the database subnets"
   default     = {}
@@ -330,6 +356,11 @@ variable "elasticache_subnet_tags" {
 
 variable "intra_subnet_tags" {
   description = "Additional tags for the intra subnets"
+  default     = {}
+}
+
+variable "shared_subnet_tags" {
+  description = "Additional tags for the shared subnets"
   default     = {}
 }
 

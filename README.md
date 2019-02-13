@@ -111,6 +111,7 @@ elasticache_subnets = ["10.0.31.0/24", "10.0.32.0/24"]
 private_subnets     = ["10.0.1.0/24", "10.0.2.0/24", "10.0.3.0/24", "10.0.4.0/24", "10.0.5.0/24"]
 redshift_subnets    = ["10.0.41.0/24", "10.0.42.0/24"]
 intra_subnets       = ["10.0.51.0/24", "10.0.52.0/24", "10.0.53.0/24"]
+shared_subnets       = ["10.0.61.0/24", "10.0.62.0/24", "10.0.63.0/24"]
 ```
 
 Then `5` NAT Gateways will be created since `5` private subnet CIDR blocks were specified.
@@ -191,6 +192,7 @@ Terraform version 0.10.3 or newer is required for this module to work.
 | create\_elasticache\_subnet\_route\_table | Controls if separate route table for elasticache should be created | string | `"false"` | no |
 | create\_redshift\_subnet\_group | Controls if redshift subnet group should be created | string | `"true"` | no |
 | create\_redshift\_subnet\_route\_table | Controls if separate route table for redshift should be created | string | `"false"` | no |
+| create\_shared\_subnet\_route\_table | Controls if separate route table for shared subnets should be created | string | `"false"` | no |
 | create\_vpc | Controls if VPC should be created (it affects almost all resources) | string | `"true"` | no |
 | database\_route\_table\_tags | Additional tags for the database route tables | map | `{}` | no |
 | database\_subnet\_group\_tags | Additional tags for the database subnet group | map | `{}` | no |
@@ -242,6 +244,7 @@ Terraform version 0.10.3 or newer is required for this module to work.
 | private\_subnets | A list of private subnets inside the VPC | list | `[]` | no |
 | propagate\_private\_route\_tables\_vgw | Should be true if you want route table propagation | string | `"false"` | no |
 | propagate\_public\_route\_tables\_vgw | Should be true if you want route table propagation | string | `"false"` | no |
+| propagate\_shared\_route\_tables\_vgw | Should be true if you want route table propagation | string | `"false"` | no |
 | public\_route\_table\_tags | Additional tags for the public route tables | map | `{}` | no |
 | public\_subnet\_suffix | Suffix to append to public subnets name | string | `"public"` | no |
 | public\_subnet\_tags | Additional tags for the public subnets | map | `{}` | no |
@@ -251,6 +254,11 @@ Terraform version 0.10.3 or newer is required for this module to work.
 | redshift\_subnet\_suffix | Suffix to append to redshift subnets name | string | `"redshift"` | no |
 | redshift\_subnet\_tags | Additional tags for the redshift subnets | map | `{}` | no |
 | redshift\_subnets | A list of redshift subnets | list | `[]` | no |
+| shared\_route\_table\_tags | Additional tags for the shared route tables | map | `{}` | no |
+| shared\_subnet\_group\_tags | Additional tags for the shared subnet group | map | `{}` | no |
+| shared\_subnet\_suffix | Suffix to append to shared subnets name | string | `"redshift"` | no |
+| shared\_subnet\_tags | Additional tags for the shared subnets | map | `{}` | no |
+| shared\_subnets | A list of shared subnets | list | `[]` | no |
 | reuse\_nat\_ips | Should be true if you don't want EIPs to be created for your NAT Gateways and will instead pass them in via the 'external_nat_ip_ids' variable | string | `"false"` | no |
 | secondary\_cidr\_blocks | List of secondary CIDR blocks to associate with the VPC to extend the IP Address pool | list | `[]` | no |
 | single\_nat\_gateway | Should be true if you want to provision a single shared NAT Gateway across all of your private networks | string | `"false"` | no |
