@@ -313,6 +313,9 @@ Terraform version 0.10.3 or newer is required for this module to work.
 | redshift\_subnet\_group | ID of redshift subnet group |
 | redshift\_subnets | List of IDs of redshift subnets |
 | redshift\_subnets\_cidr\_blocks | List of cidr_blocks of redshift subnets |
+| shared\_route\_table\_ids | List of IDs of shared route tables |
+| shared\_subnets | List of IDs of shared subnets |
+| shared\_subnets\_cidr\_blocks | List of cidr_blocks of shared subnets |
 | vgw\_id | The ID of the VPN Gateway |
 | vpc\_cidr\_block | The CIDR block of the VPC |
 | vpc\_enable\_dns\_hostnames | Whether or not the VPC has DNS hostname support |

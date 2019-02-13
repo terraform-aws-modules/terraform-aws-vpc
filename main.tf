@@ -384,6 +384,13 @@ resource "aws_vpc_endpoint_route_table_association" "intra_s3" {
   route_table_id  = "${element(aws_route_table.intra.*.id, 0)}"
 }
 
+resource "aws_vpc_endpoint_route_table_association" "intra_s3" {
+  count = "${var.create_vpc && var.enable_s3_endpoint && length(var.shared_subnets) > 0 ? 1 : 0}"
+
+  vpc_endpoint_id = "${aws_vpc_endpoint.s3.id}"
+  route_table_id  = "${element(aws_route_table.shared.*.id, 0)}"
+}
+
 resource "aws_vpc_endpoint_route_table_association" "public_s3" {
   count = "${var.create_vpc && var.enable_s3_endpoint && length(var.public_subnets) > 0 ? 1 : 0}"
 
@@ -419,6 +426,13 @@ resource "aws_vpc_endpoint_route_table_association" "intra_dynamodb" {
 
   vpc_endpoint_id = "${aws_vpc_endpoint.dynamodb.id}"
   route_table_id  = "${element(aws_route_table.intra.*.id, 0)}"
+}
+
+resource "aws_vpc_endpoint_route_table_association" "shared_dynamodb" {
+  count = "${var.create_vpc && var.enable_dynamodb_endpoint && length(var.shared_subnets) > 0 ? 1 : 0}"
+
+  vpc_endpoint_id = "${aws_vpc_endpoint.dynamodb.id}"
+  route_table_id  = "${element(aws_route_table.shared.*.id, 0)}"
 }
 
 resource "aws_vpc_endpoint_route_table_association" "public_dynamodb" {
