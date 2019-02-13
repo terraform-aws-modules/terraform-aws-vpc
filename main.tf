@@ -384,7 +384,7 @@ resource "aws_vpc_endpoint_route_table_association" "intra_s3" {
   route_table_id  = "${element(aws_route_table.intra.*.id, 0)}"
 }
 
-resource "aws_vpc_endpoint_route_table_association" "intra_s3" {
+resource "aws_vpc_endpoint_route_table_association" "shared_s3" {
   count = "${var.create_vpc && var.enable_s3_endpoint && length(var.shared_subnets) > 0 ? 1 : 0}"
 
   vpc_endpoint_id = "${aws_vpc_endpoint.s3.id}"
