@@ -1,17 +1,17 @@
 # VPC with separate shared subnets and route tables
 
-Configuration in this directory creates set of VPC resources which may be sufficient for staging or production environment (look into [simple-vpc](../simple-vpc) for more simplified setup). 
+Configuration in this directory creates set of VPC resources which may be sufficient for staging or production environment (look into [simple-vpc](../simple-vpc) for more simplified setup).
 
+There are a public, private, database, ElastiCache, Redshift subnets, NAT Gateways created in each availability zone.
 
-
-There are public, private, database, ElastiCache, Redshift subnets, NAT Gateways created in each availability zone. 
 **This example additionally sets up shared subnets and route table**.
 
 ![Shared_subnets](shared_subnets.png)
 
-This feature is useful if you want to share your resource among other AWS accounts and you can't use PrivateLink technology. 
+The shared subnets feature is useful in a situation where you want to share your resource among other AWS accounts and you can't use PrivateLink technology.
 
-You can do this by using:
+You can share resources in the AWS environment  by using:
+
 * [AWS VPC Peering](https://docs.aws.amazon.com/vpc/latest/userguide/vpc-peering.html)
 
 * [VPC Sharing](https://aws.amazon.com/blogs/networking-and-content-delivery/vpc-sharing-a-new-approach-to-multiple-accounts-and-vpc-management/)
@@ -20,7 +20,6 @@ With additional route table for shared subnets, you can set up VPC peering betwe
 
 Also in some cases shared subnets will be only resources that you allow to be reachable from an on-premise data centre via VPN or Direct Connect.
 That's why you can control it by using "propagate_shared_route_tables_vgw" variable.
-
 
 ## Usage
 
@@ -35,6 +34,7 @@ $ terraform apply
 Note that this example may create resources which can cost money (AWS Elastic IP, for example). Run `terraform destroy` when you don't need these resources.
 
 <!-- BEGINNING OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
+
 ## Outputs
 
 | Name | Description |
