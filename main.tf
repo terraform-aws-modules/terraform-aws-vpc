@@ -367,6 +367,46 @@ resource "aws_vpc_endpoint_route_table_association" "public_s3" {
   route_table_id  = "${aws_route_table.public.id}"
 }
 
+##########################
+# VPC Endpoint for ECR API
+##########################
+data "aws_vpc_endpoint_service" "ecr_api" {
+  count = "${var.create_vpc && var.enable_ecr_api_endpoint ? 1 : 0}"
+
+  service = "ecr.api"
+}
+
+resource "aws_vpc_endpoint" "ecr_api" {
+  count = "${var.create_vpc && var.enable_ecr_api_endpoint ? 1 : 0}"
+
+  vpc_endpoint_type = "Interface"
+  vpc_id       = "${local.vpc_id}"
+  security_group_ids = ["${var.ecr_api_endpoint_security_group_ids}"]
+  subnet_ids          = ["${coalescelist(var.ecr_api_endpoint_subnet_ids, aws_subnet.private.*.id)}"]
+  service_name = "${data.aws_vpc_endpoint_service.ecr_api.service_name}"
+  private_dns_enabled = "${var.ecr_api_endpoint_private_dns_enabled}"
+}
+
+##########################
+# VPC Endpoint for ECR DKR
+##########################
+data "aws_vpc_endpoint_service" "ecr_dkr" {
+  count = "${var.create_vpc && var.enable_ecr_dkr_endpoint ? 1 : 0}"
+
+  service = "ecr.dkr"
+}
+
+resource "aws_vpc_endpoint" "ecr_dkr" {
+  count = "${var.create_vpc && var.enable_ecr_dkr_endpoint ? 1 : 0}"
+
+  vpc_endpoint_type = "Interface"
+  vpc_id       = "${local.vpc_id}"
+  security_group_ids = ["${var.ecr_dkr_endpoint_security_group_ids}"]
+  subnet_ids          = ["${coalescelist(var.ecr_dkr_endpoint_subnet_ids, aws_subnet.private.*.id)}"]
+  service_name = "${data.aws_vpc_endpoint_service.ecr_dkr.service_name}"
+  private_dns_enabled = "${var.ecr_dkr_endpoint_private_dns_enabled}"
+}
+
 ############################
 # VPC Endpoint for DynamoDB
 ############################

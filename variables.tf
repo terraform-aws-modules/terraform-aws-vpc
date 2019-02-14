@@ -178,6 +178,46 @@ variable "enable_s3_endpoint" {
   default     = false
 }
 
+variable "enable_ecr_api_endpoint" {
+  description = "Should be true if you want to provision an ecr api endpoint to the VPC"
+  default     = false
+}
+
+variable "ecr_api_endpoint_subnet_ids" {
+  description = "The ID of one or more subnets in which to create a network interface for ECR api endpoint. If omitted, private subnets will be used."
+  default     = []
+}
+
+variable "ecr_api_endpoint_private_dns_enabled" {
+  description = "Whether or not to associate a private hosted zone with the specified VPC for ECR API endpoint"
+  default     = false
+}
+
+variable "ecr_api_endpoint_security_group_ids" {
+  description = "The ID of one or more security groups to associate with the network interface for ECR API endpoint"
+  default     = []
+}
+
+variable "enable_ecr_dkr_endpoint" {
+  description = "Should be true if you want to provision an ecr dkr endpoint to the VPC"
+  default     = false
+}
+
+variable "ecr_dkr_endpoint_subnet_ids" {
+  description = "The ID of one or more subnets in which to create a network interface for ECR dkr endpoint. If omitted, private subnets will be used."
+  default     = []
+}
+
+variable "ecr_dkr_endpoint_private_dns_enabled" {
+  description = "Whether or not to associate a private hosted zone with the specified VPC for ECR DKR endpoint"
+  default     = false
+}
+
+variable "ecr_dkr_endpoint_security_group_ids" {
+  description = "The ID of one or more security groups to associate with the network interface for ECR DKR endpoint"
+  default     = []
+}
+
 variable "enable_ssm_endpoint" {
   description = "Should be true if you want to provision an SSM endpoint to the VPC"
   default     = false
