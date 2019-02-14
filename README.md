@@ -13,7 +13,9 @@ These types of resources are supported:
 * [Internet Gateway](https://www.terraform.io/docs/providers/aws/r/internet_gateway.html)
 * [NAT Gateway](https://www.terraform.io/docs/providers/aws/r/nat_gateway.html)
 * [VPN Gateway](https://www.terraform.io/docs/providers/aws/r/vpn_gateway.html)
-* [VPC Endpoint](https://www.terraform.io/docs/providers/aws/r/vpc_endpoint.html) (Gateway: S3, DynamoDB; Interface: EC2, SSM)
+* [VPC Endpoint](https://www.terraform.io/docs/providers/aws/r/vpc_endpoint.html):
+  * Gateway: S3, DynamoDB
+  * Interface: EC2, SSM, EC2 Messages, SSM Messages
 * [RDS DB Subnet Group](https://www.terraform.io/docs/providers/aws/r/db_subnet_group.html)
 * [ElastiCache Subnet Group](https://www.terraform.io/docs/providers/aws/r/elasticache_subnet_group.html)
 * [Redshift Subnet Group](https://www.terraform.io/docs/providers/aws/r/redshift_subnet_group.html)
