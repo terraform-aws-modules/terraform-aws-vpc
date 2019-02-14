@@ -5,7 +5,7 @@ provider "aws" {
 module "vpc" {
   source = "../../"
 
-  name = "vpc-separate-private-route-tables"
+  name = "vpc-shared-subnets"
 
   cidr = "10.10.0.0/16"
 
@@ -26,12 +26,14 @@ module "vpc" {
   propagate_public_route_tables_vgw  = false
   propagate_shared_route_tables_vgw  = true
 
+  enable_s3_endpoint       = true
+  enable_dynamodb_endpoint = true
+
   single_nat_gateway = true
   enable_nat_gateway = true
 
   tags = {
-    Owner       = "user"
-    Environment = "staging"
-    Name        = "separate-private-route-tables"
+    Provisioner = "terraform"
+    TFTemplate  = "vpc"
   }
 }
