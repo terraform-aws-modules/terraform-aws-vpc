@@ -344,3 +344,23 @@ output "azs" {
   description = "A list of availability zones specified as argument to this module"
   value       = "${var.azs}"
 }
+
+output "ipv6_egress_only_igw_id" {
+  description = "The ID of the egress only Internet Gateway"
+  value       = "${element(concat(aws_egress_only_internet_gateway.this.*.id, list("")), 0)}"
+}
+
+output "public_subnets_ipv6_cidr_blocks" {
+  description = "List of ipv6 cidr_blocks of public subnets in an ipv6 enabled VPC"
+  value       = ["${aws_subnet.public.*.ipv6_cidr_block}"]
+}
+
+output "private_subnets_ipv6_cidr_blocks" {
+  description = "List of ipv6 cidr_blocks of private subnets in an ipv6 enabled VPC"
+  value       = ["${aws_subnet.private.*.ipv6_cidr_block}"]
+}
+
+output "database_subnets_ipv6_cidr_blocks" {
+  description = "List of ipv6 cidr_blocks of database subnets in an ipv6 enabled VPC"
+  value       = ["${aws_subnet.database.*.ipv6_cidr_block}"]
+}
