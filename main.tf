@@ -33,18 +33,6 @@ resource "aws_vpc_ipv4_cidr_block_association" "this" {
   cidr_block = "${element(var.secondary_cidr_blocks, count.index)}"
 }
 
-resource "aws_security_group_rule" "ipv6-egress" {
-  # VPC default has egress out
-  count            = "${var.create_vpc && var.enable_ipv6 ? 1 : 0}"
-  type             = "egress"
-  from_port        = 0
-  to_port          = 0
-  protocol         = "-1"
-  ipv6_cidr_blocks = ["::/0"]
-
-  security_group_id = "${aws_vpc.this.*.default_security_group_id[count.index]}"
-}
-
 ###################
 # DHCP Options Set
 ###################
