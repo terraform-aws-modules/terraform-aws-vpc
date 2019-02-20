@@ -113,6 +113,21 @@ output "redshift_subnet_group" {
   value       = "${element(concat(aws_redshift_subnet_group.redshift.*.id, list("")), 0)}"
 }
 
+output "redshift_public_subnets" {
+  description = "List of IDs of redshift public subnets"
+  value       = ["${aws_subnet.redshift_public.*.id}"]
+}
+
+output "redshift_public_subnets_cidr_blocks" {
+  description = "List of cidr_blocks of redshift public subnets"
+  value       = ["${aws_subnet.redshift_public.*.cidr_block}"]
+}
+
+output "redshift_public_subnet_group" {
+  description = "ID of redshift public subnet group"
+  value       = "${element(concat(aws_redshift_subnet_group.redshift_public.*.id, list("")), 0)}"
+}
+
 output "elasticache_subnets" {
   description = "List of IDs of elasticache subnets"
   value       = ["${aws_subnet.elasticache.*.id}"]

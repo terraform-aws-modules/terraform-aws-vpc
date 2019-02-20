@@ -48,6 +48,11 @@ variable "redshift_subnet_suffix" {
   default     = "redshift"
 }
 
+variable "redshift_public_subnet_suffix" {
+  description = "Suffix to append to redshift subnets name"
+  default     = "redshift_public"
+}
+
 variable "elasticache_subnet_suffix" {
   description = "Suffix to append to elasticache subnets name"
   default     = "elasticache"
@@ -70,6 +75,12 @@ variable "database_subnets" {
 }
 
 variable "redshift_subnets" {
+  type        = "list"
+  description = "A list of redshift subnets"
+  default     = []
+}
+
+variable "redshift_public_subnets" {
   type        = "list"
   description = "A list of redshift subnets"
   default     = []
@@ -114,6 +125,11 @@ variable "create_elasticache_subnet_group" {
 
 variable "create_redshift_subnet_group" {
   description = "Controls if redshift subnet group should be created"
+  default     = true
+}
+
+variable "create_redshift_public_subnet_group" {
+  description = "Controls if redshift public subnet group should be created"
   default     = true
 }
 
@@ -400,6 +416,16 @@ variable "redshift_subnet_tags" {
 
 variable "redshift_subnet_group_tags" {
   description = "Additional tags for the redshift subnet group"
+  default     = {}
+}
+
+variable "redshift_public_subnet_tags" {
+  description = "Additional tags for the redshift public subnets"
+  default     = {}
+}
+
+variable "redshift_public_subnet_group_tags" {
+  description = "Additional tags for the redshift public subnet group"
   default     = {}
 }
 

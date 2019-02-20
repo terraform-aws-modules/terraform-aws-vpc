@@ -250,6 +250,30 @@ resource "aws_redshift_subnet_group" "redshift" {
   tags = "${merge(map("Name", format("%s", var.name)), var.tags, var.redshift_subnet_group_tags)}"
 }
 
+##################
+# Redshift public subnet
+##################
+resource "aws_subnet" "redshift_public" {
+  count = "${var.create_vpc && length(var.redshift_public_subnets) > 0 ? length(var.redshift_public_subnets) : 0}"
+
+  vpc_id                  = "${local.vpc_id}"
+  cidr_block              = "${var.redshift_public_subnets[count.index]}"
+  availability_zone       = "${element(var.azs, count.index)}"
+  map_public_ip_on_launch = "${var.map_public_ip_on_launch}"
+
+  tags = "${merge(map("Name", format("%s-${var.redshift_public_subnet_suffix}-%s", var.name, element(var.azs, count.index))), var.tags, var.redshift_public_subnet_tags)}"
+}
+
+resource "aws_redshift_subnet_group" "redshift_public" {
+  count = "${var.create_vpc && length(var.redshift_public_subnets) > 0 && var.create_redshift_public_subnet_group ? 1 : 0}"
+
+  name        = "${lower(var.name)}"
+  description = "Redshift public subnet group for ${var.name}"
+  subnet_ids  = ["${aws_subnet.redshift_public.*.id}"]
+
+  tags = "${merge(map("Name", format("%s", var.name)), var.tags, var.redshift_public_subnet_group_tags)}"
+}
+
 #####################
 # ElastiCache subnet
 #####################
