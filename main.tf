@@ -174,7 +174,7 @@ resource "aws_route_table" "intra" {
 
   vpc_id = "${local.vpc_id}"
 
-  tags = "${merge(var.tags, var.intra_route_table_tags, map("Name", "${var.name}-intra-${var.intra_subnet_suffix}"))}"
+  tags = "${merge(var.tags, var.intra_route_table_tags, map("Name", "${var.name}-${var.intra_subnet_suffix}"))}"
 }
 
 ################
