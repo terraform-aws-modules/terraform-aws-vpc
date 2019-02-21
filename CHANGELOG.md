@@ -4,8 +4,9 @@
 
 
 <a name="v1.57.0"></a>
-## [v1.57.0] - 0001-01-01
+## [v1.57.0] - 2019-02-21
 
+- Added CHANGELOG.md ([#221](https://github.com/terraform-aws-modules/terraform-aws-vpc/issues/221))
 
 
 <a name="v1.56.0"></a>
