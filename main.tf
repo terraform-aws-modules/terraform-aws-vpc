@@ -267,7 +267,7 @@ resource "aws_subnet" "redshift_public" {
 resource "aws_redshift_subnet_group" "redshift_public" {
   count = "${var.create_vpc && length(var.redshift_public_subnets) > 0 && var.create_redshift_public_subnet_group ? 1 : 0}"
 
-  name        = "${lower(var.name)}"
+  name        = "${lower(var.name)}-public"
   description = "Redshift public subnet group for ${var.name}"
   subnet_ids  = ["${aws_subnet.redshift_public.*.id}"]
 
