@@ -156,6 +156,17 @@ resource "aws_route_table" "redshift" {
 }
 
 #################
+# Redshift public routes
+#################
+resource "aws_route_table" "redshift_public" {
+  count = "${var.create_vpc && var.create_redshift_public_subnet_route_table && length(var.redshift_public_subnets) > 0 ? 1 : 0}"
+
+  vpc_id = "${local.vpc_id}"
+
+  tags = "${merge(var.tags, var.redshift_public_route_table_tags, map("Name", "${var.name}-${var.redshift_public_subnet_suffix}"))}"
+}
+
+#################
 # Elasticache routes
 #################
 resource "aws_route_table" "elasticache" {
@@ -576,6 +587,13 @@ resource "aws_route_table_association" "redshift" {
 
   subnet_id      = "${element(aws_subnet.redshift.*.id, count.index)}"
   route_table_id = "${element(coalescelist(aws_route_table.redshift.*.id, aws_route_table.private.*.id), (var.single_nat_gateway || var.create_redshift_subnet_route_table ? 0 : count.index))}"
+}
+
+resource "aws_route_table_association" "redshift_public" {
+  count = "${var.create_vpc && length(var.redshift_public_subnets) > 0 ? length(var.redshift_public_subnets) : 0}"
+
+  subnet_id      = "${element(aws_subnet.redshift_public.*.id, count.index)}"
+  route_table_id = "${element(coalescelist(aws_route_table.redshift_public.*.id, aws_route_table.public.*.id), (var.single_nat_gateway || var.create_redshift_public_subnet_route_table ? 0 : count.index))}"
 }
 
 resource "aws_route_table_association" "elasticache" {

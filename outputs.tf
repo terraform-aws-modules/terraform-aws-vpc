@@ -178,6 +178,11 @@ output "redshift_route_table_ids" {
   value       = ["${coalescelist(aws_route_table.redshift.*.id, aws_route_table.private.*.id)}"]
 }
 
+output "redshift_public_route_table_ids" {
+  description = "List of IDs of redshift public route tables"
+  value       = ["${coalescelist(aws_route_table.redshift_public.*.id, aws_route_table.public.*.id)}"]
+}
+
 output "elasticache_route_table_ids" {
   description = "List of IDs of elasticache route tables"
   value       = ["${coalescelist(aws_route_table.elasticache.*.id, aws_route_table.private.*.id)}"]
