@@ -41,6 +41,12 @@ variable "database_subnet_ipv6_prefixes" {
   type        = "list"
 }
 
+variable "intra_subnet_ipv6_prefixes" {
+  description = "Assigns ipv6 subnet id based on the Amazon provided /56 prefix base 10 integer (0-256). Must be of equal length to the corresponding ipv4 subnet list"
+  default     = []
+  type        = "list"
+}
+
 variable "assign_ipv6_address_on_creation" {
   description = "Assign ipv6 address on subnet, must be disabled to change ipv6 cidrs. This is the ipv6 equivalent of map_public_ip_on_launch"
   default     = false

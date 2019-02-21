@@ -364,3 +364,8 @@ output "database_subnets_ipv6_cidr_blocks" {
   description = "List of ipv6 cidr_blocks of database subnets in an ipv6 enabled VPC"
   value       = ["${aws_subnet.database.*.ipv6_cidr_block}"]
 }
+
+output "intra_subnets_ipv6_cidr_blocks" {
+  description = "List of ipv6 cidr_blocks of intra subnets in an ipv6 enabled VPC"
+  value       = ["${aws_subnet.intra.*.ipv6_cidr_block}"]
+}

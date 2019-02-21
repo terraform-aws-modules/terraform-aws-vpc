@@ -315,6 +315,9 @@ resource "aws_subnet" "intra" {
   cidr_block        = "${var.intra_subnets[count.index]}"
   availability_zone = "${element(var.azs, count.index)}"
 
+  # TODO: Does not unset, need null support or the like see: Terraform 0.12
+  ipv6_cidr_block = "${var.enable_ipv6 && length(var.intra_subnet_ipv6_prefixes) > 0 ? cidrsubnet(aws_vpc.this.ipv6_cidr_block, 8, element(concat(var.intra_subnet_ipv6_prefixes, list("0")), count.index)) : ""}"
+  
   tags = "${merge(map("Name", format("%s-intra-%s", var.name, element(var.azs, count.index))), var.tags, var.intra_subnet_tags)}"
 }
 
