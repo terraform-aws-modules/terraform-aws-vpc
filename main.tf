@@ -185,7 +185,7 @@ resource "aws_route_table" "intra" {
 
   vpc_id = "${local.vpc_id}"
 
-  tags = "${merge(map("Name", "${var.name}-intra"), var.tags, var.intra_route_table_tags)}"
+  tags = "${merge(map("Name", "${var.name}-${var.intra_subnet_suffix}"), var.tags, var.intra_route_table_tags)}"
 }
 
 ################
@@ -316,7 +316,7 @@ resource "aws_subnet" "intra" {
   cidr_block        = "${var.intra_subnets[count.index]}"
   availability_zone = "${element(var.azs, count.index)}"
 
-  tags = "${merge(map("Name", format("%s-intra-%s", var.name, element(var.azs, count.index))), var.tags, var.intra_subnet_tags)}"
+  tags = "${merge(map("Name", format("%s-${var.intra_subnet_suffix}-%s", var.name, element(var.azs, count.index))), var.tags, var.intra_subnet_tags)}"
 }
 
 ##############

@@ -38,6 +38,11 @@ variable "private_subnet_suffix" {
   default     = "private"
 }
 
+variable "intra_subnet_suffix" {
+  description = "Suffix to append to intra subnets name"
+  default     = "intra"
+}
+
 variable "database_subnet_suffix" {
   description = "Suffix to append to database subnets name"
   default     = "db"
