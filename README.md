@@ -167,7 +167,7 @@ Sometimes it is handy to have public access to RDS instances (it is not recommen
 
 ## Public access to Redshift cluster
 
-Sometimes it is handy to have public access to Redshift clusters (for example if you need to access it by kinesis - VPC endpoint for kinesis is not yet supported by redshift) by specifying these arguments:
+Sometimes it is handy to have public access to Redshift clusters (for example if you need to access it by Kinesis - VPC endpoint for Kinesis is not yet supported by Redshift) by specifying these arguments:
 
 ```hcl
   create_redshift_public_subnet_group       = true
