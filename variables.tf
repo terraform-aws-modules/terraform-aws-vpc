@@ -395,7 +395,7 @@ variable "redshift_route_table_tags" {
 }
 
 variable "redshift_public_route_table_tags" {
-  description = "Additional tags for the redshift route tables"
+  description = "Additional tags for the public redshift route tables"
   default     = {}
 }
 
