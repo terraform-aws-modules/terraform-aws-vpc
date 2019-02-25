@@ -14,19 +14,99 @@ module "vpc" {
   public_subnets  = ["10.0.101.0/24", "10.0.102.0/24", "10.0.103.0/24"]
 
   public_inbound_acl_rules = [
-    "100", "allow", 80,    80,    "tcp", "0.0.0.0/0",       "Allows inbound HTTP traffic from any IPv4 address",
-    "110", "allow", 443,   443,   "tcp", "0.0.0.0/0",       "Allows inbound HTTPS traffic from any IPv4 address",
-    "120", "allow", 22,    22,    "tcp", "0.0.0.0/0",       "Allows inbound SSH traffic from any IPv4 address",
-    "130", "allow", 3389,  3389,  "tcp", "0.0.0.0/0",       "Allows inbound RDP traffic from any IPv4 address",
-    "140", "allow", 1024,  65535, "tcp", "0.0.0.0/0",       "Allows inbound return traffic from hosts"
+    {
+      rule_number = 100
+      rule_action = "allow"
+      from_port   = 80
+      to_port     = 80
+      protocol    = "tcp"
+      cidr_block  = "0.0.0.0/0"
+      description = "Allow inbound HTTP traffic from any IPv4 address"
+    },
+    {
+      rule_number = 110
+      rule_action = "allow"
+      from_port   = 443
+      to_port     = 443
+      protocol    = "tcp"
+      cidr_block  = "0.0.0.0/0"
+      description = "Allow inbound HTTPS traffic from any IPv4 address"
+    },
+    {
+      rule_number = 120
+      rule_action = "allow"
+      from_port   = 22
+      to_port     = 22
+      protocol    = "tcp"
+      cidr_block  = "0.0.0.0/0"
+      description = "Allow inbound SSH traffic from any IPv4 address"
+    },
+    {
+      rule_number = 130
+      rule_action = "allow"
+      from_port   = 3389
+      to_port     = 3389
+      protocol    = "tcp"
+      cidr_block  = "0.0.0.0/0"
+      description = "Allow inbound RDP traffic from any IPv4 address"
+    },
+    {
+      rule_number = 140
+      rule_action = "allow"
+      from_port   = 1024
+      to_port     = 65535
+      protocol    = "tcp"
+      cidr_block  = "0.0.0.0/0"
+      description = "Allow inbound return traffic from hosts"
+    },
   ]
 
   public_outbound_acl_rules = [
-    "100", "allow", 80,    80,    "tcp", "0.0.0.0/0",       "Allows outbound HTTP traffic from the subnet to the Internet",
-    "110", "allow", 443,   443,   "tcp", "0.0.0.0/0",       "Allows outbound HTTPS traffic from the subnet to the Internet",
-    "120", "allow", 1433,  1433,  "tcp", "10.0.100.0/22",   "Allows outbound MS SQL access to database servers in the private subnet",
-    "140", "allow", 32768, 65535, "tcp", "0.0.0.0/0",       "Allows outbound responses to clients on the Internet",
-    "150", "allow", 22,    22,    "tcp", "10.0.100.0/22",   "Allows outbound SSH access to instances in your private subnet"
+    {
+      rule_number = 100
+      rule_action = "allow"
+      from_port   = 80
+      to_port     = 80
+      protocol    = "tcp"
+      cidr_block  = "0.0.0.0/0"
+      description = "Allow outbound HTTP traffic from the subnet to the Internet"
+    },
+    {
+      rule_number = 110
+      rule_action = "allow"
+      from_port   = 443
+      to_port     = 443
+      protocol    = "tcp"
+      cidr_block  = "0.0.0.0/0"
+      description = "Allow outbound HTTPS traffic from the subnet to the Internet"
+    },
+    {
+      rule_number = 120
+      rule_action = "allow"
+      from_port   = 1433
+      to_port     = 1433
+      protocol    = "tcp"
+      cidr_block  = "10.0.100.0/22"
+      description = "Allow outbound MS SQL access to database servers in the private subnet"
+    },
+    {
+      rule_number = 130
+      rule_action = "allow"
+      from_port   = 32768
+      to_port     = 65535
+      protocol    = "tcp"
+      cidr_block  = "0.0.0.0/0"
+      description = "Allows outbound responses to clients on the Internet"
+    },
+    {
+      rule_number = 140
+      rule_action = "allow"
+      from_port   = 22
+      to_port     = 22
+      protocol    = "tcp"
+      cidr_block  = "10.0.100.0/22"
+      description = "Allows outbound SSH access to instances in your private subnet"
+    },
   ]
 
   assign_generated_ipv6_cidr_block = true

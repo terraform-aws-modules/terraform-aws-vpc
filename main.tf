@@ -306,31 +306,31 @@ resource "aws_network_acl" "public" {
 }
 
 resource "aws_network_acl_rule" "public_inbound" {
-  count = "${var.create_vpc && length(var.public_subnets) > 0 ? length(var.public_inbound_acl_rules) / 7 : 0}"
+  count = "${var.create_vpc && length(var.public_subnets) > 0 ? length(var.public_inbound_acl_rules) : 0}"
 
   network_acl_id = "${aws_network_acl.public.id}"
 
   egress      = false
-  rule_number = "${element(var.public_inbound_acl_rules, count.index * 7 + 0)}"
-  rule_action = "${element(var.public_inbound_acl_rules, count.index * 7 + 1)}"
-  from_port   = "${element(var.public_inbound_acl_rules, count.index * 7 + 2)}"
-  to_port     = "${element(var.public_inbound_acl_rules, count.index * 7 + 3)}"
-  protocol    = "${element(var.public_inbound_acl_rules, count.index * 7 + 4)}"
-  cidr_block  = "${element(var.public_inbound_acl_rules, count.index * 7 + 5)}"
+  rule_number = "${lookup(var.public_inbound_acl_rules[count.index], "rule_number")}"
+  rule_action = "${lookup(var.public_inbound_acl_rules[count.index], "rule_action")}"
+  from_port   = "${lookup(var.public_inbound_acl_rules[count.index], "from_port")}"
+  to_port     = "${lookup(var.public_inbound_acl_rules[count.index], "to_port")}"
+  protocol    = "${lookup(var.public_inbound_acl_rules[count.index], "protocol")}"
+  cidr_block  = "${lookup(var.public_inbound_acl_rules[count.index], "cidr_block")}"
 }
 
 resource "aws_network_acl_rule" "public_outbound" {
-  count = "${var.create_vpc && length(var.public_subnets) > 0 ? length(var.public_outbound_acl_rules) / 7 : 0}"
+  count = "${var.create_vpc && length(var.public_subnets) > 0 ? length(var.public_outbound_acl_rules) : 0}"
 
   network_acl_id = "${aws_network_acl.public.id}"
 
   egress      = true
-  rule_number = "${element(var.public_outbound_acl_rules, count.index * 7 + 0)}"
-  rule_action = "${element(var.public_outbound_acl_rules, count.index * 7 + 1)}"
-  from_port   = "${element(var.public_outbound_acl_rules, count.index * 7 + 2)}"
-  to_port     = "${element(var.public_outbound_acl_rules, count.index * 7 + 3)}"
-  protocol    = "${element(var.public_outbound_acl_rules, count.index * 7 + 4)}"
-  cidr_block  = "${element(var.public_outbound_acl_rules, count.index * 7 + 5)}"
+  rule_number = "${lookup(var.public_outbound_acl_rules[count.index], "rule_number")}"
+  rule_action = "${lookup(var.public_outbound_acl_rules[count.index], "rule_action")}"
+  from_port   = "${lookup(var.public_outbound_acl_rules[count.index], "from_port")}"
+  to_port     = "${lookup(var.public_outbound_acl_rules[count.index], "to_port")}"
+  protocol    = "${lookup(var.public_outbound_acl_rules[count.index], "protocol")}"
+  cidr_block  = "${lookup(var.public_outbound_acl_rules[count.index], "cidr_block")}"
 }
 
 #######################
@@ -346,31 +346,31 @@ resource "aws_network_acl" "private" {
 }
 
 resource "aws_network_acl_rule" "private_inbound" {
-  count = "${var.create_vpc && length(var.private_subnets) > 0 ? length(var.private_inbound_acl_rules) / 7 : 0}"
+  count = "${var.create_vpc && length(var.private_subnets) > 0 ? length(var.private_inbound_acl_rules) : 0}"
 
   network_acl_id = "${aws_network_acl.private.id}"
 
   egress      = false
-  rule_number = "${element(var.private_inbound_acl_rules, count.index * 7 + 0)}"
-  rule_action = "${element(var.private_inbound_acl_rules, count.index * 7 + 1)}"
-  from_port   = "${element(var.private_inbound_acl_rules, count.index * 7 + 2)}"
-  to_port     = "${element(var.private_inbound_acl_rules, count.index * 7 + 3)}"
-  protocol    = "${element(var.private_inbound_acl_rules, count.index * 7 + 4)}"
-  cidr_block  = "${element(var.private_inbound_acl_rules, count.index * 7 + 5)}"
+  rule_number = "${lookup(var.private_inbound_acl_rules[count.index], "rule_number")}"
+  rule_action = "${lookup(var.private_inbound_acl_rules[count.index], "rule_action")}"
+  from_port   = "${lookup(var.private_inbound_acl_rules[count.index], "from_port")}"
+  to_port     = "${lookup(var.private_inbound_acl_rules[count.index], "to_port")}"
+  protocol    = "${lookup(var.private_inbound_acl_rules[count.index], "protocol")}"
+  cidr_block  = "${lookup(var.private_inbound_acl_rules[count.index], "cidr_block")}"
 }
 
 resource "aws_network_acl_rule" "private_outbound" {
-  count = "${var.create_vpc && length(var.private_subnets) > 0 ? length(var.private_outbound_acl_rules) / 7 : 0}"
+  count = "${var.create_vpc && length(var.private_subnets) > 0 ? length(var.private_outbound_acl_rules) : 0}"
 
   network_acl_id = "${aws_network_acl.private.id}"
 
   egress      = true
-  rule_number = "${element(var.private_outbound_acl_rules, count.index * 7 + 0)}"
-  rule_action = "${element(var.private_outbound_acl_rules, count.index * 7 + 1)}"
-  from_port   = "${element(var.private_outbound_acl_rules, count.index * 7 + 2)}"
-  to_port     = "${element(var.private_outbound_acl_rules, count.index * 7 + 3)}"
-  protocol    = "${element(var.private_outbound_acl_rules, count.index * 7 + 4)}"
-  cidr_block  = "${element(var.private_outbound_acl_rules, count.index * 7 + 5)}"
+  rule_number = "${lookup(var.private_outbound_acl_rules[count.index], "rule_number")}"
+  rule_action = "${lookup(var.private_outbound_acl_rules[count.index], "rule_action")}"
+  from_port   = "${lookup(var.private_outbound_acl_rules[count.index], "from_port")}"
+  to_port     = "${lookup(var.private_outbound_acl_rules[count.index], "to_port")}"
+  protocol    = "${lookup(var.private_outbound_acl_rules[count.index], "protocol")}"
+  cidr_block  = "${lookup(var.private_outbound_acl_rules[count.index], "cidr_block")}"
 }
 
 ########################
@@ -386,31 +386,31 @@ resource "aws_network_acl" "intra" {
 }
 
 resource "aws_network_acl_rule" "intra_inbound" {
-  count = "${var.create_vpc && length(var.intra_subnets) > 0 ? length(var.intra_inbound_acl_rules) / 7 : 0}"
+  count = "${var.create_vpc && length(var.intra_subnets) > 0 ? length(var.intra_inbound_acl_rules) : 0}"
 
   network_acl_id = "${aws_network_acl.intra.id}"
 
   egress      = false
-  rule_number = "${element(var.intra_inbound_acl_rules, count.index * 7 + 0)}"
-  rule_action = "${element(var.intra_inbound_acl_rules, count.index * 7 + 1)}"
-  from_port   = "${element(var.intra_inbound_acl_rules, count.index * 7 + 2)}"
-  to_port     = "${element(var.intra_inbound_acl_rules, count.index * 7 + 3)}"
-  protocol    = "${element(var.intra_inbound_acl_rules, count.index * 7 + 4)}"
-  cidr_block  = "${element(var.intra_inbound_acl_rules, count.index * 7 + 5)}"
+  rule_number = "${lookup(var.intra_inbound_acl_rules[count.index], "rule_number")}"
+  rule_action = "${lookup(var.intra_inbound_acl_rules[count.index], "rule_action")}"
+  from_port   = "${lookup(var.intra_inbound_acl_rules[count.index], "from_port")}"
+  to_port     = "${lookup(var.intra_inbound_acl_rules[count.index], "to_port")}"
+  protocol    = "${lookup(var.intra_inbound_acl_rules[count.index], "protocol")}"
+  cidr_block  = "${lookup(var.intra_inbound_acl_rules[count.index], "cidr_block")}"
 }
 
 resource "aws_network_acl_rule" "intra_outbound" {
-  count = "${var.create_vpc && length(var.intra_subnets) > 0 ? length(var.intra_outbound_acl_rules) / 7 : 0}"
+  count = "${var.create_vpc && length(var.intra_subnets) > 0 ? length(var.intra_outbound_acl_rules) : 0}"
 
   network_acl_id = "${aws_network_acl.intra.id}"
 
   egress      = true
-  rule_number = "${element(var.intra_outbound_acl_rules, count.index * 7 + 0)}"
-  rule_action = "${element(var.intra_outbound_acl_rules, count.index * 7 + 1)}"
-  from_port   = "${element(var.intra_outbound_acl_rules, count.index * 7 + 2)}"
-  to_port     = "${element(var.intra_outbound_acl_rules, count.index * 7 + 3)}"
-  protocol    = "${element(var.intra_outbound_acl_rules, count.index * 7 + 4)}"
-  cidr_block  = "${element(var.intra_outbound_acl_rules, count.index * 7 + 5)}"
+  rule_number = "${lookup(var.intra_outbound_acl_rules[count.index], "rule_number")}"
+  rule_action = "${lookup(var.intra_outbound_acl_rules[count.index], "rule_action")}"
+  from_port   = "${lookup(var.intra_outbound_acl_rules[count.index], "from_port")}"
+  to_port     = "${lookup(var.intra_outbound_acl_rules[count.index], "to_port")}"
+  protocol    = "${lookup(var.intra_outbound_acl_rules[count.index], "protocol")}"
+  cidr_block  = "${lookup(var.intra_outbound_acl_rules[count.index], "cidr_block")}"
 }
 
 ########################
@@ -426,31 +426,31 @@ resource "aws_network_acl" "database" {
 }
 
 resource "aws_network_acl_rule" "database_inbound" {
-  count = "${var.create_vpc && length(var.database_subnets) > 0 ? length(var.database_inbound_acl_rules) / 7 : 0}"
+  count = "${var.create_vpc && length(var.database_subnets) > 0 ? length(var.database_inbound_acl_rules) : 0}"
 
   network_acl_id = "${aws_network_acl.database.id}"
 
   egress      = false
-  rule_number = "${element(var.database_inbound_acl_rules, count.index * 7 + 0)}"
-  rule_action = "${element(var.database_inbound_acl_rules, count.index * 7 + 1)}"
-  from_port   = "${element(var.database_inbound_acl_rules, count.index * 7 + 2)}"
-  to_port     = "${element(var.database_inbound_acl_rules, count.index * 7 + 3)}"
-  protocol    = "${element(var.database_inbound_acl_rules, count.index * 7 + 4)}"
-  cidr_block  = "${element(var.database_inbound_acl_rules, count.index * 7 + 5)}"
+  rule_number = "${lookup(var.database_inbound_acl_rules[count.index], "rule_number")}"
+  rule_action = "${lookup(var.database_inbound_acl_rules[count.index], "rule_action")}"
+  from_port   = "${lookup(var.database_inbound_acl_rules[count.index], "from_port")}"
+  to_port     = "${lookup(var.database_inbound_acl_rules[count.index], "to_port")}"
+  protocol    = "${lookup(var.database_inbound_acl_rules[count.index], "protocol")}"
+  cidr_block  = "${lookup(var.database_inbound_acl_rules[count.index], "cidr_block")}"
 }
 
 resource "aws_network_acl_rule" "database_outbound" {
-  count = "${var.create_vpc && length(var.database_subnets) > 0 ? length(var.database_outbound_acl_rules) / 7 : 0}"
+  count = "${var.create_vpc && length(var.database_subnets) > 0 ? length(var.database_outbound_acl_rules) : 0}"
 
   network_acl_id = "${aws_network_acl.database.id}"
 
   egress      = true
-  rule_number = "${element(var.database_outbound_acl_rules, count.index * 7 + 0)}"
-  rule_action = "${element(var.database_outbound_acl_rules, count.index * 7 + 1)}"
-  from_port   = "${element(var.database_outbound_acl_rules, count.index * 7 + 2)}"
-  to_port     = "${element(var.database_outbound_acl_rules, count.index * 7 + 3)}"
-  protocol    = "${element(var.database_outbound_acl_rules, count.index * 7 + 4)}"
-  cidr_block  = "${element(var.database_outbound_acl_rules, count.index * 7 + 5)}"
+  rule_number = "${lookup(var.database_outbound_acl_rules[count.index], "rule_number")}"
+  rule_action = "${lookup(var.database_outbound_acl_rules[count.index], "rule_action")}"
+  from_port   = "${lookup(var.database_outbound_acl_rules[count.index], "from_port")}"
+  to_port     = "${lookup(var.database_outbound_acl_rules[count.index], "to_port")}"
+  protocol    = "${lookup(var.database_outbound_acl_rules[count.index], "protocol")}"
+  cidr_block  = "${lookup(var.database_outbound_acl_rules[count.index], "cidr_block")}"
 }
 
 ########################
@@ -466,31 +466,31 @@ resource "aws_network_acl" "redshift" {
 }
 
 resource "aws_network_acl_rule" "redshift_inbound" {
-  count = "${var.create_vpc && length(var.redshift_subnets) > 0 ? length(var.redshift_inbound_acl_rules) / 7 : 0}"
+  count = "${var.create_vpc && length(var.redshift_subnets) > 0 ? length(var.redshift_inbound_acl_rules) : 0}"
 
   network_acl_id = "${aws_network_acl.redshift.id}"
 
   egress      = false
-  rule_number = "${element(var.redshift_inbound_acl_rules, count.index * 7 + 0)}"
-  rule_action = "${element(var.redshift_inbound_acl_rules, count.index * 7 + 1)}"
-  from_port   = "${element(var.redshift_inbound_acl_rules, count.index * 7 + 2)}"
-  to_port     = "${element(var.redshift_inbound_acl_rules, count.index * 7 + 3)}"
-  protocol    = "${element(var.redshift_inbound_acl_rules, count.index * 7 + 4)}"
-  cidr_block  = "${element(var.redshift_inbound_acl_rules, count.index * 7 + 5)}"
+  rule_number = "${lookup(var.redshift_inbound_acl_rules[count.index], "rule_number")}"
+  rule_action = "${lookup(var.redshift_inbound_acl_rules[count.index], "rule_action")}"
+  from_port   = "${lookup(var.redshift_inbound_acl_rules[count.index], "from_port")}"
+  to_port     = "${lookup(var.redshift_inbound_acl_rules[count.index], "to_port")}"
+  protocol    = "${lookup(var.redshift_inbound_acl_rules[count.index], "protocol")}"
+  cidr_block  = "${lookup(var.redshift_inbound_acl_rules[count.index], "cidr_block")}"
 }
 
 resource "aws_network_acl_rule" "redshift_outbound" {
-  count = "${var.create_vpc && length(var.redshift_subnets) > 0 ? length(var.redshift_outbound_acl_rules) / 7 : 0}"
+  count = "${var.create_vpc && length(var.redshift_subnets) > 0 ? length(var.redshift_outbound_acl_rules) : 0}"
 
   network_acl_id = "${aws_network_acl.redshift.id}"
 
   egress      = true
-  rule_number = "${element(var.redshift_outbound_acl_rules, count.index * 7 + 0)}"
-  rule_action = "${element(var.redshift_outbound_acl_rules, count.index * 7 + 1)}"
-  from_port   = "${element(var.redshift_outbound_acl_rules, count.index * 7 + 2)}"
-  to_port     = "${element(var.redshift_outbound_acl_rules, count.index * 7 + 3)}"
-  protocol    = "${element(var.redshift_outbound_acl_rules, count.index * 7 + 4)}"
-  cidr_block  = "${element(var.redshift_outbound_acl_rules, count.index * 7 + 5)}"
+  rule_number = "${lookup(var.redshift_outbound_acl_rules[count.index], "rule_number")}"
+  rule_action = "${lookup(var.redshift_outbound_acl_rules[count.index], "rule_action")}"
+  from_port   = "${lookup(var.redshift_outbound_acl_rules[count.index], "from_port")}"
+  to_port     = "${lookup(var.redshift_outbound_acl_rules[count.index], "to_port")}"
+  protocol    = "${lookup(var.redshift_outbound_acl_rules[count.index], "protocol")}"
+  cidr_block  = "${lookup(var.redshift_outbound_acl_rules[count.index], "cidr_block")}"
 }
 
 ###########################
@@ -506,31 +506,31 @@ resource "aws_network_acl" "elasticache" {
 }
 
 resource "aws_network_acl_rule" "elasticache_inbound" {
-  count = "${var.create_vpc && length(var.elasticache_subnets) > 0 ? length(var.elasticache_inbound_acl_rules) / 7 : 0}"
+  count = "${var.create_vpc && length(var.elasticache_subnets) > 0 ? length(var.elasticache_inbound_acl_rules) : 0}"
 
   network_acl_id = "${aws_network_acl.elasticache.id}"
 
   egress      = false
-  rule_number = "${element(var.elasticache_inbound_acl_rules, count.index * 7 + 0)}"
-  rule_action = "${element(var.elasticache_inbound_acl_rules, count.index * 7 + 1)}"
-  from_port   = "${element(var.elasticache_inbound_acl_rules, count.index * 7 + 2)}"
-  to_port     = "${element(var.elasticache_inbound_acl_rules, count.index * 7 + 3)}"
-  protocol    = "${element(var.elasticache_inbound_acl_rules, count.index * 7 + 4)}"
-  cidr_block  = "${element(var.elasticache_inbound_acl_rules, count.index * 7 + 5)}"
+  rule_number = "${lookup(var.elasticache_inbound_acl_rules[count.index], "rule_number")}"
+  rule_action = "${lookup(var.elasticache_inbound_acl_rules[count.index], "rule_action")}"
+  from_port   = "${lookup(var.elasticache_inbound_acl_rules[count.index], "from_port")}"
+  to_port     = "${lookup(var.elasticache_inbound_acl_rules[count.index], "to_port")}"
+  protocol    = "${lookup(var.elasticache_inbound_acl_rules[count.index], "protocol")}"
+  cidr_block  = "${lookup(var.elasticache_inbound_acl_rules[count.index], "cidr_block")}"
 }
 
 resource "aws_network_acl_rule" "elasticache_outbound" {
-  count = "${var.create_vpc && length(var.elasticache_subnets) > 0 ? length(var.elasticache_outbound_acl_rules) / 7 : 0}"
+  count = "${var.create_vpc && length(var.elasticache_subnets) > 0 ? length(var.elasticache_outbound_acl_rules) : 0}"
 
   network_acl_id = "${aws_network_acl.elasticache.id}"
 
   egress      = true
-  rule_number = "${element(var.elasticache_outbound_acl_rules, count.index * 7 + 0)}"
-  rule_action = "${element(var.elasticache_outbound_acl_rules, count.index * 7 + 1)}"
-  from_port   = "${element(var.elasticache_outbound_acl_rules, count.index * 7 + 2)}"
-  to_port     = "${element(var.elasticache_outbound_acl_rules, count.index * 7 + 3)}"
-  protocol    = "${element(var.elasticache_outbound_acl_rules, count.index * 7 + 4)}"
-  cidr_block  = "${element(var.elasticache_outbound_acl_rules, count.index * 7 + 5)}"
+  rule_number = "${lookup(var.elasticache_outbound_acl_rules[count.index], "rule_number")}"
+  rule_action = "${lookup(var.elasticache_outbound_acl_rules[count.index], "rule_action")}"
+  from_port   = "${lookup(var.elasticache_outbound_acl_rules[count.index], "from_port")}"
+  to_port     = "${lookup(var.elasticache_outbound_acl_rules[count.index], "to_port")}"
+  protocol    = "${lookup(var.elasticache_outbound_acl_rules[count.index], "protocol")}"
+  cidr_block  = "${lookup(var.elasticache_outbound_acl_rules[count.index], "cidr_block")}"
 }
 
 ##############
