@@ -17,12 +17,11 @@ $ terraform apply
 Run `terraform destroy` when you don't need these resources.
 
 <!-- BEGINNING OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
-
 ## Outputs
 
 | Name | Description |
 |------|-------------|
-| default_vpc_cidr_block | The CIDR block of the VPC |
-| default_vpc_id | Default VPC |
+| default\_vpc\_cidr\_block | The CIDR block of the VPC |
+| default\_vpc\_id | The ID of the Default VPC |
 
 <!-- END OF PRE-COMMIT-TERRAFORM DOCS HOOK -->

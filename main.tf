@@ -121,6 +121,29 @@ resource "aws_route_table" "database" {
   tags = "${merge(var.tags, var.database_route_table_tags, map("Name", "${var.name}-${var.database_subnet_suffix}"))}"
 }
 
+resource "aws_route" "database_internet_gateway" {
+  count = "${var.create_vpc && var.create_database_subnet_route_table && length(var.database_subnets) > 0 && var.create_database_internet_gateway_route && !var.create_database_nat_gateway_route ? 1 : 0}"
+
+  route_table_id         = "${aws_route_table.database.id}"
+  destination_cidr_block = "0.0.0.0/0"
+  gateway_id             = "${aws_internet_gateway.this.id}"
+
+  timeouts {
+    create = "5m"
+  }
+}
+
+resource "aws_route" "database_nat_gateway" {
+  count                  = "${var.create_vpc && var.create_database_subnet_route_table && length(var.database_subnets) > 0 && !var.create_database_internet_gateway_route && var.create_database_nat_gateway_route && var.enable_nat_gateway ? local.nat_gateway_count : 0}"
+  route_table_id         = "${element(aws_route_table.private.*.id, count.index)}"
+  destination_cidr_block = "0.0.0.0/0"
+  nat_gateway_id         = "${element(aws_nat_gateway.this.*.id, count.index)}"
+
+  timeouts {
+    create = "5m"
+  }
+}
+
 #################
 # Redshift routes
 #################
@@ -151,7 +174,7 @@ resource "aws_route_table" "intra" {
 
   vpc_id = "${local.vpc_id}"
 
-  tags = "${merge(map("Name", "${var.name}-intra"), var.tags, var.intra_route_table_tags)}"
+  tags = "${merge(map("Name", "${var.name}-${var.intra_subnet_suffix}"), var.tags, var.intra_route_table_tags)}"
 }
 
 ################
@@ -218,9 +241,9 @@ resource "aws_subnet" "redshift" {
 }
 
 resource "aws_redshift_subnet_group" "redshift" {
-  count = "${var.create_vpc && length(var.redshift_subnets) > 0 ? 1 : 0}"
+  count = "${var.create_vpc && length(var.redshift_subnets) > 0 && var.create_redshift_subnet_group ? 1 : 0}"
 
-  name        = "${var.name}"
+  name        = "${lower(var.name)}"
   description = "Redshift subnet group for ${var.name}"
   subnet_ids  = ["${aws_subnet.redshift.*.id}"]
 
@@ -241,7 +264,7 @@ resource "aws_subnet" "elasticache" {
 }
 
 resource "aws_elasticache_subnet_group" "elasticache" {
-  count = "${var.create_vpc && length(var.elasticache_subnets) > 0 ? 1 : 0}"
+  count = "${var.create_vpc && length(var.elasticache_subnets) > 0 && var.create_elasticache_subnet_group ? 1 : 0}"
 
   name        = "${var.name}"
   description = "ElastiCache subnet group for ${var.name}"
@@ -258,7 +281,7 @@ resource "aws_subnet" "intra" {
   cidr_block        = "${var.intra_subnets[count.index]}"
   availability_zone = "${element(var.azs, count.index)}"
 
-  tags = "${merge(map("Name", format("%s-intra-%s", var.name, element(var.azs, count.index))), var.tags, var.intra_subnet_tags)}"
+  tags = "${merge(map("Name", format("%s-${var.intra_subnet_suffix}-%s", var.name, element(var.azs, count.index))), var.tags, var.intra_subnet_tags)}"
 }
 
 ##############
@@ -379,6 +402,132 @@ resource "aws_vpc_endpoint_route_table_association" "public_dynamodb" {
 
   vpc_endpoint_id = "${aws_vpc_endpoint.dynamodb.id}"
   route_table_id  = "${aws_route_table.public.id}"
+}
+
+#######################
+# VPC Endpoint for SSM
+#######################
+data "aws_vpc_endpoint_service" "ssm" {
+  count = "${var.create_vpc && var.enable_ssm_endpoint ? 1 : 0}"
+
+  service = "ssm"
+}
+
+resource "aws_vpc_endpoint" "ssm" {
+  count = "${var.create_vpc && var.enable_ssm_endpoint ? 1 : 0}"
+
+  vpc_id            = "${local.vpc_id}"
+  service_name      = "${data.aws_vpc_endpoint_service.ssm.service_name}"
+  vpc_endpoint_type = "Interface"
+
+  security_group_ids  = ["${var.ssm_endpoint_security_group_ids}"]
+  subnet_ids          = ["${coalescelist(var.ssm_endpoint_subnet_ids, aws_subnet.private.*.id)}"]
+  private_dns_enabled = "${var.ssm_endpoint_private_dns_enabled}"
+}
+
+###############################
+# VPC Endpoint for SSMMESSAGES
+###############################
+data "aws_vpc_endpoint_service" "ssmmessages" {
+  count = "${var.create_vpc && var.enable_ssmmessages_endpoint ? 1 : 0}"
+
+  service = "ssmmessages"
+}
+
+resource "aws_vpc_endpoint" "ssmmessages" {
+  count = "${var.create_vpc && var.enable_ssmmessages_endpoint ? 1 : 0}"
+
+  vpc_id            = "${local.vpc_id}"
+  service_name      = "${data.aws_vpc_endpoint_service.ssmmessages.service_name}"
+  vpc_endpoint_type = "Interface"
+
+  security_group_ids  = ["${var.ssmmessages_endpoint_security_group_ids}"]
+  subnet_ids          = ["${coalescelist(var.ssmmessages_endpoint_subnet_ids, aws_subnet.private.*.id)}"]
+  private_dns_enabled = "${var.ssmmessages_endpoint_private_dns_enabled}"
+}
+
+#######################
+# VPC Endpoint for EC2
+#######################
+data "aws_vpc_endpoint_service" "ec2" {
+  count = "${var.create_vpc && var.enable_ec2_endpoint ? 1 : 0}"
+
+  service = "ec2"
+}
+
+resource "aws_vpc_endpoint" "ec2" {
+  count = "${var.create_vpc && var.enable_ec2_endpoint ? 1 : 0}"
+
+  vpc_id            = "${local.vpc_id}"
+  service_name      = "${data.aws_vpc_endpoint_service.ec2.service_name}"
+  vpc_endpoint_type = "Interface"
+
+  security_group_ids  = ["${var.ec2_endpoint_security_group_ids}"]
+  subnet_ids          = ["${coalescelist(var.ec2_endpoint_subnet_ids, aws_subnet.private.*.id)}"]
+  private_dns_enabled = "${var.ec2_endpoint_private_dns_enabled}"
+}
+
+###############################
+# VPC Endpoint for EC2MESSAGES
+###############################
+data "aws_vpc_endpoint_service" "ec2messages" {
+  count = "${var.create_vpc && var.enable_ec2messages_endpoint ? 1 : 0}"
+
+  service = "ec2messages"
+}
+
+resource "aws_vpc_endpoint" "ec2messages" {
+  count = "${var.create_vpc && var.enable_ec2messages_endpoint ? 1 : 0}"
+
+  vpc_id            = "${local.vpc_id}"
+  service_name      = "${data.aws_vpc_endpoint_service.ec2messages.service_name}"
+  vpc_endpoint_type = "Interface"
+
+  security_group_ids  = ["${var.ec2messages_endpoint_security_group_ids}"]
+  subnet_ids          = ["${coalescelist(var.ec2messages_endpoint_subnet_ids, aws_subnet.private.*.id)}"]
+  private_dns_enabled = "${var.ec2messages_endpoint_private_dns_enabled}"
+}
+
+###########################
+# VPC Endpoint for ECR API
+###########################
+data "aws_vpc_endpoint_service" "ecr_api" {
+  count = "${var.create_vpc && var.enable_ecr_api_endpoint ? 1 : 0}"
+
+  service = "ecr.api"
+}
+
+resource "aws_vpc_endpoint" "ecr_api" {
+  count = "${var.create_vpc && var.enable_ecr_api_endpoint ? 1 : 0}"
+
+  vpc_id            = "${local.vpc_id}"
+  service_name      = "${data.aws_vpc_endpoint_service.ecr_api.service_name}"
+  vpc_endpoint_type = "Interface"
+
+  security_group_ids  = ["${var.ecr_api_endpoint_security_group_ids}"]
+  subnet_ids          = ["${coalescelist(var.ecr_api_endpoint_subnet_ids, aws_subnet.private.*.id)}"]
+  private_dns_enabled = "${var.ecr_api_endpoint_private_dns_enabled}"
+}
+
+###########################
+# VPC Endpoint for ECR DKR
+###########################
+data "aws_vpc_endpoint_service" "ecr_dkr" {
+  count = "${var.create_vpc && var.enable_ecr_dkr_endpoint ? 1 : 0}"
+
+  service = "ecr.dkr"
+}
+
+resource "aws_vpc_endpoint" "ecr_dkr" {
+  count = "${var.create_vpc && var.enable_ecr_dkr_endpoint ? 1 : 0}"
+
+  vpc_id            = "${local.vpc_id}"
+  service_name      = "${data.aws_vpc_endpoint_service.ecr_dkr.service_name}"
+  vpc_endpoint_type = "Interface"
+
+  security_group_ids  = ["${var.ecr_dkr_endpoint_security_group_ids}"]
+  subnet_ids          = ["${coalescelist(var.ecr_dkr_endpoint_subnet_ids, aws_subnet.private.*.id)}"]
+  private_dns_enabled = "${var.ecr_dkr_endpoint_private_dns_enabled}"
 }
 
 ##########################
