@@ -208,6 +208,26 @@ variable "enable_ssmmessages_endpoint" {
   default     = false
 }
 
+variable "enable_apigw_endpoint" {
+  description = "Should be true if you want to provision an api gateway endpoint to the VPC"
+  default     = false
+}
+
+variable "apigw_endpoint_security_group_ids" {
+  description = "The ID of one or more security groups to associate with the network interface for API GW  endpoint"
+  default     = []
+}
+
+variable "apigw_endpoint_private_dns_enabled" {
+  description = "Whether or not to associate a private hosted zone with the specified VPC for API GW endpoint"
+  default     = false
+}
+
+variable "apigw_endpoint_subnet_ids" {
+  description = "The ID of one or more subnets in which to create a network interface for API GW endpoint. Only a single subnet within an AZ is supported. If omitted, private subnets will be used."
+  default     = []
+}
+
 variable "ssmmessages_endpoint_security_group_ids" {
   description = "The ID of one or more security groups to associate with the network interface for SSMMESSAGES endpoint"
   default     = []

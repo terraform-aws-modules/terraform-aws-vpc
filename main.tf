@@ -530,6 +530,27 @@ resource "aws_vpc_endpoint" "ecr_dkr" {
   private_dns_enabled = "${var.ecr_dkr_endpoint_private_dns_enabled}"
 }
 
+#######################
+# VPC Endpoint for API Gateway
+#######################
+data "aws_vpc_endpoint_service" "apigw" {
+  count = "${var.create_vpc && var.enable_apigw_endpoint ? 1 : 0}"
+
+  service = "execute-api"
+}
+
+resource "aws_vpc_endpoint" "apigw" {
+  count = "${var.create_vpc && var.enable_apigw_endpoint ? 1 : 0}"
+
+  vpc_id            = "${local.vpc_id}"
+  service_name      = "${data.aws_vpc_endpoint_service.apigw.service_name}"
+  vpc_endpoint_type = "Interface"
+
+  security_group_ids  = ["${var.apigw_endpoint_security_group_ids}"]
+  subnet_ids          = ["${coalescelist(var.apigw_endpoint_subnet_ids, aws_subnet.private.*.id)}"]
+  private_dns_enabled = "${var.apigw_endpoint_private_dns_enabled}"
+}
+
 ##########################
 # Route table association
 ##########################
