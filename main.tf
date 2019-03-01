@@ -551,7 +551,6 @@ resource "aws_vpc_endpoint" "apigw" {
   private_dns_enabled = "${var.apigw_endpoint_private_dns_enabled}"
 }
 
-
 ##########################
 # Route table association
 ##########################

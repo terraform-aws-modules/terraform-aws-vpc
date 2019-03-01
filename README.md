@@ -182,6 +182,9 @@ Terraform version 0.10.3 or newer is required for this module to work.
 | Name | Description | Type | Default | Required |
 |------|-------------|:----:|:-----:|:-----:|
 | amazon\_side\_asn | The Autonomous System Number (ASN) for the Amazon side of the gateway. By default the virtual private gateway is created with the current default Amazon ASN. | string | `"64512"` | no |
+| apigw\_endpoint\_private\_dns\_enabled | Whether or not to associate a private hosted zone with the specified VPC for API GW endpoint | string | `"false"` | no |
+| apigw\_endpoint\_security\_group\_ids | The ID of one or more security groups to associate with the network interface for API GW  endpoint | list | `[]` | no |
+| apigw\_endpoint\_subnet\_ids | The ID of one or more subnets in which to create a network interface for API GW endpoint. Only a single subnet within an AZ is supported. If omitted, private subnets will be used. | list | `[]` | no |
 | assign\_generated\_ipv6\_cidr\_block | Requests an Amazon-provided IPv6 CIDR block with a /56 prefix length for the VPC. You cannot specify the range of IP addresses, or the size of the CIDR block | string | `"false"` | no |
 | azs | A list of availability zones in the region | list | `[]` | no |
 | cidr | The CIDR block for the VPC. Default value is a valid CIDR, but not acceptable by AWS and should be overridden | string | `"0.0.0.0/0"` | no |
@@ -226,6 +229,7 @@ Terraform version 0.10.3 or newer is required for this module to work.
 | elasticache\_subnet\_suffix | Suffix to append to elasticache subnets name | string | `"elasticache"` | no |
 | elasticache\_subnet\_tags | Additional tags for the elasticache subnets | map | `{}` | no |
 | elasticache\_subnets | A list of elasticache subnets | list | `[]` | no |
+| enable\_apigw\_endpoint | Should be true if you want to provision an api gateway endpoint to the VPC | string | `"false"` | no |
 | enable\_dhcp\_options | Should be true if you want to specify a DHCP options set with a custom domain name, DNS servers, NTP servers, netbios servers, and/or netbios server type | string | `"false"` | no |
 | enable\_dns\_hostnames | Should be true to enable DNS hostnames in the VPC | string | `"false"` | no |
 | enable\_dns\_support | Should be true to enable DNS support in the VPC | string | `"true"` | no |
@@ -238,12 +242,12 @@ Terraform version 0.10.3 or newer is required for this module to work.
 | enable\_s3\_endpoint | Should be true if you want to provision an S3 endpoint to the VPC | string | `"false"` | no |
 | enable\_ssm\_endpoint | Should be true if you want to provision an SSM endpoint to the VPC | string | `"false"` | no |
 | enable\_ssmmessages\_endpoint | Should be true if you want to provision a SSMMESSAGES endpoint to the VPC | string | `"false"` | no |
-| enable\_apigw\_endpoint | Should be true if you want to provision a API Gateway endpoint to the VPC | string | `"false"` | no |
 | enable\_vpn\_gateway | Should be true if you want to create a new VPN Gateway resource and attach it to the VPC | string | `"false"` | no |
 | external\_nat\_ip\_ids | List of EIP IDs to be assigned to the NAT Gateways (used in combination with reuse_nat_ips) | list | `[]` | no |
 | igw\_tags | Additional tags for the internet gateway | map | `{}` | no |
 | instance\_tenancy | A tenancy option for instances launched into the VPC | string | `"default"` | no |
 | intra\_route\_table\_tags | Additional tags for the intra route tables | map | `{}` | no |
+| intra\_subnet\_suffix | Suffix to append to intra subnets name | string | `"intra"` | no |
 | intra\_subnet\_tags | Additional tags for the intra subnets | map | `{}` | no |
 | intra\_subnets | A list of intra subnets | list | `[]` | no |
 | manage\_default\_vpc | Should be true to adopt and manage Default VPC | string | `"false"` | no |
@@ -272,10 +276,8 @@ Terraform version 0.10.3 or newer is required for this module to work.
 | single\_nat\_gateway | Should be true if you want to provision a single shared NAT Gateway across all of your private networks | string | `"false"` | no |
 | ssm\_endpoint\_private\_dns\_enabled | Whether or not to associate a private hosted zone with the specified VPC for SSM endpoint | string | `"false"` | no |
 | ssm\_endpoint\_security\_group\_ids | The ID of one or more security groups to associate with the network interface for SSM endpoint | list | `[]` | no |
-| apigw\_endpoint\_security\_group\_ids | The ID of one or more security groups to associate with the network interface for API Gateway endpoint | list | `[]` | no |
 | ssm\_endpoint\_subnet\_ids | The ID of one or more subnets in which to create a network interface for SSM endpoint. Only a single subnet within an AZ is supported. If omitted, private subnets will be used. | list | `[]` | no |
 | ssmmessages\_endpoint\_private\_dns\_enabled | Whether or not to associate a private hosted zone with the specified VPC for SSMMESSAGES endpoint | string | `"false"` | no |
-| apigw\_endpoint\_private\_dns\_enabled | Whether or not to associate a private hosted zone with the specified VPC for API Gateway endpoint | string | `"false"` | no |
 | ssmmessages\_endpoint\_security\_group\_ids | The ID of one or more security groups to associate with the network interface for SSMMESSAGES endpoint | list | `[]` | no |
 | ssmmessages\_endpoint\_subnet\_ids | The ID of one or more subnets in which to create a network interface for SSMMESSAGES endpoint. Only a single subnet within an AZ is supported. If omitted, private subnets will be used. | list | `[]` | no |
 | tags | A map of tags to add to all resources | map | `{}` | no |
