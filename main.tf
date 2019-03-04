@@ -156,17 +156,6 @@ resource "aws_route_table" "redshift" {
 }
 
 #################
-# Redshift public routes
-#################
-resource "aws_route_table" "redshift_public" {
-  count = "${var.create_vpc && var.create_redshift_public_subnet_route_table && length(var.redshift_public_subnets) > 0 ? 1 : 0}"
-
-  vpc_id = "${local.vpc_id}"
-
-  tags = "${merge(var.tags, var.redshift_public_route_table_tags, map("Name", "${var.name}-${var.redshift_public_subnet_suffix}"))}"
-}
-
-#################
 # Elasticache routes
 #################
 resource "aws_route_table" "elasticache" {
@@ -259,30 +248,6 @@ resource "aws_redshift_subnet_group" "redshift" {
   subnet_ids  = ["${aws_subnet.redshift.*.id}"]
 
   tags = "${merge(map("Name", format("%s", var.name)), var.tags, var.redshift_subnet_group_tags)}"
-}
-
-##################
-# Redshift public subnet
-##################
-resource "aws_subnet" "redshift_public" {
-  count = "${var.create_vpc && length(var.redshift_public_subnets) > 0 ? length(var.redshift_public_subnets) : 0}"
-
-  vpc_id                  = "${local.vpc_id}"
-  cidr_block              = "${var.redshift_public_subnets[count.index]}"
-  availability_zone       = "${element(var.azs, count.index)}"
-  map_public_ip_on_launch = "${var.map_public_ip_on_launch}"
-
-  tags = "${merge(map("Name", format("%s-${var.redshift_public_subnet_suffix}-%s", var.name, element(var.azs, count.index))), var.tags, var.redshift_public_subnet_tags)}"
-}
-
-resource "aws_redshift_subnet_group" "redshift_public" {
-  count = "${var.create_vpc && length(var.redshift_public_subnets) > 0 && var.create_redshift_public_subnet_group ? 1 : 0}"
-
-  name        = "${lower(var.name)}-public"
-  description = "Redshift public subnet group for ${var.name}"
-  subnet_ids  = ["${aws_subnet.redshift_public.*.id}"]
-
-  tags = "${merge(map("Name", format("%s", var.name)), var.tags, var.redshift_public_subnet_group_tags)}"
 }
 
 #####################
@@ -583,17 +548,17 @@ resource "aws_route_table_association" "database" {
 }
 
 resource "aws_route_table_association" "redshift" {
-  count = "${var.create_vpc && length(var.redshift_subnets) > 0 ? length(var.redshift_subnets) : 0}"
+  count = "${var.enable_public_redshift == false && var.create_vpc && length(var.redshift_subnets) > 0 ? length(var.redshift_subnets) : 0}"
 
   subnet_id      = "${element(aws_subnet.redshift.*.id, count.index)}"
   route_table_id = "${element(coalescelist(aws_route_table.redshift.*.id, aws_route_table.private.*.id), (var.single_nat_gateway || var.create_redshift_subnet_route_table ? 0 : count.index))}"
 }
 
 resource "aws_route_table_association" "redshift_public" {
-  count = "${var.create_vpc && length(var.redshift_public_subnets) > 0 ? length(var.redshift_public_subnets) : 0}"
+  count = "${var.enable_public_redshift && var.create_vpc && length(var.redshift_subnets) > 0 ? length(var.redshift_subnets) : 0}"
 
-  subnet_id      = "${element(aws_subnet.redshift_public.*.id, count.index)}"
-  route_table_id = "${element(coalescelist(aws_route_table.redshift_public.*.id, aws_route_table.public.*.id), (var.single_nat_gateway || var.create_redshift_public_subnet_route_table ? 0 : count.index))}"
+  subnet_id      = "${element(aws_subnet.redshift.*.id, count.index)}"
+  route_table_id = "${element(coalescelist(aws_route_table.redshift.*.id, aws_route_table.public.*.id), (var.single_nat_gateway || var.create_redshift_subnet_route_table ? 0 : count.index))}"
 }
 
 resource "aws_route_table_association" "elasticache" {

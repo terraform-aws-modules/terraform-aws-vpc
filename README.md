@@ -170,8 +170,7 @@ Sometimes it is handy to have public access to RDS instances (it is not recommen
 Sometimes it is handy to have public access to Redshift clusters (for example if you need to access it by Kinesis - VPC endpoint for Kinesis is not yet supported by Redshift) by specifying these arguments:
 
 ```hcl
-  create_redshift_public_subnet_group       = true
-  create_redshift_public_subnet_route_table = true  # <= Default it will be placed into public subnet route table
+  enable_public_redshift = true  # <= Default it will be placed into private subnet route table
 ```
 
 ## Terraform version
@@ -202,8 +201,6 @@ Terraform version 0.10.3 or newer is required for this module to work.
 | create\_elasticache\_subnet\_route\_table | Controls if separate route table for elasticache should be created | string | `"false"` | no |
 | create\_redshift\_subnet\_group | Controls if redshift subnet group should be created | string | `"true"` | no |
 | create\_redshift\_subnet\_route\_table | Controls if separate route table for redshift should be created | string | `"false"` | no |
-| create\_redshift\_public\_subnet\_group | Controls if redshift public subnet group should be created | string | `"true"` | no |
-| create\_redshift\_public\_subnet\_route\_table | Controls if separate route table for public redshift should be created | string | `"false"` | no |
 | create\_vpc | Controls if VPC should be created (it affects almost all resources) | string | `"true"` | no |
 | database\_route\_table\_tags | Additional tags for the database route tables | map | `{}` | no |
 | database\_subnet\_group\_tags | Additional tags for the database subnet group | map | `{}` | no |
@@ -277,11 +274,7 @@ Terraform version 0.10.3 or newer is required for this module to work.
 | redshift\_subnet\_suffix | Suffix to append to redshift subnets name | string | `"redshift"` | no |
 | redshift\_subnet\_tags | Additional tags for the redshift subnets | map | `{}` | no |
 | redshift\_subnets | A list of redshift subnets | list | `[]` | no |
-| redshift\_public\_route\_table\_tags | Additional tags for the public redshift route tables | map | `{}` | no |
-| redshift\_public\_subnet\_group\_tags | Additional tags for the redshift public subnet group | map | `{}` | no |
-| redshift\_public\_subnet\_suffix | Suffix to append to redshift public subnets name | string | `"redshift_public"` | no |
-| redshift\_public\_subnet\_tags | Additional tags for the redshift public subnets | map | `{}` | no |
-| redshift\_public\_subnets | A list of redshift public subnets | list | `[]` | no |
+| enable\_public\_redshift | Should be true if you want Redshift cluster to be placed into public subnet route table | string | `"false"` | no |
 | reuse\_nat\_ips | Should be true if you don't want EIPs to be created for your NAT Gateways and will instead pass them in via the 'external_nat_ip_ids' variable | string | `"false"` | no |
 | secondary\_cidr\_blocks | List of secondary CIDR blocks to associate with the VPC to extend the IP Address pool | list | `[]` | no |
 | single\_nat\_gateway | Should be true if you want to provision a single shared NAT Gateway across all of your private networks | string | `"false"` | no |
@@ -339,10 +332,6 @@ Terraform version 0.10.3 or newer is required for this module to work.
 | redshift\_subnet\_group | ID of redshift subnet group |
 | redshift\_subnets | List of IDs of redshift subnets |
 | redshift\_subnets\_cidr\_blocks | List of cidr_blocks of redshift subnets |
-| redshift\_public\_route\_table\_ids | List of IDs of redshift public route tables |
-| redshift\_public\_subnet\_group | ID of redshift public subnet group |
-| redshift\_public\_subnets | List of IDs of redshift public subnets |
-| redshift\_public\_subnets\_cidr\_blocks | List of cidr_blocks of redshift public subnets |
 | vgw\_id | The ID of the VPN Gateway |
 | vpc\_cidr\_block | The CIDR block of the VPC |
 | vpc\_enable\_dns\_hostnames | Whether or not the VPC has DNS hostname support |
