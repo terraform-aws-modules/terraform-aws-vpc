@@ -170,7 +170,11 @@ Sometimes it is handy to have public access to RDS instances (it is not recommen
 Sometimes it is handy to have public access to Redshift clusters (for example if you need to access it by Kinesis - VPC endpoint for Kinesis is not yet supported by Redshift) by specifying these arguments:
 
 ```hcl
+<<<<<<< HEAD
   enable_public_redshift = true  # <= Default it will be placed into private subnet route table
+=======
+  enable_public_redshift = true  # <= By default Redshift subnets will be associated with the private route table
+>>>>>>> Redshift public subnets (#222)
 ```
 
 ## Terraform version
@@ -247,6 +251,7 @@ Terraform version 0.10.3 or newer is required for this module to work.
 | enable\_ecr\_api\_endpoint | Should be true if you want to provision an ecr api endpoint to the VPC | string | `"false"` | no |
 | enable\_ecr\_dkr\_endpoint | Should be true if you want to provision an ecr dkr endpoint to the VPC | string | `"false"` | no |
 | enable\_nat\_gateway | Should be true if you want to provision NAT Gateways for each of your private networks | string | `"false"` | no |
+| enable\_public\_redshift | Controls if redshift should have public routing table | string | `"false"` | no |
 | enable\_s3\_endpoint | Should be true if you want to provision an S3 endpoint to the VPC | string | `"false"` | no |
 | enable\_ssm\_endpoint | Should be true if you want to provision an SSM endpoint to the VPC | string | `"false"` | no |
 | enable\_ssmmessages\_endpoint | Should be true if you want to provision a SSMMESSAGES endpoint to the VPC | string | `"false"` | no |
