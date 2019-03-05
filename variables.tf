@@ -69,25 +69,25 @@ variable "private_subnets" {
 }
 
 variable "database_subnets" {
-  type        = "list"
+  type        = list(string)
   description = "A list of database subnets"
   default     = []
 }
 
 variable "redshift_subnets" {
-  type        = "list"
+  type        = list(string)
   description = "A list of redshift subnets"
   default     = []
 }
 
 variable "elasticache_subnets" {
-  type        = "list"
+  type        = list(string)
   description = "A list of elasticache subnets"
   default     = []
 }
 
 variable "intra_subnets" {
-  type        = "list"
+  type        = list(string)
   description = "A list of intra subnets"
   default     = []
 }
@@ -169,7 +169,7 @@ variable "reuse_nat_ips" {
 
 variable "external_nat_ip_ids" {
   description = "List of EIP IDs to be assigned to the NAT Gateways (used in combination with reuse_nat_ips)"
-  type        = "list"
+  type        = list(string)
   default     = []
 }
 
@@ -355,107 +355,128 @@ variable "propagate_public_route_tables_vgw" {
 
 variable "tags" {
   description = "A map of tags to add to all resources"
-  default     = {}
+  default = {
+  }
 }
 
 variable "vpc_tags" {
   description = "Additional tags for the VPC"
-  default     = {}
+  default = {
+  }
 }
 
 variable "igw_tags" {
   description = "Additional tags for the internet gateway"
-  default     = {}
+  default = {
+  }
 }
 
 variable "public_subnet_tags" {
   description = "Additional tags for the public subnets"
-  default     = {}
+  default = {
+  }
 }
 
 variable "private_subnet_tags" {
   description = "Additional tags for the private subnets"
-  default     = {}
+  default = {
+  }
 }
 
 variable "public_route_table_tags" {
   description = "Additional tags for the public route tables"
-  default     = {}
+  default = {
+  }
 }
 
 variable "private_route_table_tags" {
   description = "Additional tags for the private route tables"
-  default     = {}
+  default = {
+  }
 }
 
 variable "database_route_table_tags" {
   description = "Additional tags for the database route tables"
-  default     = {}
+  default = {
+  }
 }
 
 variable "redshift_route_table_tags" {
   description = "Additional tags for the redshift route tables"
-  default     = {}
+  default = {
+  }
 }
 
 variable "elasticache_route_table_tags" {
   description = "Additional tags for the elasticache route tables"
-  default     = {}
+  default = {
+  }
 }
 
 variable "intra_route_table_tags" {
   description = "Additional tags for the intra route tables"
-  default     = {}
+  default = {
+  }
 }
 
 variable "database_subnet_tags" {
   description = "Additional tags for the database subnets"
-  default     = {}
+  default = {
+  }
 }
 
 variable "database_subnet_group_tags" {
   description = "Additional tags for the database subnet group"
-  default     = {}
+  default = {
+  }
 }
 
 variable "redshift_subnet_tags" {
   description = "Additional tags for the redshift subnets"
-  default     = {}
+  default = {
+  }
 }
 
 variable "redshift_subnet_group_tags" {
   description = "Additional tags for the redshift subnet group"
-  default     = {}
+  default = {
+  }
 }
 
 variable "elasticache_subnet_tags" {
   description = "Additional tags for the elasticache subnets"
-  default     = {}
+  default = {
+  }
 }
 
 variable "intra_subnet_tags" {
   description = "Additional tags for the intra subnets"
-  default     = {}
+  default = {
+  }
 }
 
 variable "dhcp_options_tags" {
   description = "Additional tags for the DHCP option set"
-  default     = {}
+  default = {
+  }
 }
 
 variable "nat_gateway_tags" {
   description = "Additional tags for the NAT gateways"
-  default     = {}
+  default = {
+  }
 }
 
 variable "nat_eip_tags" {
   description = "Additional tags for the NAT EIP"
-  default     = {}
+  default = {
+  }
 }
 
 variable "vpn_gateway_tags" {
   description = "Additional tags for the VPN gateway"
-  default     = {}
+  default = {
+  }
 }
 
 variable "enable_dhcp_options" {
@@ -470,19 +491,19 @@ variable "dhcp_options_domain_name" {
 
 variable "dhcp_options_domain_name_servers" {
   description = "Specify a list of DNS server addresses for DHCP options set, default to AWS provided"
-  type        = "list"
+  type        = list(string)
   default     = ["AmazonProvidedDNS"]
 }
 
 variable "dhcp_options_ntp_servers" {
   description = "Specify a list of NTP servers for DHCP options set"
-  type        = "list"
+  type        = list(string)
   default     = []
 }
 
 variable "dhcp_options_netbios_name_servers" {
   description = "Specify a list of netbios servers for DHCP options set"
-  type        = "list"
+  type        = list(string)
   default     = []
 }
 
@@ -518,5 +539,7 @@ variable "default_vpc_enable_classiclink" {
 
 variable "default_vpc_tags" {
   description = "Additional tags for the Default VPC"
-  default     = {}
+  default = {
+  }
 }
+
