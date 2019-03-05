@@ -165,6 +165,14 @@ Sometimes it is handy to have public access to RDS instances (it is not recommen
   enable_dns_support   = true
 ```
 
+## Public access to Redshift cluster
+
+Sometimes it is handy to have public access to Redshift clusters (for example if you need to access it by Kinesis - VPC endpoint for Kinesis is not yet supported by Redshift) by specifying these arguments:
+
+```hcl
+  enable_public_redshift = true  # <= Default it will be placed into private subnet route table
+```
+
 ## Terraform version
 
 Terraform version 0.10.3 or newer is required for this module to work.
@@ -271,6 +279,7 @@ Terraform version 0.10.3 or newer is required for this module to work.
 | redshift\_subnet\_suffix | Suffix to append to redshift subnets name | string | `"redshift"` | no |
 | redshift\_subnet\_tags | Additional tags for the redshift subnets | map | `{}` | no |
 | redshift\_subnets | A list of redshift subnets | list | `[]` | no |
+| enable\_public\_redshift | Should be true if you want Redshift cluster to be placed into public subnet route table | string | `"false"` | no |
 | reuse\_nat\_ips | Should be true if you don't want EIPs to be created for your NAT Gateways and will instead pass them in via the 'external_nat_ip_ids' variable | string | `"false"` | no |
 | secondary\_cidr\_blocks | List of secondary CIDR blocks to associate with the VPC to extend the IP Address pool | list | `[]` | no |
 | single\_nat\_gateway | Should be true if you want to provision a single shared NAT Gateway across all of your private networks | string | `"false"` | no |

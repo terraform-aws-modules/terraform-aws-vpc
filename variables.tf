@@ -102,6 +102,11 @@ variable "create_redshift_subnet_route_table" {
   default     = false
 }
 
+variable "enable_public_redshift" {
+  description = "Controls if redshift should have public routing table"
+  default     = false
+}
+
 variable "create_elasticache_subnet_route_table" {
   description = "Controls if separate route table for elasticache should be created"
   default     = false
