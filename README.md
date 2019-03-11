@@ -375,6 +375,20 @@ gem install bundler; bundle install
 ```
 3. Test using `bundle exec kitchen test` from the root of the repo.
 
+## Migration
+
+If you are migrating from [the deprecated community module](github.com/terraform-community-modules/tf_aws_vpc) you will notice that this module potentially wants to recreate a lot of your existing VPC Module. This is because of a change in the internal naming convention. You can avoid recreating ressources by modifiying your terraform state.
+
+Start by moving the vpc module
+
+`terraform state mv module.***.aws_vpc.mod module.***.aws_vpc.this`
+
+and then move other resources such as your NAT Gateways, EIPs and Internet Gateways
+
+`terraform state mv module.***.aws_nat_gateway.natgw[0] module.***.aws_nat_gateway.this[0]`
+`terraform state mv module.***.aws_eip.nateip[0] module.***.aws_eip.nat[0]`
+`terraform state mv module.***.aws_internet_gateway.mod module.common.module.vpc.aws_internet_gateway.this`
+
 
 ## Authors
 
