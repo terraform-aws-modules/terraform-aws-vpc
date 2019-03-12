@@ -37,9 +37,3 @@ output "azs" {
   description = "A list of availability zones spefified as argument to this module"
   value       = [module.vpc.azs]
 }
-
-5000
-+200 (social) vs 31%
-
-house: 234m2 - 1200 eur
-
