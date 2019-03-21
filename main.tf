@@ -92,6 +92,18 @@ resource "aws_route" "public_internet_gateway" {
   }
 }
 
+resource "aws_route" "public_internet_gateway_v6" {
+  count = "${var.create_vpc && length(var.public_subnets) && var.igw_enable_ipv6 > 0 ? 1 : 0}"
+
+  route_table_id              = "${aws_route_table.public.id}"
+  destination_ipv6_cidr_block = "::/0"
+  gateway_id                  = "${aws_internet_gateway.this.id}"
+
+  timeouts {
+    create = "5m"
+  }
+}
+
 #################
 # Private routes
 # There are as many routing tables as the number of NAT gateways
@@ -183,10 +195,12 @@ resource "aws_route_table" "intra" {
 resource "aws_subnet" "public" {
   count = "${var.create_vpc && length(var.public_subnets) > 0 && (!var.one_nat_gateway_per_az || length(var.public_subnets) >= length(var.azs)) ? length(var.public_subnets) : 0}"
 
-  vpc_id                  = "${local.vpc_id}"
-  cidr_block              = "${element(concat(var.public_subnets, list("")), count.index)}"
-  availability_zone       = "${element(var.azs, count.index)}"
-  map_public_ip_on_launch = "${var.map_public_ip_on_launch}"
+  vpc_id                          = "${local.vpc_id}"
+  cidr_block                      = "${element(concat(var.public_subnets, list("")), count.index)}"
+  availability_zone               = "${element(var.azs, count.index)}"
+  map_public_ip_on_launch         = "${var.map_public_ip_on_launch}"
+  ipv6_cidr_block                 = "${cidrsubnet(aws_vpc.this.ipv6_cidr_block, 8, (count.index * 3 ))}"
+  assign_ipv6_address_on_creation = "${var.assign_ipv6_address_on_creation}"
 
   tags = "${merge(map("Name", format("%s-${var.public_subnet_suffix}-%s", var.name, element(var.azs, count.index))), var.tags, var.public_subnet_tags)}"
 }

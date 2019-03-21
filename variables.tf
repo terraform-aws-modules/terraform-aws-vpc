@@ -18,6 +18,11 @@ variable "assign_generated_ipv6_cidr_block" {
   default     = false
 }
 
+variable "assign_ipv6_address_on_creation" {
+  description = "Specify true to indicate that network interfaces created in the specified subnet should be assigned an IPv6 address"
+  default     = false
+}
+
 variable "secondary_cidr_blocks" {
   description = "List of secondary CIDR blocks to associate with the VPC to extend the IP Address pool"
   default     = []
@@ -355,6 +360,11 @@ variable "propagate_private_route_tables_vgw" {
 
 variable "propagate_public_route_tables_vgw" {
   description = "Should be true if you want route table propagation"
+  default     = false
+}
+
+variable "igw_enable_ipv6" {
+  description = "Enable ipv6 routing for the internet gateway"
   default     = false
 }
 
