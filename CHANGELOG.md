@@ -3,9 +3,18 @@
 
 
 
+<a name="v1.60.0"></a>
+## [v1.60.0] - 2019-03-22
+
+- Network ACLs ([#238](https://github.com/terraform-aws-modules/terraform-aws-vpc/issues/238))
+
+
 <a name="v1.59.0"></a>
 ## [v1.59.0] - 2019-03-05
 
+- Updated changelog
+- Resolved conflicts after merge
+- Redshift public subnets ([#222](https://github.com/terraform-aws-modules/terraform-aws-vpc/issues/222))
 - Redshift public subnets ([#222](https://github.com/terraform-aws-modules/terraform-aws-vpc/issues/222))
 - docs: Update comment in docs ([#226](https://github.com/terraform-aws-modules/terraform-aws-vpc/issues/226))
 
@@ -477,7 +486,8 @@
 - Initial commit
 
 
-[Unreleased]: https://github.com/terraform-aws-modules/terraform-aws-vpc/compare/v1.59.0...HEAD
+[Unreleased]: https://github.com/terraform-aws-modules/terraform-aws-vpc/compare/v1.60.0...HEAD
+[v1.60.0]: https://github.com/terraform-aws-modules/terraform-aws-vpc/compare/v1.59.0...v1.60.0
 [v1.59.0]: https://github.com/terraform-aws-modules/terraform-aws-vpc/compare/v1.58.0...v1.59.0
 [v1.58.0]: https://github.com/terraform-aws-modules/terraform-aws-vpc/compare/v1.57.0...v1.58.0
 [v1.57.0]: https://github.com/terraform-aws-modules/terraform-aws-vpc/compare/v1.56.0...v1.57.0
