@@ -102,6 +102,11 @@ variable "create_redshift_subnet_route_table" {
   default     = false
 }
 
+variable "enable_public_redshift" {
+  description = "Controls if redshift should have public routing table"
+  default     = false
+}
+
 variable "create_elasticache_subnet_route_table" {
   description = "Controls if separate route table for elasticache should be created"
   default     = false
@@ -206,6 +211,26 @@ variable "ssm_endpoint_private_dns_enabled" {
 variable "enable_ssmmessages_endpoint" {
   description = "Should be true if you want to provision a SSMMESSAGES endpoint to the VPC"
   default     = false
+}
+
+variable "enable_apigw_endpoint" {
+  description = "Should be true if you want to provision an api gateway endpoint to the VPC"
+  default     = false
+}
+
+variable "apigw_endpoint_security_group_ids" {
+  description = "The ID of one or more security groups to associate with the network interface for API GW  endpoint"
+  default     = []
+}
+
+variable "apigw_endpoint_private_dns_enabled" {
+  description = "Whether or not to associate a private hosted zone with the specified VPC for API GW endpoint"
+  default     = false
+}
+
+variable "apigw_endpoint_subnet_ids" {
+  description = "The ID of one or more subnets in which to create a network interface for API GW endpoint. Only a single subnet within an AZ is supported. If omitted, private subnets will be used."
+  default     = []
 }
 
 variable "ssmmessages_endpoint_security_group_ids" {

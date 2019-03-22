@@ -94,7 +94,7 @@ resource "aws_route" "public_internet_gateway" {
 
 #################
 # Private routes
-# There are so many routing tables as the largest amount of subnets of each type (really?)
+# There are as many routing tables as the number of NAT gateways
 #################
 resource "aws_route_table" "private" {
   count = "${var.create_vpc && local.max_subnet_length > 0 ? local.nat_gateway_count : 0}"
@@ -788,6 +788,27 @@ resource "aws_vpc_endpoint" "ecr_dkr" {
   private_dns_enabled = "${var.ecr_dkr_endpoint_private_dns_enabled}"
 }
 
+#######################
+# VPC Endpoint for API Gateway
+#######################
+data "aws_vpc_endpoint_service" "apigw" {
+  count = "${var.create_vpc && var.enable_apigw_endpoint ? 1 : 0}"
+
+  service = "execute-api"
+}
+
+resource "aws_vpc_endpoint" "apigw" {
+  count = "${var.create_vpc && var.enable_apigw_endpoint ? 1 : 0}"
+
+  vpc_id            = "${local.vpc_id}"
+  service_name      = "${data.aws_vpc_endpoint_service.apigw.service_name}"
+  vpc_endpoint_type = "Interface"
+
+  security_group_ids  = ["${var.apigw_endpoint_security_group_ids}"]
+  subnet_ids          = ["${coalescelist(var.apigw_endpoint_subnet_ids, aws_subnet.private.*.id)}"]
+  private_dns_enabled = "${var.apigw_endpoint_private_dns_enabled}"
+}
+
 ##########################
 # Route table association
 ##########################
@@ -806,10 +827,17 @@ resource "aws_route_table_association" "database" {
 }
 
 resource "aws_route_table_association" "redshift" {
-  count = "${var.create_vpc && length(var.redshift_subnets) > 0 ? length(var.redshift_subnets) : 0}"
+  count = "${var.create_vpc && length(var.redshift_subnets) > 0 && !var.enable_public_redshift ? length(var.redshift_subnets) : 0}"
 
   subnet_id      = "${element(aws_subnet.redshift.*.id, count.index)}"
   route_table_id = "${element(coalescelist(aws_route_table.redshift.*.id, aws_route_table.private.*.id), (var.single_nat_gateway || var.create_redshift_subnet_route_table ? 0 : count.index))}"
+}
+
+resource "aws_route_table_association" "redshift_public" {
+  count = "${var.create_vpc && length(var.redshift_subnets) > 0 && var.enable_public_redshift ? length(var.redshift_subnets) : 0}"
+
+  subnet_id      = "${element(aws_subnet.redshift.*.id, count.index)}"
+  route_table_id = "${element(coalescelist(aws_route_table.redshift.*.id, aws_route_table.public.*.id), (var.single_nat_gateway || var.create_redshift_subnet_route_table ? 0 : count.index))}"
 }
 
 resource "aws_route_table_association" "elasticache" {
