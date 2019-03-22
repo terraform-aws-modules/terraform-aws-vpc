@@ -443,6 +443,36 @@ variable "intra_subnet_tags" {
   default     = {}
 }
 
+variable "public_acl_tags" {
+  description = "Additional tags for the public subnets network ACL"
+  default     = {}
+}
+
+variable "private_acl_tags" {
+  description = "Additional tags for the private subnets network ACL"
+  default     = {}
+}
+
+variable "intra_acl_tags" {
+  description = "Additional tags for the intra subnets network ACL"
+  default     = {}
+}
+
+variable "database_acl_tags" {
+  description = "Additional tags for the database subnets network ACL"
+  default     = {}
+}
+
+variable "redshift_acl_tags" {
+  description = "Additional tags for the redshift subnets network ACL"
+  default     = {}
+}
+
+variable "elasticache_acl_tags" {
+  description = "Additional tags for the elasticache subnets network ACL"
+  default     = {}
+}
+
 variable "dhcp_options_tags" {
   description = "Additional tags for the DHCP option set"
   default     = {}
@@ -524,4 +554,273 @@ variable "default_vpc_enable_classiclink" {
 variable "default_vpc_tags" {
   description = "Additional tags for the Default VPC"
   default     = {}
+}
+
+variable "manage_default_network_acl" {
+  description = "Should be true to adopt and manage Default Network ACL"
+  default     = false
+}
+
+variable "default_network_acl_name" {
+  description = "Name to be used on the Default Network ACL"
+  default     = ""
+}
+
+variable "default_network_acl_tags" {
+  description = "Additional tags for the Default Network ACL"
+  default     = {}
+}
+
+variable "public_dedicated_network_acl" {
+  description = "Whether to use dedicated network ACL (not default) and custom rules for public subnets"
+  default     = false
+}
+
+variable "private_dedicated_network_acl" {
+  description = "Whether to use dedicated network ACL (not default) and custom rules for private subnets"
+  default     = false
+}
+
+variable "intra_dedicated_network_acl" {
+  description = "Whether to use dedicated network ACL (not default) and custom rules for intra subnets"
+  default     = false
+}
+
+variable "database_dedicated_network_acl" {
+  description = "Whether to use dedicated network ACL (not default) and custom rules for database subnets"
+  default     = false
+}
+
+variable "redshift_dedicated_network_acl" {
+  description = "Whether to use dedicated network ACL (not default) and custom rules for redshift subnets"
+  default     = false
+}
+
+variable "elasticache_dedicated_network_acl" {
+  description = "Whether to use dedicated network ACL (not default) and custom rules for elasticache subnets"
+  default     = false
+}
+
+variable "default_network_acl_ingress" {
+  description = "List of maps of ingress rules to set on the Default Network ACL"
+
+  default = [{
+    rule_no    = 100
+    action     = "allow"
+    from_port  = 0
+    to_port    = 0
+    protocol   = "-1"
+    cidr_block = "0.0.0.0/0"
+  },
+    {
+      rule_no         = 101
+      action          = "allow"
+      from_port       = 0
+      to_port         = 0
+      protocol        = "-1"
+      ipv6_cidr_block = "::/0"
+    },
+  ]
+}
+
+variable "default_network_acl_egress" {
+  description = "List of maps of egress rules to set on the Default Network ACL"
+
+  default = [{
+    rule_no    = 100
+    action     = "allow"
+    from_port  = 0
+    to_port    = 0
+    protocol   = "-1"
+    cidr_block = "0.0.0.0/0"
+  },
+    {
+      rule_no         = 101
+      action          = "allow"
+      from_port       = 0
+      to_port         = 0
+      protocol        = "-1"
+      ipv6_cidr_block = "::/0"
+    },
+  ]
+}
+
+variable "public_inbound_acl_rules" {
+  description = "Public subnets inbound network ACLs"
+
+  default = [
+    {
+      rule_number = 100
+      rule_action = "allow"
+      from_port   = 0
+      to_port     = 0
+      protocol    = "-1"
+      cidr_block  = "0.0.0.0/0"
+    },
+  ]
+}
+
+variable "public_outbound_acl_rules" {
+  description = "Public subnets outbound network ACLs"
+
+  default = [
+    {
+      rule_number = 100
+      rule_action = "allow"
+      from_port   = 0
+      to_port     = 0
+      protocol    = "-1"
+      cidr_block  = "0.0.0.0/0"
+    },
+  ]
+}
+
+variable "private_inbound_acl_rules" {
+  description = "Private subnets inbound network ACLs"
+
+  default = [
+    {
+      rule_number = 100
+      rule_action = "allow"
+      from_port   = 0
+      to_port     = 0
+      protocol    = "-1"
+      cidr_block  = "0.0.0.0/0"
+    },
+  ]
+}
+
+variable "private_outbound_acl_rules" {
+  description = "Private subnets outbound network ACLs"
+
+  default = [
+    {
+      rule_number = 100
+      rule_action = "allow"
+      from_port   = 0
+      to_port     = 0
+      protocol    = "-1"
+      cidr_block  = "0.0.0.0/0"
+    },
+  ]
+}
+
+variable "intra_inbound_acl_rules" {
+  description = "Intra subnets inbound network ACLs"
+
+  default = [
+    {
+      rule_number = 100
+      rule_action = "allow"
+      from_port   = 0
+      to_port     = 0
+      protocol    = "-1"
+      cidr_block  = "0.0.0.0/0"
+    },
+  ]
+}
+
+variable "intra_outbound_acl_rules" {
+  description = "Intra subnets outbound network ACLs"
+
+  default = [
+    {
+      rule_number = 100
+      rule_action = "allow"
+      from_port   = 0
+      to_port     = 0
+      protocol    = "-1"
+      cidr_block  = "0.0.0.0/0"
+    },
+  ]
+}
+
+variable "database_inbound_acl_rules" {
+  description = "Database subnets inbound network ACL rules"
+
+  default = [
+    {
+      rule_number = 100
+      rule_action = "allow"
+      from_port   = 0
+      to_port     = 0
+      protocol    = "-1"
+      cidr_block  = "0.0.0.0/0"
+    },
+  ]
+}
+
+variable "database_outbound_acl_rules" {
+  description = "Database subnets outbound network ACL rules"
+
+  default = [
+    {
+      rule_number = 100
+      rule_action = "allow"
+      from_port   = 0
+      to_port     = 0
+      protocol    = "-1"
+      cidr_block  = "0.0.0.0/0"
+    },
+  ]
+}
+
+variable "redshift_inbound_acl_rules" {
+  description = "Redshift subnets inbound network ACL rules"
+
+  default = [
+    {
+      rule_number = 100
+      rule_action = "allow"
+      from_port   = 0
+      to_port     = 0
+      protocol    = "-1"
+      cidr_block  = "0.0.0.0/0"
+    },
+  ]
+}
+
+variable "redshift_outbound_acl_rules" {
+  description = "Redshift subnets outbound network ACL rules"
+
+  default = [
+    {
+      rule_number = 100
+      rule_action = "allow"
+      from_port   = 0
+      to_port     = 0
+      protocol    = "-1"
+      cidr_block  = "0.0.0.0/0"
+    },
+  ]
+}
+
+variable "elasticache_inbound_acl_rules" {
+  description = "Elasticache subnets inbound network ACL rules"
+
+  default = [
+    {
+      rule_number = 100
+      rule_action = "allow"
+      from_port   = 0
+      to_port     = 0
+      protocol    = "-1"
+      cidr_block  = "0.0.0.0/0"
+    },
+  ]
+}
+
+variable "elasticache_outbound_acl_rules" {
+  description = "Elasticache subnets outbound network ACL rules"
+
+  default = [
+    {
+      rule_number = 100
+      rule_action = "allow"
+      from_port   = 0
+      to_port     = 0
+      protocol    = "-1"
+      cidr_block  = "0.0.0.0/0"
+    },
+  ]
 }

@@ -258,6 +258,36 @@ output "default_vpc_main_route_table_id" {
 //  value       = "${element(concat(aws_default_vpc.this.*.ipv6_cidr_block, list("")), 0)}"
 //}
 
+output "public_network_acl_id" {
+  description = "ID of the public network ACL"
+  value       = "${element(concat(aws_network_acl.public.*.id, list("")), 0)}"
+}
+
+output "private_network_acl_id" {
+  description = "ID of the private network ACL"
+  value       = "${element(concat(aws_network_acl.private.*.id, list("")), 0)}"
+}
+
+output "intra_network_acl_id" {
+  description = "ID of the intra network ACL"
+  value       = "${element(concat(aws_network_acl.intra.*.id, list("")), 0)}"
+}
+
+output "database_network_acl_id" {
+  description = "ID of the database network ACL"
+  value       = "${element(concat(aws_network_acl.database.*.id, list("")), 0)}"
+}
+
+output "redshift_network_acl_id" {
+  description = "ID of the redshift network ACL"
+  value       = "${element(concat(aws_network_acl.redshift.*.id, list("")), 0)}"
+}
+
+output "elasticache_network_acl_id" {
+  description = "ID of the elasticache network ACL"
+  value       = "${element(concat(aws_network_acl.elasticache.*.id, list("")), 0)}"
+}
+
 # VPC Endpoints
 output "vpc_endpoint_s3_id" {
   description = "The ID of VPC endpoint for S3"
