@@ -78,6 +78,10 @@ output "public_subnets" {
   value       = ["${aws_subnet.public.*.id}"]
 }
 
+output "private_subnets_count" {
+  description = "Count of private subnets"
+  value       = ${join(",", aws_instance.public.*.id)}
+
 output "public_subnets_cidr_blocks" {
   description = "List of cidr_blocks of public subnets"
   value       = ["${aws_subnet.public.*.cidr_block}"]
