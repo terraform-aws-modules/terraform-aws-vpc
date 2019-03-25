@@ -70,7 +70,7 @@ resource "aws_internet_gateway" "this" {
 }
 
 resource "aws_egress_only_internet_gateway" "this" {
-  count = "${var.enable_ipv6 ? 1 : 0}"
+  count = "${var.enable_ipv6 && length(var.database_subnets) > 0 && length(var.private_subnets) > 0 ? 1 : 0}"
 
   vpc_id = "${aws_vpc.this.id}"
 }
@@ -159,9 +159,9 @@ resource "aws_route" "database_nat_gateway" {
 }
 
 resource "aws_route" "database_ipv6_egress" {
-  count = "${var.enable_ipv6 ? length(var.azs) : 0}"
+  count = "${var.enable_ipv6 ? length(var.database_subnets) : 0}"
 
-  route_table_id              = "${element(aws_route_table.private.*.id, count.index)}"
+  route_table_id              = "${element(aws_route_table.database.*.id, count.index)}"
   destination_ipv6_cidr_block = "::/0"
   egress_only_gateway_id      = "${element(aws_egress_only_internet_gateway.this.*.id, 0)}"
 }
@@ -368,7 +368,7 @@ resource "aws_route" "private_nat_gateway" {
 }
 
 resource "aws_route" "private_ipv6_egress" {
-  count = "${var.enable_ipv6 ? length(var.azs) : 0}"
+  count = "${var.enable_ipv6 ? length(var.private_subnets) : 0}"
 
   route_table_id              = "${element(aws_route_table.private.*.id, count.index)}"
   destination_ipv6_cidr_block = "::/0"
