@@ -48,15 +48,15 @@ output "vpc_main_route_table_id" {
   value       = "${element(concat(aws_vpc.this.*.main_route_table_id, list("")), 0)}"
 }
 
-//output "vpc_ipv6_association_id" {
-//  description = "The association ID for the IPv6 CIDR block"
-//  value       = "${element(concat(aws_vpc.this.*.ipv6_association_id, list("")), 0)}"
-//}
-//
-//output "vpc_ipv6_cidr_block" {
-//  description = "The IPv6 CIDR block"
-//  value       = "${element(concat(aws_vpc.this.*.ipv6_cidr_block, list("")), 0)}"
-//}
+output "vpc_ipv6_association_id" {
+ description = "The association ID for the IPv6 CIDR block"
+ value       = "${element(concat(aws_vpc.this.*.ipv6_association_id, list("")), 0)}"
+}
+
+output "vpc_ipv6_cidr_block" {
+ description = "The IPv6 CIDR block"
+ value       = "${element(concat(aws_vpc.this.*.ipv6_cidr_block, list("")), 0)}"
+}
 
 output "vpc_secondary_cidr_blocks" {
   description = "List of secondary CIDR blocks of the VPC"
