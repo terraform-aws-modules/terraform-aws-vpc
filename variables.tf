@@ -3,6 +3,22 @@ variable "create_vpc" {
   default     = true
 }
 
+variable "create_tgw" {
+  description = "Controls if TGW should be created"
+  default     = false
+}
+
+variable "subnet_type_tgw_attachment" {
+  type = "string"
+  description = "This parameter is considered only if create_tgw is true.Provide the subnet type needed to be added for TGW Attachment . Value can be either private or public"
+  default     = "public"
+}
+
+variable "cidr_tgw" {
+  description = "This parameter is considered only if create_tgw is true.Provide valid cidr blocks which will be Destination of TGW .This configuration will be added in Route tables"
+  default     = []
+}
+
 variable "name" {
   description = "Name to be used on all the resources as identifier"
   default     = ""
@@ -90,6 +106,11 @@ variable "intra_subnets" {
   type        = "list"
   description = "A list of intra subnets"
   default     = []
+}
+
+variable "public_subnet_tgw" {
+  description = "Controls if public subnet needs to be attached to TGW"
+  default     = true
 }
 
 variable "create_database_subnet_route_table" {
@@ -365,6 +386,11 @@ variable "tags" {
 
 variable "vpc_tags" {
   description = "Additional tags for the VPC"
+  default     = {}
+}
+
+variable "tgw_tags" {
+  description = "Additional tags for the TGW"
   default     = {}
 }
 

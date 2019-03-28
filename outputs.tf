@@ -374,3 +374,10 @@ output "azs" {
   description = "A list of availability zones specified as argument to this module"
   value       = "${var.azs}"
 }
+
+# Transit Gateway details
+
+output "tgw_id" {
+  description = "Transit Gateway ID"
+  value       = "${aws_ec2_transit_gateway.this.*.id}"
+}
