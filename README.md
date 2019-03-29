@@ -23,6 +23,7 @@ These types of resources are supported:
 * [DHCP Options Set](https://www.terraform.io/docs/providers/aws/r/vpc_dhcp_options.html)
 * [Default VPC](https://www.terraform.io/docs/providers/aws/r/default_vpc.html)
 * [Default Network ACL](https://www.terraform.io/docs/providers/aws/r/default_network_acl.html)
+* [TGW](https://www.terraform.io/docs/providers/aws/r/ec2_transit_gateway.html)
 
 Sponsored by [Cloudcraft - the best way to draw AWS diagrams](https://cloudcraft.co/?utm_source=terraform-aws-vpc)
 
@@ -182,6 +183,11 @@ Sometimes it is handy to have public access to Redshift clusters (for example if
 ```hcl
   enable_public_redshift = true  # <= By default Redshift subnets will be associated with the private route table
 ```
+## Transit Gateway creation , association and propagation.
+
+This module can create a TGW , create an Attachment and add the VPC to it , Associate the Attachment in the Transit gateway route table and propagate the same. TGW and related resources is created when (`create_tgw = true`) and by default its set to false.
+
+Once TGW is created and configured . Based on (`cidr_tgw`) , new routes will be added to the subnets where the Destination is `cidr_tgw` and Target is TGW ID . Subnet selection is based on (`subnet_type_tgw_attachment=private`) . If you wish to create the attachment with Public subnets and also create routes to the same then please provide (`subnet_type_tgw_attachment=public`)
 
 ## Terraform version
 
@@ -190,6 +196,7 @@ Terraform version 0.10.3 or newer is required for this module to work.
 ## Examples
 
 * [Simple VPC](https://github.com/terraform-aws-modules/terraform-aws-vpc/tree/master/examples/simple-vpc)
+* [Simple VPC with TGW](https://github.com/terraform-aws-modules/terraform-aws-vpc/tree/master/examples/simple-vpc-tgw)
 * [Complete VPC](https://github.com/terraform-aws-modules/terraform-aws-vpc/tree/master/examples/complete-vpc)
 * [Manage Default VPC](https://github.com/terraform-aws-modules/terraform-aws-vpc/tree/master/examples/manage-default-vpc)
 * [Network ACL](https://github.com/terraform-aws-modules/terraform-aws-vpc/tree/master/examples/network-acls)
@@ -407,6 +414,10 @@ Terraform version 0.10.3 or newer is required for this module to work.
 | vpc\_instance\_tenancy | Tenancy of instances spin up within VPC |
 | vpc\_main\_route\_table\_id | The ID of the main route table associated with this VPC |
 | vpc\_secondary\_cidr\_blocks | List of secondary CIDR blocks of the VPC |
+| create\_tgw | Contros if Transit Gateway should be create | string | `"false"` | no |
+| subnet\_type\_tgw\_attachment | Controls the subnet type which will added in TGW Attachment | `"private"` | no |
+| cidr\_tgw | The route which will be added to subnets . The Destination cidr will be cidr_tgw and Target will be TGW id | `"private"` | no |
+
 
 <!-- END OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
 

@@ -924,7 +924,7 @@ resource "aws_ec2_transit_gateway" "this" {
 # #########
 
 resource "aws_ec2_transit_gateway_vpc_attachment" "this" {
-  count                                           = "${var.create_tgw && (var.subnet_type_tgw_attachment == "private" || var.subnet_type_tgw_attachment == "public") && length(var.public_subnets) > 0 ? 1 : 0}"
+  count                                           = "${var.create_tgw && (var.subnet_type_tgw_attachment == "private" || var.subnet_type_tgw_attachment == "public") ? 1 : 0}"
   subnet_ids                                      = ["${split(",", var.subnet_type_tgw_attachment == "private" ? join(",", aws_subnet.private.*.id ) : join(",", aws_subnet.public.*.id))}"]
   transit_gateway_id                              = "${aws_ec2_transit_gateway.this.id}"
   vpc_id                                          = "${aws_vpc.this.id}"
@@ -947,7 +947,7 @@ resource "aws_ec2_transit_gateway_route_table" "this" {
 #########
 
 resource "aws_ec2_transit_gateway_route_table_association" "this" {
-  count = "${var.create_tgw && (var.subnet_type_tgw_attachment == "private" || var.subnet_type_tgw_attachment == "public") && length(var.private_subnets) > 0 ? 1 : 0}"
+  count = "${var.create_tgw && (var.subnet_type_tgw_attachment == "private" || var.subnet_type_tgw_attachment == "public") ? 1 : 0}"
 
   transit_gateway_attachment_id  = "${aws_ec2_transit_gateway_vpc_attachment.this.id}"
   transit_gateway_route_table_id = "${aws_ec2_transit_gateway_route_table.this.id}"
@@ -955,7 +955,7 @@ resource "aws_ec2_transit_gateway_route_table_association" "this" {
 }
 
 resource "aws_ec2_transit_gateway_route_table_propagation" "this" {
-  count = "${var.create_tgw && (var.subnet_type_tgw_attachment == "private" || var.subnet_type_tgw_attachment == "public") && length(var.private_subnets) > 0 ? 1 : 0}"
+  count = "${var.create_tgw && (var.subnet_type_tgw_attachment == "private" || var.subnet_type_tgw_attachment == "public") ? 1 : 0}"
 
   transit_gateway_attachment_id  = "${aws_ec2_transit_gateway_vpc_attachment.this.id}"
   transit_gateway_route_table_id = "${aws_ec2_transit_gateway_route_table.this.id}"
@@ -963,19 +963,20 @@ resource "aws_ec2_transit_gateway_route_table_propagation" "this" {
 }
 
 ########
-# Routes to TGW
+# Routes to TGW are added to the Subnets.
 ########
 
-# resource "aws_route" "tgw_route" {
-#   count          = "${var.create_vpc && (var.subnet_type_tgw_attachment == "private" || var.subnet_type_tgw_attachment == "public") && length(var.cidr_tgw) > 0 ? length(var.cidr_tgw) : 0}"
-#   route_table_id = ["${split(",", var.subnet_type_tgw_attachment == "private" ? join(",", element(aws_route_table.private.*.id, count.index) ) : join(",", element(aws_route_table.public.*.id, count.index)))}"]
-#   destination_cidr_block = "${var.cidr_tgw[count.index]}"
-#   transit_gateway_id     = "${element(aws_ec2_transit_gateway.this.*.id, count.index)}"
+locals {
+  route_table_id = ["${split(",", var.subnet_type_tgw_attachment == "private" ? join(",", aws_route_table.private.*.id ) : join(",", aws_route_table.public.id))}"]
+}
 
-#   timeouts {
-#     create = "5m"
-#   }
-# }
+resource "aws_route" "tgw_route" {
+  count                  = "${var.create_tgw && length(var.cidr_tgw) > 0 && (var.subnet_type_tgw_attachment == "private" || var.subnet_type_tgw_attachment == "public") ? (length(var.private_subnets) * length(var.cidr_tgw)) : 0}"
+  route_table_id         = "${element(local.route_table_id, ceil(count.index/length(var.cidr_tgw)))}"
+  destination_cidr_block = "${element(var.cidr_tgw, count.index)}"
+  transit_gateway_id     = "${aws_ec2_transit_gateway.this.id}"
 
-
-
+  timeouts {
+    create = "5m"
+  }
+}

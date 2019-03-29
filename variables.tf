@@ -11,7 +11,7 @@ variable "create_tgw" {
 variable "subnet_type_tgw_attachment" {
   type = "string"
   description = "This parameter is considered only if create_tgw is true.Provide the subnet type needed to be added for TGW Attachment . Value can be either private or public"
-  default     = "public"
+  default     = "private"
 }
 
 variable "cidr_tgw" {
