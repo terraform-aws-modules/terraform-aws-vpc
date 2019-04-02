@@ -68,6 +68,11 @@ output "private_subnets" {
   value       = ["${aws_subnet.private.*.id}"]
 }
 
+output "private_subnet_arns" {
+  description = "List of ARNs of private subnets"
+  value       = ["${aws_subnet.private.*.arn}"]
+}
+
 output "private_subnets_cidr_blocks" {
   description = "List of cidr_blocks of private subnets"
   value       = ["${aws_subnet.private.*.cidr_block}"]
@@ -78,6 +83,11 @@ output "public_subnets" {
   value       = ["${aws_subnet.public.*.id}"]
 }
 
+output "public_subnet_arns" {
+  description = "List of ARNs of public subnets"
+  value       = ["${aws_subnet.public.*.arn}"]
+}
+
 output "public_subnets_cidr_blocks" {
   description = "List of cidr_blocks of public subnets"
   value       = ["${aws_subnet.public.*.cidr_block}"]
@@ -86,6 +96,11 @@ output "public_subnets_cidr_blocks" {
 output "database_subnets" {
   description = "List of IDs of database subnets"
   value       = ["${aws_subnet.database.*.id}"]
+}
+
+output "database_subnet_arns" {
+  description = "List of ARNs of database subnets"
+  value       = ["${aws_subnet.database.*.arn}"]
 }
 
 output "database_subnets_cidr_blocks" {
@@ -103,6 +118,11 @@ output "redshift_subnets" {
   value       = ["${aws_subnet.redshift.*.id}"]
 }
 
+output "redshift_subnet_arns" {
+  description = "List of ARNs of redshift subnets"
+  value       = ["${aws_subnet.redshift.*.arn}"]
+}
+
 output "redshift_subnets_cidr_blocks" {
   description = "List of cidr_blocks of redshift subnets"
   value       = ["${aws_subnet.redshift.*.cidr_block}"]
@@ -118,6 +138,11 @@ output "elasticache_subnets" {
   value       = ["${aws_subnet.elasticache.*.id}"]
 }
 
+output "elasticache_subnet_arns" {
+  description = "List of ARNs of elasticache subnets"
+  value       = ["${aws_subnet.elasticache.*.arn}"]
+}
+
 output "elasticache_subnets_cidr_blocks" {
   description = "List of cidr_blocks of elasticache subnets"
   value       = ["${aws_subnet.elasticache.*.cidr_block}"]
@@ -126,6 +151,11 @@ output "elasticache_subnets_cidr_blocks" {
 output "intra_subnets" {
   description = "List of IDs of intra subnets"
   value       = ["${aws_subnet.intra.*.id}"]
+}
+
+output "intra_subnet_arns" {
+  description = "List of ARNs of intra subnets"
+  value       = ["${aws_subnet.intra.*.arn}"]
 }
 
 output "intra_subnets_cidr_blocks" {
