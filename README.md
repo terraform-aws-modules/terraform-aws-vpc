@@ -343,6 +343,7 @@ Terraform version 0.10.3 or newer is required for this module to work.
 | database\_route\_table\_ids | List of IDs of database route tables |
 | database\_subnet\_group | ID of database subnet group |
 | database\_subnets | List of IDs of database subnets |
+| database\_subnet\_arns | List of ARNs of database subnets |
 | database\_subnets\_cidr\_blocks | List of cidr_blocks of database subnets |
 | default\_network\_acl\_id | The ID of the default network ACL |
 | default\_route\_table\_id | The ID of the default route table |
@@ -361,11 +362,13 @@ Terraform version 0.10.3 or newer is required for this module to work.
 | elasticache\_subnet\_group | ID of elasticache subnet group |
 | elasticache\_subnet\_group\_name | Name of elasticache subnet group |
 | elasticache\_subnets | List of IDs of elasticache subnets |
+| elasticache\_subnet\_arns | List of ARNs of elasticache subnets |
 | elasticache\_subnets\_cidr\_blocks | List of cidr_blocks of elasticache subnets |
 | igw\_id | The ID of the Internet Gateway |
 | intra\_network\_acl\_id | ID of the intra network ACL |
 | intra\_route\_table\_ids | List of IDs of intra route tables |
 | intra\_subnets | List of IDs of intra subnets |
+| intra\_subnet\_arns | List of ARNs of intra subnets |
 | intra\_subnets\_cidr\_blocks | List of cidr_blocks of intra subnets |
 | nat\_ids | List of allocation ID of Elastic IPs created for AWS NAT Gateway |
 | nat\_public\_ips | List of public Elastic IPs created for AWS NAT Gateway |
@@ -373,15 +376,18 @@ Terraform version 0.10.3 or newer is required for this module to work.
 | private\_network\_acl\_id | ID of the private network ACL |
 | private\_route\_table\_ids | List of IDs of private route tables |
 | private\_subnets | List of IDs of private subnets |
+| private\_subnet\_arns | List of ARNs of private subnets |
 | private\_subnets\_cidr\_blocks | List of cidr_blocks of private subnets |
 | public\_network\_acl\_id | ID of the public network ACL |
 | public\_route\_table\_ids | List of IDs of public route tables |
 | public\_subnets | List of IDs of public subnets |
+| public\_subnet\_arns | List of ARNs of public subnets |
 | public\_subnets\_cidr\_blocks | List of cidr_blocks of public subnets |
 | redshift\_network\_acl\_id | ID of the redshift network ACL |
 | redshift\_route\_table\_ids | List of IDs of redshift route tables |
 | redshift\_subnet\_group | ID of redshift subnet group |
 | redshift\_subnets | List of IDs of redshift subnets |
+| redshift\_subnet\_arns | List of ARNs of redshift subnets |
 | redshift\_subnets\_cidr\_blocks | List of cidr_blocks of redshift subnets |
 | vgw\_id | The ID of the VPN Gateway |
 | vpc\_cidr\_block | The CIDR block of the VPC |
