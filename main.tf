@@ -967,7 +967,7 @@ resource "aws_ec2_transit_gateway_route_table_propagation" "this" {
 ########
 
 locals {
-  route_table_id = ["${split(",", var.subnet_type_tgw_attachment == "private" ? join(",", aws_route_table.private.*.id ) : join(",", aws_route_table.public.id))}"]
+  route_table_id = ["${split(",", var.subnet_type_tgw_attachment == "private" ? join(",", aws_route_table.private.*.id ) : join(",", aws_route_table.public.*.id))}"]
 }
 
 resource "aws_route" "tgw_route" {
