@@ -19,6 +19,7 @@ variable "assign_generated_ipv6_cidr_block" {
 }
 
 variable "secondary_cidr_blocks" {
+  type        = "list"
   description = "List of secondary CIDR blocks to associate with the VPC to extend the IP Address pool"
   default     = []
 }
@@ -59,11 +60,13 @@ variable "elasticache_subnet_suffix" {
 }
 
 variable "public_subnets" {
+  type        = "list"
   description = "A list of public subnets inside the VPC"
   default     = []
 }
 
 variable "private_subnets" {
+  type        = "list"
   description = "A list of private subnets inside the VPC"
   default     = []
 }
@@ -138,6 +141,7 @@ variable "create_database_nat_gateway_route" {
 }
 
 variable "azs" {
+  type        = "list"
   description = "A list of availability zones in the region"
   default     = []
 }
@@ -194,11 +198,13 @@ variable "enable_ssm_endpoint" {
 }
 
 variable "ssm_endpoint_security_group_ids" {
+  type        = "list"
   description = "The ID of one or more security groups to associate with the network interface for SSM endpoint"
   default     = []
 }
 
 variable "ssm_endpoint_subnet_ids" {
+  type        = "list"
   description = "The ID of one or more subnets in which to create a network interface for SSM endpoint. Only a single subnet within an AZ is supported. If omitted, private subnets will be used."
   default     = []
 }
@@ -219,6 +225,7 @@ variable "enable_apigw_endpoint" {
 }
 
 variable "apigw_endpoint_security_group_ids" {
+  type        = "list"
   description = "The ID of one or more security groups to associate with the network interface for API GW  endpoint"
   default     = []
 }
@@ -229,16 +236,19 @@ variable "apigw_endpoint_private_dns_enabled" {
 }
 
 variable "apigw_endpoint_subnet_ids" {
+  type        = "list"
   description = "The ID of one or more subnets in which to create a network interface for API GW endpoint. Only a single subnet within an AZ is supported. If omitted, private subnets will be used."
   default     = []
 }
 
 variable "ssmmessages_endpoint_security_group_ids" {
+  type        = "list"
   description = "The ID of one or more security groups to associate with the network interface for SSMMESSAGES endpoint"
   default     = []
 }
 
 variable "ssmmessages_endpoint_subnet_ids" {
+  type        = "list"
   description = "The ID of one or more subnets in which to create a network interface for SSMMESSAGES endpoint. Only a single subnet within an AZ is supported. If omitted, private subnets will be used."
   default     = []
 }
@@ -254,6 +264,7 @@ variable "enable_ec2_endpoint" {
 }
 
 variable "ec2_endpoint_security_group_ids" {
+  type        = "list"
   description = "The ID of one or more security groups to associate with the network interface for EC2 endpoint"
   default     = []
 }
@@ -264,6 +275,7 @@ variable "ec2_endpoint_private_dns_enabled" {
 }
 
 variable "ec2_endpoint_subnet_ids" {
+  type        = "list"
   description = "The ID of one or more subnets in which to create a network interface for EC2 endpoint. Only a single subnet within an AZ is supported. If omitted, private subnets will be used."
   default     = []
 }
@@ -274,6 +286,7 @@ variable "enable_ec2messages_endpoint" {
 }
 
 variable "ec2messages_endpoint_security_group_ids" {
+  type        = "list"
   description = "The ID of one or more security groups to associate with the network interface for EC2MESSAGES endpoint"
   default     = []
 }
@@ -284,6 +297,7 @@ variable "ec2messages_endpoint_private_dns_enabled" {
 }
 
 variable "ec2messages_endpoint_subnet_ids" {
+  type        = "list"
   description = "The ID of one or more subnets in which to create a network interface for EC2MESSAGES endpoint. Only a single subnet within an AZ is supported. If omitted, private subnets will be used."
   default     = []
 }
@@ -294,6 +308,7 @@ variable "enable_ecr_api_endpoint" {
 }
 
 variable "ecr_api_endpoint_subnet_ids" {
+  type        = "list"
   description = "The ID of one or more subnets in which to create a network interface for ECR api endpoint. If omitted, private subnets will be used."
   default     = []
 }
@@ -304,6 +319,7 @@ variable "ecr_api_endpoint_private_dns_enabled" {
 }
 
 variable "ecr_api_endpoint_security_group_ids" {
+  type        = "list"
   description = "The ID of one or more security groups to associate with the network interface for ECR API endpoint"
   default     = []
 }
@@ -314,6 +330,7 @@ variable "enable_ecr_dkr_endpoint" {
 }
 
 variable "ecr_dkr_endpoint_subnet_ids" {
+  type        = "list"
   description = "The ID of one or more subnets in which to create a network interface for ECR dkr endpoint. If omitted, private subnets will be used."
   default     = []
 }
@@ -324,8 +341,31 @@ variable "ecr_dkr_endpoint_private_dns_enabled" {
 }
 
 variable "ecr_dkr_endpoint_security_group_ids" {
+  type        = "list"
   description = "The ID of one or more security groups to associate with the network interface for ECR DKR endpoint"
   default     = []
+}
+
+variable "enable_kms_endpoint" {
+  description = "Should be true if you want to provision a KMS endpoint to the VPC"
+  default     = false
+}
+
+variable "kms_endpoint_security_group_ids" {
+  type        = "list"
+  description = "The ID of one or more security groups to associate with the network interface for KMS endpoint"
+  default     = []
+}
+
+variable "kms_endpoint_subnet_ids" {
+  type        = "list"
+  description = "The ID of one or more subnets in which to create a network interface for KMS endpoint. Only a single subnet within an AZ is supported. If omitted, private subnets will be used."
+  default     = []
+}
+
+variable "kms_endpoint_private_dns_enabled" {
+  description = "Whether or not to associate a private hosted zone with the specified VPC for KMS endpoint"
+  default     = false
 }
 
 variable "map_public_ip_on_launch" {
@@ -359,136 +399,163 @@ variable "propagate_public_route_tables_vgw" {
 }
 
 variable "tags" {
+  type        = "map"
   description = "A map of tags to add to all resources"
   default     = {}
 }
 
 variable "vpc_tags" {
+  type        = "map"
   description = "Additional tags for the VPC"
   default     = {}
 }
 
 variable "igw_tags" {
+  type        = "map"
   description = "Additional tags for the internet gateway"
   default     = {}
 }
 
 variable "public_subnet_tags" {
+  type        = "map"
   description = "Additional tags for the public subnets"
   default     = {}
 }
 
 variable "private_subnet_tags" {
+  type        = "map"
   description = "Additional tags for the private subnets"
   default     = {}
 }
 
 variable "public_route_table_tags" {
+  type        = "map"
   description = "Additional tags for the public route tables"
   default     = {}
 }
 
 variable "private_route_table_tags" {
+  type        = "map"
   description = "Additional tags for the private route tables"
   default     = {}
 }
 
 variable "database_route_table_tags" {
+  type        = "map"
   description = "Additional tags for the database route tables"
   default     = {}
 }
 
 variable "redshift_route_table_tags" {
+  type        = "map"
   description = "Additional tags for the redshift route tables"
   default     = {}
 }
 
 variable "elasticache_route_table_tags" {
+  type        = "map"
   description = "Additional tags for the elasticache route tables"
   default     = {}
 }
 
 variable "intra_route_table_tags" {
+  type        = "map"
   description = "Additional tags for the intra route tables"
   default     = {}
 }
 
 variable "database_subnet_tags" {
+  type        = "map"
   description = "Additional tags for the database subnets"
   default     = {}
 }
 
 variable "database_subnet_group_tags" {
+  type        = "map"
   description = "Additional tags for the database subnet group"
   default     = {}
 }
 
 variable "redshift_subnet_tags" {
+  type        = "map"
   description = "Additional tags for the redshift subnets"
   default     = {}
 }
 
 variable "redshift_subnet_group_tags" {
+  type        = "map"
   description = "Additional tags for the redshift subnet group"
   default     = {}
 }
 
 variable "elasticache_subnet_tags" {
+  type        = "map"
   description = "Additional tags for the elasticache subnets"
   default     = {}
 }
 
 variable "intra_subnet_tags" {
+  type        = "map"
   description = "Additional tags for the intra subnets"
   default     = {}
 }
 
 variable "public_acl_tags" {
+  type        = "map"
   description = "Additional tags for the public subnets network ACL"
   default     = {}
 }
 
 variable "private_acl_tags" {
+  type        = "map"
   description = "Additional tags for the private subnets network ACL"
   default     = {}
 }
 
 variable "intra_acl_tags" {
+  type        = "map"
   description = "Additional tags for the intra subnets network ACL"
   default     = {}
 }
 
 variable "database_acl_tags" {
+  type        = "map"
   description = "Additional tags for the database subnets network ACL"
   default     = {}
 }
 
 variable "redshift_acl_tags" {
+  type        = "map"
   description = "Additional tags for the redshift subnets network ACL"
   default     = {}
 }
 
 variable "elasticache_acl_tags" {
+  type        = "map"
   description = "Additional tags for the elasticache subnets network ACL"
   default     = {}
 }
 
 variable "dhcp_options_tags" {
+  type        = "map"
   description = "Additional tags for the DHCP option set"
   default     = {}
 }
 
 variable "nat_gateway_tags" {
+  type        = "map"
   description = "Additional tags for the NAT gateways"
   default     = {}
 }
 
 variable "nat_eip_tags" {
+  type        = "map"
   description = "Additional tags for the NAT EIP"
   default     = {}
 }
 
 variable "vpn_gateway_tags" {
+  type        = "map"
   description = "Additional tags for the VPN gateway"
   default     = {}
 }
@@ -552,6 +619,7 @@ variable "default_vpc_enable_classiclink" {
 }
 
 variable "default_vpc_tags" {
+  type        = "map"
   description = "Additional tags for the Default VPC"
   default     = {}
 }
@@ -567,6 +635,7 @@ variable "default_network_acl_name" {
 }
 
 variable "default_network_acl_tags" {
+  type        = "map"
   description = "Additional tags for the Default Network ACL"
   default     = {}
 }
@@ -602,6 +671,7 @@ variable "elasticache_dedicated_network_acl" {
 }
 
 variable "default_network_acl_ingress" {
+  type        = "list"
   description = "List of maps of ingress rules to set on the Default Network ACL"
 
   default = [{
@@ -624,6 +694,7 @@ variable "default_network_acl_ingress" {
 }
 
 variable "default_network_acl_egress" {
+  type        = "list"
   description = "List of maps of egress rules to set on the Default Network ACL"
 
   default = [{
@@ -646,6 +717,7 @@ variable "default_network_acl_egress" {
 }
 
 variable "public_inbound_acl_rules" {
+  type        = "list"
   description = "Public subnets inbound network ACLs"
 
   default = [
@@ -661,6 +733,7 @@ variable "public_inbound_acl_rules" {
 }
 
 variable "public_outbound_acl_rules" {
+  type        = "list"
   description = "Public subnets outbound network ACLs"
 
   default = [
@@ -676,6 +749,7 @@ variable "public_outbound_acl_rules" {
 }
 
 variable "private_inbound_acl_rules" {
+  type        = "list"
   description = "Private subnets inbound network ACLs"
 
   default = [
@@ -691,6 +765,7 @@ variable "private_inbound_acl_rules" {
 }
 
 variable "private_outbound_acl_rules" {
+  type        = "list"
   description = "Private subnets outbound network ACLs"
 
   default = [
@@ -706,6 +781,7 @@ variable "private_outbound_acl_rules" {
 }
 
 variable "intra_inbound_acl_rules" {
+  type        = "list"
   description = "Intra subnets inbound network ACLs"
 
   default = [
@@ -721,6 +797,7 @@ variable "intra_inbound_acl_rules" {
 }
 
 variable "intra_outbound_acl_rules" {
+  type        = "list"
   description = "Intra subnets outbound network ACLs"
 
   default = [
@@ -736,6 +813,7 @@ variable "intra_outbound_acl_rules" {
 }
 
 variable "database_inbound_acl_rules" {
+  type        = "list"
   description = "Database subnets inbound network ACL rules"
 
   default = [
@@ -751,6 +829,7 @@ variable "database_inbound_acl_rules" {
 }
 
 variable "database_outbound_acl_rules" {
+  type        = "list"
   description = "Database subnets outbound network ACL rules"
 
   default = [
@@ -766,6 +845,7 @@ variable "database_outbound_acl_rules" {
 }
 
 variable "redshift_inbound_acl_rules" {
+  type        = "list"
   description = "Redshift subnets inbound network ACL rules"
 
   default = [
@@ -781,6 +861,7 @@ variable "redshift_inbound_acl_rules" {
 }
 
 variable "redshift_outbound_acl_rules" {
+  type        = "list"
   description = "Redshift subnets outbound network ACL rules"
 
   default = [
@@ -796,6 +877,7 @@ variable "redshift_outbound_acl_rules" {
 }
 
 variable "elasticache_inbound_acl_rules" {
+  type        = "list"
   description = "Elasticache subnets inbound network ACL rules"
 
   default = [
@@ -811,6 +893,7 @@ variable "elasticache_inbound_acl_rules" {
 }
 
 variable "elasticache_outbound_acl_rules" {
+  type        = "list"
   description = "Elasticache subnets outbound network ACL rules"
 
   default = [

@@ -72,6 +72,12 @@ module "vpc" {
   ecr_dkr_endpoint_private_dns_enabled = true
   ecr_dkr_endpoint_security_group_ids  = ["${data.aws_security_group.default.id}"]
 
+  # VPC endpoint for KMS
+  enable_kms_endpoint              = true
+  kms_endpoint_private_dns_enabled = true
+  kms_endpoint_security_group_ids  = ["${data.aws_security_group.default.id}"] 
+# kms_endpoint_subnet_ids = ["..."]
+
   tags = {
     Owner       = "user"
     Environment = "staging"
