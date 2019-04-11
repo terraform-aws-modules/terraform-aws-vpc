@@ -910,73 +910,100 @@ resource "aws_default_vpc" "this" {
 #########
 # Transit Gateway
 #########
-
 resource "aws_ec2_transit_gateway" "this" {
-  count                           = "${var.create_tgw && (var.subnet_type_tgw_attachment == "private" || var.subnet_type_tgw_attachment == "public")? 1 : 0}"
-  description                     = "Transit Gateway"
-  default_route_table_association = "disable"
-  default_route_table_propagation = "disable"
-  tags                            = "${merge(map("Name", format("%s", var.name)), var.tags, var.tgw_tags)}"
+  count = "${var.create_tgw && (var.subnet_type_tgw_attachment == "private" || var.subnet_type_tgw_attachment == "public")? 1 : 0}"
+
+  description                     = "${var.tgw_description}"
+  default_route_table_association = "${var.tgw_default_route_table_association}"
+  default_route_table_propagation = "${var.tgw_default_route_table_propagation}"
+  auto_accept_shared_attachments  = "${var.tgw_auto_accept_shared_attachments}"
+  dns_support                     = "${var.tgw_dns_support}"
+  vpn_ecmp_support                = "${var.tgw_vpn_ecmp_support}"
+
+  tags = "${merge(map("Name", format("%s", var.name)), var.tags, var.tgw_tags)}"
 }
 
 # #########
 # # Transit Gateway Attachment
 # #########
-
 resource "aws_ec2_transit_gateway_vpc_attachment" "this" {
-  count                                           = "${var.create_tgw && (var.subnet_type_tgw_attachment == "private" || var.subnet_type_tgw_attachment == "public") ? 1 : 0}"
+  count = "${(var.create_tgw || var.attach_tgw) && (var.subnet_type_tgw_attachment == "private" || var.subnet_type_tgw_attachment == "public") ? 1 : 0}"
+
   subnet_ids                                      = ["${split(",", var.subnet_type_tgw_attachment == "private" ? join(",", aws_subnet.private.*.id ) : join(",", aws_subnet.public.*.id))}"]
-  transit_gateway_id                              = "${aws_ec2_transit_gateway.this.id}"
+  transit_gateway_id                              = "${element(concat(aws_ec2_transit_gateway.this.*.id, list(var.attach_tgw_id)), 0)}"
   vpc_id                                          = "${aws_vpc.this.id}"
-  transit_gateway_default_route_table_association = false
-  transit_gateway_default_route_table_propagation = false
-  tags                                            = "${merge(map("Name", format("%s", var.name)), var.tags, var.tgw_tags)}"
-  depends_on                                      = ["aws_ec2_transit_gateway.this"]
+  transit_gateway_default_route_table_association = "${var.tgw_attach_default_route_table_association}"
+  transit_gateway_default_route_table_propagation = "${var.tgw_attach_default_route_table_propagation}"
+
+  tags = "${merge(map("Name", format("%s", var.name)), var.tags, var.tgw_tags)}"
 }
 
 resource "aws_ec2_transit_gateway_route_table" "this" {
-  count              = "${var.create_tgw && (var.subnet_type_tgw_attachment == "private" || var.subnet_type_tgw_attachment == "public")? 1 : 0}"
+  count  = "${var.create_tgw && (var.subnet_type_tgw_attachment == "private" || var.subnet_type_tgw_attachment == "public")? 1 : 0}"
+
   transit_gateway_id = "${aws_ec2_transit_gateway.this.id}"
   tags               = "${merge(map("Name", format("%s", var.name)), var.tags, var.tgw_tags)}"
 
-  depends_on = ["aws_ec2_transit_gateway.this"]
 }
 
 #########
 # Transit Gateway Route table association and propagation for TGW Attachements
 #########
-
 resource "aws_ec2_transit_gateway_route_table_association" "this" {
   count = "${var.create_tgw && (var.subnet_type_tgw_attachment == "private" || var.subnet_type_tgw_attachment == "public") ? 1 : 0}"
 
-  transit_gateway_attachment_id  = "${aws_ec2_transit_gateway_vpc_attachment.this.id}"
-  transit_gateway_route_table_id = "${aws_ec2_transit_gateway_route_table.this.id}"
-  depends_on                     = ["aws_ec2_transit_gateway.this"]
+  transit_gateway_attachment_id  = "${element(aws_ec2_transit_gateway_vpc_attachment.this.*.id, 0)}"
+  transit_gateway_route_table_id = "${element(aws_ec2_transit_gateway_route_table.this.*.id, 0)}"
 }
 
 resource "aws_ec2_transit_gateway_route_table_propagation" "this" {
   count = "${var.create_tgw && (var.subnet_type_tgw_attachment == "private" || var.subnet_type_tgw_attachment == "public") ? 1 : 0}"
 
-  transit_gateway_attachment_id  = "${aws_ec2_transit_gateway_vpc_attachment.this.id}"
-  transit_gateway_route_table_id = "${aws_ec2_transit_gateway_route_table.this.id}"
-  depends_on                     = ["aws_ec2_transit_gateway.this"]
+  transit_gateway_attachment_id  = "${element(aws_ec2_transit_gateway_vpc_attachment.this.*.id, 0)}"
+  transit_gateway_route_table_id = "${element(aws_ec2_transit_gateway_route_table.this.*.id, 0)}"
 }
 
 ########
 # Routes to TGW are added to the Subnets.
 ########
-
 locals {
   route_table_id = ["${split(",", var.subnet_type_tgw_attachment == "private" ? join(",", aws_route_table.private.*.id ) : join(",", aws_route_table.public.*.id))}"]
 }
 
 resource "aws_route" "tgw_route" {
-  count                  = "${var.create_tgw && length(var.cidr_tgw) > 0 && (var.subnet_type_tgw_attachment == "private" || var.subnet_type_tgw_attachment == "public") ? (length(var.private_subnets) * length(var.cidr_tgw)) : 0}"
+  count = "${(var.create_tgw || var.attach_tgw) && length(var.cidr_tgw) > 0 && (var.subnet_type_tgw_attachment == "private" || var.subnet_type_tgw_attachment == "public") ? (length(var.private_subnets) * length(var.cidr_tgw)) : 0}"
+
   route_table_id         = "${element(local.route_table_id, ceil(count.index/length(var.cidr_tgw)))}"
   destination_cidr_block = "${element(var.cidr_tgw, count.index)}"
-  transit_gateway_id     = "${aws_ec2_transit_gateway.this.id}"
+  transit_gateway_id     = "${element(concat(aws_ec2_transit_gateway.this.*.id, list(var.attach_tgw_id)), 0)}"
 
   timeouts {
     create = "5m"
   }
+}
+
+######################
+# Share TGW Resource with Org / OU or AWS Account principal
+######################
+resource "aws_ram_resource_share" "this" {
+  count = "${var.create_tgw && var.share_tgw ? 1 : 0}"
+
+  name                      = "${var.ram_resource_share_name}"
+  allow_external_principals = "${var.ram_resource_allow_external_principals}"
+
+  tags = "${var.ram_share_tags}"
+}
+
+resource "aws_ram_resource_association" "this" {
+  count = "${var.create_tgw && var.share_tgw ? 1 : 0}"
+
+  resource_arn       = "${element(aws_ec2_transit_gateway.this.*.arn, 0)}"
+  resource_share_arn = "${aws_ram_resource_share.this.arn}"
+}
+
+resource "aws_ram_principal_association" "example" {
+  count = "${var.create_tgw && var.share_tgw ? 1 : 0}"
+
+  principal          = "${var.ram_resource_principal_association}"
+  resource_share_arn = "${aws_ram_resource_share.this.arn}"
 }

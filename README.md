@@ -24,6 +24,7 @@ These types of resources are supported:
 * [Default VPC](https://www.terraform.io/docs/providers/aws/r/default_vpc.html)
 * [Default Network ACL](https://www.terraform.io/docs/providers/aws/r/default_network_acl.html)
 * [TGW](https://www.terraform.io/docs/providers/aws/r/ec2_transit_gateway.html)
+* [RAM](https://www.terraform.io/docs/providers/aws/r/ram_resource_share.html)
 
 Sponsored by [Cloudcraft - the best way to draw AWS diagrams](https://cloudcraft.co/?utm_source=terraform-aws-vpc)
 
@@ -189,6 +190,8 @@ This module can create a TGW , create an Attachment and add the VPC to it , Asso
 
 Once TGW is created and configured . Based on (`cidr_tgw`) , new routes will be added to the subnets where the Destination is `cidr_tgw` and Target is TGW ID . Subnet selection is based on (`subnet_type_tgw_attachment=private`) . If you wish to create the attachment with Public subnets and also create routes to the same then please provide (`subnet_type_tgw_attachment=public`)
 
+You can also attach an already created TGW, based on the (`tgw_id`). Also use resource sharing you can share the TGW across Organization / OU or Account.
+
 ## Terraform version
 
 Terraform version 0.10.3 or newer is required for this module to work.
@@ -197,6 +200,8 @@ Terraform version 0.10.3 or newer is required for this module to work.
 
 * [Simple VPC](https://github.com/terraform-aws-modules/terraform-aws-vpc/tree/master/examples/simple-vpc)
 * [Simple VPC with TGW](https://github.com/terraform-aws-modules/terraform-aws-vpc/tree/master/examples/simple-vpc-tgw)
+* [Simple VPC Hub and spoke using TGW](https://github.com/terraform-aws-modules/terraform-aws-vpc/tree/master/examples/simple-vpc-hub-and-spoke)
+* [Cross Account VPC Hub & Spoke using TGW](https://github.com/terraform-aws-modules/terraform-aws-vpc/tree/master/examples/cross-account-vpc-hub-and-spoke)
 * [Complete VPC](https://github.com/terraform-aws-modules/terraform-aws-vpc/tree/master/examples/complete-vpc)
 * [Manage Default VPC](https://github.com/terraform-aws-modules/terraform-aws-vpc/tree/master/examples/manage-default-vpc)
 * [Network ACL](https://github.com/terraform-aws-modules/terraform-aws-vpc/tree/master/examples/network-acls)
@@ -212,6 +217,8 @@ Terraform version 0.10.3 or newer is required for this module to work.
 | apigw\_endpoint\_security\_group\_ids | The ID of one or more security groups to associate with the network interface for API GW  endpoint | list | `[]` | no |
 | apigw\_endpoint\_subnet\_ids | The ID of one or more subnets in which to create a network interface for API GW endpoint. Only a single subnet within an AZ is supported. If omitted, private subnets will be used. | list | `[]` | no |
 | assign\_generated\_ipv6\_cidr\_block | Requests an Amazon-provided IPv6 CIDR block with a /56 prefix length for the VPC. You cannot specify the range of IP addresses, or the size of the CIDR block | string | `"false"` | no |
+| attach\_tgw| Attaches an existing TGW to this VPC| string | `"false"` | no |
+| attach\_tgw\_id | TGW ID to attach to the VPC this variable works in conjunction with attach_tgw | string | `""` | no |
 | azs | A list of availability zones in the region | list | `[]` | no |
 | cidr | The CIDR block for the VPC. Default value is a valid CIDR, but not acceptable by AWS and should be overridden | string | `"0.0.0.0/0"` | no |
 | create\_database\_internet\_gateway\_route | Controls if an internet gateway route for public database access should be created | string | `"false"` | no |
@@ -327,7 +334,12 @@ Terraform version 0.10.3 or newer is required for this module to work.
 | redshift\_subnet\_suffix | Suffix to append to redshift subnets name | string | `"redshift"` | no |
 | redshift\_subnet\_tags | Additional tags for the redshift subnets | map | `{}` | no |
 | redshift\_subnets | A list of redshift subnets | list | `[]` | no |
+| ram\_resource\_share\_name | Name of the Resource Share name | string | `""` | no |
+| ram\_resource\_allow\_external\_principals| Allow other AWS accounts outside of your org access to resource share | string | `"false"` | no |
+| ram\_resource\_principal\_association | Who to share RAM resource with. Can be Org / OU / or AWS Account | string | `""` | no |
+| ram\_share\_tags | Additional tags for the RAM share | map | `{}` | no |
 | reuse\_nat\_ips | Should be true if you don't want EIPs to be created for your NAT Gateways and will instead pass them in via the 'external_nat_ip_ids' variable | string | `"false"` | no |
+| share\_tgw| Required to Share the TGW using the AWS RAM service| string | `"false"` | no |
 | secondary\_cidr\_blocks | List of secondary CIDR blocks to associate with the VPC to extend the IP Address pool | list | `[]` | no |
 | single\_nat\_gateway | Should be true if you want to provision a single shared NAT Gateway across all of your private networks | string | `"false"` | no |
 | ssm\_endpoint\_private\_dns\_enabled | Whether or not to associate a private hosted zone with the specified VPC for SSM endpoint | string | `"false"` | no |
@@ -337,7 +349,15 @@ Terraform version 0.10.3 or newer is required for this module to work.
 | ssmmessages\_endpoint\_security\_group\_ids | The ID of one or more security groups to associate with the network interface for SSMMESSAGES endpoint | list | `[]` | no |
 | ssmmessages\_endpoint\_subnet\_ids | The ID of one or more subnets in which to create a network interface for SSMMESSAGES endpoint. Only a single subnet within an AZ is supported. If omitted, private subnets will be used. | list | `[]` | no |
 | tags | A map of tags to add to all resources | map | `{}` | no |
-| vpc\_tags | Additional tags for the VPC | map | `{}` | no |
+| tgw\_description | A description to apply to a TGW resource | string | `""` | no |
+| tgw\_default\_route\_table\_association | Associate TGW with a default Route table | string | `"disable"` | no |
+| tgw\_default\_route\_table\_propagation | Propagate TGW to a default Route table | string | `"disable"` | no |
+| tgw\_dns\_support | Enable DNS support on the TGW | string | `"enable"` | no |
+| tgw\_vpn\_ecmp_support | Support on TGW for VPN Equal Cost Multipath support | string | `"disable"` | no |
+| tgw\_attach\_default\_route\_table\_association | Whether the VPC Attachment should be associated with the EC2 Transit gateway default route table" | string | `"false"` | no |
+| tgw\_attach\_defaul\_route\_table\_propagation | Whether the VPC Attachment should propagate routes to the EC2 transit Gateway default route table | string | `"false"` | no |
+| tgw\_tags | Additional tags for the TGW | map | `{}` | no |
+| vpc\_tags\ | Additional tags for the VPC | map | `{}` | no |
 | vpn\_gateway\_id | ID of VPN Gateway to attach to the VPC | string | `""` | no |
 | vpn\_gateway\_tags | Additional tags for the VPN gateway | map | `{}` | no |
 
