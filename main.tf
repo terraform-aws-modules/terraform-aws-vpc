@@ -939,11 +939,11 @@ resource "aws_ec2_transit_gateway_vpc_attachment" "this" {
 }
 
 resource "aws_ec2_transit_gateway_route_table" "this" {
-  count  = "${(var.create_tgw || var.attach_tgw) && (var.subnet_type_tgw_attachment == "private" || var.subnet_type_tgw_attachment == "public")? 1 : 0}"
+  count = "${(var.create_tgw || var.attach_tgw) && (var.subnet_type_tgw_attachment == "private" || var.subnet_type_tgw_attachment == "public")? 1 : 0}"
 
-  transit_gateway_id = "${aws_ec2_transit_gateway.this.id}"
-  tags               = "${merge(map("Name", format("%s", var.name)), var.tags, var.tgw_tags)}"
+  transit_gateway_id = "${element(concat(aws_ec2_transit_gateway.this.*.id, list(var.attach_tgw_id)), 0)}"
 
+  tags = "${merge(map("Name", format("%s", var.name)), var.tags, var.tgw_tags)}"
 }
 
 #########
