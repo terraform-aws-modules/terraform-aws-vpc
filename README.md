@@ -192,6 +192,8 @@ Once TGW is created and configured . Based on (`cidr_tgw`) , new routes will be 
 
 You can also attach an already created TGW, based on the (`tgw_id`). Also use resource sharing you can share the TGW across Organization / OU or Account.
 
+We want to have route traffic to existing VPCs from the newly created VPC using TGW . Conditions for attaching existing TGW works here too and in addition to it set (`attach_tgw_route_vpc`) to true and provide the existing TGW Route table id (`tgw_rt_id`) . Now the newly created VPCs TGW attachment will be added in propagation and association in the existing TGW Route table . Please provide the VPC CIDR in `cidr_tgw` to which the newly created VPC has to communicate .
+
 ## Terraform version
 
 Terraform version 0.10.3 or newer is required for this module to work.
@@ -200,6 +202,7 @@ Terraform version 0.10.3 or newer is required for this module to work.
 
 * [Simple VPC](https://github.com/terraform-aws-modules/terraform-aws-vpc/tree/master/examples/simple-vpc)
 * [Simple VPC with TGW](https://github.com/terraform-aws-modules/terraform-aws-vpc/tree/master/examples/simple-vpc-tgw)
+* [Simple VPC to VPC using TGW](https://github.com/terraform-aws-modules/terraform-aws-vpc/tree/master/examples/simple-vpc-to-vpc)
 * [Simple VPC Hub and spoke using TGW](https://github.com/terraform-aws-modules/terraform-aws-vpc/tree/master/examples/simple-vpc-hub-and-spoke)
 * [Cross Account VPC Hub & Spoke using TGW](https://github.com/terraform-aws-modules/terraform-aws-vpc/tree/master/examples/cross-account-vpc-hub-and-spoke)
 * [Complete VPC](https://github.com/terraform-aws-modules/terraform-aws-vpc/tree/master/examples/complete-vpc)
@@ -219,6 +222,8 @@ Terraform version 0.10.3 or newer is required for this module to work.
 | assign\_generated\_ipv6\_cidr\_block | Requests an Amazon-provided IPv6 CIDR block with a /56 prefix length for the VPC. You cannot specify the range of IP addresses, or the size of the CIDR block | string | `"false"` | no |
 | attach\_tgw| Attaches an existing TGW to this VPC| string | `"false"` | no |
 | attach\_tgw\_id | TGW ID to attach to the VPC this variable works in conjunction with attach_tgw | string | `""` | no |
+| attach\_tgw\_route\_vpc| Attaches an existing TGW to this VPC using existing TGW Route table| string | `"false"` | no |
+| tgw\_rt\_id | TGW Route table ID to attach to this VPC Attachment, this variable works in conjunction with attach_tgw_route_vpc | string | `""` | no |
 | azs | A list of availability zones in the region | list | `[]` | no |
 | cidr | The CIDR block for the VPC. Default value is a valid CIDR, but not acceptable by AWS and should be overridden | string | `"0.0.0.0/0"` | no |
 | create\_database\_internet\_gateway\_route | Controls if an internet gateway route for public database access should be created | string | `"false"` | no |
@@ -434,9 +439,10 @@ Terraform version 0.10.3 or newer is required for this module to work.
 | vpc\_instance\_tenancy | Tenancy of instances spin up within VPC |
 | vpc\_main\_route\_table\_id | The ID of the main route table associated with this VPC |
 | vpc\_secondary\_cidr\_blocks | List of secondary CIDR blocks of the VPC |
-| create\_tgw | Contros if Transit Gateway should be create | string | `"false"` | no |
-| subnet\_type\_tgw\_attachment | Controls the subnet type which will added in TGW Attachment | `"private"` | no |
-| cidr\_tgw | The route which will be added to subnets . The Destination cidr will be cidr_tgw and Target will be TGW id | `"private"` | no |
+`"private"` | no |
+| tgw\_id | The ID of the TGW |
+| tgw\_rt\_id | The ID of the TGW Route table |
+
 
 
 <!-- END OF PRE-COMMIT-TERRAFORM DOCS HOOK -->

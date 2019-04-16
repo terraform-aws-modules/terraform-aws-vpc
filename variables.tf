@@ -13,6 +13,16 @@ variable "attach_tgw" {
   default = false
 }
 
+variable "attach_tgw_route_vpc" {
+  description = "Works only when attach_tgw is true.This will attach an existing TGW to the VPC ,creates propagation and assocication in existing tgw RT ."
+  default = false
+}
+
+variable "tgw_rt_id" {
+  description = "Works only when attach_tgw and attach_tgw_route_vpc is true.Provide the existing TGW Route table id which already has association and propagation for other VPC attachments"
+  default = ""
+}
+
 variable "attach_tgw_id" {
   description = "TGW ID to attach to the VPC this variable works in conjunction with attach_tgw"
   default = ""
@@ -24,14 +34,13 @@ variable "share_tgw" {
 }
 
 variable "subnet_type_tgw_attachment" {
-  description = "This parameter is considered only if create_tgw is true.Provide the subnet type needed to be added for TGW Attachment . Value can be either private or public"
+  description = "This parameter is considered only if create_tgw is true.Provide the subnet type needed to be added for TGW Attachment . Value can be either private or public."
   default     = "private"
 }
 
 variable "cidr_tgw" {
-  description = "This parameter is considered only if create_tgw is true.Provide valid cidr blocks which will be Destination of TGW .This configuration will be added in Route tables"
+  description = "This parameter is considered only if create_tgw is true.Provide valid cidr blocks which will be Destination of TGW . If attach_tgw_route_vpc is true , you can provide that exisiting VPC's CIDR values.This configuration will be added in Route tables."
   default     = []
-
   type = "list"
 }
 
