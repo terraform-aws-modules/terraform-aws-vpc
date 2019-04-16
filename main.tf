@@ -939,7 +939,8 @@ resource "aws_ec2_transit_gateway_vpc_attachment" "this" {
 }
 
 resource "aws_ec2_transit_gateway_route_table" "this" {
-  count = "${(var.create_tgw || var.attach_tgw) && (var.subnet_type_tgw_attachment == "private" || var.subnet_type_tgw_attachment == "public")? 1 : 0}"
+  count = "${(var.attach_tgw  && var.attach_tgw_route_vpc ? false:true) && (var.create_tgw || var.attach_tgw) && (var.subnet_type_tgw_attachment == "private" || var.subnet_type_tgw_attachment == "public")? 1 : 0}"
+  # count = "${false && (var.create_tgw || var.attach_tgw) && (var.subnet_type_tgw_attachment == "private" || var.subnet_type_tgw_attachment == "public")? 1 : 0}"
 
   transit_gateway_id = "${element(concat(aws_ec2_transit_gateway.this.*.id, list(var.attach_tgw_id)), 0)}"
 
@@ -950,17 +951,31 @@ resource "aws_ec2_transit_gateway_route_table" "this" {
 # Transit Gateway Route table association and propagation for TGW Attachements
 #########
 resource "aws_ec2_transit_gateway_route_table_association" "this" {
-  count = "${(var.create_tgw || var.attach_tgw)&& (var.subnet_type_tgw_attachment == "private" || var.subnet_type_tgw_attachment == "public") ? 1 : 0}"
+  count = "${(var.attach_tgw  && var.attach_tgw_route_vpc ? false:true) && (var.create_tgw || var.attach_tgw )&& (var.subnet_type_tgw_attachment == "private" || var.subnet_type_tgw_attachment == "public") ? 1 : 0}"
 
   transit_gateway_attachment_id  = "${element(aws_ec2_transit_gateway_vpc_attachment.this.*.id, 0)}"
   transit_gateway_route_table_id = "${element(aws_ec2_transit_gateway_route_table.this.*.id, 0)}"
 }
 
 resource "aws_ec2_transit_gateway_route_table_propagation" "this" {
-  count = "${(var.create_tgw || var.attach_tgw) && (var.subnet_type_tgw_attachment == "private" || var.subnet_type_tgw_attachment == "public") ? 1 : 0}"
+  count = "${(var.attach_tgw  && var.attach_tgw_route_vpc ? false:true) && (var.create_tgw || var.attach_tgw) && (var.subnet_type_tgw_attachment == "private" || var.subnet_type_tgw_attachment == "public") ? 1 : 0}"
 
   transit_gateway_attachment_id  = "${element(aws_ec2_transit_gateway_vpc_attachment.this.*.id, 0)}"
   transit_gateway_route_table_id = "${element(aws_ec2_transit_gateway_route_table.this.*.id, 0)}"
+}
+
+resource "aws_ec2_transit_gateway_route_table_association" "existing_rt" {
+  count = "${((var.attach_tgw  && var.attach_tgw_route_vpc) && (var.subnet_type_tgw_attachment == "private" || var.subnet_type_tgw_attachment == "public") ? 1:0)}" 
+
+  transit_gateway_attachment_id  = "${element(aws_ec2_transit_gateway_vpc_attachment.this.*.id, 0)}"
+  transit_gateway_route_table_id =  "${var.tgw_rt_id}"
+}
+
+resource "aws_ec2_transit_gateway_route_table_propagation" "existing_rt" {
+  count = "${((var.attach_tgw  && var.attach_tgw_route_vpc) && (var.subnet_type_tgw_attachment == "private" || var.subnet_type_tgw_attachment == "public") ? 1:0)}" 
+  
+  transit_gateway_attachment_id  = "${element(aws_ec2_transit_gateway_vpc_attachment.this.*.id, 0)}"
+  transit_gateway_route_table_id =  "${var.tgw_rt_id}"
 }
 
 ########
