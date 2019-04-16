@@ -983,15 +983,17 @@ resource "aws_ec2_transit_gateway_route_table_propagation" "existing_rt" {
 ########
 locals {
   route_table_id = ["${split(",", var.subnet_type_tgw_attachment == "private" ? join(",", aws_route_table.private.*.id ) : join(",", aws_route_table.public.*.id))}"]
-  subnet_ids     = ["${split(",", var.subnet_type_tgw_attachment == "private" ? join(",", aws_subnet.private.*.id ) : join(",", aws_subnet.public.*.id))}"]
 }
 
 resource "aws_route" "tgw_route" {
-  count = "${(var.create_tgw || var.attach_tgw) && length(var.cidr_tgw) > 0 && (var.subnet_type_tgw_attachment == "private" || var.subnet_type_tgw_attachment == "public") ? ( (var.subnet_type_tgw_attachment == "private" ? length(var.private_subnets) : length(var.public_subnets) ) * length(var.cidr_tgw)) : 0}"
+  count = "${(var.create_tgw || var.attach_tgw) && length(var.cidr_tgw) > 0 && (var.subnet_type_tgw_attachment == "private" || var.subnet_type_tgw_attachment == "public") ? length(var.cidr_tgw) : 0}"
 
   route_table_id         = "${element(local.route_table_id, ceil(count.index/length(var.cidr_tgw)))}"
   destination_cidr_block = "${element(var.cidr_tgw, count.index)}"
   transit_gateway_id     = "${element(concat(aws_ec2_transit_gateway.this.*.id, list(var.attach_tgw_id)), 0)}"
+
+  
+  depends_on = ["aws_route_table.public","aws_route_table.private"]
 
   timeouts {
     create = "5m"
