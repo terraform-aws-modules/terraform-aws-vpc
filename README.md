@@ -388,6 +388,7 @@ Terraform version 0.10.3 or newer is required for this module to work.
 | redshift\_subnets | List of IDs of redshift subnets |
 | redshift\_subnets\_cidr\_blocks | List of cidr_blocks of redshift subnets |
 | vgw\_id | The ID of the VPN Gateway |
+| vpc\_arn | The ARN of the VPC |
 | vpc\_cidr\_block | The CIDR block of the VPC |
 | vpc\_enable\_dns\_hostnames | Whether or not the VPC has DNS hostname support |
 | vpc\_enable\_dns\_support | Whether or not the VPC has DNS support |
