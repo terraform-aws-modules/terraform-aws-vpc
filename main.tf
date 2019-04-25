@@ -809,6 +809,27 @@ resource "aws_vpc_endpoint" "apigw" {
   private_dns_enabled = "${var.apigw_endpoint_private_dns_enabled}"
 }
 
+#######################
+# VPC Endpoint for KMS
+#######################
+data "aws_vpc_endpoint_service" "kms" {
+  count = "${var.create_vpc && var.enable_kms_endpoint ? 1 : 0}"
+
+  service = "kms"
+}
+
+resource "aws_vpc_endpoint" "kms" {
+  count = "${var.create_vpc && var.enable_kms_endpoint ? 1 : 0}"
+
+  vpc_id            = "${local.vpc_id}"
+  service_name      = "${data.aws_vpc_endpoint_service.kms.service_name}"
+  vpc_endpoint_type = "Interface"
+
+  security_group_ids  = ["${var.kms_endpoint_security_group_ids}"]
+  subnet_ids          = ["${coalescelist(var.kms_endpoint_subnet_ids, aws_subnet.private.*.id)}"]
+  private_dns_enabled = "${var.kms_endpoint_private_dns_enabled}"
+}
+
 ##########################
 # Route table association
 ##########################
