@@ -384,6 +384,51 @@ output "vpc_endpoint_kms_dns_entry" {
   value       = "${flatten(aws_vpc_endpoint.kms.*.dns_entry)}"
 }
 
+output "vpc_endpoint_ecr_api_id" {
+  description = "The ID of VPC endpoint for ECR API"
+  value       = "${element(concat(aws_vpc_endpoint.ecr_api.*.id, list("")), 0)}"
+}
+
+output "vpc_endpoint_ecr_api_network_interface_ids" {
+  description = "One or more network interfaces for the VPC Endpoint for ECR API."
+  value       = "${flatten(aws_vpc_endpoint.ecr_api.*.network_interface_ids)}"
+}
+
+output "vpc_endpoint_ecr_api_dns_entry" {
+  description = "The DNS entries for the VPC Endpoint for ECR API."
+  value       = "${flatten(aws_vpc_endpoint.ecr_api.*.dns_entry)}"
+}
+
+output "vpc_endpoint_ecr_dkr_id" {
+  description = "The ID of VPC endpoint for ECR DKR"
+  value       = "${element(concat(aws_vpc_endpoint.ecr_dkr.*.id, list("")), 0)}"
+}
+
+output "vpc_endpoint_ecr_dkr_network_interface_ids" {
+  description = "One or more network interfaces for the VPC Endpoint for ECR DKR."
+  value       = "${flatten(aws_vpc_endpoint.ecr_dkr.*.network_interface_ids)}"
+}
+
+output "vpc_endpoint_ecr_dkr_dns_entry" {
+  description = "The DNS entries for the VPC Endpoint for ECR DKR."
+  value       = "${flatten(aws_vpc_endpoint.ecr_dkr.*.dns_entry)}"
+}
+
+output "vpc_endpoint_apigw_id" {
+  description = "The ID of VPC endpoint for APIGW"
+  value       = "${element(concat(aws_vpc_endpoint.apigw.*.id, list("")), 0)}"
+}
+
+output "vpc_endpoint_apigw_network_interface_ids" {
+  description = "One or more network interfaces for the VPC Endpoint for APIGW."
+  value       = "${flatten(aws_vpc_endpoint.apigw.*.network_interface_ids)}"
+}
+
+output "vpc_endpoint_apigw_dns_entry" {
+  description = "The DNS entries for the VPC Endpoint for APIGW."
+  value       = "${flatten(aws_vpc_endpoint.apigw.*.dns_entry)}"
+}
+
 # Static values (arguments)
 output "azs" {
   description = "A list of availability zones specified as argument to this module"
