@@ -3,6 +3,11 @@ output "vpc_id" {
   value       = "${element(concat(aws_vpc.this.*.id, list("")), 0)}"
 }
 
+output "vpc_arn" {
+  description = "The ARN of the VPC"
+  value       = "${element(concat(aws_vpc.this.*.arn, list("")), 0)}"
+}
+
 output "vpc_cidr_block" {
   description = "The CIDR block of the VPC"
   value       = "${element(concat(aws_vpc.this.*.cidr_block, list("")), 0)}"
