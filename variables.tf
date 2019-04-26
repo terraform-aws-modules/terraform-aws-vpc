@@ -169,25 +169,21 @@ variable "private_subnets" {
 }
 
 variable "database_subnets" {
-  type        = "list"
   description = "A list of database subnets"
   default     = []
 }
 
 variable "redshift_subnets" {
-  type        = "list"
   description = "A list of redshift subnets"
   default     = []
 }
 
 variable "elasticache_subnets" {
-  type        = "list"
   description = "A list of elasticache subnets"
   default     = []
 }
 
 variable "intra_subnets" {
-  type        = "list"
   description = "A list of intra subnets"
   default     = []
 }
@@ -281,9 +277,8 @@ variable "reuse_nat_ips" {
 
 variable "external_nat_ip_ids" {
   description = "List of EIP IDs to be assigned to the NAT Gateways (used in combination with reuse_nat_ips)"
-  default     = []
-
   type        = "list"
+  default     = []
 }
 
 variable "enable_dynamodb_endpoint" {
@@ -458,6 +453,26 @@ variable "ecr_dkr_endpoint_security_group_ids" {
   default     = []
 
   type = "list"
+}
+
+variable "enable_kms_endpoint" {
+  description = "Should be true if you want to provision a KMS endpoint to the VPC"
+  default     = false
+}
+
+variable "kms_endpoint_security_group_ids" {
+  description = "The ID of one or more security groups to associate with the network interface for KMS endpoint"
+  default     = []
+}
+
+variable "kms_endpoint_subnet_ids" {
+  description = "The ID of one or more subnets in which to create a network interface for KMS endpoint. Only a single subnet within an AZ is supported. If omitted, private subnets will be used."
+  default     = []
+}
+
+variable "kms_endpoint_private_dns_enabled" {
+  description = "Whether or not to associate a private hosted zone with the specified VPC for KMS endpoint"
+  default     = false
 }
 
 variable "map_public_ip_on_launch" {
@@ -705,20 +720,20 @@ variable "dhcp_options_domain_name" {
 
 variable "dhcp_options_domain_name_servers" {
   description = "Specify a list of DNS server addresses for DHCP options set, default to AWS provided"
-  type        = "list"
-  default     = ["AmazonProvidedDNS"]
+
+  default = ["AmazonProvidedDNS"]
 }
 
 variable "dhcp_options_ntp_servers" {
   description = "Specify a list of NTP servers for DHCP options set"
-  type        = "list"
-  default     = []
+
+  default = []
 }
 
 variable "dhcp_options_netbios_name_servers" {
   description = "Specify a list of netbios servers for DHCP options set"
-  type        = "list"
-  default     = []
+
+  default = []
 }
 
 variable "dhcp_options_netbios_node_type" {

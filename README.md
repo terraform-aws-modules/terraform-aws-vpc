@@ -16,7 +16,7 @@ These types of resources are supported:
 * [VPN Gateway](https://www.terraform.io/docs/providers/aws/r/vpn_gateway.html)
 * [VPC Endpoint](https://www.terraform.io/docs/providers/aws/r/vpc_endpoint.html):
   * Gateway: S3, DynamoDB
-  * Interface: EC2, SSM, EC2 Messages, SSM Messages, ECR API, ECR DKR, API Gateway
+  * Interface: EC2, SSM, EC2 Messages, SSM Messages, ECR API, ECR DKR, API Gateway, KMS
 * [RDS DB Subnet Group](https://www.terraform.io/docs/providers/aws/r/db_subnet_group.html)
 * [ElastiCache Subnet Group](https://www.terraform.io/docs/providers/aws/r/elasticache_subnet_group.html)
 * [Redshift Subnet Group](https://www.terraform.io/docs/providers/aws/r/redshift_subnet_group.html)
@@ -288,6 +288,7 @@ Terraform version 0.10.3 or newer is required for this module to work.
 | enable\_ec2messages\_endpoint | Should be true if you want to provision an EC2MESSAGES endpoint to the VPC | string | `"false"` | no |
 | enable\_ecr\_api\_endpoint | Should be true if you want to provision an ecr api endpoint to the VPC | string | `"false"` | no |
 | enable\_ecr\_dkr\_endpoint | Should be true if you want to provision an ecr dkr endpoint to the VPC | string | `"false"` | no |
+| enable\_kms\_endpoint | Should be true if you want to provision a KMS endpoint to the VPC | string | `"false"` | no |
 | enable\_nat\_gateway | Should be true if you want to provision NAT Gateways for each of your private networks | string | `"false"` | no |
 | enable\_public\_redshift | Controls if redshift should have public routing table | string | `"false"` | no |
 | enable\_s3\_endpoint | Should be true if you want to provision an S3 endpoint to the VPC | string | `"false"` | no |
@@ -305,6 +306,9 @@ Terraform version 0.10.3 or newer is required for this module to work.
 | intra\_subnet\_suffix | Suffix to append to intra subnets name | string | `"intra"` | no |
 | intra\_subnet\_tags | Additional tags for the intra subnets | map | `{}` | no |
 | intra\_subnets | A list of intra subnets | list | `[]` | no |
+| kms\_endpoint\_private\_dns\_enabled | Whether or not to associate a private hosted zone with the specified VPC for KMS endpoint | string | `"false"` | no |
+| kms\_endpoint\_security\_group\_ids | The ID of one or more security groups to associate with the network interface for KMS endpoint | list | `[]` | no |
+| kms\_endpoint\_subnet\_ids | The ID of one or more subnets in which to create a network interface for KMS endpoint. Only a single subnet within an AZ is supported. If omitted, private subnets will be used. | list | `[]` | no |
 | manage\_default\_network\_acl | Should be true to adopt and manage Default Network ACL | string | `"false"` | no |
 | manage\_default\_vpc | Should be true to adopt and manage Default VPC | string | `"false"` | no |
 | map\_public\_ip\_on\_launch | Should be false if you do not want to auto-assign public IP on launch | string | `"true"` | no |
@@ -373,6 +377,7 @@ Terraform version 0.10.3 or newer is required for this module to work.
 | azs | A list of availability zones specified as argument to this module |
 | database\_network\_acl\_id | ID of the database network ACL |
 | database\_route\_table\_ids | List of IDs of database route tables |
+| database\_subnet\_arns | List of ARNs of database subnets |
 | database\_subnet\_group | ID of database subnet group |
 | database\_subnets | List of IDs of database subnets |
 | database\_subnets\_cidr\_blocks | List of cidr_blocks of database subnets |
@@ -390,6 +395,7 @@ Terraform version 0.10.3 or newer is required for this module to work.
 | default\_vpc\_main\_route\_table\_id | The ID of the main route table associated with this VPC |
 | elasticache\_network\_acl\_id | ID of the elasticache network ACL |
 | elasticache\_route\_table\_ids | List of IDs of elasticache route tables |
+| elasticache\_subnet\_arns | List of ARNs of elasticache subnets |
 | elasticache\_subnet\_group | ID of elasticache subnet group |
 | elasticache\_subnet\_group\_name | Name of elasticache subnet group |
 | elasticache\_subnets | List of IDs of elasticache subnets |
@@ -397,6 +403,7 @@ Terraform version 0.10.3 or newer is required for this module to work.
 | igw\_id | The ID of the Internet Gateway |
 | intra\_network\_acl\_id | ID of the intra network ACL |
 | intra\_route\_table\_ids | List of IDs of intra route tables |
+| intra\_subnet\_arns | List of ARNs of intra subnets |
 | intra\_subnets | List of IDs of intra subnets |
 | intra\_subnets\_cidr\_blocks | List of cidr_blocks of intra subnets |
 | nat\_ids | List of allocation ID of Elastic IPs created for AWS NAT Gateway |
@@ -404,21 +411,28 @@ Terraform version 0.10.3 or newer is required for this module to work.
 | natgw\_ids | List of NAT Gateway IDs |
 | private\_network\_acl\_id | ID of the private network ACL |
 | private\_route\_table\_ids | List of IDs of private route tables |
+| private\_subnet\_arns | List of ARNs of private subnets |
 | private\_subnets | List of IDs of private subnets |
 | private\_subnets\_cidr\_blocks | List of cidr_blocks of private subnets |
 | public\_network\_acl\_id | ID of the public network ACL |
 | public\_route\_table\_ids | List of IDs of public route tables |
+| public\_subnet\_arns | List of ARNs of public subnets |
 | public\_subnets | List of IDs of public subnets |
 | public\_subnets\_cidr\_blocks | List of cidr_blocks of public subnets |
 | redshift\_network\_acl\_id | ID of the redshift network ACL |
 | redshift\_route\_table\_ids | List of IDs of redshift route tables |
+| redshift\_subnet\_arns | List of ARNs of redshift subnets |
 | redshift\_subnet\_group | ID of redshift subnet group |
 | redshift\_subnets | List of IDs of redshift subnets |
 | redshift\_subnets\_cidr\_blocks | List of cidr_blocks of redshift subnets |
 | vgw\_id | The ID of the VPN Gateway |
+| vpc\_arn | The ARN of the VPC |
 | vpc\_cidr\_block | The CIDR block of the VPC |
 | vpc\_enable\_dns\_hostnames | Whether or not the VPC has DNS hostname support |
 | vpc\_enable\_dns\_support | Whether or not the VPC has DNS support |
+| vpc\_endpoint\_apigw\_dns\_entry | The DNS entries for the VPC Endpoint for APIGW. |
+| vpc\_endpoint\_apigw\_id | The ID of VPC endpoint for APIGW |
+| vpc\_endpoint\_apigw\_network\_interface\_ids | One or more network interfaces for the VPC Endpoint for APIGW. |
 | vpc\_endpoint\_dynamodb\_id | The ID of VPC endpoint for DynamoDB |
 | vpc\_endpoint\_dynamodb\_pl\_id | The prefix list for the DynamoDB VPC endpoint. |
 | vpc\_endpoint\_ec2\_dns\_entry | The DNS entries for the VPC Endpoint for EC2. |
@@ -427,6 +441,15 @@ Terraform version 0.10.3 or newer is required for this module to work.
 | vpc\_endpoint\_ec2messages\_dns\_entry | The DNS entries for the VPC Endpoint for EC2MESSAGES. |
 | vpc\_endpoint\_ec2messages\_id | The ID of VPC endpoint for EC2MESSAGES |
 | vpc\_endpoint\_ec2messages\_network\_interface\_ids | One or more network interfaces for the VPC Endpoint for EC2MESSAGES |
+| vpc\_endpoint\_ecr\_api\_dns\_entry | The DNS entries for the VPC Endpoint for ECR API. |
+| vpc\_endpoint\_ecr\_api\_id | The ID of VPC endpoint for ECR API |
+| vpc\_endpoint\_ecr\_api\_network\_interface\_ids | One or more network interfaces for the VPC Endpoint for ECR API. |
+| vpc\_endpoint\_ecr\_dkr\_dns\_entry | The DNS entries for the VPC Endpoint for ECR DKR. |
+| vpc\_endpoint\_ecr\_dkr\_id | The ID of VPC endpoint for ECR DKR |
+| vpc\_endpoint\_ecr\_dkr\_network\_interface\_ids | One or more network interfaces for the VPC Endpoint for ECR DKR. |
+| vpc\_endpoint\_kms\_dns\_entry | The DNS entries for the VPC Endpoint for KMS. |
+| vpc\_endpoint\_kms\_id | The ID of VPC endpoint for KMS |
+| vpc\_endpoint\_kms\_network\_interface\_ids | One or more network interfaces for the VPC Endpoint for KMS. |
 | vpc\_endpoint\_s3\_id | The ID of VPC endpoint for S3 |
 | vpc\_endpoint\_s3\_pl\_id | The prefix list for the S3 VPC endpoint. |
 | vpc\_endpoint\_ssm\_dns\_entry | The DNS entries for the VPC Endpoint for SSM. |
