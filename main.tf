@@ -688,7 +688,7 @@ resource "aws_vpc_endpoint" "ssm" {
 #######################
 data "aws_vpc_endpoint_service" "sqs" {
   count = "${var.create_vpc && var.enable_sqs_endpoint ? 1 : 0}"
-  
+
   service = "sqs"
 }
 
@@ -698,7 +698,7 @@ resource "aws_vpc_endpoint" "sqs" {
   vpc_id            = "${local.vpc_id}"
   service_name      = "${data.aws_vpc_endpoint_service.sqs.service_name}"
   vpc_endpoint_type = "Interface"
-  
+
   security_group_ids  = ["${var.sqs_endpoint_security_group_ids}"]
   subnet_ids          = ["${coalescelist(var.sqs_endpoint_subnet_ids, aws_subnet.private.*.id)}"]
   private_dns_enabled = "${var.sqs_endpoint_private_dns_enabled}"
