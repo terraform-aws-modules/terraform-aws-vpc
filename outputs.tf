@@ -359,6 +359,21 @@ output "vpc_endpoint_ssm_dns_entry" {
   value       = "${flatten(aws_vpc_endpoint.ssm.*.dns_entry)}"
 }
 
+output "vpc_endpoint_sqs_id" {
+  description = "The ID of VPC endpoint for SQS"
+  value       = "${element(concat(aws_vpc_endpoint.sqs.*.id, list("")), 0)}"
+}
+
+output "vpc_endpoint_sqs_network_interface_ids" {
+  description = "One or more network interfaces for the VPC Endpoint for SQS."
+  value       = "${flatten(aws_vpc_endpoint.sqs.*.network_interface_ids)}"
+}
+
+output "vpc_endpoint_sqs_dns_entry" {
+  description = "The DNS entries for the VPC Endpoint for SQS."
+  value       = "${flatten(aws_vpc_endpoint.sqs.*.dns_entry)}"
+}
+
 output "vpc_endpoint_ssmmessages_id" {
   description = "The ID of VPC endpoint for SSMMESSAGES"
   value       = "${element(concat(aws_vpc_endpoint.ssmmessages.*.id, list("")), 0)}"
