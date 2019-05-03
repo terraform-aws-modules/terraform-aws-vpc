@@ -322,10 +322,12 @@ resource "aws_network_acl_rule" "public_inbound" {
   egress      = false
   rule_number = "${lookup(var.public_inbound_acl_rules[count.index], "rule_number")}"
   rule_action = "${lookup(var.public_inbound_acl_rules[count.index], "rule_action")}"
-  from_port   = "${lookup(var.public_inbound_acl_rules[count.index], "from_port")}"
-  to_port     = "${lookup(var.public_inbound_acl_rules[count.index], "to_port")}"
+  from_port   = "${lookup(var.public_inbound_acl_rules[count.index], "from_port", "-1")}"
+  to_port     = "${lookup(var.public_inbound_acl_rules[count.index], "to_port", "-1")}"
   protocol    = "${lookup(var.public_inbound_acl_rules[count.index], "protocol")}"
   cidr_block  = "${lookup(var.public_inbound_acl_rules[count.index], "cidr_block")}"
+  icmp_type   = "${lookup(var.public_inbound_acl_rules[count.index], "icmp_type", "-1")}"
+  icmp_code   = "${lookup(var.public_inbound_acl_rules[count.index], "icmp_code", "-1")}"
 }
 
 resource "aws_network_acl_rule" "public_outbound" {
@@ -336,10 +338,12 @@ resource "aws_network_acl_rule" "public_outbound" {
   egress      = true
   rule_number = "${lookup(var.public_outbound_acl_rules[count.index], "rule_number")}"
   rule_action = "${lookup(var.public_outbound_acl_rules[count.index], "rule_action")}"
-  from_port   = "${lookup(var.public_outbound_acl_rules[count.index], "from_port")}"
-  to_port     = "${lookup(var.public_outbound_acl_rules[count.index], "to_port")}"
+  from_port   = "${lookup(var.public_outbound_acl_rules[count.index], "from_port", "-1")}"
+  to_port     = "${lookup(var.public_outbound_acl_rules[count.index], "to_port", "-1")}"
   protocol    = "${lookup(var.public_outbound_acl_rules[count.index], "protocol")}"
   cidr_block  = "${lookup(var.public_outbound_acl_rules[count.index], "cidr_block")}"
+  icmp_type   = "${lookup(var.public_outbound_acl_rules[count.index], "icmp_type", "-1")}"
+  icmp_code   = "${lookup(var.public_outbound_acl_rules[count.index], "icmp_code", "-1")}"
 }
 
 #######################
@@ -362,10 +366,12 @@ resource "aws_network_acl_rule" "private_inbound" {
   egress      = false
   rule_number = "${lookup(var.private_inbound_acl_rules[count.index], "rule_number")}"
   rule_action = "${lookup(var.private_inbound_acl_rules[count.index], "rule_action")}"
-  from_port   = "${lookup(var.private_inbound_acl_rules[count.index], "from_port")}"
-  to_port     = "${lookup(var.private_inbound_acl_rules[count.index], "to_port")}"
+  from_port   = "${lookup(var.private_inbound_acl_rules[count.index], "from_port", "-1")}"
+  to_port     = "${lookup(var.private_inbound_acl_rules[count.index], "to_port", "-1")}"
   protocol    = "${lookup(var.private_inbound_acl_rules[count.index], "protocol")}"
   cidr_block  = "${lookup(var.private_inbound_acl_rules[count.index], "cidr_block")}"
+  icmp_type   = "${lookup(var.private_inbound_acl_rules[count.index], "icmp_type", "-1")}"
+  icmp_code   = "${lookup(var.private_inbound_acl_rules[count.index], "icmp_code", "-1")}"
 }
 
 resource "aws_network_acl_rule" "private_outbound" {
@@ -376,10 +382,12 @@ resource "aws_network_acl_rule" "private_outbound" {
   egress      = true
   rule_number = "${lookup(var.private_outbound_acl_rules[count.index], "rule_number")}"
   rule_action = "${lookup(var.private_outbound_acl_rules[count.index], "rule_action")}"
-  from_port   = "${lookup(var.private_outbound_acl_rules[count.index], "from_port")}"
-  to_port     = "${lookup(var.private_outbound_acl_rules[count.index], "to_port")}"
+  from_port   = "${lookup(var.private_outbound_acl_rules[count.index], "from_port", "-1")}"
+  to_port     = "${lookup(var.private_outbound_acl_rules[count.index], "to_port", "-1")}"
   protocol    = "${lookup(var.private_outbound_acl_rules[count.index], "protocol")}"
   cidr_block  = "${lookup(var.private_outbound_acl_rules[count.index], "cidr_block")}"
+  icmp_type   = "${lookup(var.private_outbound_acl_rules[count.index], "icmp_type", "-1")}"
+  icmp_code   = "${lookup(var.private_outbound_acl_rules[count.index], "icmp_code", "-1")}"
 }
 
 ########################
@@ -402,10 +410,12 @@ resource "aws_network_acl_rule" "intra_inbound" {
   egress      = false
   rule_number = "${lookup(var.intra_inbound_acl_rules[count.index], "rule_number")}"
   rule_action = "${lookup(var.intra_inbound_acl_rules[count.index], "rule_action")}"
-  from_port   = "${lookup(var.intra_inbound_acl_rules[count.index], "from_port")}"
-  to_port     = "${lookup(var.intra_inbound_acl_rules[count.index], "to_port")}"
+  from_port   = "${lookup(var.intra_inbound_acl_rules[count.index], "from_port", "-1")}"
+  to_port     = "${lookup(var.intra_inbound_acl_rules[count.index], "to_port", "-1")}"
   protocol    = "${lookup(var.intra_inbound_acl_rules[count.index], "protocol")}"
   cidr_block  = "${lookup(var.intra_inbound_acl_rules[count.index], "cidr_block")}"
+  icmp_type   = "${lookup(var.intra_inbound_acl_rules[count.index], "icmp_type", "-1")}"
+  icmp_code   = "${lookup(var.intra_inbound_acl_rules[count.index], "icmp_code", "-1")}"
 }
 
 resource "aws_network_acl_rule" "intra_outbound" {
@@ -416,10 +426,12 @@ resource "aws_network_acl_rule" "intra_outbound" {
   egress      = true
   rule_number = "${lookup(var.intra_outbound_acl_rules[count.index], "rule_number")}"
   rule_action = "${lookup(var.intra_outbound_acl_rules[count.index], "rule_action")}"
-  from_port   = "${lookup(var.intra_outbound_acl_rules[count.index], "from_port")}"
-  to_port     = "${lookup(var.intra_outbound_acl_rules[count.index], "to_port")}"
+  from_port   = "${lookup(var.intra_outbound_acl_rules[count.index], "from_port", "-1")}"
+  to_port     = "${lookup(var.intra_outbound_acl_rules[count.index], "to_port", "-1")}"
   protocol    = "${lookup(var.intra_outbound_acl_rules[count.index], "protocol")}"
   cidr_block  = "${lookup(var.intra_outbound_acl_rules[count.index], "cidr_block")}"
+  icmp_type   = "${lookup(var.intra_outbound_acl_rules[count.index], "icmp_type", "-1")}"
+  icmp_code   = "${lookup(var.intra_outbound_acl_rules[count.index], "icmp_code", "-1")}"
 }
 
 ########################
