@@ -96,6 +96,14 @@ locals {
         protocol    = "tcp"
         cidr_block  = "0.0.0.0/0"
       },
+      {
+        rule_number = 140
+        rule_action = "allow"
+        icmp_code   = -1
+        icmp_type   = 0
+        protocol    = "icmp"
+        cidr_block  = "10.0.1.0/22"
+      },
     ]
 
     public_outbound = [
@@ -130,6 +138,14 @@ locals {
         to_port     = 22
         protocol    = "tcp"
         cidr_block  = "10.0.100.0/22"
+      },
+      {
+        rule_number = 140
+        rule_action = "allow"
+        icmp_code   = -1
+        icmp_type   = 8
+        protocol    = "icmp"
+        cidr_block  = "10.0.1.0/22"
       },
     ]
   }
