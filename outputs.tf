@@ -3,6 +3,11 @@ output "vpc_id" {
   value       = "${element(concat(aws_vpc.this.*.id, list("")), 0)}"
 }
 
+output "vpc_arn" {
+  description = "The ARN of the VPC"
+  value       = "${element(concat(aws_vpc.this.*.arn, list("")), 0)}"
+}
+
 output "vpc_cidr_block" {
   description = "The CIDR block of the VPC"
   value       = "${element(concat(aws_vpc.this.*.cidr_block, list("")), 0)}"
@@ -68,6 +73,11 @@ output "private_subnets" {
   value       = ["${aws_subnet.private.*.id}"]
 }
 
+output "private_subnet_arns" {
+  description = "List of ARNs of private subnets"
+  value       = ["${aws_subnet.private.*.arn}"]
+}
+
 output "private_subnets_cidr_blocks" {
   description = "List of cidr_blocks of private subnets"
   value       = ["${aws_subnet.private.*.cidr_block}"]
@@ -78,6 +88,11 @@ output "public_subnets" {
   value       = ["${aws_subnet.public.*.id}"]
 }
 
+output "public_subnet_arns" {
+  description = "List of ARNs of public subnets"
+  value       = ["${aws_subnet.public.*.arn}"]
+}
+
 output "public_subnets_cidr_blocks" {
   description = "List of cidr_blocks of public subnets"
   value       = ["${aws_subnet.public.*.cidr_block}"]
@@ -86,6 +101,11 @@ output "public_subnets_cidr_blocks" {
 output "database_subnets" {
   description = "List of IDs of database subnets"
   value       = ["${aws_subnet.database.*.id}"]
+}
+
+output "database_subnet_arns" {
+  description = "List of ARNs of database subnets"
+  value       = ["${aws_subnet.database.*.arn}"]
 }
 
 output "database_subnets_cidr_blocks" {
@@ -103,6 +123,11 @@ output "redshift_subnets" {
   value       = ["${aws_subnet.redshift.*.id}"]
 }
 
+output "redshift_subnet_arns" {
+  description = "List of ARNs of redshift subnets"
+  value       = ["${aws_subnet.redshift.*.arn}"]
+}
+
 output "redshift_subnets_cidr_blocks" {
   description = "List of cidr_blocks of redshift subnets"
   value       = ["${aws_subnet.redshift.*.cidr_block}"]
@@ -118,6 +143,11 @@ output "elasticache_subnets" {
   value       = ["${aws_subnet.elasticache.*.id}"]
 }
 
+output "elasticache_subnet_arns" {
+  description = "List of ARNs of elasticache subnets"
+  value       = ["${aws_subnet.elasticache.*.arn}"]
+}
+
 output "elasticache_subnets_cidr_blocks" {
   description = "List of cidr_blocks of elasticache subnets"
   value       = ["${aws_subnet.elasticache.*.cidr_block}"]
@@ -126,6 +156,11 @@ output "elasticache_subnets_cidr_blocks" {
 output "intra_subnets" {
   description = "List of IDs of intra subnets"
   value       = ["${aws_subnet.intra.*.id}"]
+}
+
+output "intra_subnet_arns" {
+  description = "List of ARNs of intra subnets"
+  value       = ["${aws_subnet.intra.*.arn}"]
 }
 
 output "intra_subnets_cidr_blocks" {
@@ -367,6 +402,66 @@ output "vpc_endpoint_ec2messages_network_interface_ids" {
 output "vpc_endpoint_ec2messages_dns_entry" {
   description = "The DNS entries for the VPC Endpoint for EC2MESSAGES."
   value       = "${flatten(aws_vpc_endpoint.ec2messages.*.dns_entry)}"
+}
+
+output "vpc_endpoint_kms_id" {
+  description = "The ID of VPC endpoint for KMS"
+  value       = "${element(concat(aws_vpc_endpoint.kms.*.id, list("")), 0)}"
+}
+
+output "vpc_endpoint_kms_network_interface_ids" {
+  description = "One or more network interfaces for the VPC Endpoint for KMS."
+  value       = "${flatten(aws_vpc_endpoint.kms.*.network_interface_ids)}"
+}
+
+output "vpc_endpoint_kms_dns_entry" {
+  description = "The DNS entries for the VPC Endpoint for KMS."
+  value       = "${flatten(aws_vpc_endpoint.kms.*.dns_entry)}"
+}
+
+output "vpc_endpoint_ecr_api_id" {
+  description = "The ID of VPC endpoint for ECR API"
+  value       = "${element(concat(aws_vpc_endpoint.ecr_api.*.id, list("")), 0)}"
+}
+
+output "vpc_endpoint_ecr_api_network_interface_ids" {
+  description = "One or more network interfaces for the VPC Endpoint for ECR API."
+  value       = "${flatten(aws_vpc_endpoint.ecr_api.*.network_interface_ids)}"
+}
+
+output "vpc_endpoint_ecr_api_dns_entry" {
+  description = "The DNS entries for the VPC Endpoint for ECR API."
+  value       = "${flatten(aws_vpc_endpoint.ecr_api.*.dns_entry)}"
+}
+
+output "vpc_endpoint_ecr_dkr_id" {
+  description = "The ID of VPC endpoint for ECR DKR"
+  value       = "${element(concat(aws_vpc_endpoint.ecr_dkr.*.id, list("")), 0)}"
+}
+
+output "vpc_endpoint_ecr_dkr_network_interface_ids" {
+  description = "One or more network interfaces for the VPC Endpoint for ECR DKR."
+  value       = "${flatten(aws_vpc_endpoint.ecr_dkr.*.network_interface_ids)}"
+}
+
+output "vpc_endpoint_ecr_dkr_dns_entry" {
+  description = "The DNS entries for the VPC Endpoint for ECR DKR."
+  value       = "${flatten(aws_vpc_endpoint.ecr_dkr.*.dns_entry)}"
+}
+
+output "vpc_endpoint_apigw_id" {
+  description = "The ID of VPC endpoint for APIGW"
+  value       = "${element(concat(aws_vpc_endpoint.apigw.*.id, list("")), 0)}"
+}
+
+output "vpc_endpoint_apigw_network_interface_ids" {
+  description = "One or more network interfaces for the VPC Endpoint for APIGW."
+  value       = "${flatten(aws_vpc_endpoint.apigw.*.network_interface_ids)}"
+}
+
+output "vpc_endpoint_apigw_dns_entry" {
+  description = "The DNS entries for the VPC Endpoint for APIGW."
+  value       = "${flatten(aws_vpc_endpoint.apigw.*.dns_entry)}"
 }
 
 # Static values (arguments)

@@ -3,9 +3,39 @@
 
 
 
+<a name="v1.64.0"></a>
+## [v1.64.0] - 2019-04-25
+
+- Fixed formatting
+- Add Output Of Subnet ARNs ([#242](https://github.com/terraform-aws-modules/terraform-aws-vpc/issues/242))
+
+
+<a name="v1.63.0"></a>
+## [v1.63.0] - 2019-04-25
+
+- Updated CHANGELOG
+- Fixed formatting
+- Added ARN of VPC in module output ([#245](https://github.com/terraform-aws-modules/terraform-aws-vpc/issues/245))
+
+
+<a name="v1.62.0"></a>
+## [v1.62.0] - 2019-04-25
+
+- Updated CHANGELOG
+- Add support for KMS VPC endpoint creation ([#243](https://github.com/terraform-aws-modules/terraform-aws-vpc/issues/243))
+
+
+<a name="v1.61.0"></a>
+## [v1.61.0] - 2019-04-25
+
+- Updated CHANGELOG
+- Added missing VPC endpoints outputs (resolves [#246](https://github.com/terraform-aws-modules/terraform-aws-vpc/issues/246)) ([#247](https://github.com/terraform-aws-modules/terraform-aws-vpc/issues/247))
+
+
 <a name="v1.60.0"></a>
 ## [v1.60.0] - 2019-03-22
 
+- Updated CHANGELOG
 - Network ACLs ([#238](https://github.com/terraform-aws-modules/terraform-aws-vpc/issues/238))
 
 
@@ -486,7 +516,11 @@
 - Initial commit
 
 
-[Unreleased]: https://github.com/terraform-aws-modules/terraform-aws-vpc/compare/v1.60.0...HEAD
+[Unreleased]: https://github.com/terraform-aws-modules/terraform-aws-vpc/compare/v1.64.0...HEAD
+[v1.64.0]: https://github.com/terraform-aws-modules/terraform-aws-vpc/compare/v1.63.0...v1.64.0
+[v1.63.0]: https://github.com/terraform-aws-modules/terraform-aws-vpc/compare/v1.62.0...v1.63.0
+[v1.62.0]: https://github.com/terraform-aws-modules/terraform-aws-vpc/compare/v1.61.0...v1.62.0
+[v1.61.0]: https://github.com/terraform-aws-modules/terraform-aws-vpc/compare/v1.60.0...v1.61.0
 [v1.60.0]: https://github.com/terraform-aws-modules/terraform-aws-vpc/compare/v1.59.0...v1.60.0
 [v1.59.0]: https://github.com/terraform-aws-modules/terraform-aws-vpc/compare/v1.58.0...v1.59.0
 [v1.58.0]: https://github.com/terraform-aws-modules/terraform-aws-vpc/compare/v1.57.0...v1.58.0
