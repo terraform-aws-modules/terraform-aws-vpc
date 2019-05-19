@@ -464,6 +464,51 @@ output "vpc_endpoint_apigw_dns_entry" {
   value       = "${flatten(aws_vpc_endpoint.apigw.*.dns_entry)}"
 }
 
+output "vpc_endpoint_ecs_id" {
+  description = "The ID of VPC endpoint for ECS"
+  value       = "${element(concat(aws_vpc_endpoint.ecs.*.id, list("")), 0)}"
+}
+
+output "vpc_endpoint_ecs_network_interface_ids" {
+  description = "One or more network interfaces for the VPC Endpoint for ECS."
+  value       = "${flatten(aws_vpc_endpoint.ecs.*.network_interface_ids)}"
+}
+
+output "vpc_endpoint_ecs_dns_entry" {
+  description = "The DNS entries for the VPC Endpoint for ECS."
+  value       = "${flatten(aws_vpc_endpoint.ecs.*.dns_entry)}"
+}
+
+output "vpc_endpoint_ecs_agent_id" {
+  description = "The ID of VPC endpoint for ECS Agent"
+  value       = "${element(concat(aws_vpc_endpoint.ecs_agent.*.id, list("")), 0)}"
+}
+
+output "vpc_endpoint_ecs_agent_network_interface_ids" {
+  description = "One or more network interfaces for the VPC Endpoint for ECS Agent."
+  value       = "${flatten(aws_vpc_endpoint.ecs_agent.*.network_interface_ids)}"
+}
+
+output "vpc_endpoint_ecs_agent_dns_entry" {
+  description = "The DNS entries for the VPC Endpoint for ECS Agent."
+  value       = "${flatten(aws_vpc_endpoint.ecs_agent.*.dns_entry)}"
+}
+
+output "vpc_endpoint_ecs_telemetry_id" {
+  description = "The ID of VPC endpoint for ECS Telemetry"
+  value       = "${element(concat(aws_vpc_endpoint.ecs_telemetry.*.id, list("")), 0)}"
+}
+
+output "vpc_endpoint_ecs_telemetry_network_interface_ids" {
+  description = "One or more network interfaces for the VPC Endpoint for ECS Telemetry."
+  value       = "${flatten(aws_vpc_endpoint.ecs_telemetry.*.network_interface_ids)}"
+}
+
+output "vpc_endpoint_ecs_telemetry_dns_entry" {
+  description = "The DNS entries for the VPC Endpoint for ECS Telemetry."
+  value       = "${flatten(aws_vpc_endpoint.ecs_telemetry.*.dns_entry)}"
+}
+
 # Static values (arguments)
 output "azs" {
   description = "A list of availability zones specified as argument to this module"
