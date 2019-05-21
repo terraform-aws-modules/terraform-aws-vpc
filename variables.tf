@@ -490,7 +490,7 @@ variable "elasticache_acl_tags" {
 }
 
 variable "dhcp_options_tags" {
-  description = "Additional tags for the DHCP option set"
+  description = "Additional tags for the DHCP option set (requires enable_dhcp_options set to true)"
   default     = {}
 }
 
@@ -515,30 +515,30 @@ variable "enable_dhcp_options" {
 }
 
 variable "dhcp_options_domain_name" {
-  description = "Specifies DNS name for DHCP options set"
+  description = "Specifies DNS name for DHCP options set (requires enable_dhcp_options set to true)"
   default     = ""
 }
 
 variable "dhcp_options_domain_name_servers" {
-  description = "Specify a list of DNS server addresses for DHCP options set, default to AWS provided"
+  description = "Specify a list of DNS server addresses for DHCP options set, default to AWS provided (requires enable_dhcp_options set to true)"
 
   default = ["AmazonProvidedDNS"]
 }
 
 variable "dhcp_options_ntp_servers" {
-  description = "Specify a list of NTP servers for DHCP options set"
+  description = "Specify a list of NTP servers for DHCP options set (requires enable_dhcp_options set to true)"
 
   default = []
 }
 
 variable "dhcp_options_netbios_name_servers" {
-  description = "Specify a list of netbios servers for DHCP options set"
+  description = "Specify a list of netbios servers for DHCP options set (requires enable_dhcp_options set to true)"
 
   default = []
 }
 
 variable "dhcp_options_netbios_node_type" {
-  description = "Specify netbios node_type for DHCP options set"
+  description = "Specify netbios node_type for DHCP options set (requires enable_dhcp_options set to true)"
   default     = ""
 }
 

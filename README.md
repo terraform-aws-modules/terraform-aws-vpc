@@ -234,12 +234,12 @@ Terraform version 0.10.3 or newer is required for this module to work.
 | default\_vpc\_enable\_dns\_support | Should be true to enable DNS support in the Default VPC | string | `"true"` | no |
 | default\_vpc\_name | Name to be used on the Default VPC | string | `""` | no |
 | default\_vpc\_tags | Additional tags for the Default VPC | map | `{}` | no |
-| dhcp\_options\_domain\_name | Specifies DNS name for DHCP options set (requires `enable_dhcp_options` set to `true`) | string | `""` | no |
-| dhcp\_options\_domain\_name\_servers | Specify a list of DNS server addresses for DHCP options set, default to AWS provided (requires `enable_dhcp_options` set to `true`) | list | `[ "AmazonProvidedDNS" ]` | no |
-| dhcp\_options\_netbios\_name\_servers | Specify a list of netbios servers for DHCP options set (requires `enable_dhcp_options` set to `true`) | list | `[]` | no |
-| dhcp\_options\_netbios\_node\_type | Specify netbios node_type for DHCP options set (requires `enable_dhcp_options` set to `true`) | string | `""` | no |
-| dhcp\_options\_ntp\_servers | Specify a list of NTP servers for DHCP options set (requires `enable_dhcp_options` set to `true`) | list | `[]` | no |
-| dhcp\_options\_tags | Additional tags for the DHCP option set (requires `enable_dhcp_options` set to `true`) | map | `{}` | no |
+| dhcp\_options\_domain\_name | Specifies DNS name for DHCP options set (requires enable_dhcp_options set to true) | string | `""` | no |
+| dhcp\_options\_domain\_name\_servers | Specify a list of DNS server addresses for DHCP options set, default to AWS provided (requires enable_dhcp_options set to true) | list | `[ "AmazonProvidedDNS" ]` | no |
+| dhcp\_options\_netbios\_name\_servers | Specify a list of netbios servers for DHCP options set (requires enable_dhcp_options set to true) | list | `[]` | no |
+| dhcp\_options\_netbios\_node\_type | Specify netbios node_type for DHCP options set (requires enable_dhcp_options set to true) | string | `""` | no |
+| dhcp\_options\_ntp\_servers | Specify a list of NTP servers for DHCP options set (requires enable_dhcp_options set to true) | list | `[]` | no |
+| dhcp\_options\_tags | Additional tags for the DHCP option set (requires enable_dhcp_options set to true) | map | `{}` | no |
 | ec2\_endpoint\_private\_dns\_enabled | Whether or not to associate a private hosted zone with the specified VPC for EC2 endpoint | string | `"false"` | no |
 | ec2\_endpoint\_security\_group\_ids | The ID of one or more security groups to associate with the network interface for EC2 endpoint | list | `[]` | no |
 | ec2\_endpoint\_subnet\_ids | The ID of one or more subnets in which to create a network interface for EC2 endpoint. Only a single subnet within an AZ is supported. If omitted, private subnets will be used. | list | `[]` | no |
