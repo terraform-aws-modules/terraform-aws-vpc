@@ -4,7 +4,7 @@ provider "aws" {
 
 data "aws_security_group" "default" {
   name   = "default"
-  vpc_id = "${module.vpc.vpc_id}"
+  vpc_id = module.vpc.vpc_id
 }
 
 module "vpc" {
@@ -19,7 +19,7 @@ module "vpc" {
 
   # VPC endpoint for API gateway
   enable_apigw_endpoint              = true
-  apigw_endpoint_security_group_ids  = ["${data.aws_security_group.default.id}"]
+  apigw_endpoint_security_group_ids  = [data.aws_security_group.default.id]
   apigw_endpoint_private_dns_enabled = true
 
   tags = {
@@ -28,3 +28,4 @@ module "vpc" {
     Name        = "test-224"
   }
 }
+
