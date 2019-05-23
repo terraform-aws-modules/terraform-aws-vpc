@@ -620,14 +620,15 @@ variable "elasticache_dedicated_network_acl" {
 variable "default_network_acl_ingress" {
   description = "List of maps of ingress rules to set on the Default Network ACL"
 
-  default = [{
-    rule_no    = 100
-    action     = "allow"
-    from_port  = 0
-    to_port    = 0
-    protocol   = "-1"
-    cidr_block = "0.0.0.0/0"
-  },
+  default = [
+    {
+      rule_no    = 100
+      action     = "allow"
+      from_port  = 0
+      to_port    = 0
+      protocol   = "-1"
+      cidr_block = "0.0.0.0/0"
+    },
     {
       rule_no         = 101
       action          = "allow"
@@ -642,14 +643,15 @@ variable "default_network_acl_ingress" {
 variable "default_network_acl_egress" {
   description = "List of maps of egress rules to set on the Default Network ACL"
 
-  default = [{
-    rule_no    = 100
-    action     = "allow"
-    from_port  = 0
-    to_port    = 0
-    protocol   = "-1"
-    cidr_block = "0.0.0.0/0"
-  },
+  default = [
+    {
+      rule_no    = 100
+      action     = "allow"
+      from_port  = 0
+      to_port    = 0
+      protocol   = "-1"
+      cidr_block = "0.0.0.0/0"
+    },
     {
       rule_no         = 101
       action          = "allow"
@@ -840,3 +842,4 @@ variable "elasticache_outbound_acl_rules" {
     },
   ]
 }
+
