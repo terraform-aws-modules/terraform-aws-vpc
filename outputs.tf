@@ -65,52 +65,52 @@ output "vpc_main_route_table_id" {
 
 output "vpc_secondary_cidr_blocks" {
   description = "List of secondary CIDR blocks of the VPC"
-  value       = [aws_vpc_ipv4_cidr_block_association.this.*.cidr_block]
+  value       = aws_vpc_ipv4_cidr_block_association.this.*.cidr_block
 }
 
 output "private_subnets" {
   description = "List of IDs of private subnets"
-  value       = [aws_subnet.private.*.id]
+  value       = aws_subnet.private.*.id
 }
 
 output "private_subnet_arns" {
   description = "List of ARNs of private subnets"
-  value       = [aws_subnet.private.*.arn]
+  value       = aws_subnet.private.*.arn
 }
 
 output "private_subnets_cidr_blocks" {
   description = "List of cidr_blocks of private subnets"
-  value       = [aws_subnet.private.*.cidr_block]
+  value       = aws_subnet.private.*.cidr_block
 }
 
 output "public_subnets" {
   description = "List of IDs of public subnets"
-  value       = [aws_subnet.public.*.id]
+  value       = aws_subnet.public.*.id
 }
 
 output "public_subnet_arns" {
   description = "List of ARNs of public subnets"
-  value       = [aws_subnet.public.*.arn]
+  value       = aws_subnet.public.*.arn
 }
 
 output "public_subnets_cidr_blocks" {
   description = "List of cidr_blocks of public subnets"
-  value       = [aws_subnet.public.*.cidr_block]
+  value       = aws_subnet.public.*.cidr_block
 }
 
 output "database_subnets" {
   description = "List of IDs of database subnets"
-  value       = [aws_subnet.database.*.id]
+  value       = aws_subnet.database.*.id
 }
 
 output "database_subnet_arns" {
   description = "List of ARNs of database subnets"
-  value       = [aws_subnet.database.*.arn]
+  value       = aws_subnet.database.*.arn
 }
 
 output "database_subnets_cidr_blocks" {
   description = "List of cidr_blocks of database subnets"
-  value       = [aws_subnet.database.*.cidr_block]
+  value       = aws_subnet.database.*.cidr_block
 }
 
 output "database_subnet_group" {
@@ -120,17 +120,17 @@ output "database_subnet_group" {
 
 output "redshift_subnets" {
   description = "List of IDs of redshift subnets"
-  value       = [aws_subnet.redshift.*.id]
+  value       = aws_subnet.redshift.*.id
 }
 
 output "redshift_subnet_arns" {
   description = "List of ARNs of redshift subnets"
-  value       = [aws_subnet.redshift.*.arn]
+  value       = aws_subnet.redshift.*.arn
 }
 
 output "redshift_subnets_cidr_blocks" {
   description = "List of cidr_blocks of redshift subnets"
-  value       = [aws_subnet.redshift.*.cidr_block]
+  value       = aws_subnet.redshift.*.cidr_block
 }
 
 output "redshift_subnet_group" {
@@ -140,32 +140,32 @@ output "redshift_subnet_group" {
 
 output "elasticache_subnets" {
   description = "List of IDs of elasticache subnets"
-  value       = [aws_subnet.elasticache.*.id]
+  value       = aws_subnet.elasticache.*.id
 }
 
 output "elasticache_subnet_arns" {
   description = "List of ARNs of elasticache subnets"
-  value       = [aws_subnet.elasticache.*.arn]
+  value       = aws_subnet.elasticache.*.arn
 }
 
 output "elasticache_subnets_cidr_blocks" {
   description = "List of cidr_blocks of elasticache subnets"
-  value       = [aws_subnet.elasticache.*.cidr_block]
+  value       = aws_subnet.elasticache.*.cidr_block
 }
 
 output "intra_subnets" {
   description = "List of IDs of intra subnets"
-  value       = [aws_subnet.intra.*.id]
+  value       = aws_subnet.intra.*.id
 }
 
 output "intra_subnet_arns" {
   description = "List of ARNs of intra subnets"
-  value       = [aws_subnet.intra.*.arn]
+  value       = aws_subnet.intra.*.arn
 }
 
 output "intra_subnets_cidr_blocks" {
   description = "List of cidr_blocks of intra subnets"
-  value       = [aws_subnet.intra.*.cidr_block]
+  value       = aws_subnet.intra.*.cidr_block
 }
 
 output "elasticache_subnet_group" {
@@ -186,22 +186,22 @@ output "elasticache_subnet_group_name" {
 
 output "public_route_table_ids" {
   description = "List of IDs of public route tables"
-  value       = [aws_route_table.public.*.id]
+  value       = aws_route_table.public.*.id
 }
 
 output "private_route_table_ids" {
   description = "List of IDs of private route tables"
-  value       = [aws_route_table.private.*.id]
+  value       = aws_route_table.private.*.id
 }
 
 output "database_route_table_ids" {
   description = "List of IDs of database route tables"
-  value       = [coalescelist(aws_route_table.database.*.id, aws_route_table.private.*.id)]
+  value       = coalescelist(aws_route_table.database.*.id, aws_route_table.private.*.id)
 }
 
 output "redshift_route_table_ids" {
   description = "List of IDs of redshift route tables"
-  value       = [coalescelist(aws_route_table.redshift.*.id, aws_route_table.private.*.id)]
+  value       = coalescelist(aws_route_table.redshift.*.id, aws_route_table.private.*.id)
 }
 
 output "elasticache_route_table_ids" {
@@ -214,22 +214,22 @@ output "elasticache_route_table_ids" {
 
 output "intra_route_table_ids" {
   description = "List of IDs of intra route tables"
-  value       = [aws_route_table.intra.*.id]
+  value       = aws_route_table.intra.*.id
 }
 
 output "nat_ids" {
   description = "List of allocation ID of Elastic IPs created for AWS NAT Gateway"
-  value       = [aws_eip.nat.*.id]
+  value       = aws_eip.nat.*.id
 }
 
 output "nat_public_ips" {
   description = "List of public Elastic IPs created for AWS NAT Gateway"
-  value       = [aws_eip.nat.*.public_ip]
+  value       = aws_eip.nat.*.public_ip
 }
 
 output "natgw_ids" {
   description = "List of NAT Gateway IDs"
-  value       = [aws_nat_gateway.this.*.id]
+  value       = aws_nat_gateway.this.*.id
 }
 
 output "igw_id" {

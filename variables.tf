@@ -619,6 +619,7 @@ variable "elasticache_dedicated_network_acl" {
 
 variable "default_network_acl_ingress" {
   description = "List of maps of ingress rules to set on the Default Network ACL"
+  type        = list(map(string))
 
   default = [
     {
@@ -642,6 +643,7 @@ variable "default_network_acl_ingress" {
 
 variable "default_network_acl_egress" {
   description = "List of maps of egress rules to set on the Default Network ACL"
+  type        = list(map(string))
 
   default = [
     {

@@ -437,11 +437,6 @@ resource "aws_default_network_acl" "this" {
   dynamic "ingress" {
     for_each = var.default_network_acl_ingress
     content {
-      # TF-UPGRADE-TODO: The automatic upgrade tool can't predict
-      # which keys might be set in maps assigned here, so it has
-      # produced a comprehensive set here. Consider simplifying
-      # this after confirming which keys can be set in practice.
-
       action          = ingress.value.action
       cidr_block      = lookup(ingress.value, "cidr_block", null)
       from_port       = ingress.value.from_port
@@ -456,11 +451,6 @@ resource "aws_default_network_acl" "this" {
   dynamic "egress" {
     for_each = var.default_network_acl_egress
     content {
-      # TF-UPGRADE-TODO: The automatic upgrade tool can't predict
-      # which keys might be set in maps assigned here, so it has
-      # produced a comprehensive set here. Consider simplifying
-      # this after confirming which keys can be set in practice.
-
       action          = egress.value.action
       cidr_block      = lookup(egress.value, "cidr_block", null)
       from_port       = egress.value.from_port
@@ -927,16 +917,8 @@ resource "aws_vpc_endpoint" "ssm" {
   service_name      = data.aws_vpc_endpoint_service.ssm[0].service_name
   vpc_endpoint_type = "Interface"
 
-  security_group_ids = var.ssm_endpoint_security_group_ids
-  # TF-UPGRADE-TODO: In Terraform v0.10 and earlier, it was sometimes necessary to
-  # force an interpolation expression to be interpreted as a list by wrapping it
-  # in an extra set of list brackets. That form was supported for compatibilty in
-  # v0.11, but is no longer supported in Terraform v0.12.
-  #
-  # If the expression in the following list itself returns a list, remove the
-  # brackets to avoid interpretation as a list of lists. If the expression
-  # returns a single list item then leave it as-is and remove this TODO comment.
-  subnet_ids          = [coalescelist(var.ssm_endpoint_subnet_ids, aws_subnet.private.*.id)]
+  security_group_ids  = var.ssm_endpoint_security_group_ids
+  subnet_ids          = coalescelist(var.ssm_endpoint_subnet_ids, aws_subnet.private.*.id)
   private_dns_enabled = var.ssm_endpoint_private_dns_enabled
 }
 
@@ -956,16 +938,8 @@ resource "aws_vpc_endpoint" "ssmmessages" {
   service_name      = data.aws_vpc_endpoint_service.ssmmessages[0].service_name
   vpc_endpoint_type = "Interface"
 
-  security_group_ids = var.ssmmessages_endpoint_security_group_ids
-  # TF-UPGRADE-TODO: In Terraform v0.10 and earlier, it was sometimes necessary to
-  # force an interpolation expression to be interpreted as a list by wrapping it
-  # in an extra set of list brackets. That form was supported for compatibilty in
-  # v0.11, but is no longer supported in Terraform v0.12.
-  #
-  # If the expression in the following list itself returns a list, remove the
-  # brackets to avoid interpretation as a list of lists. If the expression
-  # returns a single list item then leave it as-is and remove this TODO comment.
-  subnet_ids          = [coalescelist(var.ssmmessages_endpoint_subnet_ids, aws_subnet.private.*.id)]
+  security_group_ids  = var.ssmmessages_endpoint_security_group_ids
+  subnet_ids          = coalescelist(var.ssmmessages_endpoint_subnet_ids, aws_subnet.private.*.id)
   private_dns_enabled = var.ssmmessages_endpoint_private_dns_enabled
 }
 
@@ -985,16 +959,8 @@ resource "aws_vpc_endpoint" "ec2" {
   service_name      = data.aws_vpc_endpoint_service.ec2[0].service_name
   vpc_endpoint_type = "Interface"
 
-  security_group_ids = var.ec2_endpoint_security_group_ids
-  # TF-UPGRADE-TODO: In Terraform v0.10 and earlier, it was sometimes necessary to
-  # force an interpolation expression to be interpreted as a list by wrapping it
-  # in an extra set of list brackets. That form was supported for compatibilty in
-  # v0.11, but is no longer supported in Terraform v0.12.
-  #
-  # If the expression in the following list itself returns a list, remove the
-  # brackets to avoid interpretation as a list of lists. If the expression
-  # returns a single list item then leave it as-is and remove this TODO comment.
-  subnet_ids          = [coalescelist(var.ec2_endpoint_subnet_ids, aws_subnet.private.*.id)]
+  security_group_ids  = var.ec2_endpoint_security_group_ids
+  subnet_ids          = coalescelist(var.ec2_endpoint_subnet_ids, aws_subnet.private.*.id)
   private_dns_enabled = var.ec2_endpoint_private_dns_enabled
 }
 
@@ -1014,16 +980,8 @@ resource "aws_vpc_endpoint" "ec2messages" {
   service_name      = data.aws_vpc_endpoint_service.ec2messages[0].service_name
   vpc_endpoint_type = "Interface"
 
-  security_group_ids = var.ec2messages_endpoint_security_group_ids
-  # TF-UPGRADE-TODO: In Terraform v0.10 and earlier, it was sometimes necessary to
-  # force an interpolation expression to be interpreted as a list by wrapping it
-  # in an extra set of list brackets. That form was supported for compatibilty in
-  # v0.11, but is no longer supported in Terraform v0.12.
-  #
-  # If the expression in the following list itself returns a list, remove the
-  # brackets to avoid interpretation as a list of lists. If the expression
-  # returns a single list item then leave it as-is and remove this TODO comment.
-  subnet_ids          = [coalescelist(var.ec2messages_endpoint_subnet_ids, aws_subnet.private.*.id)]
+  security_group_ids  = var.ec2messages_endpoint_security_group_ids
+  subnet_ids          = coalescelist(var.ec2messages_endpoint_subnet_ids, aws_subnet.private.*.id)
   private_dns_enabled = var.ec2messages_endpoint_private_dns_enabled
 }
 
@@ -1043,16 +1001,8 @@ resource "aws_vpc_endpoint" "ecr_api" {
   service_name      = data.aws_vpc_endpoint_service.ecr_api[0].service_name
   vpc_endpoint_type = "Interface"
 
-  security_group_ids = var.ecr_api_endpoint_security_group_ids
-  # TF-UPGRADE-TODO: In Terraform v0.10 and earlier, it was sometimes necessary to
-  # force an interpolation expression to be interpreted as a list by wrapping it
-  # in an extra set of list brackets. That form was supported for compatibilty in
-  # v0.11, but is no longer supported in Terraform v0.12.
-  #
-  # If the expression in the following list itself returns a list, remove the
-  # brackets to avoid interpretation as a list of lists. If the expression
-  # returns a single list item then leave it as-is and remove this TODO comment.
-  subnet_ids          = [coalescelist(var.ecr_api_endpoint_subnet_ids, aws_subnet.private.*.id)]
+  security_group_ids  = var.ecr_api_endpoint_security_group_ids
+  subnet_ids          = coalescelist(var.ecr_api_endpoint_subnet_ids, aws_subnet.private.*.id)
   private_dns_enabled = var.ecr_api_endpoint_private_dns_enabled
 }
 
@@ -1072,16 +1022,8 @@ resource "aws_vpc_endpoint" "ecr_dkr" {
   service_name      = data.aws_vpc_endpoint_service.ecr_dkr[0].service_name
   vpc_endpoint_type = "Interface"
 
-  security_group_ids = var.ecr_dkr_endpoint_security_group_ids
-  # TF-UPGRADE-TODO: In Terraform v0.10 and earlier, it was sometimes necessary to
-  # force an interpolation expression to be interpreted as a list by wrapping it
-  # in an extra set of list brackets. That form was supported for compatibilty in
-  # v0.11, but is no longer supported in Terraform v0.12.
-  #
-  # If the expression in the following list itself returns a list, remove the
-  # brackets to avoid interpretation as a list of lists. If the expression
-  # returns a single list item then leave it as-is and remove this TODO comment.
-  subnet_ids          = [coalescelist(var.ecr_dkr_endpoint_subnet_ids, aws_subnet.private.*.id)]
+  security_group_ids  = var.ecr_dkr_endpoint_security_group_ids
+  subnet_ids          = coalescelist(var.ecr_dkr_endpoint_subnet_ids, aws_subnet.private.*.id)
   private_dns_enabled = var.ecr_dkr_endpoint_private_dns_enabled
 }
 
@@ -1101,16 +1043,8 @@ resource "aws_vpc_endpoint" "apigw" {
   service_name      = data.aws_vpc_endpoint_service.apigw[0].service_name
   vpc_endpoint_type = "Interface"
 
-  security_group_ids = var.apigw_endpoint_security_group_ids
-  # TF-UPGRADE-TODO: In Terraform v0.10 and earlier, it was sometimes necessary to
-  # force an interpolation expression to be interpreted as a list by wrapping it
-  # in an extra set of list brackets. That form was supported for compatibilty in
-  # v0.11, but is no longer supported in Terraform v0.12.
-  #
-  # If the expression in the following list itself returns a list, remove the
-  # brackets to avoid interpretation as a list of lists. If the expression
-  # returns a single list item then leave it as-is and remove this TODO comment.
-  subnet_ids          = [coalescelist(var.apigw_endpoint_subnet_ids, aws_subnet.private.*.id)]
+  security_group_ids  = var.apigw_endpoint_security_group_ids
+  subnet_ids          = coalescelist(var.apigw_endpoint_subnet_ids, aws_subnet.private.*.id)
   private_dns_enabled = var.apigw_endpoint_private_dns_enabled
 }
 
@@ -1130,16 +1064,8 @@ resource "aws_vpc_endpoint" "kms" {
   service_name      = data.aws_vpc_endpoint_service.kms[0].service_name
   vpc_endpoint_type = "Interface"
 
-  security_group_ids = var.kms_endpoint_security_group_ids
-  # TF-UPGRADE-TODO: In Terraform v0.10 and earlier, it was sometimes necessary to
-  # force an interpolation expression to be interpreted as a list by wrapping it
-  # in an extra set of list brackets. That form was supported for compatibilty in
-  # v0.11, but is no longer supported in Terraform v0.12.
-  #
-  # If the expression in the following list itself returns a list, remove the
-  # brackets to avoid interpretation as a list of lists. If the expression
-  # returns a single list item then leave it as-is and remove this TODO comment.
-  subnet_ids          = [coalescelist(var.kms_endpoint_subnet_ids, aws_subnet.private.*.id)]
+  security_group_ids  = var.kms_endpoint_security_group_ids
+  subnet_ids          = coalescelist(var.kms_endpoint_subnet_ids, aws_subnet.private.*.id)
   private_dns_enabled = var.kms_endpoint_private_dns_enabled
 }
 
