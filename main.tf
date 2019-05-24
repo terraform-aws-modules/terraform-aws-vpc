@@ -1,7 +1,3 @@
-terraform {
-  required_version = ">= 0.12"
-}
-
 locals {
   max_subnet_length = max(
     length(var.private_subnets),
@@ -902,6 +898,27 @@ resource "aws_vpc_endpoint_route_table_association" "public_dynamodb" {
 }
 
 #######################
+# VPC Endpoint for SQS
+#######################
+data "aws_vpc_endpoint_service" "sqs" {
+  count = var.create_vpc && var.enable_sqs_endpoint ? 1 : 0
+
+  service = "sqs"
+}
+
+resource "aws_vpc_endpoint" "sqs" {
+  count = var.create_vpc && var.enable_sqs_endpoint ? 1 : 0
+
+  vpc_id            = local.vpc_id
+  service_name      = data.aws_vpc_endpoint_service.sqs[0].service_name
+  vpc_endpoint_type = "Interface"
+
+  security_group_ids  = var.sqs_endpoint_security_group_ids
+  subnet_ids          = coalescelist(var.sqs_endpoint_subnet_ids, aws_subnet.private.*.id)
+  private_dns_enabled = var.sqs_endpoint_private_dns_enabled
+}
+
+#######################
 # VPC Endpoint for SSM
 #######################
 data "aws_vpc_endpoint_service" "ssm" {
@@ -1067,6 +1084,71 @@ resource "aws_vpc_endpoint" "kms" {
   security_group_ids  = var.kms_endpoint_security_group_ids
   subnet_ids          = coalescelist(var.kms_endpoint_subnet_ids, aws_subnet.private.*.id)
   private_dns_enabled = var.kms_endpoint_private_dns_enabled
+}
+
+#######################
+# VPC Endpoint for ECS
+#######################
+data "aws_vpc_endpoint_service" "ecs" {
+  count = var.create_vpc && var.enable_ecs_endpoint ? 1 : 0
+
+  service = "ecs"
+}
+
+resource "aws_vpc_endpoint" "ecs" {
+  count = var.create_vpc && var.enable_ecs_endpoint ? 1 : 0
+
+  vpc_id            = local.vpc_id
+  service_name      = data.aws_vpc_endpoint_service.ecs[0].service_name
+  vpc_endpoint_type = "Interface"
+
+  security_group_ids  = var.ecs_endpoint_security_group_ids
+  subnet_ids          = coalescelist(var.ecs_endpoint_subnet_ids, aws_subnet.private.*.id)
+  private_dns_enabled = var.ecs_endpoint_private_dns_enabled
+}
+
+
+#######################
+# VPC Endpoint for ECS Agent
+#######################
+data "aws_vpc_endpoint_service" "ecs_agent" {
+  count = var.create_vpc && var.enable_ecs_agent_endpoint ? 1 : 0
+
+  service = "ecs-agent"
+}
+
+resource "aws_vpc_endpoint" "ecs_agent" {
+  count = var.create_vpc && var.enable_ecs_agent_endpoint ? 1 : 0
+
+  vpc_id            = local.vpc_id
+  service_name      = data.aws_vpc_endpoint_service.ecs_agent[0].service_name
+  vpc_endpoint_type = "Interface"
+
+  security_group_ids  = var.ecs_agent_endpoint_security_group_ids
+  subnet_ids          = coalescelist(var.ecs_agent_endpoint_subnet_ids, aws_subnet.private.*.id)
+  private_dns_enabled = var.ecs_agent_endpoint_private_dns_enabled
+}
+
+
+#######################
+# VPC Endpoint for ECS Telemetry
+#######################
+data "aws_vpc_endpoint_service" "ecs_telemetry" {
+  count = var.create_vpc && var.enable_ecs_telemetry_endpoint ? 1 : 0
+
+  service = "ecs-telemetry"
+}
+
+resource "aws_vpc_endpoint" "ecs_telemetry" {
+  count = var.create_vpc && var.enable_ecs_telemetry_endpoint ? 1 : 0
+
+  vpc_id            = local.vpc_id
+  service_name      = data.aws_vpc_endpoint_service.ecs_telemetry[0].service_name
+  vpc_endpoint_type = "Interface"
+
+  security_group_ids  = var.ecs_telemetry_endpoint_security_group_ids
+  subnet_ids          = coalescelist(var.ecs_telemetry_endpoint_subnet_ids, aws_subnet.private.*.id)
+  private_dns_enabled = var.ecs_telemetry_endpoint_private_dns_enabled
 }
 
 ##########################

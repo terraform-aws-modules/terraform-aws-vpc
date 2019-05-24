@@ -218,6 +218,26 @@ variable "enable_s3_endpoint" {
   default     = false
 }
 
+variable "enable_sqs_endpoint" {
+  description = "Should be true if you want to provision an SQS endpoint to the VPC"
+  default     = false
+}
+
+variable "sqs_endpoint_security_group_ids" {
+  description = "The ID of one or more security groups to associate with the network interface for SQS endpoint"
+  default     = []
+}
+
+variable "sqs_endpoint_subnet_ids" {
+  description = "The ID of one or more subnets in which to create a network interface for SQS endpoint. Only a single subnet within an AZ is supported. If omitted, private subnets will be used."
+  default     = []
+}
+
+variable "sqs_endpoint_private_dns_enabled" {
+  description = "Whether or not to associate a private hosted zone with the specified VPC for SQS endpoint"
+  default     = false
+}
+
 variable "enable_ssm_endpoint" {
   description = "Should be true if you want to provision an SSM endpoint to the VPC"
   type        = bool
@@ -406,6 +426,78 @@ variable "kms_endpoint_subnet_ids" {
 
 variable "kms_endpoint_private_dns_enabled" {
   description = "Whether or not to associate a private hosted zone with the specified VPC for KMS endpoint"
+  type        = bool
+  default     = false
+}
+
+variable "enable_ecs_endpoint" {
+  description = "Should be true if you want to provision a ECS endpoint to the VPC"
+  type        = bool
+  default     = false
+}
+
+variable "ecs_endpoint_security_group_ids" {
+  description = "The ID of one or more security groups to associate with the network interface for ECS endpoint"
+  type        = list(string)
+  default     = []
+}
+
+variable "ecs_endpoint_subnet_ids" {
+  description = "The ID of one or more subnets in which to create a network interface for ECS endpoint. Only a single subnet within an AZ is supported. If omitted, private subnets will be used."
+  type        = list(string)
+  default     = []
+}
+
+variable "ecs_endpoint_private_dns_enabled" {
+  description = "Whether or not to associate a private hosted zone with the specified VPC for ECS endpoint"
+  type        = bool
+  default     = false
+}
+
+variable "enable_ecs_agent_endpoint" {
+  description = "Should be true if you want to provision a ECS Agent endpoint to the VPC"
+  type        = bool
+  default     = false
+}
+
+variable "ecs_agent_endpoint_security_group_ids" {
+  description = "The ID of one or more security groups to associate with the network interface for ECS Agent endpoint"
+  type        = list(string)
+  default     = []
+}
+
+variable "ecs_agent_endpoint_subnet_ids" {
+  description = "The ID of one or more subnets in which to create a network interface for ECS Agent endpoint. Only a single subnet within an AZ is supported. If omitted, private subnets will be used."
+  type        = list(string)
+  default     = []
+}
+
+variable "ecs_agent_endpoint_private_dns_enabled" {
+  description = "Whether or not to associate a private hosted zone with the specified VPC for ECS Agent endpoint"
+  type        = bool
+  default     = false
+}
+
+variable "enable_ecs_telemetry_endpoint" {
+  description = "Should be true if you want to provision a ECS Telemetry endpoint to the VPC"
+  type        = bool
+  default     = false
+}
+
+variable "ecs_telemetry_endpoint_security_group_ids" {
+  description = "The ID of one or more security groups to associate with the network interface for ECS Telemetry endpoint"
+  type        = list(string)
+  default     = []
+}
+
+variable "ecs_telemetry_endpoint_subnet_ids" {
+  description = "The ID of one or more subnets in which to create a network interface for ECS Telemetry endpoint. Only a single subnet within an AZ is supported. If omitted, private subnets will be used."
+  type        = list(string)
+  default     = []
+}
+
+variable "ecs_telemetry_endpoint_private_dns_enabled" {
+  description = "Whether or not to associate a private hosted zone with the specified VPC for ECS Telemetry endpoint"
   type        = bool
   default     = false
 }

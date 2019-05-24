@@ -45,7 +45,7 @@ module "vpc" {
   # VPC endpoint for SSM
   enable_ssm_endpoint              = true
   ssm_endpoint_private_dns_enabled = true
-  ssm_endpoint_security_group_ids  = [data.aws_security_group.default.id] # ssm_endpoint_subnet_ids = ["..."]
+  ssm_endpoint_security_group_ids  = [data.aws_security_group.default.id]
 
   # VPC endpoint for SSMMESSAGES
   enable_ssmmessages_endpoint              = true
@@ -77,7 +77,20 @@ module "vpc" {
   kms_endpoint_private_dns_enabled = true
   kms_endpoint_security_group_ids  = [data.aws_security_group.default.id]
 
-  # kms_endpoint_subnet_ids = ["..."]
+  # VPC endpoint for ECS
+  enable_ecs_endpoint              = true
+  ecs_endpoint_private_dns_enabled = true
+  ecs_endpoint_security_group_ids  = [data.aws_security_group.default.id]
+
+  # VPC endpoint for ECS telemetry
+  enable_ecs_telemetry_endpoint              = true
+  ecs_telemetry_endpoint_private_dns_enabled = true
+  ecs_telemetry_endpoint_security_group_ids  = [data.aws_security_group.default.id]
+
+  # VPC endpoint for SQS
+  enable_sqs_endpoint              = true
+  sqs_endpoint_private_dns_enabled = true
+  sqs_endpoint_security_group_ids  = [data.aws_security_group.default.id]
 
   tags = {
     Owner       = "user"
