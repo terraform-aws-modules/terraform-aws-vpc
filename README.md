@@ -189,10 +189,6 @@ Sometimes it is handy to have public access to Redshift clusters (for example if
   enable_public_redshift = true  # <= By default Redshift subnets will be associated with the private route table
 ```
 
-## Terraform version
-
-Terraform version 0.10.3 or newer is required for this module to work.
-
 ## Examples
 
 * [Simple VPC](https://github.com/terraform-aws-modules/terraform-aws-vpc/tree/master/examples/simple-vpc)
