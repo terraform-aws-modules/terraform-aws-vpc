@@ -184,6 +184,26 @@ variable "enable_s3_endpoint" {
   default     = false
 }
 
+variable "enable_sqs_endpoint" {
+  description = "Should be true if you want to provision an SQS endpoint to the VPC"
+  default     = false
+}
+
+variable "sqs_endpoint_security_group_ids" {
+  description = "The ID of one or more security groups to associate with the network interface for SQS endpoint"
+  default     = []
+}
+
+variable "sqs_endpoint_subnet_ids" {
+  description = "The ID of one or more subnets in which to create a network interface for SQS endpoint. Only a single subnet within an AZ is supported. If omitted, private subnets will be used."
+  default     = []
+}
+
+variable "sqs_endpoint_private_dns_enabled" {
+  description = "Whether or not to associate a private hosted zone with the specified VPC for SQS endpoint"
+  default     = false
+}
+
 variable "enable_ssm_endpoint" {
   description = "Should be true if you want to provision an SSM endpoint to the VPC"
   default     = false
@@ -687,7 +707,7 @@ variable "default_network_acl_ingress" {
     to_port    = 0
     protocol   = "-1"
     cidr_block = "0.0.0.0/0"
-  },
+    },
     {
       rule_no         = 101
       action          = "allow"
@@ -709,7 +729,7 @@ variable "default_network_acl_egress" {
     to_port    = 0
     protocol   = "-1"
     cidr_block = "0.0.0.0/0"
-  },
+    },
     {
       rule_no         = 101
       action          = "allow"
