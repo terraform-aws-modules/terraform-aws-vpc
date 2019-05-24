@@ -344,6 +344,66 @@ variable "kms_endpoint_private_dns_enabled" {
   default     = false
 }
 
+variable "enable_ecs_endpoint" {
+  description = "Should be true if you want to provision a ECS endpoint to the VPC"
+  default     = false
+}
+
+variable "ecs_endpoint_security_group_ids" {
+  description = "The ID of one or more security groups to associate with the network interface for ECS endpoint"
+  default     = []
+}
+
+variable "ecs_endpoint_subnet_ids" {
+  description = "The ID of one or more subnets in which to create a network interface for ECS endpoint. Only a single subnet within an AZ is supported. If omitted, private subnets will be used."
+  default     = []
+}
+
+variable "ecs_endpoint_private_dns_enabled" {
+  description = "Whether or not to associate a private hosted zone with the specified VPC for ECS endpoint"
+  default     = false
+}
+
+variable "enable_ecs_agent_endpoint" {
+  description = "Should be true if you want to provision a ECS Agent endpoint to the VPC"
+  default     = false
+}
+
+variable "ecs_agent_endpoint_security_group_ids" {
+  description = "The ID of one or more security groups to associate with the network interface for ECS Agent endpoint"
+  default     = []
+}
+
+variable "ecs_agent_endpoint_subnet_ids" {
+  description = "The ID of one or more subnets in which to create a network interface for ECS Agent endpoint. Only a single subnet within an AZ is supported. If omitted, private subnets will be used."
+  default     = []
+}
+
+variable "ecs_agent_endpoint_private_dns_enabled" {
+  description = "Whether or not to associate a private hosted zone with the specified VPC for ECS Agent endpoint"
+  default     = false
+}
+
+variable "enable_ecs_telemetry_endpoint" {
+  description = "Should be true if you want to provision a ECS Telemetry endpoint to the VPC"
+  default     = false
+}
+
+variable "ecs_telemetry_endpoint_security_group_ids" {
+  description = "The ID of one or more security groups to associate with the network interface for ECS Telemetry endpoint"
+  default     = []
+}
+
+variable "ecs_telemetry_endpoint_subnet_ids" {
+  description = "The ID of one or more subnets in which to create a network interface for ECS Telemetry endpoint. Only a single subnet within an AZ is supported. If omitted, private subnets will be used."
+  default     = []
+}
+
+variable "ecs_telemetry_endpoint_private_dns_enabled" {
+  description = "Whether or not to associate a private hosted zone with the specified VPC for ECS Telemetry endpoint"
+  default     = false
+}
+
 variable "map_public_ip_on_launch" {
   description = "Should be false if you do not want to auto-assign public IP on launch"
   default     = true

@@ -16,7 +16,7 @@ These types of resources are supported:
 * [VPN Gateway](https://www.terraform.io/docs/providers/aws/r/vpn_gateway.html)
 * [VPC Endpoint](https://www.terraform.io/docs/providers/aws/r/vpc_endpoint.html):
   * Gateway: S3, DynamoDB
-  * Interface: EC2, SSM, EC2 Messages, SSM Messages, ECR API, ECR DKR, API Gateway, KMS
+  * Interface: EC2, SSM, EC2 Messages, SSM Messages, ECR API, ECR DKR, API Gateway, KMS, ECS, ECS Agent, ECS Telemetry
 * [RDS DB Subnet Group](https://www.terraform.io/docs/providers/aws/r/db_subnet_group.html)
 * [ElastiCache Subnet Group](https://www.terraform.io/docs/providers/aws/r/elasticache_subnet_group.html)
 * [Redshift Subnet Group](https://www.terraform.io/docs/providers/aws/r/redshift_subnet_group.html)
@@ -333,6 +333,15 @@ Terraform version 0.10.3 or newer is required for this module to work.
 | ssmmessages\_endpoint\_private\_dns\_enabled | Whether or not to associate a private hosted zone with the specified VPC for SSMMESSAGES endpoint | string | `"false"` | no |
 | ssmmessages\_endpoint\_security\_group\_ids | The ID of one or more security groups to associate with the network interface for SSMMESSAGES endpoint | list | `[]` | no |
 | ssmmessages\_endpoint\_subnet\_ids | The ID of one or more subnets in which to create a network interface for SSMMESSAGES endpoint. Only a single subnet within an AZ is supported. If omitted, private subnets will be used. | list | `[]` | no |
+| ecs\_endpoint\_private\_dns\_enabled | Whether or not to associate a private hosted zone with the specified VPC for ECS endpoint | string | `"false"` | no |
+| ecs\_endpoint\_security\_group\_ids | The ID of one or more security groups to associate with the network interface for ECS endpoint | list | `[]` | no |
+| ecs\_endpoint\_subnet\_ids | The ID of one or more subnets in which to create a network interface for ECS endpoint. Only a single subnet within an AZ is supported. If omitted, private subnets will be used. | list | `[]` | no |
+| ecs\_agent\_endpoint\_private\_dns\_enabled | Whether or not to associate a private hosted zone with the specified VPC for ECS Agent endpoint | string | `"false"` | no |
+| ecs\_agent\_endpoint\_security\_group\_ids | The ID of one or more security groups to associate with the network interface for ECS Agent endpoint | list | `[]` | no |
+| ecs\_agent\_endpoint\_subnet\_ids | The ID of one or more subnets in which to create a network interface for ECS Agent endpoint. Only a single subnet within an AZ is supported. If omitted, private subnets will be used. | list | `[]` | no |
+| ecs\_telemetry\_endpoint\_private\_dns\_enabled | Whether or not to associate a private hosted zone with the specified VPC for ECS Telemetry endpoint | string | `"false"` | no |
+| ecs\_telemetry\_endpoint\_security\_group\_ids | The ID of one or more security groups to associate with the network interface for ECS Telemetry endpoint | list | `[]` | no |
+| ecs\_telemetry\_endpoint\_subnet\_ids | The ID of one or more subnets in which to create a network interface for ECS Telemetry endpoint. Only a single subnet within an AZ is supported. If omitted, private subnets will be used. | list | `[]` | no |
 | tags | A map of tags to add to all resources | map | `{}` | no |
 | vpc\_tags | Additional tags for the VPC | map | `{}` | no |
 | vpn\_gateway\_id | ID of VPN Gateway to attach to the VPC | string | `""` | no |
@@ -426,6 +435,15 @@ Terraform version 0.10.3 or newer is required for this module to work.
 | vpc\_endpoint\_ssmmessages\_dns\_entry | The DNS entries for the VPC Endpoint for SSMMESSAGES. |
 | vpc\_endpoint\_ssmmessages\_id | The ID of VPC endpoint for SSMMESSAGES |
 | vpc\_endpoint\_ssmmessages\_network\_interface\_ids | One or more network interfaces for the VPC Endpoint for SSMMESSAGES. |
+| vpc\_endpoint\_ecs\_dns\_entry | The DNS entries for the VPC Endpoint for ECS. |
+| vpc\_endpoint\_ecs\_id | The ID of VPC endpoint for ECS |
+| vpc\_endpoint\_ecs\_network\_interface\_ids | One or more network interfaces for the VPC Endpoint for ECS. |
+| vpc\_endpoint\_ecs\_agent\_dns\_entry | The DNS entries for the VPC Endpoint for ECS Agent. |
+| vpc\_endpoint\_ecs\_agent\_id | The ID of VPC endpoint for ECS Agent |
+| vpc\_endpoint\_ecs\_agent\_network\_interface\_ids | One or more network interfaces for the VPC Endpoint for ECS Agent. |
+| vpc\_endpoint\_ecs\_telemetry\_dns\_entry | The DNS entries for the VPC Endpoint for ECS Telemetry. |
+| vpc\_endpoint\_ecs\_telemetry\_id | The ID of VPC endpoint for ECS Telemetry |
+| vpc\_endpoint\_ecs\_telemetry\_network\_interface\_ids | One or more network interfaces for the VPC Endpoint for ECS Telemetry. |
 | vpc\_id | The ID of the VPC |
 | vpc\_instance\_tenancy | Tenancy of instances spin up within VPC |
 | vpc\_main\_route\_table\_id | The ID of the main route table associated with this VPC |
