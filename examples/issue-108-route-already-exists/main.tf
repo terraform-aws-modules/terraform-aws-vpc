@@ -19,3 +19,4 @@ module "vpc" {
   enable_s3_endpoint       = true
   enable_dynamodb_endpoint = true
 }
+

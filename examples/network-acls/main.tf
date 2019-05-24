@@ -15,8 +15,14 @@ module "vpc" {
   elasticache_subnets = ["10.0.201.0/24", "10.0.202.0/24", "10.0.203.0/24"]
 
   public_dedicated_network_acl = true
-  public_inbound_acl_rules     = "${concat(local.network_acls["default_inbound"], local.network_acls["public_inbound"])}"
-  public_outbound_acl_rules    = "${concat(local.network_acls["default_outbound"], local.network_acls["public_outbound"])}"
+  public_inbound_acl_rules = concat(
+    local.network_acls["default_inbound"],
+    local.network_acls["public_inbound"],
+  )
+  public_outbound_acl_rules = concat(
+    local.network_acls["default_outbound"],
+    local.network_acls["public_outbound"],
+  )
 
   private_dedicated_network_acl = true
 
@@ -51,7 +57,6 @@ locals {
         cidr_block  = "0.0.0.0/0"
       },
     ]
-
     default_outbound = [
       {
         rule_number = 900
@@ -62,7 +67,6 @@ locals {
         cidr_block  = "0.0.0.0/0"
       },
     ]
-
     public_inbound = [
       {
         rule_number = 100
@@ -97,7 +101,6 @@ locals {
         cidr_block  = "0.0.0.0/0"
       },
     ]
-
     public_outbound = [
       {
         rule_number = 100
@@ -134,3 +137,4 @@ locals {
     ]
   }
 }
+

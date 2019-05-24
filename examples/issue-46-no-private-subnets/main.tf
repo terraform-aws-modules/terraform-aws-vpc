@@ -23,3 +23,4 @@ module "vpc" {
     Name  = "no-private-subnets"
   }
 }
+
