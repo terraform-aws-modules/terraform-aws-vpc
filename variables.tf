@@ -502,6 +502,150 @@ variable "ecs_telemetry_endpoint_private_dns_enabled" {
   default     = false
 }
 
+variable "enable_sns_endpoint" {
+description = "Should be true if you want to provision a SNS endpoint to the VPC"
+type        = bool
+default     = false
+}
+
+variable "sns_endpoint_security_group_ids" {
+description = "The ID of one or more security groups to associate with the network interface for SNS endpoint"
+type        = list(string)
+default     = []
+}
+
+variable "sns_endpoint_subnet_ids" {
+description = "The ID of one or more subnets in which to create a network interface for SNS endpoint. Only a single subnet within an AZ is supported. If omitted, private subnets will be used."
+type        = list(string)
+default     = []
+}
+
+variable "sns_endpoint_private_dns_enabled" {
+description = "Whether or not to associate a private hosted zone with the specified VPC for SNS endpoint"
+type        = bool
+default     = false
+}
+
+variable "enable_monitoring_endpoint" {
+description = "Should be true if you want to provision a CloudWatch Monitoring endpoint to the VPC"
+type        = bool
+default     = false
+}
+
+variable "monitoring_endpoint_security_group_ids" {
+description = "The ID of one or more security groups to associate with the network interface for CloudWatch Monitoring endpoint"
+type        = list(string)
+default     = []
+}
+
+variable "monitoring_endpoint_subnet_ids" {
+description = "The ID of one or more subnets in which to create a network interface for CloudWatch Monitoring endpoint. Only a single subnet within an AZ is supported. If omitted, private subnets will be used."
+type        = list(string)
+default     = []
+}
+
+variable "monitoring_endpoint_private_dns_enabled" {
+description = "Whether or not to associate a private hosted zone with the specified VPC for CloudWatch Monitoring endpoint"
+type        = bool
+default     = false
+}
+
+variable "enable_elasticloadbalancing_endpoint" {
+description = "Should be true if you want to provision a Elastic Load Balancing endpoint to the VPC"
+type        = bool
+default     = false
+}
+
+variable "elasticloadbalancing_endpoint_security_group_ids" {
+description = "The ID of one or more security groups to associate with the network interface for Elastic Load Balancing endpoint"
+type        = list(string)
+default     = []
+}
+
+variable "elasticloadbalancing_endpoint_subnet_ids" {
+description = "The ID of one or more subnets in which to create a network interface for Elastic Load Balancing endpoint. Only a single subnet within an AZ is supported. If omitted, private subnets will be used."
+type        = list(string)
+default     = []
+}
+
+variable "elasticloadbalancing_endpoint_private_dns_enabled" {
+description = "Whether or not to associate a private hosted zone with the specified VPC for Elastic Load Balancing endpoint"
+type        = bool
+default     = false
+}
+
+variable "enable_events_endpoint" {
+description = "Should be true if you want to provision a CloudWatch Events endpoint to the VPC"
+type        = bool
+default     = false
+}
+
+variable "events_endpoint_security_group_ids" {
+description = "The ID of one or more security groups to associate with the network interface for CloudWatch Events endpoint"
+type        = list(string)
+default     = []
+}
+
+variable "events_endpoint_subnet_ids" {
+description = "The ID of one or more subnets in which to create a network interface for CloudWatch Events endpoint. Only a single subnet within an AZ is supported. If omitted, private subnets will be used."
+type        = list(string)
+default     = []
+}
+
+variable "events_endpoint_private_dns_enabled" {
+description = "Whether or not to associate a private hosted zone with the specified VPC for CloudWatch Events endpoint"
+type        = bool
+default     = false
+}
+
+variable "enable_logs_endpoint" {
+description = "Should be true if you want to provision a CloudWatch Logs endpoint to the VPC"
+type        = bool
+default     = false
+}
+
+variable "logs_endpoint_security_group_ids" {
+description = "The ID of one or more security groups to associate with the network interface for CloudWatch Logs endpoint"
+type        = list(string)
+default     = []
+}
+
+variable "logs_endpoint_subnet_ids" {
+description = "The ID of one or more subnets in which to create a network interface for CloudWatch Logs endpoint. Only a single subnet within an AZ is supported. If omitted, private subnets will be used."
+type        = list(string)
+default     = []
+}
+
+variable "logs_endpoint_private_dns_enabled" {
+description = "Whether or not to associate a private hosted zone with the specified VPC for CloudWatch Logs endpoint"
+type        = bool
+default     = false
+}
+
+variable "enable_cloudtrail_endpoint" {
+description = "Should be true if you want to provision a CloudTrail endpoint to the VPC"
+type        = bool
+default     = false
+}
+
+variable "cloudtrail_endpoint_security_group_ids" {
+description = "The ID of one or more security groups to associate with the network interface for CloudTrail endpoint"
+type        = list(string)
+default     = []
+}
+
+variable "cloudtrail_endpoint_subnet_ids" {
+description = "The ID of one or more subnets in which to create a network interface for CloudTrail endpoint. Only a single subnet within an AZ is supported. If omitted, private subnets will be used."
+type        = list(string)
+default     = []
+}
+
+variable "cloudtrail_endpoint_private_dns_enabled" {
+description = "Whether or not to associate a private hosted zone with the specified VPC for CloudTrail endpoint"
+type        = bool
+default     = false
+}
+
 variable "map_public_ip_on_launch" {
   description = "Should be false if you do not want to auto-assign public IP on launch"
   type        = bool
