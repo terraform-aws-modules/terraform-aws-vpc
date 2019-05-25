@@ -898,12 +898,12 @@ resource "aws_vpc_endpoint_route_table_association" "public_dynamodb" {
   route_table_id  = aws_route_table.public[0].id
 }
 
+
 #######################
 # VPC Endpoint for SQS
 #######################
 data "aws_vpc_endpoint_service" "sqs" {
   count = var.create_vpc && var.enable_sqs_endpoint ? 1 : 0
-
   service = "sqs"
 }
 
