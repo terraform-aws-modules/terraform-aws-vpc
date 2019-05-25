@@ -904,6 +904,7 @@ resource "aws_vpc_endpoint_route_table_association" "public_dynamodb" {
 #######################
 data "aws_vpc_endpoint_service" "sqs" {
   count = var.create_vpc && var.enable_sqs_endpoint ? 1 : 0
+  
   service = "sqs"
 }
 
