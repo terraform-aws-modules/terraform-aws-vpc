@@ -524,6 +524,96 @@ output "vpc_endpoint_ecs_telemetry_dns_entry" {
   value       = "${flatten(aws_vpc_endpoint.ecs_telemetry.*.dns_entry)}"
 }
 
+output "vpc_endpoint_sns_id" {
+  description = "The ID of VPC endpoint for SNS"
+  value       = "${element(concat(aws_vpc_endpoint.sns.*.id, list("")), 0)}"
+}
+
+output "vpc_endpoint_sns_network_interface_ids" {
+  description = "One or more network interfaces for the VPC Endpoint for SNS."
+  value       = "${flatten(aws_vpc_endpoint.sns.*.network_interface_ids)}"
+}
+
+output "vpc_endpoint_sns_dns_entry" {
+  description = "The DNS entries for the VPC Endpoint for SNS."
+  value       = "${flatten(aws_vpc_endpoint.sns.*.dns_entry)}"
+}
+
+output "vpc_endpoint_monitoring_id" {
+  description = "The ID of VPC endpoint for CloudWatch Monitoring"
+  value       = "${element(concat(aws_vpc_endpoint.monitoring.*.id, list("")), 0)}"
+}
+
+output "vpc_endpoint_monitoring_network_interface_ids" {
+  description = "One or more network interfaces for the VPC Endpoint for CloudWatch Monitoring."
+  value       = "${flatten(aws_vpc_endpoint.monitoring.*.network_interface_ids)}"
+}
+
+output "vpc_endpoint_monitoring_dns_entry" {
+  description = "The DNS entries for the VPC Endpoint for CloudWatch Monitoring."
+  value       = "${flatten(aws_vpc_endpoint.monitoring.*.dns_entry)}"
+}
+
+output "vpc_endpoint_elasticloadbalancing_id" {
+  description = "The ID of VPC endpoint for Elastic Load Balancing"
+  value       = "${element(concat(aws_vpc_endpoint.elasticloadbalancing.*.id, list("")), 0)}"
+}
+
+output "vpc_endpoint_elasticloadbalancing_network_interface_ids" {
+  description = "One or more network interfaces for the VPC Endpoint for Elastic Load Balancing."
+  value       = "${flatten(aws_vpc_endpoint.elasticloadbalancing.*.network_interface_ids)}"
+}
+
+output "vpc_endpoint_elasticloadbalancing_dns_entry" {
+  description = "The DNS entries for the VPC Endpoint for Elastic Load Balancing."
+  value       = "${flatten(aws_vpc_endpoint.elasticloadbalancing.*.dns_entry)}"
+}
+
+output "vpc_endpoint_cloudtrail_id" {
+  description = "The ID of VPC endpoint for CloudTrail"
+  value       = "${element(concat(aws_vpc_endpoint.cloudtrail.*.id, list("")), 0)}"
+}
+
+output "vpc_endpoint_cloudtrail_network_interface_ids" {
+  description = "One or more network interfaces for the VPC Endpoint for CloudTrail."
+  value       = "${flatten(aws_vpc_endpoint.cloudtrail.*.network_interface_ids)}"
+}
+
+output "vpc_endpoint_cloudtrail_dns_entry" {
+  description = "The DNS entries for the VPC Endpoint for CloudTrail."
+  value       = "${flatten(aws_vpc_endpoint.cloudtrail.*.dns_entry)}"
+}
+
+output "vpc_endpoint_logs_id" {
+  description = "The ID of VPC endpoint for CloudWatch Logs"
+  value       = "${element(concat(aws_vpc_endpoint.logs.*.id, list("")), 0)}"
+}
+
+output "vpc_endpoint_logs_network_interface_ids" {
+  description = "One or more network interfaces for the VPC Endpoint for CloudWatch Logs."
+  value       = "${flatten(aws_vpc_endpoint.logs.*.network_interface_ids)}"
+}
+
+output "vpc_endpoint_logs_dns_entry" {
+  description = "The DNS entries for the VPC Endpoint for CloudWatch Logs."
+  value       = "${flatten(aws_vpc_endpoint.logs.*.dns_entry)}"
+}
+
+output "vpc_endpoint_events_id" {
+  description = "The ID of VPC endpoint for CloudWatch Events"
+  value       = "${element(concat(aws_vpc_endpoint.events.*.id, list("")), 0)}"
+}
+
+output "vpc_endpoint_events_network_interface_ids" {
+  description = "One or more network interfaces for the VPC Endpoint for CloudWatch Events."
+  value       = "${flatten(aws_vpc_endpoint.events.*.network_interface_ids)}"
+}
+
+output "vpc_endpoint_events_dns_entry" {
+  description = "The DNS entries for the VPC Endpoint for CloudWatch Events."
+  value       = "${flatten(aws_vpc_endpoint.events.*.dns_entry)}"
+}
+
 # Static values (arguments)
 output "azs" {
   description = "A list of availability zones specified as argument to this module"
