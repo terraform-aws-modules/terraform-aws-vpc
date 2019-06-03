@@ -369,6 +369,29 @@ resource "aws_redshift_subnet_group" "redshift" {
   )
 }
 
+######################
+# Elasticsearch subnet
+######################
+resource "aws_subnet" "elasticsearch" {
+  count = var.create_vpc && length(var.elasticsearch_subnets) > 0 ? length(var.elasticsearch_subnets) : 0
+
+  vpc_id            = local.vpc_id
+  cidr_block        = var.elasticsearch_subnets[count.index]
+  availability_zone = element(var.azs, count.index)
+
+  tags = merge(
+    {
+      "Name" = format(
+        "%s-${var.elasticsearch_subnet_suffix}-%s",
+        var.name,
+        element(var.azs, count.index),
+      )
+    },
+    var.tags,
+    var.elasticserarch_subnet_tags,
+  )
+}
+
 #####################
 # ElastiCache subnet
 #####################
@@ -1295,6 +1318,16 @@ resource "aws_route_table_association" "private" {
   subnet_id = element(aws_subnet.private.*.id, count.index)
   route_table_id = element(
     aws_route_table.private.*.id,
+    var.single_nat_gateway ? 0 : count.index,
+  )
+}
+
+resource "aws_route_table_association" "elasticsearch" {
+  count = var.create_vpc && length(var.elasticsearch_subnets) > 0 ? length(var.elasticsearch_subnets) : 0
+
+  subnet_id = element(aws_subnet.elasticsearch.*.id, count.index)
+  route_table_id = element(
+    aws_route_table.elasticsearch.*.id,
     var.single_nat_gateway ? 0 : count.index,
   )
 }

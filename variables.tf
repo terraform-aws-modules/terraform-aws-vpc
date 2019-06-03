@@ -44,6 +44,12 @@ variable "private_subnet_suffix" {
   default     = "private"
 }
 
+variable "elasticsearch_subnet_suffix" {
+  description = "Suffix to append to elasticsearch subnets name"
+  type        = string
+  default     = "elasticsearch"
+}
+
 variable "intra_subnet_suffix" {
   description = "Suffix to append to intra subnets name"
   type        = string
@@ -76,6 +82,12 @@ variable "public_subnets" {
 
 variable "private_subnets" {
   description = "A list of private subnets inside the VPC"
+  type        = list(string)
+  default     = []
+}
+
+variable "elasticsearch_subnets" {
+  description = "A list of elasticsearch subnets inside the VPC"
   type        = list(string)
   default     = []
 }

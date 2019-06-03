@@ -35,6 +35,11 @@ output "intra_subnets" {
   value       = module.vpc.intra_subnets
 }
 
+output "elasticsearch_subnets" {
+  description = "List of IDs of elasticsearch subnets"
+  value       = module.vpc.elasticsearch_subnets
+}
+
 # NAT gateways
 output "nat_public_ips" {
   description = "List of public Elastic IPs created for AWS NAT Gateway"

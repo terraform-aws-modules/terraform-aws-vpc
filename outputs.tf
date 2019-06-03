@@ -118,6 +118,21 @@ output "database_subnet_group" {
   value       = concat(aws_db_subnet_group.database.*.id, [""])[0]
 }
 
+output "elasticsearch_subnets" {
+  description = "List of IDs of elasticsearch subnets"
+  value       = aws_subnet.elasticsearch.*.id
+}
+
+output "elasticsearch_subnet_arns" {
+  description = "List of ARNs of elasticsearch subnets"
+  value       = aws_subnet.elasticsearch.*.arn
+}
+
+output "elasticsearch_subnets_cidr_blocks" {
+  description = "List of cidr_blocks of elasticsearch subnets"
+  value       = aws_subnet.elasticsearch.*.cidr_block
+}
+
 output "redshift_subnets" {
   description = "List of IDs of redshift subnets"
   value       = aws_subnet.redshift.*.id

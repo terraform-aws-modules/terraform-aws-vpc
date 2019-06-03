@@ -25,6 +25,7 @@ These types of resources are supported:
 * [DHCP Options Set](https://www.terraform.io/docs/providers/aws/r/vpc_dhcp_options.html)
 * [Default VPC](https://www.terraform.io/docs/providers/aws/r/default_vpc.html)
 * [Default Network ACL](https://www.terraform.io/docs/providers/aws/r/default_network_acl.html)
+* Elasticsearch Subnet - A set of subnets within a VPC where a VPC based elasticserach domain can be launched.
 
 Sponsored by [Cloudcraft - the best way to draw AWS diagrams](https://cloudcraft.co/?utm_source=terraform-aws-vpc)
 
