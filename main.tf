@@ -228,6 +228,34 @@ resource "aws_route_table" "elasticache" {
 }
 
 #################
+# Elasticsearch routes
+# There are as many routing tables as the number of NAT gateways
+#################
+resource "aws_route_table" "elasticsearch" {
+  count = var.create_vpc && local.max_subnet_length > 0 ? local.nat_gateway_count : 0
+
+  vpc_id = local.vpc_id
+
+  tags = merge(
+    {
+      "Name" = var.single_nat_gateway ? "${var.name}-${var.elasticsearch_subnet_suffix}" : format(
+        "%s-${var.elasticsearch_subnet_suffix}-%s",
+        var.name,
+        element(var.azs, count.index),
+      )
+    },
+    var.tags,
+    var.elasticsearch_route_table_tags,
+  )
+
+  lifecycle {
+    # When attaching VPN gateways it is common to define aws_vpn_gateway_route_propagation
+    # resources that manipulate the attributes of the routing table (typically for the private subnets)
+    ignore_changes = [propagating_vgws]
+  }
+}
+
+#################
 # Intra routes
 #################
 resource "aws_route_table" "intra" {
@@ -388,7 +416,7 @@ resource "aws_subnet" "elasticsearch" {
       )
     },
     var.tags,
-    var.elasticserarch_subnet_tags,
+    var.elasticsearch_subnet_tags,
   )
 }
 
