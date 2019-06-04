@@ -4,3 +4,4 @@
 terraform.tfstate
 terraform.tfvars
 Gemfile.lock
+.idea
