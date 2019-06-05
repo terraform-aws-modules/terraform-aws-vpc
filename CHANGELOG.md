@@ -3,9 +3,16 @@
 
 
 
+<a name="v2.4.0"></a>
+## [v2.4.0] - 2019-06-05
+
+- Fixed broken 2.3.0
+
+
 <a name="v2.3.0"></a>
 ## [v2.3.0] - 2019-06-04
 
+- Updated CHANGELOG
 - Fixed opportunity to create the vpc, vpn gateway routes (bug during upgrade to 0.12)
 
 
@@ -561,7 +568,8 @@
 - Initial commit
 
 
-[Unreleased]: https://github.com/terraform-aws-modules/terraform-aws-vpc/compare/v2.3.0...HEAD
+[Unreleased]: https://github.com/terraform-aws-modules/terraform-aws-vpc/compare/v2.4.0...HEAD
+[v2.4.0]: https://github.com/terraform-aws-modules/terraform-aws-vpc/compare/v2.3.0...v2.4.0
 [v2.3.0]: https://github.com/terraform-aws-modules/terraform-aws-vpc/compare/v2.2.0...v2.3.0
 [v2.2.0]: https://github.com/terraform-aws-modules/terraform-aws-vpc/compare/v2.1.0...v2.2.0
 [v2.1.0]: https://github.com/terraform-aws-modules/terraform-aws-vpc/compare/v2.0.0...v2.1.0
