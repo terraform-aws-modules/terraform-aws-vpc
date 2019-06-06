@@ -194,6 +194,24 @@ variable "one_nat_gateway_per_az" {
   default     = false
 }
 
+variable "nat_instance" {
+  description = "Should be true if you want to provision a single NAT instance."
+  type        = bool
+  default     = false
+}
+
+variable "nat_instance_type" {
+  description = "The instance type/size to use. Defaults to a t2.micro"
+  type        = string
+  default     = "t2.micro"
+}
+
+variable "nat_instance_keypair" {
+  description = "The AWS EC2 SSH keypair to use. Needs to be created first."
+  type        = string
+  default     = ""
+}
+
 variable "reuse_nat_ips" {
   description = "Should be true if you don't want EIPs to be created for your NAT Gateways and will instead pass them in via the 'external_nat_ip_ids' variable"
   type        = bool

@@ -5,7 +5,7 @@ locals {
     length(var.database_subnets),
     length(var.redshift_subnets),
   )
-  nat_gateway_count = var.single_nat_gateway ? 1 : var.one_nat_gateway_per_az ? length(var.azs) : local.max_subnet_length
+  nat_gateway_count = var.nat_instance ? 1 : var.single_nat_gateway ? 1 : var.one_nat_gateway_per_az ? length(var.azs) : local.max_subnet_length
 
   # Use `local.vpc_id` to give a hint to Terraform that subnets should be deleted before secondary CIDR blocks can be free!
   vpc_id = element(
@@ -187,6 +187,18 @@ resource "aws_route" "database_nat_gateway" {
   route_table_id         = element(aws_route_table.private.*.id, count.index)
   destination_cidr_block = "0.0.0.0/0"
   nat_gateway_id         = element(aws_nat_gateway.this.*.id, count.index)
+
+  timeouts {
+    create = "5m"
+  }
+}
+
+resource "aws_route" "database_nat_instance" {
+  count = var.create_vpc && var.create_database_subnet_route_table && length(var.database_subnets) > 0 && false == var.create_database_internet_gateway_route && var.create_database_nat_gateway_route && var.nat_instance ? local.nat_gateway_count : 0
+
+  route_table_id         = element(aws_route_table.private.*.id, count.index)
+  destination_cidr_block = "0.0.0.0/0"
+  instance_id            = var.nat_instance ? element(aws_instance.nat.*.id, count.index) : ""
 
   timeouts {
     create = "5m"
@@ -812,12 +824,128 @@ resource "aws_nat_gateway" "this" {
   depends_on = [aws_internet_gateway.this]
 }
 
+# NAT instance gateway
+data "aws_ami" "ubuntu" {
+  most_recent = true
+  filter {
+    name   = "name"
+    values = ["ubuntu/images/hvm-ssd/ubuntu-bionic-18.04-amd64-server-*"]
+  }
+  filter {
+    name   = "virtualization-type"
+    values = ["hvm"]
+  }
+  owners = ["513442679011"]
+}
+
+resource "aws_instance" "nat" {
+  count                       = var.nat_instance ? 1 : 0
+  ami                         = data.aws_ami.ubuntu.id
+  associate_public_ip_address = true
+  instance_type               = var.nat_instance_type
+  lifecycle {
+    ignore_changes = [ami,tags]
+  }
+  root_block_device {
+    volume_type = "gp2"
+    volume_size = "20"
+  }
+  key_name                    = var.nat_instance_keypair
+  source_dest_check = false
+  subnet_id                   = element(aws_subnet.public.*.id, count.index)
+  tenancy                     = var.instance_tenancy
+  user_data                   = <<-EOT
+#!/bin/bash
+apt-get update
+echo iptables-persistent iptables-persistent/autosave_v4 boolean true | debconf-set-selections
+echo iptables-persistent iptables-persistent/autosave_v6 boolean true | debconf-set-selections
+apt-get -y install iptables iptables-persistent
+echo "net.ipv4.ip_forward=1" > /etc/sysctl.d/10-ipv4-forwarding.conf
+sysctl --system
+cat <<EOF > /etc/iptables/rules.v4
+*nat
+:PREROUTING ACCEPT [0:0]
+:INPUT ACCEPT [0:0]
+:OUTPUT ACCEPT [0:0]
+:POSTROUTING ACCEPT [0:0]
+-A POSTROUTING -s 10.5.0.0/16 -o eth0 -j MASQUERADE
+COMMIT
+*filter
+:INPUT ACCEPT [0:0]
+:FORWARD ACCEPT [0:0]
+:OUTPUT ACCEPT [0:0]
+-A INPUT -m state --state RELATED,ESTABLISHED -j ACCEPT
+-A INPUT -p icmp -j ACCEPT
+-A INPUT -i lo -j ACCEPT
+-A INPUT -p tcp -m state --state NEW -m tcp -s ${var.cidr} --dport 22 -j ACCEPT
+-A INPUT -i eth0 -s ${var.cidr} -j ACCEPT
+-A INPUT -j REJECT --reject-with icmp-host-prohibited
+-A FORWARD -s ${var.cidr} -i eth0 -o eth0 -j ACCEPT
+-A FORWARD -i eth0 -o eth0 -m state --state RELATED,ESTABLISHED -j ACCEPT
+-A FORWARD -j REJECT --reject-with icmp-host-prohibited
+COMMIT
+EOF
+iptables-restore < /etc/iptables/rules.v4
+EOT
+  vpc_security_group_ids      = [element(aws_security_group.nat.*.id, count.index)]
+  tags = merge(
+    {
+      "Name" = format("%s-nat", var.name)
+    },
+    var.tags,
+    var.vpc_tags,
+  )
+}
+
+resource "aws_security_group" "nat" {
+  count = var.nat_instance ? 1 : 0
+  description = "${var.name} nat security group"
+
+  # outgoing rules
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  # SSH access
+  ingress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = [var.cidr]
+  }
+
+  name = "${var.name}-nat-securitygroup"
+  tags = merge(
+    {
+      "Name" = format("%s-nat-securitygroup", var.name)
+    },
+    var.tags,
+    var.vpc_tags,
+  )
+  vpc_id = element(aws_vpc.this.*.id, count.index)
+}
+
 resource "aws_route" "private_nat_gateway" {
   count = var.create_vpc && var.enable_nat_gateway ? local.nat_gateway_count : 0
 
   route_table_id         = element(aws_route_table.private.*.id, count.index)
   destination_cidr_block = "0.0.0.0/0"
-  nat_gateway_id         = element(aws_nat_gateway.this.*.id, count.index)
+  nat_gateway_id         = var.nat_instance ? "" : element(aws_nat_gateway.this.*.id, count.index)
+
+  timeouts {
+    create = "5m"
+  }
+}
+
+resource "aws_route" "private_nat_instance" {
+  count = var.nat_instance ? local.nat_gateway_count : 0
+
+  route_table_id         = element(aws_route_table.private.*.id, count.index)
+  destination_cidr_block = "0.0.0.0/0"
+  instance_id            = var.nat_instance ? element(aws_instance.nat.*.id, count.index) : ""
 
   timeouts {
     create = "5m"

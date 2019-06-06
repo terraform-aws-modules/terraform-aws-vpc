@@ -113,6 +113,24 @@ This module supports three scenarios for creating NAT gateways. Each will be exp
 
 If both `single_nat_gateway` and `one_nat_gateway_per_az` are set to `true`, then `single_nat_gateway` takes precedence.
 
+## NAT Instance Gateway
+
+This module also supports the use of an Ubuntu 18.04 NAT instance gateway. To use a NAT instance:
+
+* Create a keypair, and upload that to EC2. Note the name.
+* Configure the following settings:
+
+```
+nat_instance = true
+nat_instance_type = "t2.small"
+nat_instance_keypair = "NAME-OF-KEYPAIR-IN-EC2"
+enable_nat_gateway = false
+single_nat_gateway = false
+one_nat_gateway_per_az = false
+```
+
+Setting `nat_instance = false` will remove the NAT instance gateway.
+
 ### One NAT Gateway per subnet (default)
 
 By default, the module will determine the number of NAT Gateways to create based on the the `max()` of the private subnet lists (`database_subnets`, `elasticache_subnets`, `private_subnets`, and `redshift_subnets`). The module **does not** take into account the number of `intra_subnets`, since the latter are designed to have no Internet access via NAT Gateway.  For example, if your configuration looks like the following:
