@@ -1,9 +1,9 @@
 repos:
 - repo: git://github.com/antonbabenko/pre-commit-terraform
-  rev: v1.11.0
+  rev: v1.13.0
   hooks:
     - id: terraform_fmt
-#    - id: terraform_docs  # not yet compatible with Terraform 0.12
+    - id: terraform_docs
 - repo: git://github.com/pre-commit/pre-commit-hooks
   rev: v2.2.3
   hooks:
