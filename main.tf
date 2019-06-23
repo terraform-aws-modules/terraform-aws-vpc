@@ -602,6 +602,8 @@ resource "aws_vpc_endpoint" "s3" {
 
   vpc_id       = "${local.vpc_id}"
   service_name = "${data.aws_vpc_endpoint_service.s3.service_name}"
+
+  tags = "${merge(var.tags, var.vpc_endpoint_tags)}"
 }
 
 resource "aws_vpc_endpoint_route_table_association" "private_s3" {
@@ -639,6 +641,8 @@ resource "aws_vpc_endpoint" "dynamodb" {
 
   vpc_id       = "${local.vpc_id}"
   service_name = "${data.aws_vpc_endpoint_service.dynamodb.service_name}"
+
+  tags = "${merge(var.tags, var.vpc_endpoint_tags)}"
 }
 
 resource "aws_vpc_endpoint_route_table_association" "private_dynamodb" {
@@ -681,6 +685,8 @@ resource "aws_vpc_endpoint" "sqs" {
   security_group_ids  = ["${var.sqs_endpoint_security_group_ids}"]
   subnet_ids          = ["${coalescelist(var.sqs_endpoint_subnet_ids, aws_subnet.private.*.id)}"]
   private_dns_enabled = "${var.sqs_endpoint_private_dns_enabled}"
+
+  tags = "${merge(var.tags, var.vpc_endpoint_tags)}"
 }
 
 #######################
@@ -702,6 +708,8 @@ resource "aws_vpc_endpoint" "ssm" {
   security_group_ids  = ["${var.ssm_endpoint_security_group_ids}"]
   subnet_ids          = ["${coalescelist(var.ssm_endpoint_subnet_ids, aws_subnet.private.*.id)}"]
   private_dns_enabled = "${var.ssm_endpoint_private_dns_enabled}"
+
+  tags = "${merge(var.tags, var.vpc_endpoint_tags)}"
 }
 
 ###############################
@@ -723,6 +731,8 @@ resource "aws_vpc_endpoint" "ssmmessages" {
   security_group_ids  = ["${var.ssmmessages_endpoint_security_group_ids}"]
   subnet_ids          = ["${coalescelist(var.ssmmessages_endpoint_subnet_ids, aws_subnet.private.*.id)}"]
   private_dns_enabled = "${var.ssmmessages_endpoint_private_dns_enabled}"
+
+  tags = "${merge(var.tags, var.vpc_endpoint_tags)}"
 }
 
 #######################
@@ -744,6 +754,8 @@ resource "aws_vpc_endpoint" "ec2" {
   security_group_ids  = ["${var.ec2_endpoint_security_group_ids}"]
   subnet_ids          = ["${coalescelist(var.ec2_endpoint_subnet_ids, aws_subnet.private.*.id)}"]
   private_dns_enabled = "${var.ec2_endpoint_private_dns_enabled}"
+
+  tags = "${merge(var.tags, var.vpc_endpoint_tags)}"
 }
 
 ###############################
@@ -765,6 +777,8 @@ resource "aws_vpc_endpoint" "ec2messages" {
   security_group_ids  = ["${var.ec2messages_endpoint_security_group_ids}"]
   subnet_ids          = ["${coalescelist(var.ec2messages_endpoint_subnet_ids, aws_subnet.private.*.id)}"]
   private_dns_enabled = "${var.ec2messages_endpoint_private_dns_enabled}"
+
+  tags = "${merge(var.tags, var.vpc_endpoint_tags)}"
 }
 
 ###########################
@@ -786,6 +800,8 @@ resource "aws_vpc_endpoint" "ecr_api" {
   security_group_ids  = ["${var.ecr_api_endpoint_security_group_ids}"]
   subnet_ids          = ["${coalescelist(var.ecr_api_endpoint_subnet_ids, aws_subnet.private.*.id)}"]
   private_dns_enabled = "${var.ecr_api_endpoint_private_dns_enabled}"
+
+  tags = "${merge(var.tags, var.vpc_endpoint_tags)}"
 }
 
 ###########################
@@ -807,6 +823,8 @@ resource "aws_vpc_endpoint" "ecr_dkr" {
   security_group_ids  = ["${var.ecr_dkr_endpoint_security_group_ids}"]
   subnet_ids          = ["${coalescelist(var.ecr_dkr_endpoint_subnet_ids, aws_subnet.private.*.id)}"]
   private_dns_enabled = "${var.ecr_dkr_endpoint_private_dns_enabled}"
+
+  tags = "${merge(var.tags, var.vpc_endpoint_tags)}"
 }
 
 #######################
@@ -828,6 +846,8 @@ resource "aws_vpc_endpoint" "apigw" {
   security_group_ids  = ["${var.apigw_endpoint_security_group_ids}"]
   subnet_ids          = ["${coalescelist(var.apigw_endpoint_subnet_ids, aws_subnet.private.*.id)}"]
   private_dns_enabled = "${var.apigw_endpoint_private_dns_enabled}"
+
+  tags = "${merge(var.tags, var.vpc_endpoint_tags)}"
 }
 
 #######################
@@ -849,6 +869,8 @@ resource "aws_vpc_endpoint" "kms" {
   security_group_ids  = ["${var.kms_endpoint_security_group_ids}"]
   subnet_ids          = ["${coalescelist(var.kms_endpoint_subnet_ids, aws_subnet.private.*.id)}"]
   private_dns_enabled = "${var.kms_endpoint_private_dns_enabled}"
+
+  tags = "${merge(var.tags, var.vpc_endpoint_tags)}"
 }
 
 #######################
@@ -870,6 +892,8 @@ resource "aws_vpc_endpoint" "ecs" {
   security_group_ids  = ["${var.ecs_endpoint_security_group_ids}"]
   subnet_ids          = ["${coalescelist(var.ecs_endpoint_subnet_ids, aws_subnet.private.*.id)}"]
   private_dns_enabled = "${var.ecs_endpoint_private_dns_enabled}"
+
+  tags = "${merge(var.tags, var.vpc_endpoint_tags)}"
 }
 
 #######################
@@ -891,6 +915,8 @@ resource "aws_vpc_endpoint" "ecs_agent" {
   security_group_ids  = ["${var.ecs_agent_endpoint_security_group_ids}"]
   subnet_ids          = ["${coalescelist(var.ecs_agent_endpoint_subnet_ids, aws_subnet.private.*.id)}"]
   private_dns_enabled = "${var.ecs_agent_endpoint_private_dns_enabled}"
+
+  tags = "${merge(var.tags, var.vpc_endpoint_tags)}"
 }
 
 #######################
@@ -912,6 +938,8 @@ resource "aws_vpc_endpoint" "ecs_telemetry" {
   security_group_ids  = ["${var.ecs_telemetry_endpoint_security_group_ids}"]
   subnet_ids          = ["${coalescelist(var.ecs_telemetry_endpoint_subnet_ids, aws_subnet.private.*.id)}"]
   private_dns_enabled = "${var.ecs_telemetry_endpoint_private_dns_enabled}"
+
+  tags = "${merge(var.tags, var.vpc_endpoint_tags)}"
 }
 
 #######################
@@ -933,6 +961,8 @@ resource "aws_vpc_endpoint" "elasticloadbalancing" {
   security_group_ids  = ["${var.elasticloadbalancing_endpoint_security_group_ids}"]
   subnet_ids          = ["${coalescelist(var.elasticloadbalancing_endpoint_subnet_ids, aws_subnet.private.*.id)}"]
   private_dns_enabled = "${var.elasticloadbalancing_endpoint_private_dns_enabled}"
+
+  tags = "${merge(var.tags, var.vpc_endpoint_tags)}"
 }
 
 #######################
@@ -954,6 +984,8 @@ resource "aws_vpc_endpoint" "sns" {
   security_group_ids  = ["${var.sns_endpoint_security_group_ids}"]
   subnet_ids          = ["${coalescelist(var.sns_endpoint_subnet_ids, aws_subnet.private.*.id)}"]
   private_dns_enabled = "${var.sns_endpoint_private_dns_enabled}"
+
+  tags = "${merge(var.tags, var.vpc_endpoint_tags)}"
 }
 
 #######################
@@ -975,6 +1007,8 @@ resource "aws_vpc_endpoint" "logs" {
   security_group_ids  = ["${var.logs_endpoint_security_group_ids}"]
   subnet_ids          = ["${coalescelist(var.logs_endpoint_subnet_ids, aws_subnet.private.*.id)}"]
   private_dns_enabled = "${var.logs_endpoint_private_dns_enabled}"
+
+  tags = "${merge(var.tags, var.vpc_endpoint_tags)}"
 }
 
 #######################
@@ -996,6 +1030,8 @@ resource "aws_vpc_endpoint" "cloudtrail" {
   security_group_ids  = ["${var.cloudtrail_endpoint_security_group_ids}"]
   subnet_ids          = ["${coalescelist(var.cloudtrail_endpoint_subnet_ids, aws_subnet.private.*.id)}"]
   private_dns_enabled = "${var.cloudtrail_endpoint_private_dns_enabled}"
+
+  tags = "${merge(var.tags, var.vpc_endpoint_tags)}"
 }
 
 #######################
@@ -1017,6 +1053,8 @@ resource "aws_vpc_endpoint" "monitoring" {
   security_group_ids  = ["${var.monitoring_endpoint_security_group_ids}"]
   subnet_ids          = ["${coalescelist(var.monitoring_endpoint_subnet_ids, aws_subnet.private.*.id)}"]
   private_dns_enabled = "${var.monitoring_endpoint_private_dns_enabled}"
+
+  tags = "${merge(var.tags, var.vpc_endpoint_tags)}"
 }
 
 #######################
@@ -1038,6 +1076,8 @@ resource "aws_vpc_endpoint" "events" {
   security_group_ids  = ["${var.events_endpoint_security_group_ids}"]
   subnet_ids          = ["${coalescelist(var.events_endpoint_subnet_ids, aws_subnet.private.*.id)}"]
   private_dns_enabled = "${var.events_endpoint_private_dns_enabled}"
+
+  tags = "${merge(var.tags, var.vpc_endpoint_tags)}"
 }
 
 ##########################
