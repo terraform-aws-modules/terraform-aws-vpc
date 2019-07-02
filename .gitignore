@@ -1,4 +1,6 @@
 .terraform
-terraform.tfstate
 *.tfstate*
+.kitchen
+terraform.tfstate
 terraform.tfvars
+Gemfile.lock

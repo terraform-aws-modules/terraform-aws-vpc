@@ -10,10 +10,10 @@ output "vpc_cidr_block" {
   value       = module.vpc.vpc_cidr_block
 }
 
-//output "vpc_ipv6_cidr_block" {
-//  description = "The IPv6 CIDR block"
-//  value       = ["${module.vpc.vpc_ipv6_cidr_block}"]
-//}
+output "vpc_secondary_cidr_blocks" {
+  description = "List of secondary CIDR blocks of the VPC"
+  value       = module.vpc.vpc_secondary_cidr_blocks
+}
 
 # Subnets
 output "private_subnets" {
@@ -30,11 +30,5 @@ output "public_subnets" {
 output "nat_public_ips" {
   description = "List of public Elastic IPs created for AWS NAT Gateway"
   value       = module.vpc.nat_public_ips
-}
-
-# AZs
-output "azs" {
-  description = "A list of availability zones spefified as argument to this module"
-  value       = module.vpc.azs
 }
 
