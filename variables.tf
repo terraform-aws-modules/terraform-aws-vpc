@@ -92,12 +92,6 @@ variable "redshift_subnets" {
   default     = []
 }
 
-variable "redshift_subnets" {
-  type        = "list"
-  description = "A list of redshift subnets"
-  default     = []
-}
-
 variable "elasticache_subnets" {
   description = "A list of elasticache subnets"
   type        = list(string)
@@ -773,11 +767,6 @@ variable "redshift_subnet_tags" {
 variable "redshift_subnet_group_tags" {
   description = "Additional tags for the redshift subnet group"
   type        = map(string)
-  default     = {}
-}
-
-variable "redshift_subnet_tags" {
-  description = "Additional tags for the redshift subnets"
   default     = {}
 }
 

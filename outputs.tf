@@ -138,21 +138,6 @@ output "redshift_subnet_group" {
   value       = concat(aws_redshift_subnet_group.redshift.*.id, [""])[0]
 }
 
-output "redshift_subnets" {
-  description = "List of IDs of redshift subnets"
-  value       = ["${aws_subnet.redshift.*.id}"]
-}
-
-output "redshift_subnets_cidr_blocks" {
-  description = "List of cidr_blocks of redshift subnets"
-  value       = ["${aws_subnet.redshift.*.cidr_block}"]
-}
-
-output "redshift_subnet_group" {
-  description = "ID of redshift subnet group"
-  value       = "${element(concat(aws_redshift_subnet_group.redshift.*.id, list("")), 0)}"
-}
-
 output "elasticache_subnets" {
   description = "List of IDs of elasticache subnets"
   value       = aws_subnet.elasticache.*.id
@@ -351,11 +336,6 @@ output "vpc_endpoint_s3_id" {
 output "vpc_endpoint_s3_pl_id" {
   description = "The prefix list for the S3 VPC endpoint."
   value       = concat(aws_vpc_endpoint.s3.*.prefix_list_id, [""])[0]
-}
-
-output "vpc_endpoint_s3_pl_id" {
-  description = "The prefix list for the S3 VPC endpoint."
-  value       = "${element(concat(aws_vpc_endpoint.s3.*.prefix_list_id, list("")), 0)}"
 }
 
 output "vpc_endpoint_dynamodb_id" {
