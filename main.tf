@@ -34,8 +34,18 @@ resource "aws_vpc" "this" {
     {
       "Name" = format("%s", var.name)
     },
-    var.tags,
-    var.vpc_tags,
+    zipmap(
+      keys(var.tags),
+      [for v in values(var.tags) :
+        replace(replace(v, "%az%", element(var.azs, count.index)), "%name%", var.name)
+      ]
+    ),
+    zipmap(
+      keys(var.vpc_tags),
+      [for v in values(var.vpc_tags) :
+        replace(replace(v, "%az%", element(var.azs, count.index)), "%name%", var.name)
+      ]
+    ),
   )
 }
 
@@ -63,8 +73,18 @@ resource "aws_vpc_dhcp_options" "this" {
     {
       "Name" = format("%s", var.name)
     },
-    var.tags,
-    var.dhcp_options_tags,
+    zipmap(
+      keys(var.tags),
+      [for v in values(var.tags) :
+        replace(replace(v, "%az%", element(var.azs, count.index)), "%name%", var.name)
+      ]
+    ),
+    zipmap(
+      keys(var.dhcp_options_tags),
+      [for v in values(var.dhcp_options_tags) :
+        replace(replace(v, "%az%", element(var.azs, count.index)), "%name%", var.name)
+      ]
+    ),
   )
 }
 
@@ -90,8 +110,18 @@ resource "aws_internet_gateway" "this" {
     {
       "Name" = format("%s", var.name)
     },
-    var.tags,
-    var.igw_tags,
+    zipmap(
+      keys(var.tags),
+      [for v in values(var.tags) :
+        replace(replace(v, "%az%", element(var.azs, count.index)), "%name%", var.name)
+      ]
+    ),
+    zipmap(
+      keys(var.igw_tags),
+      [for v in values(var.igw_tags) :
+        replace(replace(v, "%az%", element(var.azs, count.index)), "%name%", var.name)
+      ]
+    ),
   )
 }
 
@@ -107,8 +137,18 @@ resource "aws_route_table" "public" {
     {
       "Name" = format("%s-${var.public_subnet_suffix}", var.name)
     },
-    var.tags,
-    var.public_route_table_tags,
+    zipmap(
+      keys(var.tags),
+      [for v in values(var.tags) :
+        replace(replace(v, "%az%", element(var.azs, count.index)), "%name%", var.name)
+      ]
+    ),
+    zipmap(
+      keys(var.public_route_table_tags),
+      [for v in values(var.public_route_table_tags) :
+        replace(replace(v, "%az%", element(var.azs, count.index)), "%name%", var.name)
+      ]
+    ),
   )
 }
 
@@ -141,8 +181,18 @@ resource "aws_route_table" "private" {
         element(var.azs, count.index),
       )
     },
-    var.tags,
-    var.private_route_table_tags,
+    zipmap(
+      keys(var.tags),
+      [for v in values(var.tags) :
+        replace(replace(v, "%az%", element(var.azs, count.index)), "%name%", var.name)
+      ]
+    ),
+    zipmap(
+      keys(var.private_route_table_tags),
+      [for v in values(var.private_route_table_tags) :
+        replace(replace(v, "%az%", element(var.azs, count.index)), "%name%", var.name)
+      ]
+    ),
   )
 
   lifecycle {
@@ -161,11 +211,21 @@ resource "aws_route_table" "database" {
   vpc_id = local.vpc_id
 
   tags = merge(
-    var.tags,
-    var.database_route_table_tags,
     {
       "Name" = "${var.name}-${var.database_subnet_suffix}"
     },
+    zipmap(
+      keys(var.tags),
+      [for v in values(var.tags) :
+        replace(replace(v, "%az%", element(var.azs, count.index)), "%name%", var.name)
+      ]
+    ),
+    zipmap(
+      keys(var.database_route_table_tags),
+      [for v in values(var.database_route_table_tags) :
+        replace(replace(v, "%az%", element(var.azs, count.index)), "%name%", var.name)
+      ]
+    ),
   )
 }
 
@@ -202,11 +262,21 @@ resource "aws_route_table" "redshift" {
   vpc_id = local.vpc_id
 
   tags = merge(
-    var.tags,
-    var.redshift_route_table_tags,
     {
       "Name" = "${var.name}-${var.redshift_subnet_suffix}"
     },
+    zipmap(
+      keys(var.tags),
+      [for v in values(var.tags) :
+        replace(replace(v, "%az%", element(var.azs, count.index)), "%name%", var.name)
+      ]
+    ),
+    zipmap(
+      keys(var.redshift_route_table_tags),
+      [for v in values(var.redshift_route_table_tags) :
+        replace(replace(v, "%az%", element(var.azs, count.index)), "%name%", var.name)
+      ]
+    ),
   )
 }
 
@@ -219,11 +289,21 @@ resource "aws_route_table" "elasticache" {
   vpc_id = local.vpc_id
 
   tags = merge(
-    var.tags,
-    var.elasticache_route_table_tags,
     {
       "Name" = "${var.name}-${var.elasticache_subnet_suffix}"
     },
+    zipmap(
+      keys(var.tags),
+      [for v in values(var.tags) :
+        replace(replace(v, "%az%", element(var.azs, count.index)), "%name%", var.name)
+      ]
+    ),
+    zipmap(
+      keys(var.elasticache_route_table_tags),
+      [for v in values(var.elasticache_route_table_tags) :
+        replace(replace(v, "%az%", element(var.azs, count.index)), "%name%", var.name)
+      ]
+    ),
   )
 }
 
@@ -239,8 +319,18 @@ resource "aws_route_table" "intra" {
     {
       "Name" = "${var.name}-${var.intra_subnet_suffix}"
     },
-    var.tags,
-    var.intra_route_table_tags,
+    zipmap(
+      keys(var.tags),
+      [for v in values(var.tags) :
+        replace(replace(v, "%az%", element(var.azs, count.index)), "%name%", var.name)
+      ]
+    ),
+    zipmap(
+      keys(var.intra_route_table_tags),
+      [for v in values(var.intra_route_table_tags) :
+        replace(replace(v, "%az%", element(var.azs, count.index)), "%name%", var.name)
+      ]
+    ),
   )
 }
 
@@ -263,8 +353,18 @@ resource "aws_subnet" "public" {
         element(var.azs, count.index),
       )
     },
-    var.tags,
-    var.public_subnet_tags,
+    zipmap(
+      keys(var.tags),
+      [for v in values(var.tags) :
+        replace(replace(v, "%az%", element(var.azs, count.index)), "%name%", var.name)
+      ]
+    ),
+    zipmap(
+      keys(var.public_subnet_tags),
+      [for v in values(var.public_subnet_tags) :
+        replace(replace(v, "%az%", element(var.azs, count.index)), "%name%", var.name)
+      ]
+    ),
   )
 }
 
@@ -286,8 +386,18 @@ resource "aws_subnet" "private" {
         element(var.azs, count.index),
       )
     },
-    var.tags,
-    var.private_subnet_tags,
+    zipmap(
+      keys(var.tags),
+      [for v in values(var.tags) :
+        replace(replace(v, "%az%", element(var.azs, count.index)), "%name%", var.name)
+      ]
+    ),
+    zipmap(
+      keys(var.private_subnet_tags),
+      [for v in values(var.private_subnet_tags) :
+        replace(replace(v, "%az%", element(var.azs, count.index)), "%name%", var.name)
+      ]
+    ),
   )
 }
 
@@ -309,8 +419,18 @@ resource "aws_subnet" "database" {
         element(var.azs, count.index),
       )
     },
-    var.tags,
-    var.database_subnet_tags,
+    zipmap(
+      keys(var.tags),
+      [for v in values(var.tags) :
+        replace(replace(v, "%az%", element(var.azs, count.index)), "%name%", var.name)
+      ]
+    ),
+    zipmap(
+      keys(var.database_subnet_tags),
+      [for v in values(var.database_subnet_tags) :
+        replace(replace(v, "%az%", element(var.azs, count.index)), "%name%", var.name)
+      ]
+    ),
   )
 }
 
@@ -325,8 +445,18 @@ resource "aws_db_subnet_group" "database" {
     {
       "Name" = format("%s", var.name)
     },
-    var.tags,
-    var.database_subnet_group_tags,
+    zipmap(
+      keys(var.tags),
+      [for v in values(var.tags) :
+        replace(replace(v, "%az%", element(var.azs, count.index)), "%name%", var.name)
+      ]
+    ),
+    zipmap(
+      keys(var.database_subnet_group_tags),
+      [for v in values(var.database_subnet_group_tags) :
+        replace(replace(v, "%az%", element(var.azs, count.index)), "%name%", var.name)
+      ]
+    ),
   )
 }
 
@@ -348,8 +478,18 @@ resource "aws_subnet" "redshift" {
         element(var.azs, count.index),
       )
     },
-    var.tags,
-    var.redshift_subnet_tags,
+    zipmap(
+      keys(var.tags),
+      [for v in values(var.tags) :
+        replace(replace(v, "%az%", element(var.azs, count.index)), "%name%", var.name)
+      ]
+    ),
+    zipmap(
+      keys(var.redshift_subnet_tags),
+      [for v in values(var.redshift_subnet_tags) :
+        replace(replace(v, "%az%", element(var.azs, count.index)), "%name%", var.name)
+      ]
+    ),
   )
 }
 
@@ -364,8 +504,18 @@ resource "aws_redshift_subnet_group" "redshift" {
     {
       "Name" = format("%s", var.name)
     },
-    var.tags,
-    var.redshift_subnet_group_tags,
+    zipmap(
+      keys(var.tags),
+      [for v in values(var.tags) :
+        replace(replace(v, "%az%", element(var.azs, count.index)), "%name%", var.name)
+      ]
+    ),
+    zipmap(
+      keys(var.redshift_subnet_group_tags),
+      [for v in values(var.redshift_subnet_group_tags) :
+        replace(replace(v, "%az%", element(var.azs, count.index)), "%name%", var.name)
+      ]
+    ),
   )
 }
 
@@ -387,8 +537,18 @@ resource "aws_subnet" "elasticache" {
         element(var.azs, count.index),
       )
     },
-    var.tags,
-    var.elasticache_subnet_tags,
+    zipmap(
+      keys(var.tags),
+      [for v in values(var.tags) :
+        replace(replace(v, "%az%", element(var.azs, count.index)), "%name%", var.name)
+      ]
+    ),
+    zipmap(
+      keys(var.elasticache_subnet_tags),
+      [for v in values(var.elasticache_subnet_tags) :
+        replace(replace(v, "%az%", element(var.azs, count.index)), "%name%", var.name)
+      ]
+    ),
   )
 }
 
@@ -418,8 +578,18 @@ resource "aws_subnet" "intra" {
         element(var.azs, count.index),
       )
     },
-    var.tags,
-    var.intra_subnet_tags,
+    zipmap(
+      keys(var.tags),
+      [for v in values(var.tags) :
+        replace(replace(v, "%az%", element(var.azs, count.index)), "%name%", var.name)
+      ]
+    ),
+    zipmap(
+      keys(var.intra_subnet_tags),
+      [for v in values(var.intra_subnet_tags) :
+        replace(replace(v, "%az%", element(var.azs, count.index)), "%name%", var.name)
+      ]
+    ),
   )
 }
 
@@ -464,8 +634,18 @@ resource "aws_default_network_acl" "this" {
     {
       "Name" = format("%s", var.default_network_acl_name)
     },
-    var.tags,
-    var.default_network_acl_tags,
+    zipmap(
+      keys(var.tags),
+      [for v in values(var.tags) :
+        replace(replace(v, "%az%", element(var.azs, count.index)), "%name%", var.name)
+      ]
+    ),
+    zipmap(
+      keys(var.default_network_acl_tags),
+      [for v in values(var.default_network_acl_tags) :
+        replace(replace(v, "%az%", element(var.azs, count.index)), "%name%", var.name)
+      ]
+    ),
   )
 
   lifecycle {
@@ -486,8 +666,18 @@ resource "aws_network_acl" "public" {
     {
       "Name" = format("%s-${var.public_subnet_suffix}", var.name)
     },
-    var.tags,
-    var.public_acl_tags,
+    zipmap(
+      keys(var.tags),
+      [for v in values(var.tags) :
+        replace(replace(v, "%az%", element(var.azs, count.index)), "%name%", var.name)
+      ]
+    ),
+    zipmap(
+      keys(var.public_acl_tags),
+      [for v in values(var.public_acl_tags) :
+        replace(replace(v, "%az%", element(var.azs, count.index)), "%name%", var.name)
+      ]
+    ),
   )
 }
 
@@ -532,8 +722,18 @@ resource "aws_network_acl" "private" {
     {
       "Name" = format("%s-${var.private_subnet_suffix}", var.name)
     },
-    var.tags,
-    var.private_acl_tags,
+    zipmap(
+      keys(var.tags),
+      [for v in values(var.tags) :
+        replace(replace(v, "%az%", element(var.azs, count.index)), "%name%", var.name)
+      ]
+    ),
+    zipmap(
+      keys(var.private_acl_tags),
+      [for v in values(var.private_acl_tags) :
+        replace(replace(v, "%az%", element(var.azs, count.index)), "%name%", var.name)
+      ]
+    ),
   )
 }
 
@@ -578,8 +778,18 @@ resource "aws_network_acl" "intra" {
     {
       "Name" = format("%s-${var.intra_subnet_suffix}", var.name)
     },
-    var.tags,
-    var.intra_acl_tags,
+    zipmap(
+      keys(var.tags),
+      [for v in values(var.tags) :
+        replace(replace(v, "%az%", element(var.azs, count.index)), "%name%", var.name)
+      ]
+    ),
+    zipmap(
+      keys(var.intra_acl_tags),
+      [for v in values(var.intra_acl_tags) :
+        replace(replace(v, "%az%", element(var.azs, count.index)), "%name%", var.name)
+      ]
+    ),
   )
 }
 
@@ -624,8 +834,18 @@ resource "aws_network_acl" "database" {
     {
       "Name" = format("%s-${var.database_subnet_suffix}", var.name)
     },
-    var.tags,
-    var.database_acl_tags,
+    zipmap(
+      keys(var.tags),
+      [for v in values(var.tags) :
+        replace(replace(v, "%az%", element(var.azs, count.index)), "%name%", var.name)
+      ]
+    ),
+    zipmap(
+      keys(var.database_acl_tags),
+      [for v in values(var.database_acl_tags) :
+        replace(replace(v, "%az%", element(var.azs, count.index)), "%name%", var.name)
+      ]
+    ),
   )
 }
 
@@ -670,8 +890,18 @@ resource "aws_network_acl" "redshift" {
     {
       "Name" = format("%s-${var.redshift_subnet_suffix}", var.name)
     },
-    var.tags,
-    var.redshift_acl_tags,
+    zipmap(
+      keys(var.tags),
+      [for v in values(var.tags) :
+        replace(replace(v, "%az%", element(var.azs, count.index)), "%name%", var.name)
+      ]
+    ),
+    zipmap(
+      keys(var.redshift_acl_tags),
+      [for v in values(var.redshift_acl_tags) :
+        replace(replace(v, "%az%", element(var.azs, count.index)), "%name%", var.name)
+      ]
+    ),
   )
 }
 
@@ -716,8 +946,18 @@ resource "aws_network_acl" "elasticache" {
     {
       "Name" = format("%s-${var.elasticache_subnet_suffix}", var.name)
     },
-    var.tags,
-    var.elasticache_acl_tags,
+    zipmap(
+      keys(var.tags),
+      [for v in values(var.tags) :
+        replace(replace(v, "%az%", element(var.azs, count.index)), "%name%", var.name)
+      ]
+    ),
+    zipmap(
+      keys(var.elasticache_acl_tags),
+      [for v in values(var.elasticache_acl_tags) :
+        replace(replace(v, "%az%", element(var.azs, count.index)), "%name%", var.name)
+      ]
+    ),
   )
 }
 
@@ -780,8 +1020,18 @@ resource "aws_eip" "nat" {
         element(var.azs, var.single_nat_gateway ? 0 : count.index),
       )
     },
-    var.tags,
-    var.nat_eip_tags,
+    zipmap(
+      keys(var.tags),
+      [for v in values(var.tags) :
+        replace(replace(v, "%az%", element(var.azs, count.index)), "%name%", var.name)
+      ]
+    ),
+    zipmap(
+      keys(var.nat_eip_tags),
+      [for v in values(var.nat_eip_tags) :
+        replace(replace(v, "%az%", element(var.azs, count.index)), "%name%", var.name)
+      ]
+    ),
   )
 }
 
@@ -805,8 +1055,18 @@ resource "aws_nat_gateway" "this" {
         element(var.azs, var.single_nat_gateway ? 0 : count.index),
       )
     },
-    var.tags,
-    var.nat_gateway_tags,
+    zipmap(
+      keys(var.tags),
+      [for v in values(var.tags) :
+        replace(replace(v, "%az%", element(var.azs, count.index)), "%name%", var.name)
+      ]
+    ),
+    zipmap(
+      keys(var.nat_gateway_tags),
+      [for v in values(var.nat_gateway_tags) :
+        replace(replace(v, "%az%", element(var.azs, count.index)), "%name%", var.name)
+      ]
+    ),
   )
 
   depends_on = [aws_internet_gateway.this]
@@ -1369,8 +1629,18 @@ resource "aws_vpn_gateway" "this" {
     {
       "Name" = format("%s", var.name)
     },
-    var.tags,
-    var.vpn_gateway_tags,
+    zipmap(
+      keys(var.tags),
+      [for v in values(var.tags) :
+        replace(replace(v, "%az%", element(var.azs, count.index)), "%name%", var.name)
+      ]
+    ),
+    zipmap(
+      keys(var.vpn_gateway_tags),
+      [for v in values(var.vpn_gateway_tags) :
+        replace(replace(v, "%az%", element(var.azs, count.index)), "%name%", var.name)
+      ]
+    ),
   )
 }
 
@@ -1421,8 +1691,17 @@ resource "aws_default_vpc" "this" {
     {
       "Name" = format("%s", var.default_vpc_name)
     },
-    var.tags,
-    var.default_vpc_tags,
+    zipmap(
+      keys(var.tags),
+      [for v in values(var.tags) :
+        replace(replace(v, "%az%", element(var.azs, count.index)), "%name%", var.name)
+      ]
+    ),
+    zipmap(
+      keys(var.default_vpc_tags),
+      [for v in values(var.default_vpc_tags) :
+        replace(replace(v, "%az%", element(var.azs, count.index)), "%name%", var.name)
+      ]
+    ),
   )
 }
-
