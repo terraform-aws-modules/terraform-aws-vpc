@@ -630,21 +630,21 @@ output "ipv6_egress_only_igw_id" {
 }
 
 output "public_subnets_ipv6_cidr_blocks" {
-  description = "List of ipv6 cidr_blocks of public subnets in an ipv6 enabled VPC"
+  description = "List of IPv6 cidr_blocks of public subnets in an IPv6 enabled VPC"
   value       = aws_subnet.public.*.ipv6_cidr_block
 }
 
 output "private_subnets_ipv6_cidr_blocks" {
-  description = "List of ipv6 cidr_blocks of private subnets in an ipv6 enabled VPC"
+  description = "List of IPv6 cidr_blocks of private subnets in an IPv6 enabled VPC"
   value       = aws_subnet.private.*.ipv6_cidr_block
 }
 
 output "database_subnets_ipv6_cidr_blocks" {
-  description = "List of ipv6 cidr_blocks of database subnets in an ipv6 enabled VPC"
+  description = "List of IPv6 cidr_blocks of database subnets in an IPv6 enabled VPC"
   value       = aws_subnet.database.*.ipv6_cidr_block
 }
 
 output "intra_subnets_ipv6_cidr_blocks" {
-  description = "List of ipv6 cidr_blocks of intra subnets in an ipv6 enabled VPC"
+  description = "List of IPv6 cidr_blocks of intra subnets in an IPv6 enabled VPC"
   value       = aws_subnet.intra.*.ipv6_cidr_block
 }
