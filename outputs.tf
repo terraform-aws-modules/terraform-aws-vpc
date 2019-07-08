@@ -53,15 +53,15 @@ output "vpc_main_route_table_id" {
   value       = concat(aws_vpc.this.*.main_route_table_id, [""])[0]
 }
 
-//output "vpc_ipv6_association_id" {
-//  description = "The association ID for the IPv6 CIDR block"
-//  value       = "${element(concat(aws_vpc.this.*.ipv6_association_id, list("")), 0)}"
-//}
-//
-//output "vpc_ipv6_cidr_block" {
-//  description = "The IPv6 CIDR block"
-//  value       = "${element(concat(aws_vpc.this.*.ipv6_cidr_block, list("")), 0)}"
-//}
+output "vpc_ipv6_association_id" {
+  description = "The association ID for the IPv6 CIDR block"
+  value       = element(concat(aws_vpc.this.*.ipv6_association_id, list("")), 0)
+}
+
+output "vpc_ipv6_cidr_block" {
+  description = "The IPv6 CIDR block"
+  value       = element(concat(aws_vpc.this.*.ipv6_cidr_block, list("")), 0)
+}
 
 output "vpc_secondary_cidr_blocks" {
   description = "List of secondary CIDR blocks of the VPC"
@@ -624,3 +624,27 @@ output "azs" {
   value       = var.azs
 }
 
+output "ipv6_egress_only_igw_id" {
+  description = "The ID of the egress only Internet Gateway"
+  value       = element(concat(aws_egress_only_internet_gateway.this.*.id, list("")), 0)
+}
+
+output "public_subnets_ipv6_cidr_blocks" {
+  description = "List of ipv6 cidr_blocks of public subnets in an ipv6 enabled VPC"
+  value       = aws_subnet.public.*.ipv6_cidr_block
+}
+
+output "private_subnets_ipv6_cidr_blocks" {
+  description = "List of ipv6 cidr_blocks of private subnets in an ipv6 enabled VPC"
+  value       = aws_subnet.private.*.ipv6_cidr_block
+}
+
+output "database_subnets_ipv6_cidr_blocks" {
+  description = "List of ipv6 cidr_blocks of database subnets in an ipv6 enabled VPC"
+  value       = aws_subnet.database.*.ipv6_cidr_block
+}
+
+output "intra_subnets_ipv6_cidr_blocks" {
+  description = "List of ipv6 cidr_blocks of intra subnets in an ipv6 enabled VPC"
+  value       = aws_subnet.intra.*.ipv6_cidr_block
+}
