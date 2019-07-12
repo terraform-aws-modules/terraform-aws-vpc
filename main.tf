@@ -15,7 +15,7 @@ locals {
       [""],
     ),
     0,
-  ) : data.aws_vpc.vpc.id
+  ) : data.aws_vpc.vpc[0].id
 }
 
 data "aws_vpc" "vpc" {
