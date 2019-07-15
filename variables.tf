@@ -646,6 +646,54 @@ variable "cloudtrail_endpoint_private_dns_enabled" {
   default     = false
 }
 
+variable "enable_kinesis_streams_endpoint" {
+  description = "Should be true if you want to provision a Kinesis Streams endpoint to the VPC"
+  type        = bool
+  default     = false
+}
+
+variable "kinesis_streams_endpoint_security_group_ids" {
+  description = "The ID of one or more security groups to associate with the network interface for Kinesis Streams endpoint"
+  type        = list(string)
+  default     = []
+}
+
+variable "kinesis_streams_endpoint_subnet_ids" {
+  description = "The ID of one or more subnets in which to create a network interface for Kinesis Streams endpoint. Only a single subnet within an AZ is supported. If omitted, private subnets will be used."
+  type        = list(string)
+  default     = []
+}
+
+variable "kinesis_streams_endpoint_private_dns_enabled" {
+  description = "Whether or not to associate a private hosted zone with the specified VPC for Kinesis Streams endpoint"
+  type        = bool
+  default     = false
+}
+
+variable "enable_kinesis_firehose_endpoint" {
+  description = "Should be true if you want to provision a Kinesis Firehose endpoint to the VPC"
+  type        = bool
+  default     = false
+}
+
+variable "kinesis_firehose_endpoint_security_group_ids" {
+  description = "The ID of one or more security groups to associate with the network interface for Kinesis Firehose endpoint"
+  type        = list(string)
+  default     = []
+}
+
+variable "kinesis_firehose_endpoint_subnet_ids" {
+  description = "The ID of one or more subnets in which to create a network interface for Kinesis Firehose endpoint. Only a single subnet within an AZ is supported. If omitted, private subnets will be used."
+  type        = list(string)
+  default     = []
+}
+
+variable "kinesis_firehose_endpoint_private_dns_enabled" {
+  description = "Whether or not to associate a private hosted zone with the specified VPC for Kinesis Firehose endpoint"
+  type        = bool
+  default     = false
+}
+
 variable "map_public_ip_on_launch" {
   description = "Should be false if you do not want to auto-assign public IP on launch"
   type        = bool
