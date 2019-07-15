@@ -899,6 +899,27 @@ resource "aws_vpc_endpoint_route_table_association" "public_dynamodb" {
 }
 
 
+##########################
+# VPC Endpoint for Config
+##########################
+data "aws_vpc_endpoint_service" "config" {
+  count = var.create_vpc && var.enable_config_endpoint ? 1 : 0
+
+  service = "config"
+}
+
+resource "aws_vpc_endpoint" "config" {
+  count = var.create_vpc && var.enable_config_endpoint ? 1 : 0
+
+  vpc_id            = local.vpc_id
+  service_name      = data.aws_vpc_endpoint_service.config[0].service_name
+  vpc_endpoint_type = "Interface"
+
+  security_group_ids  = var.config_endpoint_security_group_ids
+  subnet_ids          = coalescelist(var.config_endpoint_subnet_ids, aws_subnet.private.*.id)
+  private_dns_enabled = var.config_endpoint_private_dns_enabled
+}
+
 #######################
 # VPC Endpoint for SQS
 #######################
