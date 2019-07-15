@@ -218,6 +218,66 @@ variable "enable_s3_endpoint" {
   default     = false
 }
 
+variable "enable_codebuild_endpoint" {
+  description = "Should be true if you want to provision an Codebuild endpoint to the VPC"
+  default     = false
+}
+
+variable "codebuild_endpoint_security_group_ids" {
+  description = "The ID of one or more security groups to associate with the network interface for Codebuild endpoint"
+  default     = []
+}
+
+variable "codebuild_endpoint_subnet_ids" {
+  description = "The ID of one or more subnets in which to create a network interface for Codebuilt endpoint. Only a single subnet within an AZ is supported. If omitted, private subnets will be used."
+  default     = []
+}
+
+variable "codebuild_endpoint_private_dns_enabled" {
+  description = "Whether or not to associate a private hosted zone with the specified VPC for Codebuild endpoint"
+  default     = false
+}
+
+variable "enable_codecommit_endpoint" {
+  description = "Should be true if you want to provision an Codecommit endpoint to the VPC"
+  default     = false
+}
+
+variable "codecommit_endpoint_security_group_ids" {
+  description = "The ID of one or more security groups to associate with the network interface for Codecommit endpoint"
+  default     = []
+}
+
+variable "codecommit_endpoint_subnet_ids" {
+  description = "The ID of one or more subnets in which to create a network interface for Codecommit endpoint. Only a single subnet within an AZ is supported. If omitted, private subnets will be used."
+  default     = []
+}
+
+variable "codecommit_endpoint_private_dns_enabled" {
+  description = "Whether or not to associate a private hosted zone with the specified VPC for Codecommit endpoint"
+  default     = false
+}
+
+variable "enable_git_codecommit_endpoint" {
+  description = "Should be true if you want to provision an Git Codecommit endpoint to the VPC"
+  default     = false
+}
+
+variable "git_codecommit_endpoint_security_group_ids" {
+  description = "The ID of one or more security groups to associate with the network interface for Git Codecommit endpoint"
+  default     = []
+}
+
+variable "git_codecommit_endpoint_subnet_ids" {
+  description = "The ID of one or more subnets in which to create a network interface for Git Codecommit endpoint. Only a single subnet within an AZ is supported. If omitted, private subnets will be used."
+  default     = []
+}
+
+variable "git_codecommit_endpoint_private_dns_enabled" {
+  description = "Whether or not to associate a private hosted zone with the specified VPC for Git Codecommit endpoint"
+  default     = false
+}
+
 variable "enable_config_endpoint" {
   description = "Should be true if you want to provision an config endpoint to the VPC"
   default     = false

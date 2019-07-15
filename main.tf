@@ -899,6 +899,69 @@ resource "aws_vpc_endpoint_route_table_association" "public_dynamodb" {
 }
 
 
+#############################
+# VPC Endpoint for Codebuild
+#############################
+data "aws_vpc_endpoint_service" "codebuild" {
+  count = var.create_vpc && var.enable_codebuild_endpoint ? 1 : 0
+
+  service = "codebuild"
+}
+
+resource "aws_vpc_endpoint" "codebuild" {
+  count = var.create_vpc && var.enable_codebuild_endpoint ? 1 : 0
+
+  vpc_id            = local.vpc_id
+  service_name      = data.aws_vpc_endpoint_service.codebuild[0].service_name
+  vpc_endpoint_type = "Interface"
+
+  security_group_ids  = var.codebuild_endpoint_security_group_ids
+  subnet_ids          = coalescelist(var.codebuild_endpoint_subnet_ids, aws_subnet.private.*.id)
+  private_dns_enabled = var.codebuild_endpoint_private_dns_enabled
+}
+
+###############################
+# VPC Endpoint for Code Commit
+###############################
+data "aws_vpc_endpoint_service" "codecommit" {
+  count = var.create_vpc && var.enable_codecommit_endpoint ? 1 : 0
+
+  service = "codecommit"
+}
+
+resource "aws_vpc_endpoint" "codecommit" {
+  count = var.create_vpc && var.enable_codecommit_endpoint ? 1 : 0
+
+  vpc_id            = local.vpc_id
+  service_name      = data.aws_vpc_endpoint_service.codecommit[0].service_name
+  vpc_endpoint_type = "Interface"
+
+  security_group_ids  = var.codecommit_endpoint_security_group_ids
+  subnet_ids          = coalescelist(var.codecommit_endpoint_subnet_ids, aws_subnet.private.*.id)
+  private_dns_enabled = var.codecommit_endpoint_private_dns_enabled
+}
+
+###################################
+# VPC Endpoint for Git Code Commit
+###################################
+data "aws_vpc_endpoint_service" "git_codecommit" {
+  count = var.create_vpc && var.enable_git_codecommit_endpoint ? 1 : 0
+
+  service = "git-codecommit"
+}
+
+resource "aws_vpc_endpoint" "git_codecommit" {
+  count = var.create_vpc && var.enable_git_codecommit_endpoint ? 1 : 0
+
+  vpc_id            = local.vpc_id
+  service_name      = data.aws_vpc_endpoint_service.git_codecommit[0].service_name
+  vpc_endpoint_type = "Interface"
+
+  security_group_ids  = var.git_codecommit_endpoint_security_group_ids
+  subnet_ids          = coalescelist(var.git_codecommit_endpoint_subnet_ids, aws_subnet.private.*.id)
+  private_dns_enabled = var.git_codecommit_endpoint_private_dns_enabled
+}
+
 ##########################
 # VPC Endpoint for Config
 ##########################

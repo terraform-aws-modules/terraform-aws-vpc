@@ -368,6 +368,15 @@ Sometimes it is handy to have public access to Redshift clusters (for example if
 | sns\_endpoint\_private\_dns\_enabled | Whether or not to associate a private hosted zone with the specified VPC for SNS endpoint | bool | `"false"` | no |
 | sns\_endpoint\_security\_group\_ids | The ID of one or more security groups to associate with the network interface for SNS endpoint | list(string) | `[]` | no |
 | sns\_endpoint\_subnet\_ids | The ID of one or more subnets in which to create a network interface for SNS endpoint. Only a single subnet within an AZ is supported. If omitted, private subnets will be used. | list(string) | `[]` | no |
+| codebuild\_endpoint\_private\_dns\_enabled | Whether or not to associate a private hosted zone with the specified VPC for Codebuild endpoint | string | `"false"` | no |
+| codebuild\_endpoint\_security\_group\_ids | The ID of one or more security groups to associate with the network interface for Codebuild endpoint | list | `[]` | no |
+| codebuild\_endpoint\_subnet\_ids | The ID of one or more subnets in which to create a network interface for Codebuild endpoint. Only a single subnet within an AZ is supported. If omitted, private subnets will be used. | list | `[]` | no |
+| codecommit\_endpoint\_private\_dns\_enabled | Whether or not to associate a private hosted zone with the specified VPC for Codecommit endpoint | string | `"false"` | no |
+| codecommit\_endpoint\_security\_group\_ids | The ID of one or more security groups to associate with the network interface for Codecommit endpoint | list | `[]` | no |
+| codecommit\_endpoint\_subnet\_ids | The ID of one or more subnets in which to create a network interface for Codecommit endpoint. Only a single subnet within an AZ is supported. If omitted, private subnets will be used. | list | `[]` | no |
+| git\_codecommit\_endpoint\_private\_dns\_enabled | Whether or not to associate a private hosted zone with the specified VPC for Git Codecommit endpoint | string | `"false"` | no |
+| git\_codecommit\_endpoint\_security\_group\_ids | The ID of one or more security groups to associate with the network interface for Git Codecommit endpoint | list | `[]` | no |
+| git\_codecommit\_endpoint\_subnet\_ids | The ID of one or more subnets in which to create a network interface for Git Codecommit endpoint. Only a single subnet within an AZ is supported. If omitted, private subnets will be used. | list | `[]` | no |
 | config\_endpoint\_private\_dns\_enabled | Whether or not to associate a private hosted zone with the specified VPC for Config endpoint | string | `"false"` | no |
 | config\_endpoint\_security\_group\_ids | The ID of one or more security groups to associate with the network interface for Config endpoint | list | `[]` | no |
 | config\_endpoint\_subnet\_ids | The ID of one or more subnets in which to create a network interface for Config endpoint. Only a single subnet within an AZ is supported. If omitted, private subnets will be used. | list | `[]` | no |
