@@ -1,7 +1,7 @@
 <a name="unreleased"></a>
 ## [Unreleased]
-
-
+- Updated CHANGELOG
+- Added VPC endpoint for Secrets Manager,
 
 <a name="v2.7.0"></a>
 ## [v2.7.0] - 2019-06-17
