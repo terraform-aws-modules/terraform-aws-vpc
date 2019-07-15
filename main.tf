@@ -1109,6 +1109,27 @@ resource "aws_vpc_endpoint" "ec2messages" {
   private_dns_enabled = var.ec2messages_endpoint_private_dns_enabled
 }
 
+###################################
+# VPC Endpoint for Transfer Server
+###################################
+data "aws_vpc_endpoint_service" "transferserver" {
+  count = var.create_vpc && var.enable_transferserver_endpoint ? 1 : 0
+
+  service = "transfer.server"
+}
+
+resource "aws_vpc_endpoint" "transferserver" {
+  count = var.create_vpc && var.enable_transferserver_endpoint ? 1 : 0
+
+  vpc_id            = local.vpc_id
+  service_name      = data.aws_vpc_endpoint_service.transferserver[0].service_name
+  vpc_endpoint_type = "Interface"
+
+  security_group_ids  = var.transferserver_endpoint_security_group_ids
+  subnet_ids          = coalescelist(var.transferserver_endpoint_subnet_ids, aws_subnet.private.*.id)
+  private_dns_enabled = var.transferserver_endpoint_private_dns_enabled
+}
+
 ###########################
 # VPC Endpoint for ECR API
 ###########################

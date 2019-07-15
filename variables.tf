@@ -366,12 +366,6 @@ variable "secretsmanager_endpoint_private_dns_enabled" {
   default     = false
 }
 
-variable "enable_ssmmessages_endpoint" {
-  description = "Should be true if you want to provision a SSMMESSAGES endpoint to the VPC"
-  type        = bool
-  default     = false
-}
-
 variable "enable_apigw_endpoint" {
   description = "Should be true if you want to provision an api gateway endpoint to the VPC"
   type        = bool
@@ -396,6 +390,12 @@ variable "apigw_endpoint_subnet_ids" {
   default     = []
 }
 
+variable "enable_ssmmessages_endpoint" {
+  description = "Should be true if you want to provision a SSMMESSAGES endpoint to the VPC"
+  type        = bool
+  default     = false
+}
+
 variable "ssmmessages_endpoint_security_group_ids" {
   description = "The ID of one or more security groups to associate with the network interface for SSMMESSAGES endpoint"
   type        = list(string)
@@ -413,6 +413,31 @@ variable "ssmmessages_endpoint_private_dns_enabled" {
   type        = bool
   default     = false
 }
+
+variable "enable_transferserver_endpoint" {
+  description = "Should be true if you want to provision a Transer Server endpoint to the VPC"
+  type        = bool
+  default     = false
+}
+
+variable "transferserver_endpoint_security_group_ids" {
+  description = "The ID of one or more security groups to associate with the network interface for Transfer Server endpoint"
+  type        = list(string)
+  default     = []
+}
+
+variable "transferserver_endpoint_subnet_ids" {
+  description = "The ID of one or more subnets in which to create a network interface for Transfer Server endpoint. Only a single subnet within an AZ is supported. If omitted, private subnets will be used."
+  type        = list(string)
+  default     = []
+}
+
+variable "transferserver_endpoint_private_dns_enabled" {
+  description = "Whether or not to associate a private hosted zone with the specified VPC for Transfer Server endpoint"
+  type        = bool
+  default     = false
+}
+
 
 variable "enable_ec2_endpoint" {
   description = "Should be true if you want to provision an EC2 endpoint to the VPC"
