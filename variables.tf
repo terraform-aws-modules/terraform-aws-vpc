@@ -847,6 +847,7 @@ variable "vpc_endpoint_tags" {
   type        = map(string)
   default     = {}
 }
+
 variable "enable_dhcp_options" {
   description = "Should be true if you want to specify a DHCP options set with a custom domain name, DNS servers, NTP servers, netbios servers, and/or netbios server type"
   type        = bool
