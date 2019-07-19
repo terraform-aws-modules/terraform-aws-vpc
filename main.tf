@@ -843,10 +843,7 @@ resource "aws_vpc_endpoint" "s3" {
 
   vpc_id       = local.vpc_id
   service_name = data.aws_vpc_endpoint_service.s3[0].service_name
-  vpce_tags = merge(
-    var.tags,
-    var.vpc_endpoint_tags,
-  )
+  tags         = local.vpce_tags
 }
 
 resource "aws_vpc_endpoint_route_table_association" "private_s3" {
