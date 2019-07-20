@@ -12,6 +12,9 @@ jobs:
         AWS_DEFAULT_REGION: us-east-1
     steps:
       - checkout
+      - run:
+          name: Install curl
+          command: apk add --update curl
 #      - run:
 #          name: Add github.com to ~/.ssh/known_hosts
 #          command: mkdir ~/.ssh && ssh-keyscan -t rsa github.com >> ~/.ssh/known_hosts

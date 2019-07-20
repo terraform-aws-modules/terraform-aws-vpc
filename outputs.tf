@@ -624,7 +624,7 @@ output "azs" {
   value       = var.azs
 }
 
-output "vpc_name" {
+output "name" {
   description = "The name of the VPC"
   value       = var.name
 }
