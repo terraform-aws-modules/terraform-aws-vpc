@@ -1286,6 +1286,50 @@ resource "aws_vpc_endpoint" "cloudtrail" {
 }
 
 
+#######################
+# VPC Endpoint for Kinesis Streams
+#######################
+data "aws_vpc_endpoint_service" "kinesis_streams" {
+  count = var.create_vpc && var.enable_kinesis_streams_endpoint ? 1 : 0
+
+  service = "kinesis-streams"
+}
+
+resource "aws_vpc_endpoint" "kinesis_streams" {
+  count = var.create_vpc && var.enable_kinesis_streams_endpoint ? 1 : 0
+
+  vpc_id            = local.vpc_id
+  service_name      = data.aws_vpc_endpoint_service.kinesis_streams[0].service_name
+  vpc_endpoint_type = "Interface"
+
+  security_group_ids  = var.kinesis_streams_endpoint_security_group_ids
+  subnet_ids          = coalescelist(var.kinesis_streams_endpoint_subnet_ids, aws_subnet.private.*.id)
+  private_dns_enabled = var.kinesis_streams_endpoint_private_dns_enabled
+}
+
+
+#######################
+# VPC Endpoint for Kinesis Firehose
+#######################
+data "aws_vpc_endpoint_service" "kinesis_firehose" {
+  count = var.create_vpc && var.enable_kinesis_firehose_endpoint ? 1 : 0
+
+  service = "kinesis-firehose"
+}
+
+resource "aws_vpc_endpoint" "kinesis_firehose" {
+  count = var.create_vpc && var.enable_kinesis_firehose_endpoint ? 1 : 0
+
+  vpc_id            = local.vpc_id
+  service_name      = data.aws_vpc_endpoint_service.kinesis_firehose[0].service_name
+  vpc_endpoint_type = "Interface"
+
+  security_group_ids  = var.kinesis_firehose_endpoint_security_group_ids
+  subnet_ids          = coalescelist(var.kinesis_firehose_endpoint_subnet_ids, aws_subnet.private.*.id)
+  private_dns_enabled = var.kinesis_firehose_endpoint_private_dns_enabled
+}
+
+
 ##########################
 # Route table association
 ##########################
