@@ -449,6 +449,7 @@ Sometimes it is handy to have public access to Redshift clusters (for example if
 | intra\_subnet\_arns | List of ARNs of intra subnets |
 | intra\_subnets | List of IDs of intra subnets |
 | intra\_subnets\_cidr\_blocks | List of cidr_blocks of intra subnets |
+| name | The name of the VPC specified as argument to this module |
 | nat\_ids | List of allocation ID of Elastic IPs created for AWS NAT Gateway |
 | nat\_public\_ips | List of public Elastic IPs created for AWS NAT Gateway |
 | natgw\_ids | List of NAT Gateway IDs |
