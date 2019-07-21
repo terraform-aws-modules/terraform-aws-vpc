@@ -8,17 +8,22 @@ terraform: &terraform
 jobs:
   validate:
     <<: *terraform
+    environment:
+        AWS_DEFAULT_REGION: us-east-1
     steps:
       - checkout
+      - run:
+          name: Install curl
+          command: apk add --update curl
 #      - run:
 #          name: Add github.com to ~/.ssh/known_hosts
 #          command: mkdir ~/.ssh && ssh-keyscan -t rsa github.com >> ~/.ssh/known_hosts
       - run:
           name: terraform init
-          command: terraform init -input=false
+          command: find . -type f -name "*.tf" -exec dirname {} \;|sort -u | while read m; do (cd "$m" && terraform init -input=false -backend=false) || exit 1; done
       - run:
           name: Validate Terraform configurations
-          command: find . -type f -name "*.tf" -exec dirname {} \;|sort -u | while read m; do (terraform validate -check-variables=false "$m" && echo "√ $m") || exit 1 ; done
+          command: find . -name ".terraform" -prune -o -type f -name "*.tf" -exec dirname {} \;|sort -u | while read m; do (cd "$m" && terraform validate && echo "√ $m") || exit 1 ; done
       - run:
           name: Check if Terraform configurations are properly formatted
           command: if [[ -n "$(terraform fmt -write=false)" ]]; then echo "Some terraform files need be formatted, run 'terraform fmt' to fix"; exit 1; fi
