@@ -19,7 +19,7 @@ module "vpc" {
   single_nat_gateway               = true
 
   public_subnet_tags = {
-    Name = "overridden-name-public"
+    global = { Name = "overridden-name-public"}
   }
 
   tags = {
