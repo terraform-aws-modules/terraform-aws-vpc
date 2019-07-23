@@ -876,14 +876,14 @@ variable "igw_tags" {
 }
 
 variable "public_subnet_tags" {
-  description = "Additional tags for the public subnets"
-  type        = map(string)
+  description = "Additional tags for the public subnets. Keyed based on subnets, global tags will be applied to all subnets"
+  type        = map(map(string))
   default     = {}
 }
 
 variable "private_subnet_tags" {
-  description = "Additional tags for the private subnets"
-  type        = map(string)
+  description = "Additional tags for the private subnets. Keyed based on subnets, global tags will be applied to all subnets"
+  type        = map(map(string))
   default     = {}
 }
 
