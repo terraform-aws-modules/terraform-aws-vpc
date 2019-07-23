@@ -16,9 +16,8 @@ These types of resources are supported:
 * [VPN Gateway](https://www.terraform.io/docs/providers/aws/r/vpn_gateway.html)
 * [VPC Endpoint](https://www.terraform.io/docs/providers/aws/r/vpc_endpoint.html):
   * Gateway: S3, DynamoDB
-  * Interface: EC2, SSM, EC2 Messages, SSM Messages, SQS, ECR API, ECR DKR, API Gateway, KMS,
-               ECS, ECS Agent, ECS Telemetry, SNS, CloudWatch(Monitoring, Logs, Events), Elastic Load Balancing,
-               CloudTrail
+  * Interface: EC2, SSM, EC2 Messages, SSM Messages, SQS, ECR API, ECR DKR, API Gateway, KMS, 
+ECS, ECS Agent, ECS Telemetry, SNS, CloudWatch(Monitoring, Logs, Events), Elastic Load Balancing, CloudTrail, Secrets Manager, Config, Codebuild, Codecommit, Git-Codecommit, Transfer Server, Kinesis Streams, Kinesis Firehose
 * [RDS DB Subnet Group](https://www.terraform.io/docs/providers/aws/r/db_subnet_group.html)
 * [ElastiCache Subnet Group](https://www.terraform.io/docs/providers/aws/r/elasticache_subnet_group.html)
 * [Redshift Subnet Group](https://www.terraform.io/docs/providers/aws/r/redshift_subnet_group.html)
@@ -378,7 +377,6 @@ Sometimes it is handy to have public access to Redshift clusters (for example if
 | ssmmessages\_endpoint\_security\_group\_ids | The ID of one or more security groups to associate with the network interface for SSMMESSAGES endpoint | list(string) | `[]` | no |
 | ssmmessages\_endpoint\_subnet\_ids | The ID of one or more subnets in which to create a network interface for SSMMESSAGES endpoint. Only a single subnet within an AZ is supported. If omitted, private subnets will be used. | list(string) | `[]` | no |
 | tags | A map of tags to add to all resources | map(string) | `{}` | no |
-| vpc\_endpoint\_tags | Additional tags for the VPC Endpoints | map(string) | `{}` | no |
 | vpc\_tags | Additional tags for the VPC | map(string) | `{}` | no |
 | vpn\_gateway\_id | ID of VPN Gateway to attach to the VPC | string | `""` | no |
 | vpn\_gateway\_tags | Additional tags for the VPN gateway | map(string) | `{}` | no |
