@@ -66,6 +66,10 @@ resource "aws_vpc_dhcp_options" "this" {
     var.tags,
     var.dhcp_options_tags,
   )
+
+  lifecycle {
+    ignore_changes = [tags]
+  }
 }
 
 ###############################
@@ -266,6 +270,10 @@ resource "aws_subnet" "public" {
     var.tags,
     var.public_subnet_tags,
   )
+
+  lifecycle {
+    ignore_changes = [tags]
+  }
 }
 
 #################
@@ -289,6 +297,10 @@ resource "aws_subnet" "private" {
     var.tags,
     var.private_subnet_tags,
   )
+
+  lifecycle {
+    ignore_changes = [tags]
+  }
 }
 
 ##################
@@ -312,6 +324,10 @@ resource "aws_subnet" "database" {
     var.tags,
     var.database_subnet_tags,
   )
+
+  lifecycle {
+    ignore_changes = [tags]
+  }
 }
 
 resource "aws_db_subnet_group" "database" {
@@ -351,6 +367,10 @@ resource "aws_subnet" "redshift" {
     var.tags,
     var.redshift_subnet_tags,
   )
+
+  lifecycle {
+    ignore_changes = [tags]
+  }
 }
 
 resource "aws_redshift_subnet_group" "redshift" {
@@ -390,6 +410,10 @@ resource "aws_subnet" "elasticache" {
     var.tags,
     var.elasticache_subnet_tags,
   )
+
+  lifecycle {
+    ignore_changes = [tags]
+  }
 }
 
 resource "aws_elasticache_subnet_group" "elasticache" {
@@ -421,6 +445,10 @@ resource "aws_subnet" "intra" {
     var.tags,
     var.intra_subnet_tags,
   )
+
+  lifecycle {
+    ignore_changes = [tags]
+  }
 }
 
 #######################
