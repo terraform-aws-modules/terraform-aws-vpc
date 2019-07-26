@@ -37,6 +37,10 @@ resource "aws_vpc" "this" {
     var.tags,
     var.vpc_tags,
   )
+
+  lifecycle {
+    ignore_changes = [tags]
+  }
 }
 
 resource "aws_vpc_ipv4_cidr_block_association" "this" {
@@ -66,6 +70,10 @@ resource "aws_vpc_dhcp_options" "this" {
     var.tags,
     var.dhcp_options_tags,
   )
+
+  lifecycle {
+    ignore_changes = [tags]
+  }
 }
 
 ###############################
@@ -225,6 +233,10 @@ resource "aws_route_table" "elasticache" {
       "Name" = "${var.name}-${var.elasticache_subnet_suffix}"
     },
   )
+
+  lifecycle {
+    ignore_changes = [tags]
+  }
 }
 
 #################
@@ -242,6 +254,10 @@ resource "aws_route_table" "intra" {
     var.tags,
     var.intra_route_table_tags,
   )
+
+  lifecycle {
+    ignore_changes = [tags]
+  }
 }
 
 ################
@@ -266,6 +282,10 @@ resource "aws_subnet" "public" {
     var.tags,
     var.public_subnet_tags,
   )
+
+  lifecycle {
+    ignore_changes = [tags]
+  }
 }
 
 #################
@@ -289,6 +309,10 @@ resource "aws_subnet" "private" {
     var.tags,
     var.private_subnet_tags,
   )
+
+  lifecycle {
+    ignore_changes = [tags]
+  }
 }
 
 ##################
@@ -312,6 +336,10 @@ resource "aws_subnet" "database" {
     var.tags,
     var.database_subnet_tags,
   )
+
+  lifecycle {
+    ignore_changes = [tags]
+  }
 }
 
 resource "aws_db_subnet_group" "database" {
@@ -328,6 +356,10 @@ resource "aws_db_subnet_group" "database" {
     var.tags,
     var.database_subnet_group_tags,
   )
+
+  lifecycle {
+    ignore_changes = [tags]
+  }
 }
 
 ##################
@@ -351,6 +383,10 @@ resource "aws_subnet" "redshift" {
     var.tags,
     var.redshift_subnet_tags,
   )
+
+  lifecycle {
+    ignore_changes = [tags]
+  }
 }
 
 resource "aws_redshift_subnet_group" "redshift" {
@@ -367,6 +403,10 @@ resource "aws_redshift_subnet_group" "redshift" {
     var.tags,
     var.redshift_subnet_group_tags,
   )
+
+  lifecycle {
+    ignore_changes = [tags]
+  }
 }
 
 #####################
@@ -390,6 +430,10 @@ resource "aws_subnet" "elasticache" {
     var.tags,
     var.elasticache_subnet_tags,
   )
+
+  lifecycle {
+    ignore_changes = [tags]
+  }
 }
 
 resource "aws_elasticache_subnet_group" "elasticache" {
@@ -421,6 +465,10 @@ resource "aws_subnet" "intra" {
     var.tags,
     var.intra_subnet_tags,
   )
+
+  lifecycle {
+    ignore_changes = [tags]
+  }
 }
 
 #######################
@@ -489,6 +537,10 @@ resource "aws_network_acl" "public" {
     var.tags,
     var.public_acl_tags,
   )
+
+  lifecycle {
+    ignore_changes = [tags]
+  }
 }
 
 resource "aws_network_acl_rule" "public_inbound" {
@@ -535,6 +587,10 @@ resource "aws_network_acl" "private" {
     var.tags,
     var.private_acl_tags,
   )
+
+  lifecycle {
+    ignore_changes = [tags]
+  }
 }
 
 resource "aws_network_acl_rule" "private_inbound" {
