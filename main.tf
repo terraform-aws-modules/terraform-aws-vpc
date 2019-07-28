@@ -1,10 +1,14 @@
 locals {
+  # Check if IPv6 was enabled for this VPC. Only allow if `assign_generated_ipv6_cidr_block` was true as well.
+  assign_ipv6_address_on_creation = var.assign_generated_ipv6_cidr_block && var.assign_ipv6_address_on_creation ? true : false
+
   max_subnet_length = max(
     length(var.private_subnets),
     length(var.elasticache_subnets),
     length(var.database_subnets),
     length(var.redshift_subnets),
   )
+
   nat_gateway_count = var.single_nat_gateway ? 1 : var.one_nat_gateway_per_az ? length(var.azs) : local.max_subnet_length
 
   # Use `local.vpc_id` to give a hint to Terraform that subnets should be deleted before secondary CIDR blocks can be free!
@@ -250,10 +254,11 @@ resource "aws_route_table" "intra" {
 resource "aws_subnet" "public" {
   count = var.create_vpc && length(var.public_subnets) > 0 && (false == var.one_nat_gateway_per_az || length(var.public_subnets) >= length(var.azs)) ? length(var.public_subnets) : 0
 
-  vpc_id                  = local.vpc_id
-  cidr_block              = element(concat(var.public_subnets, [""]), count.index)
-  availability_zone       = element(var.azs, count.index)
-  map_public_ip_on_launch = var.map_public_ip_on_launch
+  vpc_id                          = local.vpc_id
+  cidr_block                      = element(concat(var.public_subnets, [""]), count.index)
+  availability_zone               = element(var.azs, count.index)
+  map_public_ip_on_launch         = var.map_public_ip_on_launch
+  assign_ipv6_address_on_creation = local.assign_ipv6_address_on_creation
 
   tags = merge(
     {
@@ -1595,4 +1600,3 @@ resource "aws_default_vpc" "this" {
     var.default_vpc_tags,
   )
 }
-
