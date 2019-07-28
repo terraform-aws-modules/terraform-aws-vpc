@@ -21,7 +21,7 @@ variable "assign_generated_ipv6_cidr_block" {
 }
 
 variable "assign_ipv6_address_on_creation" {
-  description = "(Optional) Specify true to indicate that network interfaces created in the specified subnet should be assigned an IPv6 address. Default is `false`."
+  description = "Specify `true` to indicate that network interfaces created in the specified subnet should be assigned an IPv6 address. Default is `false`."
   default     = false
   type        = bool
 }
