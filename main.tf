@@ -1,7 +1,4 @@
 locals {
-  # Check if IPv6 was enabled for this VPC. Only allow if `assign_generated_ipv6_cidr_block` was true as well.
-  assign_ipv6_address_on_creation = var.assign_generated_ipv6_cidr_block && var.assign_ipv6_address_on_creation ? true : false
-
   max_subnet_length = max(
     length(var.private_subnets),
     length(var.elasticache_subnets),
@@ -258,7 +255,7 @@ resource "aws_subnet" "public" {
   cidr_block                      = element(concat(var.public_subnets, [""]), count.index)
   availability_zone               = element(var.azs, count.index)
   map_public_ip_on_launch         = var.map_public_ip_on_launch
-  assign_ipv6_address_on_creation = local.assign_ipv6_address_on_creation
+  assign_ipv6_address_on_creation = var.assign_ipv6_address_on_creation
 
   tags = merge(
     {
