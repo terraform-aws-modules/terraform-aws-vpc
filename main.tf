@@ -181,18 +181,6 @@ resource "aws_route" "database_internet_gateway" {
   }
 }
 
-resource "aws_route" "database_nat_gateway" {
-  count = var.create_vpc && var.create_database_subnet_route_table && length(var.database_subnets) > 0 && false == var.create_database_internet_gateway_route && var.create_database_nat_gateway_route && var.enable_nat_gateway ? local.nat_gateway_count : 0
-
-  route_table_id         = element(aws_route_table.private.*.id, count.index)
-  destination_cidr_block = "0.0.0.0/0"
-  nat_gateway_id         = element(aws_nat_gateway.this.*.id, count.index)
-
-  timeouts {
-    create = "5m"
-  }
-}
-
 #################
 # Redshift routes
 #################
