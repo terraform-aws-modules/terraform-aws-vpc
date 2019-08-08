@@ -1455,6 +1455,27 @@ resource "aws_vpc_endpoint" "kinesis_firehose" {
   private_dns_enabled = var.kinesis_firehose_endpoint_private_dns_enabled
 }
 
+#######################
+# VPC Endpoint for Glue
+#######################
+data "aws_vpc_endpoint_service" "glue" {
+  count = var.create_vpc && var.enable_glue_endpoint ? 1 : 0
+
+  service = "glue"
+}
+
+resource "aws_vpc_endpoint" "glue" {
+  count = var.create_vpc && var.enable_glue_endpoint ? 1 : 0
+
+  vpc_id            = local.vpc_id
+  service_name      = data.aws_vpc_endpoint_service.glue[0].service_name
+  vpc_endpoint_type = "Interface"
+
+  security_group_ids  = var.glue_endpoint_security_group_ids
+  subnet_ids          = coalescelist(var.glue_endpoint_subnet_ids, aws_subnet.private.*.id)
+  private_dns_enabled = var.glue_endpoint_private_dns_enabled
+}
+
 
 ##########################
 # Route table association

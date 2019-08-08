@@ -306,6 +306,7 @@ Sometimes it is handy to have public access to Redshift clusters (for example if
 | enable\_elasticloadbalancing\_endpoint | Should be true if you want to provision a Elastic Load Balancing endpoint to the VPC | bool | `"false"` | no |
 | enable\_events\_endpoint | Should be true if you want to provision a CloudWatch Events endpoint to the VPC | bool | `"false"` | no |
 | enable\_git\_codecommit\_endpoint | Should be true if you want to provision an Git Codecommit endpoint to the VPC | string | `"false"` | no |
+| enable\_glue\_endpoint | Should be true if you want to provision a Glue endpoint to the VPC | string | `"false"` | no |
 | enable\_kinesis\_firehose\_endpoint | Should be true if you want to provision a Kinesis Firehose endpoint to the VPC | bool | `"false"` | no |
 | enable\_kinesis\_streams\_endpoint | Should be true if you want to provision a Kinesis Streams endpoint to the VPC | bool | `"false"` | no |
 | enable\_kms\_endpoint | Should be true if you want to provision a KMS endpoint to the VPC | bool | `"false"` | no |
@@ -328,6 +329,9 @@ Sometimes it is handy to have public access to Redshift clusters (for example if
 | git\_codecommit\_endpoint\_private\_dns\_enabled | Whether or not to associate a private hosted zone with the specified VPC for Git Codecommit endpoint | string | `"false"` | no |
 | git\_codecommit\_endpoint\_security\_group\_ids | The ID of one or more security groups to associate with the network interface for Git Codecommit endpoint | list | `[]` | no |
 | git\_codecommit\_endpoint\_subnet\_ids | The ID of one or more subnets in which to create a network interface for Git Codecommit endpoint. Only a single subnet within an AZ is supported. If omitted, private subnets will be used. | list | `[]` | no |
+| glue\_endpoint\_private\_dns\_enabled | Whether or not to associate a private hosted zone with the specified VPC for Glue endpoint | bool | `"false"` | no |
+| glue\_endpoint\_security\_group\_ids | The ID of one or more security groups to associate with the network interface for Glue endpoint | list(string) | `[]` | no |
+| glue\_endpoint\_subnet\_ids | The ID of one or more subnets in which to create a network interface for Glue endpoint. Only a single subnet within an AZ is supported. If omitted, private subnets will be used. | list(string) | `[]` | no |
 | igw\_tags | Additional tags for the internet gateway | map(string) | `{}` | no |
 | instance\_tenancy | A tenancy option for instances launched into the VPC | string | `"default"` | no |
 | intra\_acl\_tags | Additional tags for the intra subnets network ACL | map(string) | `{}` | no |
