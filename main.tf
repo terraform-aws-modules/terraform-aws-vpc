@@ -1476,6 +1476,27 @@ resource "aws_vpc_endpoint" "glue" {
   private_dns_enabled = var.glue_endpoint_private_dns_enabled
 }
 
+######################################
+# VPC Endpoint for Sagemaker Notebooks
+######################################
+data "aws_vpc_endpoint_service" "sagemaker_notebook" {
+  count = var.create_vpc && var.enable_sagemaker_notebook_endpoint ? 1 : 0
+
+  service = "sagemaker_notebook"
+}
+
+resource "aws_vpc_endpoint" "sagemaker_notebook" {
+  count = var.create_vpc && var.enable_sagemaker_notebook_endpoint ? 1 : 0
+
+  vpc_id            = local.vpc_id
+  service_name      = data.aws_vpc_endpoint_service.sagemaker_notebook[0].service_name
+  vpc_endpoint_type = "Interface"
+
+  security_group_ids  = var.sagemaker_notebook_endpoint_security_group_ids
+  subnet_ids          = coalescelist(var.sagemaker_notebook_endpoint_subnet_ids, aws_subnet.private.*.id)
+  private_dns_enabled = var.sagemaker_notebook_endpoint_private_dns_enabled
+}
+
 
 ##########################
 # Route table association
