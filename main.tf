@@ -1482,7 +1482,7 @@ resource "aws_vpc_endpoint" "glue" {
 data "aws_vpc_endpoint_service" "sagemaker_notebook" {
   count = var.create_vpc && var.enable_sagemaker_notebook_endpoint ? 1 : 0
 
-  service = "sagemaker_notebook"
+  service_name = "aws.sagemaker.eu-central-1.notebook"
 }
 
 resource "aws_vpc_endpoint" "sagemaker_notebook" {
