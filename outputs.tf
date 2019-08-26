@@ -348,16 +348,6 @@ output "vpc_endpoint_dynamodb_pl_id" {
   value       = concat(aws_vpc_endpoint.dynamodb.*.prefix_list_id, [""])[0]
 }
 
-output "vpc_endpoint_kinesis_streams_id" {
-  description = "The ID of VPC endpoint for Kinesis Streams"
-  value       = concat(aws_vpc_endpoint.kinesis_streams.*.id, [""])[0]
-}
-
-output "vpc_endpoint_kinesis_firehose_id" {
-  description = "The ID of VPC endpoint for Kinesis Firehose"
-  value       = concat(aws_vpc_endpoint.kinesis_firehose.*.id, [""])[0]
-}
-
 output "vpc_endpoint_sqs_id" {
   description = "The ID of VPC endpoint for SQS"
   value       = "${element(concat(aws_vpc_endpoint.sqs.*.id, list("")), 0)}"
@@ -433,6 +423,21 @@ output "vpc_endpoint_ec2messages_dns_entry" {
   value       = flatten(aws_vpc_endpoint.ec2messages.*.dns_entry)
 }
 
+output "vpc_endpoint_glue_id" {
+  description = "The ID of VPC endpoint for Glue"
+  value       = "${element(concat(aws_vpc_endpoint.glue.*.id, list("")), 0)}"
+}
+
+output "vpc_endpoint_glue_network_interface_ids" {
+  description = "One or more network interfaces for the VPC Endpoint for Glue."
+  value       = "${flatten(aws_vpc_endpoint.glue.*.network_interface_ids)}"
+}
+
+output "vpc_endpoint_glue_dns_entry" {
+  description = "The DNS entries for the VPC Endpoint for Glue."
+  value       = "${flatten(aws_vpc_endpoint.glue.*.dns_entry)}"
+}
+
 output "vpc_endpoint_kms_id" {
   description = "The ID of VPC endpoint for KMS"
   value       = concat(aws_vpc_endpoint.kms.*.id, [""])[0]
@@ -446,6 +451,36 @@ output "vpc_endpoint_kms_network_interface_ids" {
 output "vpc_endpoint_kms_dns_entry" {
   description = "The DNS entries for the VPC Endpoint for KMS."
   value       = flatten(aws_vpc_endpoint.kms.*.dns_entry)
+}
+
+output "vpc_endpoint_kinesis_firehose_id" {
+  description = "The ID of VPC endpoint for Kinesis Firehose"
+  value       = concat(aws_vpc_endpoint.kinesis_firehose.*.id, [""])[0]
+}
+
+output "vpc_endpoint_kinesis_firehose_network_interface_ids" {
+  description = "One or more network interfaces for the VPC Endpoint for Kinesis Firehose."
+  value       = flatten(aws_vpc_endpoint.kinesis_firehose.*.network_interface_ids)
+}
+
+output "vpc_endpoint_kinesis_firehose_dns_entry" {
+  description = "The DNS entries for the VPC Endpoint for Kinesis Firehose."
+  value       = flatten(aws_vpc_endpoint.kinesis_firehose.*.dns_entry)
+}
+
+output "vpc_endpoint_kinesis_streams_id" {
+  description = "The ID of VPC endpoint for Kinesis Streams"
+  value       = concat(aws_vpc_endpoint.kinesis_streams.*.id, [""])[0]
+}
+
+output "vpc_endpoint_kinesis_streams_network_interface_ids" {
+  description = "One or more network interfaces for the VPC Endpoint for Kinesis Streams."
+  value       = flatten(aws_vpc_endpoint.kinesis_streams.*.network_interface_ids)
+}
+
+output "vpc_endpoint_kinesis_streams_dns_entry" {
+  description = "The DNS entries for the VPC Endpoint for Kinesis Streams."
+  value       = flatten(aws_vpc_endpoint.kinesis_streams.*.dns_entry)
 }
 
 output "vpc_endpoint_ecr_api_id" {
