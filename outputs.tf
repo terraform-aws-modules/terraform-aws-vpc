@@ -348,6 +348,16 @@ output "vpc_endpoint_dynamodb_pl_id" {
   value       = concat(aws_vpc_endpoint.dynamodb.*.prefix_list_id, [""])[0]
 }
 
+output "vpc_endpoint_kinesis_streams_id" {
+  description = "The ID of VPC endpoint for Kinesis Streams"
+  value       = concat(aws_vpc_endpoint.kinesis_streams.*.id, [""])[0]
+}
+
+output "vpc_endpoint_kinesis_firehose_id" {
+  description = "The ID of VPC endpoint for Kinesis Firehose"
+  value       = concat(aws_vpc_endpoint.kinesis_firehose.*.id, [""])[0]
+}
+
 output "vpc_endpoint_sqs_id" {
   description = "The ID of VPC endpoint for SQS"
   value       = "${element(concat(aws_vpc_endpoint.sqs.*.id, list("")), 0)}"
