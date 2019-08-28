@@ -1497,6 +1497,27 @@ resource "aws_vpc_endpoint" "sagemaker_notebook" {
   private_dns_enabled = var.sagemaker_notebook_endpoint_private_dns_enabled
 }
 
+#######################
+# VPC Endpoint for STS
+#######################
+data "aws_vpc_endpoint_service" "sts" {
+  count = var.create_vpc && var.enable_sts_endpoint ? 1 : 0
+
+  service = "sts"
+}
+
+resource "aws_vpc_endpoint" "sts" {
+  count = var.create_vpc && var.enable_sts_endpoint ? 1 : 0
+
+  vpc_id            = local.vpc_id
+  service_name      = data.aws_vpc_endpoint_service.sts[0].service_name
+  vpc_endpoint_type = "Interface"
+
+  security_group_ids  = var.sts_endpoint_security_group_ids
+  subnet_ids          = coalescelist(var.sts_endpoint_subnet_ids, aws_subnet.private.*.id)
+  private_dns_enabled = var.sts_endpoint_private_dns_enabled
+}
+
 
 ##########################
 # Route table association

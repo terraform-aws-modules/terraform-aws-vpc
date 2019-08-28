@@ -663,6 +663,21 @@ output "vpc_endpoint_cloudtrail_dns_entry" {
   value       = flatten(aws_vpc_endpoint.cloudtrail.*.dns_entry)
 }
 
+output "vpc_endpoint_sts_id" {
+  description = "The ID of VPC endpoint for STS"
+  value       = "${element(concat(aws_vpc_endpoint.sts.*.id, list("")), 0)}"
+}
+
+output "vpc_endpoint_sts_network_interface_ids" {
+  description = "One or more network interfaces for the VPC Endpoint for STS."
+  value       = "${flatten(aws_vpc_endpoint.sts.*.network_interface_ids)}"
+}
+
+output "vpc_endpoint_sts_dns_entry" {
+  description = "The DNS entries for the VPC Endpoint for STS."
+  value       = "${flatten(aws_vpc_endpoint.sts.*.dns_entry)}"
+}
+
 # Static values (arguments)
 output "azs" {
   description = "A list of availability zones specified as argument to this module"
