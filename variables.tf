@@ -438,7 +438,6 @@ variable "transferserver_endpoint_private_dns_enabled" {
   default     = false
 }
 
-
 variable "enable_ec2_endpoint" {
   description = "Should be true if you want to provision an EC2 endpoint to the VPC"
   type        = bool
@@ -1019,6 +1018,12 @@ variable "vpn_gateway_tags" {
   default     = {}
 }
 
+variable "vpc_flow_log_tags" {
+  description = "Additional tags for the VPC Flow Logs"
+  type        = map(string)
+  default     = {}
+}
+
 variable "enable_dhcp_options" {
   description = "Should be true if you want to specify a DHCP options set with a custom domain name, DNS servers, NTP servers, netbios servers, and/or netbios server type"
   type        = bool
@@ -1384,4 +1389,47 @@ variable "elasticache_outbound_acl_rules" {
     },
   ]
 }
+
+variable "enable_flow_log" {
+  description = "Whether or not to enable VPC Flow Logs"
+  type        = bool
+  default     = false
+}
+
+variable "flow_log_traffic_type" {
+  description = "The type of traffic to capture. Valid values: ACCEPT,REJECT, ALL."
+  type        = string
+  default     = "ALL"
+}
+
+variable "flow_log_destination_type" {
+  description = "The type of the logging destination. Valid values: cloud-watch-logs, s3."
+  type        = string
+  default     = "cloud-watch-logs"
+}
+
+variable "flow_log_destination_arn" {
+  description = "The ARN of the CloudWatch log group or S3 bucket where VPC Flow Logs will be pushed. If this ARN is a S3 bucket the appropriate permissions need to be set on that bucket's policy. When create_flow_log_cloudwatch_log_group is set to false this argument must be provided. When create_flow_log_cloudwatch_log_group is set to true this argument is ignored."
+  type        = string
+  default     = ""
+}
+
+variable "create_flow_log_cloudwatch_log_group" {
+  description = "Whether or not to create acloudWatch log group"
+  type        = bool
+  default     = true
+}
+
+variable "create_flow_log_cloudwatch_iam_role" {
+  description = "Whether or not to create an IAM role to push VPC Flow Logs to CloudWatch"
+  type        = bool
+  default     = true
+}
+
+variable "flow_log_cloudwatch_iam_role_arn" {
+  description = "The ARN for the IAM role that's used to post flow logs to a CloudWatch Logs log group. When create_flow_log_cloudwatch_iam_role is set to false, this argument needs to be provided.When create_flow_log_cloudwatch_iam_role is set to true, this argument is ignored."
+  type        = string
+  default     = ""
+}
+
 

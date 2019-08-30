@@ -92,6 +92,9 @@ module "vpc" {
   sqs_endpoint_private_dns_enabled = true
   sqs_endpoint_security_group_ids  = [data.aws_security_group.default.id]
 
+  # Flow Logs
+  enable_flow_log = true
+
   tags = {
     Owner       = "user"
     Environment = "staging"
