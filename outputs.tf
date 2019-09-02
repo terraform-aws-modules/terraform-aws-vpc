@@ -618,6 +618,26 @@ output "vpc_endpoint_cloudtrail_dns_entry" {
   value       = flatten(aws_vpc_endpoint.cloudtrail.*.dns_entry)
 }
 
+output "vpc_flow_log_id" {
+  description = "The ID of the Flow Log reosurce"
+  value = join("", aws_flow_log.this.*.id)
+}
+
+output "vpc_flow_log_destination_arn" {
+  description = "The ARN of the destination for VPC FLow Logs"
+  value = local.flow_log_destination
+}
+
+output "vpc_flow_log_destination_type" {
+  description = "The type of the destination for VPC FLow Logs"
+  value = local.flow_log_destination_type
+}
+
+output "vop_flow_log_cloudwatch_iam_role_arn" {
+  description = "The ARN of the IAM role used when pushing logs to CLoudWatch log group"
+  value = local.flow_log_iam_role_arn
+}
+
 # Static values (arguments)
 output "azs" {
   description = "A list of availability zones specified as argument to this module"

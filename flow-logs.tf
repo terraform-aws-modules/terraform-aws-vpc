@@ -9,10 +9,8 @@ locals {
   flow_log_cloudwatch_destination = local.create_flow_log_cloudwatch_log_group ? join("", aws_cloudwatch_log_group.flow_log.*.arn) : var.flow_log_destination_arn
   flow_log_s3_destination         = local.create_flow_log_s3_bucket ? join("", aws_s3_bucket.flow_log.*.arn) : var.flow_log_destination_arn
 
-  flow_log_iam_role_arn = local.create_flow_log_cloudwatch_iam_role ? join("", aws_iam_role.vpc_flow_log_cloudwatch.*.arn) : var.flow_log_cloudwatch_iam_role_arn
-
-  flow_log_destination = var.push_flow_log_to_s3 ? local.flow_log_s3_destination : local.flow_log_cloudwatch_destination
-
+  flow_log_iam_role_arn     = local.create_flow_log_cloudwatch_iam_role ? join("", aws_iam_role.vpc_flow_log_cloudwatch.*.arn) : var.flow_log_cloudwatch_iam_role_arn
+  flow_log_destination      = var.push_flow_log_to_s3 ? local.flow_log_s3_destination : local.flow_log_cloudwatch_destination
   flow_log_destination_type = var.push_flow_log_to_s3 ? "s3" : "cloud-watch-logs"
 }
 
