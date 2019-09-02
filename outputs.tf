@@ -45,7 +45,7 @@ output "vpc_enable_dns_hostnames" {
 
 //output "vpc_enable_classiclink" {
 //  description = "Whether or not the VPC has Classiclink enabled"
-//  value       = "${element(concat(aws_vpc.this.*.enable_classiclink, list("")), 0)}"
+//  value       = concat(aws_vpc.this.*.enable_classiclink, [""])[0]
 //}
 
 output "vpc_main_route_table_id" {
@@ -53,15 +53,15 @@ output "vpc_main_route_table_id" {
   value       = concat(aws_vpc.this.*.main_route_table_id, [""])[0]
 }
 
-//output "vpc_ipv6_association_id" {
-//  description = "The association ID for the IPv6 CIDR block"
-//  value       = "${element(concat(aws_vpc.this.*.ipv6_association_id, list("")), 0)}"
-//}
-//
-//output "vpc_ipv6_cidr_block" {
-//  description = "The IPv6 CIDR block"
-//  value       = "${element(concat(aws_vpc.this.*.ipv6_cidr_block, list("")), 0)}"
-//}
+output "vpc_ipv6_association_id" {
+  description = "The association ID for the IPv6 CIDR block"
+  value       = concat(aws_vpc.this.*.ipv6_association_id, [""])[0]
+}
+
+output "vpc_ipv6_cidr_block" {
+  description = "The IPv6 CIDR block"
+  value       = concat(aws_vpc.this.*.ipv6_cidr_block, [""])[0]
+}
 
 output "vpc_secondary_cidr_blocks" {
   description = "List of secondary CIDR blocks of the VPC"
@@ -83,6 +83,11 @@ output "private_subnets_cidr_blocks" {
   value       = aws_subnet.private.*.cidr_block
 }
 
+output "private_subnets_ipv6_cidr_blocks" {
+  description = "List of IPv6 cidr_blocks of private subnets in an IPv6 enabled VPC"
+  value       = aws_subnet.private.*.ipv6_cidr_block
+}
+
 output "public_subnets" {
   description = "List of IDs of public subnets"
   value       = aws_subnet.public.*.id
@@ -98,6 +103,11 @@ output "public_subnets_cidr_blocks" {
   value       = aws_subnet.public.*.cidr_block
 }
 
+output "public_subnets_ipv6_cidr_blocks" {
+  description = "List of IPv6 cidr_blocks of public subnets in an IPv6 enabled VPC"
+  value       = aws_subnet.public.*.ipv6_cidr_block
+}
+
 output "database_subnets" {
   description = "List of IDs of database subnets"
   value       = aws_subnet.database.*.id
@@ -111,6 +121,11 @@ output "database_subnet_arns" {
 output "database_subnets_cidr_blocks" {
   description = "List of cidr_blocks of database subnets"
   value       = aws_subnet.database.*.cidr_block
+}
+
+output "database_subnets_ipv6_cidr_blocks" {
+  description = "List of IPv6 cidr_blocks of database subnets in an IPv6 enabled VPC"
+  value       = aws_subnet.database.*.ipv6_cidr_block
 }
 
 output "database_subnet_group" {
@@ -133,6 +148,11 @@ output "redshift_subnets_cidr_blocks" {
   value       = aws_subnet.redshift.*.cidr_block
 }
 
+output "redshift_subnets_ipv6_cidr_blocks" {
+  description = "List of IPv6 cidr_blocks of redshift subnets in an IPv6 enabled VPC"
+  value       = aws_subnet.redshift.*.ipv6_cidr_block
+}
+
 output "redshift_subnet_group" {
   description = "ID of redshift subnet group"
   value       = concat(aws_redshift_subnet_group.redshift.*.id, [""])[0]
@@ -153,6 +173,11 @@ output "elasticache_subnets_cidr_blocks" {
   value       = aws_subnet.elasticache.*.cidr_block
 }
 
+output "elasticache_subnets_ipv6_cidr_blocks" {
+  description = "List of IPv6 cidr_blocks of elasticache subnets in an IPv6 enabled VPC"
+  value       = aws_subnet.elasticache.*.ipv6_cidr_block
+}
+
 output "intra_subnets" {
   description = "List of IDs of intra subnets"
   value       = aws_subnet.intra.*.id
@@ -166,6 +191,11 @@ output "intra_subnet_arns" {
 output "intra_subnets_cidr_blocks" {
   description = "List of cidr_blocks of intra subnets"
   value       = aws_subnet.intra.*.cidr_block
+}
+
+output "intra_subnets_ipv6_cidr_blocks" {
+  description = "List of IPv6 cidr_blocks of intra subnets in an IPv6 enabled VPC"
+  value       = aws_subnet.intra.*.ipv6_cidr_block
 }
 
 output "elasticache_subnet_group" {
@@ -228,6 +258,11 @@ output "igw_id" {
   value       = concat(aws_internet_gateway.this.*.id, [""])[0]
 }
 
+output "egress_only_internet_gateway_id" {
+  description = "The ID of the egress only Internet Gateway"
+  value       = concat(aws_egress_only_internet_gateway.this.*.id, [""])[0]
+}
+
 output "vgw_id" {
   description = "The ID of the VPN Gateway"
   value = concat(
@@ -279,7 +314,7 @@ output "default_vpc_enable_dns_hostnames" {
 
 //output "default_vpc_enable_classiclink" {
 //  description = "Whether or not the VPC has Classiclink enabled"
-//  value       = "${element(concat(aws_default_vpc.this.*.enable_classiclink, list("")), 0)}"
+//  value       = concat(aws_default_vpc.this.*.enable_classiclink, [""])[0]
 //}
 
 output "default_vpc_main_route_table_id" {
@@ -289,12 +324,12 @@ output "default_vpc_main_route_table_id" {
 
 //output "default_vpc_ipv6_association_id" {
 //  description = "The association ID for the IPv6 CIDR block"
-//  value       = "${element(concat(aws_default_vpc.this.*.ipv6_association_id, list("")), 0)}"
+//  value       = concat(aws_default_vpc.this.*.ipv6_association_id, [""])[0]
 //}
 //
 //output "default_vpc_ipv6_cidr_block" {
 //  description = "The IPv6 CIDR block"
-//  value       = "${element(concat(aws_default_vpc.this.*.ipv6_cidr_block, list("")), 0)}"
+//  value       = concat(aws_default_vpc.this.*.ipv6_cidr_block, [""])[0]
 //}
 
 output "public_network_acl_id" {
@@ -350,17 +385,17 @@ output "vpc_endpoint_dynamodb_pl_id" {
 
 output "vpc_endpoint_sqs_id" {
   description = "The ID of VPC endpoint for SQS"
-  value       = "${element(concat(aws_vpc_endpoint.sqs.*.id, list("")), 0)}"
+  value       = concat(aws_vpc_endpoint.sqs.*.id, [""])[0]
 }
 
 output "vpc_endpoint_sqs_network_interface_ids" {
   description = "One or more network interfaces for the VPC Endpoint for SQS."
-  value       = "${flatten(aws_vpc_endpoint.sqs.*.network_interface_ids)}"
+  value       = flatten(aws_vpc_endpoint.sqs.*.network_interface_ids)
 }
 
 output "vpc_endpoint_sqs_dns_entry" {
   description = "The DNS entries for the VPC Endpoint for SQS."
-  value       = "${flatten(aws_vpc_endpoint.sqs.*.dns_entry)}"
+  value       = flatten(aws_vpc_endpoint.sqs.*.dns_entry)
 }
 
 output "vpc_endpoint_ssm_id" {
@@ -530,47 +565,47 @@ output "vpc_endpoint_apigw_dns_entry" {
 
 output "vpc_endpoint_ecs_id" {
   description = "The ID of VPC endpoint for ECS"
-  value       = "${element(concat(aws_vpc_endpoint.ecs.*.id, list("")), 0)}"
+  value       = concat(aws_vpc_endpoint.ecs.*.id, [""])[0]
 }
 
 output "vpc_endpoint_ecs_network_interface_ids" {
   description = "One or more network interfaces for the VPC Endpoint for ECS."
-  value       = "${flatten(aws_vpc_endpoint.ecs.*.network_interface_ids)}"
+  value       = flatten(aws_vpc_endpoint.ecs.*.network_interface_ids)
 }
 
 output "vpc_endpoint_ecs_dns_entry" {
   description = "The DNS entries for the VPC Endpoint for ECS."
-  value       = "${flatten(aws_vpc_endpoint.ecs.*.dns_entry)}"
+  value       = flatten(aws_vpc_endpoint.ecs.*.dns_entry)
 }
 
 output "vpc_endpoint_ecs_agent_id" {
   description = "The ID of VPC endpoint for ECS Agent"
-  value       = "${element(concat(aws_vpc_endpoint.ecs_agent.*.id, list("")), 0)}"
+  value       = concat(aws_vpc_endpoint.ecs_agent.*.id, [""])[0]
 }
 
 output "vpc_endpoint_ecs_agent_network_interface_ids" {
   description = "One or more network interfaces for the VPC Endpoint for ECS Agent."
-  value       = "${flatten(aws_vpc_endpoint.ecs_agent.*.network_interface_ids)}"
+  value       = flatten(aws_vpc_endpoint.ecs_agent.*.network_interface_ids)
 }
 
 output "vpc_endpoint_ecs_agent_dns_entry" {
   description = "The DNS entries for the VPC Endpoint for ECS Agent."
-  value       = "${flatten(aws_vpc_endpoint.ecs_agent.*.dns_entry)}"
+  value       = flatten(aws_vpc_endpoint.ecs_agent.*.dns_entry)
 }
 
 output "vpc_endpoint_ecs_telemetry_id" {
   description = "The ID of VPC endpoint for ECS Telemetry"
-  value       = "${element(concat(aws_vpc_endpoint.ecs_telemetry.*.id, list("")), 0)}"
+  value       = concat(aws_vpc_endpoint.ecs_telemetry.*.id, [""])[0]
 }
 
 output "vpc_endpoint_ecs_telemetry_network_interface_ids" {
   description = "One or more network interfaces for the VPC Endpoint for ECS Telemetry."
-  value       = "${flatten(aws_vpc_endpoint.ecs_telemetry.*.network_interface_ids)}"
+  value       = flatten(aws_vpc_endpoint.ecs_telemetry.*.network_interface_ids)
 }
 
 output "vpc_endpoint_ecs_telemetry_dns_entry" {
   description = "The DNS entries for the VPC Endpoint for ECS Telemetry."
-  value       = "${flatten(aws_vpc_endpoint.ecs_telemetry.*.dns_entry)}"
+  value       = flatten(aws_vpc_endpoint.ecs_telemetry.*.dns_entry)
 }
 
 output "vpc_endpoint_sns_id" {
