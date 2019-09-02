@@ -16,6 +16,11 @@ locals {
     ),
     0,
   )
+
+  vpce_tags = merge(
+    var.tags,
+    var.vpc_endpoint_tags,
+  )
 }
 
 ######

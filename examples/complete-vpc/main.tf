@@ -97,5 +97,10 @@ module "vpc" {
     Environment = "staging"
     Name        = "complete"
   }
+
+  vpc_endpoint_tags = {
+    Project  = "Secret"
+    Endpoint = "true"
+  }
 }
 
