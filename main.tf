@@ -28,7 +28,7 @@ resource "aws_vpc" "this" {
   instance_tenancy                 = var.instance_tenancy
   enable_dns_hostnames             = var.enable_dns_hostnames
   enable_dns_support               = var.enable_dns_support
-  assign_generated_ipv6_cidr_block = var.assign_generated_ipv6_cidr_block
+  assign_generated_ipv6_cidr_block = var.enable_ipv6
 
   tags = merge(
     {
@@ -95,6 +95,12 @@ resource "aws_internet_gateway" "this" {
   )
 }
 
+resource "aws_egress_only_internet_gateway" "this" {
+  count = var.create_vpc && var.enable_ipv6 && local.max_subnet_length > 0 ? 1 : 0
+
+  vpc_id = local.vpc_id
+}
+
 ################
 # Publiс routes
 ################
@@ -122,6 +128,14 @@ resource "aws_route" "public_internet_gateway" {
   timeouts {
     create = "5m"
   }
+}
+
+resource "aws_route" "public_internet_gateway_ipv6" {
+  count = var.create_vpc && var.enable_ipv6 && length(var.public_subnets) > 0 ? 1 : 0
+
+  route_table_id              = aws_route_table.public[0].id
+  destination_ipv6_cidr_block = "::/0"
+  gateway_id                  = aws_internet_gateway.this[0].id
 }
 
 #################
@@ -193,6 +207,18 @@ resource "aws_route" "database_nat_gateway" {
   }
 }
 
+resource "aws_route" "database_ipv6_egress" {
+  count = var.create_vpc && var.enable_ipv6 && var.create_database_subnet_route_table && length(var.database_subnets) > 0 && var.create_database_internet_gateway_route ? 1 : 0
+
+  route_table_id              = aws_route_table.database[0].id
+  destination_ipv6_cidr_block = "::/0"
+  egress_only_gateway_id      = aws_egress_only_internet_gateway.this[0].id
+
+  timeouts {
+    create = "5m"
+  }
+}
+
 #################
 # Redshift routes
 #################
@@ -250,10 +276,13 @@ resource "aws_route_table" "intra" {
 resource "aws_subnet" "public" {
   count = var.create_vpc && length(var.public_subnets) > 0 && (false == var.one_nat_gateway_per_az || length(var.public_subnets) >= length(var.azs)) ? length(var.public_subnets) : 0
 
-  vpc_id                  = local.vpc_id
-  cidr_block              = element(concat(var.public_subnets, [""]), count.index)
-  availability_zone       = element(var.azs, count.index)
-  map_public_ip_on_launch = var.map_public_ip_on_launch
+  vpc_id                          = local.vpc_id
+  cidr_block                      = element(concat(var.public_subnets, [""]), count.index)
+  availability_zone               = element(var.azs, count.index)
+  map_public_ip_on_launch         = var.map_public_ip_on_launch
+  assign_ipv6_address_on_creation = var.public_subnet_assign_ipv6_address_on_creation == null ? var.assign_ipv6_address_on_creation : var.public_subnet_assign_ipv6_address_on_creation
+
+  ipv6_cidr_block = var.enable_ipv6 && length(var.public_subnet_ipv6_prefixes) > 0 ? cidrsubnet(aws_vpc.this[0].ipv6_cidr_block, 8, var.public_subnet_ipv6_prefixes[count.index]) : null
 
   tags = merge(
     {
@@ -274,9 +303,12 @@ resource "aws_subnet" "public" {
 resource "aws_subnet" "private" {
   count = var.create_vpc && length(var.private_subnets) > 0 ? length(var.private_subnets) : 0
 
-  vpc_id            = local.vpc_id
-  cidr_block        = var.private_subnets[count.index]
-  availability_zone = element(var.azs, count.index)
+  vpc_id                          = local.vpc_id
+  cidr_block                      = var.private_subnets[count.index]
+  availability_zone               = element(var.azs, count.index)
+  assign_ipv6_address_on_creation = var.private_subnet_assign_ipv6_address_on_creation == null ? var.assign_ipv6_address_on_creation : var.private_subnet_assign_ipv6_address_on_creation
+
+  ipv6_cidr_block = var.enable_ipv6 && length(var.private_subnet_ipv6_prefixes) > 0 ? cidrsubnet(aws_vpc.this[0].ipv6_cidr_block, 8, var.private_subnet_ipv6_prefixes[count.index]) : null
 
   tags = merge(
     {
@@ -297,9 +329,12 @@ resource "aws_subnet" "private" {
 resource "aws_subnet" "database" {
   count = var.create_vpc && length(var.database_subnets) > 0 ? length(var.database_subnets) : 0
 
-  vpc_id            = local.vpc_id
-  cidr_block        = var.database_subnets[count.index]
-  availability_zone = element(var.azs, count.index)
+  vpc_id                          = local.vpc_id
+  cidr_block                      = var.database_subnets[count.index]
+  availability_zone               = element(var.azs, count.index)
+  assign_ipv6_address_on_creation = var.database_subnet_assign_ipv6_address_on_creation == null ? var.assign_ipv6_address_on_creation : var.database_subnet_assign_ipv6_address_on_creation
+
+  ipv6_cidr_block = var.enable_ipv6 && length(var.database_subnet_ipv6_prefixes) > 0 ? cidrsubnet(aws_vpc.this[0].ipv6_cidr_block, 8, var.database_subnet_ipv6_prefixes[count.index]) : null
 
   tags = merge(
     {
@@ -336,9 +371,12 @@ resource "aws_db_subnet_group" "database" {
 resource "aws_subnet" "redshift" {
   count = var.create_vpc && length(var.redshift_subnets) > 0 ? length(var.redshift_subnets) : 0
 
-  vpc_id            = local.vpc_id
-  cidr_block        = var.redshift_subnets[count.index]
-  availability_zone = element(var.azs, count.index)
+  vpc_id                          = local.vpc_id
+  cidr_block                      = var.redshift_subnets[count.index]
+  availability_zone               = element(var.azs, count.index)
+  assign_ipv6_address_on_creation = var.redshift_subnet_assign_ipv6_address_on_creation == null ? var.assign_ipv6_address_on_creation : var.redshift_subnet_assign_ipv6_address_on_creation
+
+  ipv6_cidr_block = var.enable_ipv6 && length(var.redshift_subnet_ipv6_prefixes) > 0 ? cidrsubnet(aws_vpc.this[0].ipv6_cidr_block, 8, var.redshift_subnet_ipv6_prefixes[count.index]) : null
 
   tags = merge(
     {
@@ -375,9 +413,12 @@ resource "aws_redshift_subnet_group" "redshift" {
 resource "aws_subnet" "elasticache" {
   count = var.create_vpc && length(var.elasticache_subnets) > 0 ? length(var.elasticache_subnets) : 0
 
-  vpc_id            = local.vpc_id
-  cidr_block        = var.elasticache_subnets[count.index]
-  availability_zone = element(var.azs, count.index)
+  vpc_id                          = local.vpc_id
+  cidr_block                      = var.elasticache_subnets[count.index]
+  availability_zone               = element(var.azs, count.index)
+  assign_ipv6_address_on_creation = var.elasticache_subnet_assign_ipv6_address_on_creation == null ? var.assign_ipv6_address_on_creation : var.elasticache_subnet_assign_ipv6_address_on_creation
+
+  ipv6_cidr_block = var.enable_ipv6 && length(var.elasticache_subnet_ipv6_prefixes) > 0 ? cidrsubnet(aws_vpc.this[0].ipv6_cidr_block, 8, var.elasticache_subnet_ipv6_prefixes[count.index]) : null
 
   tags = merge(
     {
@@ -406,9 +447,12 @@ resource "aws_elasticache_subnet_group" "elasticache" {
 resource "aws_subnet" "intra" {
   count = var.create_vpc && length(var.intra_subnets) > 0 ? length(var.intra_subnets) : 0
 
-  vpc_id            = local.vpc_id
-  cidr_block        = var.intra_subnets[count.index]
-  availability_zone = element(var.azs, count.index)
+  vpc_id                          = local.vpc_id
+  cidr_block                      = var.intra_subnets[count.index]
+  availability_zone               = element(var.azs, count.index)
+  assign_ipv6_address_on_creation = var.intra_subnet_assign_ipv6_address_on_creation == null ? var.assign_ipv6_address_on_creation : var.intra_subnet_assign_ipv6_address_on_creation
+
+  ipv6_cidr_block = var.enable_ipv6 && length(var.intra_subnet_ipv6_prefixes) > 0 ? cidrsubnet(aws_vpc.this[0].ipv6_cidr_block, 8, var.intra_subnet_ipv6_prefixes[count.index]) : null
 
   tags = merge(
     {
@@ -822,6 +866,14 @@ resource "aws_route" "private_nat_gateway" {
   timeouts {
     create = "5m"
   }
+}
+
+resource "aws_route" "private_ipv6_egress" {
+  count = var.enable_ipv6 ? length(var.private_subnets) : 0
+
+  route_table_id              = element(aws_route_table.private.*.id, count.index)
+  destination_ipv6_cidr_block = "::/0"
+  egress_only_gateway_id      = element(aws_egress_only_internet_gateway.this.*.id, 0)
 }
 
 ######################
