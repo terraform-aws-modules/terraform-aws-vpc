@@ -24,7 +24,6 @@ module "vpc" {
   single_nat_gateway = true
 
   enable_flow_log = true
-  create_flow_log_cloudwatch_iam_role = false
   flow_log_cloudwatch_iam_role_arn = aws_iam_role.vpc_flow_log_cloudwatch.arn
 
   tags = {

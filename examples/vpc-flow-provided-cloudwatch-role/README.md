@@ -1,7 +1,12 @@
 # VPC Flow Logs provided IAM role for CloudWatch
 
 Configuration in this directory creates set of VPC resources with VPC FLow Logs enabled and configured to push the logs to CloudWatch using a provided (ie. pre-existing) IAM role.
+This configuration requires that the IAM role is already created before enabling the VPC FLow Logs because otherwise terraform will complain about a count attribute being computed.
+This is because the conditional logic that determines if a new IAM role should be created is dependent on the ARN string being empty, which cannot be determined before the actual role is created.
+To that end, we can leverage terraform targeted plans to first create the role, and then the VPC with Flow Logs enabled.
+A realist scenario for this is to have the IAM role created in a separate configuration (different layer or even account) and read in via terraform remote state.
 
+One way to avoid this issue would be the introduction of new boolean arguments that control the creation logic, but that would add at least two more boolean arguments that users need to set correctly.
 
 ## Usage
 
@@ -9,6 +14,7 @@ To run this example you need to execute:
 
 ```bash
 $ terraform init
+$ terraform apply -target aws_iam_role.vpc_flow_log_cloudwatch
 $ terraform plan
 $ terraform apply
 ```

@@ -1414,28 +1414,10 @@ variable "flow_log_destination_arn" {
   default     = ""
 }
 
-variable "create_flow_log_cloudwatch_log_group" {
-  description = "Whether or not to create acloudWatch log group"
-  type        = bool
-  default     = true
-}
-
-variable "create_flow_log_cloudwatch_iam_role" {
-  description = "Whether or not to create an IAM role to push VPC Flow Logs to CloudWatch"
-  type        = bool
-  default     = true
-}
-
 variable "flow_log_cloudwatch_iam_role_arn" {
   description = "The ARN for the IAM role that's used to post flow logs to a CloudWatch Logs log group. When create_flow_log_cloudwatch_iam_role is set to false, this argument needs to be provided.When create_flow_log_cloudwatch_iam_role is set to true, this argument is ignored."
   type        = string
   default     = ""
-}
-
-variable "create_flow_log_s3_bucket" {
-  description = "Whether or not to create an S3 bucket to push the VPC Flow Logs to"
-  type        = bool
-  default     = false
 }
 
 variable "flow_log_force_destroy_s3_bucket" {

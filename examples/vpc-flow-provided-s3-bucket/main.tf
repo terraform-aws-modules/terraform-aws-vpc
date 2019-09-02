@@ -24,8 +24,6 @@ module "vpc" {
   single_nat_gateway = true
 
   enable_flow_log                      = true
-  create_flow_log_cloudwatch_log_group = false
-  create_flow_log_cloudwatch_iam_role  = false
   push_flow_log_to_s3                  = true
   flow_log_destination_arn             = aws_s3_bucket.vpf_flow_log.arn
 

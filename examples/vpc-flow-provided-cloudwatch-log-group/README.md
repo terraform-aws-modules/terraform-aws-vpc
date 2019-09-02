@@ -1,6 +1,12 @@
 # VPC Flow Logs provided CloudWatch log group
 
 Configuration in this directory creates set of VPC resources with VPC FLow Logs enabled and configured to push the logs to CloudWatch using a provided (ie. pre-existing) log group.
+This configuration requires that the CloudWatch log group is already created before enabling the VPC FLow Logs because otherwise terraform will complain about a count attribute being computed.
+This is because the conditional logic that determines if a new CloudWatch log group should be created is dependent on the ARN string being empty, which cannot be determined before the actual resource is created.
+To that end, we can leverage terraform targeted plans to first create the log group, and then the VPC with Flow Logs enabled.
+A realist scenario for this is to have the log group created in a separate configuration (different layer or even account) and read in via terraform remote state.
+
+One way to avoid this issue would be the introduction of new boolean arguments that control the creation logic, but that would add at least two more boolean arguments that users need to set correctly.
 
 ## Usage
 
@@ -8,6 +14,7 @@ To run this example you need to execute:
 
 ```bash
 $ terraform init
+$ terraform apply -target aws_cloudwatch_log_group.vpc_flow_log
 $ terraform plan
 $ terraform apply
 ```
