@@ -194,9 +194,11 @@ Sometimes it is handy to have public access to Redshift clusters (for example if
 ## Examples
 
 * [Simple VPC](https://github.com/terraform-aws-modules/terraform-aws-vpc/tree/master/examples/simple-vpc)
+* [Simple VPC with secondary CIDR blocks](https://github.com/terraform-aws-modules/terraform-aws-vpc/tree/master/examples/secondary-cidr-blocks)
 * [Complete VPC](https://github.com/terraform-aws-modules/terraform-aws-vpc/tree/master/examples/complete-vpc)
-* [Manage Default VPC](https://github.com/terraform-aws-modules/terraform-aws-vpc/tree/master/examples/manage-default-vpc)
+* [VPC with IPv6 enabled](https://github.com/terraform-aws-modules/terraform-aws-vpc/tree/master/examples/ipv6)
 * [Network ACL](https://github.com/terraform-aws-modules/terraform-aws-vpc/tree/master/examples/network-acls)
+* [Manage Default VPC](https://github.com/terraform-aws-modules/terraform-aws-vpc/tree/master/examples/manage-default-vpc)
 * Few tests and edge cases examples: [#46](https://github.com/terraform-aws-modules/terraform-aws-vpc/tree/master/examples/issue-46-no-private-subnets), [#44](https://github.com/terraform-aws-modules/terraform-aws-vpc/tree/master/examples/issue-44-asymmetric-private-subnets), [#108](https://github.com/terraform-aws-modules/terraform-aws-vpc/tree/master/examples/issue-108-route-already-exists)
 
 <!-- BEGINNING OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
@@ -208,7 +210,7 @@ Sometimes it is handy to have public access to Redshift clusters (for example if
 | apigw\_endpoint\_private\_dns\_enabled | Whether or not to associate a private hosted zone with the specified VPC for API GW endpoint | bool | `"false"` | no |
 | apigw\_endpoint\_security\_group\_ids | The ID of one or more security groups to associate with the network interface for API GW  endpoint | list(string) | `[]` | no |
 | apigw\_endpoint\_subnet\_ids | The ID of one or more subnets in which to create a network interface for API GW endpoint. Only a single subnet within an AZ is supported. If omitted, private subnets will be used. | list(string) | `[]` | no |
-| assign\_generated\_ipv6\_cidr\_block | Requests an Amazon-provided IPv6 CIDR block with a /56 prefix length for the VPC. You cannot specify the range of IP addresses, or the size of the CIDR block | bool | `"false"` | no |
+| assign\_ipv6\_address\_on\_creation | Assign IPv6 address on subnet, must be disabled to change IPv6 CIDRs. This is the IPv6 equivalent of map_public_ip_on_launch | bool | `"false"` | no |
 | azs | A list of availability zones in the region | list(string) | `[]` | no |
 | cidr | The CIDR block for the VPC. Default value is a valid CIDR, but not acceptable by AWS and should be overridden | string | `"0.0.0.0/0"` | no |
 | cloudtrail\_endpoint\_private\_dns\_enabled | Whether or not to associate a private hosted zone with the specified VPC for CloudTrail endpoint | bool | `"false"` | no |
@@ -228,7 +230,9 @@ Sometimes it is handy to have public access to Redshift clusters (for example if
 | database\_inbound\_acl\_rules | Database subnets inbound network ACL rules | list(map(string)) | `[ { "cidr_block": "0.0.0.0/0", "from_port": 0, "protocol": "-1", "rule_action": "allow", "rule_number": 100, "to_port": 0 } ]` | no |
 | database\_outbound\_acl\_rules | Database subnets outbound network ACL rules | list(map(string)) | `[ { "cidr_block": "0.0.0.0/0", "from_port": 0, "protocol": "-1", "rule_action": "allow", "rule_number": 100, "to_port": 0 } ]` | no |
 | database\_route\_table\_tags | Additional tags for the database route tables | map(string) | `{}` | no |
+| database\_subnet\_assign\_ipv6\_address\_on\_creation | Assign IPv6 address on database subnet, must be disabled to change IPv6 CIDRs. This is the IPv6 equivalent of map_public_ip_on_launch | bool | `"null"` | no |
 | database\_subnet\_group\_tags | Additional tags for the database subnet group | map(string) | `{}` | no |
+| database\_subnet\_ipv6\_prefixes | Assigns IPv6 database subnet id based on the Amazon provided /56 prefix base 10 integer (0-256). Must be of equal length to the corresponding IPv4 subnet list | list | `[]` | no |
 | database\_subnet\_suffix | Suffix to append to database subnets name | string | `"db"` | no |
 | database\_subnet\_tags | Additional tags for the database subnets | map(string) | `{}` | no |
 | database\_subnets | A list of database subnets | list(string) | `[]` | no |
@@ -273,6 +277,8 @@ Sometimes it is handy to have public access to Redshift clusters (for example if
 | elasticache\_inbound\_acl\_rules | Elasticache subnets inbound network ACL rules | list(map(string)) | `[ { "cidr_block": "0.0.0.0/0", "from_port": 0, "protocol": "-1", "rule_action": "allow", "rule_number": 100, "to_port": 0 } ]` | no |
 | elasticache\_outbound\_acl\_rules | Elasticache subnets outbound network ACL rules | list(map(string)) | `[ { "cidr_block": "0.0.0.0/0", "from_port": 0, "protocol": "-1", "rule_action": "allow", "rule_number": 100, "to_port": 0 } ]` | no |
 | elasticache\_route\_table\_tags | Additional tags for the elasticache route tables | map(string) | `{}` | no |
+| elasticache\_subnet\_assign\_ipv6\_address\_on\_creation | Assign IPv6 address on elasticache subnet, must be disabled to change IPv6 CIDRs. This is the IPv6 equivalent of map_public_ip_on_launch | bool | `"null"` | no |
+| elasticache\_subnet\_ipv6\_prefixes | Assigns IPv6 elasticache subnet id based on the Amazon provided /56 prefix base 10 integer (0-256). Must be of equal length to the corresponding IPv4 subnet list | list | `[]` | no |
 | elasticache\_subnet\_suffix | Suffix to append to elasticache subnets name | string | `"elasticache"` | no |
 | elasticache\_subnet\_tags | Additional tags for the elasticache subnets | map(string) | `{}` | no |
 | elasticache\_subnets | A list of elasticache subnets | list(string) | `[]` | no |
@@ -294,6 +300,7 @@ Sometimes it is handy to have public access to Redshift clusters (for example if
 | enable\_ecs\_telemetry\_endpoint | Should be true if you want to provision a ECS Telemetry endpoint to the VPC | bool | `"false"` | no |
 | enable\_elasticloadbalancing\_endpoint | Should be true if you want to provision a Elastic Load Balancing endpoint to the VPC | bool | `"false"` | no |
 | enable\_events\_endpoint | Should be true if you want to provision a CloudWatch Events endpoint to the VPC | bool | `"false"` | no |
+| enable\_ipv6 | Requests an Amazon-provided IPv6 CIDR block with a /56 prefix length for the VPC. You cannot specify the range of IP addresses, or the size of the CIDR block. | bool | `"false"` | no |
 | enable\_kms\_endpoint | Should be true if you want to provision a KMS endpoint to the VPC | bool | `"false"` | no |
 | enable\_logs\_endpoint | Should be true if you want to provision a CloudWatch Logs endpoint to the VPC | bool | `"false"` | no |
 | enable\_monitoring\_endpoint | Should be true if you want to provision a CloudWatch Monitoring endpoint to the VPC | bool | `"false"` | no |
@@ -316,6 +323,8 @@ Sometimes it is handy to have public access to Redshift clusters (for example if
 | intra\_inbound\_acl\_rules | Intra subnets inbound network ACLs | list(map(string)) | `[ { "cidr_block": "0.0.0.0/0", "from_port": 0, "protocol": "-1", "rule_action": "allow", "rule_number": 100, "to_port": 0 } ]` | no |
 | intra\_outbound\_acl\_rules | Intra subnets outbound network ACLs | list(map(string)) | `[ { "cidr_block": "0.0.0.0/0", "from_port": 0, "protocol": "-1", "rule_action": "allow", "rule_number": 100, "to_port": 0 } ]` | no |
 | intra\_route\_table\_tags | Additional tags for the intra route tables | map(string) | `{}` | no |
+| intra\_subnet\_assign\_ipv6\_address\_on\_creation | Assign IPv6 address on intra subnet, must be disabled to change IPv6 CIDRs. This is the IPv6 equivalent of map_public_ip_on_launch | bool | `"null"` | no |
+| intra\_subnet\_ipv6\_prefixes | Assigns IPv6 intra subnet id based on the Amazon provided /56 prefix base 10 integer (0-256). Must be of equal length to the corresponding IPv4 subnet list | list | `[]` | no |
 | intra\_subnet\_suffix | Suffix to append to intra subnets name | string | `"intra"` | no |
 | intra\_subnet\_tags | Additional tags for the intra subnets | map(string) | `{}` | no |
 | intra\_subnets | A list of intra subnets | list(string) | `[]` | no |
@@ -340,6 +349,8 @@ Sometimes it is handy to have public access to Redshift clusters (for example if
 | private\_inbound\_acl\_rules | Private subnets inbound network ACLs | list(map(string)) | `[ { "cidr_block": "0.0.0.0/0", "from_port": 0, "protocol": "-1", "rule_action": "allow", "rule_number": 100, "to_port": 0 } ]` | no |
 | private\_outbound\_acl\_rules | Private subnets outbound network ACLs | list(map(string)) | `[ { "cidr_block": "0.0.0.0/0", "from_port": 0, "protocol": "-1", "rule_action": "allow", "rule_number": 100, "to_port": 0 } ]` | no |
 | private\_route\_table\_tags | Additional tags for the private route tables | map(string) | `{}` | no |
+| private\_subnet\_assign\_ipv6\_address\_on\_creation | Assign IPv6 address on private subnet, must be disabled to change IPv6 CIDRs. This is the IPv6 equivalent of map_public_ip_on_launch | bool | `"null"` | no |
+| private\_subnet\_ipv6\_prefixes | Assigns IPv6 private subnet id based on the Amazon provided /56 prefix base 10 integer (0-256). Must be of equal length to the corresponding IPv4 subnet list | list | `[]` | no |
 | private\_subnet\_suffix | Suffix to append to private subnets name | string | `"private"` | no |
 | private\_subnet\_tags | Additional tags for the private subnets | map(string) | `{}` | no |
 | private\_subnets | A list of private subnets inside the VPC | list(string) | `[]` | no |
@@ -350,6 +361,8 @@ Sometimes it is handy to have public access to Redshift clusters (for example if
 | public\_inbound\_acl\_rules | Public subnets inbound network ACLs | list(map(string)) | `[ { "cidr_block": "0.0.0.0/0", "from_port": 0, "protocol": "-1", "rule_action": "allow", "rule_number": 100, "to_port": 0 } ]` | no |
 | public\_outbound\_acl\_rules | Public subnets outbound network ACLs | list(map(string)) | `[ { "cidr_block": "0.0.0.0/0", "from_port": 0, "protocol": "-1", "rule_action": "allow", "rule_number": 100, "to_port": 0 } ]` | no |
 | public\_route\_table\_tags | Additional tags for the public route tables | map(string) | `{}` | no |
+| public\_subnet\_assign\_ipv6\_address\_on\_creation | Assign IPv6 address on public subnet, must be disabled to change IPv6 CIDRs. This is the IPv6 equivalent of map_public_ip_on_launch | bool | `"null"` | no |
+| public\_subnet\_ipv6\_prefixes | Assigns IPv6 public subnet id based on the Amazon provided /56 prefix base 10 integer (0-256). Must be of equal length to the corresponding IPv4 subnet list | list | `[]` | no |
 | public\_subnet\_suffix | Suffix to append to public subnets name | string | `"public"` | no |
 | public\_subnet\_tags | Additional tags for the public subnets | map(string) | `{}` | no |
 | public\_subnets | A list of public subnets inside the VPC | list(string) | `[]` | no |
@@ -358,7 +371,9 @@ Sometimes it is handy to have public access to Redshift clusters (for example if
 | redshift\_inbound\_acl\_rules | Redshift subnets inbound network ACL rules | list(map(string)) | `[ { "cidr_block": "0.0.0.0/0", "from_port": 0, "protocol": "-1", "rule_action": "allow", "rule_number": 100, "to_port": 0 } ]` | no |
 | redshift\_outbound\_acl\_rules | Redshift subnets outbound network ACL rules | list(map(string)) | `[ { "cidr_block": "0.0.0.0/0", "from_port": 0, "protocol": "-1", "rule_action": "allow", "rule_number": 100, "to_port": 0 } ]` | no |
 | redshift\_route\_table\_tags | Additional tags for the redshift route tables | map(string) | `{}` | no |
+| redshift\_subnet\_assign\_ipv6\_address\_on\_creation | Assign IPv6 address on redshift subnet, must be disabled to change IPv6 CIDRs. This is the IPv6 equivalent of map_public_ip_on_launch | bool | `"null"` | no |
 | redshift\_subnet\_group\_tags | Additional tags for the redshift subnet group | map(string) | `{}` | no |
+| redshift\_subnet\_ipv6\_prefixes | Assigns IPv6 redshift subnet id based on the Amazon provided /56 prefix base 10 integer (0-256). Must be of equal length to the corresponding IPv4 subnet list | list | `[]` | no |
 | redshift\_subnet\_suffix | Suffix to append to redshift subnets name | string | `"redshift"` | no |
 | redshift\_subnet\_tags | Additional tags for the redshift subnets | map(string) | `{}` | no |
 | redshift\_subnets | A list of redshift subnets | list(string) | `[]` | no |
@@ -393,6 +408,7 @@ Sometimes it is handy to have public access to Redshift clusters (for example if
 | database\_subnet\_group | ID of database subnet group |
 | database\_subnets | List of IDs of database subnets |
 | database\_subnets\_cidr\_blocks | List of cidr_blocks of database subnets |
+| database\_subnets\_ipv6\_cidr\_blocks | List of IPv6 cidr_blocks of database subnets in an IPv6 enabled VPC |
 | default\_network\_acl\_id | The ID of the default network ACL |
 | default\_route\_table\_id | The ID of the default route table |
 | default\_security\_group\_id | The ID of the security group created by default on VPC creation |
@@ -405,6 +421,7 @@ Sometimes it is handy to have public access to Redshift clusters (for example if
 | default\_vpc\_id | The ID of the VPC |
 | default\_vpc\_instance\_tenancy | Tenancy of instances spin up within VPC |
 | default\_vpc\_main\_route\_table\_id | The ID of the main route table associated with this VPC |
+| egress\_only\_internet\_gateway\_id | The ID of the egress only Internet Gateway |
 | elasticache\_network\_acl\_id | ID of the elasticache network ACL |
 | elasticache\_route\_table\_ids | List of IDs of elasticache route tables |
 | elasticache\_subnet\_arns | List of ARNs of elasticache subnets |
@@ -412,12 +429,14 @@ Sometimes it is handy to have public access to Redshift clusters (for example if
 | elasticache\_subnet\_group\_name | Name of elasticache subnet group |
 | elasticache\_subnets | List of IDs of elasticache subnets |
 | elasticache\_subnets\_cidr\_blocks | List of cidr_blocks of elasticache subnets |
+| elasticache\_subnets\_ipv6\_cidr\_blocks | List of IPv6 cidr_blocks of elasticache subnets in an IPv6 enabled VPC |
 | igw\_id | The ID of the Internet Gateway |
 | intra\_network\_acl\_id | ID of the intra network ACL |
 | intra\_route\_table\_ids | List of IDs of intra route tables |
 | intra\_subnet\_arns | List of ARNs of intra subnets |
 | intra\_subnets | List of IDs of intra subnets |
 | intra\_subnets\_cidr\_blocks | List of cidr_blocks of intra subnets |
+| intra\_subnets\_ipv6\_cidr\_blocks | List of IPv6 cidr_blocks of intra subnets in an IPv6 enabled VPC |
 | nat\_ids | List of allocation ID of Elastic IPs created for AWS NAT Gateway |
 | nat\_public\_ips | List of public Elastic IPs created for AWS NAT Gateway |
 | natgw\_ids | List of NAT Gateway IDs |
@@ -426,17 +445,20 @@ Sometimes it is handy to have public access to Redshift clusters (for example if
 | private\_subnet\_arns | List of ARNs of private subnets |
 | private\_subnets | List of IDs of private subnets |
 | private\_subnets\_cidr\_blocks | List of cidr_blocks of private subnets |
+| private\_subnets\_ipv6\_cidr\_blocks | List of IPv6 cidr_blocks of private subnets in an IPv6 enabled VPC |
 | public\_network\_acl\_id | ID of the public network ACL |
 | public\_route\_table\_ids | List of IDs of public route tables |
 | public\_subnet\_arns | List of ARNs of public subnets |
 | public\_subnets | List of IDs of public subnets |
 | public\_subnets\_cidr\_blocks | List of cidr_blocks of public subnets |
+| public\_subnets\_ipv6\_cidr\_blocks | List of IPv6 cidr_blocks of public subnets in an IPv6 enabled VPC |
 | redshift\_network\_acl\_id | ID of the redshift network ACL |
 | redshift\_route\_table\_ids | List of IDs of redshift route tables |
 | redshift\_subnet\_arns | List of ARNs of redshift subnets |
 | redshift\_subnet\_group | ID of redshift subnet group |
 | redshift\_subnets | List of IDs of redshift subnets |
 | redshift\_subnets\_cidr\_blocks | List of cidr_blocks of redshift subnets |
+| redshift\_subnets\_ipv6\_cidr\_blocks | List of IPv6 cidr_blocks of redshift subnets in an IPv6 enabled VPC |
 | vgw\_id | The ID of the VPN Gateway |
 | vpc\_arn | The ARN of the VPC |
 | vpc\_cidr\_block | The CIDR block of the VPC |
@@ -502,6 +524,8 @@ Sometimes it is handy to have public access to Redshift clusters (for example if
 | vpc\_endpoint\_ssmmessages\_network\_interface\_ids | One or more network interfaces for the VPC Endpoint for SSMMESSAGES. |
 | vpc\_id | The ID of the VPC |
 | vpc\_instance\_tenancy | Tenancy of instances spin up within VPC |
+| vpc\_ipv6\_association\_id | The association ID for the IPv6 CIDR block |
+| vpc\_ipv6\_cidr\_block | The IPv6 CIDR block |
 | vpc\_main\_route\_table\_id | The ID of the main route table associated with this VPC |
 | vpc\_secondary\_cidr\_blocks | List of secondary CIDR blocks of the VPC |
 
