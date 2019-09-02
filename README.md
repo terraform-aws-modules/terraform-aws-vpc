@@ -17,7 +17,7 @@ These types of resources are supported:
 * [VPC Endpoint](https://www.terraform.io/docs/providers/aws/r/vpc_endpoint.html):
   * Gateway: S3, DynamoDB
   * Interface: EC2, SSM, EC2 Messages, SSM Messages, SQS, ECR API, ECR DKR, API Gateway, KMS, 
-ECS, ECS Agent, ECS Telemetry, SNS, CloudWatch(Monitoring, Logs, Events), Elastic Load Balancing, CloudTrail, Secrets Manager, Config, Codebuild, Codecommit, Git-Codecommit, Transfer Server, Kinesis Streams, Kinesis Firehose
+ECS, ECS Agent, ECS Telemetry, SNS, STS, Glue, CloudWatch(Monitoring, Logs, Events), Elastic Load Balancing, CloudTrail, Secrets Manager, Config, Codebuild, Codecommit, Git-Codecommit, Transfer Server, Kinesis Streams, Kinesis Firehose, Sagemaker Notebook
 * [RDS DB Subnet Group](https://www.terraform.io/docs/providers/aws/r/db_subnet_group.html)
 * [ElastiCache Subnet Group](https://www.terraform.io/docs/providers/aws/r/elasticache_subnet_group.html)
 * [Redshift Subnet Group](https://www.terraform.io/docs/providers/aws/r/redshift_subnet_group.html)
@@ -207,12 +207,21 @@ Sometimes it is handy to have public access to Redshift clusters (for example if
 | apigw\_endpoint\_private\_dns\_enabled | Whether or not to associate a private hosted zone with the specified VPC for API GW endpoint | bool | `"false"` | no |
 | apigw\_endpoint\_security\_group\_ids | The ID of one or more security groups to associate with the network interface for API GW  endpoint | list(string) | `[]` | no |
 | apigw\_endpoint\_subnet\_ids | The ID of one or more subnets in which to create a network interface for API GW endpoint. Only a single subnet within an AZ is supported. If omitted, private subnets will be used. | list(string) | `[]` | no |
-| assign\_generated\_ipv6\_cidr\_block | Requests an Amazon-provided IPv6 CIDR block with a /56 prefix length for the VPC. You cannot specify the range of IP addresses, or the size of the CIDR block | bool | `"false"` | no |
+| assign\_ipv6\_address\_on\_creation | Assign IPv6 address on subnet, must be disabled to change IPv6 CIDRs. This is the IPv6 equivalent of map_public_ip_on_launch | bool | `"false"` | no |
 | azs | A list of availability zones in the region | list(string) | `[]` | no |
 | cidr | The CIDR block for the VPC. Default value is a valid CIDR, but not acceptable by AWS and should be overridden | string | `"0.0.0.0/0"` | no |
 | cloudtrail\_endpoint\_private\_dns\_enabled | Whether or not to associate a private hosted zone with the specified VPC for CloudTrail endpoint | bool | `"false"` | no |
 | cloudtrail\_endpoint\_security\_group\_ids | The ID of one or more security groups to associate with the network interface for CloudTrail endpoint | list(string) | `[]` | no |
 | cloudtrail\_endpoint\_subnet\_ids | The ID of one or more subnets in which to create a network interface for CloudTrail endpoint. Only a single subnet within an AZ is supported. If omitted, private subnets will be used. | list(string) | `[]` | no |
+| codebuild\_endpoint\_private\_dns\_enabled | Whether or not to associate a private hosted zone with the specified VPC for Codebuild endpoint | string | `"false"` | no |
+| codebuild\_endpoint\_security\_group\_ids | The ID of one or more security groups to associate with the network interface for Codebuild endpoint | list | `[]` | no |
+| codebuild\_endpoint\_subnet\_ids | The ID of one or more subnets in which to create a network interface for Codebuilt endpoint. Only a single subnet within an AZ is supported. If omitted, private subnets will be used. | list | `[]` | no |
+| codecommit\_endpoint\_private\_dns\_enabled | Whether or not to associate a private hosted zone with the specified VPC for Codecommit endpoint | string | `"false"` | no |
+| codecommit\_endpoint\_security\_group\_ids | The ID of one or more security groups to associate with the network interface for Codecommit endpoint | list | `[]` | no |
+| codecommit\_endpoint\_subnet\_ids | The ID of one or more subnets in which to create a network interface for Codecommit endpoint. Only a single subnet within an AZ is supported. If omitted, private subnets will be used. | list | `[]` | no |
+| config\_endpoint\_private\_dns\_enabled | Whether or not to associate a private hosted zone with the specified VPC for config endpoint | string | `"false"` | no |
+| config\_endpoint\_security\_group\_ids | The ID of one or more security groups to associate with the network interface for config endpoint | list | `[]` | no |
+| config\_endpoint\_subnet\_ids | The ID of one or more subnets in which to create a network interface for config endpoint. Only a single subnet within an AZ is supported. If omitted, private subnets will be used. | list | `[]` | no |
 | create\_database\_internet\_gateway\_route | Controls if an internet gateway route for public database access should be created | bool | `"false"` | no |
 | create\_database\_nat\_gateway\_route | Controls if a nat gateway route should be created to give internet access to the database subnets | bool | `"false"` | no |
 | create\_database\_subnet\_group | Controls if database subnet group should be created | bool | `"true"` | no |
@@ -227,7 +236,9 @@ Sometimes it is handy to have public access to Redshift clusters (for example if
 | database\_inbound\_acl\_rules | Database subnets inbound network ACL rules | list(map(string)) | `[ { "cidr_block": "0.0.0.0/0", "from_port": 0, "protocol": "-1", "rule_action": "allow", "rule_number": 100, "to_port": 0 } ]` | no |
 | database\_outbound\_acl\_rules | Database subnets outbound network ACL rules | list(map(string)) | `[ { "cidr_block": "0.0.0.0/0", "from_port": 0, "protocol": "-1", "rule_action": "allow", "rule_number": 100, "to_port": 0 } ]` | no |
 | database\_route\_table\_tags | Additional tags for the database route tables | map(string) | `{}` | no |
+| database\_subnet\_assign\_ipv6\_address\_on\_creation | Assign IPv6 address on database subnet, must be disabled to change IPv6 CIDRs. This is the IPv6 equivalent of map_public_ip_on_launch | bool | `"null"` | no |
 | database\_subnet\_group\_tags | Additional tags for the database subnet group | map(string) | `{}` | no |
+| database\_subnet\_ipv6\_prefixes | Assigns IPv6 database subnet id based on the Amazon provided /56 prefix base 10 integer (0-256). Must be of equal length to the corresponding IPv4 subnet list | list | `[]` | no |
 | database\_subnet\_suffix | Suffix to append to database subnets name | string | `"db"` | no |
 | database\_subnet\_tags | Additional tags for the database subnets | map(string) | `{}` | no |
 | database\_subnets | A list of database subnets | list(string) | `[]` | no |
@@ -272,6 +283,8 @@ Sometimes it is handy to have public access to Redshift clusters (for example if
 | elasticache\_inbound\_acl\_rules | Elasticache subnets inbound network ACL rules | list(map(string)) | `[ { "cidr_block": "0.0.0.0/0", "from_port": 0, "protocol": "-1", "rule_action": "allow", "rule_number": 100, "to_port": 0 } ]` | no |
 | elasticache\_outbound\_acl\_rules | Elasticache subnets outbound network ACL rules | list(map(string)) | `[ { "cidr_block": "0.0.0.0/0", "from_port": 0, "protocol": "-1", "rule_action": "allow", "rule_number": 100, "to_port": 0 } ]` | no |
 | elasticache\_route\_table\_tags | Additional tags for the elasticache route tables | map(string) | `{}` | no |
+| elasticache\_subnet\_assign\_ipv6\_address\_on\_creation | Assign IPv6 address on elasticache subnet, must be disabled to change IPv6 CIDRs. This is the IPv6 equivalent of map_public_ip_on_launch | bool | `"null"` | no |
+| elasticache\_subnet\_ipv6\_prefixes | Assigns IPv6 elasticache subnet id based on the Amazon provided /56 prefix base 10 integer (0-256). Must be of equal length to the corresponding IPv4 subnet list | list | `[]` | no |
 | elasticache\_subnet\_suffix | Suffix to append to elasticache subnets name | string | `"elasticache"` | no |
 | elasticache\_subnet\_tags | Additional tags for the elasticache subnets | map(string) | `{}` | no |
 | elasticache\_subnets | A list of elasticache subnets | list(string) | `[]` | no |
@@ -280,6 +293,9 @@ Sometimes it is handy to have public access to Redshift clusters (for example if
 | elasticloadbalancing\_endpoint\_subnet\_ids | The ID of one or more subnets in which to create a network interface for Elastic Load Balancing endpoint. Only a single subnet within an AZ is supported. If omitted, private subnets will be used. | list(string) | `[]` | no |
 | enable\_apigw\_endpoint | Should be true if you want to provision an api gateway endpoint to the VPC | bool | `"false"` | no |
 | enable\_cloudtrail\_endpoint | Should be true if you want to provision a CloudTrail endpoint to the VPC | bool | `"false"` | no |
+| enable\_codebuild\_endpoint | Should be true if you want to provision an Codebuild endpoint to the VPC | string | `"false"` | no |
+| enable\_codecommit\_endpoint | Should be true if you want to provision an Codecommit endpoint to the VPC | string | `"false"` | no |
+| enable\_config\_endpoint | Should be true if you want to provision an config endpoint to the VPC | string | `"false"` | no |
 | enable\_dhcp\_options | Should be true if you want to specify a DHCP options set with a custom domain name, DNS servers, NTP servers, netbios servers, and/or netbios server type | bool | `"false"` | no |
 | enable\_dns\_hostnames | Should be true to enable DNS hostnames in the VPC | bool | `"false"` | no |
 | enable\_dns\_support | Should be true to enable DNS support in the VPC | bool | `"true"` | no |
@@ -293,21 +309,36 @@ Sometimes it is handy to have public access to Redshift clusters (for example if
 | enable\_ecs\_telemetry\_endpoint | Should be true if you want to provision a ECS Telemetry endpoint to the VPC | bool | `"false"` | no |
 | enable\_elasticloadbalancing\_endpoint | Should be true if you want to provision a Elastic Load Balancing endpoint to the VPC | bool | `"false"` | no |
 | enable\_events\_endpoint | Should be true if you want to provision a CloudWatch Events endpoint to the VPC | bool | `"false"` | no |
+| enable\_git\_codecommit\_endpoint | Should be true if you want to provision an Git Codecommit endpoint to the VPC | string | `"false"` | no |
+| enable\_glue\_endpoint | Should be true if you want to provision a Glue endpoint to the VPC | bool | `"false"` | no |
+| enable\_ipv6 | Requests an Amazon-provided IPv6 CIDR block with a /56 prefix length for the VPC. You cannot specify the range of IP addresses, or the size of the CIDR block. | bool | `"false"` | no |
+| enable\_kinesis\_firehose\_endpoint | Should be true if you want to provision a Kinesis Firehose endpoint to the VPC | bool | `"false"` | no |
+| enable\_kinesis\_streams\_endpoint | Should be true if you want to provision a Kinesis Streams endpoint to the VPC | bool | `"false"` | no |
 | enable\_kms\_endpoint | Should be true if you want to provision a KMS endpoint to the VPC | bool | `"false"` | no |
 | enable\_logs\_endpoint | Should be true if you want to provision a CloudWatch Logs endpoint to the VPC | bool | `"false"` | no |
 | enable\_monitoring\_endpoint | Should be true if you want to provision a CloudWatch Monitoring endpoint to the VPC | bool | `"false"` | no |
 | enable\_nat\_gateway | Should be true if you want to provision NAT Gateways for each of your private networks | bool | `"false"` | no |
 | enable\_public\_redshift | Controls if redshift should have public routing table | bool | `"false"` | no |
 | enable\_s3\_endpoint | Should be true if you want to provision an S3 endpoint to the VPC | bool | `"false"` | no |
+| enable\_sagemaker\_notebook\_endpoint | Should be true if you want to provision a Sagemaker Notebook endpoint to the VPC | bool | `"false"` | no |
+| enable\_secretsmanager\_endpoint | Should be true if you want to provision an Secrets Manager endpoint to the VPC | bool | `"false"` | no |
 | enable\_sns\_endpoint | Should be true if you want to provision a SNS endpoint to the VPC | bool | `"false"` | no |
 | enable\_sqs\_endpoint | Should be true if you want to provision an SQS endpoint to the VPC | string | `"false"` | no |
 | enable\_ssm\_endpoint | Should be true if you want to provision an SSM endpoint to the VPC | bool | `"false"` | no |
 | enable\_ssmmessages\_endpoint | Should be true if you want to provision a SSMMESSAGES endpoint to the VPC | bool | `"false"` | no |
+| enable\_sts\_endpoint | Should be true if you want to provision a STS endpoint to the VPC | bool | `"false"` | no |
+| enable\_transferserver\_endpoint | Should be true if you want to provision a Transer Server endpoint to the VPC | bool | `"false"` | no |
 | enable\_vpn\_gateway | Should be true if you want to create a new VPN Gateway resource and attach it to the VPC | bool | `"false"` | no |
 | events\_endpoint\_private\_dns\_enabled | Whether or not to associate a private hosted zone with the specified VPC for CloudWatch Events endpoint | bool | `"false"` | no |
 | events\_endpoint\_security\_group\_ids | The ID of one or more security groups to associate with the network interface for CloudWatch Events endpoint | list(string) | `[]` | no |
 | events\_endpoint\_subnet\_ids | The ID of one or more subnets in which to create a network interface for CloudWatch Events endpoint. Only a single subnet within an AZ is supported. If omitted, private subnets will be used. | list(string) | `[]` | no |
 | external\_nat\_ip\_ids | List of EIP IDs to be assigned to the NAT Gateways (used in combination with reuse_nat_ips) | list(string) | `[]` | no |
+| git\_codecommit\_endpoint\_private\_dns\_enabled | Whether or not to associate a private hosted zone with the specified VPC for Git Codecommit endpoint | string | `"false"` | no |
+| git\_codecommit\_endpoint\_security\_group\_ids | The ID of one or more security groups to associate with the network interface for Git Codecommit endpoint | list | `[]` | no |
+| git\_codecommit\_endpoint\_subnet\_ids | The ID of one or more subnets in which to create a network interface for Git Codecommit endpoint. Only a single subnet within an AZ is supported. If omitted, private subnets will be used. | list | `[]` | no |
+| glue\_endpoint\_private\_dns\_enabled | Whether or not to associate a private hosted zone with the specified VPC for Glue endpoint | bool | `"false"` | no |
+| glue\_endpoint\_security\_group\_ids | The ID of one or more security groups to associate with the network interface for Glue endpoint | list(string) | `[]` | no |
+| glue\_endpoint\_subnet\_ids | The ID of one or more subnets in which to create a network interface for Glue endpoint. Only a single subnet within an AZ is supported. If omitted, private subnets will be used. | list(string) | `[]` | no |
 | igw\_tags | Additional tags for the internet gateway | map(string) | `{}` | no |
 | instance\_tenancy | A tenancy option for instances launched into the VPC | string | `"default"` | no |
 | intra\_acl\_tags | Additional tags for the intra subnets network ACL | map(string) | `{}` | no |
@@ -315,9 +346,17 @@ Sometimes it is handy to have public access to Redshift clusters (for example if
 | intra\_inbound\_acl\_rules | Intra subnets inbound network ACLs | list(map(string)) | `[ { "cidr_block": "0.0.0.0/0", "from_port": 0, "protocol": "-1", "rule_action": "allow", "rule_number": 100, "to_port": 0 } ]` | no |
 | intra\_outbound\_acl\_rules | Intra subnets outbound network ACLs | list(map(string)) | `[ { "cidr_block": "0.0.0.0/0", "from_port": 0, "protocol": "-1", "rule_action": "allow", "rule_number": 100, "to_port": 0 } ]` | no |
 | intra\_route\_table\_tags | Additional tags for the intra route tables | map(string) | `{}` | no |
+| intra\_subnet\_assign\_ipv6\_address\_on\_creation | Assign IPv6 address on intra subnet, must be disabled to change IPv6 CIDRs. This is the IPv6 equivalent of map_public_ip_on_launch | bool | `"null"` | no |
+| intra\_subnet\_ipv6\_prefixes | Assigns IPv6 intra subnet id based on the Amazon provided /56 prefix base 10 integer (0-256). Must be of equal length to the corresponding IPv4 subnet list | list | `[]` | no |
 | intra\_subnet\_suffix | Suffix to append to intra subnets name | string | `"intra"` | no |
 | intra\_subnet\_tags | Additional tags for the intra subnets | map(string) | `{}` | no |
 | intra\_subnets | A list of intra subnets | list(string) | `[]` | no |
+| kinesis\_firehose\_endpoint\_private\_dns\_enabled | Whether or not to associate a private hosted zone with the specified VPC for Kinesis Firehose endpoint | bool | `"false"` | no |
+| kinesis\_firehose\_endpoint\_security\_group\_ids | The ID of one or more security groups to associate with the network interface for Kinesis Firehose endpoint | list(string) | `[]` | no |
+| kinesis\_firehose\_endpoint\_subnet\_ids | The ID of one or more subnets in which to create a network interface for Kinesis Firehose endpoint. Only a single subnet within an AZ is supported. If omitted, private subnets will be used. | list(string) | `[]` | no |
+| kinesis\_streams\_endpoint\_private\_dns\_enabled | Whether or not to associate a private hosted zone with the specified VPC for Kinesis Streams endpoint | bool | `"false"` | no |
+| kinesis\_streams\_endpoint\_security\_group\_ids | The ID of one or more security groups to associate with the network interface for Kinesis Streams endpoint | list(string) | `[]` | no |
+| kinesis\_streams\_endpoint\_subnet\_ids | The ID of one or more subnets in which to create a network interface for Kinesis Streams endpoint. Only a single subnet within an AZ is supported. If omitted, private subnets will be used. | list(string) | `[]` | no |
 | kms\_endpoint\_private\_dns\_enabled | Whether or not to associate a private hosted zone with the specified VPC for KMS endpoint | bool | `"false"` | no |
 | kms\_endpoint\_security\_group\_ids | The ID of one or more security groups to associate with the network interface for KMS endpoint | list(string) | `[]` | no |
 | kms\_endpoint\_subnet\_ids | The ID of one or more subnets in which to create a network interface for KMS endpoint. Only a single subnet within an AZ is supported. If omitted, private subnets will be used. | list(string) | `[]` | no |
@@ -339,6 +378,8 @@ Sometimes it is handy to have public access to Redshift clusters (for example if
 | private\_inbound\_acl\_rules | Private subnets inbound network ACLs | list(map(string)) | `[ { "cidr_block": "0.0.0.0/0", "from_port": 0, "protocol": "-1", "rule_action": "allow", "rule_number": 100, "to_port": 0 } ]` | no |
 | private\_outbound\_acl\_rules | Private subnets outbound network ACLs | list(map(string)) | `[ { "cidr_block": "0.0.0.0/0", "from_port": 0, "protocol": "-1", "rule_action": "allow", "rule_number": 100, "to_port": 0 } ]` | no |
 | private\_route\_table\_tags | Additional tags for the private route tables | map(string) | `{}` | no |
+| private\_subnet\_assign\_ipv6\_address\_on\_creation | Assign IPv6 address on private subnet, must be disabled to change IPv6 CIDRs. This is the IPv6 equivalent of map_public_ip_on_launch | bool | `"null"` | no |
+| private\_subnet\_ipv6\_prefixes | Assigns IPv6 private subnet id based on the Amazon provided /56 prefix base 10 integer (0-256). Must be of equal length to the corresponding IPv4 subnet list | list | `[]` | no |
 | private\_subnet\_suffix | Suffix to append to private subnets name | string | `"private"` | no |
 | private\_subnet\_tags | Additional tags for the private subnets | map(string) | `{}` | no |
 | private\_subnets | A list of private subnets inside the VPC | list(string) | `[]` | no |
@@ -349,6 +390,8 @@ Sometimes it is handy to have public access to Redshift clusters (for example if
 | public\_inbound\_acl\_rules | Public subnets inbound network ACLs | list(map(string)) | `[ { "cidr_block": "0.0.0.0/0", "from_port": 0, "protocol": "-1", "rule_action": "allow", "rule_number": 100, "to_port": 0 } ]` | no |
 | public\_outbound\_acl\_rules | Public subnets outbound network ACLs | list(map(string)) | `[ { "cidr_block": "0.0.0.0/0", "from_port": 0, "protocol": "-1", "rule_action": "allow", "rule_number": 100, "to_port": 0 } ]` | no |
 | public\_route\_table\_tags | Additional tags for the public route tables | map(string) | `{}` | no |
+| public\_subnet\_assign\_ipv6\_address\_on\_creation | Assign IPv6 address on public subnet, must be disabled to change IPv6 CIDRs. This is the IPv6 equivalent of map_public_ip_on_launch | bool | `"null"` | no |
+| public\_subnet\_ipv6\_prefixes | Assigns IPv6 public subnet id based on the Amazon provided /56 prefix base 10 integer (0-256). Must be of equal length to the corresponding IPv4 subnet list | list | `[]` | no |
 | public\_subnet\_suffix | Suffix to append to public subnets name | string | `"public"` | no |
 | public\_subnet\_tags | Additional tags for the public subnets | map(string) | `{}` | no |
 | public\_subnets | A list of public subnets inside the VPC | list(string) | `[]` | no |
@@ -357,12 +400,21 @@ Sometimes it is handy to have public access to Redshift clusters (for example if
 | redshift\_inbound\_acl\_rules | Redshift subnets inbound network ACL rules | list(map(string)) | `[ { "cidr_block": "0.0.0.0/0", "from_port": 0, "protocol": "-1", "rule_action": "allow", "rule_number": 100, "to_port": 0 } ]` | no |
 | redshift\_outbound\_acl\_rules | Redshift subnets outbound network ACL rules | list(map(string)) | `[ { "cidr_block": "0.0.0.0/0", "from_port": 0, "protocol": "-1", "rule_action": "allow", "rule_number": 100, "to_port": 0 } ]` | no |
 | redshift\_route\_table\_tags | Additional tags for the redshift route tables | map(string) | `{}` | no |
+| redshift\_subnet\_assign\_ipv6\_address\_on\_creation | Assign IPv6 address on redshift subnet, must be disabled to change IPv6 CIDRs. This is the IPv6 equivalent of map_public_ip_on_launch | bool | `"null"` | no |
 | redshift\_subnet\_group\_tags | Additional tags for the redshift subnet group | map(string) | `{}` | no |
+| redshift\_subnet\_ipv6\_prefixes | Assigns IPv6 redshift subnet id based on the Amazon provided /56 prefix base 10 integer (0-256). Must be of equal length to the corresponding IPv4 subnet list | list | `[]` | no |
 | redshift\_subnet\_suffix | Suffix to append to redshift subnets name | string | `"redshift"` | no |
 | redshift\_subnet\_tags | Additional tags for the redshift subnets | map(string) | `{}` | no |
 | redshift\_subnets | A list of redshift subnets | list(string) | `[]` | no |
 | reuse\_nat\_ips | Should be true if you don't want EIPs to be created for your NAT Gateways and will instead pass them in via the 'external_nat_ip_ids' variable | bool | `"false"` | no |
+| sagemaker\_notebook\_endpoint\_private\_dns\_enabled | Whether or not to associate a private hosted zone with the specified VPC for Sagemaker Notebook endpoint | bool | `"false"` | no |
+| sagemaker\_notebook\_endpoint\_region | Region to use for Sagemaker Notebook endpoint | string | `""` | no |
+| sagemaker\_notebook\_endpoint\_security\_group\_ids | The ID of one or more security groups to associate with the network interface for Sagemaker Notebook endpoint | list(string) | `[]` | no |
+| sagemaker\_notebook\_endpoint\_subnet\_ids | The ID of one or more subnets in which to create a network interface for Sagemaker Notebook endpoint. Only a single subnet within an AZ is supported. If omitted, private subnets will be used. | list(string) | `[]` | no |
 | secondary\_cidr\_blocks | List of secondary CIDR blocks to associate with the VPC to extend the IP Address pool | list(string) | `[]` | no |
+| secretsmanager\_endpoint\_private\_dns\_enabled | Whether or not to associate a private hosted zone with the specified VPC for Secrets Manager endpoint | bool | `"false"` | no |
+| secretsmanager\_endpoint\_security\_group\_ids | The ID of one or more security groups to associate with the network interface for Secrets Manager endpoint | list(string) | `[]` | no |
+| secretsmanager\_endpoint\_subnet\_ids | The ID of one or more subnets in which to create a network interface for Secrets Manager endpoint. Only a single subnet within an AZ is supported. If omitted, private subnets will be used. | list(string) | `[]` | no |
 | single\_nat\_gateway | Should be true if you want to provision a single shared NAT Gateway across all of your private networks | bool | `"false"` | no |
 | sns\_endpoint\_private\_dns\_enabled | Whether or not to associate a private hosted zone with the specified VPC for SNS endpoint | bool | `"false"` | no |
 | sns\_endpoint\_security\_group\_ids | The ID of one or more security groups to associate with the network interface for SNS endpoint | list(string) | `[]` | no |
@@ -376,7 +428,14 @@ Sometimes it is handy to have public access to Redshift clusters (for example if
 | ssmmessages\_endpoint\_private\_dns\_enabled | Whether or not to associate a private hosted zone with the specified VPC for SSMMESSAGES endpoint | bool | `"false"` | no |
 | ssmmessages\_endpoint\_security\_group\_ids | The ID of one or more security groups to associate with the network interface for SSMMESSAGES endpoint | list(string) | `[]` | no |
 | ssmmessages\_endpoint\_subnet\_ids | The ID of one or more subnets in which to create a network interface for SSMMESSAGES endpoint. Only a single subnet within an AZ is supported. If omitted, private subnets will be used. | list(string) | `[]` | no |
+| sts\_endpoint\_private\_dns\_enabled | Whether or not to associate a private hosted zone with the specified VPC for STS endpoint | bool | `"false"` | no |
+| sts\_endpoint\_security\_group\_ids | The ID of one or more security groups to associate with the network interface for STS endpoint | list(string) | `[]` | no |
+| sts\_endpoint\_subnet\_ids | The ID of one or more subnets in which to create a network interface for STS endpoint. Only a single subnet within an AZ is supported. If omitted, private subnets will be used. | list(string) | `[]` | no |
 | tags | A map of tags to add to all resources | map(string) | `{}` | no |
+| transferserver\_endpoint\_private\_dns\_enabled | Whether or not to associate a private hosted zone with the specified VPC for Transfer Server endpoint | bool | `"false"` | no |
+| transferserver\_endpoint\_security\_group\_ids | The ID of one or more security groups to associate with the network interface for Transfer Server endpoint | list(string) | `[]` | no |
+| transferserver\_endpoint\_subnet\_ids | The ID of one or more subnets in which to create a network interface for Transfer Server endpoint. Only a single subnet within an AZ is supported. If omitted, private subnets will be used. | list(string) | `[]` | no |
+| vpc\_endpoint\_tags | Additional tags for the VPC Endpoints | map(string) | `{}` | no |
 | vpc\_tags | Additional tags for the VPC | map(string) | `{}` | no |
 | vpn\_gateway\_id | ID of VPN Gateway to attach to the VPC | string | `""` | no |
 | vpn\_gateway\_tags | Additional tags for the VPN gateway | map(string) | `{}` | no |
@@ -392,6 +451,7 @@ Sometimes it is handy to have public access to Redshift clusters (for example if
 | database\_subnet\_group | ID of database subnet group |
 | database\_subnets | List of IDs of database subnets |
 | database\_subnets\_cidr\_blocks | List of cidr_blocks of database subnets |
+| database\_subnets\_ipv6\_cidr\_blocks | List of IPv6 cidr_blocks of database subnets in an IPv6 enabled VPC |
 | default\_network\_acl\_id | The ID of the default network ACL |
 | default\_route\_table\_id | The ID of the default route table |
 | default\_security\_group\_id | The ID of the security group created by default on VPC creation |
@@ -404,6 +464,7 @@ Sometimes it is handy to have public access to Redshift clusters (for example if
 | default\_vpc\_id | The ID of the VPC |
 | default\_vpc\_instance\_tenancy | Tenancy of instances spin up within VPC |
 | default\_vpc\_main\_route\_table\_id | The ID of the main route table associated with this VPC |
+| egress\_only\_internet\_gateway\_id | The ID of the egress only Internet Gateway |
 | elasticache\_network\_acl\_id | ID of the elasticache network ACL |
 | elasticache\_route\_table\_ids | List of IDs of elasticache route tables |
 | elasticache\_subnet\_arns | List of ARNs of elasticache subnets |
@@ -411,12 +472,15 @@ Sometimes it is handy to have public access to Redshift clusters (for example if
 | elasticache\_subnet\_group\_name | Name of elasticache subnet group |
 | elasticache\_subnets | List of IDs of elasticache subnets |
 | elasticache\_subnets\_cidr\_blocks | List of cidr_blocks of elasticache subnets |
+| elasticache\_subnets\_ipv6\_cidr\_blocks | List of IPv6 cidr_blocks of elasticache subnets in an IPv6 enabled VPC |
 | igw\_id | The ID of the Internet Gateway |
 | intra\_network\_acl\_id | ID of the intra network ACL |
 | intra\_route\_table\_ids | List of IDs of intra route tables |
 | intra\_subnet\_arns | List of ARNs of intra subnets |
 | intra\_subnets | List of IDs of intra subnets |
 | intra\_subnets\_cidr\_blocks | List of cidr_blocks of intra subnets |
+| intra\_subnets\_ipv6\_cidr\_blocks | List of IPv6 cidr_blocks of intra subnets in an IPv6 enabled VPC |
+| name | The name of the VPC specified as argument to this module |
 | nat\_ids | List of allocation ID of Elastic IPs created for AWS NAT Gateway |
 | nat\_public\_ips | List of public Elastic IPs created for AWS NAT Gateway |
 | natgw\_ids | List of NAT Gateway IDs |
@@ -425,17 +489,20 @@ Sometimes it is handy to have public access to Redshift clusters (for example if
 | private\_subnet\_arns | List of ARNs of private subnets |
 | private\_subnets | List of IDs of private subnets |
 | private\_subnets\_cidr\_blocks | List of cidr_blocks of private subnets |
+| private\_subnets\_ipv6\_cidr\_blocks | List of IPv6 cidr_blocks of private subnets in an IPv6 enabled VPC |
 | public\_network\_acl\_id | ID of the public network ACL |
 | public\_route\_table\_ids | List of IDs of public route tables |
 | public\_subnet\_arns | List of ARNs of public subnets |
 | public\_subnets | List of IDs of public subnets |
 | public\_subnets\_cidr\_blocks | List of cidr_blocks of public subnets |
+| public\_subnets\_ipv6\_cidr\_blocks | List of IPv6 cidr_blocks of public subnets in an IPv6 enabled VPC |
 | redshift\_network\_acl\_id | ID of the redshift network ACL |
 | redshift\_route\_table\_ids | List of IDs of redshift route tables |
 | redshift\_subnet\_arns | List of ARNs of redshift subnets |
 | redshift\_subnet\_group | ID of redshift subnet group |
 | redshift\_subnets | List of IDs of redshift subnets |
 | redshift\_subnets\_cidr\_blocks | List of cidr_blocks of redshift subnets |
+| redshift\_subnets\_ipv6\_cidr\_blocks | List of IPv6 cidr_blocks of redshift subnets in an IPv6 enabled VPC |
 | vgw\_id | The ID of the VPN Gateway |
 | vpc\_arn | The ARN of the VPC |
 | vpc\_cidr\_block | The CIDR block of the VPC |
@@ -447,6 +514,15 @@ Sometimes it is handy to have public access to Redshift clusters (for example if
 | vpc\_endpoint\_cloudtrail\_dns\_entry | The DNS entries for the VPC Endpoint for CloudTrail. |
 | vpc\_endpoint\_cloudtrail\_id | The ID of VPC endpoint for CloudTrail |
 | vpc\_endpoint\_cloudtrail\_network\_interface\_ids | One or more network interfaces for the VPC Endpoint for CloudTrail. |
+| vpc\_endpoint\_codebuild\_dns\_entry | The DNS entries for the VPC Endpoint for codebuild. |
+| vpc\_endpoint\_codebuild\_id | The ID of VPC endpoint for codebuild |
+| vpc\_endpoint\_codebuild\_network\_interface\_ids | One or more network interfaces for the VPC Endpoint for codebuild. |
+| vpc\_endpoint\_codecommit\_dns\_entry | The DNS entries for the VPC Endpoint for codecommit. |
+| vpc\_endpoint\_codecommit\_id | The ID of VPC endpoint for codecommit |
+| vpc\_endpoint\_codecommit\_network\_interface\_ids | One or more network interfaces for the VPC Endpoint for codecommit. |
+| vpc\_endpoint\_config\_dns\_entry | The DNS entries for the VPC Endpoint for config. |
+| vpc\_endpoint\_config\_id | The ID of VPC endpoint for config |
+| vpc\_endpoint\_config\_network\_interface\_ids | One or more network interfaces for the VPC Endpoint for config. |
 | vpc\_endpoint\_dynamodb\_id | The ID of VPC endpoint for DynamoDB |
 | vpc\_endpoint\_dynamodb\_pl\_id | The prefix list for the DynamoDB VPC endpoint. |
 | vpc\_endpoint\_ec2\_dns\_entry | The DNS entries for the VPC Endpoint for EC2. |
@@ -476,6 +552,18 @@ Sometimes it is handy to have public access to Redshift clusters (for example if
 | vpc\_endpoint\_events\_dns\_entry | The DNS entries for the VPC Endpoint for CloudWatch Events. |
 | vpc\_endpoint\_events\_id | The ID of VPC endpoint for CloudWatch Events |
 | vpc\_endpoint\_events\_network\_interface\_ids | One or more network interfaces for the VPC Endpoint for CloudWatch Events. |
+| vpc\_endpoint\_git\_codecommit\_dns\_entry | The DNS entries for the VPC Endpoint for git_codecommit. |
+| vpc\_endpoint\_git\_codecommit\_id | The ID of VPC endpoint for git_codecommit |
+| vpc\_endpoint\_git\_codecommit\_network\_interface\_ids | One or more network interfaces for the VPC Endpoint for git_codecommit. |
+| vpc\_endpoint\_glue\_dns\_entry | The DNS entries for the VPC Endpoint for Glue. |
+| vpc\_endpoint\_glue\_id | The ID of VPC endpoint for Glue |
+| vpc\_endpoint\_glue\_network\_interface\_ids | One or more network interfaces for the VPC Endpoint for Glue. |
+| vpc\_endpoint\_kinesis\_firehose\_dns\_entry | The DNS entries for the VPC Endpoint for Kinesis Firehose. |
+| vpc\_endpoint\_kinesis\_firehose\_id | The ID of VPC endpoint for Kinesis Firehose |
+| vpc\_endpoint\_kinesis\_firehose\_network\_interface\_ids | One or more network interfaces for the VPC Endpoint for Kinesis Firehose. |
+| vpc\_endpoint\_kinesis\_streams\_dns\_entry | The DNS entries for the VPC Endpoint for Kinesis Streams. |
+| vpc\_endpoint\_kinesis\_streams\_id | The ID of VPC endpoint for Kinesis Streams |
+| vpc\_endpoint\_kinesis\_streams\_network\_interface\_ids | One or more network interfaces for the VPC Endpoint for Kinesis Streams. |
 | vpc\_endpoint\_kms\_dns\_entry | The DNS entries for the VPC Endpoint for KMS. |
 | vpc\_endpoint\_kms\_id | The ID of VPC endpoint for KMS |
 | vpc\_endpoint\_kms\_network\_interface\_ids | One or more network interfaces for the VPC Endpoint for KMS. |
@@ -487,6 +575,9 @@ Sometimes it is handy to have public access to Redshift clusters (for example if
 | vpc\_endpoint\_monitoring\_network\_interface\_ids | One or more network interfaces for the VPC Endpoint for CloudWatch Monitoring. |
 | vpc\_endpoint\_s3\_id | The ID of VPC endpoint for S3 |
 | vpc\_endpoint\_s3\_pl\_id | The prefix list for the S3 VPC endpoint. |
+| vpc\_endpoint\_secretsmanager\_dns\_entry | The DNS entries for the VPC Endpoint for secretsmanager. |
+| vpc\_endpoint\_secretsmanager\_id | The ID of VPC endpoint for secretsmanager |
+| vpc\_endpoint\_secretsmanager\_network\_interface\_ids | One or more network interfaces for the VPC Endpoint for secretsmanager. |
 | vpc\_endpoint\_sns\_dns\_entry | The DNS entries for the VPC Endpoint for SNS. |
 | vpc\_endpoint\_sns\_id | The ID of VPC endpoint for SNS |
 | vpc\_endpoint\_sns\_network\_interface\_ids | One or more network interfaces for the VPC Endpoint for SNS. |
@@ -499,8 +590,16 @@ Sometimes it is handy to have public access to Redshift clusters (for example if
 | vpc\_endpoint\_ssmmessages\_dns\_entry | The DNS entries for the VPC Endpoint for SSMMESSAGES. |
 | vpc\_endpoint\_ssmmessages\_id | The ID of VPC endpoint for SSMMESSAGES |
 | vpc\_endpoint\_ssmmessages\_network\_interface\_ids | One or more network interfaces for the VPC Endpoint for SSMMESSAGES. |
+| vpc\_endpoint\_sts\_dns\_entry | The DNS entries for the VPC Endpoint for STS. |
+| vpc\_endpoint\_sts\_id | The ID of VPC endpoint for STS |
+| vpc\_endpoint\_sts\_network\_interface\_ids | One or more network interfaces for the VPC Endpoint for STS. |
+| vpc\_endpoint\_transferserver\_dns\_entry | The DNS entries for the VPC Endpoint for transferserver. |
+| vpc\_endpoint\_transferserver\_id | The ID of VPC endpoint for transferserver |
+| vpc\_endpoint\_transferserver\_network\_interface\_ids | One or more network interfaces for the VPC Endpoint for transferserver |
 | vpc\_id | The ID of the VPC |
 | vpc\_instance\_tenancy | Tenancy of instances spin up within VPC |
+| vpc\_ipv6\_association\_id | The association ID for the IPv6 CIDR block |
+| vpc\_ipv6\_cidr\_block | The IPv6 CIDR block |
 | vpc\_main\_route\_table\_id | The ID of the main route table associated with this VPC |
 | vpc\_secondary\_cidr\_blocks | List of secondary CIDR blocks of the VPC |
 

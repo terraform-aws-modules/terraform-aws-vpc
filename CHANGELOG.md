@@ -3,9 +3,23 @@
 
 
 
+<a name="v2.11.0"></a>
+## [v2.11.0] - 2019-09-02
+
+- Added more VPC endpoints (Glue, STS, Sagemaker Notebook), and all missing outputs ([#311](https://github.com/terraform-aws-modules/terraform-aws-vpc/issues/311))
+
+
+<a name="v2.10.0"></a>
+## [v2.10.0] - 2019-09-02
+
+- Updated CHANGELOG
+- Add IPv6 support ([#317](https://github.com/terraform-aws-modules/terraform-aws-vpc/issues/317))
+
+
 <a name="v2.9.0"></a>
 ## [v2.9.0] - 2019-07-21
 
+- Updated CHANGELOG
 - Fixed README after merge
 - Output var.name ([#303](https://github.com/terraform-aws-modules/terraform-aws-vpc/issues/303))
 
@@ -631,7 +645,9 @@
 - Initial commit
 
 
-[Unreleased]: https://github.com/terraform-aws-modules/terraform-aws-vpc/compare/v2.9.0...HEAD
+[Unreleased]: https://github.com/terraform-aws-modules/terraform-aws-vpc/compare/v2.11.0...HEAD
+[v2.11.0]: https://github.com/terraform-aws-modules/terraform-aws-vpc/compare/v2.10.0...v2.11.0
+[v2.10.0]: https://github.com/terraform-aws-modules/terraform-aws-vpc/compare/v2.9.0...v2.10.0
 [v2.9.0]: https://github.com/terraform-aws-modules/terraform-aws-vpc/compare/v2.8.0...v2.9.0
 [v2.8.0]: https://github.com/terraform-aws-modules/terraform-aws-vpc/compare/v2.7.0...v2.8.0
 [v2.7.0]: https://github.com/terraform-aws-modules/terraform-aws-vpc/compare/v2.6.0...v2.7.0
