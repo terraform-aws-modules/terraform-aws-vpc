@@ -903,6 +903,84 @@ variable "kinesis_firehose_endpoint_private_dns_enabled" {
   default     = false
 }
 
+variable "enable_glue_endpoint" {
+  description = "Should be true if you want to provision a Glue endpoint to the VPC"
+  type        = bool
+  default     = false
+}
+
+variable "glue_endpoint_security_group_ids" {
+  description = "The ID of one or more security groups to associate with the network interface for Glue endpoint"
+  type        = list(string)
+  default     = []
+}
+
+variable "glue_endpoint_subnet_ids" {
+  description = "The ID of one or more subnets in which to create a network interface for Glue endpoint. Only a single subnet within an AZ is supported. If omitted, private subnets will be used."
+  type        = list(string)
+  default     = []
+}
+
+variable "glue_endpoint_private_dns_enabled" {
+  description = "Whether or not to associate a private hosted zone with the specified VPC for Glue endpoint"
+  type        = bool
+  default     = false
+}
+
+variable "enable_sagemaker_notebook_endpoint" {
+  description = "Should be true if you want to provision a Sagemaker Notebook endpoint to the VPC"
+  type        = bool
+  default     = false
+}
+
+variable "sagemaker_notebook_endpoint_region" {
+  description = "Region to use for Sagemaker Notebook endpoint"
+  type        = string
+  default     = ""
+}
+
+variable "sagemaker_notebook_endpoint_security_group_ids" {
+  description = "The ID of one or more security groups to associate with the network interface for Sagemaker Notebook endpoint"
+  type        = list(string)
+  default     = []
+}
+
+variable "sagemaker_notebook_endpoint_subnet_ids" {
+  description = "The ID of one or more subnets in which to create a network interface for Sagemaker Notebook endpoint. Only a single subnet within an AZ is supported. If omitted, private subnets will be used."
+  type        = list(string)
+  default     = []
+}
+
+variable "sagemaker_notebook_endpoint_private_dns_enabled" {
+  description = "Whether or not to associate a private hosted zone with the specified VPC for Sagemaker Notebook endpoint"
+  type        = bool
+  default     = false
+}
+
+variable "enable_sts_endpoint" {
+  description = "Should be true if you want to provision a STS endpoint to the VPC"
+  type        = bool
+  default     = false
+}
+
+variable "sts_endpoint_security_group_ids" {
+  description = "The ID of one or more security groups to associate with the network interface for STS endpoint"
+  type        = list(string)
+  default     = []
+}
+
+variable "sts_endpoint_subnet_ids" {
+  description = "The ID of one or more subnets in which to create a network interface for STS endpoint. Only a single subnet within an AZ is supported. If omitted, private subnets will be used."
+  type        = list(string)
+  default     = []
+}
+
+variable "sts_endpoint_private_dns_enabled" {
+  description = "Whether or not to associate a private hosted zone with the specified VPC for STS endpoint"
+  type        = bool
+  default     = false
+}
+
 variable "map_public_ip_on_launch" {
   description = "Should be false if you do not want to auto-assign public IP on launch"
   type        = bool
