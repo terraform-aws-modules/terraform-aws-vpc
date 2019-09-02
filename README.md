@@ -195,7 +195,8 @@ Sometimes it is handy to have public access to Redshift clusters (for example if
 This module is able to provision the collection of VPC Flow Logs by setting `enable_flow_log = true`.
 The [default behaviour](https://github.com/terraform-aws-modules/terraform-aws-vpc/tree/master/examples/complete-vpc) will push the Flow Logs to a CloudWatch log group that gets created together the required IAM role.
 Through the module's arguments it is possible to pass in an existing [CloudWatch log group](https://github.com/terraform-aws-modules/terraform-aws-vpc/tree/master/examples/vpc-flow-provided-cloudwatch-log-group) and/or an existing [IAM role](https://github.com/terraform-aws-modules/terraform-aws-vpc/tree/master/examples/vpc-flow-provided-cloudwatch-role) to be used instead of creating these resources.
-It is also possible to pass in a [S3 bucket](https://github.com/terraform-aws-modules/terraform-aws-vpc/tree/master/examples/vpc-flow-provided-s3-bucket) as the destination for the logs, instead of a CloudWatch log group.
+It is also possible to push FLow Logs to S3.
+To that end the module allows for a [S3 bucket](https://github.com/terraform-aws-modules/terraform-aws-vpc/tree/master/examples/vpc-flow-provided-s3-bucket) to be proivided as the destination for the logs, or to [have it created by the module](https://github.com/terraform-aws-modules/terraform-aws-vpc/tree/master/examples/vpc-flow-create-s3-bucket).
 
 ## Examples
 
@@ -206,6 +207,7 @@ It is also possible to pass in a [S3 bucket](https://github.com/terraform-aws-mo
 * [Flow Log CloudWatch log group provided](https://github.com/terraform-aws-modules/terraform-aws-vpc/tree/master/examples/vpc-flow-provided-cloudwatch-log-group)
 * [Flow Log IAM role for CloudWatch provided](https://github.com/terraform-aws-modules/terraform-aws-vpc/tree/master/examples/vpc-flow-provided-cloudwatch-role)
 * [Flow Log S3 bucket provided](https://github.com/terraform-aws-modules/terraform-aws-vpc/tree/master/examples/vpc-flow-provided-s3-bucket)
+* [Flow Log create S3 bucket](https://github.com/terraform-aws-modules/terraform-aws-vpc/tree/master/examples/vpc-flow-create-s3-bucket)
 * Few tests and edge cases examples: [#46](https://github.com/terraform-aws-modules/terraform-aws-vpc/tree/master/examples/issue-46-no-private-subnets), [#44](https://github.com/terraform-aws-modules/terraform-aws-vpc/tree/master/examples/issue-44-asymmetric-private-subnets), [#108](https://github.com/terraform-aws-modules/terraform-aws-vpc/tree/master/examples/issue-108-route-already-exists)
 
 <!-- BEGINNING OF PRE-COMMIT-TERRAFORM DOCS HOOK -->

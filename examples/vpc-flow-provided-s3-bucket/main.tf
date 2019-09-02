@@ -23,11 +23,11 @@ module "vpc" {
   enable_nat_gateway = true
   single_nat_gateway = true
 
-  enable_flow_log = true
+  enable_flow_log                      = true
   create_flow_log_cloudwatch_log_group = false
-  create_flow_log_cloudwatch_iam_role = false
-  flow_log_destination_type = "s3"
-  flow_log_destination_arn = aws_s3_bucket.vpf_flow_log.arn
+  create_flow_log_cloudwatch_iam_role  = false
+  push_flow_log_to_s3                  = true
+  flow_log_destination_arn             = aws_s3_bucket.vpf_flow_log.arn
 
   tags = {
     Owner       = "user"
@@ -38,6 +38,8 @@ module "vpc" {
 resource "aws_s3_bucket" "vpf_flow_log" {
   bucket = "aws-vpc-module-test-flow-logs"
   policy = data.aws_iam_policy_document.flow_log_s3.json
+
+  force_destroy = true
 }
 
 data "aws_iam_policy_document" "flow_log_s3" {

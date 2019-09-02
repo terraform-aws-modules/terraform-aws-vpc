@@ -1402,10 +1402,10 @@ variable "flow_log_traffic_type" {
   default     = "ALL"
 }
 
-variable "flow_log_destination_type" {
-  description = "The type of the logging destination. Valid values: cloud-watch-logs, s3."
-  type        = string
-  default     = "cloud-watch-logs"
+variable "push_flow_log_to_s3" {
+  description = "Whether or not to change the default behaviour from pushing logs to CloudWatch to pushing to S3"
+  type        = bool
+  default     = false
 }
 
 variable "flow_log_destination_arn" {
@@ -1432,4 +1432,14 @@ variable "flow_log_cloudwatch_iam_role_arn" {
   default     = ""
 }
 
+variable "create_flow_log_s3_bucket" {
+  description = "Whether or not to create an S3 bucket to push the VPC Flow Logs to"
+  type        = bool
+  default     = false
+}
 
+variable "flow_log_force_destroy_s3_bucket" {
+  description = "Whether or not to force destroy the Flow Logs S3 bucket created by this module"
+  type        = bool
+  default     = false
+}
