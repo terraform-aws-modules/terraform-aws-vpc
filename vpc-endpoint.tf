@@ -790,12 +790,12 @@ resource "aws_vpc_endpoint" "codepipeline" {
 }
 
 #######################
-# VPC Endpoint for appmesh_envoy_management
+# VPC Endpoint for AppMesh
 #######################
 data "aws_vpc_endpoint_service" "appmesh_envoy_management" {
   count = "${var.create_vpc && var.enable_appmesh_envoy_management_endpoint ? 1: 0}"
 
-  service = "appmesh_envoy_management"
+  service = "appmesh-envoy-management"
 }
 
 resource "aws_vpc_endpoint" "appmesh_envoy_management" {
