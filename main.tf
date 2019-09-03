@@ -7,7 +7,8 @@ locals {
   nat_gateway_count = "${var.single_nat_gateway ? 1 : (var.one_nat_gateway_per_az ? length(var.azs) : local.max_subnet_length)}"
 
   # Use `local.vpc_id` to give a hint to Terraform that subnets should be deleted before secondary CIDR blocks can be free!
-  vpc_id = "${element(concat(aws_vpc_ipv4_cidr_block_association.this.*.vpc_id, aws_vpc.this.*.id, list("")), 0)}"
+  vpc_id    = "${element(concat(aws_vpc_ipv4_cidr_block_association.this.*.vpc_id, aws_vpc.this.*.id, list("")), 0)}"
+  vpce_tags = "${merge(var.tags, var.vpc_endpoint_tags)}"
 }
 
 ######
@@ -122,7 +123,7 @@ resource "aws_route_table" "database" {
 }
 
 resource "aws_route" "database_internet_gateway" {
-  count = "${var.create_vpc && var.create_database_subnet_route_table && length(var.database_subnets) > 0 && var.create_database_internet_gateway_route && !var.create_database_nat_gateway_route ? 1 : 0}"
+  count = "${var.create_vpc && var.create_database_subnet_route_table && length(var.database_subnets) > 0 && var.create_database_internet_gateway_route && ! var.create_database_nat_gateway_route ? 1 : 0}"
 
   route_table_id         = "${aws_route_table.database.id}"
   destination_cidr_block = "0.0.0.0/0"
@@ -134,7 +135,7 @@ resource "aws_route" "database_internet_gateway" {
 }
 
 resource "aws_route" "database_nat_gateway" {
-  count                  = "${var.create_vpc && var.create_database_subnet_route_table && length(var.database_subnets) > 0 && !var.create_database_internet_gateway_route && var.create_database_nat_gateway_route && var.enable_nat_gateway ? local.nat_gateway_count : 0}"
+  count                  = "${var.create_vpc && var.create_database_subnet_route_table && length(var.database_subnets) > 0 && ! var.create_database_internet_gateway_route && var.create_database_nat_gateway_route && var.enable_nat_gateway ? local.nat_gateway_count : 0}"
   route_table_id         = "${element(aws_route_table.private.*.id, count.index)}"
   destination_cidr_block = "0.0.0.0/0"
   nat_gateway_id         = "${element(aws_nat_gateway.this.*.id, count.index)}"
@@ -181,7 +182,7 @@ resource "aws_route_table" "intra" {
 # Public subnet
 ################
 resource "aws_subnet" "public" {
-  count = "${var.create_vpc && length(var.public_subnets) > 0 && (!var.one_nat_gateway_per_az || length(var.public_subnets) >= length(var.azs)) ? length(var.public_subnets) : 0}"
+  count = "${var.create_vpc && length(var.public_subnets) > 0 && (! var.one_nat_gateway_per_az || length(var.public_subnets) >= length(var.azs)) ? length(var.public_subnets) : 0}"
 
   vpc_id                  = "${local.vpc_id}"
   cidr_block              = "${element(concat(var.public_subnets, list("")), count.index)}"
@@ -582,7 +583,7 @@ locals {
 }
 
 resource "aws_eip" "nat" {
-  count = "${var.create_vpc && (var.enable_nat_gateway && !var.reuse_nat_ips) ? local.nat_gateway_count : 0}"
+  count = "${var.create_vpc && (var.enable_nat_gateway && ! var.reuse_nat_ips) ? local.nat_gateway_count : 0}"
 
   vpc = true
 
@@ -612,248 +613,6 @@ resource "aws_route" "private_nat_gateway" {
   }
 }
 
-######################
-# VPC Endpoint for S3
-######################
-data "aws_vpc_endpoint_service" "s3" {
-  count = "${var.create_vpc && var.enable_s3_endpoint ? 1 : 0}"
-
-  service = "s3"
-}
-
-resource "aws_vpc_endpoint" "s3" {
-  count = "${var.create_vpc && var.enable_s3_endpoint ? 1 : 0}"
-
-  vpc_id       = "${local.vpc_id}"
-  service_name = "${data.aws_vpc_endpoint_service.s3.service_name}"
-}
-
-resource "aws_vpc_endpoint_route_table_association" "private_s3" {
-  count = "${var.create_vpc && var.enable_s3_endpoint ? local.nat_gateway_count : 0}"
-
-  vpc_endpoint_id = "${aws_vpc_endpoint.s3.id}"
-  route_table_id  = "${element(aws_route_table.private.*.id, count.index)}"
-}
-
-resource "aws_vpc_endpoint_route_table_association" "intra_s3" {
-  count = "${var.create_vpc && var.enable_s3_endpoint && length(var.intra_subnets) > 0 ? 1 : 0}"
-
-  vpc_endpoint_id = "${aws_vpc_endpoint.s3.id}"
-  route_table_id  = "${element(aws_route_table.intra.*.id, 0)}"
-}
-
-resource "aws_vpc_endpoint_route_table_association" "public_s3" {
-  count = "${var.create_vpc && var.enable_s3_endpoint && length(var.public_subnets) > 0 ? 1 : 0}"
-
-  vpc_endpoint_id = "${aws_vpc_endpoint.s3.id}"
-  route_table_id  = "${aws_route_table.public.id}"
-}
-
-############################
-# VPC Endpoint for DynamoDB
-############################
-data "aws_vpc_endpoint_service" "dynamodb" {
-  count = "${var.create_vpc && var.enable_dynamodb_endpoint ? 1 : 0}"
-
-  service = "dynamodb"
-}
-
-resource "aws_vpc_endpoint" "dynamodb" {
-  count = "${var.create_vpc && var.enable_dynamodb_endpoint ? 1 : 0}"
-
-  vpc_id       = "${local.vpc_id}"
-  service_name = "${data.aws_vpc_endpoint_service.dynamodb.service_name}"
-}
-
-resource "aws_vpc_endpoint_route_table_association" "private_dynamodb" {
-  count = "${var.create_vpc && var.enable_dynamodb_endpoint ? local.nat_gateway_count : 0}"
-
-  vpc_endpoint_id = "${aws_vpc_endpoint.dynamodb.id}"
-  route_table_id  = "${element(aws_route_table.private.*.id, count.index)}"
-}
-
-resource "aws_vpc_endpoint_route_table_association" "intra_dynamodb" {
-  count = "${var.create_vpc && var.enable_dynamodb_endpoint && length(var.intra_subnets) > 0 ? 1 : 0}"
-
-  vpc_endpoint_id = "${aws_vpc_endpoint.dynamodb.id}"
-  route_table_id  = "${element(aws_route_table.intra.*.id, 0)}"
-}
-
-resource "aws_vpc_endpoint_route_table_association" "public_dynamodb" {
-  count = "${var.create_vpc && var.enable_dynamodb_endpoint && length(var.public_subnets) > 0 ? 1 : 0}"
-
-  vpc_endpoint_id = "${aws_vpc_endpoint.dynamodb.id}"
-  route_table_id  = "${aws_route_table.public.id}"
-}
-
-#######################
-# VPC Endpoint for SSM
-#######################
-data "aws_vpc_endpoint_service" "ssm" {
-  count = "${var.create_vpc && var.enable_ssm_endpoint ? 1 : 0}"
-
-  service = "ssm"
-}
-
-resource "aws_vpc_endpoint" "ssm" {
-  count = "${var.create_vpc && var.enable_ssm_endpoint ? 1 : 0}"
-
-  vpc_id            = "${local.vpc_id}"
-  service_name      = "${data.aws_vpc_endpoint_service.ssm.service_name}"
-  vpc_endpoint_type = "Interface"
-
-  security_group_ids  = ["${var.ssm_endpoint_security_group_ids}"]
-  subnet_ids          = ["${coalescelist(var.ssm_endpoint_subnet_ids, aws_subnet.private.*.id)}"]
-  private_dns_enabled = "${var.ssm_endpoint_private_dns_enabled}"
-}
-
-###############################
-# VPC Endpoint for SSMMESSAGES
-###############################
-data "aws_vpc_endpoint_service" "ssmmessages" {
-  count = "${var.create_vpc && var.enable_ssmmessages_endpoint ? 1 : 0}"
-
-  service = "ssmmessages"
-}
-
-resource "aws_vpc_endpoint" "ssmmessages" {
-  count = "${var.create_vpc && var.enable_ssmmessages_endpoint ? 1 : 0}"
-
-  vpc_id            = "${local.vpc_id}"
-  service_name      = "${data.aws_vpc_endpoint_service.ssmmessages.service_name}"
-  vpc_endpoint_type = "Interface"
-
-  security_group_ids  = ["${var.ssmmessages_endpoint_security_group_ids}"]
-  subnet_ids          = ["${coalescelist(var.ssmmessages_endpoint_subnet_ids, aws_subnet.private.*.id)}"]
-  private_dns_enabled = "${var.ssmmessages_endpoint_private_dns_enabled}"
-}
-
-#######################
-# VPC Endpoint for EC2
-#######################
-data "aws_vpc_endpoint_service" "ec2" {
-  count = "${var.create_vpc && var.enable_ec2_endpoint ? 1 : 0}"
-
-  service = "ec2"
-}
-
-resource "aws_vpc_endpoint" "ec2" {
-  count = "${var.create_vpc && var.enable_ec2_endpoint ? 1 : 0}"
-
-  vpc_id            = "${local.vpc_id}"
-  service_name      = "${data.aws_vpc_endpoint_service.ec2.service_name}"
-  vpc_endpoint_type = "Interface"
-
-  security_group_ids  = ["${var.ec2_endpoint_security_group_ids}"]
-  subnet_ids          = ["${coalescelist(var.ec2_endpoint_subnet_ids, aws_subnet.private.*.id)}"]
-  private_dns_enabled = "${var.ec2_endpoint_private_dns_enabled}"
-}
-
-###############################
-# VPC Endpoint for EC2MESSAGES
-###############################
-data "aws_vpc_endpoint_service" "ec2messages" {
-  count = "${var.create_vpc && var.enable_ec2messages_endpoint ? 1 : 0}"
-
-  service = "ec2messages"
-}
-
-resource "aws_vpc_endpoint" "ec2messages" {
-  count = "${var.create_vpc && var.enable_ec2messages_endpoint ? 1 : 0}"
-
-  vpc_id            = "${local.vpc_id}"
-  service_name      = "${data.aws_vpc_endpoint_service.ec2messages.service_name}"
-  vpc_endpoint_type = "Interface"
-
-  security_group_ids  = ["${var.ec2messages_endpoint_security_group_ids}"]
-  subnet_ids          = ["${coalescelist(var.ec2messages_endpoint_subnet_ids, aws_subnet.private.*.id)}"]
-  private_dns_enabled = "${var.ec2messages_endpoint_private_dns_enabled}"
-}
-
-###########################
-# VPC Endpoint for ECR API
-###########################
-data "aws_vpc_endpoint_service" "ecr_api" {
-  count = "${var.create_vpc && var.enable_ecr_api_endpoint ? 1 : 0}"
-
-  service = "ecr.api"
-}
-
-resource "aws_vpc_endpoint" "ecr_api" {
-  count = "${var.create_vpc && var.enable_ecr_api_endpoint ? 1 : 0}"
-
-  vpc_id            = "${local.vpc_id}"
-  service_name      = "${data.aws_vpc_endpoint_service.ecr_api.service_name}"
-  vpc_endpoint_type = "Interface"
-
-  security_group_ids  = ["${var.ecr_api_endpoint_security_group_ids}"]
-  subnet_ids          = ["${coalescelist(var.ecr_api_endpoint_subnet_ids, aws_subnet.private.*.id)}"]
-  private_dns_enabled = "${var.ecr_api_endpoint_private_dns_enabled}"
-}
-
-###########################
-# VPC Endpoint for ECR DKR
-###########################
-data "aws_vpc_endpoint_service" "ecr_dkr" {
-  count = "${var.create_vpc && var.enable_ecr_dkr_endpoint ? 1 : 0}"
-
-  service = "ecr.dkr"
-}
-
-resource "aws_vpc_endpoint" "ecr_dkr" {
-  count = "${var.create_vpc && var.enable_ecr_dkr_endpoint ? 1 : 0}"
-
-  vpc_id            = "${local.vpc_id}"
-  service_name      = "${data.aws_vpc_endpoint_service.ecr_dkr.service_name}"
-  vpc_endpoint_type = "Interface"
-
-  security_group_ids  = ["${var.ecr_dkr_endpoint_security_group_ids}"]
-  subnet_ids          = ["${coalescelist(var.ecr_dkr_endpoint_subnet_ids, aws_subnet.private.*.id)}"]
-  private_dns_enabled = "${var.ecr_dkr_endpoint_private_dns_enabled}"
-}
-
-#######################
-# VPC Endpoint for API Gateway
-#######################
-data "aws_vpc_endpoint_service" "apigw" {
-  count = "${var.create_vpc && var.enable_apigw_endpoint ? 1 : 0}"
-
-  service = "execute-api"
-}
-
-resource "aws_vpc_endpoint" "apigw" {
-  count = "${var.create_vpc && var.enable_apigw_endpoint ? 1 : 0}"
-
-  vpc_id            = "${local.vpc_id}"
-  service_name      = "${data.aws_vpc_endpoint_service.apigw.service_name}"
-  vpc_endpoint_type = "Interface"
-
-  security_group_ids  = ["${var.apigw_endpoint_security_group_ids}"]
-  subnet_ids          = ["${coalescelist(var.apigw_endpoint_subnet_ids, aws_subnet.private.*.id)}"]
-  private_dns_enabled = "${var.apigw_endpoint_private_dns_enabled}"
-}
-
-#######################
-# VPC Endpoint for KMS
-#######################
-data "aws_vpc_endpoint_service" "kms" {
-  count = "${var.create_vpc && var.enable_kms_endpoint ? 1 : 0}"
-
-  service = "kms"
-}
-
-resource "aws_vpc_endpoint" "kms" {
-  count = "${var.create_vpc && var.enable_kms_endpoint ? 1 : 0}"
-
-  vpc_id            = "${local.vpc_id}"
-  service_name      = "${data.aws_vpc_endpoint_service.kms.service_name}"
-  vpc_endpoint_type = "Interface"
-
-  security_group_ids  = ["${var.kms_endpoint_security_group_ids}"]
-  subnet_ids          = ["${coalescelist(var.kms_endpoint_subnet_ids, aws_subnet.private.*.id)}"]
-  private_dns_enabled = "${var.kms_endpoint_private_dns_enabled}"
-}
-
 ##########################
 # Route table association
 ##########################
@@ -872,7 +631,7 @@ resource "aws_route_table_association" "database" {
 }
 
 resource "aws_route_table_association" "redshift" {
-  count = "${var.create_vpc && length(var.redshift_subnets) > 0 && !var.enable_public_redshift ? length(var.redshift_subnets) : 0}"
+  count = "${var.create_vpc && length(var.redshift_subnets) > 0 && ! var.enable_public_redshift ? length(var.redshift_subnets) : 0}"
 
   subnet_id      = "${element(aws_subnet.redshift.*.id, count.index)}"
   route_table_id = "${element(coalescelist(aws_route_table.redshift.*.id, aws_route_table.private.*.id), (var.single_nat_gateway || var.create_redshift_subnet_route_table ? 0 : count.index))}"

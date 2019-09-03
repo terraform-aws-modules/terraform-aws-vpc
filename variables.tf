@@ -184,6 +184,26 @@ variable "enable_s3_endpoint" {
   default     = false
 }
 
+variable "enable_sqs_endpoint" {
+  description = "Should be true if you want to provision an SQS endpoint to the VPC"
+  default     = false
+}
+
+variable "sqs_endpoint_security_group_ids" {
+  description = "The ID of one or more security groups to associate with the network interface for SQS endpoint"
+  default     = []
+}
+
+variable "sqs_endpoint_subnet_ids" {
+  description = "The ID of one or more subnets in which to create a network interface for SQS endpoint. Only a single subnet within an AZ is supported. If omitted, private subnets will be used."
+  default     = []
+}
+
+variable "sqs_endpoint_private_dns_enabled" {
+  description = "Whether or not to associate a private hosted zone with the specified VPC for SQS endpoint"
+  default     = false
+}
+
 variable "enable_ssm_endpoint" {
   description = "Should be true if you want to provision an SSM endpoint to the VPC"
   default     = false
@@ -344,6 +364,571 @@ variable "kms_endpoint_private_dns_enabled" {
   default     = false
 }
 
+variable "enable_ecs_endpoint" {
+  description = "Should be true if you want to provision a ECS endpoint to the VPC"
+  default     = false
+}
+
+variable "ecs_endpoint_security_group_ids" {
+  description = "The ID of one or more security groups to associate with the network interface for ECS endpoint"
+  default     = []
+}
+
+variable "ecs_endpoint_subnet_ids" {
+  description = "The ID of one or more subnets in which to create a network interface for ECS endpoint. Only a single subnet within an AZ is supported. If omitted, private subnets will be used."
+  default     = []
+}
+
+variable "ecs_endpoint_private_dns_enabled" {
+  description = "Whether or not to associate a private hosted zone with the specified VPC for ECS endpoint"
+  default     = false
+}
+
+variable "enable_ecs_agent_endpoint" {
+  description = "Should be true if you want to provision a ECS Agent endpoint to the VPC"
+  default     = false
+}
+
+variable "ecs_agent_endpoint_security_group_ids" {
+  description = "The ID of one or more security groups to associate with the network interface for ECS Agent endpoint"
+  default     = []
+}
+
+variable "ecs_agent_endpoint_subnet_ids" {
+  description = "The ID of one or more subnets in which to create a network interface for ECS Agent endpoint. Only a single subnet within an AZ is supported. If omitted, private subnets will be used."
+  default     = []
+}
+
+variable "ecs_agent_endpoint_private_dns_enabled" {
+  description = "Whether or not to associate a private hosted zone with the specified VPC for ECS Agent endpoint"
+  default     = false
+}
+
+variable "enable_ecs_telemetry_endpoint" {
+  description = "Should be true if you want to provision a ECS Telemetry endpoint to the VPC"
+  default     = false
+}
+
+variable "ecs_telemetry_endpoint_security_group_ids" {
+  description = "The ID of one or more security groups to associate with the network interface for ECS Telemetry endpoint"
+  default     = []
+}
+
+variable "ecs_telemetry_endpoint_subnet_ids" {
+  description = "The ID of one or more subnets in which to create a network interface for ECS Telemetry endpoint. Only a single subnet within an AZ is supported. If omitted, private subnets will be used."
+  default     = []
+}
+
+variable "ecs_telemetry_endpoint_private_dns_enabled" {
+  description = "Whether or not to associate a private hosted zone with the specified VPC for ECS Telemetry endpoint"
+  default     = false
+}
+
+variable "enable_logs_endpoint" {
+  description = "Should be true if you want to provision a CloudWatch Logs endpoint to the VPC"
+  default     = false
+}
+
+variable "logs_endpoint_security_group_ids" {
+  description = "The ID of one or more security groups to associate with the network interface for CloudWatch Logs endpoint"
+  default     = []
+}
+
+variable "logs_endpoint_subnet_ids" {
+  description = "The ID of one or more subnets in which to create a network interface for CloudWatch Logs endpoint. Only a single subnet within an AZ is supported. If omitted, private subnets will be used."
+  default     = []
+}
+
+variable "logs_endpoint_private_dns_enabled" {
+  description = "Whether or not to associate a private hosted zone with the specified VPC for CloudWatch Logs endpoint"
+  default     = false
+}
+
+variable "enable_cloudtrail_endpoint" {
+  description = "Should be true if you want to provision a CloudTrail endpoint to the VPC"
+  default     = false
+}
+
+variable "cloudtrail_endpoint_security_group_ids" {
+  description = "The ID of one or more security groups to associate with the network interface for CloudTrail endpoint"
+  default     = []
+}
+
+variable "cloudtrail_endpoint_subnet_ids" {
+  description = "The ID of one or more subnets in which to create a network interface for CloudTrail endpoint. Only a single subnet within an AZ is supported. If omitted, private subnets will be used."
+  default     = []
+}
+
+variable "cloudtrail_endpoint_private_dns_enabled" {
+  description = "Whether or not to associate a private hosted zone with the specified VPC for CloudTrail endpoint"
+  default     = false
+}
+
+variable "enable_elasticloadbalancing_endpoint" {
+  description = "Should be true if you want to provision a Elastic Load Balancing endpoint to the VPC"
+  default     = false
+}
+
+variable "elasticloadbalancing_endpoint_security_group_ids" {
+  description = "The ID of one or more security groups to associate with the network interface for Elastic Load Balancing endpoint"
+  default     = []
+}
+
+variable "elasticloadbalancing_endpoint_subnet_ids" {
+  description = "The ID of one or more subnets in which to create a network interface for Elastic Load Balancing endpoint. Only a single subnet within an AZ is supported. If omitted, private subnets will be used."
+  default     = []
+}
+
+variable "elasticloadbalancing_endpoint_private_dns_enabled" {
+  description = "Whether or not to associate a private hosted zone with the specified VPC for Elastic Load Balancing endpoint"
+  default     = false
+}
+
+variable "enable_sns_endpoint" {
+  description = "Should be true if you want to provision a SNS endpoint to the VPC"
+  default     = false
+}
+
+variable "sns_endpoint_security_group_ids" {
+  description = "The ID of one or more security groups to associate with the network interface for SNS endpoint"
+  default     = []
+}
+
+variable "sns_endpoint_subnet_ids" {
+  description = "The ID of one or more subnets in which to create a network interface for SNS endpoint. Only a single subnet within an AZ is supported. If omitted, private subnets will be used."
+  default     = []
+}
+
+variable "sns_endpoint_private_dns_enabled" {
+  description = "Whether or not to associate a private hosted zone with the specified VPC for SNS endpoint"
+  default     = false
+}
+
+variable "enable_events_endpoint" {
+  description = "Should be true if you want to provision a CloudWatch Events endpoint to the VPC"
+  default     = false
+}
+
+variable "events_endpoint_security_group_ids" {
+  description = "The ID of one or more security groups to associate with the network interface for CloudWatch Events endpoint"
+  default     = []
+}
+
+variable "events_endpoint_subnet_ids" {
+  description = "The ID of one or more subnets in which to create a network interface for CloudWatch Events endpoint. Only a single subnet within an AZ is supported. If omitted, private subnets will be used."
+  default     = []
+}
+
+variable "events_endpoint_private_dns_enabled" {
+  description = "Whether or not to associate a private hosted zone with the specified VPC for CloudWatch Events endpoint"
+  default     = false
+}
+
+variable "enable_monitoring_endpoint" {
+  description = "Should be true if you want to provision a CloudWatch Monitoring endpoint to the VPC"
+  default     = false
+}
+
+variable "monitoring_endpoint_security_group_ids" {
+  description = "The ID of one or more security groups to associate with the network interface for CloudWatch Monitoring endpoint"
+  default     = []
+}
+
+variable "monitoring_endpoint_subnet_ids" {
+  description = "The ID of one or more subnets in which to create a network interface for CloudWatch Monitoring endpoint. Only a single subnet within an AZ is supported. If omitted, private subnets will be used."
+  default     = []
+}
+
+variable "monitoring_endpoint_private_dns_enabled" {
+  description = "Whether or not to associate a private hosted zone with the specified VPC for CloudWatch Monitoring endpoint"
+  default     = false
+}
+
+variable "enable_codebuild_endpoint" {
+  description = "Should be true if you want to provision an CodeBuild endpoint to the VPC"
+  default     = false
+}
+
+variable "codebuild_endpoint_security_group_ids" {
+  description = "The ID of one or more security groups to associate with the network interface for CodeBuild endpoint"
+  default     = []
+}
+
+variable "codebuild_endpoint_subnet_ids" {
+  description = "The ID of one or more subnets in which to create a network interface for CodeBuild endpoint. Only a single subnet within an AZ is supported. If omitted, private subnets will be used."
+  default     = []
+}
+
+variable "codebuild_endpoint_private_dns_enabled" {
+  description = "Whether or not to associate a private hosted zone with the specified VPC for CodeBuild endpoint"
+  default     = false
+}
+
+variable "enable_codecommit_endpoint" {
+  description = "Should be true if you want to provision an CodeCommit endpointto the VPC"
+  default     = false
+}
+
+variable "codecommit_endpoint_security_group_ids" {
+  description = "The ID of one or more security groups to associate with the network interface for CodeCommit endpoint"
+  default     = []
+}
+
+variable "codecommit_endpoint_subnet_ids" {
+  description = "The ID of one or more subnets in which to create a network interface for CodeCommit endpoint. Only a single subnet within an AZ is supported. If omitted, private subnets will be used."
+  default     = []
+}
+
+variable "codecommit_endpoint_private_dns_enabled" {
+  description = "Whether or not to associate a private hosted zone with the specified VPC for CodeCommit endpoint"
+  default     = false
+}
+
+variable "enable_git_codecommit_endpoint" {
+  description = "Should be true if you want to provision an Git CodeCommit endpoint to the VPC"
+  default     = false
+}
+
+variable "git_codecommit_endpoint_security_group_ids" {
+  description = "The ID of one or more security groups to associate with the network interface for Git CodeCommit endpoint"
+  default     = []
+}
+
+variable "git_codecommit_endpoint_subnet_ids" {
+  description = "The ID of one or more subnets in which to create a network interface for Git CodeCommit endpoint. Only a single subnet within an AZ is supported. If omitted, private subnets will be used."
+  default     = []
+}
+
+variable "git_codecommit_endpoint_private_dns_enabled" {
+  description = "Whether or not to associate a private hosted zone with the specified VPC for Git CodeCommit endpoint"
+  default     = false
+}
+
+variable "enable_config_endpoint" {
+  description = "Should be true if you want to provision an Config endpoint to the VPC"
+  default     = false
+}
+
+variable "config_endpoint_security_group_ids" {
+  description = "The ID of one or more security groups to associate with the network interface for Config endpoint"
+  default     = []
+}
+
+variable "config_endpoint_subnet_ids" {
+  description = "The ID of one or more subnets in which to create a network interface for Config endpoint. Only a single subnet within an AZ is supported. If omitted, private subnets will be used."
+  default     = []
+}
+
+variable "config_endpoint_private_dns_enabled" {
+  description = "Whether or not to associate a private hosted zone with the specified VPC for Config endpoint"
+  default     = false
+}
+
+variable "enable_secretsmanager_endpoint" {
+  description = "Should be true if you want to provision an Secrets Manager endpoint to the VPC"
+  default     = false
+}
+
+variable "secretsmanager_endpoint_security_group_ids" {
+  description = "The ID of one or more security groups to associate with the network interface for Secrets Manager endpoint"
+  default     = []
+}
+
+variable "secretsmanager_endpoint_subnet_ids" {
+  description = "The ID of one or more subnets in which to create a network interface for Secrets Manager endpoint. Only a single subnet within an AZ is supported. If omitted, private subnets will be used."
+  default     = []
+}
+
+variable "secretsmanager_endpoint_private_dns_enabled" {
+  description = "Whether or not to associate a private hosted zone with the specified VPC for Secrets Manager endpoint"
+  default     = false
+}
+
+variable "enable_transferserver_endpoint" {
+  description = "Should be true if you want to provision an Transfer Server endpoint to the VPC"
+  default     = false
+}
+
+variable "transferserver_endpoint_security_group_ids" {
+  description = "The ID of one or more security groups to associate with the network interface for Transfer Server endpoint"
+  default     = []
+}
+
+variable "transferserver_endpoint_subnet_ids" {
+  description = "The ID of one or more subnets in which to create a network interface for Transfer Server endpoint. Only a single subnet within an AZ is supported. If omitted, private subnets will be used."
+  default     = []
+}
+
+variable "transferserver_endpoint_private_dns_enabled" {
+  description = "Whether or not to associate a private hosted zone with the specified VPC for Transfer Server endpoint"
+  default     = false
+}
+
+variable "enable_kinesis_streams_endpoint" {
+  description = "Should be true if you want to provision an Kinesis Streams endpoint to the VPC"
+  default     = false
+}
+
+variable "kinesis_streams_endpoint_security_group_ids" {
+  description = "The ID of one or more security groups to associate with the network interface for Kinesis Streams endpoint"
+  default     = []
+}
+
+variable "kinesis_streams_endpoint_subnet_ids" {
+  description = "The ID of one or more subnets in which to create a network interface for Kinesis Streams endpoint. Only a single subnet within an AZ is supported. If omitted, private subnets will be used."
+  default     = []
+}
+
+variable "kinesis_streams_endpoint_private_dns_enabled" {
+  description = "Whether or not to associate a private hosted zone with the specified VPC for Kinesis Streams endpoint"
+  default     = false
+}
+
+variable "enable_kinesis_firehose_endpoint" {
+  description = "Should be true if you want to provision an Kinesis Firehose endpoint to the VPC"
+  default     = false
+}
+
+variable "kinesis_firehose_endpoint_security_group_ids" {
+  description = "The ID of one or more security groups to associate with the network interface for Kinesis Firehose endpoint"
+  default     = []
+}
+
+variable "kinesis_firehose_endpoint_subnet_ids" {
+  description = "The ID of one or more subnets in which to create a network interface for Kinesis Firehose endpoint. Only a single subnet within an AZ is supported. If omitted, private subnets will be used."
+  default     = []
+}
+
+variable "kinesis_firehose_endpoint_private_dns_enabled" {
+  description = "Whether or not to associate a private hosted zone with the specified VPC for Kinesis Firehose endpoint"
+  default     = false
+}
+
+variable "enable_glue_endpoint" {
+  description = "Should be true if you want to provision an Glue endpoint to the VPC"
+  default     = false
+}
+
+variable "glue_endpoint_security_group_ids" {
+  description = "The ID of one or more security groups to associate with the network interface for Glue endpoint"
+  default     = []
+}
+
+variable "glue_endpoint_subnet_ids" {
+  description = "The ID of one or more subnets in which to create a network interface for Glue endpoint. Only a single subnet within an AZ is supported. If omitted, private subnets will be used."
+  default     = []
+}
+
+variable "glue_endpoint_private_dns_enabled" {
+  description = "Whether or not to associate a private hosted zone with the specified VPC for Glue endpoint"
+  default     = false
+}
+
+variable "enable_sagemaker_notebook_endpoint" {
+  description = "Should be true if you want to provision an SageMaker Notebook endpoint to the VPC"
+  default     = false
+}
+
+variable "sagemaker_notebook_endpoint_region" {
+  description = "Region to use for Sagemaker Notebook endpoint"
+  default     = ""
+}
+
+variable "sagemaker_notebook_endpoint_security_group_ids" {
+  description = "The ID of one or more security groups to associate with the network interface for SageMaker Notebook endpoint"
+  default     = []
+}
+
+variable "sagemaker_notebook_endpoint_subnet_ids" {
+  description = "The ID of one or more subnets in which to create a network interface for SageMaker Notebook endpoint. Only a single subnet within an AZ is supported. If omitted, private subnets will be used."
+  default     = []
+}
+
+variable "sagemaker_notebook_endpoint_private_dns_enabled" {
+  description = "Whether or not to associate a private hosted zone with the specified VPC for SageMaker Notebook endpoint"
+  default     = false
+}
+
+variable "enable_sts_endpoint" {
+  description = "Should be true if you want to provision an STS endpoint to the VPC"
+  default     = false
+}
+
+variable "sts_endpoint_security_group_ids" {
+  description = "The ID of one or more security groups to associate with the network interface for STS endpoint"
+  default     = []
+}
+
+variable "sts_endpoint_subnet_ids" {
+  description = "The ID of one or more subnets in which to create a network interface for STS endpoint. Only a single subnet within an AZ is supported. If omitted, private subnets will be used."
+  default     = []
+}
+
+variable "sts_endpoint_private_dns_enabled" {
+  description = "Whether or not to associate a private hosted zone with the specified VPC for STS endpoint"
+  default     = false
+}
+
+variable "enable_cloudformation_endpoint" {
+  description = "Should be true if you want to provision an CloudFormation endpoint to the VPC"
+  default     = false
+}
+
+variable "cloudformation_endpoint_security_group_ids" {
+  description = "The ID of one or more security groups to associate with the network interface for CloudFormation endpoint"
+  default     = []
+}
+
+variable "cloudformation_endpoint_subnet_ids" {
+  description = "The ID of one or more subnets in which to create a network interface for CloudFormation endpoint. Only a single subnet within an AZ is supported. If omitted, private subnets will be used."
+  default     = []
+}
+
+variable "cloudformation_endpoint_private_dns_enabled" {
+  description = "Whether or not to associate a private hosted zone with the specified VPC for CloudFormation endpoint"
+  default     = false
+}
+
+variable "enable_codepipeline_endpoint" {
+  description = "Should be true if you want to provision an CodePipeline endpoint to the VPC"
+  default     = false
+}
+
+variable "codepipeline_endpoint_security_group_ids" {
+  description = "The ID of one or more security groups to associate with the network interface for CodePipeline endpoint"
+  default     = []
+}
+
+variable "codepipeline_endpoint_subnet_ids" {
+  description = "The ID of one or more subnets in which to create a network interface for CodePipeline endpoint. Only a single subnet within an AZ is supported. If omitted, private subnets will be used."
+  default     = []
+}
+
+variable "codepipeline_endpoint_private_dns_enabled" {
+  description = "Whether or not to associate a private hosted zone with the specified VPC for CodePipeline endpoint"
+  default     = false
+}
+
+variable "enable_appmesh_envoy_management_endpoint" {
+  description = "Should be true if you want to provision an APPMESH Envoy Management endpoint to the VPC"
+  default     = false
+}
+
+variable "appmesh_envoy_management_endpoint_security_group_ids" {
+  description = "The ID of one or more security groups to associate with the network interface for APPMESH Envoy Management endpoint"
+  default     = []
+}
+
+variable "appmesh_envoy_management_endpoint_subnet_ids" {
+  description = "The ID of one or more subnets in which to create a network interface for APPMESH Envoy Management endpoint. Only a single subnet within an AZ is supported. If omitted, private subnets will be used."
+  default     = []
+}
+
+variable "appmesh_envoy_management_endpoint_private_dns_enabled" {
+  description = "Whether or not to associate a private hosted zone with the specified VPC for APPMESH Envoy Management endpoint"
+  default     = false
+}
+
+variable "enable_servicecatalog_endpoint" {
+  description = "Should be true if you want to provision an Service Catalog endpoint to the VPC"
+  default     = false
+}
+
+variable "servicecatalog_endpoint_security_group_ids" {
+  description = "The ID of one or more security groups to associate with the network interface for Service Catalog endpoint"
+  default     = []
+}
+
+variable "servicecatalog_endpoint_subnet_ids" {
+  description = "The ID of one or more subnets in which to create a network interface for Service Catalog endpoint. Only a single subnet within an AZ is supported. If omitted, private subnets will be used."
+  default     = []
+}
+
+variable "servicecatalog_endpoint_private_dns_enabled" {
+  description = "Whether or not to associate a private hosted zone with the specified VPC for Service Catalog endpoint"
+  default     = false
+}
+
+variable "enable_storagegateway_endpoint" {
+  description = "Should be true if you want to provision an Storage Gateway endpoint to the VPC"
+  default     = false
+}
+
+variable "storagegateway_endpoint_security_group_ids" {
+  description = "The ID of one or more security groups to associate with the network interface for Storage Gateway endpoint"
+  default     = []
+}
+
+variable "storagegateway_endpoint_subnet_ids" {
+  description = "The ID of one or more subnets in which to create a network interface for Storage Gateway endpoint. Only a single subnet within an AZ is supported. If omitted, private subnets will be used."
+  default     = []
+}
+
+variable "storagegateway_endpoint_private_dns_enabled" {
+  description = "Whether or not to associate a private hosted zone with the specified VPC for Storage Gateway endpoint"
+  default     = false
+}
+
+variable "enable_transfer_endpoint" {
+  description = "Should be true if you want to provision an Transfer endpoint to the VPC"
+  default     = false
+}
+
+variable "transfer_endpoint_security_group_ids" {
+  description = "The ID of one or more security groups to associate with the network interface for Transfer endpoint"
+  default     = []
+}
+
+variable "transfer_endpoint_subnet_ids" {
+  description = "The ID of one or more subnets in which to create a network interface for Transfer endpoint. Only a single subnet within an AZ is supported. Ifomitted, private subnets will be used."
+  default     = []
+}
+
+variable "transfer_endpoint_private_dns_enabled" {
+  description = "Whether or not to associate a private hosted zone with the specified VPC for Transfer endpoint"
+  default     = false
+}
+
+variable "enable_sagemaker_api_endpoint" {
+  description = "Should be true if you want to provision an Sagemaker API endpoint to the VPC"
+  default     = false
+}
+
+variable "sagemaker_api_endpoint_security_group_ids" {
+  description = "The ID of one or more security groups to associate with the network interface for Sagemaker API endpoint"
+  default     = []
+}
+
+variable "sagemaker_api_endpoint_subnet_ids" {
+  description = "The ID of one or more subnets in which to create a network interface for Sagemaker API endpoint. Only a single subnet within an AZ is supported. If omitted, private subnets will be used."
+  default     = []
+}
+
+variable "sagemaker_api_endpoint_private_dns_enabled" {
+  description = "Whether or not to associate a private hosted zone with the specified VPC for Sagemaker API endpoint"
+  default     = false
+}
+
+variable "enable_sagemaker_runtime_endpoint" {
+  description = "Should be true if you want to provision an Sagemaker Runtime endpoint to the VPC"
+  default     = false
+}
+
+variable "sagemaker_runtime_endpoint_security_group_ids" {
+  description = "The ID of one or more security groups to associate with the network interface for Sagemaker Runtime endpoint"
+  default     = []
+}
+
+variable "sagemaker_runtime_endpoint_subnet_ids" {
+  description = "The ID of one or more subnets in which to create a network interface for Sagemaker Runtime endpoint. Only a single subnet within an AZ is supported. If omitted, private subnets will be used."
+  default     = []
+}
+
+variable "sagemaker_runtime_endpoint_private_dns_enabled" {
+  description = "Whether or not to associate a private hosted zone with the specified VPC for Sagemaker Runtime endpoint"
+  default     = false
+}
+
 variable "map_public_ip_on_launch" {
   description = "Should be false if you do not want to auto-assign public IP on launch"
   default     = true
@@ -490,7 +1075,7 @@ variable "elasticache_acl_tags" {
 }
 
 variable "dhcp_options_tags" {
-  description = "Additional tags for the DHCP option set"
+  description = "Additional tags for the DHCP option set (requires enable_dhcp_options set to true)"
   default     = {}
 }
 
@@ -509,36 +1094,41 @@ variable "vpn_gateway_tags" {
   default     = {}
 }
 
+variable "vpc_endpoint_tags" {
+  description = "Additional tags for the VPC Endpoints"
+  default     = {}
+}
+
 variable "enable_dhcp_options" {
   description = "Should be true if you want to specify a DHCP options set with a custom domain name, DNS servers, NTP servers, netbios servers, and/or netbios server type"
   default     = false
 }
 
 variable "dhcp_options_domain_name" {
-  description = "Specifies DNS name for DHCP options set"
+  description = "Specifies DNS name for DHCP options set (requires enable_dhcp_options set to true)"
   default     = ""
 }
 
 variable "dhcp_options_domain_name_servers" {
-  description = "Specify a list of DNS server addresses for DHCP options set, default to AWS provided"
+  description = "Specify a list of DNS server addresses for DHCP options set, default to AWS provided (requires enable_dhcp_options set to true)"
 
   default = ["AmazonProvidedDNS"]
 }
 
 variable "dhcp_options_ntp_servers" {
-  description = "Specify a list of NTP servers for DHCP options set"
+  description = "Specify a list of NTP servers for DHCP options set (requires enable_dhcp_options set to true)"
 
   default = []
 }
 
 variable "dhcp_options_netbios_name_servers" {
-  description = "Specify a list of netbios servers for DHCP options set"
+  description = "Specify a list of netbios servers for DHCP options set (requires enable_dhcp_options set to true)"
 
   default = []
 }
 
 variable "dhcp_options_netbios_node_type" {
-  description = "Specify netbios node_type for DHCP options set"
+  description = "Specify netbios node_type for DHCP options set (requires enable_dhcp_options set to true)"
   default     = ""
 }
 
