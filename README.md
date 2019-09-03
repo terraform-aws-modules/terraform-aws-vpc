@@ -17,7 +17,11 @@ These types of resources are supported:
 * [VPC Endpoint](https://www.terraform.io/docs/providers/aws/r/vpc_endpoint.html):
   * Gateway: S3, DynamoDB
   * Interface: EC2, SSM, EC2 Messages, SSM Messages, SQS, ECR API, ECR DKR, API Gateway, KMS, 
-ECS, ECS Agent, ECS Telemetry, SNS, STS, Glue, CloudWatch(Monitoring, Logs, Events), Elastic Load Balancing, CloudTrail, Secrets Manager, Config, Codebuild, Codecommit, Git-Codecommit, Transfer Server, Kinesis Streams, Kinesis Firehose, Sagemaker Notebook
+ECS, ECS Agent, ECS Telemetry, SNS, STS, Glue, CloudWatch(Monitoring, Logs, Events), 
+Elastic Load Balancing, CloudTrail, Secrets Manager, Config, CodeBuild, CodeCommit, 
+Git-Codecommit, Transfer Server, Kinesis Streams, Kinesis Firehose, SageMaker(Notebook, Runtime, API), 
+CloudFormation, CodePipeline, Storage Gateway, AppMesh, Transfer, Service Catalog
+
 * [RDS DB Subnet Group](https://www.terraform.io/docs/providers/aws/r/db_subnet_group.html)
 * [ElastiCache Subnet Group](https://www.terraform.io/docs/providers/aws/r/elasticache_subnet_group.html)
 * [Redshift Subnet Group](https://www.terraform.io/docs/providers/aws/r/redshift_subnet_group.html)
@@ -209,9 +213,15 @@ Sometimes it is handy to have public access to Redshift clusters (for example if
 | apigw\_endpoint\_private\_dns\_enabled | Whether or not to associate a private hosted zone with the specified VPC for API GW endpoint | bool | `"false"` | no |
 | apigw\_endpoint\_security\_group\_ids | The ID of one or more security groups to associate with the network interface for API GW  endpoint | list(string) | `[]` | no |
 | apigw\_endpoint\_subnet\_ids | The ID of one or more subnets in which to create a network interface for API GW endpoint. Only a single subnet within an AZ is supported. If omitted, private subnets will be used. | list(string) | `[]` | no |
+| appmesh\_envoy\_management\_endpoint\_private\_dns\_enabled | Whether or not to associate a private hosted zone with the specified VPC for AppMesh endpoint | bool | `"false"` | no |
+| appmesh\_envoy\_management\_endpoint\_security\_group\_ids | The ID of one or more security groups to associate with the network interface for AppMesh endpoint | list(string) | `[]` | no |
+| appmesh\_envoy\_management\_endpoint\_subnet\_ids | The ID of one or more subnets in which to create a network interface for AppMesh endpoint. Only a single subnet within an AZ is supported. If omitted, private subnets will be used. | list(string) | `[]` | no |
 | assign\_ipv6\_address\_on\_creation | Assign IPv6 address on subnet, must be disabled to change IPv6 CIDRs. This is the IPv6 equivalent of map_public_ip_on_launch | bool | `"false"` | no |
 | azs | A list of availability zones in the region | list(string) | `[]` | no |
 | cidr | The CIDR block for the VPC. Default value is a valid CIDR, but not acceptable by AWS and should be overridden | string | `"0.0.0.0/0"` | no |
+| cloudformation\_endpoint\_private\_dns\_enabled | Whether or not to associate a private hosted zone with the specified VPC for Cloudformation endpoint | bool | `"false"` | no |
+| cloudformation\_endpoint\_security\_group\_ids | The ID of one or more security groups to associate with the network interface for Cloudformation endpoint | list(string) | `[]` | no |
+| cloudformation\_endpoint\_subnet\_ids | The ID of one or more subnets in which to create a network interface for Cloudformation endpoint. Only a single subnet within an AZ is supported. If omitted, private subnets will be used. | list(string) | `[]` | no |
 | cloudtrail\_endpoint\_private\_dns\_enabled | Whether or not to associate a private hosted zone with the specified VPC for CloudTrail endpoint | bool | `"false"` | no |
 | cloudtrail\_endpoint\_security\_group\_ids | The ID of one or more security groups to associate with the network interface for CloudTrail endpoint | list(string) | `[]` | no |
 | cloudtrail\_endpoint\_subnet\_ids | The ID of one or more subnets in which to create a network interface for CloudTrail endpoint. Only a single subnet within an AZ is supported. If omitted, private subnets will be used. | list(string) | `[]` | no |
@@ -221,6 +231,9 @@ Sometimes it is handy to have public access to Redshift clusters (for example if
 | codecommit\_endpoint\_private\_dns\_enabled | Whether or not to associate a private hosted zone with the specified VPC for Codecommit endpoint | string | `"false"` | no |
 | codecommit\_endpoint\_security\_group\_ids | The ID of one or more security groups to associate with the network interface for Codecommit endpoint | list | `[]` | no |
 | codecommit\_endpoint\_subnet\_ids | The ID of one or more subnets in which to create a network interface for Codecommit endpoint. Only a single subnet within an AZ is supported. If omitted, private subnets will be used. | list | `[]` | no |
+| codepipeline\_endpoint\_private\_dns\_enabled | Whether or not to associate a private hosted zone with the specified VPC for CodePipeline endpoint | bool | `"false"` | no |
+| codepipeline\_endpoint\_security\_group\_ids | The ID of one or more security groups to associate with the network interface for CodePipeline endpoint | list(string) | `[]` | no |
+| codepipeline\_endpoint\_subnet\_ids | The ID of one or more subnets in which to create a network interface for CodePipeline endpoint. Only a single subnet within an AZ is supported. If omitted, private subnets will be used. | list(string) | `[]` | no |
 | config\_endpoint\_private\_dns\_enabled | Whether or not to associate a private hosted zone with the specified VPC for config endpoint | string | `"false"` | no |
 | config\_endpoint\_security\_group\_ids | The ID of one or more security groups to associate with the network interface for config endpoint | list | `[]` | no |
 | config\_endpoint\_subnet\_ids | The ID of one or more subnets in which to create a network interface for config endpoint. Only a single subnet within an AZ is supported. If omitted, private subnets will be used. | list | `[]` | no |
@@ -294,11 +307,14 @@ Sometimes it is handy to have public access to Redshift clusters (for example if
 | elasticloadbalancing\_endpoint\_security\_group\_ids | The ID of one or more security groups to associate with the network interface for Elastic Load Balancing endpoint | list(string) | `[]` | no |
 | elasticloadbalancing\_endpoint\_subnet\_ids | The ID of one or more subnets in which to create a network interface for Elastic Load Balancing endpoint. Only a single subnet within an AZ is supported. If omitted, private subnets will be used. | list(string) | `[]` | no |
 | enable\_apigw\_endpoint | Should be true if you want to provision an api gateway endpoint to the VPC | bool | `"false"` | no |
+| enable\_appmesh\_envoy\_management\_endpoint | Should be true if you want to provision a AppMesh endpoint to the VPC | bool | `"false"` | no |
 | enable\_classiclink | Should be true to enable ClassicLink for the VPC. Only valid in regions and accounts that support EC2 Classic. | bool | `"null"` | no |
 | enable\_classiclink\_dns\_support | Should be true to enable ClassicLink DNS Support for the VPC. Only valid in regions and accounts that support EC2 Classic. | bool | `"null"` | no |
+| enable\_cloudformation\_endpoint | Should be true if you want to provision a Cloudformation endpoint to the VPC | bool | `"false"` | no |
 | enable\_cloudtrail\_endpoint | Should be true if you want to provision a CloudTrail endpoint to the VPC | bool | `"false"` | no |
 | enable\_codebuild\_endpoint | Should be true if you want to provision an Codebuild endpoint to the VPC | string | `"false"` | no |
 | enable\_codecommit\_endpoint | Should be true if you want to provision an Codecommit endpoint to the VPC | string | `"false"` | no |
+| enable\_codepipeline\_endpoint | Should be true if you want to provision a CodePipeline endpoint to the VPC | bool | `"false"` | no |
 | enable\_config\_endpoint | Should be true if you want to provision an config endpoint to the VPC | string | `"false"` | no |
 | enable\_dhcp\_options | Should be true if you want to specify a DHCP options set with a custom domain name, DNS servers, NTP servers, netbios servers, and/or netbios server type | bool | `"false"` | no |
 | enable\_dns\_hostnames | Should be true to enable DNS hostnames in the VPC | bool | `"false"` | no |
@@ -324,13 +340,18 @@ Sometimes it is handy to have public access to Redshift clusters (for example if
 | enable\_nat\_gateway | Should be true if you want to provision NAT Gateways for each of your private networks | bool | `"false"` | no |
 | enable\_public\_redshift | Controls if redshift should have public routing table | bool | `"false"` | no |
 | enable\_s3\_endpoint | Should be true if you want to provision an S3 endpoint to the VPC | bool | `"false"` | no |
+| enable\_sagemaker\_api\_endpoint | Should be true if you want to provision a SageMaker API endpoint to the VPC | bool | `"false"` | no |
 | enable\_sagemaker\_notebook\_endpoint | Should be true if you want to provision a Sagemaker Notebook endpoint to the VPC | bool | `"false"` | no |
+| enable\_sagemaker\_runtime\_endpoint | Should be true if you want to provision a SageMaker Runtime endpoint to the VPC | bool | `"false"` | no |
 | enable\_secretsmanager\_endpoint | Should be true if you want to provision an Secrets Manager endpoint to the VPC | bool | `"false"` | no |
+| enable\_servicecatalog\_endpoint | Should be true if you want to provision a Service Catalog endpoint to the VPC | bool | `"false"` | no |
 | enable\_sns\_endpoint | Should be true if you want to provision a SNS endpoint to the VPC | bool | `"false"` | no |
 | enable\_sqs\_endpoint | Should be true if you want to provision an SQS endpoint to the VPC | string | `"false"` | no |
 | enable\_ssm\_endpoint | Should be true if you want to provision an SSM endpoint to the VPC | bool | `"false"` | no |
 | enable\_ssmmessages\_endpoint | Should be true if you want to provision a SSMMESSAGES endpoint to the VPC | bool | `"false"` | no |
+| enable\_storagegateway\_endpoint | Should be true if you want to provision a Storage Gateway endpoint to the VPC | bool | `"false"` | no |
 | enable\_sts\_endpoint | Should be true if you want to provision a STS endpoint to the VPC | bool | `"false"` | no |
+| enable\_transfer\_endpoint | Should be true if you want to provision a Transfer endpoint tothe VPC | bool | `"false"` | no |
 | enable\_transferserver\_endpoint | Should be true if you want to provision a Transer Server endpoint to the VPC | bool | `"false"` | no |
 | enable\_vpn\_gateway | Should be true if you want to create a new VPN Gateway resource and attach it to the VPC | bool | `"false"` | no |
 | events\_endpoint\_private\_dns\_enabled | Whether or not to associate a private hosted zone with the specified VPC for CloudWatch Events endpoint | bool | `"false"` | no |
@@ -411,14 +432,23 @@ Sometimes it is handy to have public access to Redshift clusters (for example if
 | redshift\_subnet\_tags | Additional tags for the redshift subnets | map(string) | `{}` | no |
 | redshift\_subnets | A list of redshift subnets | list(string) | `[]` | no |
 | reuse\_nat\_ips | Should be true if you don't want EIPs to be created for your NAT Gateways and will instead pass them in via the 'external_nat_ip_ids' variable | bool | `"false"` | no |
+| sagemaker\_api\_endpoint\_private\_dns\_enabled | Whether or not to associate a private hosted zone with the specified VPC for SageMaker API endpoint | bool | `"false"` | no |
+| sagemaker\_api\_endpoint\_security\_group\_ids | The ID of one or more security groups to associate with the network interface for SageMaker API endpoint | list(string) | `[]` | no |
+| sagemaker\_api\_endpoint\_subnet\_ids | The ID of one or more subnets in which to create a network interface for SageMaker API endpoint. Only a single subnet within an AZ is supported. If omitted, private subnets will be used. | list(string) | `[]` | no |
 | sagemaker\_notebook\_endpoint\_private\_dns\_enabled | Whether or not to associate a private hosted zone with the specified VPC for Sagemaker Notebook endpoint | bool | `"false"` | no |
 | sagemaker\_notebook\_endpoint\_region | Region to use for Sagemaker Notebook endpoint | string | `""` | no |
 | sagemaker\_notebook\_endpoint\_security\_group\_ids | The ID of one or more security groups to associate with the network interface for Sagemaker Notebook endpoint | list(string) | `[]` | no |
 | sagemaker\_notebook\_endpoint\_subnet\_ids | The ID of one or more subnets in which to create a network interface for Sagemaker Notebook endpoint. Only a single subnet within an AZ is supported. If omitted, private subnets will be used. | list(string) | `[]` | no |
+| sagemaker\_runtime\_endpoint\_private\_dns\_enabled | Whether or not to associate a private hosted zone with the specified VPC for SageMaker Runtime endpoint | bool | `"false"` | no |
+| sagemaker\_runtime\_endpoint\_security\_group\_ids | The ID of one or more security groups to associate with the network interface for SageMaker Runtime endpoint | list(string) | `[]` | no |
+| sagemaker\_runtime\_endpoint\_subnet\_ids | The ID of one or more subnets in which to create a network interface for SageMaker Runtime endpoint. Only a single subnet within an AZ is supported. If omitted, private subnets will be used. | list(string) | `[]` | no |
 | secondary\_cidr\_blocks | List of secondary CIDR blocks to associate with the VPC to extend the IP Address pool | list(string) | `[]` | no |
 | secretsmanager\_endpoint\_private\_dns\_enabled | Whether or not to associate a private hosted zone with the specified VPC for Secrets Manager endpoint | bool | `"false"` | no |
 | secretsmanager\_endpoint\_security\_group\_ids | The ID of one or more security groups to associate with the network interface for Secrets Manager endpoint | list(string) | `[]` | no |
 | secretsmanager\_endpoint\_subnet\_ids | The ID of one or more subnets in which to create a network interface for Secrets Manager endpoint. Only a single subnet within an AZ is supported. If omitted, private subnets will be used. | list(string) | `[]` | no |
+| servicecatalog\_endpoint\_private\_dns\_enabled | Whether or not to associate a private hosted zone with the specified VPC for Service Catalog endpoint | bool | `"false"` | no |
+| servicecatalog\_endpoint\_security\_group\_ids | The ID of one or more security groups to associate with the network interface for Service Catalog endpoint | list(string) | `[]` | no |
+| servicecatalog\_endpoint\_subnet\_ids | The ID of one or more subnets in which to create a network interface for Service Catalog endpoint. Only a single subnet within an AZ is supported. If omitted, private subnets will be used. | list(string) | `[]` | no |
 | single\_nat\_gateway | Should be true if you want to provision a single shared NAT Gateway across all of your private networks | bool | `"false"` | no |
 | sns\_endpoint\_private\_dns\_enabled | Whether or not to associate a private hosted zone with the specified VPC for SNS endpoint | bool | `"false"` | no |
 | sns\_endpoint\_security\_group\_ids | The ID of one or more security groups to associate with the network interface for SNS endpoint | list(string) | `[]` | no |
@@ -432,10 +462,16 @@ Sometimes it is handy to have public access to Redshift clusters (for example if
 | ssmmessages\_endpoint\_private\_dns\_enabled | Whether or not to associate a private hosted zone with the specified VPC for SSMMESSAGES endpoint | bool | `"false"` | no |
 | ssmmessages\_endpoint\_security\_group\_ids | The ID of one or more security groups to associate with the network interface for SSMMESSAGES endpoint | list(string) | `[]` | no |
 | ssmmessages\_endpoint\_subnet\_ids | The ID of one or more subnets in which to create a network interface for SSMMESSAGES endpoint. Only a single subnet within an AZ is supported. If omitted, private subnets will be used. | list(string) | `[]` | no |
+| storagegateway\_endpoint\_private\_dns\_enabled | Whether or not to associate a private hosted zone with the specified VPC for Storage Gateway endpoint | bool | `"false"` | no |
+| storagegateway\_endpoint\_security\_group\_ids | The ID of one or more security groups to associate with the network interface for Storage Gateway endpoint | list(string) | `[]` | no |
+| storagegateway\_endpoint\_subnet\_ids | The ID of one or more subnets in which to create a network interface for Storage Gateway endpoint. Only a single subnet within an AZ is supported. If omitted, private subnets will be used. | list(string) | `[]` | no |
 | sts\_endpoint\_private\_dns\_enabled | Whether or not to associate a private hosted zone with the specified VPC for STS endpoint | bool | `"false"` | no |
 | sts\_endpoint\_security\_group\_ids | The ID of one or more security groups to associate with the network interface for STS endpoint | list(string) | `[]` | no |
 | sts\_endpoint\_subnet\_ids | The ID of one or more subnets in which to create a network interface for STS endpoint. Only a single subnet within an AZ is supported. If omitted, private subnets will be used. | list(string) | `[]` | no |
 | tags | A map of tags to add to all resources | map(string) | `{}` | no |
+| transfer\_endpoint\_private\_dns\_enabled | Whether or not to associate a private hosted zone with the specified VPC for Transfer endpoint | bool | `"false"` | no |
+| transfer\_endpoint\_security\_group\_ids | The ID of one or more security groups to associate with the network interface for Transfer endpoint | list(string) | `[]` | no |
+| transfer\_endpoint\_subnet\_ids | The ID of one or more subnets in which to create a network interface for Transfer endpoint. Only a single subnet within an AZ is supported. Ifomitted, private subnets will be used. | list(string) | `[]` | no |
 | transferserver\_endpoint\_private\_dns\_enabled | Whether or not to associate a private hosted zone with the specified VPC for Transfer Server endpoint | bool | `"false"` | no |
 | transferserver\_endpoint\_security\_group\_ids | The ID of one or more security groups to associate with the network interface for Transfer Server endpoint | list(string) | `[]` | no |
 | transferserver\_endpoint\_subnet\_ids | The ID of one or more subnets in which to create a network interface for Transfer Server endpoint. Only a single subnet within an AZ is supported. If omitted, private subnets will be used. | list(string) | `[]` | no |
@@ -515,6 +551,12 @@ Sometimes it is handy to have public access to Redshift clusters (for example if
 | vpc\_endpoint\_apigw\_dns\_entry | The DNS entries for the VPC Endpoint for APIGW. |
 | vpc\_endpoint\_apigw\_id | The ID of VPC endpoint for APIGW |
 | vpc\_endpoint\_apigw\_network\_interface\_ids | One or more network interfaces for the VPC Endpoint for APIGW. |
+| vpc\_endpoint\_appmesh\_envoy\_management\_dns\_entry | The DNS entries for the VPC Endpoint for AppMesh. |
+| vpc\_endpoint\_appmesh\_envoy\_management\_id | The ID of VPC endpoint for AppMesh |
+| vpc\_endpoint\_appmesh\_envoy\_management\_network\_interface\_ids | One or more network interfaces for the VPC Endpoint for AppMesh. |
+| vpc\_endpoint\_cloudformation\_dns\_entry | The DNS entries for the VPC Endpoint for Cloudformation. |
+| vpc\_endpoint\_cloudformation\_id | The ID of VPC endpoint for Cloudformation |
+| vpc\_endpoint\_cloudformation\_network\_interface\_ids | One or more network interfaces for the VPC Endpoint for Cloudformation. |
 | vpc\_endpoint\_cloudtrail\_dns\_entry | The DNS entries for the VPC Endpoint for CloudTrail. |
 | vpc\_endpoint\_cloudtrail\_id | The ID of VPC endpoint for CloudTrail |
 | vpc\_endpoint\_cloudtrail\_network\_interface\_ids | One or more network interfaces for the VPC Endpoint for CloudTrail. |
@@ -524,6 +566,9 @@ Sometimes it is handy to have public access to Redshift clusters (for example if
 | vpc\_endpoint\_codecommit\_dns\_entry | The DNS entries for the VPC Endpoint for codecommit. |
 | vpc\_endpoint\_codecommit\_id | The ID of VPC endpoint for codecommit |
 | vpc\_endpoint\_codecommit\_network\_interface\_ids | One or more network interfaces for the VPC Endpoint for codecommit. |
+| vpc\_endpoint\_codepipeline\_dns\_entry | The DNS entries for the VPC Endpoint for CodePipeline. |
+| vpc\_endpoint\_codepipeline\_id | The ID of VPC endpoint for CodePipeline |
+| vpc\_endpoint\_codepipeline\_network\_interface\_ids | One or more network interfaces for the VPC Endpoint for CodePipeline. |
 | vpc\_endpoint\_config\_dns\_entry | The DNS entries for the VPC Endpoint for config. |
 | vpc\_endpoint\_config\_id | The ID of VPC endpoint for config |
 | vpc\_endpoint\_config\_network\_interface\_ids | One or more network interfaces for the VPC Endpoint for config. |
@@ -579,9 +624,18 @@ Sometimes it is handy to have public access to Redshift clusters (for example if
 | vpc\_endpoint\_monitoring\_network\_interface\_ids | One or more network interfaces for the VPC Endpoint for CloudWatch Monitoring. |
 | vpc\_endpoint\_s3\_id | The ID of VPC endpoint for S3 |
 | vpc\_endpoint\_s3\_pl\_id | The prefix list for the S3 VPC endpoint. |
+| vpc\_endpoint\_sagemaker\_api\_dns\_entry | The DNS entries for the VPC Endpoint for SageMaker API. |
+| vpc\_endpoint\_sagemaker\_api\_id | The ID of VPC endpoint for SageMaker API |
+| vpc\_endpoint\_sagemaker\_api\_network\_interface\_ids | One or more network interfaces for the VPC Endpoint for SageMaker API. |
+| vpc\_endpoint\_sagemaker\_runtime\_dns\_entry | The DNS entries for the VPC Endpoint for SageMaker Runtime. |
+| vpc\_endpoint\_sagemaker\_runtime\_id | The ID of VPC endpoint for SageMaker Runtime |
+| vpc\_endpoint\_sagemaker\_runtime\_network\_interface\_ids | One or more network interfaces for the VPC Endpoint for SageMaker Runtime. |
 | vpc\_endpoint\_secretsmanager\_dns\_entry | The DNS entries for the VPC Endpoint for secretsmanager. |
 | vpc\_endpoint\_secretsmanager\_id | The ID of VPC endpoint for secretsmanager |
 | vpc\_endpoint\_secretsmanager\_network\_interface\_ids | One or more network interfaces for the VPC Endpoint for secretsmanager. |
+| vpc\_endpoint\_servicecatalog\_dns\_entry | The DNS entries for the VPC Endpoint for Service Catalog. |
+| vpc\_endpoint\_servicecatalog\_id | The ID of VPC endpoint for Service Catalog |
+| vpc\_endpoint\_servicecatalog\_network\_interface\_ids | One or more network interfaces for the VPC Endpoint for Service Catalog. |
 | vpc\_endpoint\_sns\_dns\_entry | The DNS entries for the VPC Endpoint for SNS. |
 | vpc\_endpoint\_sns\_id | The ID of VPC endpoint for SNS |
 | vpc\_endpoint\_sns\_network\_interface\_ids | One or more network interfaces for the VPC Endpoint for SNS. |
@@ -594,9 +648,15 @@ Sometimes it is handy to have public access to Redshift clusters (for example if
 | vpc\_endpoint\_ssmmessages\_dns\_entry | The DNS entries for the VPC Endpoint for SSMMESSAGES. |
 | vpc\_endpoint\_ssmmessages\_id | The ID of VPC endpoint for SSMMESSAGES |
 | vpc\_endpoint\_ssmmessages\_network\_interface\_ids | One or more network interfaces for the VPC Endpoint for SSMMESSAGES. |
+| vpc\_endpoint\_storagegateway\_dns\_entry | The DNS entries for the VPC Endpoint for Storage Gateway. |
+| vpc\_endpoint\_storagegateway\_id | The ID of VPC endpoint for Storage Gateway |
+| vpc\_endpoint\_storagegateway\_network\_interface\_ids | One or more network interfaces for the VPC Endpoint for Storage Gateway. |
 | vpc\_endpoint\_sts\_dns\_entry | The DNS entries for the VPC Endpoint for STS. |
 | vpc\_endpoint\_sts\_id | The ID of VPC endpoint for STS |
 | vpc\_endpoint\_sts\_network\_interface\_ids | One or more network interfaces for the VPC Endpoint for STS. |
+| vpc\_endpoint\_transfer\_dns\_entry | The DNS entries for the VPC Endpoint for Transfer. |
+| vpc\_endpoint\_transfer\_id | The ID of VPC endpoint for Transfer |
+| vpc\_endpoint\_transfer\_network\_interface\_ids | One or more network interfaces for the VPC Endpoint for Transfer. |
 | vpc\_endpoint\_transferserver\_dns\_entry | The DNS entries for the VPC Endpoint for transferserver. |
 | vpc\_endpoint\_transferserver\_id | The ID of VPC endpoint for transferserver |
 | vpc\_endpoint\_transferserver\_network\_interface\_ids | One or more network interfaces for the VPC Endpoint for transferserver |
