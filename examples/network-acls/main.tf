@@ -14,11 +14,13 @@ module "vpc" {
   public_subnets      = ["10.0.101.0/24", "10.0.102.0/24", "10.0.103.0/24"]
   elasticache_subnets = ["10.0.201.0/24", "10.0.202.0/24", "10.0.203.0/24"]
 
-  public_dedicated_network_acl = true
-  public_inbound_acl_rules     = "${concat(local.network_acls["default_inbound"], local.network_acls["public_inbound"])}"
-  public_outbound_acl_rules    = "${concat(local.network_acls["default_outbound"], local.network_acls["public_outbound"])}"
+  public_dedicated_network_acl   = true
+  public_inbound_acl_rules       = "${concat(local.network_acls["default_inbound"], local.network_acls["public_inbound"])}"
+  public_outbound_acl_rules      = "${concat(local.network_acls["default_outbound"], local.network_acls["public_outbound"])}"
+  elasticache_outbound_acl_rules = "${concat(local.network_acls["default_outbound"], local.network_acls["elasticache_outbound"])}"
 
-  private_dedicated_network_acl = true
+  private_dedicated_network_acl     = true
+  elasticache_dedicated_network_acl = true
 
   assign_generated_ipv6_cidr_block = true
 
@@ -96,6 +98,14 @@ locals {
         protocol    = "tcp"
         cidr_block  = "0.0.0.0/0"
       },
+      {
+        rule_number = 140
+        rule_action = "allow"
+        icmp_code   = -1
+        icmp_type   = 0
+        protocol    = "icmp"
+        cidr_block  = "10.0.0.0/22"
+      },
     ]
 
     public_outbound = [
@@ -130,6 +140,41 @@ locals {
         to_port     = 22
         protocol    = "tcp"
         cidr_block  = "10.0.100.0/22"
+      },
+      {
+        rule_number = 140
+        rule_action = "allow"
+        icmp_code   = -1
+        icmp_type   = 8
+        protocol    = "icmp"
+        cidr_block  = "10.0.0.0/22"
+      },
+    ]
+
+    elasticache_outbound = [
+      {
+        rule_number = 100
+        rule_action = "allow"
+        from_port   = 80
+        to_port     = 80
+        protocol    = "tcp"
+        cidr_block  = "0.0.0.0/0"
+      },
+      {
+        rule_number = 110
+        rule_action = "allow"
+        from_port   = 443
+        to_port     = 443
+        protocol    = "tcp"
+        cidr_block  = "0.0.0.0/0"
+      },
+      {
+        rule_number = 140
+        rule_action = "allow"
+        icmp_code   = -1
+        icmp_type   = 12
+        protocol    = "icmp"
+        cidr_block  = "10.0.0.0/22"
       },
     ]
   }
