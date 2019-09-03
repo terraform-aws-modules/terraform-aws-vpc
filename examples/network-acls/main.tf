@@ -26,7 +26,7 @@ module "vpc" {
 
   private_dedicated_network_acl = true
 
-  assign_generated_ipv6_cidr_block = true
+  enable_ipv6 = true
 
   enable_nat_gateway = false
   single_nat_gateway = true
