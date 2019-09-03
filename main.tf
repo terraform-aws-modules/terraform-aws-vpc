@@ -33,6 +33,8 @@ resource "aws_vpc" "this" {
   instance_tenancy                 = var.instance_tenancy
   enable_dns_hostnames             = var.enable_dns_hostnames
   enable_dns_support               = var.enable_dns_support
+  enable_classiclink               = var.enable_classiclink
+  enable_classiclink_dns_support   = var.enable_classiclink_dns_support
   assign_generated_ipv6_cidr_block = var.enable_ipv6
 
   tags = merge(
@@ -548,8 +550,10 @@ resource "aws_network_acl_rule" "public_inbound" {
   egress      = false
   rule_number = var.public_inbound_acl_rules[count.index]["rule_number"]
   rule_action = var.public_inbound_acl_rules[count.index]["rule_action"]
-  from_port   = var.public_inbound_acl_rules[count.index]["from_port"]
-  to_port     = var.public_inbound_acl_rules[count.index]["to_port"]
+  from_port   = lookup(var.public_inbound_acl_rules[count.index], "from_port", null)
+  to_port     = lookup(var.public_inbound_acl_rules[count.index], "to_port", null)
+  icmp_code   = lookup(var.public_inbound_acl_rules[count.index], "icmp_code", null)
+  icmp_type   = lookup(var.public_inbound_acl_rules[count.index], "icmp_type", null)
   protocol    = var.public_inbound_acl_rules[count.index]["protocol"]
   cidr_block  = var.public_inbound_acl_rules[count.index]["cidr_block"]
 }
@@ -562,8 +566,10 @@ resource "aws_network_acl_rule" "public_outbound" {
   egress      = true
   rule_number = var.public_outbound_acl_rules[count.index]["rule_number"]
   rule_action = var.public_outbound_acl_rules[count.index]["rule_action"]
-  from_port   = var.public_outbound_acl_rules[count.index]["from_port"]
-  to_port     = var.public_outbound_acl_rules[count.index]["to_port"]
+  from_port   = lookup(var.public_outbound_acl_rules[count.index], "from_port", null)
+  to_port     = lookup(var.public_outbound_acl_rules[count.index], "to_port", null)
+  icmp_code   = lookup(var.public_outbound_acl_rules[count.index], "icmp_code", null)
+  icmp_type   = lookup(var.public_outbound_acl_rules[count.index], "icmp_type", null)
   protocol    = var.public_outbound_acl_rules[count.index]["protocol"]
   cidr_block  = var.public_outbound_acl_rules[count.index]["cidr_block"]
 }
@@ -594,8 +600,10 @@ resource "aws_network_acl_rule" "private_inbound" {
   egress      = false
   rule_number = var.private_inbound_acl_rules[count.index]["rule_number"]
   rule_action = var.private_inbound_acl_rules[count.index]["rule_action"]
-  from_port   = var.private_inbound_acl_rules[count.index]["from_port"]
-  to_port     = var.private_inbound_acl_rules[count.index]["to_port"]
+  from_port   = lookup(var.private_inbound_acl_rules[count.index], "from_port", null)
+  to_port     = lookup(var.private_inbound_acl_rules[count.index], "to_port", null)
+  icmp_code   = lookup(var.private_inbound_acl_rules[count.index], "icmp_code", null)
+  icmp_type   = lookup(var.private_inbound_acl_rules[count.index], "icmp_type", null)
   protocol    = var.private_inbound_acl_rules[count.index]["protocol"]
   cidr_block  = var.private_inbound_acl_rules[count.index]["cidr_block"]
 }
@@ -608,8 +616,10 @@ resource "aws_network_acl_rule" "private_outbound" {
   egress      = true
   rule_number = var.private_outbound_acl_rules[count.index]["rule_number"]
   rule_action = var.private_outbound_acl_rules[count.index]["rule_action"]
-  from_port   = var.private_outbound_acl_rules[count.index]["from_port"]
-  to_port     = var.private_outbound_acl_rules[count.index]["to_port"]
+  from_port   = lookup(var.private_outbound_acl_rules[count.index], "from_port", null)
+  to_port     = lookup(var.private_outbound_acl_rules[count.index], "to_port", null)
+  icmp_code   = lookup(var.private_outbound_acl_rules[count.index], "icmp_code", null)
+  icmp_type   = lookup(var.private_outbound_acl_rules[count.index], "icmp_type", null)
   protocol    = var.private_outbound_acl_rules[count.index]["protocol"]
   cidr_block  = var.private_outbound_acl_rules[count.index]["cidr_block"]
 }
@@ -640,8 +650,10 @@ resource "aws_network_acl_rule" "intra_inbound" {
   egress      = false
   rule_number = var.intra_inbound_acl_rules[count.index]["rule_number"]
   rule_action = var.intra_inbound_acl_rules[count.index]["rule_action"]
-  from_port   = var.intra_inbound_acl_rules[count.index]["from_port"]
-  to_port     = var.intra_inbound_acl_rules[count.index]["to_port"]
+  from_port   = lookup(var.intra_inbound_acl_rules[count.index], "from_port", null)
+  to_port     = lookup(var.intra_inbound_acl_rules[count.index], "to_port", null)
+  icmp_code   = lookup(var.intra_inbound_acl_rules[count.index], "icmp_code", null)
+  icmp_type   = lookup(var.intra_inbound_acl_rules[count.index], "icmp_type", null)
   protocol    = var.intra_inbound_acl_rules[count.index]["protocol"]
   cidr_block  = var.intra_inbound_acl_rules[count.index]["cidr_block"]
 }
@@ -654,8 +666,10 @@ resource "aws_network_acl_rule" "intra_outbound" {
   egress      = true
   rule_number = var.intra_outbound_acl_rules[count.index]["rule_number"]
   rule_action = var.intra_outbound_acl_rules[count.index]["rule_action"]
-  from_port   = var.intra_outbound_acl_rules[count.index]["from_port"]
-  to_port     = var.intra_outbound_acl_rules[count.index]["to_port"]
+  from_port   = lookup(var.intra_outbound_acl_rules[count.index], "from_port", null)
+  to_port     = lookup(var.intra_outbound_acl_rules[count.index], "to_port", null)
+  icmp_code   = lookup(var.intra_outbound_acl_rules[count.index], "icmp_code", null)
+  icmp_type   = lookup(var.intra_outbound_acl_rules[count.index], "icmp_type", null)
   protocol    = var.intra_outbound_acl_rules[count.index]["protocol"]
   cidr_block  = var.intra_outbound_acl_rules[count.index]["cidr_block"]
 }
@@ -686,8 +700,10 @@ resource "aws_network_acl_rule" "database_inbound" {
   egress      = false
   rule_number = var.database_inbound_acl_rules[count.index]["rule_number"]
   rule_action = var.database_inbound_acl_rules[count.index]["rule_action"]
-  from_port   = var.database_inbound_acl_rules[count.index]["from_port"]
-  to_port     = var.database_inbound_acl_rules[count.index]["to_port"]
+  from_port   = lookup(var.database_inbound_acl_rules[count.index], "from_port", null)
+  to_port     = lookup(var.database_inbound_acl_rules[count.index], "to_port", null)
+  icmp_code   = lookup(var.database_inbound_acl_rules[count.index], "icmp_code", null)
+  icmp_type   = lookup(var.database_inbound_acl_rules[count.index], "icmp_type", null)
   protocol    = var.database_inbound_acl_rules[count.index]["protocol"]
   cidr_block  = var.database_inbound_acl_rules[count.index]["cidr_block"]
 }
@@ -700,8 +716,10 @@ resource "aws_network_acl_rule" "database_outbound" {
   egress      = true
   rule_number = var.database_outbound_acl_rules[count.index]["rule_number"]
   rule_action = var.database_outbound_acl_rules[count.index]["rule_action"]
-  from_port   = var.database_outbound_acl_rules[count.index]["from_port"]
-  to_port     = var.database_outbound_acl_rules[count.index]["to_port"]
+  from_port   = lookup(var.database_outbound_acl_rules[count.index], "from_port", null)
+  to_port     = lookup(var.database_outbound_acl_rules[count.index], "to_port", null)
+  icmp_code   = lookup(var.database_outbound_acl_rules[count.index], "icmp_code", null)
+  icmp_type   = lookup(var.database_outbound_acl_rules[count.index], "icmp_type", null)
   protocol    = var.database_outbound_acl_rules[count.index]["protocol"]
   cidr_block  = var.database_outbound_acl_rules[count.index]["cidr_block"]
 }
@@ -732,8 +750,10 @@ resource "aws_network_acl_rule" "redshift_inbound" {
   egress      = false
   rule_number = var.redshift_inbound_acl_rules[count.index]["rule_number"]
   rule_action = var.redshift_inbound_acl_rules[count.index]["rule_action"]
-  from_port   = var.redshift_inbound_acl_rules[count.index]["from_port"]
-  to_port     = var.redshift_inbound_acl_rules[count.index]["to_port"]
+  from_port   = lookup(var.redshift_inbound_acl_rules[count.index], "from_port", null)
+  to_port     = lookup(var.redshift_inbound_acl_rules[count.index], "to_port", null)
+  icmp_code   = lookup(var.redshift_inbound_acl_rules[count.index], "icmp_code", null)
+  icmp_type   = lookup(var.redshift_inbound_acl_rules[count.index], "icmp_type", null)
   protocol    = var.redshift_inbound_acl_rules[count.index]["protocol"]
   cidr_block  = var.redshift_inbound_acl_rules[count.index]["cidr_block"]
 }
@@ -746,8 +766,10 @@ resource "aws_network_acl_rule" "redshift_outbound" {
   egress      = true
   rule_number = var.redshift_outbound_acl_rules[count.index]["rule_number"]
   rule_action = var.redshift_outbound_acl_rules[count.index]["rule_action"]
-  from_port   = var.redshift_outbound_acl_rules[count.index]["from_port"]
-  to_port     = var.redshift_outbound_acl_rules[count.index]["to_port"]
+  from_port   = lookup(var.redshift_outbound_acl_rules[count.index], "from_port", null)
+  to_port     = lookup(var.redshift_outbound_acl_rules[count.index], "to_port", null)
+  icmp_code   = lookup(var.redshift_outbound_acl_rules[count.index], "icmp_code", null)
+  icmp_type   = lookup(var.redshift_outbound_acl_rules[count.index], "icmp_type", null)
   protocol    = var.redshift_outbound_acl_rules[count.index]["protocol"]
   cidr_block  = var.redshift_outbound_acl_rules[count.index]["cidr_block"]
 }
@@ -778,8 +800,10 @@ resource "aws_network_acl_rule" "elasticache_inbound" {
   egress      = false
   rule_number = var.elasticache_inbound_acl_rules[count.index]["rule_number"]
   rule_action = var.elasticache_inbound_acl_rules[count.index]["rule_action"]
-  from_port   = var.elasticache_inbound_acl_rules[count.index]["from_port"]
-  to_port     = var.elasticache_inbound_acl_rules[count.index]["to_port"]
+  from_port   = lookup(var.elasticache_inbound_acl_rules[count.index], "from_port", null)
+  to_port     = lookup(var.elasticache_inbound_acl_rules[count.index], "to_port", null)
+  icmp_code   = lookup(var.elasticache_inbound_acl_rules[count.index], "icmp_code", null)
+  icmp_type   = lookup(var.elasticache_inbound_acl_rules[count.index], "icmp_type", null)
   protocol    = var.elasticache_inbound_acl_rules[count.index]["protocol"]
   cidr_block  = var.elasticache_inbound_acl_rules[count.index]["cidr_block"]
 }
@@ -792,8 +816,10 @@ resource "aws_network_acl_rule" "elasticache_outbound" {
   egress      = true
   rule_number = var.elasticache_outbound_acl_rules[count.index]["rule_number"]
   rule_action = var.elasticache_outbound_acl_rules[count.index]["rule_action"]
-  from_port   = var.elasticache_outbound_acl_rules[count.index]["from_port"]
-  to_port     = var.elasticache_outbound_acl_rules[count.index]["to_port"]
+  from_port   = lookup(var.elasticache_outbound_acl_rules[count.index], "from_port", null)
+  to_port     = lookup(var.elasticache_outbound_acl_rules[count.index], "to_port", null)
+  icmp_code   = lookup(var.elasticache_outbound_acl_rules[count.index], "icmp_code", null)
+  icmp_type   = lookup(var.elasticache_outbound_acl_rules[count.index], "icmp_type", null)
   protocol    = var.elasticache_outbound_acl_rules[count.index]["protocol"]
   cidr_block  = var.elasticache_outbound_acl_rules[count.index]["cidr_block"]
 }
