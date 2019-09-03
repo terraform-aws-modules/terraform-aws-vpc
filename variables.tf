@@ -731,7 +731,6 @@ variable "enable_sagemaker_notebook_endpoint" {
 
 variable "sagemaker_notebook_endpoint_region" {
   description = "Region to use for Sagemaker Notebook endpoint"
-  type        = string
   default     = ""
 }
 
@@ -789,6 +788,7 @@ variable "cloudformation_endpoint_private_dns_enabled" {
   description = "Whether or not to associate a private hosted zone with the specified VPC for CloudFormation endpoint"
   default     = false
 }
+
 variable "enable_codepipeline_endpoint" {
   description = "Should be true if you want to provision an CodePipeline endpoint to the VPC"
   default     = false
@@ -808,6 +808,7 @@ variable "codepipeline_endpoint_private_dns_enabled" {
   description = "Whether or not to associate a private hosted zone with the specified VPC for CodePipeline endpoint"
   default     = false
 }
+
 variable "enable_appmesh_envoy_management_endpoint" {
   description = "Should be true if you want to provision an APPMESH Envoy Management endpoint to the VPC"
   default     = false
@@ -827,6 +828,7 @@ variable "appmesh_envoy_management_endpoint_private_dns_enabled" {
   description = "Whether or not to associate a private hosted zone with the specified VPC for APPMESH Envoy Management endpoint"
   default     = false
 }
+
 variable "enable_servicecatalog_endpoint" {
   description = "Should be true if you want to provision an Service Catalog endpoint to the VPC"
   default     = false
@@ -846,6 +848,7 @@ variable "servicecatalog_endpoint_private_dns_enabled" {
   description = "Whether or not to associate a private hosted zone with the specified VPC for Service Catalog endpoint"
   default     = false
 }
+
 variable "enable_storagegateway_endpoint" {
   description = "Should be true if you want to provision an Storage Gateway endpoint to the VPC"
   default     = false
@@ -865,6 +868,7 @@ variable "storagegateway_endpoint_private_dns_enabled" {
   description = "Whether or not to associate a private hosted zone with the specified VPC for Storage Gateway endpoint"
   default     = false
 }
+
 variable "enable_transfer_endpoint" {
   description = "Should be true if you want to provision an Transfer endpoint to the VPC"
   default     = false
@@ -884,6 +888,7 @@ variable "transfer_endpoint_private_dns_enabled" {
   description = "Whether or not to associate a private hosted zone with the specified VPC for Transfer endpoint"
   default     = false
 }
+
 variable "enable_sagemaker_api_endpoint" {
   description = "Should be true if you want to provision an Sagemaker API endpoint to the VPC"
   default     = false
@@ -903,6 +908,7 @@ variable "sagemaker_api_endpoint_private_dns_enabled" {
   description = "Whether or not to associate a private hosted zone with the specified VPC for Sagemaker API endpoint"
   default     = false
 }
+
 variable "enable_sagemaker_runtime_endpoint" {
   description = "Should be true if you want to provision an Sagemaker Runtime endpoint to the VPC"
   default     = false

@@ -765,6 +765,7 @@ resource "aws_vpc_endpoint" "cloudformation" {
 
   tags = "${local.vpce_tags}"
 }
+
 #######################
 # VPC Endpoint for CodePipeline
 #######################
@@ -787,6 +788,7 @@ resource "aws_vpc_endpoint" "codepipeline" {
 
   tags = "${local.vpce_tags}"
 }
+
 #######################
 # VPC Endpoint for appmesh_envoy_management
 #######################
@@ -809,6 +811,7 @@ resource "aws_vpc_endpoint" "appmesh_envoy_management" {
 
   tags = "${local.vpce_tags}"
 }
+
 #######################
 # VPC Endpoint for Service Catalog
 #######################
@@ -831,6 +834,7 @@ resource "aws_vpc_endpoint" "servicecatalog" {
 
   tags = "${local.vpce_tags}"
 }
+
 #######################
 # VPC Endpoint for Storage Gateway
 #######################
@@ -853,6 +857,7 @@ resource "aws_vpc_endpoint" "storagegateway" {
 
   tags = "${local.vpce_tags}"
 }
+
 #######################
 # VPC Endpoint for Transfer
 #######################
@@ -875,6 +880,7 @@ resource "aws_vpc_endpoint" "transfer" {
 
   tags = "${local.vpce_tags}"
 }
+
 #######################
 # VPC Endpoint for Sagemaker API
 #######################
@@ -897,6 +903,7 @@ resource "aws_vpc_endpoint" "sagemaker_api" {
 
   tags = "${local.vpce_tags}"
 }
+
 #######################
 # VPC Endpoint for SAGEMAKER.RUNTIME
 #######################
