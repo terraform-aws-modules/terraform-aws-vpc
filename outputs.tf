@@ -779,6 +779,121 @@ output "vpc_endpoint_sts_dns_entry" {
   value       = "${flatten(aws_vpc_endpoint.sts.*.dns_entry)}"
 }
 
+output "vpc_endpoint_cloudformation_network_interface_ids" {
+  description = "One or more network interfaces for the VPC Endpoint for Cloudformation."
+  value       = "${flatten(aws_vpc_endpoint.cloudformation.*.network_interface_ids)}"
+}
+
+output "vpc_endpoint_cloudformation_dns_entry" {
+  description = "The DNS entries for the VPC Endpoint for Cloudformation."
+  value       = "${flatten(aws_vpc_endpoint.cloudformation.*.dns_entry)}"
+}
+
+output "vpc_endpoint_codepipeline_id" {
+  description = "The ID of VPC endpoint for CodePipeline"
+  value       = "${element(concat(aws_vpc_endpoint.codepipeline.*.id, list("")), 0)}"
+}
+
+output "vpc_endpoint_codepipeline_network_interface_ids" {
+  description = "One or more network interfaces for the VPC Endpoint for CodePipeline."
+  value       = "${flatten(aws_vpc_endpoint.codepipeline.*.network_interface_ids)}"
+}
+
+output "vpc_endpoint_codepipeline_dns_entry" {
+  description = "The DNS entries for the VPC Endpoint for CodePipeline."
+  value       = "${flatten(aws_vpc_endpoint.codepipeline.*.dns_entry)}"
+}
+
+output "vpc_endpoint_appmesh_envoy_management_id" {
+  description = "The ID of VPC endpoint for AppMesh"
+  value       = "${element(concat(aws_vpc_endpoint.appmesh_envoy_management.*.id, list("")), 0)}"
+}
+
+output "vpc_endpoint_appmesh_envoy_management_network_interface_ids" {
+  description = "One or more network interfaces for the VPC Endpoint for AppMesh."
+  value       = "${flatten(aws_vpc_endpoint.appmesh_envoy_management.*.network_interface_ids)}"
+}
+
+output "vpc_endpoint_appmesh_envoy_management_dns_entry" {
+  description = "The DNS entries for the VPC Endpoint for AppMesh."
+  value       = "${flatten(aws_vpc_endpoint.appmesh_envoy_management.*.dns_entry)}"
+}
+
+output "vpc_endpoint_servicecatalog_id" {
+  description = "The ID of VPC endpoint for Service Catalog"
+  value       = "${element(concat(aws_vpc_endpoint.servicecatalog.*.id, list("")), 0)}"
+}
+
+output "vpc_endpoint_servicecatalog_network_interface_ids" {
+  description = "One or more network interfaces for the VPC Endpoint for Service Catalog."
+  value       = "${flatten(aws_vpc_endpoint.servicecatalog.*.network_interface_ids)}"
+}
+
+output "vpc_endpoint_servicecatalog_dns_entry" {
+  description = "The DNS entries for the VPC Endpoint for Service Catalog."
+  value       = "${flatten(aws_vpc_endpoint.servicecatalog.*.dns_entry)}"
+}
+
+output "vpc_endpoint_storagegateway_id" {
+  description = "The ID of VPC endpoint for Storage Gateway"
+  value       = "${element(concat(aws_vpc_endpoint.storagegateway.*.id, list("")), 0)}"
+}
+
+output "vpc_endpoint_storagegateway_network_interface_ids" {
+  description = "One or more network interfaces for the VPC Endpoint for Storage Gateway."
+  value       = "${flatten(aws_vpc_endpoint.storagegateway.*.network_interface_ids)}"
+}
+
+output "vpc_endpoint_storagegateway_dns_entry" {
+  description = "The DNS entries for the VPC Endpoint for Storage Gateway."
+  value       = "${flatten(aws_vpc_endpoint.storagegateway.*.dns_entry)}"
+}
+
+output "vpc_endpoint_transfer_id" {
+  description = "The ID of VPC endpoint for Transfer"
+  value       = "${element(concat(aws_vpc_endpoint.transfer.*.id, list("")), 0)}"
+}
+
+output "vpc_endpoint_transfer_network_interface_ids" {
+  description = "One or more network interfaces for the VPC Endpoint for Transfer."
+  value       = "${flatten(aws_vpc_endpoint.transfer.*.network_interface_ids)}"
+}
+
+output "vpc_endpoint_transfer_dns_entry" {
+  description = "The DNS entries for the VPC Endpoint for Transfer."
+  value       = "${flatten(aws_vpc_endpoint.transfer.*.dns_entry)}"
+}
+
+output "vpc_endpoint_sagemaker_api_id" {
+  description = "The ID of VPC endpoint for SageMaker API"
+  value       = "${element(concat(aws_vpc_endpoint.sagemaker_api.*.id, list("")), 0)}"
+}
+
+output "vpc_endpoint_sagemaker_api_network_interface_ids" {
+  description = "One or more network interfaces for the VPC Endpoint for SageMaker API."
+  value       = "${flatten(aws_vpc_endpoint.sagemaker_api.*.network_interface_ids)}"
+}
+
+output "vpc_endpoint_sagemaker_api_dns_entry" {
+  description = "The DNS entries for the VPC Endpoint for SageMaker API."
+  value       = "${flatten(aws_vpc_endpoint.sagemaker_api.*.dns_entry)}"
+}
+
+output "vpc_endpoint_sagemaker_runtime_id" {
+  description = "The ID of VPC endpoint for SageMaker Runtime"
+  value       = "${element(concat(aws_vpc_endpoint.sagemaker_runtime.*.id, list("")), 0)}"
+}
+
+output "vpc_endpoint_sagemaker_runtime_network_interface_ids" {
+  description = "One or more network interfaces for the VPC Endpoint for SageMaker Runtime."
+  value       = "${flatten(aws_vpc_endpoint.sagemaker_runtime.*.network_interface_ids)}"
+}
+
+output "vpc_endpoint_sagemaker_runtime_dns_entry" {
+  description = "The DNS entries for the VPC Endpoint for SageMaker Runtime."
+  value       = "${flatten(aws_vpc_endpoint.sagemaker_runtime.*.dns_entry)}"
+}
+
 # Static values (arguments)
 output "azs" {
   description = "A list of availability zones specified as argument to this module"

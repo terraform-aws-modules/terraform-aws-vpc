@@ -882,12 +882,12 @@ resource "aws_vpc_endpoint" "transfer" {
 }
 
 #######################
-# VPC Endpoint for Sagemaker API
+# VPC Endpoint for SageMaker API
 #######################
 data "aws_vpc_endpoint_service" "sagemaker_api" {
   count = "${var.create_vpc && var.enable_sagemaker_api_endpoint ? 1 : 0}"
 
-  service = "sagemaker_api"
+  service = "sagemaker.api"
 }
 
 resource "aws_vpc_endpoint" "sagemaker_api" {
@@ -905,7 +905,7 @@ resource "aws_vpc_endpoint" "sagemaker_api" {
 }
 
 #######################
-# VPC Endpoint for SAGEMAKER.RUNTIME
+# VPC Endpoint for SageMaker Runtime
 #######################
 data "aws_vpc_endpoint_service" "sagemaker_runtime" {
   count = "${var.create_vpc && var.enable_sagemaker_runtime_endpoint ? 1 : 0}"
@@ -913,7 +913,7 @@ data "aws_vpc_endpoint_service" "sagemaker_runtime" {
   service = "sagemaker.runtime"
 }
 
-resource "aws_vpc_endpoint" "sagemaker.runtime" {
+resource "aws_vpc_endpoint" "sagemaker_runtime" {
   count = "${var.create_vpc && var.enable_sagemaker_runtime_endpoint ? 1 : 0}"
 
   vpc_id            = "${local.vpc_id}"
