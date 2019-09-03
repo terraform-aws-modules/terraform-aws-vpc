@@ -77,7 +77,7 @@ resource "aws_vpc_endpoint_route_table_association" "public_dynamodb" {
 }
 
 #######################
-# VPC Endpoint for CODEBUILD
+# VPC Endpoint for CodeBuild
 #######################
 data "aws_vpc_endpoint_service" "codebuild" {
   count = "${var.create_vpc && var.enable_codebuild_endpoint ? 1 : 0}"
@@ -100,7 +100,7 @@ resource "aws_vpc_endpoint" "codebuild" {
 }
 
 #######################
-# VPC Endpoint for CODECOMMIT
+# VPC Endpoint for CodeCommit
 #######################
 data "aws_vpc_endpoint_service" "codecommit" {
   count = "${var.create_vpc && var.enable_codecommit_endpoint ? 1 : 0}"
@@ -123,7 +123,7 @@ resource "aws_vpc_endpoint" "codecommit" {
 }
 
 #######################
-# VPC Endpoint for GIT CODECOMMIT
+# VPC Endpoint for Giy CodeCommit
 #######################
 data "aws_vpc_endpoint_service" "git_codecommit" {
   count = "${var.create_vpc && var.enable_git_codecommit_endpoint ? 1 : 0}"
@@ -146,7 +146,7 @@ resource "aws_vpc_endpoint" "git_codecommit" {
 }
 
 #######################
-# VPC Endpoint for CONFIG
+# VPC Endpoint for Config
 #######################
 data "aws_vpc_endpoint_service" "config" {
   count = "${var.create_vpc && var.enable_config_endpoint ? 1 : 0}"
@@ -810,7 +810,7 @@ resource "aws_vpc_endpoint" "appmesh_envoy_management" {
   tags = "${local.vpce_tags}"
 }
 #######################
-# VPC Endpoint for SERVICECATALOG
+# VPC Endpoint for Service Catalog
 #######################
 data "aws_vpc_endpoint_service" "servicecatalog" {
   count = "${var.create_vpc && var.enable_servicecatalog_endpoint ? 1 : 0}"
@@ -832,7 +832,7 @@ resource "aws_vpc_endpoint" "servicecatalog" {
   tags = "${local.vpce_tags}"
 }
 #######################
-# VPC Endpoint for STORAGEGATEWAY
+# VPC Endpoint for Storage Gateway
 #######################
 data "aws_vpc_endpoint_service" "storagegateway" {
   count = "${var.create_vpc && var.enable_storagegateway_endpoint ? 1 : 0}"
@@ -854,7 +854,7 @@ resource "aws_vpc_endpoint" "storagegateway" {
   tags = "${local.vpce_tags}"
 }
 #######################
-# VPC Endpoint for TRANSFER
+# VPC Endpoint for Transfer
 #######################
 data "aws_vpc_endpoint_service" "transfer" {
   count = "${var.create_vpc && var.enable_transfer_endpoint ? 1 : 0}"
