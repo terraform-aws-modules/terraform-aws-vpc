@@ -53,3 +53,7 @@ output "default_network_acl_id" {
   value       = module.vpc.default_network_acl_id
 }
 
+output "module_vpc" {
+  description = "Module VPC"
+  value       = module.vpc
+}
