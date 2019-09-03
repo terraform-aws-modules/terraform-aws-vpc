@@ -6,18 +6,98 @@ variable "create_vpc" {
 
 variable "name" {
   description = "Name to be used on all the resources as identifier"
+  type        = string
   default     = ""
 }
 
 variable "cidr" {
   description = "The CIDR block for the VPC. Default value is a valid CIDR, but not acceptable by AWS and should be overridden"
+  type        = string
   default     = "0.0.0.0/0"
 }
 
-variable "assign_generated_ipv6_cidr_block" {
-  description = "Requests an Amazon-provided IPv6 CIDR block with a /56 prefix length for the VPC. You cannot specify the range of IP addresses, or the size of the CIDR block"
+variable "enable_ipv6" {
+  description = "Requests an Amazon-provided IPv6 CIDR block with a /56 prefix length for the VPC. You cannot specify the range of IP addresses, or the size of the CIDR block."
   type        = bool
   default     = false
+}
+
+variable "private_subnet_ipv6_prefixes" {
+  description = "Assigns IPv6 private subnet id based on the Amazon provided /56 prefix base 10 integer (0-256). Must be of equal length to the corresponding IPv4 subnet list"
+  type        = list
+  default     = []
+}
+
+variable "public_subnet_ipv6_prefixes" {
+  description = "Assigns IPv6 public subnet id based on the Amazon provided /56 prefix base 10 integer (0-256). Must be of equal length to the corresponding IPv4 subnet list"
+  type        = list
+  default     = []
+}
+
+variable "database_subnet_ipv6_prefixes" {
+  description = "Assigns IPv6 database subnet id based on the Amazon provided /56 prefix base 10 integer (0-256). Must be of equal length to the corresponding IPv4 subnet list"
+  type        = list
+  default     = []
+}
+
+variable "redshift_subnet_ipv6_prefixes" {
+  description = "Assigns IPv6 redshift subnet id based on the Amazon provided /56 prefix base 10 integer (0-256). Must be of equal length to the corresponding IPv4 subnet list"
+  type        = list
+  default     = []
+}
+
+variable "elasticache_subnet_ipv6_prefixes" {
+  description = "Assigns IPv6 elasticache subnet id based on the Amazon provided /56 prefix base 10 integer (0-256). Must be of equal length to the corresponding IPv4 subnet list"
+  type        = list
+  default     = []
+}
+
+variable "intra_subnet_ipv6_prefixes" {
+  description = "Assigns IPv6 intra subnet id based on the Amazon provided /56 prefix base 10 integer (0-256). Must be of equal length to the corresponding IPv4 subnet list"
+  type        = list
+  default     = []
+}
+
+variable "assign_ipv6_address_on_creation" {
+  description = "Assign IPv6 address on subnet, must be disabled to change IPv6 CIDRs. This is the IPv6 equivalent of map_public_ip_on_launch"
+  type        = bool
+  default     = false
+}
+
+variable "private_subnet_assign_ipv6_address_on_creation" {
+  description = "Assign IPv6 address on private subnet, must be disabled to change IPv6 CIDRs. This is the IPv6 equivalent of map_public_ip_on_launch"
+  type        = bool
+  default     = null
+}
+
+variable "public_subnet_assign_ipv6_address_on_creation" {
+  description = "Assign IPv6 address on public subnet, must be disabled to change IPv6 CIDRs. This is the IPv6 equivalent of map_public_ip_on_launch"
+  type        = bool
+  default     = null
+}
+
+variable "database_subnet_assign_ipv6_address_on_creation" {
+  description = "Assign IPv6 address on database subnet, must be disabled to change IPv6 CIDRs. This is the IPv6 equivalent of map_public_ip_on_launch"
+  type        = bool
+  default     = null
+}
+
+variable "redshift_subnet_assign_ipv6_address_on_creation" {
+  description = "Assign IPv6 address on redshift subnet, must be disabled to change IPv6 CIDRs. This is the IPv6 equivalent of map_public_ip_on_launch"
+  type        = bool
+  default     = null
+}
+
+variable "elasticache_subnet_assign_ipv6_address_on_creation" {
+  description = "Assign IPv6 address on elasticache subnet, must be disabled to change IPv6 CIDRs. This is the IPv6 equivalent of map_public_ip_on_launch"
+  type        = bool
+  default     = null
+}
+
+variable "intra_subnet_assign_ipv6_address_on_creation" {
+  description = "Assign IPv6 address on intra subnet, must be disabled to change IPv6 CIDRs. This is the IPv6 equivalent of map_public_ip_on_launch"
+  type        = bool
+  default     = null
 }
 
 variable "secondary_cidr_blocks" {
@@ -218,6 +298,86 @@ variable "enable_s3_endpoint" {
   default     = false
 }
 
+variable "enable_codebuild_endpoint" {
+  description = "Should be true if you want to provision an Codebuild endpoint to the VPC"
+  default     = false
+}
+
+variable "codebuild_endpoint_security_group_ids" {
+  description = "The ID of one or more security groups to associate with the network interface for Codebuild endpoint"
+  default     = []
+}
+
+variable "codebuild_endpoint_subnet_ids" {
+  description = "The ID of one or more subnets in which to create a network interface for Codebuilt endpoint. Only a single subnet within an AZ is supported. If omitted, private subnets will be used."
+  default     = []
+}
+
+variable "codebuild_endpoint_private_dns_enabled" {
+  description = "Whether or not to associate a private hosted zone with the specified VPC for Codebuild endpoint"
+  default     = false
+}
+
+variable "enable_codecommit_endpoint" {
+  description = "Should be true if you want to provision an Codecommit endpoint to the VPC"
+  default     = false
+}
+
+variable "codecommit_endpoint_security_group_ids" {
+  description = "The ID of one or more security groups to associate with the network interface for Codecommit endpoint"
+  default     = []
+}
+
+variable "codecommit_endpoint_subnet_ids" {
+  description = "The ID of one or more subnets in which to create a network interface for Codecommit endpoint. Only a single subnet within an AZ is supported. If omitted, private subnets will be used."
+  default     = []
+}
+
+variable "codecommit_endpoint_private_dns_enabled" {
+  description = "Whether or not to associate a private hosted zone with the specified VPC for Codecommit endpoint"
+  default     = false
+}
+
+variable "enable_git_codecommit_endpoint" {
+  description = "Should be true if you want to provision an Git Codecommit endpoint to the VPC"
+  default     = false
+}
+
+variable "git_codecommit_endpoint_security_group_ids" {
+  description = "The ID of one or more security groups to associate with the network interface for Git Codecommit endpoint"
+  default     = []
+}
+
+variable "git_codecommit_endpoint_subnet_ids" {
+  description = "The ID of one or more subnets in which to create a network interface for Git Codecommit endpoint. Only a single subnet within an AZ is supported. If omitted, private subnets will be used."
+  default     = []
+}
+
+variable "git_codecommit_endpoint_private_dns_enabled" {
+  description = "Whether or not to associate a private hosted zone with the specified VPC for Git Codecommit endpoint"
+  default     = false
+}
+
+variable "enable_config_endpoint" {
+  description = "Should be true if you want to provision an config endpoint to the VPC"
+  default     = false
+}
+
+variable "config_endpoint_security_group_ids" {
+  description = "The ID of one or more security groups to associate with the network interface for config endpoint"
+  default     = []
+}
+
+variable "config_endpoint_subnet_ids" {
+  description = "The ID of one or more subnets in which to create a network interface for config endpoint. Only a single subnet within an AZ is supported. If omitted, private subnets will be used."
+  default     = []
+}
+
+variable "config_endpoint_private_dns_enabled" {
+  description = "Whether or not to associate a private hosted zone with the specified VPC for config endpoint"
+  default     = false
+}
+
 variable "enable_sqs_endpoint" {
   description = "Should be true if you want to provision an SQS endpoint to the VPC"
   default     = false
@@ -262,8 +422,26 @@ variable "ssm_endpoint_private_dns_enabled" {
   default     = false
 }
 
-variable "enable_ssmmessages_endpoint" {
-  description = "Should be true if you want to provision a SSMMESSAGES endpoint to the VPC"
+variable "enable_secretsmanager_endpoint" {
+  description = "Should be true if you want to provision an Secrets Manager endpoint to the VPC"
+  type        = bool
+  default     = false
+}
+
+variable "secretsmanager_endpoint_security_group_ids" {
+  description = "The ID of one or more security groups to associate with the network interface for Secrets Manager endpoint"
+  type        = list(string)
+  default     = []
+}
+
+variable "secretsmanager_endpoint_subnet_ids" {
+  description = "The ID of one or more subnets in which to create a network interface for Secrets Manager endpoint. Only a single subnet within an AZ is supported. If omitted, private subnets will be used."
+  type        = list(string)
+  default     = []
+}
+
+variable "secretsmanager_endpoint_private_dns_enabled" {
+  description = "Whether or not to associate a private hosted zone with the specified VPC for Secrets Manager endpoint"
   type        = bool
   default     = false
 }
@@ -292,6 +470,12 @@ variable "apigw_endpoint_subnet_ids" {
   default     = []
 }
 
+variable "enable_ssmmessages_endpoint" {
+  description = "Should be true if you want to provision a SSMMESSAGES endpoint to the VPC"
+  type        = bool
+  default     = false
+}
+
 variable "ssmmessages_endpoint_security_group_ids" {
   description = "The ID of one or more security groups to associate with the network interface for SSMMESSAGES endpoint"
   type        = list(string)
@@ -309,6 +493,31 @@ variable "ssmmessages_endpoint_private_dns_enabled" {
   type        = bool
   default     = false
 }
+
+variable "enable_transferserver_endpoint" {
+  description = "Should be true if you want to provision a Transer Server endpoint to the VPC"
+  type        = bool
+  default     = false
+}
+
+variable "transferserver_endpoint_security_group_ids" {
+  description = "The ID of one or more security groups to associate with the network interface for Transfer Server endpoint"
+  type        = list(string)
+  default     = []
+}
+
+variable "transferserver_endpoint_subnet_ids" {
+  description = "The ID of one or more subnets in which to create a network interface for Transfer Server endpoint. Only a single subnet within an AZ is supported. If omitted, private subnets will be used."
+  type        = list(string)
+  default     = []
+}
+
+variable "transferserver_endpoint_private_dns_enabled" {
+  description = "Whether or not to associate a private hosted zone with the specified VPC for Transfer Server endpoint"
+  type        = bool
+  default     = false
+}
+
 
 variable "enable_ec2_endpoint" {
   description = "Should be true if you want to provision an EC2 endpoint to the VPC"
@@ -646,6 +855,132 @@ variable "cloudtrail_endpoint_private_dns_enabled" {
   default     = false
 }
 
+variable "enable_kinesis_streams_endpoint" {
+  description = "Should be true if you want to provision a Kinesis Streams endpoint to the VPC"
+  type        = bool
+  default     = false
+}
+
+variable "kinesis_streams_endpoint_security_group_ids" {
+  description = "The ID of one or more security groups to associate with the network interface for Kinesis Streams endpoint"
+  type        = list(string)
+  default     = []
+}
+
+variable "kinesis_streams_endpoint_subnet_ids" {
+  description = "The ID of one or more subnets in which to create a network interface for Kinesis Streams endpoint. Only a single subnet within an AZ is supported. If omitted, private subnets will be used."
+  type        = list(string)
+  default     = []
+}
+
+variable "kinesis_streams_endpoint_private_dns_enabled" {
+  description = "Whether or not to associate a private hosted zone with the specified VPC for Kinesis Streams endpoint"
+  type        = bool
+  default     = false
+}
+
+variable "enable_kinesis_firehose_endpoint" {
+  description = "Should be true if you want to provision a Kinesis Firehose endpoint to the VPC"
+  type        = bool
+  default     = false
+}
+
+variable "kinesis_firehose_endpoint_security_group_ids" {
+  description = "The ID of one or more security groups to associate with the network interface for Kinesis Firehose endpoint"
+  type        = list(string)
+  default     = []
+}
+
+variable "kinesis_firehose_endpoint_subnet_ids" {
+  description = "The ID of one or more subnets in which to create a network interface for Kinesis Firehose endpoint. Only a single subnet within an AZ is supported. If omitted, private subnets will be used."
+  type        = list(string)
+  default     = []
+}
+
+variable "kinesis_firehose_endpoint_private_dns_enabled" {
+  description = "Whether or not to associate a private hosted zone with the specified VPC for Kinesis Firehose endpoint"
+  type        = bool
+  default     = false
+}
+
+variable "enable_glue_endpoint" {
+  description = "Should be true if you want to provision a Glue endpoint to the VPC"
+  type        = bool
+  default     = false
+}
+
+variable "glue_endpoint_security_group_ids" {
+  description = "The ID of one or more security groups to associate with the network interface for Glue endpoint"
+  type        = list(string)
+  default     = []
+}
+
+variable "glue_endpoint_subnet_ids" {
+  description = "The ID of one or more subnets in which to create a network interface for Glue endpoint. Only a single subnet within an AZ is supported. If omitted, private subnets will be used."
+  type        = list(string)
+  default     = []
+}
+
+variable "glue_endpoint_private_dns_enabled" {
+  description = "Whether or not to associate a private hosted zone with the specified VPC for Glue endpoint"
+  type        = bool
+  default     = false
+}
+
+variable "enable_sagemaker_notebook_endpoint" {
+  description = "Should be true if you want to provision a Sagemaker Notebook endpoint to the VPC"
+  type        = bool
+  default     = false
+}
+
+variable "sagemaker_notebook_endpoint_region" {
+  description = "Region to use for Sagemaker Notebook endpoint"
+  type        = string
+  default     = ""
+}
+
+variable "sagemaker_notebook_endpoint_security_group_ids" {
+  description = "The ID of one or more security groups to associate with the network interface for Sagemaker Notebook endpoint"
+  type        = list(string)
+  default     = []
+}
+
+variable "sagemaker_notebook_endpoint_subnet_ids" {
+  description = "The ID of one or more subnets in which to create a network interface for Sagemaker Notebook endpoint. Only a single subnet within an AZ is supported. If omitted, private subnets will be used."
+  type        = list(string)
+  default     = []
+}
+
+variable "sagemaker_notebook_endpoint_private_dns_enabled" {
+  description = "Whether or not to associate a private hosted zone with the specified VPC for Sagemaker Notebook endpoint"
+  type        = bool
+  default     = false
+}
+
+variable "enable_sts_endpoint" {
+  description = "Should be true if you want to provision a STS endpoint to the VPC"
+  type        = bool
+  default     = false
+}
+
+variable "sts_endpoint_security_group_ids" {
+  description = "The ID of one or more security groups to associate with the network interface for STS endpoint"
+  type        = list(string)
+  default     = []
+}
+
+variable "sts_endpoint_subnet_ids" {
+  description = "The ID of one or more subnets in which to create a network interface for STS endpoint. Only a single subnet within an AZ is supported. If omitted, private subnets will be used."
+  type        = list(string)
+  default     = []
+}
+
+variable "sts_endpoint_private_dns_enabled" {
+  description = "Whether or not to associate a private hosted zone with the specified VPC for STS endpoint"
+  type        = bool
+  default     = false
+}
+
 variable "map_public_ip_on_launch" {
   description = "Should be false if you do not want to auto-assign public IP on launch"
   type        = bool
@@ -838,6 +1173,12 @@ variable "nat_eip_tags" {
 
 variable "vpn_gateway_tags" {
   description = "Additional tags for the VPN gateway"
+  type        = map(string)
+  default     = {}
+}
+
+variable "vpc_endpoint_tags" {
+  description = "Additional tags for the VPC Endpoints"
   type        = map(string)
   default     = {}
 }
