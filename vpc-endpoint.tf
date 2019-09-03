@@ -742,3 +742,180 @@ resource "aws_vpc_endpoint" "sts" {
 
   tags = "${local.vpce_tags}"
 }
+
+#######################
+# VPC Endpoint for CloudFormation
+#######################
+data "aws_vpc_endpoint_service" "cloudformation" {
+  count = "${var.create_vpc && var.enable_cloudformation_endpoint ? 1 : 0}"
+
+  service = "cloudformation"
+}
+
+resource "aws_vpc_endpoint" "cloudformation" {
+  count = "${var.create_vpc && var.enable_cloudformation_endpoint ? 1 : 0}"
+
+  vpc_id            = "${local.vpc_id}"
+  service_name      = "${data.aws_vpc_endpoint_service.cloudformation.service_name}"
+  vpc_endpoint_type = "Interface"
+
+  security_group_ids  = ["${var.cloudformation_endpoint_security_group_ids}"]
+  subnet_ids          = ["${coalescelist(var.cloudformation_endpoint_subnet_ids, aws_subnet.private.*.id)}"]
+  private_dns_enabled = "${var.cloudformation_endpoint_private_dns_enabled}"
+
+  tags = "${local.vpce_tags}"
+}
+#######################
+# VPC Endpoint for CodePipeline
+#######################
+data "aws_vpc_endpoint_service" "codepipeline" {
+  count = "${var.create_vpc && var.enable_codepipeline_endpoint ? 1 : 0}"
+
+  service = "codepipeline"
+}
+
+resource "aws_vpc_endpoint" "codepipeline" {
+  count = "${var.create_vpc && var.enable_codepipeline_endpoint ? 1 : 0}"
+
+  vpc_id            = "${local.vpc_id}"
+  service_name      = "${data.aws_vpc_endpoint_service.codepipeline.service_name}"
+  vpc_endpoint_type = "Interface"
+
+  security_group_ids  = ["${var.codepipeline_endpoint_security_group_ids}"]
+  subnet_ids          = ["${coalescelist(var.codepipeline_endpoint_subnet_ids, aws_subnet.private.*.id)}"]
+  private_dns_enabled = "${var.codepipeline_endpoint_private_dns_enabled}"
+
+  tags = "${local.vpce_tags}"
+}
+#######################
+# VPC Endpoint for appmesh_envoy_management
+#######################
+data "aws_vpc_endpoint_service" "appmesh_envoy_management" {
+  count = "${var.create_vpc && var.enable_appmesh_envoy_management_endpoint ? 1: 0}"
+
+  service = "appmesh_envoy_management"
+}
+
+resource "aws_vpc_endpoint" "appmesh_envoy_management" {
+  count = "${var.create_vpc && var.enable_appmesh_envoy_management_endpoint ? 1: 0}"
+
+  vpc_id            = "${local.vpc_id}"
+  service_name      = "${data.aws_vpc_endpoint_service.appmesh_envoy_management.service_name}"
+  vpc_endpoint_type = "Interface"
+
+  security_group_ids  = ["${var.appmesh_envoy_management_endpoint_security_group_ids}"]
+  subnet_ids          = ["${coalescelist(var.appmesh_envoy_management_endpoint_subnet_ids, aws_subnet.private.*.id)}"]
+  private_dns_enabled = "${var.appmesh_envoy_management_endpoint_private_dns_enabled}"
+
+  tags = "${local.vpce_tags}"
+}
+#######################
+# VPC Endpoint for SERVICECATALOG
+#######################
+data "aws_vpc_endpoint_service" "servicecatalog" {
+  count = "${var.create_vpc && var.enable_servicecatalog_endpoint ? 1 : 0}"
+
+  service = "servicecatalog"
+}
+
+resource "aws_vpc_endpoint" "servicecatalog" {
+  count = "${var.create_vpc && var.enable_servicecatalog_endpoint ? 1 : 0}"
+
+  vpc_id            = "${local.vpc_id}"
+  service_name      = "${data.aws_vpc_endpoint_service.servicecatalog.service_name}"
+  vpc_endpoint_type = "Interface"
+
+  security_group_ids  = ["${var.servicecatalog_endpoint_security_group_ids}"]
+  subnet_ids          = ["${coalescelist(var.servicecatalog_endpoint_subnet_ids, aws_subnet.private.*.id)}"]
+  private_dns_enabled = "${var.servicecatalog_endpoint_private_dns_enabled}"
+
+  tags = "${local.vpce_tags}"
+}
+#######################
+# VPC Endpoint for STORAGEGATEWAY
+#######################
+data "aws_vpc_endpoint_service" "storagegateway" {
+  count = "${var.create_vpc && var.enable_storagegateway_endpoint ? 1 : 0}"
+
+  service = "storagegateway"
+}
+
+resource "aws_vpc_endpoint" "storagegateway" {
+  count = "${var.create_vpc && var.enable_storagegateway_endpoint ? 1 : 0}"
+
+  vpc_id            = "${local.vpc_id}"
+  service_name      = "${data.aws_vpc_endpoint_service.storagegateway.service_name}"
+  vpc_endpoint_type = "Interface"
+
+  security_group_ids  = ["${var.storagegateway_endpoint_security_group_ids}"]
+  subnet_ids          = ["${coalescelist(var.storagegateway_endpoint_subnet_ids, aws_subnet.private.*.id)}"]
+  private_dns_enabled = "${var.storagegateway_endpoint_private_dns_enabled}"
+
+  tags = "${local.vpce_tags}"
+}
+#######################
+# VPC Endpoint for TRANSFER
+#######################
+data "aws_vpc_endpoint_service" "transfer" {
+  count = "${var.create_vpc && var.enable_transfer_endpoint ? 1 : 0}"
+
+  service = "transfer"
+}
+
+resource "aws_vpc_endpoint" "transfer" {
+  count = "${var.create_vpc && var.enable_transfer_endpoint ? 1 : 0}"
+
+  vpc_id            = "${local.vpc_id}"
+  service_name      = "${data.aws_vpc_endpoint_service.transfer.service_name}"
+  vpc_endpoint_type = "Interface"
+
+  security_group_ids  = ["${var.transfer_endpoint_security_group_ids}"]
+  subnet_ids          = ["${coalescelist(var.transfer_endpoint_subnet_ids, aws_subnet.private.*.id)}"]
+  private_dns_enabled = "${var.transfer_endpoint_private_dns_enabled}"
+
+  tags = "${local.vpce_tags}"
+}
+#######################
+# VPC Endpoint for Sagemaker API
+#######################
+data "aws_vpc_endpoint_service" "sagemaker_api" {
+  count = "${var.create_vpc && var.enable_sagemaker_api_endpoint ? 1 : 0}"
+
+  service = "sagemaker_api"
+}
+
+resource "aws_vpc_endpoint" "sagemaker_api" {
+  count = "${var.create_vpc && var.enable_sagemaker_api_endpoint ? 1 : 0}"
+
+  vpc_id            = "${local.vpc_id}"
+  service_name      = "${data.aws_vpc_endpoint_service.sagemaker_api.service_name}"
+  vpc_endpoint_type = "Interface"
+
+  security_group_ids  = ["${var.sagemaker_api_endpoint_security_group_ids}"]
+  subnet_ids          = ["${coalescelist(var.sagemaker_api_endpoint_subnet_ids,aws_subnet.private.*.id)}"]
+  private_dns_enabled = "${var.sagemaker_api_endpoint_private_dns_enabled}"
+
+  tags = "${local.vpce_tags}"
+}
+#######################
+# VPC Endpoint for SAGEMAKER.RUNTIME
+#######################
+data "aws_vpc_endpoint_service" "sagemaker_runtime" {
+  count = "${var.create_vpc && var.enable_sagemaker_runtime_endpoint ? 1 : 0}"
+
+  service = "sagemaker.runtime"
+}
+
+resource "aws_vpc_endpoint" "sagemaker.runtime" {
+  count = "${var.create_vpc && var.enable_sagemaker_runtime_endpoint ? 1 : 0}"
+
+  vpc_id            = "${local.vpc_id}"
+  service_name      = "${data.aws_vpc_endpoint_service.sagemaker_runtime.service_name}"
+  vpc_endpoint_type = "Interface"
+
+  security_group_ids  = ["${var.sagemaker_runtime_endpoint_security_group_ids}"]
+  subnet_ids          = ["${coalescelist(var.sagemaker_runtime_endpoint_subnet_ids, aws_subnet.private.*.id)}"]
+  private_dns_enabled = "${var.sagemaker_runtime_endpoint_private_dns_enabled}"
+
+  tags = "${local.vpce_tags}"
+}
