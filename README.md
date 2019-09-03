@@ -213,6 +213,15 @@ Sometimes it is handy to have public access to Redshift clusters (for example if
 | cloudtrail\_endpoint\_private\_dns\_enabled | Whether or not to associate a private hosted zone with the specified VPC for CloudTrail endpoint | string | `"false"` | no |
 | cloudtrail\_endpoint\_security\_group\_ids | The ID of one or more security groups to associate with the network interface for CloudTrail endpoint | list | `[]` | no |
 | cloudtrail\_endpoint\_subnet\_ids | The ID of one or more subnets in which to create a network interface for CloudTrail endpoint. Only a single subnet within an AZ is supported. If omitted, private subnets will be used. | list | `[]` | no |
+| codebuild\_endpoint\_private\_dns\_enabled | Whether or not to associate a private hosted zone with the specified VPC for CODEBUILD endpoint | string | `"false"` | no |
+| codebuild\_endpoint\_security\_group\_ids | The ID of one or more security groups to associate with the network interface for CODEBUILD endpoint | list | `[]` | no |
+| codebuild\_endpoint\_subnet\_ids | The ID of one or more subnets in which to create a network interface for CODEBUILD endpoint. Only a single subnet within an AZ is supported. If omitted, private subnets will be used. | list | `[]` | no |
+| codecommit\_endpoint\_private\_dns\_enabled | Whether or not to associate a private hosted zone with the specified VPC for CODECOMMIT endpoint | string | `"false"` | no |
+| codecommit\_endpoint\_security\_group\_ids | The ID of one or more security groups to associate with the network interface for CODECOMMIT endpoint | list | `[]` | no |
+| codecommit\_endpoint\_subnet\_ids | The ID of one or more subnets in which to create a network interface for CODECOMMIT endpoint. Only a single subnet within an AZ is supported. If omitted, private subnets will be used. | list | `[]` | no |
+| config\_endpoint\_private\_dns\_enabled | Whether or not to associate a private hosted zone with the specified VPC for CONFIG endpoint | string | `"false"` | no |
+| config\_endpoint\_security\_group\_ids | The ID of one or more security groups to associate with the network interface for CONFIG endpoint | list | `[]` | no |
+| config\_endpoint\_subnet\_ids | The ID of one or more subnets in which to create a network interface for CONFIG endpoint. Only a single subnet within an AZ is supported. If omitted, private subnets will be used. | list | `[]` | no |
 | create\_database\_internet\_gateway\_route | Controls if an internet gateway route for public database access should be created | string | `"false"` | no |
 | create\_database\_nat\_gateway\_route | Controls if a nat gateway route should be created to give internet access to the database subnets | string | `"false"` | no |
 | create\_database\_subnet\_group | Controls if database subnet group should be created | string | `"true"` | no |
@@ -280,6 +289,9 @@ Sometimes it is handy to have public access to Redshift clusters (for example if
 | elasticloadbalancing\_endpoint\_subnet\_ids | The ID of one or more subnets in which to create a network interface for Elastic Load Balancing endpoint. Only a single subnet within an AZ is supported. If omitted, private subnets will be used. | list | `[]` | no |
 | enable\_apigw\_endpoint | Should be true if you want to provision an api gateway endpoint to the VPC | string | `"false"` | no |
 | enable\_cloudtrail\_endpoint | Should be true if you want to provision a CloudTrail endpoint to the VPC | string | `"false"` | no |
+| enable\_codebuild\_endpoint | Should be true if you want to provision an CODEBUILD endpoint to the VPC | string | `"false"` | no |
+| enable\_codecommit\_endpoint | Should be true if you want to provision an CODECOMMIT endpointto the VPC | string | `"false"` | no |
+| enable\_config\_endpoint | Should be true if you want to provision an CONFIG endpoint to the VPC | string | `"false"` | no |
 | enable\_dhcp\_options | Should be true if you want to specify a DHCP options set with a custom domain name, DNS servers, NTP servers, netbios servers, and/or netbios server type | string | `"false"` | no |
 | enable\_dns\_hostnames | Should be true to enable DNS hostnames in the VPC | string | `"false"` | no |
 | enable\_dns\_support | Should be true to enable DNS support in the VPC | string | `"true"` | no |
@@ -293,21 +305,35 @@ Sometimes it is handy to have public access to Redshift clusters (for example if
 | enable\_ecs\_telemetry\_endpoint | Should be true if you want to provision a ECS Telemetry endpoint to the VPC | string | `"false"` | no |
 | enable\_elasticloadbalancing\_endpoint | Should be true if you want to provision a Elastic Load Balancing endpoint to the VPC | string | `"false"` | no |
 | enable\_events\_endpoint | Should be true if you want to provision a CloudWatch Events endpoint to the VPC | string | `"false"` | no |
+| enable\_git\_codecommit\_endpoint | Should be true if you want to provision an GIT_CODECOMMIT endpoint to the VPC | string | `"false"` | no |
+| enable\_glue\_endpoint | Should be true if you want to provision an GLUE endpoint to the VPC | string | `"false"` | no |
+| enable\_kinesis\_firehose\_endpoint | Should be true if you want to provision an KINESIS_FIREHOSE endpoint to the VPC | string | `"false"` | no |
+| enable\_kinesis\_streams\_endpoint | Should be true if you want to provision an KINESIS_STREAMS endpoint to the VPC | string | `"false"` | no |
 | enable\_kms\_endpoint | Should be true if you want to provision a KMS endpoint to the VPC | string | `"false"` | no |
 | enable\_logs\_endpoint | Should be true if you want to provision a CloudWatch Logs endpoint to the VPC | string | `"false"` | no |
 | enable\_monitoring\_endpoint | Should be true if you want to provision a CloudWatch Monitoring endpoint to the VPC | string | `"false"` | no |
 | enable\_nat\_gateway | Should be true if you want to provision NAT Gateways for each of your private networks | string | `"false"` | no |
 | enable\_public\_redshift | Controls if redshift should have public routing table | string | `"false"` | no |
 | enable\_s3\_endpoint | Should be true if you want to provision an S3 endpoint to the VPC | string | `"false"` | no |
+| enable\_sagemaker\_notebook\_endpoint | Should be true if you want to provision an SAGEMAKER_NOTEBOOK endpoint to the VPC | string | `"false"` | no |
+| enable\_secretsmanager\_endpoint | Should be true if you want to provision an SECRETSMANAGER endpoint to the VPC | string | `"false"` | no |
 | enable\_sns\_endpoint | Should be true if you want to provision a SNS endpoint to the VPC | string | `"false"` | no |
 | enable\_sqs\_endpoint | Should be true if you want to provision an SQS endpoint to the VPC | string | `"false"` | no |
 | enable\_ssm\_endpoint | Should be true if you want to provision an SSM endpoint to the VPC | string | `"false"` | no |
 | enable\_ssmmessages\_endpoint | Should be true if you want to provision a SSMMESSAGES endpoint to the VPC | string | `"false"` | no |
+| enable\_sts\_endpoint | Should be true if you want to provision an STS endpoint to theVPC | string | `"false"` | no |
+| enable\_transferserver\_endpoint | Should be true if you want to provision an TRANSFERSERVER endpoint to the VPC | string | `"false"` | no |
 | enable\_vpn\_gateway | Should be true if you want to create a new VPN Gateway resource and attach it to the VPC | string | `"false"` | no |
 | events\_endpoint\_private\_dns\_enabled | Whether or not to associate a private hosted zone with the specified VPC for CloudWatch Events endpoint | string | `"false"` | no |
 | events\_endpoint\_security\_group\_ids | The ID of one or more security groups to associate with the network interface for CloudWatch Events endpoint | list | `[]` | no |
 | events\_endpoint\_subnet\_ids | The ID of one or more subnets in which to create a network interface for CloudWatch Events endpoint. Only a single subnet within an AZ is supported. If omitted, private subnets will be used. | list | `[]` | no |
 | external\_nat\_ip\_ids | List of EIP IDs to be assigned to the NAT Gateways (used in combination with reuse_nat_ips) | list | `[]` | no |
+| git\_codecommit\_endpoint\_private\_dns\_enabled | Whether or not to associate a private hosted zone with the specified VPC for GIT_CODECOMMIT endpoint | string | `"false"` | no |
+| git\_codecommit\_endpoint\_security\_group\_ids | The ID of one or more security groups to associate with the network interface for GIT_CODECOMMIT endpoint | list | `[]` | no |
+| git\_codecommit\_endpoint\_subnet\_ids | The ID of one or more subnets in which to create a network interface for GIT_CODECOMMIT endpoint. Only a single subnet within an AZ is supported. If omitted, private subnets will be used. | list | `[]` | no |
+| glue\_endpoint\_private\_dns\_enabled | Whether or not to associate a private hosted zone with the specified VPC for GLUE endpoint | string | `"false"` | no |
+| glue\_endpoint\_security\_group\_ids | The ID of one or more security groups to associate with the network interface for GLUE endpoint | list | `[]` | no |
+| glue\_endpoint\_subnet\_ids | The ID of one or more subnets in which to create a network interface for GLUE endpoint. Only a single subnet within an AZ is supported. If omitted, private subnets will be used. | list | `[]` | no |
 | igw\_tags | Additional tags for the internet gateway | map | `{}` | no |
 | instance\_tenancy | A tenancy option for instances launched into the VPC | string | `"default"` | no |
 | intra\_acl\_tags | Additional tags for the intra subnets network ACL | map | `{}` | no |
@@ -318,6 +344,12 @@ Sometimes it is handy to have public access to Redshift clusters (for example if
 | intra\_subnet\_suffix | Suffix to append to intra subnets name | string | `"intra"` | no |
 | intra\_subnet\_tags | Additional tags for the intra subnets | map | `{}` | no |
 | intra\_subnets | A list of intra subnets | list | `[]` | no |
+| kinesis\_firehose\_endpoint\_private\_dns\_enabled | Whether or not to associate a private hosted zone with the specified VPC for KINESIS_FIREHOSE endpoint | string | `"false"` | no |
+| kinesis\_firehose\_endpoint\_security\_group\_ids | The ID of one or more security groups to associate with the network interface for KINESIS_FIREHOSE endpoint | list | `[]` | no |
+| kinesis\_firehose\_endpoint\_subnet\_ids | The ID of one or more subnets in which to create a network interface for KINESIS_FIREHOSE endpoint. Only a single subnet within an AZ is supported. If omitted, private subnets will be used. | list | `[]` | no |
+| kinesis\_streams\_endpoint\_private\_dns\_enabled | Whether or not to associate a private hosted zone with the specified VPC for KINESIS_STREAMS endpoint | string | `"false"` | no |
+| kinesis\_streams\_endpoint\_security\_group\_ids | The ID of one or more security groups to associate with the network interface for KINESIS_STREAMS endpoint | list | `[]` | no |
+| kinesis\_streams\_endpoint\_subnet\_ids | The ID of one or more subnets in which to create a network interface for KINESIS_STREAMS endpoint. Only a single subnet within an AZ is supported. If omitted, private subnets will be used. | list | `[]` | no |
 | kms\_endpoint\_private\_dns\_enabled | Whether or not to associate a private hosted zone with the specified VPC for KMS endpoint | string | `"false"` | no |
 | kms\_endpoint\_security\_group\_ids | The ID of one or more security groups to associate with the network interface for KMS endpoint | list | `[]` | no |
 | kms\_endpoint\_subnet\_ids | The ID of one or more subnets in which to create a network interface for KMS endpoint. Only a single subnet within an AZ is supported. If omitted, private subnets will be used. | list | `[]` | no |
@@ -362,7 +394,13 @@ Sometimes it is handy to have public access to Redshift clusters (for example if
 | redshift\_subnet\_tags | Additional tags for the redshift subnets | map | `{}` | no |
 | redshift\_subnets | A list of redshift subnets | list | `[]` | no |
 | reuse\_nat\_ips | Should be true if you don't want EIPs to be created for your NAT Gateways and will instead pass them in via the 'external_nat_ip_ids' variable | string | `"false"` | no |
+| sagemaker\_notebook\_endpoint\_private\_dns\_enabled | Whether or not to associate a private hosted zone with the specified VPC for SAGEMAKER_NOTEBOOK endpoint | string | `"false"` | no |
+| sagemaker\_notebook\_endpoint\_security\_group\_ids | The ID of one or more security groups to associate with the network interface for SAGEMAKER_NOTEBOOK endpoint | list | `[]` | no |
+| sagemaker\_notebook\_endpoint\_subnet\_ids | The ID of one or more subnets in which to create a network interface for SAGEMAKER_NOTEBOOK endpoint. Only a single subnet within an AZ is supported. If omitted, private subnets will be used. | list | `[]` | no |
 | secondary\_cidr\_blocks | List of secondary CIDR blocks to associate with the VPC to extend the IP Address pool | list | `[]` | no |
+| secretsmanager\_endpoint\_private\_dns\_enabled | Whether or not to associate a private hosted zone with the specified VPC for SECRETSMANAGER endpoint | string | `"false"` | no |
+| secretsmanager\_endpoint\_security\_group\_ids | The ID of one or more security groups to associate with the network interface for SECRETSMANAGER endpoint | list | `[]` | no |
+| secretsmanager\_endpoint\_subnet\_ids | The ID of one or more subnets in which to create a network interface for SECRETSMANAGER endpoint. Only a single subnet within an AZ is supported. If omitted, private subnets will be used. | list | `[]` | no |
 | single\_nat\_gateway | Should be true if you want to provision a single shared NAT Gateway across all of your private networks | string | `"false"` | no |
 | sns\_endpoint\_private\_dns\_enabled | Whether or not to associate a private hosted zone with the specified VPC for SNS endpoint | string | `"false"` | no |
 | sns\_endpoint\_security\_group\_ids | The ID of one or more security groups to associate with the network interface for SNS endpoint | list | `[]` | no |
@@ -376,7 +414,13 @@ Sometimes it is handy to have public access to Redshift clusters (for example if
 | ssmmessages\_endpoint\_private\_dns\_enabled | Whether or not to associate a private hosted zone with the specified VPC for SSMMESSAGES endpoint | string | `"false"` | no |
 | ssmmessages\_endpoint\_security\_group\_ids | The ID of one or more security groups to associate with the network interface for SSMMESSAGES endpoint | list | `[]` | no |
 | ssmmessages\_endpoint\_subnet\_ids | The ID of one or more subnets in which to create a network interface for SSMMESSAGES endpoint. Only a single subnet within an AZ is supported. If omitted, private subnets will be used. | list | `[]` | no |
+| sts\_endpoint\_private\_dns\_enabled | Whether or not to associate a private hosted zone with the specified VPC for STS endpoint | string | `"false"` | no |
+| sts\_endpoint\_security\_group\_ids | The ID of one or more security groups to associate with the network interface for STS endpoint | list | `[]` | no |
+| sts\_endpoint\_subnet\_ids | The ID of one or more subnets in which to create a network interface for STS endpoint. Only a single subnet within an AZ is supported. If omitted, private subnets will be used. | list | `[]` | no |
 | tags | A map of tags to add to all resources | map | `{}` | no |
+| transferserver\_endpoint\_private\_dns\_enabled | Whether or not to associate a private hosted zone with the specified VPC for TRANSFERSERVER endpoint | string | `"false"` | no |
+| transferserver\_endpoint\_security\_group\_ids | The ID of one or more security groups to associate with the network interface for TRANSFERSERVER endpoint | list | `[]` | no |
+| transferserver\_endpoint\_subnet\_ids | The ID of one or more subnets in which to create a network interface for TRANSFERSERVER endpoint. Only a single subnet within an AZ is supported. If omitted, private subnets will be used. | list | `[]` | no |
 | vpc\_endpoint\_tags | Additional tags for the VPC Endpoints | map | `{}` | no |
 | vpc\_tags | Additional tags for the VPC | map | `{}` | no |
 | vpn\_gateway\_id | ID of VPN Gateway to attach to the VPC | string | `""` | no |
@@ -448,6 +492,15 @@ Sometimes it is handy to have public access to Redshift clusters (for example if
 | vpc\_endpoint\_cloudtrail\_dns\_entry | The DNS entries for the VPC Endpoint for CloudTrail. |
 | vpc\_endpoint\_cloudtrail\_id | The ID of VPC endpoint for CloudTrail |
 | vpc\_endpoint\_cloudtrail\_network\_interface\_ids | One or more network interfaces for the VPC Endpoint for CloudTrail. |
+| vpc\_endpoint\_codebuild\_dns\_entry | The DNS entries for the VPC Endpoint for CODEBUILD. |
+| vpc\_endpoint\_codebuild\_id | The ID of VPC endpoint for CODEBUILD |
+| vpc\_endpoint\_codebuild\_network\_interface\_ids | One or more network interfaces for the VPC Endpoint for CODEBUILD. |
+| vpc\_endpoint\_codecommit\_dns\_entry | The DNS entries for the VPC Endpoint for CODECOMMIT. |
+| vpc\_endpoint\_codecommit\_id | The ID of VPC endpoint for CODECOMMIT |
+| vpc\_endpoint\_codecommit\_network\_interface\_ids | One or more network interfaces for the VPC Endpoint for CODECOMMIT. |
+| vpc\_endpoint\_config\_dns\_entry | The DNS entries for the VPC Endpoint for CONFIG. |
+| vpc\_endpoint\_config\_id | The ID of VPC endpoint for CONFIG |
+| vpc\_endpoint\_config\_network\_interface\_ids | One or more network interfaces for the VPC Endpoint for CONFIG. |
 | vpc\_endpoint\_dynamodb\_id | The ID of VPC endpoint for DynamoDB |
 | vpc\_endpoint\_dynamodb\_pl\_id | The prefix list for the DynamoDB VPC endpoint. |
 | vpc\_endpoint\_ec2\_dns\_entry | The DNS entries for the VPC Endpoint for EC2. |
@@ -477,6 +530,18 @@ Sometimes it is handy to have public access to Redshift clusters (for example if
 | vpc\_endpoint\_events\_dns\_entry | The DNS entries for the VPC Endpoint for CloudWatch Events. |
 | vpc\_endpoint\_events\_id | The ID of VPC endpoint for CloudWatch Events |
 | vpc\_endpoint\_events\_network\_interface\_ids | One or more network interfaces for the VPC Endpoint for CloudWatch Events. |
+| vpc\_endpoint\_git\_codecommit\_dns\_entry | The DNS entries for the VPC Endpoint for GIT_CODECOMMIT. |
+| vpc\_endpoint\_git\_codecommit\_id | The ID of VPC endpoint for GIT_CODECOMMIT |
+| vpc\_endpoint\_git\_codecommit\_network\_interface\_ids | One or more network interfaces for the VPC Endpoint for GIT_CODECOMMIT. |
+| vpc\_endpoint\_glue\_dns\_entry | The DNS entries for the VPC Endpoint for GLUE. |
+| vpc\_endpoint\_glue\_id | The ID of VPC endpoint for GLUE |
+| vpc\_endpoint\_glue\_network\_interface\_ids | One or more network interfaces for the VPC Endpoint for GLUE. |
+| vpc\_endpoint\_kinesis\_firehose\_dns\_entry | The DNS entries for the VPC Endpoint for KINESIS_FIREHOSE. |
+| vpc\_endpoint\_kinesis\_firehose\_id | The ID of VPC endpoint for KINESIS_FIREHOSE |
+| vpc\_endpoint\_kinesis\_firehose\_network\_interface\_ids | One or more network interfaces for the VPC Endpoint for KINESIS_FIREHOSE. |
+| vpc\_endpoint\_kinesis\_streams\_dns\_entry | The DNS entries for the VPC Endpoint for KINESIS_STREAMS. |
+| vpc\_endpoint\_kinesis\_streams\_id | The ID of VPC endpoint for KINESIS_STREAMS |
+| vpc\_endpoint\_kinesis\_streams\_network\_interface\_ids | One or more network interfaces for the VPC Endpoint for KINESIS_STREAMS. |
 | vpc\_endpoint\_kms\_dns\_entry | The DNS entries for the VPC Endpoint for KMS. |
 | vpc\_endpoint\_kms\_id | The ID of VPC endpoint for KMS |
 | vpc\_endpoint\_kms\_network\_interface\_ids | One or more network interfaces for the VPC Endpoint for KMS. |
@@ -488,6 +553,12 @@ Sometimes it is handy to have public access to Redshift clusters (for example if
 | vpc\_endpoint\_monitoring\_network\_interface\_ids | One or more network interfaces for the VPC Endpoint for CloudWatch Monitoring. |
 | vpc\_endpoint\_s3\_id | The ID of VPC endpoint for S3 |
 | vpc\_endpoint\_s3\_pl\_id | The prefix list for the S3 VPC endpoint. |
+| vpc\_endpoint\_sagemaker\_notebook\_dns\_entry | The DNS entries for the VPC Endpoint for SAGEMAKER_NOTEBOOK. |
+| vpc\_endpoint\_sagemaker\_notebook\_id | The ID of VPC endpoint for SAGEMAKER_NOTEBOOK |
+| vpc\_endpoint\_sagemaker\_notebook\_network\_interface\_ids | One or more network interfaces for the VPC Endpoint for SAGEMAKER_NOTEBOOK. |
+| vpc\_endpoint\_secretsmanager\_dns\_entry | The DNS entries for the VPC Endpoint for SECRETSMANAGER. |
+| vpc\_endpoint\_secretsmanager\_id | The ID of VPC endpoint for SECRETSMANAGER |
+| vpc\_endpoint\_secretsmanager\_network\_interface\_ids | One or more network interfaces for the VPC Endpoint for SECRETSMANAGER. |
 | vpc\_endpoint\_sns\_dns\_entry | The DNS entries for the VPC Endpoint for SNS. |
 | vpc\_endpoint\_sns\_id | The ID of VPC endpoint for SNS |
 | vpc\_endpoint\_sns\_network\_interface\_ids | One or more network interfaces for the VPC Endpoint for SNS. |
@@ -500,6 +571,12 @@ Sometimes it is handy to have public access to Redshift clusters (for example if
 | vpc\_endpoint\_ssmmessages\_dns\_entry | The DNS entries for the VPC Endpoint for SSMMESSAGES. |
 | vpc\_endpoint\_ssmmessages\_id | The ID of VPC endpoint for SSMMESSAGES |
 | vpc\_endpoint\_ssmmessages\_network\_interface\_ids | One or more network interfaces for the VPC Endpoint for SSMMESSAGES. |
+| vpc\_endpoint\_sts\_dns\_entry | The DNS entries for the VPC Endpoint for STS. |
+| vpc\_endpoint\_sts\_id | The ID of VPC endpoint for STS |
+| vpc\_endpoint\_sts\_network\_interface\_ids | One or more network interfaces for the VPC Endpoint for STS. |
+| vpc\_endpoint\_transferserver\_dns\_entry | The DNS entries for the VPC Endpoint for TRANSFERSERVER. |
+| vpc\_endpoint\_transferserver\_id | The ID of VPC endpoint for TRANSFERSERVER |
+| vpc\_endpoint\_transferserver\_network\_interface\_ids | One or more network interfaces for the VPC Endpoint for TRANSFERSERVER. |
 | vpc\_id | The ID of the VPC |
 | vpc\_instance\_tenancy | Tenancy of instances spin up within VPC |
 | vpc\_main\_route\_table\_id | The ID of the main route table associated with this VPC |
