@@ -729,6 +729,12 @@ variable "enable_sagemaker_notebook_endpoint" {
   default     = false
 }
 
+variable "sagemaker_notebook_endpoint_region" {
+  description = "Region to use for Sagemaker Notebook endpoint"
+  type        = string
+  default     = ""
+}
+
 variable "sagemaker_notebook_endpoint_security_group_ids" {
   description = "The ID of one or more security groups to associate with the network interface for SAGEMAKER_NOTEBOOK endpoint"
   default     = []

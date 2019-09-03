@@ -128,7 +128,7 @@ resource "aws_vpc_endpoint" "codecommit" {
 data "aws_vpc_endpoint_service" "git_codecommit" {
   count = "${var.create_vpc && var.enable_git_codecommit_endpoint ? 1 : 0}"
 
-  service = "git_codecommit"
+  service = "git-codecommit"
 }
 
 resource "aws_vpc_endpoint" "git_codecommit" {
@@ -312,7 +312,7 @@ resource "aws_vpc_endpoint" "ec2messages" {
 data "aws_vpc_endpoint_service" "transferserver" {
   count = "${var.create_vpc && var.enable_transferserver_endpoint ? 1 : 0}"
 
-  service = "transferserver"
+  service = "transfer.server"
 }
 
 resource "aws_vpc_endpoint" "transferserver" {
@@ -634,7 +634,7 @@ resource "aws_vpc_endpoint" "events" {
 data "aws_vpc_endpoint_service" "kinesis_streams" {
   count = "${var.create_vpc && var.enable_kinesis_streams_endpoint ? 1 : 0}"
 
-  service = "kinesis_streams"
+  service = "kinesis-streams"
 }
 
 resource "aws_vpc_endpoint" "kinesis_streams" {
@@ -657,7 +657,7 @@ resource "aws_vpc_endpoint" "kinesis_streams" {
 data "aws_vpc_endpoint_service" "kinesis_firehose" {
   count = "${var.create_vpc && var.enable_kinesis_firehose_endpoint ? 1 : 0}"
 
-  service = "kinesis_firehose"
+  service = "kinesis-firehose"
 }
 
 resource "aws_vpc_endpoint" "kinesis_firehose" {
@@ -703,7 +703,7 @@ resource "aws_vpc_endpoint" "glue" {
 data "aws_vpc_endpoint_service" "sagemaker_notebook" {
   count = "${var.create_vpc && var.enable_sagemaker_notebook_endpoint ? 1 : 0}"
 
-  service = "sagemaker_notebook"
+  service = "aws.sagemaker.${var.sagemaker_notebook_endpoint_region}.notebook"
 }
 
 resource "aws_vpc_endpoint" "sagemaker_notebook" {
