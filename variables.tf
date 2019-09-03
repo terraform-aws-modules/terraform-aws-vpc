@@ -981,6 +981,191 @@ variable "sts_endpoint_private_dns_enabled" {
   default     = false
 }
 
+variable "enable_cloudformation_endpoint" {
+  description = "Should be true if you want to provision a Cloudformation endpoint to the VPC"
+  type        = bool
+  default     = false
+}
+
+variable "cloudformation_endpoint_security_group_ids" {
+  description = "The ID of one or more security groups to associate with the network interface for Cloudformation endpoint"
+  type        = list(string)
+  default     = []
+}
+
+variable "cloudformation_endpoint_subnet_ids" {
+  description = "The ID of one or more subnets in which to create a network interface for Cloudformation endpoint. Only a single subnet within an AZ is supported. If omitted, private subnets will be used."
+  type        = list(string)
+  default     = []
+}
+
+variable "cloudformation_endpoint_private_dns_enabled" {
+  description = "Whether or not to associate a private hosted zone with the specified VPC for Cloudformation endpoint"
+  type        = bool
+  default     = false
+}
+variable "enable_codepipeline_endpoint" {
+  description = "Should be true if you want to provision a CodePipeline endpoint to the VPC"
+  type        = bool
+  default     = false
+}
+
+variable "codepipeline_endpoint_security_group_ids" {
+  description = "The ID of one or more security groups to associate with the network interface for CodePipeline endpoint"
+  type        = list(string)
+  default     = []
+}
+
+variable "codepipeline_endpoint_subnet_ids" {
+  description = "The ID of one or more subnets in which to create a network interface for CodePipeline endpoint. Only a single subnet within an AZ is supported. If omitted, private subnets will be used."
+  type        = list(string)
+  default     = []
+}
+
+variable "codepipeline_endpoint_private_dns_enabled" {
+  description = "Whether or not to associate a private hosted zone with the specified VPC for CodePipeline endpoint"
+  type        = bool
+  default     = false
+}
+variable "enable_appmesh_envoy_management_endpoint" {
+  description = "Should be true if you want to provision a AppMesh endpoint to the VPC"
+  type        = bool
+  default     = false
+}
+
+variable "appmesh_envoy_management_endpoint_security_group_ids" {
+  description = "The ID of one or more security groups to associate with the network interface for AppMesh endpoint"
+  type        = list(string)
+  default     = []
+}
+
+variable "appmesh_envoy_management_endpoint_subnet_ids" {
+  description = "The ID of one or more subnets in which to create a network interface for AppMesh endpoint. Only a single subnet within an AZ is supported. If omitted, private subnets will be used."
+  type        = list(string)
+  default     = []
+}
+
+variable "appmesh_envoy_management_endpoint_private_dns_enabled" {
+  description = "Whether or not to associate a private hosted zone with the specified VPC for AppMesh endpoint"
+  type        = bool
+  default     = false
+}
+variable "enable_servicecatalog_endpoint" {
+  description = "Should be true if you want to provision a Service Catalog endpoint to the VPC"
+  type        = bool
+  default     = false
+}
+
+variable "servicecatalog_endpoint_security_group_ids" {
+  description = "The ID of one or more security groups to associate with the network interface for Service Catalog endpoint"
+  type        = list(string)
+  default     = []
+}
+
+variable "servicecatalog_endpoint_subnet_ids" {
+  description = "The ID of one or more subnets in which to create a network interface for Service Catalog endpoint. Only a single subnet within an AZ is supported. If omitted, private subnets will be used."
+  type        = list(string)
+  default     = []
+}
+
+variable "servicecatalog_endpoint_private_dns_enabled" {
+  description = "Whether or not to associate a private hosted zone with the specified VPC for Service Catalog endpoint"
+  type        = bool
+  default     = false
+}
+variable "enable_storagegateway_endpoint" {
+  description = "Should be true if you want to provision a Storage Gateway endpoint to the VPC"
+  type        = bool
+  default     = false
+}
+
+variable "storagegateway_endpoint_security_group_ids" {
+  description = "The ID of one or more security groups to associate with the network interface for Storage Gateway endpoint"
+  type        = list(string)
+  default     = []
+}
+
+variable "storagegateway_endpoint_subnet_ids" {
+  description = "The ID of one or more subnets in which to create a network interface for Storage Gateway endpoint. Only a single subnet within an AZ is supported. If omitted, private subnets will be used."
+  type        = list(string)
+  default     = []
+}
+
+variable "storagegateway_endpoint_private_dns_enabled" {
+  description = "Whether or not to associate a private hosted zone with the specified VPC for Storage Gateway endpoint"
+  type        = bool
+  default     = false
+}
+variable "enable_transfer_endpoint" {
+  description = "Should be true if you want to provision a Transfer endpoint tothe VPC"
+  type        = bool
+  default     = false
+}
+
+variable "transfer_endpoint_security_group_ids" {
+  description = "The ID of one or more security groups to associate with the network interface for Transfer endpoint"
+  type        = list(string)
+  default     = []
+}
+
+variable "transfer_endpoint_subnet_ids" {
+  description = "The ID of one or more subnets in which to create a network interface for Transfer endpoint. Only a single subnet within an AZ is supported. Ifomitted, private subnets will be used."
+  type        = list(string)
+  default     = []
+}
+
+variable "transfer_endpoint_private_dns_enabled" {
+  description = "Whether or not to associate a private hosted zone with the specified VPC for Transfer endpoint"
+  type        = bool
+  default     = false
+}
+variable "enable_sagemaker_api_endpoint" {
+  description = "Should be true if you want to provision a SageMaker API endpoint to the VPC"
+  type        = bool
+  default     = false
+}
+
+variable "sagemaker_api_endpoint_security_group_ids" {
+  description = "The ID of one or more security groups to associate with the network interface for SageMaker API endpoint"
+  type        = list(string)
+  default     = []
+}
+
+variable "sagemaker_api_endpoint_subnet_ids" {
+  description = "The ID of one or more subnets in which to create a network interface for SageMaker API endpoint. Only a single subnet within an AZ is supported. If omitted, private subnets will be used."
+  type        = list(string)
+  default     = []
+}
+
+variable "sagemaker_api_endpoint_private_dns_enabled" {
+  description = "Whether or not to associate a private hosted zone with the specified VPC for SageMaker API endpoint"
+  type        = bool
+  default     = false
+}
+variable "enable_sagemaker_runtime_endpoint" {
+  description = "Should be true if you want to provision a SageMaker Runtime endpoint to the VPC"
+  type        = bool
+  default     = false
+}
+
+variable "sagemaker_runtime_endpoint_security_group_ids" {
+  description = "The ID of one or more security groups to associate with the network interface for SageMaker Runtime endpoint"
+  type        = list(string)
+  default     = []
+}
+
+variable "sagemaker_runtime_endpoint_subnet_ids" {
+  description = "The ID of one or more subnets in which to create a network interface for SageMaker Runtime endpoint. Only a single subnet within an AZ is supported. If omitted, private subnets will be used."
+  type        = list(string)
+  default     = []
+}
+
+variable "sagemaker_runtime_endpoint_private_dns_enabled" {
+  description = "Whether or not to associate a private hosted zone with the specified VPC for SageMaker Runtime endpoint"
+  type        = bool
+  default     = false
+}
+
 variable "map_public_ip_on_launch" {
   description = "Should be false if you do not want to auto-assign public IP on launch"
   type        = bool
