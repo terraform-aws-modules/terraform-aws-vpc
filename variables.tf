@@ -1746,3 +1746,44 @@ variable "elasticache_outbound_acl_rules" {
   ]
 }
 
+variable "eks_worker_subnet_ipv6_prefixes" {
+  description = "Assigns IPv6 EKS Worker Node subnet id based on the Amazon provided /56 prefix base 10 integer (0-256). Must be of equal length to the corresponding IPv4 subnet list"
+  type        = list
+  default     = []
+}
+
+variable "eks_worker_subnet_assign_ipv6_address_on_creation" {
+  description = "Assign IPv6 address on EKS Worker Node subnet, must be disabled to change IPv6 CIDRs. This is the IPv6 equivalent of map_public_ip_on_launch"
+  type        = bool
+  default     = null
+}
+
+variable "eks_worker_subnet_suffix" {
+  description = "Suffix to append to EKS Worker Node subnets name"
+  type        = string
+  default     = "eks-worker"
+}
+
+variable "eks_worker_subnets" {
+  description = "A list of EKS Worker Node subnets inside the VPC"
+  type        = list(string)
+  default     = []
+}
+
+variable "eks_worker_subnet_tags" {
+  description = "Additional tags for the EKS Worker Node subnets"
+  type        = map(string)
+  default     = {}
+}
+
+variable "eks_cluster_name" {
+  description = "Name of EKS Cluster using worker subnets"
+  type        = string
+  default     = ""
+}
+
+variable "enable_eks_resource_tags" {
+  description = "Enables creating tags on vpc and subnets required for EKS to manage resources."
+  type        = bool
+  default     = true
+}

@@ -151,6 +151,23 @@ Since AWS Lambda functions allocate Elastic Network Interfaces in proportion to 
 
 You can add additional tags with `intra_subnet_tags` as with other subnet types.
 
+## EKS (Kubernetes) Resource Tagging and Subnets
+
+When `enable_eks_resource_tags` is set to `true`, resources will be tagged according to the required structure for Amazon Elastic Kubernetes Service ([read more](https://docs.aws.amazon.com/eks/latest/userguide/network_reqs.html#vpc-tagging)).
+
+If `eks_cluster_name` is provided, cluster specific tags will also be applied.
+
+Tagging will be applied as follows:
+
+| Resource | Tag Name | Value |
+| :------- | :------ | ---: |
+| vpc | kubernetes.io/cluster/<cluster-name> | shared |
+| public_subnets | kubernetes.io/role/elb | 1 |
+| private_subnets | kubernetes.io/role/internal-elb | 1 |
+| eks_worker_subnets | kubernetes.io/cluster/<cluster-name> | shared |
+
+
+
 ## Conditional creation
 
 Sometimes you need to have a way to create VPC resources conditionally but Terraform does not allow to use `count` inside `module` block, so the solution is to specify argument `create_vpc`.

@@ -42,6 +42,7 @@ resource "aws_vpc" "this" {
       "Name" = format("%s", var.name)
     },
     var.tags,
+    var.enable_eks_resource_tags && var.eks_cluster_name != "" ? { "kubernetes.io/cluster/${var.eks_cluster_name}" = "shared" } : {},
     var.vpc_tags,
   )
 }
@@ -300,6 +301,7 @@ resource "aws_subnet" "public" {
       )
     },
     var.tags,
+    var.enable_eks_resource_tags ? { "kubernetes.io/role/elb" = "1" } : {},
     var.public_subnet_tags,
   )
 }
@@ -326,7 +328,35 @@ resource "aws_subnet" "private" {
       )
     },
     var.tags,
+    var.enable_eks_resource_tags ? { "kubernetes.io/role/internal-elb" = "1" } : {},
     var.private_subnet_tags,
+  )
+}
+
+#################
+# EKS Worker Subnet
+#################
+resource "aws_subnet" "eks_worker" {
+  count = var.create_vpc && length(var.eks_worker_subnets) > 0 ? length(var.eks_worker_subnets) : 0
+
+  vpc_id                          = local.vpc_id
+  cidr_block                      = var.eks_worker_subnets[count.index]
+  availability_zone               = element(var.azs, count.index)
+  assign_ipv6_address_on_creation = var.eks_worker_subnet_assign_ipv6_address_on_creation == null ? var.assign_ipv6_address_on_creation : var.eks_worker_subnet_assign_ipv6_address_on_creation
+
+  ipv6_cidr_block = var.enable_ipv6 && length(var.eks_worker_subnet_ipv6_prefixes) > 0 ? cidrsubnet(aws_vpc.this[0].ipv6_cidr_block, 8, var.eks_worker_subnet_ipv6_prefixes[count.index]) : null
+
+  tags = merge(
+    {
+      "Name" = format(
+        "%s-${var.eks_worker_subnet_suffix}-%s",
+        var.name,
+        element(var.azs, count.index),
+      )
+    },
+    var.tags,
+    var.enable_eks_resource_tags && var.eks_cluster_name != "" ? { "kubernetes.io/cluster/${var.eks_cluster_name}" = "shared" } : {},
+    var.eks_worker_subnet_tags,
   )
 }
 
@@ -1043,6 +1073,7 @@ resource "aws_default_vpc" "this" {
       "Name" = format("%s", var.default_vpc_name)
     },
     var.tags,
+    var.enable_eks_resource_tags ? { "kubernetes.io/cluster/${var.eks_cluster_name}" = "shared" } : {},
     var.default_vpc_tags,
   )
 }
