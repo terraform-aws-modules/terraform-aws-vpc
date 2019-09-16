@@ -198,6 +198,26 @@ output "intra_subnets_ipv6_cidr_blocks" {
   value       = aws_subnet.intra.*.ipv6_cidr_block
 }
 
+output "eks_worker_subnets" {
+  description = "List of IDs of eks_worker subnets"
+  value       = aws_subnet.eks_worker.*.id
+}
+
+output "eks_worker_subnet_arns" {
+  description = "List of ARNs of eks_worker subnets"
+  value       = aws_subnet.eks_worker.*.arn
+}
+
+output "eks_worker_subnets_cidr_blocks" {
+  description = "List of cidr_blocks of eks_worker subnets"
+  value       = aws_subnet.eks_worker.*.cidr_block
+}
+
+output "eks_worker_subnets_ipv6_cidr_blocks" {
+  description = "List of IPv6 cidr_blocks of eks_worker subnets in an IPv6 enabled VPC"
+  value       = aws_subnet.eks_worker.*.ipv6_cidr_block
+}
+
 output "elasticache_subnet_group" {
   description = "ID of elasticache subnet group"
   value       = concat(aws_elasticache_subnet_group.elasticache.*.id, [""])[0]
