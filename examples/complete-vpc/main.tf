@@ -12,7 +12,7 @@ module "vpc" {
 
   name = "complete-example"
 
-  cidr = "10.10.0.0/16"
+  cidr = "20.10.0.0/16" # 10.0.0.0/8 is reserved for EC2-Classic
 
   azs                 = ["eu-west-1a", "eu-west-1b", "eu-west-1c"]
   private_subnets     = ["10.10.1.0/24", "10.10.2.0/24", "10.10.3.0/24"]
@@ -26,6 +26,9 @@ module "vpc" {
 
   enable_dns_hostnames = true
   enable_dns_support   = true
+
+  enable_classiclink             = true
+  enable_classiclink_dns_support = true
 
   enable_nat_gateway = true
   single_nat_gateway = true
@@ -96,6 +99,11 @@ module "vpc" {
     Owner       = "user"
     Environment = "staging"
     Name        = "complete"
+  }
+
+  vpc_endpoint_tags = {
+    Project  = "Secret"
+    Endpoint = "true"
   }
 }
 
