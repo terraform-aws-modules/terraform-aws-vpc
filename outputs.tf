@@ -901,6 +901,7 @@ output "vpc_endpoint_sagemaker_api_dns_entry" {
   description = "The DNS entries for the VPC Endpoint for SageMaker API."
   value       = flatten(aws_vpc_endpoint.sagemaker_api.*.dns_entry)
 }
+
 output "vpc_endpoint_sagemaker_runtime_id" {
   description = "The ID of VPC endpoint for SageMaker Runtime"
   value       = concat(aws_vpc_endpoint.sagemaker_runtime.*.id, [""])[0]
@@ -914,6 +915,51 @@ output "vpc_endpoint_sagemaker_runtime_network_interface_ids" {
 output "vpc_endpoint_sagemaker_runtime_dns_entry" {
   description = "The DNS entries for the VPC Endpoint for SageMaker Runtime."
   value       = flatten(aws_vpc_endpoint.sagemaker_runtime.*.dns_entry)
+}
+
+output "vpc_endpoint_appstream_id" {
+  description = "The ID of VPC endpoint for AppStream"
+  value       = concat(aws_vpc_endpoint.appstream.*.id, [""])[0]
+}
+
+output "vpc_endpoint_appstream_network_interface_ids" {
+  description = "One or more network interfaces for the VPC Endpoint for AppStream."
+  value       = flatten(aws_vpc_endpoint.appstream.*.network_interface_ids)
+}
+
+output "vpc_endpoint_appstream_dns_entry" {
+  description = "The DNS entries for the VPC Endpoint for AppStream."
+  value       = flatten(aws_vpc_endpoint.appstream.*.dns_entry)
+}
+
+output "vpc_endpoint_athena_id" {
+  description = "The ID of VPC endpoint for Athena"
+  value       = concat(aws_vpc_endpoint.athena.*.id, [""])[0]
+}
+
+output "vpc_endpoint_athena_network_interface_ids" {
+  description = "One or more network interfaces for the VPC Endpoint for Athena."
+  value       = flatten(aws_vpc_endpoint.athena.*.network_interface_ids)
+}
+
+output "vpc_endpoint_athena_dns_entry" {
+  description = "The DNS entries for the VPC Endpoint for Athena."
+  value       = flatten(aws_vpc_endpoint.athena.*.dns_entry)
+}
+
+output "vpc_endpoint_rekognition_id" {
+  description = "The ID of VPC endpoint for Rekognition"
+  value       = concat(aws_vpc_endpoint.rekognition.*.id, [""])[0]
+}
+
+output "vpc_endpoint_rekognition_network_interface_ids" {
+  description = "One or more network interfaces for the VPC Endpoint for Rekognition."
+  value       = flatten(aws_vpc_endpoint.rekognition.*.network_interface_ids)
+}
+
+output "vpc_endpoint_rekognition_dns_entry" {
+  description = "The DNS entries for the VPC Endpoint for Rekognition."
+  value       = flatten(aws_vpc_endpoint.rekognition.*.dns_entry)
 }
 
 # Static values (arguments)
