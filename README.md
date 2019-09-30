@@ -19,7 +19,8 @@ These types of resources are supported:
   * Interface: EC2, SSM, EC2 Messages, SSM Messages, SQS, ECR API, ECR DKR, API Gateway, KMS, ECS, ECS Agent, ECS 
   Telemetry, SNS, CloudWatch(Monitoring, Logs, Events), Elastic Load Balancing, CloudTrail, SageMaker(Notebook, Runtime, API), 
   Cloudformation, CodeBuild, CodeCommit, CodePipeline, Storage Gateway, SFTP(Transfer Server), Service Catalog,
-  AppMesh, STS, Glue, Kinesis(Firehose & Streams), Config, Secrets Manager
+  AppMesh, STS, Glue, Kinesis(Firehose & Streams), Config, Secrets Manager, AppStream,
+  Athena, Rekognition
 * [RDS DB Subnet Group](https://www.terraform.io/docs/providers/aws/r/db_subnet_group.html)
 * [ElastiCache Subnet Group](https://www.terraform.io/docs/providers/aws/r/elasticache_subnet_group.html)
 * [Redshift Subnet Group](https://www.terraform.io/docs/providers/aws/r/redshift_subnet_group.html)
@@ -212,7 +213,13 @@ Sometimes it is handy to have public access to Redshift clusters (for example if
 | appmesh\_envoy\_management\_endpoint\_private\_dns\_enabled | Whether or not to associate a private hosted zone with the specified VPC for APPMESH Envoy Management endpoint | string | `"false"` | no |
 | appmesh\_envoy\_management\_endpoint\_security\_group\_ids | The ID of one or more security groups to associate with the network interface for APPMESH Envoy Management endpoint | list | `[]` | no |
 | appmesh\_envoy\_management\_endpoint\_subnet\_ids | The ID of one or more subnets in which to create a network interface for APPMESH Envoy Management endpoint. Only a single subnet within an AZ is supported. If omitted, private subnets will be used. | list | `[]` | no |
+| appstream\_endpoint\_private\_dns\_enabled | Whether or not to associate a private hosted zone with the specified VPC for AppStream endpoint | string | `"false"` | no |
+| appstream\_endpoint\_security\_group\_ids | The ID of one or more security groups to associate with the network interface for AppStream endpoint | list | `[]` | no |
+| appstream\_endpoint\_subnet\_ids | The ID of one or more subnets in which to create a network interface for AppStream endpoint. Only a single subnet within an AZ is supported. Ifomitted, private subnets will be used. | list | `[]` | no |
 | assign\_generated\_ipv6\_cidr\_block | Requests an Amazon-provided IPv6 CIDR block with a /56 prefix length for the VPC. You cannot specify the range of IP addresses, or the size of the CIDR block | string | `"false"` | no |
+| athena\_endpoint\_private\_dns\_enabled | Whether or not to associate a private hosted zone with the specified VPC for Athena endpoint | string | `"false"` | no |
+| athena\_endpoint\_security\_group\_ids | The ID of one or more security groups to associate with the network interface for Athena endpoint | list | `[]` | no |
+| athena\_endpoint\_subnet\_ids | The ID of one or more subnets in which to create a network interface for Athena endpoint. Only a single subnet within an AZ is supported. Ifomitted, private subnets will be used. | list | `[]` | no |
 | azs | A list of availability zones in the region | list | `[]` | no |
 | cidr | The CIDR block for the VPC. Default value is a valid CIDR, but not acceptable by AWS and should be overridden | string | `"0.0.0.0/0"` | no |
 | cloudformation\_endpoint\_private\_dns\_enabled | Whether or not to associate a private hosted zone with the specified VPC for CloudFormation endpoint | string | `"false"` | no |
@@ -300,6 +307,8 @@ Sometimes it is handy to have public access to Redshift clusters (for example if
 | elasticloadbalancing\_endpoint\_subnet\_ids | The ID of one or more subnets in which to create a network interface for Elastic Load Balancing endpoint. Only a single subnet within an AZ is supported. If omitted, private subnets will be used. | list | `[]` | no |
 | enable\_apigw\_endpoint | Should be true if you want to provision an api gateway endpoint to the VPC | string | `"false"` | no |
 | enable\_appmesh\_envoy\_management\_endpoint | Should be true if you want to provision an APPMESH Envoy Management endpoint to the VPC | string | `"false"` | no |
+| enable\_appstream\_endpoint | Should be true if you want to provision an AppStream endpoint to the VPC | string | `"false"` | no |
+| enable\_athena\_endpoint | Should be true if you want to provision an Athena endpoint to the VPC | string | `"false"` | no |
 | enable\_cloudformation\_endpoint | Should be true if you want to provision an CloudFormation endpoint to the VPC | string | `"false"` | no |
 | enable\_cloudtrail\_endpoint | Should be true if you want to provision a CloudTrail endpoint to the VPC | string | `"false"` | no |
 | enable\_codebuild\_endpoint | Should be true if you want to provision an CodeBuild endpoint to the VPC | string | `"false"` | no |
@@ -328,6 +337,7 @@ Sometimes it is handy to have public access to Redshift clusters (for example if
 | enable\_monitoring\_endpoint | Should be true if you want to provision a CloudWatch Monitoring endpoint to the VPC | string | `"false"` | no |
 | enable\_nat\_gateway | Should be true if you want to provision NAT Gateways for each of your private networks | string | `"false"` | no |
 | enable\_public\_redshift | Controls if redshift should have public routing table | string | `"false"` | no |
+| enable\_rekognition\_endpoint | Should be true if you want to provision an Rekognition endpoint to the VPC | string | `"false"` | no |
 | enable\_s3\_endpoint | Should be true if you want to provision an S3 endpoint to the VPC | string | `"false"` | no |
 | enable\_sagemaker\_api\_endpoint | Should be true if you want to provision an Sagemaker API endpoint to the VPC | string | `"false"` | no |
 | enable\_sagemaker\_notebook\_endpoint | Should be true if you want to provision an SageMaker Notebook endpoint to the VPC | string | `"false"` | no |
@@ -412,6 +422,9 @@ Sometimes it is handy to have public access to Redshift clusters (for example if
 | redshift\_subnet\_suffix | Suffix to append to redshift subnets name | string | `"redshift"` | no |
 | redshift\_subnet\_tags | Additional tags for the redshift subnets | map | `{}` | no |
 | redshift\_subnets | A list of redshift subnets | list | `[]` | no |
+| rekognition\_endpoint\_private\_dns\_enabled | Whether or not to associate a private hosted zone with the specified VPC for Rekognition endpoint | string | `"false"` | no |
+| rekognition\_endpoint\_security\_group\_ids | The ID of one or more security groups to associate with the network interface for Rekognition endpoint | list | `[]` | no |
+| rekognition\_endpoint\_subnet\_ids | The ID of one or more subnets in which to create a network interface for Rekognition endpoint. Only a single subnet within an AZ is supported. Ifomitted, private subnets will be used. | list | `[]` | no |
 | reuse\_nat\_ips | Should be true if you don't want EIPs to be created for your NAT Gateways and will instead pass them in via the 'external_nat_ip_ids' variable | string | `"false"` | no |
 | sagemaker\_api\_endpoint\_private\_dns\_enabled | Whether or not to associate a private hosted zone with the specified VPC for Sagemaker API endpoint | string | `"false"` | no |
 | sagemaker\_api\_endpoint\_security\_group\_ids | The ID of one or more security groups to associate with the network interface for Sagemaker API endpoint | list | `[]` | no |
@@ -527,6 +540,12 @@ Sometimes it is handy to have public access to Redshift clusters (for example if
 | vpc\_endpoint\_appmesh\_envoy\_management\_dns\_entry | The DNS entries for the VPC Endpoint for AppMesh. |
 | vpc\_endpoint\_appmesh\_envoy\_management\_id | The ID of VPC endpoint for AppMesh |
 | vpc\_endpoint\_appmesh\_envoy\_management\_network\_interface\_ids | One or more network interfaces for the VPC Endpoint for AppMesh. |
+| vpc\_endpoint\_appstream\_dns\_entry | The DNS entries for the VPC Endpoint for AppStream. |
+| vpc\_endpoint\_appstream\_id | The ID of VPC endpoint for AppStream |
+| vpc\_endpoint\_appstream\_network\_interface\_ids | One or more network interfaces for the VPC Endpoint for AppStream. |
+| vpc\_endpoint\_athena\_dns\_entry | The DNS entries for the VPC Endpoint for Athena. |
+| vpc\_endpoint\_athena\_id | The ID of VPC endpoint for Athena |
+| vpc\_endpoint\_athena\_network\_interface\_ids | One or more network interfaces for the VPC Endpoint for Athena. |
 | vpc\_endpoint\_cloudformation\_dns\_entry | The DNS entries for the VPC Endpoint for Cloudformation. |
 | vpc\_endpoint\_cloudformation\_network\_interface\_ids | One or more network interfaces for the VPC Endpoint for Cloudformation. |
 | vpc\_endpoint\_cloudtrail\_dns\_entry | The DNS entries for the VPC Endpoint for CloudTrail. |
@@ -594,6 +613,9 @@ Sometimes it is handy to have public access to Redshift clusters (for example if
 | vpc\_endpoint\_monitoring\_dns\_entry | The DNS entries for the VPC Endpoint for CloudWatch Monitoring. |
 | vpc\_endpoint\_monitoring\_id | The ID of VPC endpoint for CloudWatch Monitoring |
 | vpc\_endpoint\_monitoring\_network\_interface\_ids | One or more network interfaces for the VPC Endpoint for CloudWatch Monitoring. |
+| vpc\_endpoint\_rekognition\_dns\_entry | The DNS entries for the VPC Endpoint for Rekognition. |
+| vpc\_endpoint\_rekognition\_id | The ID of VPC endpoint for Rekognition |
+| vpc\_endpoint\_rekognition\_network\_interface\_ids | One or more network interfaces for the VPC Endpoint for Rekognition. |
 | vpc\_endpoint\_s3\_id | The ID of VPC endpoint for S3 |
 | vpc\_endpoint\_s3\_pl\_id | The prefix list for the S3 VPC endpoint. |
 | vpc\_endpoint\_sagemaker\_api\_dns\_entry | The DNS entries for the VPC Endpoint for SageMaker API. |
