@@ -891,3 +891,25 @@ resource "aws_vpc_endpoint" "sagemaker_runtime" {
   private_dns_enabled = var.sagemaker_runtime_endpoint_private_dns_enabled
   tags                = local.vpce_tags
 }
+
+#############################
+# VPC Endpoint for AppStream
+#############################
+data "aws_vpc_endpoint_service" "appstream" {
+  count = var.create_vpc && var.enable_appstream_endpoint ? 1 : 0
+
+  service = "appstream"
+}
+
+resource "aws_vpc_endpoint" "appstream" {
+  count = var.create_vpc && var.enable_appstream_endpoint ? 1 : 0
+
+  vpc_id            = local.vpc_id
+  service_name      = data.aws_vpc_endpoint_service.appstream[0].service_name
+  vpc_endpoint_type = "Interface"
+
+  security_group_ids  = var.appstream_endpoint_security_group_ids
+  subnet_ids          = coalescelist(var.appstream_endpoint_subnet_ids, aws_subnet.private.*.id)
+  private_dns_enabled = var.appstream_endpoint_private_dns_enabled
+  tags                = local.vpce_tags
+}
