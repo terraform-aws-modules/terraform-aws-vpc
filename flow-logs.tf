@@ -3,8 +3,8 @@ locals {
   enable_flow_log = var.create_vpc && var.enable_flow_log
 
   create_flow_log_s3_bucket            = local.enable_flow_log && var.push_flow_log_to_s3 && var.flow_log_destination_arn == ""
-  create_flow_log_cloudwatch_iam_role  = local.enable_flow_log && !var.push_flow_log_to_s3 && var.flow_log_cloudwatch_iam_role_arn == ""
-  create_flow_log_cloudwatch_log_group = local.enable_flow_log && !var.push_flow_log_to_s3 && var.flow_log_destination_arn == ""
+  create_flow_log_cloudwatch_iam_role  = local.enable_flow_log && ! var.push_flow_log_to_s3 && var.flow_log_cloudwatch_iam_role_arn == ""
+  create_flow_log_cloudwatch_log_group = local.enable_flow_log && ! var.push_flow_log_to_s3 && var.flow_log_destination_arn == ""
 
   flow_log_cloudwatch_destination = local.create_flow_log_cloudwatch_log_group ? join("", aws_cloudwatch_log_group.flow_log.*.arn) : var.flow_log_destination_arn
   flow_log_s3_destination         = local.create_flow_log_s3_bucket ? join("", aws_s3_bucket.flow_log.*.arn) : var.flow_log_destination_arn
@@ -132,7 +132,7 @@ data "aws_iam_policy_document" "flow_log_s3" {
     ]
 
     resources = [
-      "arn:aws:s3:::flow-log-${local.vpc_id}/*"]
+    "arn:aws:s3:::flow-log-${local.vpc_id}/*"]
   }
 
   statement {
