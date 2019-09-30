@@ -309,6 +309,8 @@ Sometimes it is handy to have public access to Redshift clusters (for example if
 | enable\_apigw\_endpoint | Should be true if you want to provision an api gateway endpoint to the VPC | bool | `"false"` | no |
 | enable\_appmesh\_envoy\_management\_endpoint | Should be true if you want to provision a AppMesh endpoint to the VPC | bool | `"false"` | no |
 | enable\_cloudformation\_endpoint | Should be true if you want to provision a Cloudformation endpoint to the VPC | bool | `"false"` | no |
+| enable\_classiclink | Should be true to enable ClassicLink for the VPC. Only valid in regions and accounts that support EC2 Classic. | bool | `"null"` | no |
+| enable\_classiclink\_dns\_support | Should be true to enable ClassicLink DNS Support for the VPC. Only valid in regions and accounts that support EC2 Classic. | bool | `"null"` | no |
 | enable\_cloudtrail\_endpoint | Should be true if you want to provision a CloudTrail endpoint to the VPC | bool | `"false"` | no |
 | enable\_codebuild\_endpoint | Should be true if you want to provision an Codebuild endpoint to the VPC | string | `"false"` | no |
 | enable\_codecommit\_endpoint | Should be true if you want to provision an Codecommit endpoint to the VPC | string | `"false"` | no |
