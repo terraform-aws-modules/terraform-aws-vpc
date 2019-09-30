@@ -17,7 +17,9 @@ These types of resources are supported:
 * [VPC Endpoint](https://www.terraform.io/docs/providers/aws/r/vpc_endpoint.html):
   * Gateway: S3, DynamoDB
   * Interface: EC2, SSM, EC2 Messages, SSM Messages, SQS, ECR API, ECR DKR, API Gateway, KMS, ECS, ECS Agent, ECS 
-  Telemetry, SNS, CloudWatch(Monitoring, Logs, Events), Elastic Load Balancing, CloudTrail- 
+  Telemetry, SNS, CloudWatch(Monitoring, Logs, Events), Elastic Load Balancing, CloudTrail, SageMaker(Notebook, Runtime, API), 
+  Cloudformation, CodeBuild, CodeCommit, CodePipeline, Storage Gateway, SFTP(Transfer Server), Service Catalog,
+  AppMesh, STS, Glue, Kinesis(Firehose & Streams), Config, Secrets Manager
 * [RDS DB Subnet Group](https://www.terraform.io/docs/providers/aws/r/db_subnet_group.html)
 * [ElastiCache Subnet Group](https://www.terraform.io/docs/providers/aws/r/elasticache_subnet_group.html)
 * [Redshift Subnet Group](https://www.terraform.io/docs/providers/aws/r/redshift_subnet_group.html)
@@ -522,6 +524,11 @@ Sometimes it is handy to have public access to Redshift clusters (for example if
 | vpc\_endpoint\_apigw\_dns\_entry | The DNS entries for the VPC Endpoint for APIGW. |
 | vpc\_endpoint\_apigw\_id | The ID of VPC endpoint for APIGW |
 | vpc\_endpoint\_apigw\_network\_interface\_ids | One or more network interfaces for the VPC Endpoint for APIGW. |
+| vpc\_endpoint\_appmesh\_envoy\_management\_dns\_entry | The DNS entries for the VPC Endpoint for AppMesh. |
+| vpc\_endpoint\_appmesh\_envoy\_management\_id | The ID of VPC endpoint for AppMesh |
+| vpc\_endpoint\_appmesh\_envoy\_management\_network\_interface\_ids | One or more network interfaces for the VPC Endpoint for AppMesh. |
+| vpc\_endpoint\_cloudformation\_dns\_entry | The DNS entries for the VPC Endpoint for Cloudformation. |
+| vpc\_endpoint\_cloudformation\_network\_interface\_ids | One or more network interfaces for the VPC Endpoint for Cloudformation. |
 | vpc\_endpoint\_cloudtrail\_dns\_entry | The DNS entries for the VPC Endpoint for CloudTrail. |
 | vpc\_endpoint\_cloudtrail\_id | The ID of VPC endpoint for CloudTrail |
 | vpc\_endpoint\_cloudtrail\_network\_interface\_ids | One or more network interfaces for the VPC Endpoint for CloudTrail. |
@@ -531,6 +538,9 @@ Sometimes it is handy to have public access to Redshift clusters (for example if
 | vpc\_endpoint\_codecommit\_dns\_entry | The DNS entries for the VPC Endpoint for CodeCommit. |
 | vpc\_endpoint\_codecommit\_id | The ID of VPC endpoint for CodeCommit |
 | vpc\_endpoint\_codecommit\_network\_interface\_ids | One or more network interfaces for the VPC Endpoint for CodeCommit. |
+| vpc\_endpoint\_codepipeline\_dns\_entry | The DNS entries for the VPC Endpoint for CodePipeline. |
+| vpc\_endpoint\_codepipeline\_id | The ID of VPC endpoint for CodePipeline |
+| vpc\_endpoint\_codepipeline\_network\_interface\_ids | One or more network interfaces for the VPC Endpoint for CodePipeline. |
 | vpc\_endpoint\_config\_dns\_entry | The DNS entries for the VPC Endpoint for Config. |
 | vpc\_endpoint\_config\_id | The ID of VPC endpoint for Config |
 | vpc\_endpoint\_config\_network\_interface\_ids | One or more network interfaces for the VPC Endpoint for Config. |
@@ -586,12 +596,21 @@ Sometimes it is handy to have public access to Redshift clusters (for example if
 | vpc\_endpoint\_monitoring\_network\_interface\_ids | One or more network interfaces for the VPC Endpoint for CloudWatch Monitoring. |
 | vpc\_endpoint\_s3\_id | The ID of VPC endpoint for S3 |
 | vpc\_endpoint\_s3\_pl\_id | The prefix list for the S3 VPC endpoint. |
+| vpc\_endpoint\_sagemaker\_api\_dns\_entry | The DNS entries for the VPC Endpoint for SageMaker API. |
+| vpc\_endpoint\_sagemaker\_api\_id | The ID of VPC endpoint for SageMaker API |
+| vpc\_endpoint\_sagemaker\_api\_network\_interface\_ids | One or more network interfaces for the VPC Endpoint for SageMaker API. |
 | vpc\_endpoint\_sagemaker\_notebook\_dns\_entry | The DNS entries for the VPC Endpoint for SageMaker Notebook. |
 | vpc\_endpoint\_sagemaker\_notebook\_id | The ID of VPC endpoint for SageMaker Notebook |
 | vpc\_endpoint\_sagemaker\_notebook\_network\_interface\_ids | One or more network interfaces for the VPC Endpoint for SageMaker Notebook. |
+| vpc\_endpoint\_sagemaker\_runtime\_dns\_entry | The DNS entries for the VPC Endpoint for SageMaker Runtime. |
+| vpc\_endpoint\_sagemaker\_runtime\_id | The ID of VPC endpoint for SageMaker Runtime |
+| vpc\_endpoint\_sagemaker\_runtime\_network\_interface\_ids | One or more network interfaces for the VPC Endpoint for SageMaker Runtime. |
 | vpc\_endpoint\_secretsmanager\_dns\_entry | The DNS entries for the VPC Endpoint for Secrets Manager. |
 | vpc\_endpoint\_secretsmanager\_id | The ID of VPC endpoint for Secrets Manager |
 | vpc\_endpoint\_secretsmanager\_network\_interface\_ids | One or more network interfaces for the VPC Endpoint for Secrets Manager. |
+| vpc\_endpoint\_servicecatalog\_dns\_entry | The DNS entries for the VPC Endpoint for Service Catalog. |
+| vpc\_endpoint\_servicecatalog\_id | The ID of VPC endpoint for Service Catalog |
+| vpc\_endpoint\_servicecatalog\_network\_interface\_ids | One or more network interfaces for the VPC Endpoint for Service Catalog. |
 | vpc\_endpoint\_sns\_dns\_entry | The DNS entries for the VPC Endpoint for SNS. |
 | vpc\_endpoint\_sns\_id | The ID of VPC endpoint for SNS |
 | vpc\_endpoint\_sns\_network\_interface\_ids | One or more network interfaces for the VPC Endpoint for SNS. |
@@ -604,9 +623,15 @@ Sometimes it is handy to have public access to Redshift clusters (for example if
 | vpc\_endpoint\_ssmmessages\_dns\_entry | The DNS entries for the VPC Endpoint for SSMMESSAGES. |
 | vpc\_endpoint\_ssmmessages\_id | The ID of VPC endpoint for SSMMESSAGES |
 | vpc\_endpoint\_ssmmessages\_network\_interface\_ids | One or more network interfaces for the VPC Endpoint for SSMMESSAGES. |
+| vpc\_endpoint\_storagegateway\_dns\_entry | The DNS entries for the VPC Endpoint for Storage Gateway. |
+| vpc\_endpoint\_storagegateway\_id | The ID of VPC endpoint for Storage Gateway |
+| vpc\_endpoint\_storagegateway\_network\_interface\_ids | One or more network interfaces for the VPC Endpoint for Storage Gateway. |
 | vpc\_endpoint\_sts\_dns\_entry | The DNS entries for the VPC Endpoint for STS. |
 | vpc\_endpoint\_sts\_id | The ID of VPC endpoint for STS |
 | vpc\_endpoint\_sts\_network\_interface\_ids | One or more network interfaces for the VPC Endpoint for STS. |
+| vpc\_endpoint\_transfer\_dns\_entry | The DNS entries for the VPC Endpoint for Transfer. |
+| vpc\_endpoint\_transfer\_id | The ID of VPC endpoint for Transfer |
+| vpc\_endpoint\_transfer\_network\_interface\_ids | One or more network interfaces for the VPC Endpoint for Transfer. |
 | vpc\_endpoint\_transferserver\_dns\_entry | The DNS entries for the VPC Endpoint for Transfer Server. |
 | vpc\_endpoint\_transferserver\_id | The ID of VPC endpoint for Transfer Server |
 | vpc\_endpoint\_transferserver\_network\_interface\_ids | One or more network interfaces for the VPC Endpoint for Transfer Server. |
