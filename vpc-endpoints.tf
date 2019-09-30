@@ -935,3 +935,25 @@ resource "aws_vpc_endpoint" "athena" {
   private_dns_enabled = var.athena_endpoint_private_dns_enabled
   tags                = local.vpce_tags
 }
+
+#############################
+# VPC Endpoint for Rekognition
+#############################
+data "aws_vpc_endpoint_service" "rekognition" {
+  count = var.create_vpc && var.enable_rekognition_endpoint ? 1 : 0
+
+  service = "rekognition"
+}
+
+resource "aws_vpc_endpoint" "rekognition" {
+  count = var.create_vpc && var.enable_rekognition_endpoint ? 1 : 0
+
+  vpc_id            = local.vpc_id
+  service_name      = data.aws_vpc_endpoint_service.rekognition[0].service_name
+  vpc_endpoint_type = "Interface"
+
+  security_group_ids  = var.rekognition_endpoint_security_group_ids
+  subnet_ids          = coalescelist(var.rekognition_endpoint_subnet_ids, aws_subnet.private.*.id)
+  private_dns_enabled = var.rekognition_endpoint_private_dns_enabled
+  tags                = local.vpce_tags
+}
