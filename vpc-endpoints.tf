@@ -913,3 +913,25 @@ resource "aws_vpc_endpoint" "appstream" {
   private_dns_enabled = var.appstream_endpoint_private_dns_enabled
   tags                = local.vpce_tags
 }
+
+#############################
+# VPC Endpoint for Athena
+#############################
+data "aws_vpc_endpoint_service" "athena" {
+  count = var.create_vpc && var.enable_athena_endpoint ? 1 : 0
+
+  service = "athena"
+}
+
+resource "aws_vpc_endpoint" "athena" {
+  count = var.create_vpc && var.enable_athena_endpoint ? 1 : 0
+
+  vpc_id            = local.vpc_id
+  service_name      = data.aws_vpc_endpoint_service.athena[0].service_name
+  vpc_endpoint_type = "Interface"
+
+  security_group_ids  = var.athena_endpoint_security_group_ids
+  subnet_ids          = coalescelist(var.athena_endpoint_subnet_ids, aws_subnet.private.*.id)
+  private_dns_enabled = var.athena_endpoint_private_dns_enabled
+  tags                = local.vpce_tags
+}
