@@ -12,6 +12,7 @@ resource "aws_vpc_endpoint" "s3" {
 
   vpc_id       = local.vpc_id
   service_name = data.aws_vpc_endpoint_service.s3[0].service_name
+  policy       = var.s3_endpoint_policy
   tags         = local.vpce_tags
 }
 
