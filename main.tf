@@ -100,6 +100,10 @@ resource "aws_internet_gateway" "this" {
     var.tags,
     var.igw_tags,
   )
+
+  lifecycle {
+    ignore_changes = var.ignored_tags
+  }
 }
 
 ################
