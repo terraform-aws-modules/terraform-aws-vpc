@@ -1207,9 +1207,3 @@ variable "elasticache_outbound_acl_rules" {
     },
   ]
 }
-
-variable "ignored_tags" {
-  description = "Tags to be ignored for lifecycle changes"
-  type        = list
-  default     = []
-}
