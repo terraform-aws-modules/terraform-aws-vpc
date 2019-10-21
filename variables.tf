@@ -4,12 +4,6 @@ variable "create_vpc" {
   default     = true
 }
 
-variable "vpc_id" {
-  description = "VPC id for use in cases where VPC was already created and you would like to reuse it with this module. Not required if create_vpc = true"
-  type = string
-  default = ""
-}
-
 variable "name" {
   description = "Name to be used on all the resources as identifier"
   default     = ""
