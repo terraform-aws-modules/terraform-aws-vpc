@@ -108,12 +108,10 @@ resource "aws_internet_gateway" "this" {
     var.igw_tags,
   )
 
-  lifecycle {
+   lifecycle {
     ignore_changes = [
-      tags["Owner"],
-      tags["DataClassification"],
-      tags["Type"],
-   ]
+      tags
+    ]
   }
 }
 
