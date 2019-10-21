@@ -15,16 +15,6 @@ locals {
       [""],
     ),
     0,
-<<<<<<< HEAD
-  ) : data.aws_vpc.vpc[0].id
-}
-
-data "aws_vpc" "vpc" {
-  count = var.create_vpc ? 0 : 1
-  id = var.vpc_id
-=======
-  )
->>>>>>> parent of 176fe47... Added data vpc in scenario that VPC is already created for you
 }
 
 ######
