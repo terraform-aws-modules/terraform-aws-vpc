@@ -20,7 +20,7 @@ These types of resources are supported:
   Telemetry, SNS, CloudWatch(Monitoring, Logs, Events), Elastic Load Balancing, CloudTrail, SageMaker(Notebook, Runtime, API), 
   Cloudformation, CodeBuild, CodeCommit, CodePipeline, Storage Gateway, SFTP(Transfer Server), Service Catalog,
   AppMesh, STS, Glue, Kinesis(Firehose & Streams), Config, Secrets Manager, AppStream,
-  Athena, Rekognition
+  Athena, Rekognition, Elastic File System, Cloud Directory
 * [RDS DB Subnet Group](https://www.terraform.io/docs/providers/aws/r/db_subnet_group.html)
 * [ElastiCache Subnet Group](https://www.terraform.io/docs/providers/aws/r/elasticache_subnet_group.html)
 * [Redshift Subnet Group](https://www.terraform.io/docs/providers/aws/r/redshift_subnet_group.html)
