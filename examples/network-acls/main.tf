@@ -105,6 +105,14 @@ locals {
         protocol    = "tcp"
         cidr_block  = "0.0.0.0/0"
       },
+      {
+        rule_number     = 140
+        rule_action     = "allow"
+        from_port       = 80
+        to_port         = 80
+        protocol        = "tcp"
+        ipv6_cidr_block = "::/0"
+      },
     ]
     public_outbound = [
       {
@@ -147,6 +155,14 @@ locals {
         protocol    = "icmp"
         cidr_block  = "10.0.0.0/22"
       },
+      {
+        rule_number     = 150
+        rule_action     = "allow"
+        from_port       = 90
+        to_port         = 90
+        protocol        = "tcp"
+        ipv6_cidr_block = "::/0"
+      },
     ]
     elasticache_outbound = [
       {
@@ -172,6 +188,14 @@ locals {
         icmp_type   = 12
         protocol    = "icmp"
         cidr_block  = "10.0.0.0/22"
+      },
+      {
+        rule_number     = 150
+        rule_action     = "allow"
+        from_port       = 90
+        to_port         = 90
+        protocol        = "tcp"
+        ipv6_cidr_block = "::/0"
       },
     ]
   }
