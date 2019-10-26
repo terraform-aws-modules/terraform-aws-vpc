@@ -989,6 +989,46 @@ variable "rekognition_endpoint_private_dns_enabled" {
   default     = false
 }
 
+variable "enable_efs_endpoint" {
+  description = "Should be true if you want to provision an EFS endpoint to the VPC"
+  default     = false
+}
+
+variable "efs_endpoint_security_group_ids" {
+  description = "The ID of one or more security groups to associate with the network interface for EFS endpoint"
+  default     = []
+}
+
+variable "efs_endpoint_subnet_ids" {
+  description = "The ID of one or more subnets in which to create a network interface for EFS endpoint. Only a single subnet within an AZ is supported. Ifomitted, private subnets will be used."
+  default     = []
+}
+
+variable "efs_endpoint_private_dns_enabled" {
+  description = "Whether or not to associate a private hosted zone with the specified VPC for EFS endpoint"
+  default     = false
+}
+
+variable "enable_cloud_directory_endpoint" {
+  description = "Should be true if you want to provision an Cloud Directory endpoint to the VPC"
+  default     = false
+}
+
+variable "cloud_directory_endpoint_security_group_ids" {
+  description = "The ID of one or more security groups to associate with the network interface for Cloud Directory endpoint"
+  default     = []
+}
+
+variable "cloud_directory_endpoint_subnet_ids" {
+  description = "The ID of one or more subnets in which to create a network interface for Cloud Directory endpoint. Only a single subnet within an AZ is supported. Ifomitted, private subnets will be used."
+  default     = []
+}
+
+variable "cloud_directory_endpoint_private_dns_enabled" {
+  description = "Whether or not to associate a private hosted zone with the specified VPC for Cloud Directory endpoint"
+  default     = false
+}
+
 variable "map_public_ip_on_launch" {
   description = "Should be false if you do not want to auto-assign public IP on launch"
   default     = true
