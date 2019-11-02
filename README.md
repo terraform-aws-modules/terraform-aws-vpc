@@ -369,9 +369,11 @@ Sometimes it is handy to have public access to Redshift clusters (for example if
 | events\_endpoint\_security\_group\_ids | The ID of one or more security groups to associate with the network interface for CloudWatch Events endpoint | list(string) | `[]` | no |
 | events\_endpoint\_subnet\_ids | The ID of one or more subnets in which to create a network interface for CloudWatch Events endpoint. Only a single subnet within an AZ is supported. If omitted, private subnets will be used. | list(string) | `[]` | no |
 | external\_nat\_ip\_ids | List of EIP IDs to be assigned to the NAT Gateways (used in combination with reuse_nat_ips) | list(string) | `[]` | no |
-| flow\_log\_cloudwatch\_iam\_role\_arn | The ARN for the IAM role that's used to post flow logs to a CloudWatch Logs log group. When create_flow_log_cloudwatch_iam_role is set to false, this argument needs to be provided.When create_flow_log_cloudwatch_iam_role is set to true, this argument is ignored. | string | `""` | no |
+| flow\_log\_cloudwatch\_iam\_role\_arn | The ARN for the IAM role that's used to post flow logs to a CloudWatch Logs log group. When flow_log_destination_arn is set to ARN of Cloudwatch Logs, this argument needs to be provided. | string | `""` | no |
+| flow\_log\_cloudwatch\_log\_group\_kms\_key\_id | The ARN of the KMS Key to use when encrypting log data for VPC flow logs. | string | `"null"` | no |
+| flow\_log\_cloudwatch\_log\_group\_retention\_in\_days | Specifies the number of days you want to retain log events in the specified log group for VPC flow logs. | number | `"null"` | no |
 | flow\_log\_destination\_arn | The ARN of the CloudWatch log group or S3 bucket where VPC Flow Logs will be pushed. If this ARN is a S3 bucket the appropriate permissions need to be set on that bucket's policy. When create_flow_log_cloudwatch_log_group is set to false this argument must be provided. When create_flow_log_cloudwatch_log_group is set to true this argument is ignored. | string | `""` | no |
-| flow\_log\_force\_destroy\_s3\_bucket | Whether or not to force destroy the Flow Logs S3 bucket created by this module | bool | `"false"` | no |
+| flow\_log\_destination\_type | Type of flow log destination. Can be s3 or cloud-watch-logs. | string | `"cloud-watch-logs"` | no |
 | flow\_log\_traffic\_type | The type of traffic to capture. Valid values: ACCEPT,REJECT, ALL. | string | `"ALL"` | no |
 | git\_codecommit\_endpoint\_private\_dns\_enabled | Whether or not to associate a private hosted zone with the specified VPC for Git Codecommit endpoint | string | `"false"` | no |
 | git\_codecommit\_endpoint\_security\_group\_ids | The ID of one or more security groups to associate with the network interface for Git Codecommit endpoint | list | `[]` | no |
@@ -435,7 +437,6 @@ Sometimes it is handy to have public access to Redshift clusters (for example if
 | public\_subnet\_suffix | Suffix to append to public subnets name | string | `"public"` | no |
 | public\_subnet\_tags | Additional tags for the public subnets | map(string) | `{}` | no |
 | public\_subnets | A list of public subnets inside the VPC | list(string) | `[]` | no |
-| push\_flow\_log\_to\_s3 | Whether or not to change the default behaviour from pushing logs to CloudWatch to pushing to S3 | bool | `"false"` | no |
 | redshift\_acl\_tags | Additional tags for the redshift subnets network ACL | map(string) | `{}` | no |
 | redshift\_dedicated\_network\_acl | Whether to use dedicated network ACL (not default) and custom rules for redshift subnets | bool | `"false"` | no |
 | redshift\_inbound\_acl\_rules | Redshift subnets inbound network ACL rules | list(map(string)) | `[ { "cidr_block": "0.0.0.0/0", "from_port": 0, "protocol": "-1", "rule_action": "allow", "rule_number": 100, "to_port": 0 } ]` | no |
@@ -564,7 +565,6 @@ Sometimes it is handy to have public access to Redshift clusters (for example if
 | redshift\_subnets\_cidr\_blocks | List of cidr_blocks of redshift subnets |
 | redshift\_subnets\_ipv6\_cidr\_blocks | List of IPv6 cidr_blocks of redshift subnets in an IPv6 enabled VPC |
 | vgw\_id | The ID of the VPN Gateway |
-| vop\_flow\_log\_cloudwatch\_iam\_role\_arn | The ARN of the IAM role used when pushing logs to CLoudWatch log group |
 | vpc\_arn | The ARN of the VPC |
 | vpc\_cidr\_block | The CIDR block of the VPC |
 | vpc\_enable\_dns\_hostnames | Whether or not the VPC has DNS hostname support |
@@ -690,9 +690,10 @@ Sometimes it is handy to have public access to Redshift clusters (for example if
 | vpc\_endpoint\_transferserver\_dns\_entry | The DNS entries for the VPC Endpoint for transferserver. |
 | vpc\_endpoint\_transferserver\_id | The ID of VPC endpoint for transferserver |
 | vpc\_endpoint\_transferserver\_network\_interface\_ids | One or more network interfaces for the VPC Endpoint for transferserver |
-| vpc\_flow\_log\_destination\_arn | The ARN of the destination for VPC FLow Logs |
-| vpc\_flow\_log\_destination\_type | The type of the destination for VPC FLow Logs |
-| vpc\_flow\_log\_id | The ID of the Flow Log reosurce |
+| vpc\_flow\_log\_cloudwatch\_iam\_role\_arn | The ARN of the IAM role used when pushing logs to Cloudwatch log group |
+| vpc\_flow\_log\_destination\_arn | The ARN of the destination for VPC Flow Logs |
+| vpc\_flow\_log\_destination\_type | The type of the destination for VPC Flow Logs |
+| vpc\_flow\_log\_id | The ID of the Flow Log resource |
 | vpc\_id | The ID of the VPC |
 | vpc\_instance\_tenancy | Tenancy of instances spin up within VPC |
 | vpc\_ipv6\_association\_id | The association ID for the IPv6 CIDR block |

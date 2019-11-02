@@ -18,12 +18,7 @@ module "vpc" {
   private_subnets = ["10.0.1.0/24", "10.0.2.0/24", "10.0.3.0/24"]
   public_subnets  = ["10.0.101.0/24", "10.0.102.0/24", "10.0.103.0/24"]
 
-  assign_generated_ipv6_cidr_block = true
-
-  enable_nat_gateway = true
-  single_nat_gateway = true
-
-  enable_flow_log = true
+  enable_flow_log          = true
   flow_log_destination_arn = aws_cloudwatch_log_group.vpc_flow_log.arn
 
   tags = {

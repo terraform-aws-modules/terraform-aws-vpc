@@ -26,11 +26,14 @@ Note that this example may create resources which can cost money (AWS Elastic IP
 
 | Name | Description |
 |------|-------------|
-| azs | A list of availability zones spefified as argument to this module |
-| nat\_public\_ips | List of public Elastic IPs created for AWS NAT Gateway |
-| private\_subnets | List of IDs of private subnets |
-| public\_subnets | List of IDs of public subnets |
-| vpc\_cidr\_block | The CIDR block of the VPC |
-| vpc\_id | The ID of the VPC |
+| vpc\_flow\_logs\_s3\_bucket\_vpc\_flow\_log\_destination\_arn | The ARN of the destination for VPC Flow Logs |
+| vpc\_flow\_logs\_s3\_bucket\_vpc\_flow\_log\_destination\_type | The type of the destination for VPC Flow Logs |
+| vpc\_flow\_logs\_s3\_bucket\_vpc\_flow\_log\_id | The ID of the Flow Log resource |
+| vpc\_with\_flow\_logs\_to\_cloudwatch\_logs\_default\_vpc\_flow\_log\_destination\_arn | The ARN of the destination for VPC Flow Logs |
+| vpc\_with\_flow\_logs\_to\_cloudwatch\_logs\_default\_vpc\_flow\_log\_destination\_type | The type of the destination for VPC Flow Logs |
+| vpc\_with\_flow\_logs\_to\_cloudwatch\_logs\_default\_vpc\_flow\_log\_id | The ID of the Flow Log resource |
+| vpc\_with\_flow\_logs\_to\_cloudwatch\_logs\_vpc\_flow\_log\_destination\_arn | The ARN of the destination for VPC Flow Logs |
+| vpc\_with\_flow\_logs\_to\_cloudwatch\_logs\_vpc\_flow\_log\_destination\_type | The type of the destination for VPC Flow Logs |
+| vpc\_with\_flow\_logs\_to\_cloudwatch\_logs\_vpc\_flow\_log\_id | The ID of the Flow Log resource |
 
 <!-- END OF PRE-COMMIT-TERRAFORM DOCS HOOK -->

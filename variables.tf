@@ -1836,10 +1836,10 @@ variable "flow_log_traffic_type" {
   default     = "ALL"
 }
 
-variable "push_flow_log_to_s3" {
-  description = "Whether or not to change the default behaviour from pushing logs to CloudWatch to pushing to S3"
-  type        = bool
-  default     = false
+variable "flow_log_destination_type" {
+  description = "Type of flow log destination. Can be s3 or cloud-watch-logs."
+  type        = string
+  default     = "cloud-watch-logs"
 }
 
 variable "flow_log_destination_arn" {
@@ -1849,13 +1849,19 @@ variable "flow_log_destination_arn" {
 }
 
 variable "flow_log_cloudwatch_iam_role_arn" {
-  description = "The ARN for the IAM role that's used to post flow logs to a CloudWatch Logs log group. When create_flow_log_cloudwatch_iam_role is set to false, this argument needs to be provided.When create_flow_log_cloudwatch_iam_role is set to true, this argument is ignored."
+  description = "The ARN for the IAM role that's used to post flow logs to a CloudWatch Logs log group. When flow_log_destination_arn is set to ARN of Cloudwatch Logs, this argument needs to be provided."
   type        = string
   default     = ""
 }
 
-variable "flow_log_force_destroy_s3_bucket" {
-  description = "Whether or not to force destroy the Flow Logs S3 bucket created by this module"
-  type        = bool
-  default     = false
+variable "flow_log_cloudwatch_log_group_retention_in_days" {
+  description = "Specifies the number of days you want to retain log events in the specified log group for VPC flow logs."
+  type        = number
+  default     = null
+}
+
+variable "flow_log_cloudwatch_log_group_kms_key_id" {
+  description = "The ARN of the KMS Key to use when encrypting log data for VPC flow logs."
+  type        = string
+  default     = null
 }
