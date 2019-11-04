@@ -507,7 +507,7 @@ variable "ssmmessages_endpoint_private_dns_enabled" {
 }
 
 variable "enable_transferserver_endpoint" {
-  description = "Should be true if you want to provision a Transer Server endpoint to the VPC"
+  description = "Should be true if you want to provision a Transfer Server endpoint to the VPC"
   type        = bool
   default     = false
 }
@@ -1109,7 +1109,7 @@ variable "storagegateway_endpoint_private_dns_enabled" {
   default     = false
 }
 variable "enable_transfer_endpoint" {
-  description = "Should be true if you want to provision a Transfer endpoint tothe VPC"
+  description = "Should be true if you want to provision a Transfer endpoint to the VPC"
   type        = bool
   default     = false
 }

@@ -361,8 +361,8 @@ Sometimes it is handy to have public access to Redshift clusters (for example if
 | enable\_ssmmessages\_endpoint | Should be true if you want to provision a SSMMESSAGES endpoint to the VPC | bool | `"false"` | no |
 | enable\_storagegateway\_endpoint | Should be true if you want to provision a Storage Gateway endpoint to the VPC | bool | `"false"` | no |
 | enable\_sts\_endpoint | Should be true if you want to provision a STS endpoint to the VPC | bool | `"false"` | no |
-| enable\_transfer\_endpoint | Should be true if you want to provision a Transfer endpoint tothe VPC | bool | `"false"` | no |
-| enable\_transferserver\_endpoint | Should be true if you want to provision a Transer Server endpoint to the VPC | bool | `"false"` | no |
+| enable\_transfer\_endpoint | Should be true if you want to provision a Transfer endpoint to the VPC | bool | `"false"` | no |
+| enable\_transferserver\_endpoint | Should be true if you want to provision a Transfer Server endpoint to the VPC | bool | `"false"` | no |
 | enable\_vpn\_gateway | Should be true if you want to create a new VPN Gateway resource and attach it to the VPC | bool | `"false"` | no |
 | events\_endpoint\_private\_dns\_enabled | Whether or not to associate a private hosted zone with the specified VPC for CloudWatch Events endpoint | bool | `"false"` | no |
 | events\_endpoint\_security\_group\_ids | The ID of one or more security groups to associate with the network interface for CloudWatch Events endpoint | list(string) | `[]` | no |
