@@ -328,6 +328,7 @@ Sometimes it is handy to have public access to Redshift clusters (for example if
 | enable\_dhcp\_options | Should be true if you want to specify a DHCP options set with a custom domain name, DNS servers, NTP servers, netbios servers, and/or netbios server type | bool | `"false"` | no |
 | enable\_dns\_hostnames | Should be true to enable DNS hostnames in the VPC | bool | `"false"` | no |
 | enable\_dns\_support | Should be true to enable DNS support in the VPC | bool | `"true"` | no |
+| enable\_default\_security\_group\_for\_endpoints | Should be true if you want to use the default security group for VPC Endpoints of type Interface | bool | `"false"` | no |
 | enable\_dynamodb\_endpoint | Should be true if you want to provision a DynamoDB endpoint to the VPC | bool | `"false"` | no |
 | enable\_ec2\_endpoint | Should be true if you want to provision an EC2 endpoint to the VPC | bool | `"false"` | no |
 | enable\_ec2messages\_endpoint | Should be true if you want to provision an EC2MESSAGES endpoint to the VPC | bool | `"false"` | no |

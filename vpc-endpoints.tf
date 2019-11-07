@@ -1,3 +1,10 @@
+data "aws_security_group" "default" {
+  count = var.enable_default_security_group_for_endpoints ? 1 : 0
+
+  name   = "default"
+  vpc_id = local.vpc_id
+}
+
 ######################
 # VPC Endpoint for S3
 ######################
@@ -91,8 +98,16 @@ resource "aws_vpc_endpoint" "codebuild" {
   service_name      = data.aws_vpc_endpoint_service.codebuild[0].service_name
   vpc_endpoint_type = "Interface"
 
-  security_group_ids  = var.codebuild_endpoint_security_group_ids
-  subnet_ids          = coalescelist(var.codebuild_endpoint_subnet_ids, aws_subnet.private.*.id)
+  security_group_ids = coalescelist(
+    var.codebuild_endpoint_security_group_ids,
+    data.aws_security_group.default.*.id,
+  )
+
+  subnet_ids = coalescelist(
+    var.codebuild_endpoint_subnet_ids,
+    aws_subnet.private.*.id
+  )
+
   private_dns_enabled = var.codebuild_endpoint_private_dns_enabled
   tags                = local.vpce_tags
 }
@@ -113,8 +128,16 @@ resource "aws_vpc_endpoint" "codecommit" {
   service_name      = data.aws_vpc_endpoint_service.codecommit[0].service_name
   vpc_endpoint_type = "Interface"
 
-  security_group_ids  = var.codecommit_endpoint_security_group_ids
-  subnet_ids          = coalescelist(var.codecommit_endpoint_subnet_ids, aws_subnet.private.*.id)
+  security_group_ids = coalescelist(
+    var.codecommit_endpoint_security_group_ids,
+    data.aws_security_group.default.*.id,
+  )
+
+  subnet_ids = coalescelist(
+    var.codecommit_endpoint_subnet_ids,
+    aws_subnet.private.*.id
+  )
+
   private_dns_enabled = var.codecommit_endpoint_private_dns_enabled
   tags                = local.vpce_tags
 }
@@ -135,8 +158,16 @@ resource "aws_vpc_endpoint" "git_codecommit" {
   service_name      = data.aws_vpc_endpoint_service.git_codecommit[0].service_name
   vpc_endpoint_type = "Interface"
 
-  security_group_ids  = var.git_codecommit_endpoint_security_group_ids
-  subnet_ids          = coalescelist(var.git_codecommit_endpoint_subnet_ids, aws_subnet.private.*.id)
+  security_group_ids = coalescelist(
+    var.git_codecommit_endpoint_security_group_ids,
+    data.aws_security_group.default.*.id,
+  )
+
+  subnet_ids = coalescelist(
+    var.git_codecommit_endpoint_subnet_ids,
+    aws_subnet.private.*.id
+  )
+
   private_dns_enabled = var.git_codecommit_endpoint_private_dns_enabled
   tags                = local.vpce_tags
 }
@@ -157,8 +188,16 @@ resource "aws_vpc_endpoint" "config" {
   service_name      = data.aws_vpc_endpoint_service.config[0].service_name
   vpc_endpoint_type = "Interface"
 
-  security_group_ids  = var.config_endpoint_security_group_ids
-  subnet_ids          = coalescelist(var.config_endpoint_subnet_ids, aws_subnet.private.*.id)
+  security_group_ids = coalescelist(
+    var.config_endpoint_security_group_ids,
+    data.aws_security_group.default.*.id,
+  )
+
+  subnet_ids = coalescelist(
+    var.config_endpoint_subnet_ids,
+    aws_subnet.private.*.id
+  )
+
   private_dns_enabled = var.config_endpoint_private_dns_enabled
   tags                = local.vpce_tags
 }
@@ -179,8 +218,16 @@ resource "aws_vpc_endpoint" "sqs" {
   service_name      = data.aws_vpc_endpoint_service.sqs[0].service_name
   vpc_endpoint_type = "Interface"
 
-  security_group_ids  = var.sqs_endpoint_security_group_ids
-  subnet_ids          = coalescelist(var.sqs_endpoint_subnet_ids, aws_subnet.private.*.id)
+  security_group_ids = coalescelist(
+    var.sqs_endpoint_security_group_ids,
+    data.aws_security_group.default.*.id,
+  )
+
+  subnet_ids = coalescelist(
+    var.sqs_endpoint_subnet_ids,
+    aws_subnet.private.*.id
+  )
+
   private_dns_enabled = var.sqs_endpoint_private_dns_enabled
   tags                = local.vpce_tags
 }
@@ -201,8 +248,16 @@ resource "aws_vpc_endpoint" "secretsmanager" {
   service_name      = data.aws_vpc_endpoint_service.secretsmanager[0].service_name
   vpc_endpoint_type = "Interface"
 
-  security_group_ids  = var.secretsmanager_endpoint_security_group_ids
-  subnet_ids          = coalescelist(var.secretsmanager_endpoint_subnet_ids, aws_subnet.private.*.id)
+  security_group_ids = coalescelist(
+    var.secretsmanager_endpoint_security_group_ids,
+    data.aws_security_group.default.*.id,
+  )
+
+  subnet_ids = coalescelist(
+    var.secretsmanager_endpoint_subnet_ids,
+    aws_subnet.private.*.id
+  )
+
   private_dns_enabled = var.secretsmanager_endpoint_private_dns_enabled
   tags                = local.vpce_tags
 }
@@ -223,8 +278,16 @@ resource "aws_vpc_endpoint" "ssm" {
   service_name      = data.aws_vpc_endpoint_service.ssm[0].service_name
   vpc_endpoint_type = "Interface"
 
-  security_group_ids  = var.ssm_endpoint_security_group_ids
-  subnet_ids          = coalescelist(var.ssm_endpoint_subnet_ids, aws_subnet.private.*.id)
+  security_group_ids = coalescelist(
+    var.ssm_endpoint_security_group_ids,
+    data.aws_security_group.default.*.id,
+  )
+
+  subnet_ids = coalescelist(
+    var.ssm_endpoint_subnet_ids,
+    aws_subnet.private.*.id
+  )
+
   private_dns_enabled = var.ssm_endpoint_private_dns_enabled
   tags                = local.vpce_tags
 }
@@ -245,8 +308,16 @@ resource "aws_vpc_endpoint" "ssmmessages" {
   service_name      = data.aws_vpc_endpoint_service.ssmmessages[0].service_name
   vpc_endpoint_type = "Interface"
 
-  security_group_ids  = var.ssmmessages_endpoint_security_group_ids
-  subnet_ids          = coalescelist(var.ssmmessages_endpoint_subnet_ids, aws_subnet.private.*.id)
+  security_group_ids = coalescelist(
+    var.ssmmessages_endpoint_security_group_ids,
+    data.aws_security_group.default.*.id,
+  )
+
+  subnet_ids = coalescelist(
+    var.ssmmessages_endpoint_subnet_ids,
+    aws_subnet.private.*.id
+  )
+
   private_dns_enabled = var.ssmmessages_endpoint_private_dns_enabled
   tags                = local.vpce_tags
 }
@@ -267,8 +338,16 @@ resource "aws_vpc_endpoint" "ec2" {
   service_name      = data.aws_vpc_endpoint_service.ec2[0].service_name
   vpc_endpoint_type = "Interface"
 
-  security_group_ids  = var.ec2_endpoint_security_group_ids
-  subnet_ids          = coalescelist(var.ec2_endpoint_subnet_ids, aws_subnet.private.*.id)
+  security_group_ids = coalescelist(
+    var.ec2_endpoint_security_group_ids,
+    data.aws_security_group.default.*.id,
+  )
+
+  subnet_ids = coalescelist(
+    var.ec2_endpoint_subnet_ids,
+    aws_subnet.private.*.id
+  )
+
   private_dns_enabled = var.ec2_endpoint_private_dns_enabled
   tags                = local.vpce_tags
 }
@@ -289,8 +368,16 @@ resource "aws_vpc_endpoint" "ec2messages" {
   service_name      = data.aws_vpc_endpoint_service.ec2messages[0].service_name
   vpc_endpoint_type = "Interface"
 
-  security_group_ids  = var.ec2messages_endpoint_security_group_ids
-  subnet_ids          = coalescelist(var.ec2messages_endpoint_subnet_ids, aws_subnet.private.*.id)
+  security_group_ids = coalescelist(
+    var.ec2messages_endpoint_security_group_ids,
+    data.aws_security_group.default.*.id,
+  )
+
+  subnet_ids = coalescelist(
+    var.ec2messages_endpoint_subnet_ids,
+    aws_subnet.private.*.id
+  )
+
   private_dns_enabled = var.ec2messages_endpoint_private_dns_enabled
   tags                = local.vpce_tags
 }
@@ -311,8 +398,16 @@ resource "aws_vpc_endpoint" "transferserver" {
   service_name      = data.aws_vpc_endpoint_service.transferserver[0].service_name
   vpc_endpoint_type = "Interface"
 
-  security_group_ids  = var.transferserver_endpoint_security_group_ids
-  subnet_ids          = coalescelist(var.transferserver_endpoint_subnet_ids, aws_subnet.private.*.id)
+  security_group_ids = coalescelist(
+    var.transferserver_endpoint_security_group_ids,
+    data.aws_security_group.default.*.id,
+  )
+
+  subnet_ids = coalescelist(
+    var.transferserver_endpoint_subnet_ids,
+    aws_subnet.private.*.id
+  )
+
   private_dns_enabled = var.transferserver_endpoint_private_dns_enabled
   tags                = local.vpce_tags
 }
@@ -333,8 +428,16 @@ resource "aws_vpc_endpoint" "ecr_api" {
   service_name      = data.aws_vpc_endpoint_service.ecr_api[0].service_name
   vpc_endpoint_type = "Interface"
 
-  security_group_ids  = var.ecr_api_endpoint_security_group_ids
-  subnet_ids          = coalescelist(var.ecr_api_endpoint_subnet_ids, aws_subnet.private.*.id)
+  security_group_ids = coalescelist(
+    var.ecr_api_endpoint_security_group_ids,
+    data.aws_security_group.default.*.id,
+  )
+
+  subnet_ids = coalescelist(
+    var.ecr_api_endpoint_subnet_ids,
+    aws_subnet.private.*.id
+  )
+
   private_dns_enabled = var.ecr_api_endpoint_private_dns_enabled
   tags                = local.vpce_tags
 }
@@ -355,8 +458,16 @@ resource "aws_vpc_endpoint" "ecr_dkr" {
   service_name      = data.aws_vpc_endpoint_service.ecr_dkr[0].service_name
   vpc_endpoint_type = "Interface"
 
-  security_group_ids  = var.ecr_dkr_endpoint_security_group_ids
-  subnet_ids          = coalescelist(var.ecr_dkr_endpoint_subnet_ids, aws_subnet.private.*.id)
+  security_group_ids = coalescelist(
+    var.ecr_dkr_endpoint_security_group_ids,
+    data.aws_security_group.default.*.id,
+  )
+
+  subnet_ids = coalescelist(
+    var.ecr_dkr_endpoint_subnet_ids,
+    aws_subnet.private.*.id
+  )
+
   private_dns_enabled = var.ecr_dkr_endpoint_private_dns_enabled
   tags                = local.vpce_tags
 }
@@ -377,8 +488,16 @@ resource "aws_vpc_endpoint" "apigw" {
   service_name      = data.aws_vpc_endpoint_service.apigw[0].service_name
   vpc_endpoint_type = "Interface"
 
-  security_group_ids  = var.apigw_endpoint_security_group_ids
-  subnet_ids          = coalescelist(var.apigw_endpoint_subnet_ids, aws_subnet.private.*.id)
+  security_group_ids = coalescelist(
+    var.apigw_endpoint_security_group_ids,
+    data.aws_security_group.default.*.id,
+  )
+
+  subnet_ids = coalescelist(
+    var.apigw_endpoint_subnet_ids,
+    aws_subnet.private.*.id
+  )
+
   private_dns_enabled = var.apigw_endpoint_private_dns_enabled
   tags                = local.vpce_tags
 }
@@ -399,8 +518,16 @@ resource "aws_vpc_endpoint" "kms" {
   service_name      = data.aws_vpc_endpoint_service.kms[0].service_name
   vpc_endpoint_type = "Interface"
 
-  security_group_ids  = var.kms_endpoint_security_group_ids
-  subnet_ids          = coalescelist(var.kms_endpoint_subnet_ids, aws_subnet.private.*.id)
+  security_group_ids = coalescelist(
+    var.kms_endpoint_security_group_ids,
+    data.aws_security_group.default.*.id,
+  )
+
+  subnet_ids = coalescelist(
+    var.kms_endpoint_subnet_ids,
+    aws_subnet.private.*.id
+  )
+
   private_dns_enabled = var.kms_endpoint_private_dns_enabled
   tags                = local.vpce_tags
 }
@@ -421,8 +548,16 @@ resource "aws_vpc_endpoint" "ecs" {
   service_name      = data.aws_vpc_endpoint_service.ecs[0].service_name
   vpc_endpoint_type = "Interface"
 
-  security_group_ids  = var.ecs_endpoint_security_group_ids
-  subnet_ids          = coalescelist(var.ecs_endpoint_subnet_ids, aws_subnet.private.*.id)
+  security_group_ids = coalescelist(
+    var.ecs_endpoint_security_group_ids,
+    data.aws_security_group.default.*.id,
+  )
+
+  subnet_ids = coalescelist(
+    var.ecs_endpoint_subnet_ids,
+    aws_subnet.private.*.id
+  )
+
   private_dns_enabled = var.ecs_endpoint_private_dns_enabled
   tags                = local.vpce_tags
 }
@@ -444,8 +579,16 @@ resource "aws_vpc_endpoint" "ecs_agent" {
   service_name      = data.aws_vpc_endpoint_service.ecs_agent[0].service_name
   vpc_endpoint_type = "Interface"
 
-  security_group_ids  = var.ecs_agent_endpoint_security_group_ids
-  subnet_ids          = coalescelist(var.ecs_agent_endpoint_subnet_ids, aws_subnet.private.*.id)
+  security_group_ids = coalescelist(
+    var.ecs_agent_endpoint_security_group_ids,
+    data.aws_security_group.default.*.id,
+  )
+
+  subnet_ids = coalescelist(
+    var.ecs_agent_endpoint_subnet_ids,
+    aws_subnet.private.*.id
+  )
+
   private_dns_enabled = var.ecs_agent_endpoint_private_dns_enabled
   tags                = local.vpce_tags
 }
@@ -467,8 +610,16 @@ resource "aws_vpc_endpoint" "ecs_telemetry" {
   service_name      = data.aws_vpc_endpoint_service.ecs_telemetry[0].service_name
   vpc_endpoint_type = "Interface"
 
-  security_group_ids  = var.ecs_telemetry_endpoint_security_group_ids
-  subnet_ids          = coalescelist(var.ecs_telemetry_endpoint_subnet_ids, aws_subnet.private.*.id)
+  security_group_ids = coalescelist(
+    var.ecs_telemetry_endpoint_security_group_ids,
+    data.aws_security_group.default.*.id,
+  )
+
+  subnet_ids = coalescelist(
+    var.ecs_telemetry_endpoint_subnet_ids,
+    aws_subnet.private.*.id
+  )
+
   private_dns_enabled = var.ecs_telemetry_endpoint_private_dns_enabled
   tags                = local.vpce_tags
 }
@@ -490,8 +641,16 @@ resource "aws_vpc_endpoint" "sns" {
   service_name      = data.aws_vpc_endpoint_service.sns[0].service_name
   vpc_endpoint_type = "Interface"
 
-  security_group_ids  = var.sns_endpoint_security_group_ids
-  subnet_ids          = coalescelist(var.sns_endpoint_subnet_ids, aws_subnet.private.*.id)
+  security_group_ids = coalescelist(
+    var.sns_endpoint_security_group_ids,
+    data.aws_security_group.default.*.id,
+  )
+
+  subnet_ids = coalescelist(
+    var.sns_endpoint_subnet_ids,
+    aws_subnet.private.*.id
+  )
+
   private_dns_enabled = var.sns_endpoint_private_dns_enabled
   tags                = local.vpce_tags
 }
@@ -513,8 +672,16 @@ resource "aws_vpc_endpoint" "monitoring" {
   service_name      = data.aws_vpc_endpoint_service.monitoring[0].service_name
   vpc_endpoint_type = "Interface"
 
-  security_group_ids  = var.monitoring_endpoint_security_group_ids
-  subnet_ids          = coalescelist(var.monitoring_endpoint_subnet_ids, aws_subnet.private.*.id)
+  security_group_ids = coalescelist(
+    var.monitoring_endpoint_security_group_ids,
+    data.aws_security_group.default.*.id,
+  )
+
+  subnet_ids = coalescelist(
+    var.monitoring_endpoint_subnet_ids,
+    aws_subnet.private.*.id
+  )
+
   private_dns_enabled = var.monitoring_endpoint_private_dns_enabled
   tags                = local.vpce_tags
 }
@@ -536,8 +703,16 @@ resource "aws_vpc_endpoint" "logs" {
   service_name      = data.aws_vpc_endpoint_service.logs[0].service_name
   vpc_endpoint_type = "Interface"
 
-  security_group_ids  = var.logs_endpoint_security_group_ids
-  subnet_ids          = coalescelist(var.logs_endpoint_subnet_ids, aws_subnet.private.*.id)
+  security_group_ids = coalescelist(
+    var.logs_endpoint_security_group_ids,
+    data.aws_security_group.default.*.id,
+  )
+
+  subnet_ids = coalescelist(
+    var.logs_endpoint_subnet_ids,
+    aws_subnet.private.*.id
+  )
+
   private_dns_enabled = var.logs_endpoint_private_dns_enabled
   tags                = local.vpce_tags
 }
@@ -559,8 +734,16 @@ resource "aws_vpc_endpoint" "events" {
   service_name      = data.aws_vpc_endpoint_service.events[0].service_name
   vpc_endpoint_type = "Interface"
 
-  security_group_ids  = var.events_endpoint_security_group_ids
-  subnet_ids          = coalescelist(var.events_endpoint_subnet_ids, aws_subnet.private.*.id)
+  security_group_ids = coalescelist(
+    var.events_endpoint_security_group_ids,
+    data.aws_security_group.default.*.id,
+  )
+
+  subnet_ids = coalescelist(
+    var.events_endpoint_subnet_ids,
+    aws_subnet.private.*.id
+  )
+
   private_dns_enabled = var.events_endpoint_private_dns_enabled
   tags                = local.vpce_tags
 }
@@ -582,8 +765,16 @@ resource "aws_vpc_endpoint" "elasticloadbalancing" {
   service_name      = data.aws_vpc_endpoint_service.elasticloadbalancing[0].service_name
   vpc_endpoint_type = "Interface"
 
-  security_group_ids  = var.elasticloadbalancing_endpoint_security_group_ids
-  subnet_ids          = coalescelist(var.elasticloadbalancing_endpoint_subnet_ids, aws_subnet.private.*.id)
+  security_group_ids = coalescelist(
+    var.elasticloadbalancing_endpoint_security_group_ids,
+    data.aws_security_group.default.*.id,
+  )
+
+  subnet_ids = coalescelist(
+    var.elasticloadbalancing_endpoint_subnet_ids,
+    aws_subnet.private.*.id
+  )
+
   private_dns_enabled = var.elasticloadbalancing_endpoint_private_dns_enabled
   tags                = local.vpce_tags
 }
@@ -605,8 +796,16 @@ resource "aws_vpc_endpoint" "cloudtrail" {
   service_name      = data.aws_vpc_endpoint_service.cloudtrail[0].service_name
   vpc_endpoint_type = "Interface"
 
-  security_group_ids  = var.cloudtrail_endpoint_security_group_ids
-  subnet_ids          = coalescelist(var.cloudtrail_endpoint_subnet_ids, aws_subnet.private.*.id)
+  security_group_ids = coalescelist(
+    var.cloudtrail_endpoint_security_group_ids,
+    data.aws_security_group.default.*.id,
+  )
+
+  subnet_ids = coalescelist(
+    var.cloudtrail_endpoint_subnet_ids,
+    aws_subnet.private.*.id
+  )
+
   private_dns_enabled = var.cloudtrail_endpoint_private_dns_enabled
   tags                = local.vpce_tags
 }
@@ -628,8 +827,16 @@ resource "aws_vpc_endpoint" "kinesis_streams" {
   service_name      = data.aws_vpc_endpoint_service.kinesis_streams[0].service_name
   vpc_endpoint_type = "Interface"
 
-  security_group_ids  = var.kinesis_streams_endpoint_security_group_ids
-  subnet_ids          = coalescelist(var.kinesis_streams_endpoint_subnet_ids, aws_subnet.private.*.id)
+  security_group_ids = coalescelist(
+    var.kinesis_streams_endpoint_security_group_ids,
+    data.aws_security_group.default.*.id,
+  )
+
+  subnet_ids = coalescelist(
+    var.kinesis_streams_endpoint_subnet_ids,
+    aws_subnet.private.*.id
+  )
+
   private_dns_enabled = var.kinesis_streams_endpoint_private_dns_enabled
   tags                = local.vpce_tags
 }
@@ -651,8 +858,16 @@ resource "aws_vpc_endpoint" "kinesis_firehose" {
   service_name      = data.aws_vpc_endpoint_service.kinesis_firehose[0].service_name
   vpc_endpoint_type = "Interface"
 
-  security_group_ids  = var.kinesis_firehose_endpoint_security_group_ids
-  subnet_ids          = coalescelist(var.kinesis_firehose_endpoint_subnet_ids, aws_subnet.private.*.id)
+  security_group_ids = coalescelist(
+    var.kinesis_firehose_endpoint_security_group_ids,
+    data.aws_security_group.default.*.id,
+  )
+
+  subnet_ids = coalescelist(
+    var.kinesis_firehose_endpoint_subnet_ids,
+    aws_subnet.private.*.id
+  )
+
   private_dns_enabled = var.kinesis_firehose_endpoint_private_dns_enabled
   tags                = local.vpce_tags
 }
@@ -673,8 +888,16 @@ resource "aws_vpc_endpoint" "glue" {
   service_name      = data.aws_vpc_endpoint_service.glue[0].service_name
   vpc_endpoint_type = "Interface"
 
-  security_group_ids  = var.glue_endpoint_security_group_ids
-  subnet_ids          = coalescelist(var.glue_endpoint_subnet_ids, aws_subnet.private.*.id)
+  security_group_ids = coalescelist(
+    var.glue_endpoint_security_group_ids,
+    data.aws_security_group.default.*.id,
+  )
+
+  subnet_ids = coalescelist(
+    var.glue_endpoint_subnet_ids,
+    aws_subnet.private.*.id
+  )
+
   private_dns_enabled = var.glue_endpoint_private_dns_enabled
   tags                = local.vpce_tags
 }
@@ -695,8 +918,16 @@ resource "aws_vpc_endpoint" "sagemaker_notebook" {
   service_name      = data.aws_vpc_endpoint_service.sagemaker_notebook[0].service_name
   vpc_endpoint_type = "Interface"
 
-  security_group_ids  = var.sagemaker_notebook_endpoint_security_group_ids
-  subnet_ids          = coalescelist(var.sagemaker_notebook_endpoint_subnet_ids, aws_subnet.private.*.id)
+  security_group_ids = coalescelist(
+    var.sagemaker_notebook_endpoint_security_group_ids,
+    data.aws_security_group.default.*.id,
+  )
+
+  subnet_ids = coalescelist(
+    var.sagemaker_notebook_endpoint_subnet_ids,
+    aws_subnet.private.*.id
+  )
+
   private_dns_enabled = var.sagemaker_notebook_endpoint_private_dns_enabled
   tags                = local.vpce_tags
 }
@@ -717,8 +948,16 @@ resource "aws_vpc_endpoint" "sts" {
   service_name      = data.aws_vpc_endpoint_service.sts[0].service_name
   vpc_endpoint_type = "Interface"
 
-  security_group_ids  = var.sts_endpoint_security_group_ids
-  subnet_ids          = coalescelist(var.sts_endpoint_subnet_ids, aws_subnet.private.*.id)
+  security_group_ids = coalescelist(
+    var.sts_endpoint_security_group_ids,
+    data.aws_security_group.default.*.id,
+  )
+
+  subnet_ids = coalescelist(
+    var.sts_endpoint_subnet_ids,
+    aws_subnet.private.*.id
+  )
+
   private_dns_enabled = var.sts_endpoint_private_dns_enabled
   tags                = local.vpce_tags
 }
@@ -739,8 +978,16 @@ resource "aws_vpc_endpoint" "cloudformation" {
   service_name      = data.aws_vpc_endpoint_service.cloudformation[0].service_name
   vpc_endpoint_type = "Interface"
 
-  security_group_ids  = var.cloudformation_endpoint_security_group_ids
-  subnet_ids          = coalescelist(var.cloudformation_endpoint_subnet_ids, aws_subnet.private.*.id)
+  security_group_ids = coalescelist(
+    var.cloudformation_endpoint_security_group_ids,
+    data.aws_security_group.default.*.id,
+  )
+
+  subnet_ids = coalescelist(
+    var.cloudformation_endpoint_subnet_ids,
+    aws_subnet.private.*.id
+  )
+
   private_dns_enabled = var.cloudformation_endpoint_private_dns_enabled
   tags                = local.vpce_tags
 }
@@ -760,8 +1007,16 @@ resource "aws_vpc_endpoint" "codepipeline" {
   service_name      = data.aws_vpc_endpoint_service.codepipeline[0].service_name
   vpc_endpoint_type = "Interface"
 
-  security_group_ids  = var.codepipeline_endpoint_security_group_ids
-  subnet_ids          = coalescelist(var.codepipeline_endpoint_subnet_ids, aws_subnet.private.*.id)
+  security_group_ids = coalescelist(
+    var.codepipeline_endpoint_security_group_ids,
+    data.aws_security_group.default.*.id,
+  )
+
+  subnet_ids = coalescelist(
+    var.codepipeline_endpoint_subnet_ids,
+    aws_subnet.private.*.id
+  )
+
   private_dns_enabled = var.codepipeline_endpoint_private_dns_enabled
   tags                = local.vpce_tags
 }
@@ -781,8 +1036,16 @@ resource "aws_vpc_endpoint" "appmesh_envoy_management" {
   service_name      = data.aws_vpc_endpoint_service.appmesh_envoy_management[0].service_name
   vpc_endpoint_type = "Interface"
 
-  security_group_ids  = var.appmesh_envoy_management_endpoint_security_group_ids
-  subnet_ids          = coalescelist(var.appmesh_envoy_management_endpoint_subnet_ids, aws_subnet.private.*.id)
+  security_group_ids = coalescelist(
+    var.appmesh_envoy_management_endpoint_security_group_ids,
+    data.aws_security_group.default.*.id,
+  )
+
+  subnet_ids = coalescelist(
+    var.appmesh_envoy_management_endpoint_subnet_ids,
+    aws_subnet.private.*.id
+  )
+
   private_dns_enabled = var.appmesh_envoy_management_endpoint_private_dns_enabled
   tags                = local.vpce_tags
 }
@@ -802,8 +1065,16 @@ resource "aws_vpc_endpoint" "servicecatalog" {
   service_name      = data.aws_vpc_endpoint_service.servicecatalog[0].service_name
   vpc_endpoint_type = "Interface"
 
-  security_group_ids  = var.servicecatalog_endpoint_security_group_ids
-  subnet_ids          = coalescelist(var.servicecatalog_endpoint_subnet_ids, aws_subnet.private.*.id)
+  security_group_ids = coalescelist(
+    var.servicecatalog_endpoint_security_group_ids,
+    data.aws_security_group.default.*.id,
+  )
+
+  subnet_ids = coalescelist(
+    var.servicecatalog_endpoint_subnet_ids,
+    aws_subnet.private.*.id
+  )
+
   private_dns_enabled = var.servicecatalog_endpoint_private_dns_enabled
   tags                = local.vpce_tags
 }
@@ -823,8 +1094,16 @@ resource "aws_vpc_endpoint" "storagegateway" {
   service_name      = data.aws_vpc_endpoint_service.storagegateway[0].service_name
   vpc_endpoint_type = "Interface"
 
-  security_group_ids  = var.storagegateway_endpoint_security_group_ids
-  subnet_ids          = coalescelist(var.storagegateway_endpoint_subnet_ids, aws_subnet.private.*.id)
+  security_group_ids = coalescelist(
+    var.storagegateway_endpoint_security_group_ids,
+    data.aws_security_group.default.*.id,
+  )
+
+  subnet_ids = coalescelist(
+    var.storagegateway_endpoint_subnet_ids,
+    aws_subnet.private.*.id
+  )
+
   private_dns_enabled = var.storagegateway_endpoint_private_dns_enabled
   tags                = local.vpce_tags
 }
@@ -844,8 +1123,16 @@ resource "aws_vpc_endpoint" "transfer" {
   service_name      = data.aws_vpc_endpoint_service.transfer[0].service_name
   vpc_endpoint_type = "Interface"
 
-  security_group_ids  = var.transfer_endpoint_security_group_ids
-  subnet_ids          = coalescelist(var.transfer_endpoint_subnet_ids, aws_subnet.private.*.id)
+  security_group_ids = coalescelist(
+    var.transfer_endpoint_security_group_ids,
+    data.aws_security_group.default.*.id,
+  )
+
+  subnet_ids = coalescelist(
+    var.transfer_endpoint_subnet_ids,
+    aws_subnet.private.*.id
+  )
+
   private_dns_enabled = var.transfer_endpoint_private_dns_enabled
   tags                = local.vpce_tags
 }
@@ -865,8 +1152,16 @@ resource "aws_vpc_endpoint" "sagemaker_api" {
   service_name      = data.aws_vpc_endpoint_service.sagemaker_api[0].service_name
   vpc_endpoint_type = "Interface"
 
-  security_group_ids  = var.sagemaker_api_endpoint_security_group_ids
-  subnet_ids          = coalescelist(var.sagemaker_api_endpoint_subnet_ids, aws_subnet.private.*.id)
+  security_group_ids = coalescelist(
+    var.sagemaker_api_endpoint_security_group_ids,
+    data.aws_security_group.default.*.id,
+  )
+
+  subnet_ids = coalescelist(
+    var.sagemaker_api_endpoint_subnet_ids,
+    aws_subnet.private.*.id
+  )
+
   private_dns_enabled = var.sagemaker_api_endpoint_private_dns_enabled
   tags                = local.vpce_tags
 }
@@ -886,8 +1181,16 @@ resource "aws_vpc_endpoint" "sagemaker_runtime" {
   service_name      = data.aws_vpc_endpoint_service.sagemaker_runtime[0].service_name
   vpc_endpoint_type = "Interface"
 
-  security_group_ids  = var.sagemaker_runtime_endpoint_security_group_ids
-  subnet_ids          = coalescelist(var.sagemaker_runtime_endpoint_subnet_ids, aws_subnet.private.*.id)
+  security_group_ids = coalescelist(
+    var.sagemaker_runtime_endpoint_security_group_ids,
+    data.aws_security_group.default.*.id,
+  )
+
+  subnet_ids = coalescelist(
+    var.sagemaker_runtime_endpoint_subnet_ids,
+    aws_subnet.private.*.id
+  )
+
   private_dns_enabled = var.sagemaker_runtime_endpoint_private_dns_enabled
   tags                = local.vpce_tags
 }
@@ -908,8 +1211,16 @@ resource "aws_vpc_endpoint" "appstream" {
   service_name      = data.aws_vpc_endpoint_service.appstream[0].service_name
   vpc_endpoint_type = "Interface"
 
-  security_group_ids  = var.appstream_endpoint_security_group_ids
-  subnet_ids          = coalescelist(var.appstream_endpoint_subnet_ids, aws_subnet.private.*.id)
+  security_group_ids = coalescelist(
+    var.appstream_endpoint_security_group_ids,
+    data.aws_security_group.default.*.id,
+  )
+
+  subnet_ids = coalescelist(
+    var.appstream_endpoint_subnet_ids,
+    aws_subnet.private.*.id
+  )
+
   private_dns_enabled = var.appstream_endpoint_private_dns_enabled
   tags                = local.vpce_tags
 }
@@ -930,8 +1241,16 @@ resource "aws_vpc_endpoint" "athena" {
   service_name      = data.aws_vpc_endpoint_service.athena[0].service_name
   vpc_endpoint_type = "Interface"
 
-  security_group_ids  = var.athena_endpoint_security_group_ids
-  subnet_ids          = coalescelist(var.athena_endpoint_subnet_ids, aws_subnet.private.*.id)
+  security_group_ids = coalescelist(
+    var.athena_endpoint_security_group_ids,
+    data.aws_security_group.default.*.id,
+  )
+
+  subnet_ids = coalescelist(
+    var.athena_endpoint_subnet_ids,
+    aws_subnet.private.*.id
+  )
+
   private_dns_enabled = var.athena_endpoint_private_dns_enabled
   tags                = local.vpce_tags
 }
@@ -952,8 +1271,16 @@ resource "aws_vpc_endpoint" "rekognition" {
   service_name      = data.aws_vpc_endpoint_service.rekognition[0].service_name
   vpc_endpoint_type = "Interface"
 
-  security_group_ids  = var.rekognition_endpoint_security_group_ids
-  subnet_ids          = coalescelist(var.rekognition_endpoint_subnet_ids, aws_subnet.private.*.id)
+  security_group_ids = coalescelist(
+    var.rekognition_endpoint_security_group_ids,
+    data.aws_security_group.default.*.id,
+  )
+
+  subnet_ids = coalescelist(
+    var.rekognition_endpoint_subnet_ids,
+    aws_subnet.private.*.id
+  )
+
   private_dns_enabled = var.rekognition_endpoint_private_dns_enabled
   tags                = local.vpce_tags
 }

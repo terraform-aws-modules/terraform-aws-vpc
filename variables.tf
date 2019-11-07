@@ -298,6 +298,12 @@ variable "external_nat_ip_ids" {
   default     = []
 }
 
+variable "enable_default_security_group_for_endpoints" {
+  description = "Whether or not to use the default security group as a fallback"
+  type        = bool
+  default     = false
+}
+
 variable "enable_dynamodb_endpoint" {
   description = "Should be true if you want to provision a DynamoDB endpoint to the VPC"
   type        = bool
