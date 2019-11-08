@@ -21,7 +21,7 @@ ECS, ECS Agent, ECS Telemetry, SNS, STS, Glue, CloudWatch(Monitoring, Logs, Even
 Elastic Load Balancing, CloudTrail, Secrets Manager, Config, CodeBuild, CodeCommit, 
 Git-Codecommit, Transfer Server, Kinesis Streams, Kinesis Firehose, SageMaker(Notebook, Runtime, API), 
 CloudFormation, CodePipeline, Storage Gateway, AppMesh, Transfer, Service Catalog, AppStream,
-Athena, Rekognition
+Athena, Rekognition, Elastic File System (EFS), Cloud Directory
 
 * [RDS DB Subnet Group](https://www.terraform.io/docs/providers/aws/r/db_subnet_group.html)
 * [ElastiCache Subnet Group](https://www.terraform.io/docs/providers/aws/r/elasticache_subnet_group.html)
