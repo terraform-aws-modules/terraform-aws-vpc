@@ -962,6 +962,37 @@ output "vpc_endpoint_rekognition_dns_entry" {
   value       = flatten(aws_vpc_endpoint.rekognition.*.dns_entry)
 }
 
+output "vpc_endpoint_efs_id" {
+  description = "The ID of VPC endpoint for EFS"
+  value       = concat(aws_vpc_endpoint.efs.*.id, [""])[0]
+}
+
+output "vpc_endpoint_efs_network_interface_ids" {
+  description = "One or more network interfaces for the VPC Endpoint for EFS."
+  value       = flatten(aws_vpc_endpoint.efs.*.network_interface_ids)
+}
+
+output "vpc_endpoint_efs_dns_entry" {
+  description = "The DNS entries for the VPC Endpoint for EFS."
+  value       = flatten(aws_vpc_endpoint.efs.*.dns_entry)
+}
+
+output "vpc_endpoint_cloud_directory_id" {
+  description = "The ID of VPC endpoint for Cloud Directory"
+  value       = concat(aws_vpc_endpoint.cloud_directory.*.id, [""])[0]
+}
+
+output "vpc_endpoint_cloud_directory_network_interface_ids" {
+  description = "One or more network interfaces for the VPC Endpoint for Cloud Directory."
+  value       = flatten(aws_vpc_endpoint.cloud_directory.*.network_interface_ids)
+}
+
+output "vpc_endpoint_cloud_directory_dns_entry" {
+  description = "The DNS entries for the VPC Endpoint for Cloud Directory."
+  value       = flatten(aws_vpc_endpoint.cloud_directory.*.dns_entry)
+}
+
+
 # Static values (arguments)
 output "azs" {
   description = "A list of availability zones specified as argument to this module"
