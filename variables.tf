@@ -14,6 +14,11 @@ variable "cidr" {
   default     = "0.0.0.0/0"
 }
 
+variable "cidr_name" {
+  description = "Name of cidr this vpc is managing"
+  default     = ""
+}
+
 variable "assign_generated_ipv6_cidr_block" {
   description = "Requests an Amazon-provided IPv6 CIDR block with a /56 prefix length for the VPC. You cannot specify the range of IP addresses, or the size of the CIDR block"
   type        = bool
