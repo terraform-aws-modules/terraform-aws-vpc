@@ -21,7 +21,7 @@ ECS, ECS Agent, ECS Telemetry, SNS, STS, Glue, CloudWatch(Monitoring, Logs, Even
 Elastic Load Balancing, CloudTrail, Secrets Manager, Config, CodeBuild, CodeCommit, 
 Git-Codecommit, Transfer Server, Kinesis Streams, Kinesis Firehose, SageMaker(Notebook, Runtime, API), 
 CloudFormation, CodePipeline, Storage Gateway, AppMesh, Transfer, Service Catalog, AppStream,
-Athena, Rekognition
+Athena, Rekognition, Elastic File System (EFS), Cloud Directory
 
 * [RDS DB Subnet Group](https://www.terraform.io/docs/providers/aws/r/db_subnet_group.html)
 * [ElastiCache Subnet Group](https://www.terraform.io/docs/providers/aws/r/elasticache_subnet_group.html)
@@ -226,6 +226,9 @@ Sometimes it is handy to have public access to Redshift clusters (for example if
 | athena\_endpoint\_subnet\_ids | The ID of one or more subnets in which to create a network interface for Athena endpoint. Only a single subnet within an AZ is supported. If omitted, private subnets will be used. | list(string) | `[]` | no |
 | azs | A list of availability zones in the region | list(string) | `[]` | no |
 | cidr | The CIDR block for the VPC. Default value is a valid CIDR, but not acceptable by AWS and should be overridden | string | `"0.0.0.0/0"` | no |
+| cloud\_directory\_endpoint\_private\_dns\_enabled | Whether or not to associate a private hosted zone with the specified VPC for Cloud Directory endpoint | bool | `"false"` | no |
+| cloud\_directory\_endpoint\_security\_group\_ids | The ID of one or more security groups to associate with the network interface for Cloud Directory endpoint | list(string) | `[]` | no |
+| cloud\_directory\_endpoint\_subnet\_ids | The ID of one or more subnets in which to create a network interface for Cloud Directory endpoint. Only a single subnet within an AZ is supported. Ifomitted, private subnets will be used. | list(string) | `[]` | no |
 | cloudformation\_endpoint\_private\_dns\_enabled | Whether or not to associate a private hosted zone with the specified VPC for Cloudformation endpoint | bool | `"false"` | no |
 | cloudformation\_endpoint\_security\_group\_ids | The ID of one or more security groups to associate with the network interface for Cloudformation endpoint | list(string) | `[]` | no |
 | cloudformation\_endpoint\_subnet\_ids | The ID of one or more subnets in which to create a network interface for Cloudformation endpoint. Only a single subnet within an AZ is supported. If omitted, private subnets will be used. | list(string) | `[]` | no |
@@ -300,6 +303,9 @@ Sometimes it is handy to have public access to Redshift clusters (for example if
 | ecs\_telemetry\_endpoint\_private\_dns\_enabled | Whether or not to associate a private hosted zone with the specified VPC for ECS Telemetry endpoint | bool | `"false"` | no |
 | ecs\_telemetry\_endpoint\_security\_group\_ids | The ID of one or more security groups to associate with the network interface for ECS Telemetry endpoint | list(string) | `[]` | no |
 | ecs\_telemetry\_endpoint\_subnet\_ids | The ID of one or more subnets in which to create a network interface for ECS Telemetry endpoint. Only a single subnet within an AZ is supported. If omitted, private subnets will be used. | list(string) | `[]` | no |
+| efs\_endpoint\_private\_dns\_enabled | Whether or not to associate a private hosted zone with the specified VPC for EFS endpoint | bool | `"false"` | no |
+| efs\_endpoint\_security\_group\_ids | The ID of one or more security groups to associate with the network interface for EFS endpoint | list(string) | `[]` | no |
+| efs\_endpoint\_subnet\_ids | The ID of one or more subnets in which to create a network interface for EFS endpoint. Only a single subnet within an AZ is supported. Ifomitted, private subnets will be used. | list(string) | `[]` | no |
 | elasticache\_acl\_tags | Additional tags for the elasticache subnets network ACL | map(string) | `{}` | no |
 | elasticache\_dedicated\_network\_acl | Whether to use dedicated network ACL (not default) and custom rules for elasticache subnets | bool | `"false"` | no |
 | elasticache\_inbound\_acl\_rules | Elasticache subnets inbound network ACL rules | list(map(string)) | `[ { "cidr_block": "0.0.0.0/0", "from_port": 0, "protocol": "-1", "rule_action": "allow", "rule_number": 100, "to_port": 0 } ]` | no |
@@ -319,6 +325,7 @@ Sometimes it is handy to have public access to Redshift clusters (for example if
 | enable\_athena\_endpoint | Should be true if you want to provision a Athena endpoint to the VPC | bool | `"false"` | no |
 | enable\_classiclink | Should be true to enable ClassicLink for the VPC. Only valid in regions and accounts that support EC2 Classic. | bool | `"null"` | no |
 | enable\_classiclink\_dns\_support | Should be true to enable ClassicLink DNS Support for the VPC. Only valid in regions and accounts that support EC2 Classic. | bool | `"null"` | no |
+| enable\_cloud\_directory\_endpoint | Should be true if you want to provision an Cloud Directory endpoint to the VPC | bool | `"false"` | no |
 | enable\_cloudformation\_endpoint | Should be true if you want to provision a Cloudformation endpoint to the VPC | bool | `"false"` | no |
 | enable\_cloudtrail\_endpoint | Should be true if you want to provision a CloudTrail endpoint to the VPC | bool | `"false"` | no |
 | enable\_codebuild\_endpoint | Should be true if you want to provision an Codebuild endpoint to the VPC | string | `"false"` | no |
@@ -336,6 +343,7 @@ Sometimes it is handy to have public access to Redshift clusters (for example if
 | enable\_ecs\_agent\_endpoint | Should be true if you want to provision a ECS Agent endpoint to the VPC | bool | `"false"` | no |
 | enable\_ecs\_endpoint | Should be true if you want to provision a ECS endpoint to the VPC | bool | `"false"` | no |
 | enable\_ecs\_telemetry\_endpoint | Should be true if you want to provision a ECS Telemetry endpoint to the VPC | bool | `"false"` | no |
+| enable\_efs\_endpoint | Should be true if you want to provision an EFS endpoint to the VPC | bool | `"false"` | no |
 | enable\_elasticloadbalancing\_endpoint | Should be true if you want to provision a Elastic Load Balancing endpoint to the VPC | bool | `"false"` | no |
 | enable\_events\_endpoint | Should be true if you want to provision a CloudWatch Events endpoint to the VPC | bool | `"false"` | no |
 | enable\_git\_codecommit\_endpoint | Should be true if you want to provision an Git Codecommit endpoint to the VPC | string | `"false"` | no |
@@ -573,6 +581,9 @@ Sometimes it is handy to have public access to Redshift clusters (for example if
 | vpc\_endpoint\_athena\_dns\_entry | The DNS entries for the VPC Endpoint for Athena. |
 | vpc\_endpoint\_athena\_id | The ID of VPC endpoint for Athena |
 | vpc\_endpoint\_athena\_network\_interface\_ids | One or more network interfaces for the VPC Endpoint for Athena. |
+| vpc\_endpoint\_cloud\_directory\_dns\_entry | The DNS entries for the VPC Endpoint for Cloud Directory. |
+| vpc\_endpoint\_cloud\_directory\_id | The ID of VPC endpoint for Cloud Directory |
+| vpc\_endpoint\_cloud\_directory\_network\_interface\_ids | One or more network interfaces for the VPC Endpoint for Cloud Directory. |
 | vpc\_endpoint\_cloudformation\_dns\_entry | The DNS entries for the VPC Endpoint for Cloudformation. |
 | vpc\_endpoint\_cloudformation\_id | The ID of VPC endpoint for Cloudformation |
 | vpc\_endpoint\_cloudformation\_network\_interface\_ids | One or more network interfaces for the VPC Endpoint for Cloudformation. |
@@ -614,6 +625,9 @@ Sometimes it is handy to have public access to Redshift clusters (for example if
 | vpc\_endpoint\_ecs\_telemetry\_dns\_entry | The DNS entries for the VPC Endpoint for ECS Telemetry. |
 | vpc\_endpoint\_ecs\_telemetry\_id | The ID of VPC endpoint for ECS Telemetry |
 | vpc\_endpoint\_ecs\_telemetry\_network\_interface\_ids | One or more network interfaces for the VPC Endpoint for ECS Telemetry. |
+| vpc\_endpoint\_efs\_dns\_entry | The DNS entries for the VPC Endpoint for EFS. |
+| vpc\_endpoint\_efs\_id | The ID of VPC endpoint for EFS |
+| vpc\_endpoint\_efs\_network\_interface\_ids | One or more network interfaces for the VPC Endpoint for EFS. |
 | vpc\_endpoint\_elasticloadbalancing\_dns\_entry | The DNS entries for the VPC Endpoint for Elastic Load Balancing. |
 | vpc\_endpoint\_elasticloadbalancing\_id | The ID of VPC endpoint for Elastic Load Balancing |
 | vpc\_endpoint\_elasticloadbalancing\_network\_interface\_ids | One or more network interfaces for the VPC Endpoint for Elastic Load Balancing. |
