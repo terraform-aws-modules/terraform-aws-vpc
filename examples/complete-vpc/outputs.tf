@@ -57,6 +57,17 @@ output "vpc_endpoint_ssm_dns_entry" {
   value       = module.vpc.vpc_endpoint_ssm_dns_entry
 }
 
+# Customer Gateway
+output "cgw_ids" {
+  description = "List of IDs of Customer Gateway"
+  value       = module.vpc.cgw_ids
+}
+
+output "this_customer_gateway" {
+  description = "Map of Customer Gateway attributes"
+  value       = module.vpc.this_customer_gateway
+}
+
 //
 //# VPC endpoints
 //output "vpc_endpoint_ec2_id" {

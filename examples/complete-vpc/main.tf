@@ -33,6 +33,17 @@ module "vpc" {
   enable_nat_gateway = true
   single_nat_gateway = true
 
+  customer_gateways = {
+    IP1 = {
+      bgp_asn    = 65112
+      ip_address = "1.2.3.4"
+    },
+    IP2 = {
+      bgp_asn    = 65112
+      ip_address = "5.6.7.8"
+    }
+  }
+
   enable_vpn_gateway = true
 
   enable_dhcp_options              = true

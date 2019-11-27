@@ -1305,6 +1305,12 @@ variable "map_public_ip_on_launch" {
   default     = true
 }
 
+variable "customer_gateways" {
+  description = "Maps of Customer Gateway's attributes (BGP ASN and Gateway's Internet-routable external IP address)"
+  type        = map(map(any))
+  default     = {}
+}
+
 variable "enable_vpn_gateway" {
   description = "Should be true if you want to create a new VPN Gateway resource and attach it to the VPC"
   type        = bool
@@ -1485,6 +1491,12 @@ variable "nat_gateway_tags" {
 
 variable "nat_eip_tags" {
   description = "Additional tags for the NAT EIP"
+  type        = map(string)
+  default     = {}
+}
+
+variable "customer_gateway_tags" {
+  description = "Additional tags for the Customer Gateway"
   type        = map(string)
   default     = {}
 }

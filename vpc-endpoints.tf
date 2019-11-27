@@ -971,7 +971,7 @@ resource "aws_vpc_endpoint" "efs" {
   count = var.create_vpc && var.enable_efs_endpoint ? 1 : 0
 
   vpc_id            = local.vpc_id
-  service_name      = data.aws_vpc_endpoint_service.efs.service_name
+  service_name      = data.aws_vpc_endpoint_service.efs[0].service_name
   vpc_endpoint_type = "Interface"
 
   security_group_ids  = var.efs_endpoint_security_group_ids
@@ -994,7 +994,7 @@ resource "aws_vpc_endpoint" "cloud_directory" {
   count = var.create_vpc && var.enable_cloud_directory_endpoint ? 1 : 0
 
   vpc_id            = local.vpc_id
-  service_name      = data.aws_vpc_endpoint_service.cloud_directory.service_name
+  service_name      = data.aws_vpc_endpoint_service.cloud_directory[0].service_name
   vpc_endpoint_type = "Interface"
 
   security_group_ids  = var.cloud_directory_endpoint_security_group_ids
