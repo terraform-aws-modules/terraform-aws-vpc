@@ -3,9 +3,16 @@
 
 
 
+<a name="v2.19.0"></a>
+## [v2.19.0] - 2019-11-27
+
+- Add Elastic File System & Cloud Directory VPC Endpoints ([#355](https://github.com/terraform-aws-modules/terraform-aws-vpc/issues/355))
+
+
 <a name="v2.18.0"></a>
 ## [v2.18.0] - 2019-11-04
 
+- Updated CHANGELOG
 - Fixed spelling mistakes
 - Updated CHANGELOG
 - Updated network-acls example with IPv6 rules
@@ -875,7 +882,8 @@
 - Initial commit
 
 
-[Unreleased]: https://github.com/terraform-aws-modules/terraform-aws-vpc/compare/v2.18.0...HEAD
+[Unreleased]: https://github.com/terraform-aws-modules/terraform-aws-vpc/compare/v2.19.0...HEAD
+[v2.19.0]: https://github.com/terraform-aws-modules/terraform-aws-vpc/compare/v2.18.0...v2.19.0
 [v2.18.0]: https://github.com/terraform-aws-modules/terraform-aws-vpc/compare/v1.72.0...v2.18.0
 [v1.72.0]: https://github.com/terraform-aws-modules/terraform-aws-vpc/compare/v2.17.0...v1.72.0
 [v2.17.0]: https://github.com/terraform-aws-modules/terraform-aws-vpc/compare/v2.16.0...v2.17.0
