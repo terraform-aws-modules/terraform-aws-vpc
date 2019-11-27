@@ -912,7 +912,7 @@ resource "aws_route" "private_nat_gateway" {
 }
 
 resource "aws_route" "private_ipv6_egress" {
-  count = var.enable_ipv6 ? length(var.private_subnets) : 0
+  count = var.create_vpc && var.enable_ipv6 ? length(var.private_subnets) : 0
 
   route_table_id              = element(aws_route_table.private.*.id, count.index)
   destination_ipv6_cidr_block = "::/0"
