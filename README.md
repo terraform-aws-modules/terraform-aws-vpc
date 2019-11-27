@@ -256,6 +256,8 @@ Sometimes it is handy to have public access to Redshift clusters (for example if
 | create\_redshift\_subnet\_group | Controls if redshift subnet group should be created | bool | `"true"` | no |
 | create\_redshift\_subnet\_route\_table | Controls if separate route table for redshift should be created | bool | `"false"` | no |
 | create\_vpc | Controls if VPC should be created (it affects almost all resources) | bool | `"true"` | no |
+| customer\_gateway\_tags | Additional tags for the Customer Gateway | map(string) | `{}` | no |
+| customer\_gateways | Maps of Customer Gateway's attributes (BGP ASN and Gateway's Internet-routable external IP address) | map(map(any)) | `{}` | no |
 | database\_acl\_tags | Additional tags for the database subnets network ACL | map(string) | `{}` | no |
 | database\_dedicated\_network\_acl | Whether to use dedicated network ACL (not default) and custom rules for database subnets | bool | `"false"` | no |
 | database\_inbound\_acl\_rules | Database subnets inbound network ACL rules | list(map(string)) | `[ { "cidr_block": "0.0.0.0/0", "from_port": 0, "protocol": "-1", "rule_action": "allow", "rule_number": 100, "to_port": 0 } ]` | no |
@@ -506,6 +508,7 @@ Sometimes it is handy to have public access to Redshift clusters (for example if
 | Name | Description |
 |------|-------------|
 | azs | A list of availability zones specified as argument to this module |
+| cgw\_ids | List of IDs of Customer Gateway |
 | database\_network\_acl\_id | ID of the database network ACL |
 | database\_route\_table\_ids | List of IDs of database route tables |
 | database\_subnet\_arns | List of ARNs of database subnets |
@@ -564,6 +567,7 @@ Sometimes it is handy to have public access to Redshift clusters (for example if
 | redshift\_subnets | List of IDs of redshift subnets |
 | redshift\_subnets\_cidr\_blocks | List of cidr_blocks of redshift subnets |
 | redshift\_subnets\_ipv6\_cidr\_blocks | List of IPv6 cidr_blocks of redshift subnets in an IPv6 enabled VPC |
+| this\_customer\_gateway | Map of Customer Gateway attributes |
 | vgw\_id | The ID of the VPN Gateway |
 | vpc\_arn | The ARN of the VPC |
 | vpc\_cidr\_block | The CIDR block of the VPC |

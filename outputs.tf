@@ -263,6 +263,16 @@ output "egress_only_internet_gateway_id" {
   value       = concat(aws_egress_only_internet_gateway.this.*.id, [""])[0]
 }
 
+output "cgw_ids" {
+  description = "List of IDs of Customer Gateway"
+  value       = [for k, v in aws_customer_gateway.this : v.id]
+}
+
+output "this_customer_gateway" {
+  description = "Map of Customer Gateway attributes"
+  value       = aws_customer_gateway.this
+}
+
 output "vgw_id" {
   description = "The ID of the VPN Gateway"
   value = concat(
