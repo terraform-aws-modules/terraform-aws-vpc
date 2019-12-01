@@ -382,7 +382,6 @@ resource "aws_subnet" "database" {
       )
     },
     var.tags,
-    var.enable_eks_resource_tags && var.eks_cluster_name != "" ? { "kubernetes.io/cluster/${var.eks_cluster_name}" = "shared" } : {},
     var.database_subnet_tags,
   )
 }
@@ -467,7 +466,6 @@ resource "aws_subnet" "elasticache" {
       )
     },
     var.tags,
-    var.enable_eks_resource_tags && var.eks_cluster_name != "" ? { "kubernetes.io/cluster/${var.eks_cluster_name}" = "shared" } : {},
     var.elasticache_subnet_tags,
   )
 }
