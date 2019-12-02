@@ -28,7 +28,19 @@ variable "private_subnet_ipv6_prefixes" {
   default     = []
 }
 
+variable "eks_private_subnet_ipv6_prefixes" {
+  description = "Assigns IPv6 private subnet id based on the Amazon provided /56 prefix base 10 integer (0-256). Must be of equal length to the corresponding IPv4 subnet list"
+  type        = list
+  default     = []
+}
+
 variable "public_subnet_ipv6_prefixes" {
+  description = "Assigns IPv6 public subnet id based on the Amazon provided /56 prefix base 10 integer (0-256). Must be of equal length to the corresponding IPv4 subnet list"
+  type        = list
+  default     = []
+}
+
+variable "eks_public_subnet_ipv6_prefixes" {
   description = "Assigns IPv6 public subnet id based on the Amazon provided /56 prefix base 10 integer (0-256). Must be of equal length to the corresponding IPv4 subnet list"
   type        = list
   default     = []
@@ -70,7 +82,19 @@ variable "private_subnet_assign_ipv6_address_on_creation" {
   default     = null
 }
 
+variable "eks_private_subnet_assign_ipv6_address_on_creation" {
+  description = "Assign IPv6 address on private subnet, must be disabled to change IPv6 CIDRs. This is the IPv6 equivalent of map_public_ip_on_launch"
+  type        = bool
+  default     = null
+}
+
 variable "public_subnet_assign_ipv6_address_on_creation" {
+  description = "Assign IPv6 address on public subnet, must be disabled to change IPv6 CIDRs. This is the IPv6 equivalent of map_public_ip_on_launch"
+  type        = bool
+  default     = null
+}
+
+variable "eks_public_subnet_assign_ipv6_address_on_creation" {
   description = "Assign IPv6 address on public subnet, must be disabled to change IPv6 CIDRs. This is the IPv6 equivalent of map_public_ip_on_launch"
   type        = bool
   default     = null
@@ -118,11 +142,24 @@ variable "public_subnet_suffix" {
   default     = "public"
 }
 
+variable "eks_public_subnet_suffix" {
+  description = "Suffix to append to public subnets name"
+  type        = string
+  default     = "public"
+}
+
 variable "private_subnet_suffix" {
   description = "Suffix to append to private subnets name"
   type        = string
   default     = "private"
 }
+
+variable "eks_private_subnet_suffix" {
+  description = "Suffix to append to private subnets name"
+  type        = string
+  default     = "private"
+}
+
 
 variable "intra_subnet_suffix" {
   description = "Suffix to append to intra subnets name"
@@ -154,7 +191,20 @@ variable "public_subnets" {
   default     = []
 }
 
+variable "eks_public_subnets" {
+  description = "A list of public subnets inside the VPC"
+  type        = list(string)
+  default     = []
+}
+
+
 variable "private_subnets" {
+  description = "A list of private subnets inside the VPC"
+  type        = list(string)
+  default     = []
+}
+
+variable "eks_private_subnets" {
   description = "A list of private subnets inside the VPC"
   type        = list(string)
   default     = []
@@ -1308,7 +1358,19 @@ variable "public_subnet_tags" {
   default     = {}
 }
 
+variable "eks_public_subnet_tags" {
+  description = "Additional tags for the public subnets"
+  type        = map(string)
+  default     = {}
+}
+
 variable "private_subnet_tags" {
+  description = "Additional tags for the private subnets"
+  type        = map(string)
+  default     = {}
+}
+
+variable "eks_private_subnet_tags" {
   description = "Additional tags for the private subnets"
   type        = map(string)
   default     = {}
@@ -1320,7 +1382,19 @@ variable "public_route_table_tags" {
   default     = {}
 }
 
+variable "eks_public_route_table_tags" {
+  description = "Additional tags for the public route tables"
+  type        = map(string)
+  default     = {}
+}
+
 variable "private_route_table_tags" {
+  description = "Additional tags for the private route tables"
+  type        = map(string)
+  default     = {}
+}
+
+variable "eks_private_route_table_tags" {
   description = "Additional tags for the private route tables"
   type        = map(string)
   default     = {}
@@ -1392,7 +1466,19 @@ variable "public_acl_tags" {
   default     = {}
 }
 
+variable "eks_public_acl_tags" {
+  description = "Additional tags for the public subnets network ACL"
+  type        = map(string)
+  default     = {}
+}
+
 variable "private_acl_tags" {
+  description = "Additional tags for the private subnets network ACL"
+  type        = map(string)
+  default     = {}
+}
+
+variable "eks_private_acl_tags" {
   description = "Additional tags for the private subnets network ACL"
   type        = map(string)
   default     = {}
@@ -1548,7 +1634,19 @@ variable "public_dedicated_network_acl" {
   default     = false
 }
 
+variable "eks_public_dedicated_network_acl" {
+  description = "Whether to use dedicated network ACL (not default) and custom rules for public subnets"
+  type        = bool
+  default     = false
+}
+
 variable "private_dedicated_network_acl" {
+  description = "Whether to use dedicated network ACL (not default) and custom rules for private subnets"
+  type        = bool
+  default     = false
+}
+
+variable "eks_private_dedicated_network_acl" {
   description = "Whether to use dedicated network ACL (not default) and custom rules for private subnets"
   type        = bool
   default     = false
@@ -1642,7 +1740,39 @@ variable "public_inbound_acl_rules" {
   ]
 }
 
+variable "eks_public_inbound_acl_rules" {
+  description = "Public subnets inbound network ACLs"
+  type        = list(map(string))
+
+  default = [
+    {
+      rule_number = 100
+      rule_action = "allow"
+      from_port   = 0
+      to_port     = 0
+      protocol    = "-1"
+      cidr_block  = "0.0.0.0/0"
+    },
+  ]
+}
+
 variable "public_outbound_acl_rules" {
+  description = "Public subnets outbound network ACLs"
+  type        = list(map(string))
+
+  default = [
+    {
+      rule_number = 100
+      rule_action = "allow"
+      from_port   = 0
+      to_port     = 0
+      protocol    = "-1"
+      cidr_block  = "0.0.0.0/0"
+    },
+  ]
+}
+
+variable "eks_public_outbound_acl_rules" {
   description = "Public subnets outbound network ACLs"
   type        = list(map(string))
 
@@ -1674,7 +1804,39 @@ variable "private_inbound_acl_rules" {
   ]
 }
 
+variable "eks_private_inbound_acl_rules" {
+  description = "Private subnets inbound network ACLs"
+  type        = list(map(string))
+
+  default = [
+    {
+      rule_number = 100
+      rule_action = "allow"
+      from_port   = 0
+      to_port     = 0
+      protocol    = "-1"
+      cidr_block  = "0.0.0.0/0"
+    },
+  ]
+}
+
 variable "private_outbound_acl_rules" {
+  description = "Private subnets outbound network ACLs"
+  type        = list(map(string))
+
+  default = [
+    {
+      rule_number = 100
+      rule_action = "allow"
+      from_port   = 0
+      to_port     = 0
+      protocol    = "-1"
+      cidr_block  = "0.0.0.0/0"
+    },
+  ]
+}
+
+variable "eks_private_outbound_acl_rules" {
   description = "Private subnets outbound network ACLs"
   type        = list(map(string))
 
