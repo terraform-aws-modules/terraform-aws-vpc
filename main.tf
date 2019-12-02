@@ -43,7 +43,6 @@ resource "aws_vpc" "this" {
       "Name" = format("%s", var.name)
     },
     var.tags,
-    var.enable_eks_resource_tags && var.eks_cluster_name != "" ? { "kubernetes.io/cluster/${var.eks_cluster_name}" = "shared" } : {},
     var.vpc_tags,
   )
 }
@@ -359,7 +358,6 @@ resource "aws_subnet" "public" {
       )
     },
     var.tags,
-    var.enable_eks_resource_tags ? { "kubernetes.io/role/elb" = "1" } : {},
     var.public_subnet_tags,
   )
 }
@@ -415,7 +413,6 @@ resource "aws_subnet" "private" {
       )
     },
     var.tags,
-    var.enable_eks_resource_tags ? { "kubernetes.io/role/internal-elb" = "1" } : {},
     var.private_subnet_tags,
   )
 }
@@ -1169,6 +1166,23 @@ resource "aws_route" "eks_private_nat_gateway" {
   }
 }
 
+resource "aws_route" "private_ipv6_egress" {
+  count = var.enable_ipv6 ? length(var.private_subnets) : 0
+
+  route_table_id              = element(aws_route_table.private.*.id, count.index)
+  destination_ipv6_cidr_block = "::/0"
+  egress_only_gateway_id      = element(aws_egress_only_internet_gateway.this.*.id, 0)
+}
+
+
+resource "aws_route" "eks_private_ipv6_egress" {
+  count = var.enable_ipv6 ? length(var.eks_private_subnets) : 0
+
+  route_table_id              = element(aws_route_table.eks_private.*.id, count.index)
+  destination_ipv6_cidr_block = "::/0"
+  egress_only_gateway_id      = element(aws_egress_only_internet_gateway.this.*.id, 0)
+}
+
 ##########################
 # Route table association
 ##########################
@@ -1348,7 +1362,6 @@ resource "aws_default_vpc" "this" {
       "Name" = format("%s", var.default_vpc_name)
     },
     var.tags,
-    var.enable_eks_resource_tags ? { "kubernetes.io/cluster/${var.eks_cluster_name}" = "shared" } : {},
     var.default_vpc_tags,
   )
 }

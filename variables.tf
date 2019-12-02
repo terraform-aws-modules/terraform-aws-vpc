@@ -1328,6 +1328,12 @@ variable "propagate_private_route_tables_vgw" {
   default     = false
 }
 
+variable "propagate_eks_private_route_tables_vgw" {
+  description = "Should be true if you want route table propagation"
+  type        = bool
+  default     = false
+}
+
 variable "propagate_public_route_tables_vgw" {
   description = "Should be true if you want route table propagation"
   type        = bool
