@@ -104,20 +104,6 @@ resource "aws_internet_gateway" "this" {
   )
 }
 
-resource "aws_internet_gateway" "this" {
-  count = var.create_vpc && length(var.eks_public_subnets) > 0 ? 1 : 0
-
-  vpc_id = local.vpc_id
-
-  tags = merge(
-    {
-      "Name" = format("%s", var.name)
-    },
-    var.tags,
-    var.igw_tags,
-  )
-}
-
 resource "aws_egress_only_internet_gateway" "this" {
   count = var.create_vpc && var.enable_ipv6 && local.max_subnet_length > 0 ? 1 : 0
 
@@ -279,18 +265,6 @@ resource "aws_route" "database_nat_gateway" {
   count = var.create_vpc && var.create_database_subnet_route_table && length(var.database_subnets) > 0 && false == var.create_database_internet_gateway_route && var.create_database_nat_gateway_route && var.enable_nat_gateway ? local.nat_gateway_count : 0
 
   route_table_id         = element(aws_route_table.private.*.id, count.index)
-  destination_cidr_block = "0.0.0.0/0"
-  nat_gateway_id         = element(aws_nat_gateway.this.*.id, count.index)
-
-  timeouts {
-    create = "5m"
-  }
-}
-
-resource "aws_route" "database_nat_gateway" {
-  count = var.create_vpc && var.create_database_subnet_route_table && length(var.database_subnets) > 0 && false == var.create_database_internet_gateway_route && var.create_database_nat_gateway_route && var.enable_nat_gateway ? local.nat_gateway_count : 0
-
-  route_table_id         = element(aws_route_table.eks_private.*.id, count.index)
   destination_cidr_block = "0.0.0.0/0"
   nat_gateway_id         = element(aws_nat_gateway.this.*.id, count.index)
 
