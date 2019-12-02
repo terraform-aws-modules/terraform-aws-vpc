@@ -43,6 +43,7 @@ resource "aws_vpc" "this" {
       "Name" = format("%s", var.name)
     },
     var.tags,
+    var.enable_eks_resource_tags && var.eks_cluster_name != "" ? { "kubernetes.io/cluster/${var.eks_cluster_name}" = "shared" } : {},
     var.vpc_tags,
   )
 }
