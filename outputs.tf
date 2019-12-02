@@ -73,6 +73,11 @@ output "private_subnets" {
   value       = aws_subnet.private.*.id
 }
 
+output "eks_private_subnets" {
+  description = "List of IDs of eks private subnets"
+  value       = aws_subnet.eks_private.*.id
+}
+
 output "private_subnet_arns" {
   description = "List of ARNs of private subnets"
   value       = aws_subnet.private.*.arn
@@ -83,14 +88,29 @@ output "private_subnets_cidr_blocks" {
   value       = aws_subnet.private.*.cidr_block
 }
 
+output "eks_private_subnets_cidr_blocks" {
+  description = "List of cidr_blocks of eks private subnets"
+  value       = aws_subnet.eks_private.*.cidr_block
+}
+
 output "private_subnets_ipv6_cidr_blocks" {
   description = "List of IPv6 cidr_blocks of private subnets in an IPv6 enabled VPC"
   value       = aws_subnet.private.*.ipv6_cidr_block
 }
 
+output "eks_private_subnets_ipv6_cidr_blocks" {
+  description = "List of IPv6 cidr_blocks of eks private subnets in an IPv6 enabled VPC"
+  value       = aws_subnet.eks_private.*.ipv6_cidr_block
+}
+
 output "public_subnets" {
   description = "List of IDs of public subnets"
   value       = aws_subnet.public.*.id
+}
+
+output "eks_public_subnets" {
+  description = "List of IDs of eks public subnets"
+  value       = aws_subnet.eks_public.*.id
 }
 
 output "public_subnet_arns" {
@@ -103,9 +123,19 @@ output "public_subnets_cidr_blocks" {
   value       = aws_subnet.public.*.cidr_block
 }
 
+output "eks_public_subnets_cidr_blocks" {
+  description = "List of cidr_blocks of eks public subnets"
+  value       = aws_subnet.eks_public.*.cidr_block
+}
+
 output "public_subnets_ipv6_cidr_blocks" {
   description = "List of IPv6 cidr_blocks of public subnets in an IPv6 enabled VPC"
   value       = aws_subnet.public.*.ipv6_cidr_block
+}
+
+output "eks_public_subnets_ipv6_cidr_blocks" {
+  description = "List of IPv6 cidr_blocks of eks public subnets in an IPv6 enabled VPC"
+  value       = aws_subnet.eks_public.*.ipv6_cidr_block
 }
 
 output "database_subnets" {

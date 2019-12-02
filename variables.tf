@@ -29,7 +29,7 @@ variable "private_subnet_ipv6_prefixes" {
 }
 
 variable "eks_private_subnet_ipv6_prefixes" {
-  description = "Assigns IPv6 private subnet id based on the Amazon provided /56 prefix base 10 integer (0-256). Must be of equal length to the corresponding IPv4 subnet list"
+  description = "Assigns IPv6 eks private subnet id based on the Amazon provided /56 prefix base 10 integer (0-256). Must be of equal length to the corresponding IPv4 subnet list"
   type        = list
   default     = []
 }
@@ -41,7 +41,7 @@ variable "public_subnet_ipv6_prefixes" {
 }
 
 variable "eks_public_subnet_ipv6_prefixes" {
-  description = "Assigns IPv6 public subnet id based on the Amazon provided /56 prefix base 10 integer (0-256). Must be of equal length to the corresponding IPv4 subnet list"
+  description = "Assigns IPv6 eks public subnet id based on the Amazon provided /56 prefix base 10 integer (0-256). Must be of equal length to the corresponding IPv4 subnet list"
   type        = list
   default     = []
 }
@@ -83,7 +83,7 @@ variable "private_subnet_assign_ipv6_address_on_creation" {
 }
 
 variable "eks_private_subnet_assign_ipv6_address_on_creation" {
-  description = "Assign IPv6 address on private subnet, must be disabled to change IPv6 CIDRs. This is the IPv6 equivalent of map_public_ip_on_launch"
+  description = "Assign IPv6 address on eks private subnet, must be disabled to change IPv6 CIDRs. This is the IPv6 equivalent of map_public_ip_on_launch"
   type        = bool
   default     = null
 }
@@ -95,7 +95,7 @@ variable "public_subnet_assign_ipv6_address_on_creation" {
 }
 
 variable "eks_public_subnet_assign_ipv6_address_on_creation" {
-  description = "Assign IPv6 address on public subnet, must be disabled to change IPv6 CIDRs. This is the IPv6 equivalent of map_public_ip_on_launch"
+  description = "Assign IPv6 address on eks public subnet, must be disabled to change IPv6 CIDRs. This is the IPv6 equivalent of map_public_ip_on_launch"
   type        = bool
   default     = null
 }
@@ -143,9 +143,9 @@ variable "public_subnet_suffix" {
 }
 
 variable "eks_public_subnet_suffix" {
-  description = "Suffix to append to public subnets name"
+  description = "Suffix to append to eks public subnets name"
   type        = string
-  default     = "public"
+  default     = "eks_public"
 }
 
 variable "private_subnet_suffix" {
@@ -155,7 +155,7 @@ variable "private_subnet_suffix" {
 }
 
 variable "eks_private_subnet_suffix" {
-  description = "Suffix to append to private subnets name"
+  description = "Suffix to append to eks private subnets name"
   type        = string
   default     = "private"
 }
@@ -192,7 +192,7 @@ variable "public_subnets" {
 }
 
 variable "eks_public_subnets" {
-  description = "A list of public subnets inside the VPC"
+  description = "A list of EKS public subnets inside the VPC"
   type        = list(string)
   default     = []
 }
@@ -205,7 +205,7 @@ variable "private_subnets" {
 }
 
 variable "eks_private_subnets" {
-  description = "A list of private subnets inside the VPC"
+  description = "A list of eks private subnets inside the VPC"
   type        = list(string)
   default     = []
 }
@@ -1359,7 +1359,7 @@ variable "public_subnet_tags" {
 }
 
 variable "eks_public_subnet_tags" {
-  description = "Additional tags for the public subnets"
+  description = "Additional tags for the eks public subnets"
   type        = map(string)
   default     = {}
 }
@@ -1371,7 +1371,7 @@ variable "private_subnet_tags" {
 }
 
 variable "eks_private_subnet_tags" {
-  description = "Additional tags for the private subnets"
+  description = "Additional tags for the eks private subnets"
   type        = map(string)
   default     = {}
 }
@@ -1467,7 +1467,7 @@ variable "public_acl_tags" {
 }
 
 variable "eks_public_acl_tags" {
-  description = "Additional tags for the public subnets network ACL"
+  description = "Additional tags for the eks public subnets network ACL"
   type        = map(string)
   default     = {}
 }
@@ -1479,7 +1479,7 @@ variable "private_acl_tags" {
 }
 
 variable "eks_private_acl_tags" {
-  description = "Additional tags for the private subnets network ACL"
+  description = "Additional tags for the EKS private subnets network ACL"
   type        = map(string)
   default     = {}
 }
@@ -1635,7 +1635,7 @@ variable "public_dedicated_network_acl" {
 }
 
 variable "eks_public_dedicated_network_acl" {
-  description = "Whether to use dedicated network ACL (not default) and custom rules for public subnets"
+  description = "Whether to use dedicated network ACL (not default) and custom rules for eks public subnets"
   type        = bool
   default     = false
 }
@@ -1647,7 +1647,7 @@ variable "private_dedicated_network_acl" {
 }
 
 variable "eks_private_dedicated_network_acl" {
-  description = "Whether to use dedicated network ACL (not default) and custom rules for private subnets"
+  description = "Whether to use dedicated network ACL (not default) and custom rules for eks private subnets"
   type        = bool
   default     = false
 }
@@ -1741,7 +1741,7 @@ variable "public_inbound_acl_rules" {
 }
 
 variable "eks_public_inbound_acl_rules" {
-  description = "Public subnets inbound network ACLs"
+  description = "EKS Public subnets inbound network ACLs"
   type        = list(map(string))
 
   default = [
@@ -1773,7 +1773,7 @@ variable "public_outbound_acl_rules" {
 }
 
 variable "eks_public_outbound_acl_rules" {
-  description = "Public subnets outbound network ACLs"
+  description = "EKS Public subnets outbound network ACLs"
   type        = list(map(string))
 
   default = [
@@ -1805,7 +1805,7 @@ variable "private_inbound_acl_rules" {
 }
 
 variable "eks_private_inbound_acl_rules" {
-  description = "Private subnets inbound network ACLs"
+  description = "EKS Private subnets inbound network ACLs"
   type        = list(map(string))
 
   default = [
@@ -1837,7 +1837,7 @@ variable "private_outbound_acl_rules" {
 }
 
 variable "eks_private_outbound_acl_rules" {
-  description = "Private subnets outbound network ACLs"
+  description = "EKS Private subnets outbound network ACLs"
   type        = list(map(string))
 
   default = [
