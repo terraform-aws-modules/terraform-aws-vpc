@@ -2,7 +2,7 @@ version: 2
 
 terraform: &terraform
   docker:
-    - image: hashicorp/terraform:0.12.0
+    - image: hashicorp/terraform:0.12.6
   working_directory: /tmp/workspace/terraform
 
 jobs:
@@ -24,6 +24,13 @@ jobs:
       - run:
           name: Validate Terraform configurations
           command: find . -name ".terraform" -prune -o -type f -name "*.tf" -exec dirname {} \;|sort -u | while read m; do (cd "$m" && terraform validate && echo "√ $m") || exit 1 ; done
+      - run:
+          name: Validate minimum version check
+          command: |
+            sed -i.bak -e 's/>=/=/' -e 's/ \(\d\+\.\d\+\)"/ \1.0"/' versions.tf
+            terraform init
+            terraform validate
+            mv versions.tf.bak versions.tf
       - run:
           name: Check if Terraform configurations are properly formatted
           command: if [[ -n "$(terraform fmt -write=false)" ]]; then echo "Some terraform files need be formatted, run 'terraform fmt' to fix"; exit 1; fi
