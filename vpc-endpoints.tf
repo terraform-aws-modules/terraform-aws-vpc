@@ -1026,3 +1026,187 @@ resource "aws_vpc_endpoint" "cloud_directory" {
 
   tags = local.vpce_tags
 }
+
+#######################
+# VPC Endpoint for Application Auto Scaling
+#######################
+data "aws_vpc_endpoint_service" "application_auto_scaling" {
+  count = var.create_vpc && var.enable_application_auto_scaling_endpoint ? 1 : 0
+
+  service = "application-autoscaling"
+}
+
+resource "aws_vpc_endpoint" "application_auto_scaling" {
+  count = var.create_vpc && var.enable_application_auto_scaling_endpoint ? 1 : 0
+
+  vpc_id            = local.vpc_id
+  service_name      = data.aws_vpc_endpoint_service.application_auto_scaling[0].service_name
+  vpc_endpoint_type = "Interface"
+
+  security_group_ids  = var.application_auto_scaling_endpoint_security_group_ids
+  subnet_ids          = coalescelist(var.application_auto_scaling_endpoint_subnet_ids, aws_subnet.private.*.id)
+  private_dns_enabled = var.application_auto_scaling_endpoint_private_dns_enabled
+
+  tags = local.vpce_tags
+}
+
+#######################
+# VPC Endpoint for Auto Scaling Plans
+#######################
+data "aws_vpc_endpoint_service" "auto_scaling_plans" {
+  count = var.create_vpc && var.enable_auto_scaling_plans_endpoint ? 1 : 0
+
+  service = "autoscaling-plans"
+}
+
+resource "aws_vpc_endpoint" "auto_scaling_plans" {
+  count = var.create_vpc && var.enable_auto_scaling_plans_endpoint ? 1 : 0
+
+  vpc_id            = local.vpc_id
+  service_name      = data.aws_vpc_endpoint_service.auto_scaling_plans[0].service_name
+  vpc_endpoint_type = "Interface"
+
+  security_group_ids  = var.auto_scaling_plans_endpoint_security_group_ids
+  subnet_ids          = coalescelist(var.auto_scaling_plans_endpoint_subnet_ids, aws_subnet.private.*.id)
+  private_dns_enabled = var.auto_scaling_plans_endpoint_private_dns_enabled
+
+  tags = local.vpce_tags
+}
+
+#######################
+# VPC Endpoint for Workspaces
+#######################
+data "aws_vpc_endpoint_service" "workspaces" {
+  count = var.create_vpc && var.enable_workspaces_endpoint ? 1 : 0
+
+  service = "workspaces"
+}
+
+resource "aws_vpc_endpoint" "workspaces" {
+  count = var.create_vpc && var.enable_workspaces_endpoint ? 1 : 0
+
+  vpc_id            = local.vpc_id
+  service_name      = data.aws_vpc_endpoint_service.workspaces[0].service_name
+  vpc_endpoint_type = "Interface"
+
+  security_group_ids  = var.workspaces_endpoint_security_group_ids
+  subnet_ids          = coalescelist(var.workspaces_endpoint_subnet_ids, aws_subnet.private.*.id)
+  private_dns_enabled = var.workspaces_endpoint_private_dns_enabled
+
+  tags = local.vpce_tags
+}
+
+#######################
+# VPC Endpoint for Access Analyzer
+#######################
+data "aws_vpc_endpoint_service" "access_analyzer" {
+  count = var.create_vpc && var.enable_access_analyzer_endpoint ? 1 : 0
+
+  service = "access-analyzer"
+}
+
+resource "aws_vpc_endpoint" "access_analyzer" {
+  count = var.create_vpc && var.enable_access_analyzer_endpoint ? 1 : 0
+
+  vpc_id            = local.vpc_id
+  service_name      = data.aws_vpc_endpoint_service.access_analyzer[0].service_name
+  vpc_endpoint_type = "Interface"
+
+  security_group_ids  = var.access_analyzer_endpoint_security_group_ids
+  subnet_ids          = coalescelist(var.access_analyzer_endpoint_subnet_ids, aws_subnet.private.*.id)
+  private_dns_enabled = var.access_analyzer_endpoint_private_dns_enabled
+
+  tags = local.vpce_tags
+}
+
+#######################
+# VPC Endpoint for EBS
+#######################
+data "aws_vpc_endpoint_service" "ebs" {
+  count = var.create_vpc && var.enable_ebs_endpoint ? 1 : 0
+
+  service = "ebs"
+}
+
+resource "aws_vpc_endpoint" "ebs" {
+  count = var.create_vpc && var.enable_ebs_endpoint ? 1 : 0
+
+  vpc_id            = local.vpc_id
+  service_name      = data.aws_vpc_endpoint_service.ebs[0].service_name
+  vpc_endpoint_type = "Interface"
+
+  security_group_ids  = var.ebs_endpoint_security_group_ids
+  subnet_ids          = coalescelist(var.ebs_endpoint_subnet_ids, aws_subnet.private.*.id)
+  private_dns_enabled = var.ebs_endpoint_private_dns_enabled
+
+  tags = local.vpce_tags
+}
+
+#######################
+# VPC Endpoint for Data Sync
+#######################
+data "aws_vpc_endpoint_service" "datasync" {
+  count = var.create_vpc && var.enable_datasync_endpoint ? 1 : 0
+
+  service = "datasync"
+}
+
+resource "aws_vpc_endpoint" "datasync" {
+  count = var.create_vpc && var.enable_datasync_endpoint ? 1 : 0
+
+  vpc_id            = local.vpc_id
+  service_name      = data.aws_vpc_endpoint_service.datasync[0].service_name
+  vpc_endpoint_type = "Interface"
+
+  security_group_ids  = var.datasync_endpoint_security_group_ids
+  subnet_ids          = coalescelist(var.datasync_endpoint_subnet_ids, aws_subnet.private.*.id)
+  private_dns_enabled = var.datasync_endpoint_private_dns_enabled
+
+  tags = local.vpce_tags
+}
+
+#######################
+# VPC Endpoint for Elastic Inference Runtime
+#######################
+data "aws_vpc_endpoint_service" "elastic_inference_runtime" {
+  count = var.create_vpc && var.enable_elastic_inference_runtime_endpoint ? 1 : 0
+
+  service = "elastic-inference.runtime"
+}
+
+resource "aws_vpc_endpoint" "elastic_inference_runtime" {
+  count = var.create_vpc && var.enable_elastic_inference_runtime_endpoint ? 1 : 0
+
+  vpc_id            = local.vpc_id
+  service_name      = data.aws_vpc_endpoint_service.elastic_inference_runtime[0].service_name
+  vpc_endpoint_type = "Interface"
+
+  security_group_ids  = var.elastic_inference_runtime_endpoint_security_group_ids
+  subnet_ids          = coalescelist(var.elastic_inference_runtime_endpoint_subnet_ids, aws_subnet.private.*.id)
+  private_dns_enabled = var.elastic_inference_runtime_endpoint_private_dns_enabled
+
+  tags = local.vpce_tags
+}
+
+#######################
+# VPC Endpoint for SMS
+#######################
+data "aws_vpc_endpoint_service" "sms" {
+  count = var.create_vpc && var.enable_sms_endpoint ? 1 : 0
+
+  service = "sms"
+}
+
+resource "aws_vpc_endpoint" "sms" {
+  count = var.create_vpc && var.enable_sms_endpoint ? 1 : 0
+
+  vpc_id            = local.vpc_id
+  service_name      = data.aws_vpc_endpoint_service.sms[0].service_name
+  vpc_endpoint_type = "Interface"
+
+  security_group_ids  = var.sms_endpoint_security_group_ids
+  subnet_ids          = coalescelist(var.sms_endpoint_subnet_ids, aws_subnet.private.*.id)
+  private_dns_enabled = var.sms_endpoint_private_dns_enabled
+
+  tags = local.vpce_tags
+}
