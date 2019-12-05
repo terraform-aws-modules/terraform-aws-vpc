@@ -1515,6 +1515,54 @@ variable "sms_endpoint_private_dns_enabled" {
   default     = false
 }
 
+variable "enable_emr_endpoint" {
+  description = "Should be true if you want to provision an EMR endpoint to the VPC"
+  type        = bool
+  default     = false
+}
+
+variable "emr_endpoint_security_group_ids" {
+  description = "The ID of one or more security groups to associate with the network interface for EMR endpoint"
+  type        = list(string)
+  default     = []
+}
+
+variable "emr_endpoint_subnet_ids" {
+  description = "The ID of one or more subnets in which to create a network interface for EMR endpoint. Only a single subnet within an AZ is supported. Ifomitted, private subnets will be used."
+  type        = list(string)
+  default     = []
+}
+
+variable "emr_endpoint_private_dns_enabled" {
+  description = "Whether or not to associate a private hosted zone with the specified VPC for EMR endpoint"
+  type        = bool
+  default     = false
+}
+
+variable "enable_qldb_session_endpoint" {
+  description = "Should be true if you want to provision an QLDB Session endpoint to the VPC"
+  type        = bool
+  default     = false
+}
+
+variable "qldb_session_endpoint_security_group_ids" {
+  description = "The ID of one or more security groups to associate with the network interface for QLDB Session endpoint"
+  type        = list(string)
+  default     = []
+}
+
+variable "qldb_session_endpoint_subnet_ids" {
+  description = "The ID of one or more subnets in which to create a network interface for QLDB Session endpoint. Only a single subnet within an AZ is supported. Ifomitted, private subnets will be used."
+  type        = list(string)
+  default     = []
+}
+
+variable "qldb_session_endpoint_private_dns_enabled" {
+  description = "Whether or not to associate a private hosted zone with the specified VPC for QLDB Session endpoint"
+  type        = bool
+  default     = false
+}
+
 variable "map_public_ip_on_launch" {
   description = "Should be false if you do not want to auto-assign public IP on launch"
   type        = bool

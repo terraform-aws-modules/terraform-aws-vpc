@@ -1210,3 +1210,49 @@ resource "aws_vpc_endpoint" "sms" {
 
   tags = local.vpce_tags
 }
+
+#######################
+# VPC Endpoint for EMR
+#######################
+data "aws_vpc_endpoint_service" "emr" {
+  count = var.create_vpc && var.enable_emr_endpoint ? 1 : 0
+
+  service = "elasticmapreduce"
+}
+
+resource "aws_vpc_endpoint" "emr" {
+  count = var.create_vpc && var.enable_emr_endpoint ? 1 : 0
+
+  vpc_id            = local.vpc_id
+  service_name      = data.aws_vpc_endpoint_service.emr[0].service_name
+  vpc_endpoint_type = "Interface"
+
+  security_group_ids  = var.emr_endpoint_security_group_ids
+  subnet_ids          = coalescelist(var.emr_endpoint_subnet_ids, aws_subnet.private.*.id)
+  private_dns_enabled = var.emr_endpoint_private_dns_enabled
+
+  tags = local.vpce_tags
+}
+
+#######################
+# VPC Endpoint for QLDB Session
+#######################
+data "aws_vpc_endpoint_service" "qldb_session" {
+  count = var.create_vpc && var.enable_qldb_session_endpoint ? 1 : 0
+
+  service = "qldb.session"
+}
+
+resource "aws_vpc_endpoint" "qldb_session" {
+  count = var.create_vpc && var.enable_qldb_session_endpoint ? 1 : 0
+
+  vpc_id            = local.vpc_id
+  service_name      = data.aws_vpc_endpoint_service.qldb_session[0].service_name
+  vpc_endpoint_type = "Interface"
+
+  security_group_ids  = var.qldb_session_endpoint_security_group_ids
+  subnet_ids          = coalescelist(var.qldb_session_endpoint_subnet_ids, aws_subnet.private.*.id)
+  private_dns_enabled = var.qldb_session_endpoint_private_dns_enabled
+
+  tags = local.vpce_tags
+}
