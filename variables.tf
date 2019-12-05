@@ -304,15 +304,33 @@ variable "enable_dynamodb_endpoint" {
   default     = false
 }
 
+variable "dynamodb_vpc_endpoint_suffix" {
+  description = "Suffix to append to a DynamoDB VPC Endpoint name"
+  type        = string
+  default     = "dynamodb-vpc-endpoint"
+}
+
 variable "enable_s3_endpoint" {
   description = "Should be true if you want to provision an S3 endpoint to the VPC"
   type        = bool
   default     = false
 }
 
+variable "s3_vpc_endpoint_suffix" {
+  description = "Suffix to append to a S3 VPC Endpoint name"
+  type        = string
+  default     = "s3-vpc-endpoint"
+}
+
 variable "enable_codebuild_endpoint" {
   description = "Should be true if you want to provision an Codebuild endpoint to the VPC"
   default     = false
+}
+
+variable "codebuild_vpc_endpoint_suffix" {
+  description = "Suffix to append to a CodeBuild VPC Endpoint name"
+  type        = string
+  default     = "codebuild-vpc-endpoint"
 }
 
 variable "codebuild_endpoint_security_group_ids" {
@@ -335,6 +353,12 @@ variable "enable_codecommit_endpoint" {
   default     = false
 }
 
+variable "codecommit_vpc_endpoint_suffix" {
+  description = "Suffix to append to a CodeCommit VPC Endpoint name"
+  type        = string
+  default     = "codecommit-vpc-endpoint"
+}
+
 variable "codecommit_endpoint_security_group_ids" {
   description = "The ID of one or more security groups to associate with the network interface for Codecommit endpoint"
   default     = []
@@ -353,6 +377,12 @@ variable "codecommit_endpoint_private_dns_enabled" {
 variable "enable_git_codecommit_endpoint" {
   description = "Should be true if you want to provision an Git Codecommit endpoint to the VPC"
   default     = false
+}
+
+variable "git_codecommit_vpc_endpoint_suffix" {
+  description = "Suffix to append to a Git CodeCommit VPC Endpoint name"
+  type        = string
+  default     = "git-codecommit-vpc-endpoint"
 }
 
 variable "git_codecommit_endpoint_security_group_ids" {
@@ -375,6 +405,12 @@ variable "enable_config_endpoint" {
   default     = false
 }
 
+variable "config_vpc_endpoint_suffix" {
+  description = "Suffix to append to a Config VPC Endpoint name"
+  type        = string
+  default     = "config-vpc-endpoint"
+}
+
 variable "config_endpoint_security_group_ids" {
   description = "The ID of one or more security groups to associate with the network interface for config endpoint"
   default     = []
@@ -393,6 +429,12 @@ variable "config_endpoint_private_dns_enabled" {
 variable "enable_sqs_endpoint" {
   description = "Should be true if you want to provision an SQS endpoint to the VPC"
   default     = false
+}
+
+variable "sqs_vpc_endpoint_suffix" {
+  description = "Suffix to append to a SQS VPC Endpoint name"
+  type        = string
+  default     = "sqs-vpc-endpoint"
 }
 
 variable "sqs_endpoint_security_group_ids" {
@@ -414,6 +456,12 @@ variable "enable_ssm_endpoint" {
   description = "Should be true if you want to provision an SSM endpoint to the VPC"
   type        = bool
   default     = false
+}
+
+variable "ssm_vpc_endpoint_suffix" {
+  description = "Suffix to append to a SSM VPC Endpoint name"
+  type        = string
+  default     = "ssm-vpc-endpoint"
 }
 
 variable "ssm_endpoint_security_group_ids" {
@@ -440,6 +488,12 @@ variable "enable_secretsmanager_endpoint" {
   default     = false
 }
 
+variable "secretsmanager_vpc_endpoint_suffix" {
+  description = "Suffix to append to a Secrets Manager VPC Endpoint name"
+  type        = string
+  default     = "secretsmanager-vpc-endpoint"
+}
+
 variable "secretsmanager_endpoint_security_group_ids" {
   description = "The ID of one or more security groups to associate with the network interface for Secrets Manager endpoint"
   type        = list(string)
@@ -459,9 +513,15 @@ variable "secretsmanager_endpoint_private_dns_enabled" {
 }
 
 variable "enable_apigw_endpoint" {
-  description = "Should be true if you want to provision an api gateway endpoint to the VPC"
+  description = "Should be true if you want to provision an API Gateway endpoint to the VPC"
   type        = bool
   default     = false
+}
+
+variable "apigw_vpc_endpoint_suffix" {
+  description = "Suffix to append to a API Gateway VPC Endpoint name"
+  type        = string
+  default     = "api-gateway-vpc-endpoint"
 }
 
 variable "apigw_endpoint_security_group_ids" {
@@ -483,25 +543,31 @@ variable "apigw_endpoint_subnet_ids" {
 }
 
 variable "enable_ssmmessages_endpoint" {
-  description = "Should be true if you want to provision a SSMMESSAGES endpoint to the VPC"
+  description = "Should be true if you want to provision an SSM Messages endpoint to the VPC"
   type        = bool
   default     = false
 }
 
+variable "ssmmessages_vpc_endpoint_suffix" {
+  description = "Suffix to append to a SSM Messages Endpoint name"
+  type        = string
+  default     = "ssm-messages-vpc-endpoint"
+}
+
 variable "ssmmessages_endpoint_security_group_ids" {
-  description = "The ID of one or more security groups to associate with the network interface for SSMMESSAGES endpoint"
+  description = "The ID of one or more security groups to associate with the network interface for SSM Messages endpoint"
   type        = list(string)
   default     = []
 }
 
 variable "ssmmessages_endpoint_subnet_ids" {
-  description = "The ID of one or more subnets in which to create a network interface for SSMMESSAGES endpoint. Only a single subnet within an AZ is supported. If omitted, private subnets will be used."
+  description = "The ID of one or more subnets in which to create a network interface for SSM Messages endpoint. Only a single subnet within an AZ is supported. If omitted, private subnets will be used."
   type        = list(string)
   default     = []
 }
 
 variable "ssmmessages_endpoint_private_dns_enabled" {
-  description = "Whether or not to associate a private hosted zone with the specified VPC for SSMMESSAGES endpoint"
+  description = "Whether or not to associate a private hosted zone with the specified VPC for SSM Messages endpoint"
   type        = bool
   default     = false
 }
@@ -510,6 +576,12 @@ variable "enable_transferserver_endpoint" {
   description = "Should be true if you want to provision a Transfer Server endpoint to the VPC"
   type        = bool
   default     = false
+}
+
+variable "transferserver_vpc_endpoint_suffix" {
+  description = "Suffix to append to a Transfer Server Endpoint name"
+  type        = string
+  default     = "transferserver-vpc-endpoint"
 }
 
 variable "transferserver_endpoint_security_group_ids" {
@@ -530,11 +602,16 @@ variable "transferserver_endpoint_private_dns_enabled" {
   default     = false
 }
 
-
 variable "enable_ec2_endpoint" {
   description = "Should be true if you want to provision an EC2 endpoint to the VPC"
   type        = bool
   default     = false
+}
+
+variable "ec2_vpc_endpoint_suffix" {
+  description = "Suffix to append to a EC2 Endpoint name"
+  type        = string
+  default     = "ec2-vpc-endpoint"
 }
 
 variable "ec2_endpoint_security_group_ids" {
@@ -556,37 +633,49 @@ variable "ec2_endpoint_subnet_ids" {
 }
 
 variable "enable_ec2messages_endpoint" {
-  description = "Should be true if you want to provision an EC2MESSAGES endpoint to the VPC"
+  description = "Should be true if you want to provision an EC2 Messages endpoint to the VPC"
   type        = bool
   default     = false
 }
 
+variable "ec2messages_vpc_endpoint_suffix" {
+  description = "Suffix to append to a EC2 Messages Endpoint name"
+  type        = string
+  default     = "ec2messages-vpc-endpoint"
+}
+
 variable "ec2messages_endpoint_security_group_ids" {
-  description = "The ID of one or more security groups to associate with the network interface for EC2MESSAGES endpoint"
+  description = "The ID of one or more security groups to associate with the network interface for EC2 Messages endpoint"
   type        = list(string)
   default     = []
 }
 
 variable "ec2messages_endpoint_private_dns_enabled" {
-  description = "Whether or not to associate a private hosted zone with the specified VPC for EC2MESSAGES endpoint"
+  description = "Whether or not to associate a private hosted zone with the specified VPC for EC2 Messages endpoint"
   type        = bool
   default     = false
 }
 
 variable "ec2messages_endpoint_subnet_ids" {
-  description = "The ID of one or more subnets in which to create a network interface for EC2MESSAGES endpoint. Only a single subnet within an AZ is supported. If omitted, private subnets will be used."
+  description = "The ID of one or more subnets in which to create a network interface for EC2 Messages endpoint. Only a single subnet within an AZ is supported. If omitted, private subnets will be used."
   type        = list(string)
   default     = []
 }
 
 variable "enable_ecr_api_endpoint" {
-  description = "Should be true if you want to provision an ecr api endpoint to the VPC"
+  description = "Should be true if you want to provision an ECR API endpoint to the VPC"
   type        = bool
   default     = false
 }
 
+variable "ecr_api_vpc_endpoint_suffix" {
+  description = "Suffix to append to a ECR API Endpoint name"
+  type        = string
+  default     = "ecr-api-vpc-endpoint"
+}
+
 variable "ecr_api_endpoint_subnet_ids" {
-  description = "The ID of one or more subnets in which to create a network interface for ECR api endpoint. If omitted, private subnets will be used."
+  description = "The ID of one or more subnets in which to create a network interface for ECR API endpoint. If omitted, private subnets will be used."
   type        = list(string)
   default     = []
 }
@@ -604,13 +693,19 @@ variable "ecr_api_endpoint_security_group_ids" {
 }
 
 variable "enable_ecr_dkr_endpoint" {
-  description = "Should be true if you want to provision an ecr dkr endpoint to the VPC"
+  description = "Should be true if you want to provision an ECR DKR endpoint to the VPC"
   type        = bool
   default     = false
 }
 
+variable "ecr_dkr_vpc_endpoint_suffix" {
+  description = "Suffix to append to a ECR DKR Endpoint name"
+  type        = string
+  default     = "ecr-dkr-vpc-endpoint"
+}
+
 variable "ecr_dkr_endpoint_subnet_ids" {
-  description = "The ID of one or more subnets in which to create a network interface for ECR dkr endpoint. If omitted, private subnets will be used."
+  description = "The ID of one or more subnets in which to create a network interface for ECR DKR endpoint. If omitted, private subnets will be used."
   type        = list(string)
   default     = []
 }
@@ -631,6 +726,12 @@ variable "enable_kms_endpoint" {
   description = "Should be true if you want to provision a KMS endpoint to the VPC"
   type        = bool
   default     = false
+}
+
+variable "kms_vpc_endpoint_suffix" {
+  description = "Suffix to append to a KMS Endpoint name"
+  type        = string
+  default     = "kms-vpc-endpoint"
 }
 
 variable "kms_endpoint_security_group_ids" {
@@ -657,6 +758,12 @@ variable "enable_ecs_endpoint" {
   default     = false
 }
 
+variable "ecs_vpc_endpoint_suffix" {
+  description = "Suffix to append to a ECS Endpoint name"
+  type        = string
+  default     = "ecs-vpc-endpoint"
+}
+
 variable "ecs_endpoint_security_group_ids" {
   description = "The ID of one or more security groups to associate with the network interface for ECS endpoint"
   type        = list(string)
@@ -679,6 +786,12 @@ variable "enable_ecs_agent_endpoint" {
   description = "Should be true if you want to provision a ECS Agent endpoint to the VPC"
   type        = bool
   default     = false
+}
+
+variable "ecs_agent_vpc_endpoint_suffix" {
+  description = "Suffix to append to a ECS Agent Endpoint name"
+  type        = string
+  default     = "ecs-agent-vpc-endpoint"
 }
 
 variable "ecs_agent_endpoint_security_group_ids" {
@@ -705,6 +818,12 @@ variable "enable_ecs_telemetry_endpoint" {
   default     = false
 }
 
+variable "ecs_telemetry_vpc_endpoint_suffix" {
+  description = "Suffix to append to a ECS Telemetry Endpoint name"
+  type        = string
+  default     = "ecs-telemetry-vpc-endpoint"
+}
+
 variable "ecs_telemetry_endpoint_security_group_ids" {
   description = "The ID of one or more security groups to associate with the network interface for ECS Telemetry endpoint"
   type        = list(string)
@@ -727,6 +846,12 @@ variable "enable_sns_endpoint" {
   description = "Should be true if you want to provision a SNS endpoint to the VPC"
   type        = bool
   default     = false
+}
+
+variable "sns_vpc_endpoint_suffix" {
+  description = "Suffix to append to a SNS Endpoint name"
+  type        = string
+  default     = "sns-vpc-endpoint"
 }
 
 variable "sns_endpoint_security_group_ids" {
@@ -753,6 +878,12 @@ variable "enable_monitoring_endpoint" {
   default     = false
 }
 
+variable "monitoring_vpc_endpoint_suffix" {
+  description = "Suffix to append to a CloudWatch Monitoring Endpoint name"
+  type        = string
+  default     = "monitoring-vpc-endpoint"
+}
+
 variable "monitoring_endpoint_security_group_ids" {
   description = "The ID of one or more security groups to associate with the network interface for CloudWatch Monitoring endpoint"
   type        = list(string)
@@ -772,9 +903,15 @@ variable "monitoring_endpoint_private_dns_enabled" {
 }
 
 variable "enable_elasticloadbalancing_endpoint" {
-  description = "Should be true if you want to provision a Elastic Load Balancing endpoint to the VPC"
+  description = "Should be true if you want to provision an Elastic Load Balancing endpoint to the VPC"
   type        = bool
   default     = false
+}
+
+variable "elasticloadbalancing_vpc_endpoint_suffix" {
+  description = "Suffix to append to an Elastic Load Balancing Endpoint name"
+  type        = string
+  default     = "elasticloadbalancing-vpc-endpoint"
 }
 
 variable "elasticloadbalancing_endpoint_security_group_ids" {
@@ -801,6 +938,12 @@ variable "enable_events_endpoint" {
   default     = false
 }
 
+variable "events_vpc_endpoint_suffix" {
+  description = "Suffix to append to a CloudWatch Events Endpoint name"
+  type        = string
+  default     = "events-vpc-endpoint"
+}
+
 variable "events_endpoint_security_group_ids" {
   description = "The ID of one or more security groups to associate with the network interface for CloudWatch Events endpoint"
   type        = list(string)
@@ -823,6 +966,12 @@ variable "enable_logs_endpoint" {
   description = "Should be true if you want to provision a CloudWatch Logs endpoint to the VPC"
   type        = bool
   default     = false
+}
+
+variable "logs_vpc_endpoint_suffix" {
+  description = "Suffix to append to a CloudWatch Logs Endpoint name"
+  type        = string
+  default     = "logs-vpc-endpoint"
 }
 
 variable "logs_endpoint_security_group_ids" {
@@ -849,6 +998,12 @@ variable "enable_cloudtrail_endpoint" {
   default     = false
 }
 
+variable "cloudtrail_vpc_endpoint_suffix" {
+  description = "Suffix to append to a CloudTrail Endpoint name"
+  type        = string
+  default     = "cloudtrail-vpc-endpoint"
+}
+
 variable "cloudtrail_endpoint_security_group_ids" {
   description = "The ID of one or more security groups to associate with the network interface for CloudTrail endpoint"
   type        = list(string)
@@ -871,6 +1026,12 @@ variable "enable_kinesis_streams_endpoint" {
   description = "Should be true if you want to provision a Kinesis Streams endpoint to the VPC"
   type        = bool
   default     = false
+}
+
+variable "kinesis_streams_vpc_endpoint_suffix" {
+  description = "Suffix to append to a Kinesis Streams Endpoint name"
+  type        = string
+  default     = "kinesis-streams-vpc-endpoint"
 }
 
 variable "kinesis_streams_endpoint_security_group_ids" {
@@ -897,6 +1058,12 @@ variable "enable_kinesis_firehose_endpoint" {
   default     = false
 }
 
+variable "kinesis_firehose_vpc_endpoint_suffix" {
+  description = "Suffix to append to a Kinesis Firehose Endpoint name"
+  type        = string
+  default     = "firehose-streams-vpc-endpoint"
+}
+
 variable "kinesis_firehose_endpoint_security_group_ids" {
   description = "The ID of one or more security groups to associate with the network interface for Kinesis Firehose endpoint"
   type        = list(string)
@@ -921,6 +1088,12 @@ variable "enable_glue_endpoint" {
   default     = false
 }
 
+variable "glue_vpc_endpoint_suffix" {
+  description = "Suffix to append to a Glue Endpoint name"
+  type        = string
+  default     = "glue-vpc-endpoint"
+}
+
 variable "glue_endpoint_security_group_ids" {
   description = "The ID of one or more security groups to associate with the network interface for Glue endpoint"
   type        = list(string)
@@ -943,6 +1116,12 @@ variable "enable_sagemaker_notebook_endpoint" {
   description = "Should be true if you want to provision a Sagemaker Notebook endpoint to the VPC"
   type        = bool
   default     = false
+}
+
+variable "sagemaker_notebook_vpc_endpoint_suffix" {
+  description = "Suffix to append to a Sagemaker Notebook Endpoint name"
+  type        = string
+  default     = "sagemaker-notebooks-vpc-endpoint"
 }
 
 variable "sagemaker_notebook_endpoint_region" {
@@ -975,6 +1154,12 @@ variable "enable_sts_endpoint" {
   default     = false
 }
 
+variable "sts_vpc_endpoint_suffix" {
+  description = "Suffix to append to a STS Endpoint name"
+  type        = string
+  default     = "sts-vpc-endpoint"
+}
+
 variable "sts_endpoint_security_group_ids" {
   description = "The ID of one or more security groups to associate with the network interface for STS endpoint"
   type        = list(string)
@@ -999,6 +1184,12 @@ variable "enable_cloudformation_endpoint" {
   default     = false
 }
 
+variable "cloudformation_vpc_endpoint_suffix" {
+  description = "Suffix to append to a Cloudformation Endpoint name"
+  type        = string
+  default     = "cloudformation-vpc-endpoint"
+}
+
 variable "cloudformation_endpoint_security_group_ids" {
   description = "The ID of one or more security groups to associate with the network interface for Cloudformation endpoint"
   type        = list(string)
@@ -1016,10 +1207,17 @@ variable "cloudformation_endpoint_private_dns_enabled" {
   type        = bool
   default     = false
 }
+
 variable "enable_codepipeline_endpoint" {
   description = "Should be true if you want to provision a CodePipeline endpoint to the VPC"
   type        = bool
   default     = false
+}
+
+variable "codepipeline_vpc_endpoint_suffix" {
+  description = "Suffix to append to a CodePipeline Endpoint name"
+  type        = string
+  default     = "codepipeline-vpc-endpoint"
 }
 
 variable "codepipeline_endpoint_security_group_ids" {
@@ -1045,6 +1243,12 @@ variable "enable_appmesh_envoy_management_endpoint" {
   default     = false
 }
 
+variable "appmesh_envoy_management_vpc_endpoint_suffix" {
+  description = "Suffix to append to a AppMesh Endpoint name"
+  type        = string
+  default     = "appmesh-vpc-endpoint"
+}
+
 variable "appmesh_envoy_management_endpoint_security_group_ids" {
   description = "The ID of one or more security groups to associate with the network interface for AppMesh endpoint"
   type        = list(string)
@@ -1066,6 +1270,12 @@ variable "enable_servicecatalog_endpoint" {
   description = "Should be true if you want to provision a Service Catalog endpoint to the VPC"
   type        = bool
   default     = false
+}
+
+variable "servicecatalog_vpc_endpoint_suffix" {
+  description = "Suffix to append to a Service Catalog Endpoint name"
+  type        = string
+  default     = "service-catalog-vpc-endpoint"
 }
 
 variable "servicecatalog_endpoint_security_group_ids" {
@@ -1091,6 +1301,12 @@ variable "enable_storagegateway_endpoint" {
   default     = false
 }
 
+variable "storagegateway_vpc_endpoint_suffix" {
+  description = "Suffix to append to a Storage Gateway Endpoint name"
+  type        = string
+  default     = "storage-gateway-vpc-endpoint"
+}
+
 variable "storagegateway_endpoint_security_group_ids" {
   description = "The ID of one or more security groups to associate with the network interface for Storage Gateway endpoint"
   type        = list(string)
@@ -1112,6 +1328,12 @@ variable "enable_transfer_endpoint" {
   description = "Should be true if you want to provision a Transfer endpoint to the VPC"
   type        = bool
   default     = false
+}
+
+variable "transfer_vpc_endpoint_suffix" {
+  description = "Suffix to append to a Transfer Endpoint name"
+  type        = string
+  default     = "transfer-vpc-endpoint"
 }
 
 variable "transfer_endpoint_security_group_ids" {
@@ -1137,6 +1359,12 @@ variable "enable_sagemaker_api_endpoint" {
   default     = false
 }
 
+variable "sagemaker_api_vpc_endpoint_suffix" {
+  description = "Suffix to append to a Sagemaker API endpoint name"
+  type        = string
+  default     = "sagemaker-api-vpc-endpoint"
+}
+
 variable "sagemaker_api_endpoint_security_group_ids" {
   description = "The ID of one or more security groups to associate with the network interface for SageMaker API endpoint"
   type        = list(string)
@@ -1158,6 +1386,12 @@ variable "enable_sagemaker_runtime_endpoint" {
   description = "Should be true if you want to provision a SageMaker Runtime endpoint to the VPC"
   type        = bool
   default     = false
+}
+
+variable "sagemaker_runtime_vpc_endpoint_suffix" {
+  description = "Suffix to append to a Sagemaker Runtime endpoint name"
+  type        = string
+  default     = "sagemaker-runtime-vpc-endpoint"
 }
 
 variable "sagemaker_runtime_endpoint_security_group_ids" {
@@ -1184,6 +1418,12 @@ variable "enable_appstream_endpoint" {
   default     = false
 }
 
+variable "appstream_vpc_endpoint_suffix" {
+  description = "Suffix to append to a AppStream endpoint name"
+  type        = string
+  default     = "appstream-vpc-endpoint"
+}
+
 variable "appstream_endpoint_security_group_ids" {
   description = "The ID of one or more security groups to associate with the network interface for AppStream endpoint"
   type        = list(string)
@@ -1206,6 +1446,12 @@ variable "enable_athena_endpoint" {
   description = "Should be true if you want to provision a Athena endpoint to the VPC"
   type        = bool
   default     = false
+}
+
+variable "athena_vpc_endpoint_suffix" {
+  description = "Suffix to append to Athena endpoint name"
+  type        = string
+  default     = "athena-vpc-endpoint"
 }
 
 variable "athena_endpoint_security_group_ids" {
@@ -1232,6 +1478,12 @@ variable "enable_rekognition_endpoint" {
   default     = false
 }
 
+variable "rekognition_vpc_endpoint_suffix" {
+  description = "Suffix to append to Rekognition endpoint name"
+  type        = string
+  default     = "rekognition-vpc-endpoint"
+}
+
 variable "rekognition_endpoint_security_group_ids" {
   description = "The ID of one or more security groups to associate with the network interface for Rekognition endpoint"
   type        = list(string)
@@ -1256,6 +1508,12 @@ variable "enable_efs_endpoint" {
   default     = false
 }
 
+variable "efs_vpc_endpoint_suffix" {
+  description = "Suffix to append to EFS endpoint name"
+  type        = string
+  default     = "efs-vpc-endpoint"
+}
+
 variable "efs_endpoint_security_group_ids" {
   description = "The ID of one or more security groups to associate with the network interface for EFS endpoint"
   type        = list(string)
@@ -1278,6 +1536,12 @@ variable "enable_cloud_directory_endpoint" {
   description = "Should be true if you want to provision an Cloud Directory endpoint to the VPC"
   type        = bool
   default     = false
+}
+
+variable "cloud_directory_vpc_endpoint_suffix" {
+  description = "Suffix to append to a Cloud Directory endpoint name"
+  type        = string
+  default     = "cloud-directory-vpc-endpoint"
 }
 
 variable "cloud_directory_endpoint_security_group_ids" {
