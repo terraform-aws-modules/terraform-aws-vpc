@@ -1002,6 +1002,7 @@ output "vpc_endpoint_cloud_directory_dns_entry" {
   value       = flatten(aws_vpc_endpoint.cloud_directory.*.dns_entry)
 }
 
+
 # Static values (arguments)
 output "azs" {
   description = "A list of availability zones specified as argument to this module"
