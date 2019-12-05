@@ -67,37 +67,37 @@ variable "assign_ipv6_address_on_creation" {
 variable "private_subnet_assign_ipv6_address_on_creation" {
   description = "Assign IPv6 address on private subnet, must be disabled to change IPv6 CIDRs. This is the IPv6 equivalent of map_public_ip_on_launch"
   type        = bool
-  default     = null
+  default     = false
 }
 
 variable "public_subnet_assign_ipv6_address_on_creation" {
   description = "Assign IPv6 address on public subnet, must be disabled to change IPv6 CIDRs. This is the IPv6 equivalent of map_public_ip_on_launch"
   type        = bool
-  default     = null
+  default     = false
 }
 
 variable "database_subnet_assign_ipv6_address_on_creation" {
   description = "Assign IPv6 address on database subnet, must be disabled to change IPv6 CIDRs. This is the IPv6 equivalent of map_public_ip_on_launch"
   type        = bool
-  default     = null
+  default     = false
 }
 
 variable "redshift_subnet_assign_ipv6_address_on_creation" {
   description = "Assign IPv6 address on redshift subnet, must be disabled to change IPv6 CIDRs. This is the IPv6 equivalent of map_public_ip_on_launch"
   type        = bool
-  default     = null
+  default     = false
 }
 
 variable "elasticache_subnet_assign_ipv6_address_on_creation" {
   description = "Assign IPv6 address on elasticache subnet, must be disabled to change IPv6 CIDRs. This is the IPv6 equivalent of map_public_ip_on_launch"
   type        = bool
-  default     = null
+  default     = false
 }
 
 variable "intra_subnet_assign_ipv6_address_on_creation" {
   description = "Assign IPv6 address on intra subnet, must be disabled to change IPv6 CIDRs. This is the IPv6 equivalent of map_public_ip_on_launch"
   type        = bool
-  default     = null
+  default     = false
 }
 
 variable "secondary_cidr_blocks" {
@@ -1878,4 +1878,3 @@ variable "elasticache_outbound_acl_rules" {
     },
   ]
 }
-
