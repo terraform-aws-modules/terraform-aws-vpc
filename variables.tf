@@ -13,7 +13,7 @@ variable "name" {
 variable "database_subnet_group_name" {
   description = "Name to be used on DB Subnet Group resource as identifier"
   type        = string
-  default     = ""
+  default     = null
 }
 
 variable "cidr" {
