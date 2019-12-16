@@ -1078,3 +1078,214 @@ resource "aws_default_vpc" "this" {
   )
 }
 
+locals {
+# Get number of route tables to created by uniquely get the names.
+    public_route_table_names = distinct(var.generic_public_subnets.*.route_table_name)
+    private_route_table_names = distinct(var.generic_private_subnets.*.route_table_name)
+}
+
+##############################
+# Generic Publiс Routes tables
+##############################
+resource "aws_route_table" "generic_public" {
+count = length(local.public_route_table_names) > 0 ? length(local.public_route_table_names) : 0
+
+  vpc_id                          = aws_vpc.this[0].id
+
+  tags = merge(
+    {
+        "Name" = format("rt_%s", local.public_route_table_names[count.index]),
+#        "Name" = format("rt_%s", each.value),
+    },
+    var.tags,
+  )
+}
+
+locals {
+# This is map of route table name versus route table id.
+# Later this can be used wherever we need route table d for given route table name.
+# One example is route tablee association to subnets. We can extend it to route creation also.
+    public_route_table_ids = zipmap(local.public_route_table_names, aws_route_table.generic_public.*.id)
+    avlzones_public_subnets_ids = zipmap(var.generic_public_subnets.*.avlzone, aws_subnet.generic_public.*.id)
+}
+
+###################
+# Internet Gateway
+###################
+resource "aws_internet_gateway" "int_gw" {
+  count = var.create_vpc && length(var.generic_public_subnets) > 0 ? 1 : 0
+
+  vpc_id = aws_vpc.this[0].id
+
+  tags = merge(
+    {
+      "Name" = format("%s", var.name)
+    },
+    var.tags,
+    var.igw_tags,
+  )
+}
+
+resource "aws_route" "generic_public_internet_gateway" {
+  count = var.create_vpc && length(local.public_route_table_names) > 0 ? length(local.public_route_table_names) : 0
+
+  route_table_id         = aws_route_table.generic_public[count.index].id
+  destination_cidr_block = "0.0.0.0/0"
+  gateway_id             = aws_internet_gateway.int_gw[0].id
+
+  timeouts {
+    create = "5m"
+  }
+}
+
+########################
+# Generic Public subnets
+########################
+resource "aws_subnet" "generic_public" {
+  count = var.create_vpc && length(var.generic_public_subnets) > 0 ? length(var.generic_public_subnets) : 0
+
+  vpc_id                          = aws_vpc.this[0].id
+  cidr_block                      = var.generic_public_subnets[count.index].cidr_block
+  availability_zone               = var.generic_public_subnets[count.index].avlzone
+
+  tags = merge(
+    {
+      "Name" = format(
+        "subnet_%s_%s",
+        var.generic_public_subnets[count.index].tag_suffix,
+        substr(var.generic_public_subnets[count.index].avlzone, length(var.generic_public_subnets[count.index].avlzone)-1, 1)
+      )
+    },
+    var.tags,
+  )
+}
+
+#################################
+#Generic  Route table association
+#################################
+resource "aws_route_table_association" "public_route_table_subnets" {
+  count = length(var.generic_public_subnets) > 0 ? length(var.generic_public_subnets) : 0
+
+  subnet_id = element(aws_subnet.generic_public.*.id, count.index)
+  route_table_id = local.public_route_table_ids[var.generic_public_subnets[count.index].route_table_name]
+}
+
+################
+# Generic Private routes
+################
+resource "aws_route_table" "generic_private" {
+count = length(local.private_route_table_names) > 0 ? length(local.private_route_table_names) : 0
+
+  vpc_id = aws_vpc.this[0].id
+
+  tags = merge(
+    {
+        "Name" = format("rt_%s", local.private_route_table_names[count.index]),
+    },
+    var.tags,
+  )
+}
+
+locals {
+# This is map of route table name versus route table id.
+# Later this can be used wherever we need route table d for given route table name.
+# One example is route tablee association to subnets. We can extend it to route creation also.
+    private_route_table_ids = zipmap(local.private_route_table_names, aws_route_table.generic_private.*.id)
+    avlzones_private_subnets_ids = zipmap(var.generic_private_subnets.*.avlzone, aws_subnet.generic_private.*.id)
+    avlzones = distinct(var.generic_public_subnets.*.avlzone)
+}
+
+################
+# Generic Private subnet
+################
+resource "aws_subnet" "generic_private" {
+  count = var.create_vpc && length(var.generic_private_subnets) > 0 ? length(var.generic_private_subnets) : 0
+
+  vpc_id                          = aws_vpc.this[0].id
+  cidr_block                      = var.generic_private_subnets[count.index].cidr_block
+  availability_zone               = var.generic_private_subnets[count.index].avlzone
+
+  tags = merge(
+    {
+      "Name" = format(
+        "subnet_%s_%s",
+        var.generic_private_subnets[count.index].subnets_suffix,
+        substr(var.generic_private_subnets[count.index].avlzone, length(var.generic_private_subnets[count.index].avlzone)-1, 1)
+      )
+    },
+    var.tags,
+  )
+}
+
+locals {
+  generic_nat_gateway_count = var.single_nat_gateway ? 1 : length(local.avlzones)
+  generic_nat_gateway_ips = split(
+    ",",
+    var.reuse_nat_ips ? join(",", var.external_nat_ip_ids) : join(",", aws_eip.generic_eip.*.id),
+  )
+}
+
+##########################
+# Private  Route table association
+##########################
+resource "aws_route_table_association" "private_route_table_subnets" {
+  count = length(var.generic_private_subnets) > 0 ? length(var.generic_private_subnets) : 0
+
+  subnet_id = element(aws_subnet.generic_private.*.id, count.index)
+  route_table_id = local.private_route_table_ids[var.generic_private_subnets[count.index].route_table_name]
+}
+
+resource "aws_eip" "generic_eip" {
+  count = var.create_vpc && var.enable_nat_gateway && false == var.reuse_nat_ips ? local.generic_nat_gateway_count : 0
+
+  vpc = true
+
+  tags = merge(
+    {
+      "Name" = format(
+        "%s-%s",
+        var.name,
+        element(var.azs, var.single_nat_gateway ? 0 : count.index),
+      )
+    },
+    var.tags,
+    var.nat_eip_tags,
+  )
+}
+
+resource "aws_nat_gateway" "generic_natgw" {
+  count = var.create_vpc && var.enable_nat_gateway ? local.generic_nat_gateway_count : 0
+
+  allocation_id = element(
+    local.generic_nat_gateway_ips,
+    var.single_nat_gateway ? 0 : count.index,
+  )
+  subnet_id = local.avlzones_public_subnets_ids[local.avlzones[count.index]]
+
+  tags = merge(
+    {
+      "Name" = format(
+        "%s-%s",
+        var.name,
+        element(local.avlzones, var.single_nat_gateway ? 0 : count.index),
+      )
+    },
+    var.tags,
+    var.nat_gateway_tags,
+  )
+
+  depends_on = [aws_internet_gateway.int_gw]
+}
+
+resource "aws_route" "generic_private_nat_gateway" {
+  count = var.create_vpc && var.enable_nat_gateway ? local.generic_nat_gateway_count : 0
+
+  route_table_id         = element(aws_route_table.generic_private.*.id, count.index)
+  destination_cidr_block = "0.0.0.0/0"
+  nat_gateway_id         = element(aws_nat_gateway.generic_natgw.*.id, count.index)
+
+  timeouts {
+    create = "5m"
+  }
+}
+

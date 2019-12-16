@@ -1879,3 +1879,15 @@ variable "elasticache_outbound_acl_rules" {
   ]
 }
 
+variable "generic_public_subnets" {
+  description = "A list of public subnets inside the VPC"
+  type        = list(map(string))
+  default     = []
+}
+
+variable "generic_private_subnets" {
+  description = "A list of private subnets inside the VPC"
+  type        = list(map(string))
+  default     = []
+}
+

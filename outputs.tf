@@ -1013,3 +1013,36 @@ output "name" {
   description = "The name of the VPC specified as argument to this module"
   value       = var.name
 }
+
+output "generic_public_subnets" {
+  description = "List of IDs of generic public subnets"
+  value       = aws_subnet.generic_public.*.id
+}
+
+output "generic_public_route_table_ids" {
+  description = "List of IDs of generic public route tables"
+  value       = aws_route_table.generic_public.*.id
+}
+
+output "public_route_table_map" {
+    value = local.public_route_table_ids
+}
+
+output "generic_private_subnets" {
+  description = "List of IDs of generic private subnets"
+  value       = aws_subnet.generic_private.*.id
+}
+
+output "generic_private_route_table_ids" {
+  description = "List of IDs of generic private route tables"
+  value       = aws_route_table.generic_private.*.id
+}
+
+output "private_route_table_map" {
+    value = local.private_route_table_ids
+}
+
+output "avlzones_map" {
+    value = local.avlzones_public_subnets_ids
+}
+
