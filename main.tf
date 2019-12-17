@@ -1218,7 +1218,7 @@ resource "aws_subnet" "generic_private" {
 }
 
 locals {
-  generic_nat_gateway_count = var.single_nat_gateway ? 1 : length(local.avlzones)
+  generic_nat_gateway_count = length(var.generic_public_subnets) > 0 ? var.single_nat_gateway ? 1 : length(local.avlzones) : 0
   generic_nat_gateway_ips = split(
     ",",
     var.reuse_nat_ips ? join(",", var.external_nat_ip_ids) : join(",", aws_eip.generic_eip.*.id),
