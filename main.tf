@@ -5,7 +5,7 @@ locals {
     length(var.database_subnets),
     length(var.redshift_subnets),
   )
-  nat_gateway_count = var.single_nat_gateway ? 1 : var.one_nat_gateway_per_az ? length(var.azs) : local.max_subnet_length
+  nat_gateway_count = length(var.generic_public_subnets) == 0 ? var.single_nat_gateway ? 1 : var.one_nat_gateway_per_az ? length(var.azs) : local.max_subnet_length : 0
 
   # Use `local.vpc_id` to give a hint to Terraform that subnets should be deleted before secondary CIDR blocks can be free!
   vpc_id = element(
@@ -1218,7 +1218,7 @@ resource "aws_subnet" "generic_private" {
 }
 
 locals {
-  generic_nat_gateway_count = length(var.generic_public_subnets) > 0 ? var.single_nat_gateway ? 1 : length(local.avlzones) : 0
+  generic_nat_gateway_count = length(var.public_subnets) > 0 ? 0 : ( length(var.generic_public_subnets) > 0 ? var.single_nat_gateway ? 1 : length(local.avlzones) : 0)
   generic_nat_gateway_ips = split(
     ",",
     var.reuse_nat_ips ? join(",", var.external_nat_ip_ids) : join(",", aws_eip.generic_eip.*.id),
@@ -1278,11 +1278,11 @@ resource "aws_nat_gateway" "generic_natgw" {
 }
 
 resource "aws_route" "generic_private_nat_gateway" {
-  count = var.create_vpc && var.enable_nat_gateway ? local.generic_nat_gateway_count : 0
+  count = var.create_vpc && var.enable_nat_gateway && (local.generic_nat_gateway_count > 0) ? length(local.private_route_table_names) : 0
 
   route_table_id         = element(aws_route_table.generic_private.*.id, count.index)
   destination_cidr_block = "0.0.0.0/0"
-  nat_gateway_id         = element(aws_nat_gateway.generic_natgw.*.id, count.index)
+  nat_gateway_id         = element(aws_nat_gateway.generic_natgw.*.id, var.single_nat_gateway ? 0 : count.index)
 
   timeouts {
     create = "5m"
