@@ -16,12 +16,7 @@ These types of resources are supported:
 * [VPN Gateway](https://www.terraform.io/docs/providers/aws/r/vpn_gateway.html)
 * [VPC Endpoint](https://www.terraform.io/docs/providers/aws/r/vpc_endpoint.html):
   * Gateway: S3, DynamoDB
-  * Interface: EC2, SSM, EC2 Messages, SSM Messages, SQS, ECR API, ECR DKR, API Gateway, KMS, 
-ECS, ECS Agent, ECS Telemetry, SNS, STS, Glue, CloudWatch(Monitoring, Logs, Events), 
-Elastic Load Balancing, CloudTrail, Secrets Manager, Config, CodeBuild, CodeCommit, 
-Git-Codecommit, Transfer Server, Kinesis Streams, Kinesis Firehose, SageMaker(Notebook, Runtime, API), 
-CloudFormation, CodePipeline, Storage Gateway, AppMesh, Transfer, Service Catalog, AppStream,
-Athena, Rekognition, Elastic File System (EFS), Cloud Directory
+  * Interface: EC2, SSM, EC2 Messages, EC2 AutoScaling, SSM Messages, SQS, ECR API, ECR DKR, API Gateway, KMS, ECS, ECS Agent, ECS Telemetry, SNS, STS, Glue, CloudWatch(Monitoring, Logs,Events), Elastic Load Balancing, CloudTrail, Secrets Manager, Config, CodeBuild, CodeCommit, Git-Codecommit, Transfer Server, Kinesis Streams, Kinesis Firehose, SageMaker(Notebook, Runtime, API), CloudFormation, CodePipeline, Storage Gateway, AppMesh, Transfer, Service Catalog, AppStream, Athena, Rekognition, Elastic File System (EFS), Cloud Directory
 
 * [RDS DB Subnet Group](https://www.terraform.io/docs/providers/aws/r/db_subnet_group.html)
 * [ElastiCache Subnet Group](https://www.terraform.io/docs/providers/aws/r/elasticache_subnet_group.html)
@@ -290,6 +285,9 @@ Sometimes it is handy to have public access to Redshift clusters (for example if
 | ec2messages\_endpoint\_private\_dns\_enabled | Whether or not to associate a private hosted zone with the specified VPC for EC2MESSAGES endpoint | bool | `"false"` | no |
 | ec2messages\_endpoint\_security\_group\_ids | The ID of one or more security groups to associate with the network interface for EC2MESSAGES endpoint | list(string) | `[]` | no |
 | ec2messages\_endpoint\_subnet\_ids | The ID of one or more subnets in which to create a network interface for EC2MESSAGES endpoint. Only a single subnet within an AZ is supported. If omitted, private subnets will be used. | list(string) | `[]` | no |
+| ec2\_autoscaling\_endpoint\_private\_dns\_enabled | Whether or not to associate a private hosted zone with the specified VPC for EC2 AutoScaling endpoint | bool | `"false"` | no |
+| ec2\_autoscaling\_endpoint\_security\_group\_ids | The ID of one or more security groups to associate with the network interface for EC2 AutoScaling endpoint | list(string) | `[]` | no |
+| ec2\_autoscaling\_endpoint\_subnet\_ids | The ID of one or more subnets in which to create a network interface for EC2 AutoScaling endpoint. Only a single subnet within an AZ is supported. If omitted, private subnets will be used. | list(string) | `[]` | no |
 | ecr\_api\_endpoint\_private\_dns\_enabled | Whether or not to associate a private hosted zone with the specified VPC for ECR API endpoint | bool | `"false"` | no |
 | ecr\_api\_endpoint\_security\_group\_ids | The ID of one or more security groups to associate with the network interface for ECR API endpoint | list(string) | `[]` | no |
 | ecr\_api\_endpoint\_subnet\_ids | The ID of one or more subnets in which to create a network interface for ECR api endpoint. If omitted, private subnets will be used. | list(string) | `[]` | no |
@@ -340,6 +338,7 @@ Sometimes it is handy to have public access to Redshift clusters (for example if
 | enable\_dynamodb\_endpoint | Should be true if you want to provision a DynamoDB endpoint to the VPC | bool | `"false"` | no |
 | enable\_ec2\_endpoint | Should be true if you want to provision an EC2 endpoint to the VPC | bool | `"false"` | no |
 | enable\_ec2messages\_endpoint | Should be true if you want to provision an EC2MESSAGES endpoint to the VPC | bool | `"false"` | no |
+| enable\_ec2\_autoscaling\_endpoint | Should be true if you want to provision an EC2AutoScaling endpoint to the VPC | bool | `"false"` | no |
 | enable\_ecr\_api\_endpoint | Should be true if you want to provision an ecr api endpoint to the VPC | bool | `"false"` | no |
 | enable\_ecr\_dkr\_endpoint | Should be true if you want to provision an ecr dkr endpoint to the VPC | bool | `"false"` | no |
 | enable\_ecs\_agent\_endpoint | Should be true if you want to provision a ECS Agent endpoint to the VPC | bool | `"false"` | no |
@@ -614,6 +613,9 @@ Sometimes it is handy to have public access to Redshift clusters (for example if
 | vpc\_endpoint\_ec2messages\_dns\_entry | The DNS entries for the VPC Endpoint for EC2MESSAGES. |
 | vpc\_endpoint\_ec2messages\_id | The ID of VPC endpoint for EC2MESSAGES |
 | vpc\_endpoint\_ec2messages\_network\_interface\_ids | One or more network interfaces for the VPC Endpoint for EC2MESSAGES |
+| vpc\_endpoint\_ec2\_autoscaling\_dns\_entry | The DNS entries for the VPC Endpoint for EC2 AutoScaling. |
+| vpc\_endpoint\_ec2\_autoscaling\_id | The ID of VPC endpoint for EC2 AutoScaling |
+| vpc\_endpoint\_ec2\_autoscaling\_network\_interface\_ids | One or more network interfaces for the VPC Endpoint for EC2 AutoScaling |
 | vpc\_endpoint\_ecr\_api\_dns\_entry | The DNS entries for the VPC Endpoint for ECR API. |
 | vpc\_endpoint\_ecr\_api\_id | The ID of VPC endpoint for ECR API |
 | vpc\_endpoint\_ecr\_api\_network\_interface\_ids | One or more network interfaces for the VPC Endpoint for ECR API. |
