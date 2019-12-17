@@ -2,8 +2,8 @@
 provider "aws" {
     region = "ap-south-1"
     version = "~> 2.0"
-    allowed_account_ids = ["461115619209"]
-    profile = "crashtest"
+    allowed_account_ids = ["44444444444"]
+    profile = "testuser"
 }
 
 #terraform {
