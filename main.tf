@@ -39,8 +39,7 @@ resource "aws_vpc" "this" {
 
   lifecycle {
     ignore_changes = [
-      "tags.%",
-      "tags.kubernetes.io/",
+      tags,
     ]
   }
 
