@@ -1014,28 +1014,28 @@ output "name" {
   value       = var.name
 }
 
-output "generic_public_subnets" {
-  description = "List of IDs of generic public subnets"
-  value       = aws_subnet.generic_public.*.id
+output "multi_public_subnets" {
+  description = "List of IDs of multi public subnets"
+  value       = aws_subnet.multi_public.*.id
 }
 
-output "generic_public_route_table_ids" {
-  description = "List of IDs of generic public route tables"
-  value       = aws_route_table.generic_public.*.id
+output "multi_public_route_table_ids" {
+  description = "List of IDs of multi public route tables"
+  value       = aws_route_table.multi_public.*.id
 }
 
 output "public_route_table_map" {
     value = local.public_route_table_ids
 }
 
-output "generic_private_subnets" {
-  description = "List of IDs of generic private subnets"
-  value       = aws_subnet.generic_private.*.id
+output "multi_private_subnets" {
+  description = "List of IDs of multi private subnets"
+  value       = aws_subnet.multi_private.*.id
 }
 
-output "generic_private_route_table_ids" {
-  description = "List of IDs of generic private route tables"
-  value       = aws_route_table.generic_private.*.id
+output "multi_private_route_table_ids" {
+  description = "List of IDs of multi private route tables"
+  value       = aws_route_table.multi_private.*.id
 }
 
 output "private_route_table_map" {

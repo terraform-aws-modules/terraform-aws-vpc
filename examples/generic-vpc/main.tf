@@ -2,7 +2,7 @@
 provider "aws" {
     region = "ap-south-1"
     version = "~> 2.0"
-    allowed_account_ids = ["44444444444"]
+#    allowed_account_ids = ["44444444444"]
     profile = "testuser"
 }
 
@@ -27,7 +27,7 @@ module "vpc" {
 
     azs = ["ap-south-1a", "ap-south-1b", "ap-south-1c"]
 
-    generic_public_subnets = [
+    multi_public_subnets = [
         {
             cidr_block = "172.35.240.0/24",
             avlzone = "ap-south-1a",
@@ -48,7 +48,7 @@ module "vpc" {
         },
     ]
 
-    generic_private_subnets = [
+    multi_private_subnets = [
         {
             cidr_block = "172.35.230.0/24",
             avlzone = "ap-south-1a",
