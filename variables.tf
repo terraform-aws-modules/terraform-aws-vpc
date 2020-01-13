@@ -244,6 +244,12 @@ variable "azs" {
   default     = []
 }
 
+variable "use_az_ids" {
+  description = "Whether to use availability zone ids"
+  type        = bool
+  default     = false
+}
+
 variable "enable_dns_hostnames" {
   description = "Should be true to enable DNS hostnames in the VPC"
   type        = bool
