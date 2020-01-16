@@ -195,6 +195,10 @@ Sometimes it is handy to have public access to Redshift clusters (for example if
   enable_public_redshift = true  # <= By default Redshift subnets will be associated with the private route table
 ```
 
+## Transit Gateway (TGW) integration
+
+It is possible to integrate this VPC module with [terraform-aws-transit-gateway module](https://github.com/terraform-aws-modules/terraform-aws-transit-gateway) which handles the creation of TGW resources and VPC attachments. See [complete example there](https://github.com/terraform-aws-modules/terraform-aws-transit-gateway/tree/master/examples/complete).
+
 ## Examples
 
 * [Simple VPC](https://github.com/terraform-aws-modules/terraform-aws-vpc/tree/master/examples/simple-vpc)
