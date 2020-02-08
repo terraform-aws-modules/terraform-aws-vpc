@@ -1323,30 +1323,6 @@ variable "cloud_directory_endpoint_private_dns_enabled" {
   default     = false
 }
 
-variable "enable_application_auto_scaling_endpoint" {
-  description = "Should be true if you want to provision an Application Auto Scaling endpoint to the VPC"
-  type        = bool
-  default     = false
-}
-
-variable "application_auto_scaling_endpoint_security_group_ids" {
-  description = "The ID of one or more security groups to associate with the network interface for Application Auto Scaling endpoint"
-  type        = list(string)
-  default     = []
-}
-
-variable "application_auto_scaling_endpoint_subnet_ids" {
-  description = "The ID of one or more subnets in which to create a network interface for Application Auto Scaling endpoint. Only a single subnet within an AZ is supported. Ifomitted, private subnets will be used."
-  type        = list(string)
-  default     = []
-}
-
-variable "application_auto_scaling_endpoint_private_dns_enabled" {
-  description = "Whether or not to associate a private hosted zone with the specified VPC for Application Auto Scaling endpoint"
-  type        = bool
-  default     = false
-}
-
 variable "enable_auto_scaling_plans_endpoint" {
   description = "Should be true if you want to provision an Auto Scaling Plans endpoint to the VPC"
   type        = bool

@@ -1123,21 +1123,6 @@ output "vpc_endpoint_auto_scaling_plans_dns_entry" {
   value       = flatten(aws_vpc_endpoint.auto_scaling_plans.*.dns_entry)
 }
 
-output "vpc_endpoint_application_auto_scaling_id" {
-  description = "The ID of VPC endpoint for Application Auto Scaling"
-  value       = concat(aws_vpc_endpoint.application_auto_scaling.*.id, [""])[0]
-}
-
-output "vpc_endpoint_application_auto_scaling_network_interface_ids" {
-  description = "One or more network interfaces for the VPC Endpoint for Application Auto Scaling."
-  value       = flatten(aws_vpc_endpoint.application_auto_scaling.*.network_interface_ids)
-}
-
-output "vpc_endpoint_application_auto_scaling_dns_entry" {
-  description = "The DNS entries for the VPC Endpoint for Application Auto Scaling."
-  value       = flatten(aws_vpc_endpoint.application_auto_scaling.*.dns_entry)
-}
-
 output "vpc_endpoint_ebs_id" {
   description = "The ID of VPC endpoint for EBS"
   value       = concat(aws_vpc_endpoint.ebs.*.id, [""])[0]
