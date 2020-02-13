@@ -17,15 +17,21 @@ $ terraform apply
 Note that this example may create resources which can cost money (AWS Elastic IP, for example). Run `terraform destroy` when you don't need these resources.
 
 <!-- BEGINNING OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
+## Providers
+
+| Name | Version |
+|------|---------|
+| aws | n/a |
+
 ## Inputs
 
 | Name | Description | Type | Default | Required |
-|------|-------------|:----:|:-----:|:-----:|
-| azs |  | list(string) | `[ "eu-west-1a", "eu-west-1b", "eu-west-1c" ]` | no |
-| cidr |  | string | `"10.0.0.0/16"` | no |
-| private\_subnets |  | list(string) | `[ "10.99.101.0/24", "10.99.102.0/24", "10.99.103.0/24" ]` | no |
-| public\_subnets |  | list(string) | `[ "10.0.1.0/24", "10.0.2.0/24", "10.0.3.0/24" ]` | no |
-| region |  | string | `"eu-west-1"` | no |
+|------|-------------|------|---------|:-----:|
+| azs | n/a | `list(string)` | <pre>[<br>  "eu-west-1a",<br>  "eu-west-1b",<br>  "eu-west-1c"<br>]</pre> | no |
+| cidr | n/a | `string` | `"10.0.0.0/16"` | no |
+| private\_subnets | n/a | `list(string)` | <pre>[<br>  "10.99.101.0/24",<br>  "10.99.102.0/24",<br>  "10.99.103.0/24"<br>]</pre> | no |
+| public\_subnets | n/a | `list(string)` | <pre>[<br>  "10.0.1.0/24",<br>  "10.0.2.0/24",<br>  "10.0.3.0/24"<br>]</pre> | no |
+| region | n/a | `string` | `"eu-west-1"` | no |
 
 ## Outputs
 
