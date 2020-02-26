@@ -270,8 +270,8 @@ It is possible to integrate this VPC module with [terraform-aws-transit-gateway 
 | customer\_gateways | Maps of Customer Gateway's attributes (BGP ASN and Gateway's Internet-routable external IP address) | `map(map(any))` | `{}` | no |
 | database\_acl\_tags | Additional tags for the database subnets network ACL | `map(string)` | `{}` | no |
 | database\_dedicated\_network\_acl | Whether to use dedicated network ACL (not default) and custom rules for database subnets | `bool` | `false` | no |
-| database\_inbound\_acl\_rules | Database subnets inbound network ACL rules | `list(map(string))` | <pre>[<br>  {<br>    "cidr_block": "0.0.0.0/0",<br>    "from_port": 0,<br>    "protocol": "-1",<br>    "rule_action": "allow",<br>    "rule_number": 100,<br>    "to_port": 0<br>  }<br>]<br></pre> | no |
-| database\_outbound\_acl\_rules | Database subnets outbound network ACL rules | `list(map(string))` | <pre>[<br>  {<br>    "cidr_block": "0.0.0.0/0",<br>    "from_port": 0,<br>    "protocol": "-1",<br>    "rule_action": "allow",<br>    "rule_number": 100,<br>    "to_port": 0<br>  }<br>]<br></pre> | no |
+| database\_inbound\_acl\_rules | Database subnets inbound network ACL rules | `list(map(string))` | <pre>[<br>  {<br>    "cidr_block": "0.0.0.0/0",<br>    "from_port": 0,<br>    "protocol": "-1",<br>    "rule_action": "allow",<br>    "rule_number": 100,<br>    "to_port": 0<br>  }<br>]</pre> | no |
+| database\_outbound\_acl\_rules | Database subnets outbound network ACL rules | `list(map(string))` | <pre>[<br>  {<br>    "cidr_block": "0.0.0.0/0",<br>    "from_port": 0,<br>    "protocol": "-1",<br>    "rule_action": "allow",<br>    "rule_number": 100,<br>    "to_port": 0<br>  }<br>]</pre> | no |
 | database\_route\_table\_tags | Additional tags for the database route tables | `map(string)` | `{}` | no |
 | database\_subnet\_assign\_ipv6\_address\_on\_creation | Assign IPv6 address on database subnet, must be disabled to change IPv6 CIDRs. This is the IPv6 equivalent of map\_public\_ip\_on\_launch | `bool` | n/a | yes |
 | database\_subnet\_group\_tags | Additional tags for the database subnet group | `map(string)` | `{}` | no |
@@ -279,8 +279,8 @@ It is possible to integrate this VPC module with [terraform-aws-transit-gateway 
 | database\_subnet\_suffix | Suffix to append to database subnets name | `string` | `"db"` | no |
 | database\_subnet\_tags | Additional tags for the database subnets | `map(string)` | `{}` | no |
 | database\_subnets | A list of database subnets | `list(string)` | `[]` | no |
-| default\_network\_acl\_egress | List of maps of egress rules to set on the Default Network ACL | `list(map(string))` | <pre>[<br>  {<br>    "action": "allow",<br>    "cidr_block": "0.0.0.0/0",<br>    "from_port": 0,<br>    "protocol": "-1",<br>    "rule_no": 100,<br>    "to_port": 0<br>  },<br>  {<br>    "action": "allow",<br>    "from_port": 0,<br>    "ipv6_cidr_block": "::/0",<br>    "protocol": "-1",<br>    "rule_no": 101,<br>    "to_port": 0<br>  }<br>]<br></pre> | no |
-| default\_network\_acl\_ingress | List of maps of ingress rules to set on the Default Network ACL | `list(map(string))` | <pre>[<br>  {<br>    "action": "allow",<br>    "cidr_block": "0.0.0.0/0",<br>    "from_port": 0,<br>    "protocol": "-1",<br>    "rule_no": 100,<br>    "to_port": 0<br>  },<br>  {<br>    "action": "allow",<br>    "from_port": 0,<br>    "ipv6_cidr_block": "::/0",<br>    "protocol": "-1",<br>    "rule_no": 101,<br>    "to_port": 0<br>  }<br>]<br></pre> | no |
+| default\_network\_acl\_egress | List of maps of egress rules to set on the Default Network ACL | `list(map(string))` | <pre>[<br>  {<br>    "action": "allow",<br>    "cidr_block": "0.0.0.0/0",<br>    "from_port": 0,<br>    "protocol": "-1",<br>    "rule_no": 100,<br>    "to_port": 0<br>  },<br>  {<br>    "action": "allow",<br>    "from_port": 0,<br>    "ipv6_cidr_block": "::/0",<br>    "protocol": "-1",<br>    "rule_no": 101,<br>    "to_port": 0<br>  }<br>]</pre> | no |
+| default\_network\_acl\_ingress | List of maps of ingress rules to set on the Default Network ACL | `list(map(string))` | <pre>[<br>  {<br>    "action": "allow",<br>    "cidr_block": "0.0.0.0/0",<br>    "from_port": 0,<br>    "protocol": "-1",<br>    "rule_no": 100,<br>    "to_port": 0<br>  },<br>  {<br>    "action": "allow",<br>    "from_port": 0,<br>    "ipv6_cidr_block": "::/0",<br>    "protocol": "-1",<br>    "rule_no": 101,<br>    "to_port": 0<br>  }<br>]</pre> | no |
 | default\_network\_acl\_name | Name to be used on the Default Network ACL | `string` | `""` | no |
 | default\_network\_acl\_tags | Additional tags for the Default Network ACL | `map(string)` | `{}` | no |
 | default\_vpc\_enable\_classiclink | Should be true to enable ClassicLink in the Default VPC | `bool` | `false` | no |
@@ -289,7 +289,7 @@ It is possible to integrate this VPC module with [terraform-aws-transit-gateway 
 | default\_vpc\_name | Name to be used on the Default VPC | `string` | `""` | no |
 | default\_vpc\_tags | Additional tags for the Default VPC | `map(string)` | `{}` | no |
 | dhcp\_options\_domain\_name | Specifies DNS name for DHCP options set (requires enable\_dhcp\_options set to true) | `string` | `""` | no |
-| dhcp\_options\_domain\_name\_servers | Specify a list of DNS server addresses for DHCP options set, default to AWS provided (requires enable\_dhcp\_options set to true) | `list(string)` | <pre>[<br>  "AmazonProvidedDNS"<br>]<br></pre> | no |
+| dhcp\_options\_domain\_name\_servers | Specify a list of DNS server addresses for DHCP options set, default to AWS provided (requires enable\_dhcp\_options set to true) | `list(string)` | <pre>[<br>  "AmazonProvidedDNS"<br>]</pre> | no |
 | dhcp\_options\_netbios\_name\_servers | Specify a list of netbios servers for DHCP options set (requires enable\_dhcp\_options set to true) | `list(string)` | `[]` | no |
 | dhcp\_options\_netbios\_node\_type | Specify netbios node\_type for DHCP options set (requires enable\_dhcp\_options set to true) | `string` | `""` | no |
 | dhcp\_options\_ntp\_servers | Specify a list of NTP servers for DHCP options set (requires enable\_dhcp\_options set to true) | `list(string)` | `[]` | no |
@@ -320,8 +320,8 @@ It is possible to integrate this VPC module with [terraform-aws-transit-gateway 
 | efs\_endpoint\_subnet\_ids | The ID of one or more subnets in which to create a network interface for EFS endpoint. Only a single subnet within an AZ is supported. Ifomitted, private subnets will be used. | `list(string)` | `[]` | no |
 | elasticache\_acl\_tags | Additional tags for the elasticache subnets network ACL | `map(string)` | `{}` | no |
 | elasticache\_dedicated\_network\_acl | Whether to use dedicated network ACL (not default) and custom rules for elasticache subnets | `bool` | `false` | no |
-| elasticache\_inbound\_acl\_rules | Elasticache subnets inbound network ACL rules | `list(map(string))` | <pre>[<br>  {<br>    "cidr_block": "0.0.0.0/0",<br>    "from_port": 0,<br>    "protocol": "-1",<br>    "rule_action": "allow",<br>    "rule_number": 100,<br>    "to_port": 0<br>  }<br>]<br></pre> | no |
-| elasticache\_outbound\_acl\_rules | Elasticache subnets outbound network ACL rules | `list(map(string))` | <pre>[<br>  {<br>    "cidr_block": "0.0.0.0/0",<br>    "from_port": 0,<br>    "protocol": "-1",<br>    "rule_action": "allow",<br>    "rule_number": 100,<br>    "to_port": 0<br>  }<br>]<br></pre> | no |
+| elasticache\_inbound\_acl\_rules | Elasticache subnets inbound network ACL rules | `list(map(string))` | <pre>[<br>  {<br>    "cidr_block": "0.0.0.0/0",<br>    "from_port": 0,<br>    "protocol": "-1",<br>    "rule_action": "allow",<br>    "rule_number": 100,<br>    "to_port": 0<br>  }<br>]</pre> | no |
+| elasticache\_outbound\_acl\_rules | Elasticache subnets outbound network ACL rules | `list(map(string))` | <pre>[<br>  {<br>    "cidr_block": "0.0.0.0/0",<br>    "from_port": 0,<br>    "protocol": "-1",<br>    "rule_action": "allow",<br>    "rule_number": 100,<br>    "to_port": 0<br>  }<br>]</pre> | no |
 | elasticache\_route\_table\_tags | Additional tags for the elasticache route tables | `map(string)` | `{}` | no |
 | elasticache\_subnet\_assign\_ipv6\_address\_on\_creation | Assign IPv6 address on elasticache subnet, must be disabled to change IPv6 CIDRs. This is the IPv6 equivalent of map\_public\_ip\_on\_launch | `bool` | n/a | yes |
 | elasticache\_subnet\_ipv6\_prefixes | Assigns IPv6 elasticache subnet id based on the Amazon provided /56 prefix base 10 integer (0-256). Must be of equal length to the corresponding IPv4 subnet list | `list` | `[]` | no |
@@ -398,8 +398,8 @@ It is possible to integrate this VPC module with [terraform-aws-transit-gateway 
 | instance\_tenancy | A tenancy option for instances launched into the VPC | `string` | `"default"` | no |
 | intra\_acl\_tags | Additional tags for the intra subnets network ACL | `map(string)` | `{}` | no |
 | intra\_dedicated\_network\_acl | Whether to use dedicated network ACL (not default) and custom rules for intra subnets | `bool` | `false` | no |
-| intra\_inbound\_acl\_rules | Intra subnets inbound network ACLs | `list(map(string))` | <pre>[<br>  {<br>    "cidr_block": "0.0.0.0/0",<br>    "from_port": 0,<br>    "protocol": "-1",<br>    "rule_action": "allow",<br>    "rule_number": 100,<br>    "to_port": 0<br>  }<br>]<br></pre> | no |
-| intra\_outbound\_acl\_rules | Intra subnets outbound network ACLs | `list(map(string))` | <pre>[<br>  {<br>    "cidr_block": "0.0.0.0/0",<br>    "from_port": 0,<br>    "protocol": "-1",<br>    "rule_action": "allow",<br>    "rule_number": 100,<br>    "to_port": 0<br>  }<br>]<br></pre> | no |
+| intra\_inbound\_acl\_rules | Intra subnets inbound network ACLs | `list(map(string))` | <pre>[<br>  {<br>    "cidr_block": "0.0.0.0/0",<br>    "from_port": 0,<br>    "protocol": "-1",<br>    "rule_action": "allow",<br>    "rule_number": 100,<br>    "to_port": 0<br>  }<br>]</pre> | no |
+| intra\_outbound\_acl\_rules | Intra subnets outbound network ACLs | `list(map(string))` | <pre>[<br>  {<br>    "cidr_block": "0.0.0.0/0",<br>    "from_port": 0,<br>    "protocol": "-1",<br>    "rule_action": "allow",<br>    "rule_number": 100,<br>    "to_port": 0<br>  }<br>]</pre> | no |
 | intra\_route\_table\_tags | Additional tags for the intra route tables | `map(string)` | `{}` | no |
 | intra\_subnet\_assign\_ipv6\_address\_on\_creation | Assign IPv6 address on intra subnet, must be disabled to change IPv6 CIDRs. This is the IPv6 equivalent of map\_public\_ip\_on\_launch | `bool` | n/a | yes |
 | intra\_subnet\_ipv6\_prefixes | Assigns IPv6 intra subnet id based on the Amazon provided /56 prefix base 10 integer (0-256). Must be of equal length to the corresponding IPv4 subnet list | `list` | `[]` | no |
@@ -430,8 +430,8 @@ It is possible to integrate this VPC module with [terraform-aws-transit-gateway 
 | one\_nat\_gateway\_per\_az | Should be true if you want only one NAT Gateway per availability zone. Requires `var.azs` to be set, and the number of `public_subnets` created to be greater than or equal to the number of availability zones specified in `var.azs`. | `bool` | `false` | no |
 | private\_acl\_tags | Additional tags for the private subnets network ACL | `map(string)` | `{}` | no |
 | private\_dedicated\_network\_acl | Whether to use dedicated network ACL (not default) and custom rules for private subnets | `bool` | `false` | no |
-| private\_inbound\_acl\_rules | Private subnets inbound network ACLs | `list(map(string))` | <pre>[<br>  {<br>    "cidr_block": "0.0.0.0/0",<br>    "from_port": 0,<br>    "protocol": "-1",<br>    "rule_action": "allow",<br>    "rule_number": 100,<br>    "to_port": 0<br>  }<br>]<br></pre> | no |
-| private\_outbound\_acl\_rules | Private subnets outbound network ACLs | `list(map(string))` | <pre>[<br>  {<br>    "cidr_block": "0.0.0.0/0",<br>    "from_port": 0,<br>    "protocol": "-1",<br>    "rule_action": "allow",<br>    "rule_number": 100,<br>    "to_port": 0<br>  }<br>]<br></pre> | no |
+| private\_inbound\_acl\_rules | Private subnets inbound network ACLs | `list(map(string))` | <pre>[<br>  {<br>    "cidr_block": "0.0.0.0/0",<br>    "from_port": 0,<br>    "protocol": "-1",<br>    "rule_action": "allow",<br>    "rule_number": 100,<br>    "to_port": 0<br>  }<br>]</pre> | no |
+| private\_outbound\_acl\_rules | Private subnets outbound network ACLs | `list(map(string))` | <pre>[<br>  {<br>    "cidr_block": "0.0.0.0/0",<br>    "from_port": 0,<br>    "protocol": "-1",<br>    "rule_action": "allow",<br>    "rule_number": 100,<br>    "to_port": 0<br>  }<br>]</pre> | no |
 | private\_route\_table\_tags | Additional tags for the private route tables | `map(string)` | `{}` | no |
 | private\_subnet\_assign\_ipv6\_address\_on\_creation | Assign IPv6 address on private subnet, must be disabled to change IPv6 CIDRs. This is the IPv6 equivalent of map\_public\_ip\_on\_launch | `bool` | n/a | yes |
 | private\_subnet\_ipv6\_prefixes | Assigns IPv6 private subnet id based on the Amazon provided /56 prefix base 10 integer (0-256). Must be of equal length to the corresponding IPv4 subnet list | `list` | `[]` | no |
@@ -442,8 +442,8 @@ It is possible to integrate this VPC module with [terraform-aws-transit-gateway 
 | propagate\_public\_route\_tables\_vgw | Should be true if you want route table propagation | `bool` | `false` | no |
 | public\_acl\_tags | Additional tags for the public subnets network ACL | `map(string)` | `{}` | no |
 | public\_dedicated\_network\_acl | Whether to use dedicated network ACL (not default) and custom rules for public subnets | `bool` | `false` | no |
-| public\_inbound\_acl\_rules | Public subnets inbound network ACLs | `list(map(string))` | <pre>[<br>  {<br>    "cidr_block": "0.0.0.0/0",<br>    "from_port": 0,<br>    "protocol": "-1",<br>    "rule_action": "allow",<br>    "rule_number": 100,<br>    "to_port": 0<br>  }<br>]<br></pre> | no |
-| public\_outbound\_acl\_rules | Public subnets outbound network ACLs | `list(map(string))` | <pre>[<br>  {<br>    "cidr_block": "0.0.0.0/0",<br>    "from_port": 0,<br>    "protocol": "-1",<br>    "rule_action": "allow",<br>    "rule_number": 100,<br>    "to_port": 0<br>  }<br>]<br></pre> | no |
+| public\_inbound\_acl\_rules | Public subnets inbound network ACLs | `list(map(string))` | <pre>[<br>  {<br>    "cidr_block": "0.0.0.0/0",<br>    "from_port": 0,<br>    "protocol": "-1",<br>    "rule_action": "allow",<br>    "rule_number": 100,<br>    "to_port": 0<br>  }<br>]</pre> | no |
+| public\_outbound\_acl\_rules | Public subnets outbound network ACLs | `list(map(string))` | <pre>[<br>  {<br>    "cidr_block": "0.0.0.0/0",<br>    "from_port": 0,<br>    "protocol": "-1",<br>    "rule_action": "allow",<br>    "rule_number": 100,<br>    "to_port": 0<br>  }<br>]</pre> | no |
 | public\_route\_table\_tags | Additional tags for the public route tables | `map(string)` | `{}` | no |
 | public\_subnet\_assign\_ipv6\_address\_on\_creation | Assign IPv6 address on public subnet, must be disabled to change IPv6 CIDRs. This is the IPv6 equivalent of map\_public\_ip\_on\_launch | `bool` | n/a | yes |
 | public\_subnet\_ipv6\_prefixes | Assigns IPv6 public subnet id based on the Amazon provided /56 prefix base 10 integer (0-256). Must be of equal length to the corresponding IPv4 subnet list | `list` | `[]` | no |
@@ -452,8 +452,8 @@ It is possible to integrate this VPC module with [terraform-aws-transit-gateway 
 | public\_subnets | A list of public subnets inside the VPC | `list(string)` | `[]` | no |
 | redshift\_acl\_tags | Additional tags for the redshift subnets network ACL | `map(string)` | `{}` | no |
 | redshift\_dedicated\_network\_acl | Whether to use dedicated network ACL (not default) and custom rules for redshift subnets | `bool` | `false` | no |
-| redshift\_inbound\_acl\_rules | Redshift subnets inbound network ACL rules | `list(map(string))` | <pre>[<br>  {<br>    "cidr_block": "0.0.0.0/0",<br>    "from_port": 0,<br>    "protocol": "-1",<br>    "rule_action": "allow",<br>    "rule_number": 100,<br>    "to_port": 0<br>  }<br>]<br></pre> | no |
-| redshift\_outbound\_acl\_rules | Redshift subnets outbound network ACL rules | `list(map(string))` | <pre>[<br>  {<br>    "cidr_block": "0.0.0.0/0",<br>    "from_port": 0,<br>    "protocol": "-1",<br>    "rule_action": "allow",<br>    "rule_number": 100,<br>    "to_port": 0<br>  }<br>]<br></pre> | no |
+| redshift\_inbound\_acl\_rules | Redshift subnets inbound network ACL rules | `list(map(string))` | <pre>[<br>  {<br>    "cidr_block": "0.0.0.0/0",<br>    "from_port": 0,<br>    "protocol": "-1",<br>    "rule_action": "allow",<br>    "rule_number": 100,<br>    "to_port": 0<br>  }<br>]</pre> | no |
+| redshift\_outbound\_acl\_rules | Redshift subnets outbound network ACL rules | `list(map(string))` | <pre>[<br>  {<br>    "cidr_block": "0.0.0.0/0",<br>    "from_port": 0,<br>    "protocol": "-1",<br>    "rule_action": "allow",<br>    "rule_number": 100,<br>    "to_port": 0<br>  }<br>]</pre> | no |
 | redshift\_route\_table\_tags | Additional tags for the redshift route tables | `map(string)` | `{}` | no |
 | redshift\_subnet\_assign\_ipv6\_address\_on\_creation | Assign IPv6 address on redshift subnet, must be disabled to change IPv6 CIDRs. This is the IPv6 equivalent of map\_public\_ip\_on\_launch | `bool` | n/a | yes |
 | redshift\_subnet\_group\_tags | Additional tags for the redshift subnet group | `map(string)` | `{}` | no |
@@ -519,7 +519,11 @@ It is possible to integrate this VPC module with [terraform-aws-transit-gateway 
 |------|-------------|
 | azs | A list of availability zones specified as argument to this module |
 | cgw\_ids | List of IDs of Customer Gateway |
+| database\_internet\_gateway\_route\_id | ID of the database internet gateway route. |
+| database\_ipv6\_egress\_route\_id | ID of the database IPv6 egress route. |
+| database\_nat\_gateway\_route\_ids | List of IDs of the database nat gateway route. |
 | database\_network\_acl\_id | ID of the database network ACL |
+| database\_route\_table\_association\_ids | List of IDs of the database route table association |
 | database\_route\_table\_ids | List of IDs of database route tables |
 | database\_subnet\_arns | List of ARNs of database subnets |
 | database\_subnet\_group | ID of database subnet group |
@@ -540,6 +544,7 @@ It is possible to integrate this VPC module with [terraform-aws-transit-gateway 
 | default\_vpc\_main\_route\_table\_id | The ID of the main route table associated with this VPC |
 | egress\_only\_internet\_gateway\_id | The ID of the egress only Internet Gateway |
 | elasticache\_network\_acl\_id | ID of the elasticache network ACL |
+| elasticache\_route\_table\_association\_ids | List of IDs of the elasticache route table association |
 | elasticache\_route\_table\_ids | List of IDs of elasticache route tables |
 | elasticache\_subnet\_arns | List of ARNs of elasticache subnets |
 | elasticache\_subnet\_group | ID of elasticache subnet group |
@@ -549,6 +554,7 @@ It is possible to integrate this VPC module with [terraform-aws-transit-gateway 
 | elasticache\_subnets\_ipv6\_cidr\_blocks | List of IPv6 cidr\_blocks of elasticache subnets in an IPv6 enabled VPC |
 | igw\_id | The ID of the Internet Gateway |
 | intra\_network\_acl\_id | ID of the intra network ACL |
+| intra\_route\_table\_association\_ids | List of IDs of the intra route table association |
 | intra\_route\_table\_ids | List of IDs of intra route tables |
 | intra\_subnet\_arns | List of ARNs of intra subnets |
 | intra\_subnets | List of IDs of intra subnets |
@@ -558,19 +564,27 @@ It is possible to integrate this VPC module with [terraform-aws-transit-gateway 
 | nat\_ids | List of allocation ID of Elastic IPs created for AWS NAT Gateway |
 | nat\_public\_ips | List of public Elastic IPs created for AWS NAT Gateway |
 | natgw\_ids | List of NAT Gateway IDs |
+| private\_ipv6\_egress\_route\_ids | List of IDs of the ipv6 egress route. |
+| private\_nat\_gateway\_route\_ids | List of IDs of the private nat gateway route. |
 | private\_network\_acl\_id | ID of the private network ACL |
+| private\_route\_table\_association\_ids | List of IDs of the private route table association |
 | private\_route\_table\_ids | List of IDs of private route tables |
 | private\_subnet\_arns | List of ARNs of private subnets |
 | private\_subnets | List of IDs of private subnets |
 | private\_subnets\_cidr\_blocks | List of cidr\_blocks of private subnets |
 | private\_subnets\_ipv6\_cidr\_blocks | List of IPv6 cidr\_blocks of private subnets in an IPv6 enabled VPC |
+| public\_internet\_gateway\_ipv6\_route\_id | ID of the IPv6 internet gateway route. |
+| public\_internet\_gateway\_route\_id | ID of the internet gateway route. |
 | public\_network\_acl\_id | ID of the public network ACL |
+| public\_route\_table\_association\_ids | List of IDs of the public route table association |
 | public\_route\_table\_ids | List of IDs of public route tables |
 | public\_subnet\_arns | List of ARNs of public subnets |
 | public\_subnets | List of IDs of public subnets |
 | public\_subnets\_cidr\_blocks | List of cidr\_blocks of public subnets |
 | public\_subnets\_ipv6\_cidr\_blocks | List of IPv6 cidr\_blocks of public subnets in an IPv6 enabled VPC |
 | redshift\_network\_acl\_id | ID of the redshift network ACL |
+| redshift\_public\_route\_table\_association\_ids | List of IDs of the public redshidt route table association |
+| redshift\_route\_table\_association\_ids | List of IDs of the redshift route table association |
 | redshift\_route\_table\_ids | List of IDs of redshift route tables |
 | redshift\_subnet\_arns | List of ARNs of redshift subnets |
 | redshift\_subnet\_group | ID of redshift subnet group |
