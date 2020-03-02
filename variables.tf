@@ -239,15 +239,9 @@ variable "create_database_nat_gateway_route" {
 }
 
 variable "azs" {
-  description = "A list of availability zones in the region"
+  description = "A list of availability zones names or ids in the region"
   type        = list(string)
   default     = []
-}
-
-variable "use_az_ids" {
-  description = "Whether to use availability zone ids"
-  type        = bool
-  default     = false
 }
 
 variable "enable_dns_hostnames" {
