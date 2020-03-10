@@ -3,9 +3,131 @@
 
 
 
+<a name="v2.25.0"></a>
+## [v2.25.0] - 2020-03-02
+
+- Added support for both types of values in azs (names and ids) ([#370](https://github.com/terraform-aws-modules/terraform-aws-vpc/issues/370))
+
+
+<a name="v2.24.0"></a>
+## [v2.24.0] - 2020-01-23
+
+- Updated CHANGELOG
+- Set minimum terraform version to 0.12.6 (fixes circleci) ([#390](https://github.com/terraform-aws-modules/terraform-aws-vpc/issues/390))
+
+
+<a name="v2.23.0"></a>
+## [v2.23.0] - 2020-01-21
+
+- Updated CHANGELOG
+- Updated pre-commit-terraform with terraform-docs 0.8.0 support ([#388](https://github.com/terraform-aws-modules/terraform-aws-vpc/issues/388))
+
+
+<a name="v2.22.0"></a>
+## [v2.22.0] - 2020-01-16
+
+- Updated CHANGELOG
+- Added note about Transit Gateway integration ([#386](https://github.com/terraform-aws-modules/terraform-aws-vpc/issues/386))
+
+
+<a name="v2.21.0"></a>
+## [v2.21.0] - 2019-11-27
+
+- Updated CHANGELOG
+- fix ipv6 enable ([#340](https://github.com/terraform-aws-modules/terraform-aws-vpc/issues/340))
+
+
+<a name="v2.20.0"></a>
+## [v2.20.0] - 2019-11-27
+
+- Updated CHANGELOG
+- Added Customer Gateway resource ([#360](https://github.com/terraform-aws-modules/terraform-aws-vpc/issues/360))
+- Update TFLint to v0.12.1 for circleci ([#351](https://github.com/terraform-aws-modules/terraform-aws-vpc/issues/351))
+
+
+<a name="v2.19.0"></a>
+## [v2.19.0] - 2019-11-27
+
+- Updated CHANGELOG
+- Add Elastic File System & Cloud Directory VPC Endpoints ([#355](https://github.com/terraform-aws-modules/terraform-aws-vpc/issues/355))
+
+
+<a name="v2.18.0"></a>
+## [v2.18.0] - 2019-11-04
+
+- Updated CHANGELOG
+- Fixed spelling mistakes
+- Updated CHANGELOG
+- Updated network-acls example with IPv6 rules
+- Added support for `ipv6_cidr_block` in network acls ([#329](https://github.com/terraform-aws-modules/terraform-aws-vpc/issues/329))
+- Updated CHANGELOG
+- Added VPC Endpoints for AppStream, Athena & Rekognition ([#335](https://github.com/terraform-aws-modules/terraform-aws-vpc/issues/335))
+- Updated CHANGELOG
+- Add VPC endpoints for CloudFormation, CodePipeline, Storage Gateway, AppMesh, Transfer, Service Catalog & SageMaker(Runtime & API) ([#324](https://github.com/terraform-aws-modules/terraform-aws-vpc/issues/324))
+- Updated CHANGELOG
+- Added support for EC2 ClassicLink ([#322](https://github.com/terraform-aws-modules/terraform-aws-vpc/issues/322))
+- Updated CHANGELOG
+- Added support for ICMP rules in Network ACL ([#286](https://github.com/terraform-aws-modules/terraform-aws-vpc/issues/286))
+- Updated CHANGELOG
+- Added tags to VPC Endpoints ([#292](https://github.com/terraform-aws-modules/terraform-aws-vpc/issues/292))
+- Updated CHANGELOG
+- Added more VPC endpoints (Glue, STS, Sagemaker Notebook), and all missing outputs ([#311](https://github.com/terraform-aws-modules/terraform-aws-vpc/issues/311))
+- Updated CHANGELOG
+- Add IPv6 support ([#317](https://github.com/terraform-aws-modules/terraform-aws-vpc/issues/317))
+- Updated CHANGELOG
+- Fixed README after merge
+- Output var.name ([#303](https://github.com/terraform-aws-modules/terraform-aws-vpc/issues/303))
+- Updated CHANGELOG
+- Fixed README after merge
+- Additional VPC Endpoints ([#302](https://github.com/terraform-aws-modules/terraform-aws-vpc/issues/302))
+- Added Kinesis streams and firehose VPC endpoints ([#301](https://github.com/terraform-aws-modules/terraform-aws-vpc/issues/301))
+- adding transfer server vpc end point support
+- adding codebuild, codecommit and git-codecommit vpc end point support
+- adding config vpc end point support
+- adding secrets manager vpc end point support
+- Updated version of pre-commit-terraform
+- Updated CHANGELOG
+- Updated pre-commit-terraform to support terraform-docs and Terraform 0.12 ([#288](https://github.com/terraform-aws-modules/terraform-aws-vpc/issues/288))
+- Updated CHANGELOG
+- Updated VPC endpoint example (fixed [#249](https://github.com/terraform-aws-modules/terraform-aws-vpc/issues/249))
+- Update tflint to 0.8.2 for circleci task ([#280](https://github.com/terraform-aws-modules/terraform-aws-vpc/issues/280))
+- Updated CHANGELOG
+- Updated CHANGELOG
+- Fixed broken 2.3.0
+- Updated CHANGELOG
+- Fixed opportunity to create the vpc, vpn gateway routes (bug during upgrade to 0.12)
+- Updated CHANGELOG
+- Updated Terraform versions in README
+- Updated CHANGELOG
+- Added VPC Endpoints for SNS, Cloudtrail, ELB, Cloudwatch ([#269](https://github.com/terraform-aws-modules/terraform-aws-vpc/issues/269))
+- Upgrade Docker Image to fix CI ([#270](https://github.com/terraform-aws-modules/terraform-aws-vpc/issues/270))
+- Updated CHANGELOG
+- Fixed merge conflicts
+- Finally, Terraform 0.12 support ([#266](https://github.com/terraform-aws-modules/terraform-aws-vpc/issues/266))
+
+
+<a name="v1.72.0"></a>
+## [v1.72.0] - 2019-09-30
+
+- Updated CHANGELOG
+- Add VPC endpoints for AppStream, Athena & Rekognition ([#336](https://github.com/terraform-aws-modules/terraform-aws-vpc/issues/336))
+- Updated CHANGELOG
+- Fixed Sagemaker resource name in VPC endpoint ([#323](https://github.com/terraform-aws-modules/terraform-aws-vpc/issues/323))
+- Fixed name of appmesh VPC endpoint ([#320](https://github.com/terraform-aws-modules/terraform-aws-vpc/issues/320))
+- Updated CHANGELOG
+- Allow ICMP Network ACL rules ([#252](https://github.com/terraform-aws-modules/terraform-aws-vpc/issues/252))
+- Updated CHANGELOG
+- Added VPC endpoints from [#311](https://github.com/terraform-aws-modules/terraform-aws-vpc/issues/311) to Terraform 0.11 branch ([#319](https://github.com/terraform-aws-modules/terraform-aws-vpc/issues/319))
+- Updated CHANGELOG
+- Add tags to VPC Endpoints ([#293](https://github.com/terraform-aws-modules/terraform-aws-vpc/issues/293))
+- Updated CHANGELOG
+- Add VPC endpoints for ELB, CloudTrail, CloudWatch and SNS ([#274](https://github.com/terraform-aws-modules/terraform-aws-vpc/issues/274))
+
+
 <a name="v2.17.0"></a>
 ## [v2.17.0] - 2019-09-30
 
+- Updated CHANGELOG
 - Updated network-acls example with IPv6 rules
 - Added support for `ipv6_cidr_block` in network acls ([#329](https://github.com/terraform-aws-modules/terraform-aws-vpc/issues/329))
 
@@ -803,7 +925,16 @@
 - Initial commit
 
 
-[Unreleased]: https://github.com/terraform-aws-modules/terraform-aws-vpc/compare/v2.17.0...HEAD
+[Unreleased]: https://github.com/terraform-aws-modules/terraform-aws-vpc/compare/v2.25.0...HEAD
+[v2.25.0]: https://github.com/terraform-aws-modules/terraform-aws-vpc/compare/v2.24.0...v2.25.0
+[v2.24.0]: https://github.com/terraform-aws-modules/terraform-aws-vpc/compare/v2.23.0...v2.24.0
+[v2.23.0]: https://github.com/terraform-aws-modules/terraform-aws-vpc/compare/v2.22.0...v2.23.0
+[v2.22.0]: https://github.com/terraform-aws-modules/terraform-aws-vpc/compare/v2.21.0...v2.22.0
+[v2.21.0]: https://github.com/terraform-aws-modules/terraform-aws-vpc/compare/v2.20.0...v2.21.0
+[v2.20.0]: https://github.com/terraform-aws-modules/terraform-aws-vpc/compare/v2.19.0...v2.20.0
+[v2.19.0]: https://github.com/terraform-aws-modules/terraform-aws-vpc/compare/v2.18.0...v2.19.0
+[v2.18.0]: https://github.com/terraform-aws-modules/terraform-aws-vpc/compare/v1.72.0...v2.18.0
+[v1.72.0]: https://github.com/terraform-aws-modules/terraform-aws-vpc/compare/v2.17.0...v1.72.0
 [v2.17.0]: https://github.com/terraform-aws-modules/terraform-aws-vpc/compare/v2.16.0...v2.17.0
 [v2.16.0]: https://github.com/terraform-aws-modules/terraform-aws-vpc/compare/v2.15.0...v2.16.0
 [v2.15.0]: https://github.com/terraform-aws-modules/terraform-aws-vpc/compare/v1.71.0...v2.15.0

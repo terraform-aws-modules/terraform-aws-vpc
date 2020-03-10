@@ -239,7 +239,7 @@ variable "create_database_nat_gateway_route" {
 }
 
 variable "azs" {
-  description = "A list of availability zones in the region"
+  description = "A list of availability zones names or ids in the region"
   type        = list(string)
   default     = []
 }
@@ -507,7 +507,7 @@ variable "ssmmessages_endpoint_private_dns_enabled" {
 }
 
 variable "enable_transferserver_endpoint" {
-  description = "Should be true if you want to provision a Transer Server endpoint to the VPC"
+  description = "Should be true if you want to provision a Transfer Server endpoint to the VPC"
   type        = bool
   default     = false
 }
@@ -1109,7 +1109,7 @@ variable "storagegateway_endpoint_private_dns_enabled" {
   default     = false
 }
 variable "enable_transfer_endpoint" {
-  description = "Should be true if you want to provision a Transfer endpoint tothe VPC"
+  description = "Should be true if you want to provision a Transfer endpoint to the VPC"
   type        = bool
   default     = false
 }
@@ -1250,10 +1250,65 @@ variable "rekognition_endpoint_private_dns_enabled" {
   default     = false
 }
 
+variable "enable_efs_endpoint" {
+  description = "Should be true if you want to provision an EFS endpoint to the VPC"
+  type        = bool
+  default     = false
+}
+
+variable "efs_endpoint_security_group_ids" {
+  description = "The ID of one or more security groups to associate with the network interface for EFS endpoint"
+  type        = list(string)
+  default     = []
+}
+
+variable "efs_endpoint_subnet_ids" {
+  description = "The ID of one or more subnets in which to create a network interface for EFS endpoint. Only a single subnet within an AZ is supported. Ifomitted, private subnets will be used."
+  type        = list(string)
+  default     = []
+}
+
+variable "efs_endpoint_private_dns_enabled" {
+  description = "Whether or not to associate a private hosted zone with the specified VPC for EFS endpoint"
+  type        = bool
+  default     = false
+}
+
+variable "enable_cloud_directory_endpoint" {
+  description = "Should be true if you want to provision an Cloud Directory endpoint to the VPC"
+  type        = bool
+  default     = false
+}
+
+variable "cloud_directory_endpoint_security_group_ids" {
+  description = "The ID of one or more security groups to associate with the network interface for Cloud Directory endpoint"
+  type        = list(string)
+  default     = []
+}
+
+variable "cloud_directory_endpoint_subnet_ids" {
+  description = "The ID of one or more subnets in which to create a network interface for Cloud Directory endpoint. Only a single subnet within an AZ is supported. Ifomitted, private subnets will be used."
+  type        = list(string)
+  default     = []
+}
+
+variable "cloud_directory_endpoint_private_dns_enabled" {
+  description = "Whether or not to associate a private hosted zone with the specified VPC for Cloud Directory endpoint"
+  type        = bool
+  default     = false
+}
+
+
 variable "map_public_ip_on_launch" {
   description = "Should be false if you do not want to auto-assign public IP on launch"
   type        = bool
   default     = true
+}
+
+variable "customer_gateways" {
+  description = "Maps of Customer Gateway's attributes (BGP ASN and Gateway's Internet-routable external IP address)"
+  type        = map(map(any))
+  default     = {}
 }
 
 variable "enable_vpn_gateway" {
@@ -1436,6 +1491,12 @@ variable "nat_gateway_tags" {
 
 variable "nat_eip_tags" {
   description = "Additional tags for the NAT EIP"
+  type        = map(string)
+  default     = {}
+}
+
+variable "customer_gateway_tags" {
+  description = "Additional tags for the Customer Gateway"
   type        = map(string)
   default     = {}
 }
