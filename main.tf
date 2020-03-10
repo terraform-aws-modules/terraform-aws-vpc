@@ -1022,7 +1022,7 @@ resource "aws_vpn_gateway" "this" {
 
   vpc_id            = local.vpc_id
   amazon_side_asn   = var.amazon_side_asn
-  availability_zone = length(var.vpn_gateway_az) != 0 ? var.vpn_gateway_az : null
+  availability_zone = var.vpn_gateway_az
 
   tags = merge(
     {
