@@ -1513,6 +1513,12 @@ variable "vpc_endpoint_tags" {
   default     = {}
 }
 
+variable "vpc_flow_log_tags" {
+  description = "Additional tags for the VPC Flow Logs"
+  type        = map(string)
+  default     = {}
+}
+
 variable "enable_dhcp_options" {
   description = "Should be true if you want to specify a DHCP options set with a custom domain name, DNS servers, NTP servers, netbios servers, and/or netbios server type"
   type        = bool
@@ -1879,3 +1885,68 @@ variable "elasticache_outbound_acl_rules" {
   ]
 }
 
+variable "enable_flow_log" {
+  description = "Whether or not to enable VPC Flow Logs"
+  type        = bool
+  default     = false
+}
+
+variable "create_flow_log_cloudwatch_log_group" {
+  description = "Whether to create CloudWatch log group for VPC Flow Logs"
+  type        = bool
+  default     = false
+}
+
+variable "create_flow_log_cloudwatch_iam_role" {
+  description = "Whether to create IAM role for VPC Flow Logs"
+  type        = bool
+  default     = false
+}
+
+variable "flow_log_traffic_type" {
+  description = "The type of traffic to capture. Valid values: ACCEPT, REJECT, ALL."
+  type        = string
+  default     = "ALL"
+}
+
+variable "flow_log_destination_type" {
+  description = "Type of flow log destination. Can be s3 or cloud-watch-logs."
+  type        = string
+  default     = "cloud-watch-logs"
+}
+
+variable "flow_log_log_format" {
+  description = "The fields to include in the flow log record, in the order in which they should appear."
+  type        = string
+  default     = null
+}
+
+variable "flow_log_destination_arn" {
+  description = "The ARN of the CloudWatch log group or S3 bucket where VPC Flow Logs will be pushed. If this ARN is a S3 bucket the appropriate permissions need to be set on that bucket's policy. When create_flow_log_cloudwatch_log_group is set to false this argument must be provided."
+  type        = string
+  default     = ""
+}
+
+variable "flow_log_cloudwatch_iam_role_arn" {
+  description = "The ARN for the IAM role that's used to post flow logs to a CloudWatch Logs log group. When flow_log_destination_arn is set to ARN of Cloudwatch Logs, this argument needs to be provided."
+  type        = string
+  default     = ""
+}
+
+variable "flow_log_cloudwatch_log_group_name_prefix" {
+  description = "Specifies the name prefix of CloudWatch Log Group for VPC flow logs."
+  type        = string
+  default     = "/aws/vpc-flow-log/"
+}
+
+variable "flow_log_cloudwatch_log_group_retention_in_days" {
+  description = "Specifies the number of days you want to retain log events in the specified log group for VPC flow logs."
+  type        = number
+  default     = null
+}
+
+variable "flow_log_cloudwatch_log_group_kms_key_id" {
+  description = "The ARN of the KMS Key to use when encrypting log data for VPC flow logs."
+  type        = string
+  default     = null
+}
