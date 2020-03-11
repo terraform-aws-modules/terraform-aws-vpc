@@ -972,6 +972,11 @@ output "vpc_endpoint_rekognition_dns_entry" {
   value       = flatten(aws_vpc_endpoint.rekognition.*.dns_entry)
 }
 
+output "vpc_endpoint_efs_id" {
+  description = "The ID of VPC endpoint for EFS"
+  value       = concat(aws_vpc_endpoint.efs.*.id, [""])[0]
+}
+
 output "vpc_endpoint_efs_network_interface_ids" {
   description = "One or more network interfaces for the VPC Endpoint for EFS."
   value       = flatten(aws_vpc_endpoint.efs.*.network_interface_ids)
@@ -1016,11 +1021,6 @@ output "vpc_flow_log_destination_type" {
 output "vpc_flow_log_cloudwatch_iam_role_arn" {
   description = "The ARN of the IAM role used when pushing logs to Cloudwatch log group"
   value       = local.flow_log_iam_role_arn
-}
-
-output "vpc_endpoint_efs_id" {
-  description = "The ID of VPC endpoint for EFS"
-  value       = concat(aws_vpc_endpoint.efs.*.id, [""])[0]
 }
 
 # Static values (arguments)
