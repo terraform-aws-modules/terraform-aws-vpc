@@ -1020,8 +1020,9 @@ resource "aws_customer_gateway" "this" {
 resource "aws_vpn_gateway" "this" {
   count = var.create_vpc && var.enable_vpn_gateway ? 1 : 0
 
-  vpc_id          = local.vpc_id
-  amazon_side_asn = var.amazon_side_asn
+  vpc_id            = local.vpc_id
+  amazon_side_asn   = var.amazon_side_asn
+  availability_zone = var.vpn_gateway_az
 
   tags = merge(
     {

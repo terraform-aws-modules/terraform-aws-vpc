@@ -1327,6 +1327,12 @@ variable "amazon_side_asn" {
   default     = "64512"
 }
 
+variable "vpn_gateway_az" {
+  description = "The Availability Zone for the VPN Gateway"
+  type        = string
+  default     = null
+}
+
 variable "propagate_private_route_tables_vgw" {
   description = "Should be true if you want route table propagation"
   type        = bool
