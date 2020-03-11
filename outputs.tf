@@ -1005,7 +1005,7 @@ output "vpc_endpoint_cloud_directory_dns_entry" {
 # VPC flow log
 output "vpc_flow_log_id" {
   description = "The ID of the Flow Log resource"
-  value       = aws_flow_log.this[0].id
+  value       = concat(aws_flow_log.this.*.id, [""])[0]
 }
 
 output "vpc_flow_log_destination_arn" {
