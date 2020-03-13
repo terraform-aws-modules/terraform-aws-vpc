@@ -21,6 +21,8 @@ resource "aws_flow_log" "this" {
   iam_role_arn         = local.flow_log_iam_role_arn
   traffic_type         = var.flow_log_traffic_type
   vpc_id               = local.vpc_id
+
+  tags = merge(var.tags, var.vpc_flow_log_tags)
 }
 
 #####################
