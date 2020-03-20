@@ -395,6 +395,11 @@ variable "enable_sqs_endpoint" {
   default     = false
 }
 
+variable "sqs_endpoint_default_security_group" {
+  description = "Should be true if you want the SQS endpoint to use the default security group for the VPC"
+  default     = false
+}
+
 variable "sqs_endpoint_security_group_ids" {
   description = "The ID of one or more security groups to associate with the network interface for SQS endpoint"
   default     = []

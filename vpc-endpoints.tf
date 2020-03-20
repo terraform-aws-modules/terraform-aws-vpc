@@ -166,6 +166,13 @@ resource "aws_vpc_endpoint" "config" {
 #######################
 # VPC Endpoint for SQS
 #######################
+data "aws_security_group" "this" {
+  count = var.create_vpc && var.sqs_endpoint_default_security_group ? 1 : 0
+
+  name   = "default"
+  vpc_id = aws_vpc.this[0].id
+}
+
 data "aws_vpc_endpoint_service" "sqs" {
   count = var.create_vpc && var.enable_sqs_endpoint ? 1 : 0
 
@@ -179,8 +186,8 @@ resource "aws_vpc_endpoint" "sqs" {
   service_name      = data.aws_vpc_endpoint_service.sqs[0].service_name
   vpc_endpoint_type = "Interface"
 
-  security_group_ids  = var.sqs_endpoint_security_group_ids
-  subnet_ids          = coalescelist(var.sqs_endpoint_subnet_ids, aws_subnet.private.*.id)
+  security_group_ids  = var.sqs_endpoint_default_security_group ? [data.aws_security_group.this[0].id] : var.sqs_endpoint_security_group_ids
+  subnet_ids          = coalescelist(var.sqs_endpoint_subnet_ids, slice(aws_subnet.private.*.id, 0, min(length(var.azs),3)))
   private_dns_enabled = var.sqs_endpoint_private_dns_enabled
   tags                = local.vpce_tags
 }

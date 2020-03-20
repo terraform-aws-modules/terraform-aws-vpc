@@ -2,11 +2,6 @@ provider "aws" {
   region = "eu-west-1"
 }
 
-data "aws_security_group" "default" {
-  name   = "default"
-  vpc_id = module.vpc.vpc_id
-}
-
 module "vpc" {
   source = "../../"
 
@@ -104,7 +99,7 @@ module "vpc" {
   # VPC endpoint for SQS
   enable_sqs_endpoint              = true
   sqs_endpoint_private_dns_enabled = true
-  sqs_endpoint_security_group_ids  = [data.aws_security_group.default.id]
+  sqs_endpoint_default_security_group  = true
 
   # VPC Flow Logs (Cloudwatch log group and IAM role will be created)
   enable_flow_log                      = true
