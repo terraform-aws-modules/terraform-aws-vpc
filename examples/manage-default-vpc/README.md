@@ -17,6 +17,14 @@ $ terraform apply
 Run `terraform destroy` when you don't need these resources.
 
 <!-- BEGINNING OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
+## Providers
+
+No provider.
+
+## Inputs
+
+No input.
+
 ## Outputs
 
 | Name | Description |
