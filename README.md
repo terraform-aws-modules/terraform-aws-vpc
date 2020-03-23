@@ -1,6 +1,8 @@
 # AWS VPC Terraform module
 
 [![Help Contribute to Open Source](https://www.codetriage.com/terraform-aws-modules/terraform-aws-vpc/badges/users.svg)](https://www.codetriage.com/terraform-aws-modules/terraform-aws-vpc)
+![GitHub tag (latest by date)](https://img.shields.io/github/v/tag/terraform-aws-modules/terraform-aws-vpc)
+
 
 Terraform module which creates VPC resources on AWS.
 
@@ -14,6 +16,7 @@ These types of resources are supported:
 * [Network ACL](https://www.terraform.io/docs/providers/aws/r/network_acl.html)
 * [NAT Gateway](https://www.terraform.io/docs/providers/aws/r/nat_gateway.html)
 * [VPN Gateway](https://www.terraform.io/docs/providers/aws/r/vpn_gateway.html)
+* [VPC Flow Log](https://www.terraform.io/docs/providers/aws/r/flow_log.html)
 * [VPC Endpoint](https://www.terraform.io/docs/providers/aws/r/vpc_endpoint.html):
   * Gateway: S3, DynamoDB
   * Interface: EC2, SSM, EC2 Messages, SSM Messages, SQS, ECR API, ECR DKR, API Gateway, KMS,
@@ -152,6 +155,10 @@ Since AWS Lambda functions allocate Elastic Network Interfaces in proportion to 
 
 You can add additional tags with `intra_subnet_tags` as with other subnet types.
 
+## VPC Flow Log
+
+VPC Flow Log allows to capture IP traffic for a specific network interface (ENI), subnet, or entire VPC. This module supports enabling or disabling VPC Flow Logs for entire VPC. If you need to have VPC Flow Logs for subnet or ENI, you have to manage it outside of this module with [aws_flow_log resource](https://www.terraform.io/docs/providers/aws/r/flow_log.html).
+
 ## Conditional creation
 
 Sometimes you need to have a way to create VPC resources conditionally but Terraform does not allow to use `count` inside `module` block, so the solution is to specify argument `create_vpc`.
@@ -206,6 +213,7 @@ It is possible to integrate this VPC module with [terraform-aws-transit-gateway 
 * [Complete VPC](https://github.com/terraform-aws-modules/terraform-aws-vpc/tree/master/examples/complete-vpc)
 * [VPC with IPv6 enabled](https://github.com/terraform-aws-modules/terraform-aws-vpc/tree/master/examples/ipv6)
 * [Network ACL](https://github.com/terraform-aws-modules/terraform-aws-vpc/tree/master/examples/network-acls)
+* [VPC Flow Logs](https://github.com/terraform-aws-modules/terraform-aws-vpc/tree/master/examples/vpc-flow-logs)
 * [Manage Default VPC](https://github.com/terraform-aws-modules/terraform-aws-vpc/tree/master/examples/manage-default-vpc)
 * Few tests and edge cases examples: [#46](https://github.com/terraform-aws-modules/terraform-aws-vpc/tree/master/examples/issue-46-no-private-subnets), [#44](https://github.com/terraform-aws-modules/terraform-aws-vpc/tree/master/examples/issue-44-asymmetric-private-subnets), [#108](https://github.com/terraform-aws-modules/terraform-aws-vpc/tree/master/examples/issue-108-route-already-exists)
 
@@ -214,7 +222,7 @@ It is possible to integrate this VPC module with [terraform-aws-transit-gateway 
 
 | Name | Version |
 |------|---------|
-| aws | ~> 2.23 |
+| aws | ~> 2.53 |
 
 ## Inputs
 
@@ -234,7 +242,7 @@ It is possible to integrate this VPC module with [terraform-aws-transit-gateway 
 | athena\_endpoint\_private\_dns\_enabled | Whether or not to associate a private hosted zone with the specified VPC for Athena endpoint | `bool` | `false` | no |
 | athena\_endpoint\_security\_group\_ids | The ID of one or more security groups to associate with the network interface for Athena endpoint | `list(string)` | `[]` | no |
 | athena\_endpoint\_subnet\_ids | The ID of one or more subnets in which to create a network interface for Athena endpoint. Only a single subnet within an AZ is supported. If omitted, private subnets will be used. | `list(string)` | `[]` | no |
-| azs | A list of availability zones in the region | `list(string)` | `[]` | no |
+| azs | A list of availability zones names or ids in the region | `list(string)` | `[]` | no |
 | cidr | The CIDR block for the VPC. Default value is a valid CIDR, but not acceptable by AWS and should be overridden | `string` | `"0.0.0.0/0"` | no |
 | cloud\_directory\_endpoint\_private\_dns\_enabled | Whether or not to associate a private hosted zone with the specified VPC for Cloud Directory endpoint | `bool` | `false` | no |
 | cloud\_directory\_endpoint\_security\_group\_ids | The ID of one or more security groups to associate with the network interface for Cloud Directory endpoint | `list(string)` | `[]` | no |
@@ -263,6 +271,8 @@ It is possible to integrate this VPC module with [terraform-aws-transit-gateway 
 | create\_database\_subnet\_route\_table | Controls if separate route table for database should be created | `bool` | `false` | no |
 | create\_elasticache\_subnet\_group | Controls if elasticache subnet group should be created | `bool` | `true` | no |
 | create\_elasticache\_subnet\_route\_table | Controls if separate route table for elasticache should be created | `bool` | `false` | no |
+| create\_flow\_log\_cloudwatch\_iam\_role | Whether to create IAM role for VPC Flow Logs | `bool` | `false` | no |
+| create\_flow\_log\_cloudwatch\_log\_group | Whether to create CloudWatch log group for VPC Flow Logs | `bool` | `false` | no |
 | create\_redshift\_subnet\_group | Controls if redshift subnet group should be created | `bool` | `true` | no |
 | create\_redshift\_subnet\_route\_table | Controls if separate route table for redshift should be created | `bool` | `false` | no |
 | create\_vpc | Controls if VPC should be created (it affects almost all resources) | `bool` | `true` | no |
@@ -362,6 +372,7 @@ It is possible to integrate this VPC module with [terraform-aws-transit-gateway 
 | enable\_efs\_endpoint | Should be true if you want to provision an EFS endpoint to the VPC | `bool` | `false` | no |
 | enable\_elasticloadbalancing\_endpoint | Should be true if you want to provision a Elastic Load Balancing endpoint to the VPC | `bool` | `false` | no |
 | enable\_events\_endpoint | Should be true if you want to provision a CloudWatch Events endpoint to the VPC | `bool` | `false` | no |
+| enable\_flow\_log | Whether or not to enable VPC Flow Logs | `bool` | `false` | no |
 | enable\_git\_codecommit\_endpoint | Should be true if you want to provision an Git Codecommit endpoint to the VPC | `bool` | `false` | no |
 | enable\_glue\_endpoint | Should be true if you want to provision a Glue endpoint to the VPC | `bool` | `false` | no |
 | enable\_ipv6 | Requests an Amazon-provided IPv6 CIDR block with a /56 prefix length for the VPC. You cannot specify the range of IP addresses, or the size of the CIDR block. | `bool` | `false` | no |
@@ -392,6 +403,14 @@ It is possible to integrate this VPC module with [terraform-aws-transit-gateway 
 | events\_endpoint\_security\_group\_ids | The ID of one or more security groups to associate with the network interface for CloudWatch Events endpoint | `list(string)` | `[]` | no |
 | events\_endpoint\_subnet\_ids | The ID of one or more subnets in which to create a network interface for CloudWatch Events endpoint. Only a single subnet within an AZ is supported. If omitted, private subnets will be used. | `list(string)` | `[]` | no |
 | external\_nat\_ip\_ids | List of EIP IDs to be assigned to the NAT Gateways (used in combination with reuse\_nat\_ips) | `list(string)` | `[]` | no |
+| flow\_log\_cloudwatch\_iam\_role\_arn | The ARN for the IAM role that's used to post flow logs to a CloudWatch Logs log group. When flow\_log\_destination\_arn is set to ARN of Cloudwatch Logs, this argument needs to be provided. | `string` | `""` | no |
+| flow\_log\_cloudwatch\_log\_group\_kms\_key\_id | The ARN of the KMS Key to use when encrypting log data for VPC flow logs. | `string` | n/a | yes |
+| flow\_log\_cloudwatch\_log\_group\_name\_prefix | Specifies the name prefix of CloudWatch Log Group for VPC flow logs. | `string` | `"/aws/vpc-flow-log/"` | no |
+| flow\_log\_cloudwatch\_log\_group\_retention\_in\_days | Specifies the number of days you want to retain log events in the specified log group for VPC flow logs. | `number` | n/a | yes |
+| flow\_log\_destination\_arn | The ARN of the CloudWatch log group or S3 bucket where VPC Flow Logs will be pushed. If this ARN is a S3 bucket the appropriate permissions need to be set on that bucket's policy. When create\_flow\_log\_cloudwatch\_log\_group is set to false this argument must be provided. | `string` | `""` | no |
+| flow\_log\_destination\_type | Type of flow log destination. Can be s3 or cloud-watch-logs. | `string` | `"cloud-watch-logs"` | no |
+| flow\_log\_log\_format | The fields to include in the flow log record, in the order in which they should appear. | `string` | n/a | yes |
+| flow\_log\_traffic\_type | The type of traffic to capture. Valid values: ACCEPT, REJECT, ALL. | `string` | `"ALL"` | no |
 | git\_codecommit\_endpoint\_private\_dns\_enabled | Whether or not to associate a private hosted zone with the specified VPC for Git Codecommit endpoint | `bool` | `false` | no |
 | git\_codecommit\_endpoint\_security\_group\_ids | The ID of one or more security groups to associate with the network interface for Git Codecommit endpoint | `list` | `[]` | no |
 | git\_codecommit\_endpoint\_subnet\_ids | The ID of one or more subnets in which to create a network interface for Git Codecommit endpoint. Only a single subnet within an AZ is supported. If omitted, private subnets will be used. | `list` | `[]` | no |
@@ -514,7 +533,9 @@ It is possible to integrate this VPC module with [terraform-aws-transit-gateway 
 | transferserver\_endpoint\_security\_group\_ids | The ID of one or more security groups to associate with the network interface for Transfer Server endpoint | `list(string)` | `[]` | no |
 | transferserver\_endpoint\_subnet\_ids | The ID of one or more subnets in which to create a network interface for Transfer Server endpoint. Only a single subnet within an AZ is supported. If omitted, private subnets will be used. | `list(string)` | `[]` | no |
 | vpc\_endpoint\_tags | Additional tags for the VPC Endpoints | `map(string)` | `{}` | no |
+| vpc\_flow\_log\_tags | Additional tags for the VPC Flow Logs | `map(string)` | `{}` | no |
 | vpc\_tags | Additional tags for the VPC | `map(string)` | `{}` | no |
+| vpn\_gateway\_az | The Availability Zone for the VPN Gateway | `string` | n/a | yes |
 | vpn\_gateway\_id | ID of VPN Gateway to attach to the VPC | `string` | `""` | no |
 | vpn\_gateway\_tags | Additional tags for the VPN gateway | `map(string)` | `{}` | no |
 
@@ -715,6 +736,10 @@ It is possible to integrate this VPC module with [terraform-aws-transit-gateway 
 | vpc\_endpoint\_transferserver\_dns\_entry | The DNS entries for the VPC Endpoint for transferserver. |
 | vpc\_endpoint\_transferserver\_id | The ID of VPC endpoint for transferserver |
 | vpc\_endpoint\_transferserver\_network\_interface\_ids | One or more network interfaces for the VPC Endpoint for transferserver |
+| vpc\_flow\_log\_cloudwatch\_iam\_role\_arn | The ARN of the IAM role used when pushing logs to Cloudwatch log group |
+| vpc\_flow\_log\_destination\_arn | The ARN of the destination for VPC Flow Logs |
+| vpc\_flow\_log\_destination\_type | The type of the destination for VPC Flow Logs |
+| vpc\_flow\_log\_id | The ID of the Flow Log resource |
 | vpc\_id | The ID of the VPC |
 | vpc\_instance\_tenancy | Tenancy of instances spin up within VPC |
 | vpc\_ipv6\_association\_id | The association ID for the IPv6 CIDR block |

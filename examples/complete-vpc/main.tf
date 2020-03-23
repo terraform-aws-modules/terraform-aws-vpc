@@ -111,6 +111,11 @@ module "vpc" {
   default_security_group_ingress = [{}]
   default_security_group_egress  = [{}]
 
+  # VPC Flow Logs (Cloudwatch log group and IAM role will be created)
+  enable_flow_log                      = true
+  create_flow_log_cloudwatch_log_group = true
+  create_flow_log_cloudwatch_iam_role  = true
+
   tags = {
     Owner       = "user"
     Environment = "staging"
