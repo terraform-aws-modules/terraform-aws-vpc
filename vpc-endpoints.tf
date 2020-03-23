@@ -958,3 +958,49 @@ resource "aws_vpc_endpoint" "rekognition" {
   private_dns_enabled = var.rekognition_endpoint_private_dns_enabled
   tags                = local.vpce_tags
 }
+
+#######################
+# VPC Endpoint for EFS
+#######################
+data "aws_vpc_endpoint_service" "efs" {
+  count = var.create_vpc && var.enable_efs_endpoint ? 1 : 0
+
+  service = "elasticfilesystem"
+}
+
+resource "aws_vpc_endpoint" "efs" {
+  count = var.create_vpc && var.enable_efs_endpoint ? 1 : 0
+
+  vpc_id            = local.vpc_id
+  service_name      = data.aws_vpc_endpoint_service.efs[0].service_name
+  vpc_endpoint_type = "Interface"
+
+  security_group_ids  = var.efs_endpoint_security_group_ids
+  subnet_ids          = coalescelist(var.efs_endpoint_subnet_ids, aws_subnet.private.*.id)
+  private_dns_enabled = var.efs_endpoint_private_dns_enabled
+
+  tags = local.vpce_tags
+}
+
+#######################
+# VPC Endpoint for Cloud Directory
+#######################
+data "aws_vpc_endpoint_service" "cloud_directory" {
+  count = var.create_vpc && var.enable_cloud_directory_endpoint ? 1 : 0
+
+  service = "clouddirectory"
+}
+
+resource "aws_vpc_endpoint" "cloud_directory" {
+  count = var.create_vpc && var.enable_cloud_directory_endpoint ? 1 : 0
+
+  vpc_id            = local.vpc_id
+  service_name      = data.aws_vpc_endpoint_service.cloud_directory[0].service_name
+  vpc_endpoint_type = "Interface"
+
+  security_group_ids  = var.cloud_directory_endpoint_security_group_ids
+  subnet_ids          = coalescelist(var.cloud_directory_endpoint_subnet_ids, aws_subnet.private.*.id)
+  private_dns_enabled = var.cloud_directory_endpoint_private_dns_enabled
+
+  tags = local.vpce_tags
+}
