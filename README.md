@@ -457,6 +457,7 @@ It is possible to integrate this VPC module with [terraform-aws-transit-gateway 
 | private\_subnet\_suffix | Suffix to append to private subnets name | `string` | `"private"` | no |
 | private\_subnet\_tags | Additional tags for the private subnets | `map(string)` | `{}` | no |
 | private\_subnets | A list of private subnets inside the VPC | `list(string)` | `[]` | no |
+| propagate\_intra\_route\_tables\_vgw | Should be true if you want route table propagation | `bool` | `false` | no |
 | propagate\_private\_route\_tables\_vgw | Should be true if you want route table propagation | `bool` | `false` | no |
 | propagate\_public\_route\_tables\_vgw | Should be true if you want route table propagation | `bool` | `false` | no |
 | public\_acl\_tags | Additional tags for the public subnets network ACL | `map(string)` | `{}` | no |
