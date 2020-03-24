@@ -1066,6 +1066,19 @@ resource "aws_vpn_gateway_route_propagation" "private" {
   )
 }
 
+resource "aws_vpn_gateway_route_propagation" "intra" {
+  count = var.create_vpc && var.propagate_intra_route_tables_vgw && (var.enable_vpn_gateway || var.vpn_gateway_id != "") ? length(var.intra_subnets) : 0
+
+  route_table_id = element(aws_route_table.intra.*.id, count.index)
+  vpn_gateway_id = element(
+    concat(
+      aws_vpn_gateway.this.*.id,
+      aws_vpn_gateway_attachment.this.*.vpn_gateway_id,
+    ),
+    count.index,
+  )
+}
+
 ###########
 # Defaults
 ###########
