@@ -232,39 +232,50 @@ It is possible to integrate this VPC module with [terraform-aws-transit-gateway 
 | apigw\_endpoint\_private\_dns\_enabled | Whether or not to associate a private hosted zone with the specified VPC for API GW endpoint | `bool` | `false` | no |
 | apigw\_endpoint\_security\_group\_ids | The ID of one or more security groups to associate with the network interface for API GW  endpoint | `list(string)` | `[]` | no |
 | apigw\_endpoint\_subnet\_ids | The ID of one or more subnets in which to create a network interface for API GW endpoint. Only a single subnet within an AZ is supported. If omitted, private subnets will be used. | `list(string)` | `[]` | no |
+| apigw\_vpc\_endpoint\_suffix | Suffix to append to a API Gateway VPC Endpoint name | `string` | `"api-gateway-vpc-endpoint"` | no |
 | appmesh\_envoy\_management\_endpoint\_private\_dns\_enabled | Whether or not to associate a private hosted zone with the specified VPC for AppMesh endpoint | `bool` | `false` | no |
 | appmesh\_envoy\_management\_endpoint\_security\_group\_ids | The ID of one or more security groups to associate with the network interface for AppMesh endpoint | `list(string)` | `[]` | no |
 | appmesh\_envoy\_management\_endpoint\_subnet\_ids | The ID of one or more subnets in which to create a network interface for AppMesh endpoint. Only a single subnet within an AZ is supported. If omitted, private subnets will be used. | `list(string)` | `[]` | no |
+| appmesh\_envoy\_management\_vpc\_endpoint\_suffix | Suffix to append to a AppMesh Endpoint name | `string` | `"appmesh-vpc-endpoint"` | no |
 | appstream\_endpoint\_private\_dns\_enabled | Whether or not to associate a private hosted zone with the specified VPC for AppStream endpoint | `bool` | `false` | no |
 | appstream\_endpoint\_security\_group\_ids | The ID of one or more security groups to associate with the network interface for AppStream endpoint | `list(string)` | `[]` | no |
 | appstream\_endpoint\_subnet\_ids | The ID of one or more subnets in which to create a network interface for AppStream endpoint. Only a single subnet within an AZ is supported. If omitted, private subnets will be used. | `list(string)` | `[]` | no |
+| appstream\_vpc\_endpoint\_suffix | Suffix to append to a AppStream endpoint name | `string` | `"appstream-vpc-endpoint"` | no |
 | assign\_ipv6\_address\_on\_creation | Assign IPv6 address on subnet, must be disabled to change IPv6 CIDRs. This is the IPv6 equivalent of map\_public\_ip\_on\_launch | `bool` | `false` | no |
 | athena\_endpoint\_private\_dns\_enabled | Whether or not to associate a private hosted zone with the specified VPC for Athena endpoint | `bool` | `false` | no |
 | athena\_endpoint\_security\_group\_ids | The ID of one or more security groups to associate with the network interface for Athena endpoint | `list(string)` | `[]` | no |
 | athena\_endpoint\_subnet\_ids | The ID of one or more subnets in which to create a network interface for Athena endpoint. Only a single subnet within an AZ is supported. If omitted, private subnets will be used. | `list(string)` | `[]` | no |
+| athena\_vpc\_endpoint\_suffix | Suffix to append to Athena endpoint name | `string` | `"athena-vpc-endpoint"` | no |
 | azs | A list of availability zones names or ids in the region | `list(string)` | `[]` | no |
 | cidr | The CIDR block for the VPC. Default value is a valid CIDR, but not acceptable by AWS and should be overridden | `string` | `"0.0.0.0/0"` | no |
 | cloud\_directory\_endpoint\_private\_dns\_enabled | Whether or not to associate a private hosted zone with the specified VPC for Cloud Directory endpoint | `bool` | `false` | no |
 | cloud\_directory\_endpoint\_security\_group\_ids | The ID of one or more security groups to associate with the network interface for Cloud Directory endpoint | `list(string)` | `[]` | no |
 | cloud\_directory\_endpoint\_subnet\_ids | The ID of one or more subnets in which to create a network interface for Cloud Directory endpoint. Only a single subnet within an AZ is supported. Ifomitted, private subnets will be used. | `list(string)` | `[]` | no |
+| cloud\_directory\_vpc\_endpoint\_suffix | Suffix to append to a Cloud Directory endpoint name | `string` | `"cloud-directory-vpc-endpoint"` | no |
 | cloudformation\_endpoint\_private\_dns\_enabled | Whether or not to associate a private hosted zone with the specified VPC for Cloudformation endpoint | `bool` | `false` | no |
 | cloudformation\_endpoint\_security\_group\_ids | The ID of one or more security groups to associate with the network interface for Cloudformation endpoint | `list(string)` | `[]` | no |
 | cloudformation\_endpoint\_subnet\_ids | The ID of one or more subnets in which to create a network interface for Cloudformation endpoint. Only a single subnet within an AZ is supported. If omitted, private subnets will be used. | `list(string)` | `[]` | no |
+| cloudformation\_vpc\_endpoint\_suffix | Suffix to append to a Cloudformation Endpoint name | `string` | `"cloudformation-vpc-endpoint"` | no |
 | cloudtrail\_endpoint\_private\_dns\_enabled | Whether or not to associate a private hosted zone with the specified VPC for CloudTrail endpoint | `bool` | `false` | no |
 | cloudtrail\_endpoint\_security\_group\_ids | The ID of one or more security groups to associate with the network interface for CloudTrail endpoint | `list(string)` | `[]` | no |
 | cloudtrail\_endpoint\_subnet\_ids | The ID of one or more subnets in which to create a network interface for CloudTrail endpoint. Only a single subnet within an AZ is supported. If omitted, private subnets will be used. | `list(string)` | `[]` | no |
+| cloudtrail\_vpc\_endpoint\_suffix | Suffix to append to a CloudTrail Endpoint name | `string` | `"cloudtrail-vpc-endpoint"` | no |
 | codebuild\_endpoint\_private\_dns\_enabled | Whether or not to associate a private hosted zone with the specified VPC for Codebuild endpoint | `bool` | `false` | no |
 | codebuild\_endpoint\_security\_group\_ids | The ID of one or more security groups to associate with the network interface for Codebuild endpoint | `list` | `[]` | no |
 | codebuild\_endpoint\_subnet\_ids | The ID of one or more subnets in which to create a network interface for Codebuilt endpoint. Only a single subnet within an AZ is supported. If omitted, private subnets will be used. | `list` | `[]` | no |
+| codebuild\_vpc\_endpoint\_suffix | Suffix to append to a CodeBuild VPC Endpoint name | `string` | `"codebuild-vpc-endpoint"` | no |
 | codecommit\_endpoint\_private\_dns\_enabled | Whether or not to associate a private hosted zone with the specified VPC for Codecommit endpoint | `bool` | `false` | no |
 | codecommit\_endpoint\_security\_group\_ids | The ID of one or more security groups to associate with the network interface for Codecommit endpoint | `list` | `[]` | no |
 | codecommit\_endpoint\_subnet\_ids | The ID of one or more subnets in which to create a network interface for Codecommit endpoint. Only a single subnet within an AZ is supported. If omitted, private subnets will be used. | `list` | `[]` | no |
+| codecommit\_vpc\_endpoint\_suffix | Suffix to append to a CodeCommit VPC Endpoint name | `string` | `"codecommit-vpc-endpoint"` | no |
 | codepipeline\_endpoint\_private\_dns\_enabled | Whether or not to associate a private hosted zone with the specified VPC for CodePipeline endpoint | `bool` | `false` | no |
 | codepipeline\_endpoint\_security\_group\_ids | The ID of one or more security groups to associate with the network interface for CodePipeline endpoint | `list(string)` | `[]` | no |
 | codepipeline\_endpoint\_subnet\_ids | The ID of one or more subnets in which to create a network interface for CodePipeline endpoint. Only a single subnet within an AZ is supported. If omitted, private subnets will be used. | `list(string)` | `[]` | no |
+| codepipeline\_vpc\_endpoint\_suffix | Suffix to append to a CodePipeline Endpoint name | `string` | `"codepipeline-vpc-endpoint"` | no |
 | config\_endpoint\_private\_dns\_enabled | Whether or not to associate a private hosted zone with the specified VPC for config endpoint | `bool` | `false` | no |
 | config\_endpoint\_security\_group\_ids | The ID of one or more security groups to associate with the network interface for config endpoint | `list` | `[]` | no |
 | config\_endpoint\_subnet\_ids | The ID of one or more subnets in which to create a network interface for config endpoint. Only a single subnet within an AZ is supported. If omitted, private subnets will be used. | `list` | `[]` | no |
+| config\_vpc\_endpoint\_suffix | Suffix to append to a Config VPC Endpoint name | `string` | `"config-vpc-endpoint"` | no |
 | create\_database\_internet\_gateway\_route | Controls if an internet gateway route for public database access should be created | `bool` | `false` | no |
 | create\_database\_nat\_gateway\_route | Controls if a nat gateway route should be created to give internet access to the database subnets | `bool` | `false` | no |
 | create\_database\_subnet\_group | Controls if database subnet group should be created | `bool` | `true` | no |
@@ -304,30 +315,39 @@ It is possible to integrate this VPC module with [terraform-aws-transit-gateway 
 | dhcp\_options\_netbios\_node\_type | Specify netbios node\_type for DHCP options set (requires enable\_dhcp\_options set to true) | `string` | `""` | no |
 | dhcp\_options\_ntp\_servers | Specify a list of NTP servers for DHCP options set (requires enable\_dhcp\_options set to true) | `list(string)` | `[]` | no |
 | dhcp\_options\_tags | Additional tags for the DHCP option set (requires enable\_dhcp\_options set to true) | `map(string)` | `{}` | no |
+| dynamodb\_vpc\_endpoint\_suffix | Suffix to append to a DynamoDB VPC Endpoint name | `string` | `"dynamodb-vpc-endpoint"` | no |
 | ec2\_endpoint\_private\_dns\_enabled | Whether or not to associate a private hosted zone with the specified VPC for EC2 endpoint | `bool` | `false` | no |
 | ec2\_endpoint\_security\_group\_ids | The ID of one or more security groups to associate with the network interface for EC2 endpoint | `list(string)` | `[]` | no |
 | ec2\_endpoint\_subnet\_ids | The ID of one or more subnets in which to create a network interface for EC2 endpoint. Only a single subnet within an AZ is supported. If omitted, private subnets will be used. | `list(string)` | `[]` | no |
-| ec2messages\_endpoint\_private\_dns\_enabled | Whether or not to associate a private hosted zone with the specified VPC for EC2MESSAGES endpoint | `bool` | `false` | no |
-| ec2messages\_endpoint\_security\_group\_ids | The ID of one or more security groups to associate with the network interface for EC2MESSAGES endpoint | `list(string)` | `[]` | no |
-| ec2messages\_endpoint\_subnet\_ids | The ID of one or more subnets in which to create a network interface for EC2MESSAGES endpoint. Only a single subnet within an AZ is supported. If omitted, private subnets will be used. | `list(string)` | `[]` | no |
+| ec2\_vpc\_endpoint\_suffix | Suffix to append to a EC2 Endpoint name | `string` | `"ec2-vpc-endpoint"` | no |
+| ec2messages\_endpoint\_private\_dns\_enabled | Whether or not to associate a private hosted zone with the specified VPC for EC2 Messages endpoint | `bool` | `false` | no |
+| ec2messages\_endpoint\_security\_group\_ids | The ID of one or more security groups to associate with the network interface for EC2 Messages endpoint | `list(string)` | `[]` | no |
+| ec2messages\_endpoint\_subnet\_ids | The ID of one or more subnets in which to create a network interface for EC2 Messages endpoint. Only a single subnet within an AZ is supported. If omitted, private subnets will be used. | `list(string)` | `[]` | no |
+| ec2messages\_vpc\_endpoint\_suffix | Suffix to append to a EC2 Messages Endpoint name | `string` | `"ec2messages-vpc-endpoint"` | no |
 | ecr\_api\_endpoint\_private\_dns\_enabled | Whether or not to associate a private hosted zone with the specified VPC for ECR API endpoint | `bool` | `false` | no |
 | ecr\_api\_endpoint\_security\_group\_ids | The ID of one or more security groups to associate with the network interface for ECR API endpoint | `list(string)` | `[]` | no |
-| ecr\_api\_endpoint\_subnet\_ids | The ID of one or more subnets in which to create a network interface for ECR api endpoint. If omitted, private subnets will be used. | `list(string)` | `[]` | no |
+| ecr\_api\_endpoint\_subnet\_ids | The ID of one or more subnets in which to create a network interface for ECR API endpoint. If omitted, private subnets will be used. | `list(string)` | `[]` | no |
+| ecr\_api\_vpc\_endpoint\_suffix | Suffix to append to a ECR API Endpoint name | `string` | `"ecr-api-vpc-endpoint"` | no |
 | ecr\_dkr\_endpoint\_private\_dns\_enabled | Whether or not to associate a private hosted zone with the specified VPC for ECR DKR endpoint | `bool` | `false` | no |
 | ecr\_dkr\_endpoint\_security\_group\_ids | The ID of one or more security groups to associate with the network interface for ECR DKR endpoint | `list(string)` | `[]` | no |
-| ecr\_dkr\_endpoint\_subnet\_ids | The ID of one or more subnets in which to create a network interface for ECR dkr endpoint. If omitted, private subnets will be used. | `list(string)` | `[]` | no |
+| ecr\_dkr\_endpoint\_subnet\_ids | The ID of one or more subnets in which to create a network interface for ECR DKR endpoint. If omitted, private subnets will be used. | `list(string)` | `[]` | no |
+| ecr\_dkr\_vpc\_endpoint\_suffix | Suffix to append to a ECR DKR Endpoint name | `string` | `"ecr-dkr-vpc-endpoint"` | no |
 | ecs\_agent\_endpoint\_private\_dns\_enabled | Whether or not to associate a private hosted zone with the specified VPC for ECS Agent endpoint | `bool` | `false` | no |
 | ecs\_agent\_endpoint\_security\_group\_ids | The ID of one or more security groups to associate with the network interface for ECS Agent endpoint | `list(string)` | `[]` | no |
 | ecs\_agent\_endpoint\_subnet\_ids | The ID of one or more subnets in which to create a network interface for ECS Agent endpoint. Only a single subnet within an AZ is supported. If omitted, private subnets will be used. | `list(string)` | `[]` | no |
+| ecs\_agent\_vpc\_endpoint\_suffix | Suffix to append to a ECS Agent Endpoint name | `string` | `"ecs-agent-vpc-endpoint"` | no |
 | ecs\_endpoint\_private\_dns\_enabled | Whether or not to associate a private hosted zone with the specified VPC for ECS endpoint | `bool` | `false` | no |
 | ecs\_endpoint\_security\_group\_ids | The ID of one or more security groups to associate with the network interface for ECS endpoint | `list(string)` | `[]` | no |
 | ecs\_endpoint\_subnet\_ids | The ID of one or more subnets in which to create a network interface for ECS endpoint. Only a single subnet within an AZ is supported. If omitted, private subnets will be used. | `list(string)` | `[]` | no |
 | ecs\_telemetry\_endpoint\_private\_dns\_enabled | Whether or not to associate a private hosted zone with the specified VPC for ECS Telemetry endpoint | `bool` | `false` | no |
 | ecs\_telemetry\_endpoint\_security\_group\_ids | The ID of one or more security groups to associate with the network interface for ECS Telemetry endpoint | `list(string)` | `[]` | no |
 | ecs\_telemetry\_endpoint\_subnet\_ids | The ID of one or more subnets in which to create a network interface for ECS Telemetry endpoint. Only a single subnet within an AZ is supported. If omitted, private subnets will be used. | `list(string)` | `[]` | no |
+| ecs\_telemetry\_vpc\_endpoint\_suffix | Suffix to append to a ECS Telemetry Endpoint name | `string` | `"ecs-telemetry-vpc-endpoint"` | no |
+| ecs\_vpc\_endpoint\_suffix | Suffix to append to a ECS Endpoint name | `string` | `"ecs-vpc-endpoint"` | no |
 | efs\_endpoint\_private\_dns\_enabled | Whether or not to associate a private hosted zone with the specified VPC for EFS endpoint | `bool` | `false` | no |
 | efs\_endpoint\_security\_group\_ids | The ID of one or more security groups to associate with the network interface for EFS endpoint | `list(string)` | `[]` | no |
 | efs\_endpoint\_subnet\_ids | The ID of one or more subnets in which to create a network interface for EFS endpoint. Only a single subnet within an AZ is supported. Ifomitted, private subnets will be used. | `list(string)` | `[]` | no |
+| efs\_vpc\_endpoint\_suffix | Suffix to append to EFS endpoint name | `string` | `"efs-vpc-endpoint"` | no |
 | elasticache\_acl\_tags | Additional tags for the elasticache subnets network ACL | `map(string)` | `{}` | no |
 | elasticache\_dedicated\_network\_acl | Whether to use dedicated network ACL (not default) and custom rules for elasticache subnets | `bool` | `false` | no |
 | elasticache\_inbound\_acl\_rules | Elasticache subnets inbound network ACL rules | `list(map(string))` | <pre>[<br>  {<br>    "cidr_block": "0.0.0.0/0",<br>    "from_port": 0,<br>    "protocol": "-1",<br>    "rule_action": "allow",<br>    "rule_number": 100,<br>    "to_port": 0<br>  }<br>]</pre> | no |
@@ -341,7 +361,8 @@ It is possible to integrate this VPC module with [terraform-aws-transit-gateway 
 | elasticloadbalancing\_endpoint\_private\_dns\_enabled | Whether or not to associate a private hosted zone with the specified VPC for Elastic Load Balancing endpoint | `bool` | `false` | no |
 | elasticloadbalancing\_endpoint\_security\_group\_ids | The ID of one or more security groups to associate with the network interface for Elastic Load Balancing endpoint | `list(string)` | `[]` | no |
 | elasticloadbalancing\_endpoint\_subnet\_ids | The ID of one or more subnets in which to create a network interface for Elastic Load Balancing endpoint. Only a single subnet within an AZ is supported. If omitted, private subnets will be used. | `list(string)` | `[]` | no |
-| enable\_apigw\_endpoint | Should be true if you want to provision an api gateway endpoint to the VPC | `bool` | `false` | no |
+| elasticloadbalancing\_vpc\_endpoint\_suffix | Suffix to append to an Elastic Load Balancing Endpoint name | `string` | `"elasticloadbalancing-vpc-endpoint"` | no |
+| enable\_apigw\_endpoint | Should be true if you want to provision an API Gateway endpoint to the VPC | `bool` | `false` | no |
 | enable\_appmesh\_envoy\_management\_endpoint | Should be true if you want to provision a AppMesh endpoint to the VPC | `bool` | `false` | no |
 | enable\_appstream\_endpoint | Should be true if you want to provision a AppStream endpoint to the VPC | `bool` | `false` | no |
 | enable\_athena\_endpoint | Should be true if you want to provision a Athena endpoint to the VPC | `bool` | `false` | no |
@@ -359,14 +380,14 @@ It is possible to integrate this VPC module with [terraform-aws-transit-gateway 
 | enable\_dns\_support | Should be true to enable DNS support in the VPC | `bool` | `true` | no |
 | enable\_dynamodb\_endpoint | Should be true if you want to provision a DynamoDB endpoint to the VPC | `bool` | `false` | no |
 | enable\_ec2\_endpoint | Should be true if you want to provision an EC2 endpoint to the VPC | `bool` | `false` | no |
-| enable\_ec2messages\_endpoint | Should be true if you want to provision an EC2MESSAGES endpoint to the VPC | `bool` | `false` | no |
-| enable\_ecr\_api\_endpoint | Should be true if you want to provision an ecr api endpoint to the VPC | `bool` | `false` | no |
-| enable\_ecr\_dkr\_endpoint | Should be true if you want to provision an ecr dkr endpoint to the VPC | `bool` | `false` | no |
+| enable\_ec2messages\_endpoint | Should be true if you want to provision an EC2 Messages endpoint to the VPC | `bool` | `false` | no |
+| enable\_ecr\_api\_endpoint | Should be true if you want to provision an ECR API endpoint to the VPC | `bool` | `false` | no |
+| enable\_ecr\_dkr\_endpoint | Should be true if you want to provision an ECR DKR endpoint to the VPC | `bool` | `false` | no |
 | enable\_ecs\_agent\_endpoint | Should be true if you want to provision a ECS Agent endpoint to the VPC | `bool` | `false` | no |
 | enable\_ecs\_endpoint | Should be true if you want to provision a ECS endpoint to the VPC | `bool` | `false` | no |
 | enable\_ecs\_telemetry\_endpoint | Should be true if you want to provision a ECS Telemetry endpoint to the VPC | `bool` | `false` | no |
 | enable\_efs\_endpoint | Should be true if you want to provision an EFS endpoint to the VPC | `bool` | `false` | no |
-| enable\_elasticloadbalancing\_endpoint | Should be true if you want to provision a Elastic Load Balancing endpoint to the VPC | `bool` | `false` | no |
+| enable\_elasticloadbalancing\_endpoint | Should be true if you want to provision an Elastic Load Balancing endpoint to the VPC | `bool` | `false` | no |
 | enable\_events\_endpoint | Should be true if you want to provision a CloudWatch Events endpoint to the VPC | `bool` | `false` | no |
 | enable\_flow\_log | Whether or not to enable VPC Flow Logs | `bool` | `false` | no |
 | enable\_git\_codecommit\_endpoint | Should be true if you want to provision an Git Codecommit endpoint to the VPC | `bool` | `false` | no |
@@ -389,7 +410,7 @@ It is possible to integrate this VPC module with [terraform-aws-transit-gateway 
 | enable\_sns\_endpoint | Should be true if you want to provision a SNS endpoint to the VPC | `bool` | `false` | no |
 | enable\_sqs\_endpoint | Should be true if you want to provision an SQS endpoint to the VPC | `bool` | `false` | no |
 | enable\_ssm\_endpoint | Should be true if you want to provision an SSM endpoint to the VPC | `bool` | `false` | no |
-| enable\_ssmmessages\_endpoint | Should be true if you want to provision a SSMMESSAGES endpoint to the VPC | `bool` | `false` | no |
+| enable\_ssmmessages\_endpoint | Should be true if you want to provision an SSM Messages endpoint to the VPC | `bool` | `false` | no |
 | enable\_storagegateway\_endpoint | Should be true if you want to provision a Storage Gateway endpoint to the VPC | `bool` | `false` | no |
 | enable\_sts\_endpoint | Should be true if you want to provision a STS endpoint to the VPC | `bool` | `false` | no |
 | enable\_transfer\_endpoint | Should be true if you want to provision a Transfer endpoint to the VPC | `bool` | `false` | no |
@@ -398,6 +419,7 @@ It is possible to integrate this VPC module with [terraform-aws-transit-gateway 
 | events\_endpoint\_private\_dns\_enabled | Whether or not to associate a private hosted zone with the specified VPC for CloudWatch Events endpoint | `bool` | `false` | no |
 | events\_endpoint\_security\_group\_ids | The ID of one or more security groups to associate with the network interface for CloudWatch Events endpoint | `list(string)` | `[]` | no |
 | events\_endpoint\_subnet\_ids | The ID of one or more subnets in which to create a network interface for CloudWatch Events endpoint. Only a single subnet within an AZ is supported. If omitted, private subnets will be used. | `list(string)` | `[]` | no |
+| events\_vpc\_endpoint\_suffix | Suffix to append to a CloudWatch Events Endpoint name | `string` | `"events-vpc-endpoint"` | no |
 | external\_nat\_ip\_ids | List of EIP IDs to be assigned to the NAT Gateways (used in combination with reuse\_nat\_ips) | `list(string)` | `[]` | no |
 | flow\_log\_cloudwatch\_iam\_role\_arn | The ARN for the IAM role that's used to post flow logs to a CloudWatch Logs log group. When flow\_log\_destination\_arn is set to ARN of Cloudwatch Logs, this argument needs to be provided. | `string` | `""` | no |
 | flow\_log\_cloudwatch\_log\_group\_kms\_key\_id | The ARN of the KMS Key to use when encrypting log data for VPC flow logs. | `string` | n/a | yes |
@@ -410,9 +432,11 @@ It is possible to integrate this VPC module with [terraform-aws-transit-gateway 
 | git\_codecommit\_endpoint\_private\_dns\_enabled | Whether or not to associate a private hosted zone with the specified VPC for Git Codecommit endpoint | `bool` | `false` | no |
 | git\_codecommit\_endpoint\_security\_group\_ids | The ID of one or more security groups to associate with the network interface for Git Codecommit endpoint | `list` | `[]` | no |
 | git\_codecommit\_endpoint\_subnet\_ids | The ID of one or more subnets in which to create a network interface for Git Codecommit endpoint. Only a single subnet within an AZ is supported. If omitted, private subnets will be used. | `list` | `[]` | no |
+| git\_codecommit\_vpc\_endpoint\_suffix | Suffix to append to a Git CodeCommit VPC Endpoint name | `string` | `"git-codecommit-vpc-endpoint"` | no |
 | glue\_endpoint\_private\_dns\_enabled | Whether or not to associate a private hosted zone with the specified VPC for Glue endpoint | `bool` | `false` | no |
 | glue\_endpoint\_security\_group\_ids | The ID of one or more security groups to associate with the network interface for Glue endpoint | `list(string)` | `[]` | no |
 | glue\_endpoint\_subnet\_ids | The ID of one or more subnets in which to create a network interface for Glue endpoint. Only a single subnet within an AZ is supported. If omitted, private subnets will be used. | `list(string)` | `[]` | no |
+| glue\_vpc\_endpoint\_suffix | Suffix to append to a Glue Endpoint name | `string` | `"glue-vpc-endpoint"` | no |
 | igw\_tags | Additional tags for the internet gateway | `map(string)` | `{}` | no |
 | instance\_tenancy | A tenancy option for instances launched into the VPC | `string` | `"default"` | no |
 | intra\_acl\_tags | Additional tags for the intra subnets network ACL | `map(string)` | `{}` | no |
@@ -428,21 +452,26 @@ It is possible to integrate this VPC module with [terraform-aws-transit-gateway 
 | kinesis\_firehose\_endpoint\_private\_dns\_enabled | Whether or not to associate a private hosted zone with the specified VPC for Kinesis Firehose endpoint | `bool` | `false` | no |
 | kinesis\_firehose\_endpoint\_security\_group\_ids | The ID of one or more security groups to associate with the network interface for Kinesis Firehose endpoint | `list(string)` | `[]` | no |
 | kinesis\_firehose\_endpoint\_subnet\_ids | The ID of one or more subnets in which to create a network interface for Kinesis Firehose endpoint. Only a single subnet within an AZ is supported. If omitted, private subnets will be used. | `list(string)` | `[]` | no |
+| kinesis\_firehose\_vpc\_endpoint\_suffix | Suffix to append to a Kinesis Firehose Endpoint name | `string` | `"firehose-streams-vpc-endpoint"` | no |
 | kinesis\_streams\_endpoint\_private\_dns\_enabled | Whether or not to associate a private hosted zone with the specified VPC for Kinesis Streams endpoint | `bool` | `false` | no |
 | kinesis\_streams\_endpoint\_security\_group\_ids | The ID of one or more security groups to associate with the network interface for Kinesis Streams endpoint | `list(string)` | `[]` | no |
 | kinesis\_streams\_endpoint\_subnet\_ids | The ID of one or more subnets in which to create a network interface for Kinesis Streams endpoint. Only a single subnet within an AZ is supported. If omitted, private subnets will be used. | `list(string)` | `[]` | no |
+| kinesis\_streams\_vpc\_endpoint\_suffix | Suffix to append to a Kinesis Streams Endpoint name | `string` | `"kinesis-streams-vpc-endpoint"` | no |
 | kms\_endpoint\_private\_dns\_enabled | Whether or not to associate a private hosted zone with the specified VPC for KMS endpoint | `bool` | `false` | no |
 | kms\_endpoint\_security\_group\_ids | The ID of one or more security groups to associate with the network interface for KMS endpoint | `list(string)` | `[]` | no |
 | kms\_endpoint\_subnet\_ids | The ID of one or more subnets in which to create a network interface for KMS endpoint. Only a single subnet within an AZ is supported. If omitted, private subnets will be used. | `list(string)` | `[]` | no |
+| kms\_vpc\_endpoint\_suffix | Suffix to append to a KMS Endpoint name | `string` | `"kms-vpc-endpoint"` | no |
 | logs\_endpoint\_private\_dns\_enabled | Whether or not to associate a private hosted zone with the specified VPC for CloudWatch Logs endpoint | `bool` | `false` | no |
 | logs\_endpoint\_security\_group\_ids | The ID of one or more security groups to associate with the network interface for CloudWatch Logs endpoint | `list(string)` | `[]` | no |
 | logs\_endpoint\_subnet\_ids | The ID of one or more subnets in which to create a network interface for CloudWatch Logs endpoint. Only a single subnet within an AZ is supported. If omitted, private subnets will be used. | `list(string)` | `[]` | no |
+| logs\_vpc\_endpoint\_suffix | Suffix to append to a CloudWatch Logs Endpoint name | `string` | `"logs-vpc-endpoint"` | no |
 | manage\_default\_network\_acl | Should be true to adopt and manage Default Network ACL | `bool` | `false` | no |
 | manage\_default\_vpc | Should be true to adopt and manage Default VPC | `bool` | `false` | no |
 | map\_public\_ip\_on\_launch | Should be false if you do not want to auto-assign public IP on launch | `bool` | `true` | no |
 | monitoring\_endpoint\_private\_dns\_enabled | Whether or not to associate a private hosted zone with the specified VPC for CloudWatch Monitoring endpoint | `bool` | `false` | no |
 | monitoring\_endpoint\_security\_group\_ids | The ID of one or more security groups to associate with the network interface for CloudWatch Monitoring endpoint | `list(string)` | `[]` | no |
 | monitoring\_endpoint\_subnet\_ids | The ID of one or more subnets in which to create a network interface for CloudWatch Monitoring endpoint. Only a single subnet within an AZ is supported. If omitted, private subnets will be used. | `list(string)` | `[]` | no |
+| monitoring\_vpc\_endpoint\_suffix | Suffix to append to a CloudWatch Monitoring Endpoint name | `string` | `"monitoring-vpc-endpoint"` | no |
 | name | Name to be used on all the resources as identifier | `string` | `""` | no |
 | nat\_eip\_tags | Additional tags for the NAT EIP | `map(string)` | `{}` | no |
 | nat\_gateway\_tags | Additional tags for the NAT gateways | `map(string)` | `{}` | no |
@@ -484,50 +513,65 @@ It is possible to integrate this VPC module with [terraform-aws-transit-gateway 
 | rekognition\_endpoint\_private\_dns\_enabled | Whether or not to associate a private hosted zone with the specified VPC for Rekognition endpoint | `bool` | `false` | no |
 | rekognition\_endpoint\_security\_group\_ids | The ID of one or more security groups to associate with the network interface for Rekognition endpoint | `list(string)` | `[]` | no |
 | rekognition\_endpoint\_subnet\_ids | The ID of one or more subnets in which to create a network interface for Rekognition endpoint. Only a single subnet within an AZ is supported. If omitted, private subnets will be used. | `list(string)` | `[]` | no |
+| rekognition\_vpc\_endpoint\_suffix | Suffix to append to Rekognition endpoint name | `string` | `"rekognition-vpc-endpoint"` | no |
 | reuse\_nat\_ips | Should be true if you don't want EIPs to be created for your NAT Gateways and will instead pass them in via the 'external\_nat\_ip\_ids' variable | `bool` | `false` | no |
+| s3\_vpc\_endpoint\_suffix | Suffix to append to a S3 VPC Endpoint name | `string` | `"s3-vpc-endpoint"` | no |
 | sagemaker\_api\_endpoint\_private\_dns\_enabled | Whether or not to associate a private hosted zone with the specified VPC for SageMaker API endpoint | `bool` | `false` | no |
 | sagemaker\_api\_endpoint\_security\_group\_ids | The ID of one or more security groups to associate with the network interface for SageMaker API endpoint | `list(string)` | `[]` | no |
 | sagemaker\_api\_endpoint\_subnet\_ids | The ID of one or more subnets in which to create a network interface for SageMaker API endpoint. Only a single subnet within an AZ is supported. If omitted, private subnets will be used. | `list(string)` | `[]` | no |
+| sagemaker\_api\_vpc\_endpoint\_suffix | Suffix to append to a Sagemaker API endpoint name | `string` | `"sagemaker-api-vpc-endpoint"` | no |
 | sagemaker\_notebook\_endpoint\_private\_dns\_enabled | Whether or not to associate a private hosted zone with the specified VPC for Sagemaker Notebook endpoint | `bool` | `false` | no |
 | sagemaker\_notebook\_endpoint\_region | Region to use for Sagemaker Notebook endpoint | `string` | `""` | no |
 | sagemaker\_notebook\_endpoint\_security\_group\_ids | The ID of one or more security groups to associate with the network interface for Sagemaker Notebook endpoint | `list(string)` | `[]` | no |
 | sagemaker\_notebook\_endpoint\_subnet\_ids | The ID of one or more subnets in which to create a network interface for Sagemaker Notebook endpoint. Only a single subnet within an AZ is supported. If omitted, private subnets will be used. | `list(string)` | `[]` | no |
+| sagemaker\_notebook\_vpc\_endpoint\_suffix | Suffix to append to a Sagemaker Notebook Endpoint name | `string` | `"sagemaker-notebooks-vpc-endpoint"` | no |
 | sagemaker\_runtime\_endpoint\_private\_dns\_enabled | Whether or not to associate a private hosted zone with the specified VPC for SageMaker Runtime endpoint | `bool` | `false` | no |
 | sagemaker\_runtime\_endpoint\_security\_group\_ids | The ID of one or more security groups to associate with the network interface for SageMaker Runtime endpoint | `list(string)` | `[]` | no |
 | sagemaker\_runtime\_endpoint\_subnet\_ids | The ID of one or more subnets in which to create a network interface for SageMaker Runtime endpoint. Only a single subnet within an AZ is supported. If omitted, private subnets will be used. | `list(string)` | `[]` | no |
+| sagemaker\_runtime\_vpc\_endpoint\_suffix | Suffix to append to a Sagemaker Runtime endpoint name | `string` | `"sagemaker-runtime-vpc-endpoint"` | no |
 | secondary\_cidr\_blocks | List of secondary CIDR blocks to associate with the VPC to extend the IP Address pool | `list(string)` | `[]` | no |
 | secretsmanager\_endpoint\_private\_dns\_enabled | Whether or not to associate a private hosted zone with the specified VPC for Secrets Manager endpoint | `bool` | `false` | no |
 | secretsmanager\_endpoint\_security\_group\_ids | The ID of one or more security groups to associate with the network interface for Secrets Manager endpoint | `list(string)` | `[]` | no |
 | secretsmanager\_endpoint\_subnet\_ids | The ID of one or more subnets in which to create a network interface for Secrets Manager endpoint. Only a single subnet within an AZ is supported. If omitted, private subnets will be used. | `list(string)` | `[]` | no |
+| secretsmanager\_vpc\_endpoint\_suffix | Suffix to append to a Secrets Manager VPC Endpoint name | `string` | `"secretsmanager-vpc-endpoint"` | no |
 | servicecatalog\_endpoint\_private\_dns\_enabled | Whether or not to associate a private hosted zone with the specified VPC for Service Catalog endpoint | `bool` | `false` | no |
 | servicecatalog\_endpoint\_security\_group\_ids | The ID of one or more security groups to associate with the network interface for Service Catalog endpoint | `list(string)` | `[]` | no |
 | servicecatalog\_endpoint\_subnet\_ids | The ID of one or more subnets in which to create a network interface for Service Catalog endpoint. Only a single subnet within an AZ is supported. If omitted, private subnets will be used. | `list(string)` | `[]` | no |
+| servicecatalog\_vpc\_endpoint\_suffix | Suffix to append to a Service Catalog Endpoint name | `string` | `"service-catalog-vpc-endpoint"` | no |
 | single\_nat\_gateway | Should be true if you want to provision a single shared NAT Gateway across all of your private networks | `bool` | `false` | no |
 | sns\_endpoint\_private\_dns\_enabled | Whether or not to associate a private hosted zone with the specified VPC for SNS endpoint | `bool` | `false` | no |
 | sns\_endpoint\_security\_group\_ids | The ID of one or more security groups to associate with the network interface for SNS endpoint | `list(string)` | `[]` | no |
 | sns\_endpoint\_subnet\_ids | The ID of one or more subnets in which to create a network interface for SNS endpoint. Only a single subnet within an AZ is supported. If omitted, private subnets will be used. | `list(string)` | `[]` | no |
+| sns\_vpc\_endpoint\_suffix | Suffix to append to a SNS Endpoint name | `string` | `"sns-vpc-endpoint"` | no |
 | sqs\_endpoint\_private\_dns\_enabled | Whether or not to associate a private hosted zone with the specified VPC for SQS endpoint | `bool` | `false` | no |
 | sqs\_endpoint\_security\_group\_ids | The ID of one or more security groups to associate with the network interface for SQS endpoint | `list` | `[]` | no |
 | sqs\_endpoint\_subnet\_ids | The ID of one or more subnets in which to create a network interface for SQS endpoint. Only a single subnet within an AZ is supported. If omitted, private subnets will be used. | `list` | `[]` | no |
+| sqs\_vpc\_endpoint\_suffix | Suffix to append to a SQS VPC Endpoint name | `string` | `"sqs-vpc-endpoint"` | no |
 | ssm\_endpoint\_private\_dns\_enabled | Whether or not to associate a private hosted zone with the specified VPC for SSM endpoint | `bool` | `false` | no |
 | ssm\_endpoint\_security\_group\_ids | The ID of one or more security groups to associate with the network interface for SSM endpoint | `list(string)` | `[]` | no |
 | ssm\_endpoint\_subnet\_ids | The ID of one or more subnets in which to create a network interface for SSM endpoint. Only a single subnet within an AZ is supported. If omitted, private subnets will be used. | `list(string)` | `[]` | no |
-| ssmmessages\_endpoint\_private\_dns\_enabled | Whether or not to associate a private hosted zone with the specified VPC for SSMMESSAGES endpoint | `bool` | `false` | no |
-| ssmmessages\_endpoint\_security\_group\_ids | The ID of one or more security groups to associate with the network interface for SSMMESSAGES endpoint | `list(string)` | `[]` | no |
-| ssmmessages\_endpoint\_subnet\_ids | The ID of one or more subnets in which to create a network interface for SSMMESSAGES endpoint. Only a single subnet within an AZ is supported. If omitted, private subnets will be used. | `list(string)` | `[]` | no |
+| ssm\_vpc\_endpoint\_suffix | Suffix to append to a SSM VPC Endpoint name | `string` | `"ssm-vpc-endpoint"` | no |
+| ssmmessages\_endpoint\_private\_dns\_enabled | Whether or not to associate a private hosted zone with the specified VPC for SSM Messages endpoint | `bool` | `false` | no |
+| ssmmessages\_endpoint\_security\_group\_ids | The ID of one or more security groups to associate with the network interface for SSM Messages endpoint | `list(string)` | `[]` | no |
+| ssmmessages\_endpoint\_subnet\_ids | The ID of one or more subnets in which to create a network interface for SSM Messages endpoint. Only a single subnet within an AZ is supported. If omitted, private subnets will be used. | `list(string)` | `[]` | no |
+| ssmmessages\_vpc\_endpoint\_suffix | Suffix to append to a SSM Messages Endpoint name | `string` | `"ssm-messages-vpc-endpoint"` | no |
 | storagegateway\_endpoint\_private\_dns\_enabled | Whether or not to associate a private hosted zone with the specified VPC for Storage Gateway endpoint | `bool` | `false` | no |
 | storagegateway\_endpoint\_security\_group\_ids | The ID of one or more security groups to associate with the network interface for Storage Gateway endpoint | `list(string)` | `[]` | no |
 | storagegateway\_endpoint\_subnet\_ids | The ID of one or more subnets in which to create a network interface for Storage Gateway endpoint. Only a single subnet within an AZ is supported. If omitted, private subnets will be used. | `list(string)` | `[]` | no |
+| storagegateway\_vpc\_endpoint\_suffix | Suffix to append to a Storage Gateway Endpoint name | `string` | `"storage-gateway-vpc-endpoint"` | no |
 | sts\_endpoint\_private\_dns\_enabled | Whether or not to associate a private hosted zone with the specified VPC for STS endpoint | `bool` | `false` | no |
 | sts\_endpoint\_security\_group\_ids | The ID of one or more security groups to associate with the network interface for STS endpoint | `list(string)` | `[]` | no |
 | sts\_endpoint\_subnet\_ids | The ID of one or more subnets in which to create a network interface for STS endpoint. Only a single subnet within an AZ is supported. If omitted, private subnets will be used. | `list(string)` | `[]` | no |
+| sts\_vpc\_endpoint\_suffix | Suffix to append to a STS Endpoint name | `string` | `"sts-vpc-endpoint"` | no |
 | tags | A map of tags to add to all resources | `map(string)` | `{}` | no |
 | transfer\_endpoint\_private\_dns\_enabled | Whether or not to associate a private hosted zone with the specified VPC for Transfer endpoint | `bool` | `false` | no |
 | transfer\_endpoint\_security\_group\_ids | The ID of one or more security groups to associate with the network interface for Transfer endpoint | `list(string)` | `[]` | no |
 | transfer\_endpoint\_subnet\_ids | The ID of one or more subnets in which to create a network interface for Transfer endpoint. Only a single subnet within an AZ is supported. Ifomitted, private subnets will be used. | `list(string)` | `[]` | no |
+| transfer\_vpc\_endpoint\_suffix | Suffix to append to a Transfer Endpoint name | `string` | `"transfer-vpc-endpoint"` | no |
 | transferserver\_endpoint\_private\_dns\_enabled | Whether or not to associate a private hosted zone with the specified VPC for Transfer Server endpoint | `bool` | `false` | no |
 | transferserver\_endpoint\_security\_group\_ids | The ID of one or more security groups to associate with the network interface for Transfer Server endpoint | `list(string)` | `[]` | no |
 | transferserver\_endpoint\_subnet\_ids | The ID of one or more subnets in which to create a network interface for Transfer Server endpoint. Only a single subnet within an AZ is supported. If omitted, private subnets will be used. | `list(string)` | `[]` | no |
+| transferserver\_vpc\_endpoint\_suffix | Suffix to append to a Transfer Server Endpoint name | `string` | `"transferserver-vpc-endpoint"` | no |
 | vpc\_endpoint\_tags | Additional tags for the VPC Endpoints | `map(string)` | `{}` | no |
 | vpc\_flow\_log\_tags | Additional tags for the VPC Flow Logs | `map(string)` | `{}` | no |
 | vpc\_tags | Additional tags for the VPC | `map(string)` | `{}` | no |
