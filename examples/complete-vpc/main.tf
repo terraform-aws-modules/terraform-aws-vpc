@@ -12,23 +12,37 @@ module "vpc" {
 
   name = "complete-example"
 
-  cidr = "10.10.0.0/16"
+  cidr = "20.10.0.0/16" # 10.0.0.0/8 is reserved for EC2-Classic
 
   azs                 = ["eu-west-1a", "eu-west-1b", "eu-west-1c"]
-  private_subnets     = ["10.10.1.0/24", "10.10.2.0/24", "10.10.3.0/24"]
-  public_subnets      = ["10.10.11.0/24", "10.10.12.0/24", "10.10.13.0/24"]
-  database_subnets    = ["10.10.21.0/24", "10.10.22.0/24", "10.10.23.0/24"]
-  elasticache_subnets = ["10.10.31.0/24", "10.10.32.0/24", "10.10.33.0/24"]
-  redshift_subnets    = ["10.10.41.0/24", "10.10.42.0/24", "10.10.43.0/24"]
-  intra_subnets       = ["10.10.51.0/24", "10.10.52.0/24", "10.10.53.0/24"]
+  private_subnets     = ["20.10.1.0/24", "20.10.2.0/24", "20.10.3.0/24"]
+  public_subnets      = ["20.10.11.0/24", "20.10.12.0/24", "20.10.13.0/24"]
+  database_subnets    = ["20.10.21.0/24", "20.10.22.0/24", "20.10.23.0/24"]
+  elasticache_subnets = ["20.10.31.0/24", "20.10.32.0/24", "20.10.33.0/24"]
+  redshift_subnets    = ["20.10.41.0/24", "20.10.42.0/24", "20.10.43.0/24"]
+  intra_subnets       = ["20.10.51.0/24", "20.10.52.0/24", "20.10.53.0/24"]
 
   create_database_subnet_group = false
 
   enable_dns_hostnames = true
   enable_dns_support   = true
 
+  enable_classiclink             = true
+  enable_classiclink_dns_support = true
+
   enable_nat_gateway = true
   single_nat_gateway = true
+
+  customer_gateways = {
+    IP1 = {
+      bgp_asn    = 65112
+      ip_address = "1.2.3.4"
+    },
+    IP2 = {
+      bgp_asn    = 65112
+      ip_address = "5.6.7.8"
+    }
+  }
 
   enable_vpn_gateway = true
 
@@ -92,10 +106,20 @@ module "vpc" {
   sqs_endpoint_private_dns_enabled = true
   sqs_endpoint_security_group_ids  = [data.aws_security_group.default.id]
 
+  # VPC Flow Logs (Cloudwatch log group and IAM role will be created)
+  enable_flow_log                      = true
+  create_flow_log_cloudwatch_log_group = true
+  create_flow_log_cloudwatch_iam_role  = true
+
   tags = {
     Owner       = "user"
     Environment = "staging"
     Name        = "complete"
+  }
+
+  vpc_endpoint_tags = {
+    Project  = "Secret"
+    Endpoint = "true"
   }
 }
 

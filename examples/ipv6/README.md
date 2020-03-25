@@ -1,8 +1,6 @@
-# Issue 44 - VPC
+# VPC with IPv6 enabled
 
-Configuration in this directory creates set of VPC resources to cover issues reported on GitHub:
-
-* https://github.com/terraform-aws-modules/terraform-aws-vpc/issues/44
+Configuration in this directory creates set of VPC resources with IPv6 enabled on VPC and subnets.
 
 ## Usage
 
@@ -19,7 +17,9 @@ Note that this example may create resources which can cost money (AWS Elastic IP
 <!-- BEGINNING OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
 ## Providers
 
-No provider.
+| Name | Version |
+|------|---------|
+| aws | n/a |
 
 ## Inputs
 
@@ -29,11 +29,8 @@ No input.
 
 | Name | Description |
 |------|-------------|
-| database\_subnets | List of IDs of database subnets |
-| elasticache\_subnets | List of IDs of elasticache subnets |
-| nat\_public\_ips | List of public Elastic IPs created for AWS NAT Gateway |
-| private\_subnets | List of IDs of private subnets |
-| public\_subnets | List of IDs of public subnets |
+| ipv6\_association\_id | The IPv6 CIDR block |
+| ipv6\_cidr\_block | The association ID for the IPv6 CIDR block |
 | vpc\_id | The ID of the VPC |
 
 <!-- END OF PRE-COMMIT-TERRAFORM DOCS HOOK -->

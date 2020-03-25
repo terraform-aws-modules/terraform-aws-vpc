@@ -14,9 +14,10 @@ module "vpc" {
   private_subnets = ["10.0.1.0/24", "10.1.2.0/24", "10.2.3.0/24"]
   public_subnets  = ["10.0.101.0/24", "10.1.102.0/24", "10.2.103.0/24"]
 
-  assign_generated_ipv6_cidr_block = true
-  enable_nat_gateway               = true
-  single_nat_gateway               = true
+  enable_ipv6 = true
+
+  enable_nat_gateway = true
+  single_nat_gateway = true
 
   public_subnet_tags = {
     Name = "overridden-name-public"
