@@ -263,6 +263,16 @@ output "egress_only_internet_gateway_id" {
   value       = concat(aws_egress_only_internet_gateway.this.*.id, [""])[0]
 }
 
+output "cgw_ids" {
+  description = "List of IDs of Customer Gateway"
+  value       = [for k, v in aws_customer_gateway.this : v.id]
+}
+
+output "this_customer_gateway" {
+  description = "Map of Customer Gateway attributes"
+  value       = aws_customer_gateway.this
+}
+
 output "vgw_id" {
   description = "The ID of the VPN Gateway"
   value = concat(
@@ -960,6 +970,57 @@ output "vpc_endpoint_rekognition_network_interface_ids" {
 output "vpc_endpoint_rekognition_dns_entry" {
   description = "The DNS entries for the VPC Endpoint for Rekognition."
   value       = flatten(aws_vpc_endpoint.rekognition.*.dns_entry)
+}
+
+output "vpc_endpoint_efs_id" {
+  description = "The ID of VPC endpoint for EFS"
+  value       = concat(aws_vpc_endpoint.efs.*.id, [""])[0]
+}
+
+output "vpc_endpoint_efs_network_interface_ids" {
+  description = "One or more network interfaces for the VPC Endpoint for EFS."
+  value       = flatten(aws_vpc_endpoint.efs.*.network_interface_ids)
+}
+
+output "vpc_endpoint_efs_dns_entry" {
+  description = "The DNS entries for the VPC Endpoint for EFS."
+  value       = flatten(aws_vpc_endpoint.efs.*.dns_entry)
+}
+
+output "vpc_endpoint_cloud_directory_id" {
+  description = "The ID of VPC endpoint for Cloud Directory"
+  value       = concat(aws_vpc_endpoint.cloud_directory.*.id, [""])[0]
+}
+
+output "vpc_endpoint_cloud_directory_network_interface_ids" {
+  description = "One or more network interfaces for the VPC Endpoint for Cloud Directory."
+  value       = flatten(aws_vpc_endpoint.cloud_directory.*.network_interface_ids)
+}
+
+output "vpc_endpoint_cloud_directory_dns_entry" {
+  description = "The DNS entries for the VPC Endpoint for Cloud Directory."
+  value       = flatten(aws_vpc_endpoint.cloud_directory.*.dns_entry)
+}
+
+# VPC flow log
+output "vpc_flow_log_id" {
+  description = "The ID of the Flow Log resource"
+  value       = concat(aws_flow_log.this.*.id, [""])[0]
+}
+
+output "vpc_flow_log_destination_arn" {
+  description = "The ARN of the destination for VPC Flow Logs"
+  value       = local.flow_log_destination_arn
+}
+
+output "vpc_flow_log_destination_type" {
+  description = "The type of the destination for VPC Flow Logs"
+  value       = var.flow_log_destination_type
+}
+
+output "vpc_flow_log_cloudwatch_iam_role_arn" {
+  description = "The ARN of the IAM role used when pushing logs to Cloudwatch log group"
+  value       = local.flow_log_iam_role_arn
 }
 
 # Static values (arguments)
