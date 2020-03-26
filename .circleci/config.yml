@@ -2,19 +2,14 @@ version: 2
 
 terraform: &terraform
   docker:
-    - image: hashicorp/terraform:0.12.0
+    - image: hashicorp/terraform:0.12.6
   working_directory: /tmp/workspace/terraform
 
 jobs:
   validate:
     <<: *terraform
-    environment:
-        AWS_DEFAULT_REGION: us-east-1
     steps:
       - checkout
-      - run:
-          name: Install curl
-          command: apk add --update curl
 #      - run:
 #          name: Add github.com to ~/.ssh/known_hosts
 #          command: mkdir ~/.ssh && ssh-keyscan -t rsa github.com >> ~/.ssh/known_hosts
@@ -24,12 +19,14 @@ jobs:
       - run:
           name: Validate Terraform configurations
           command: find . -name ".terraform" -prune -o -type f -name "*.tf" -exec dirname {} \;|sort -u | while read m; do (cd "$m" && terraform validate && echo "√ $m") || exit 1 ; done
+          environment:
+              AWS_DEFAULT_REGION: us-east-1
       - run:
           name: Check if Terraform configurations are properly formatted
           command: if [[ -n "$(terraform fmt -write=false)" ]]; then echo "Some terraform files need be formatted, run 'terraform fmt' to fix"; exit 1; fi
       - run:
           name: Install tflint
-          command: curl -L -o /tmp/tflint.zip https://github.com/wata727/tflint/releases/download/v0.12.1/tflint_linux_amd64.zip && unzip /tmp/tflint.zip -d /usr/local/bin
+          command: wget -O /tmp/tflint.zip https://github.com/wata727/tflint/releases/download/v0.12.1/tflint_linux_amd64.zip && unzip /tmp/tflint.zip -d /usr/local/bin
       - run:
           name: Check Terraform configurations with tflint
           command: tflint
