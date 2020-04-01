@@ -115,13 +115,13 @@ variable "instance_tenancy" {
 variable "public_subnet_suffix" {
   description = "Suffix to append to public subnets name"
   type        = string
-  default     = "public"
+  default     = "ComputePublic"
 }
 
 variable "private_subnet_suffix" {
   description = "Suffix to append to private subnets name"
   type        = string
-  default     = "private"
+  default     = "ComputePrivate"
 }
 
 variable "intra_subnet_suffix" {
@@ -133,7 +133,13 @@ variable "intra_subnet_suffix" {
 variable "database_subnet_suffix" {
   description = "Suffix to append to database subnets name"
   type        = string
-  default     = "db"
+  default     = "RDS"
+}
+
+variable "lb_subnet_suffix" {
+  description = "Suffix to append to load balancer subnets name"
+  type        = string
+  default     = "LB"
 }
 
 variable "redshift_subnet_suffix" {
@@ -162,6 +168,12 @@ variable "private_subnets" {
 
 variable "database_subnets" {
   description = "A list of database subnets"
+  type        = list(string)
+  default     = []
+}
+
+variable "lb_subnets" {
+  description = "A list of load balancer subnets"
   type        = list(string)
   default     = []
 }
@@ -1399,6 +1411,12 @@ variable "database_route_table_tags" {
   default     = {}
 }
 
+variable "lb_route_table_tags" {
+  description = "Additional tags for the load balancer route tables"
+  type        = map(string)
+  default     = {}
+}
+
 variable "redshift_route_table_tags" {
   description = "Additional tags for the redshift route tables"
   type        = map(string)
@@ -1419,6 +1437,12 @@ variable "intra_route_table_tags" {
 
 variable "database_subnet_tags" {
   description = "Additional tags for the database subnets"
+  type        = map(string)
+  default     = {}
+}
+
+variable "lb_subnet_tags" {
+  description = "Additional tags for the load balancer subnets"
   type        = map(string)
   default     = {}
 }
