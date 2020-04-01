@@ -9,7 +9,7 @@ module "vpc_with_flow_logs_cloudwatch_logs_default" {
   cidr = "10.10.0.0/16"
 
   azs            = ["eu-west-1a"]
-  public_subnets = ["10.10.101.0/24"]
+  compute_public_subnets = ["10.10.101.0/24"]
 
   # Cloudwatch log group and IAM role will be created
   enable_flow_log                      = true
@@ -32,7 +32,7 @@ module "vpc_with_flow_logs_cloudwatch_logs" {
   cidr = "10.20.0.0/16"
 
   azs            = ["eu-west-1a"]
-  public_subnets = ["10.20.101.0/24"]
+  compute_public_subnets = ["10.20.101.0/24"]
 
   enable_flow_log                  = true
   flow_log_destination_type        = "cloud-watch-logs"
@@ -99,4 +99,3 @@ data "aws_iam_policy_document" "vpc_flow_log_cloudwatch" {
     resources = ["*"]
   }
 }
-
