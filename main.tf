@@ -174,6 +174,34 @@ resource "aws_route_table" "private" {
 }
 
 #################
+# Load Balancer routes
+# There are as many routing tables as the number of NAT gateways
+#################
+resource "aws_route_table" "lb" {
+  count = var.create_vpc && local.max_subnet_length > 0 ? local.nat_gateway_count : 0
+
+  vpc_id = local.vpc_id
+
+  tags = merge(
+    {
+      "Name" = var.single_nat_gateway ? "${var.name}-${var.lb_subnet_suffix}" : format(
+        "%s-${var.lb_subnet_suffix}-%s",
+        var.name,
+        element(var.azs, count.index),
+      )
+    },
+    var.tags,
+    var.lb_route_table_tags,
+  )
+
+  lifecycle {
+    # When attaching VPN gateways it is common to define aws_vpn_gateway_route_propagation
+    # resources that manipulate the attributes of the routing table (typically for the private subnets)
+    ignore_changes = [propagating_vgws]
+  }
+}
+
+#################
 # Database routes
 #################
 resource "aws_route_table" "database" {
@@ -293,6 +321,7 @@ resource "aws_subnet" "public" {
   ipv6_cidr_block = var.enable_ipv6 && length(var.public_subnet_ipv6_prefixes) > 0 ? cidrsubnet(aws_vpc.this[0].ipv6_cidr_block, 8, var.public_subnet_ipv6_prefixes[count.index]) : null
 
   tags = merge(
+    map("Type", "ComputePublic"),
     {
       "Name" = format(
         "%s-${var.public_subnet_suffix}-%s",
@@ -320,6 +349,7 @@ resource "aws_subnet" "private" {
   ipv6_cidr_block = var.enable_ipv6 && length(var.private_subnet_ipv6_prefixes) > 0 ? cidrsubnet(aws_vpc.this[0].ipv6_cidr_block, 8, var.private_subnet_ipv6_prefixes[count.index]) : null
 
   tags = merge(
+    map("Type", "ComputePrivate"),
     {
       "Name" = format(
         "%s-${var.private_subnet_suffix}-%s",
@@ -347,6 +377,7 @@ resource "aws_subnet" "database" {
   ipv6_cidr_block = var.enable_ipv6 && length(var.database_subnet_ipv6_prefixes) > 0 ? cidrsubnet(aws_vpc.this[0].ipv6_cidr_block, 8, var.database_subnet_ipv6_prefixes[count.index]) : null
 
   tags = merge(
+    map("Type", "RDS"),
     {
       "Name" = format(
         "%s-${var.database_subnet_suffix}-%s",
@@ -372,6 +403,34 @@ resource "aws_db_subnet_group" "database" {
     },
     var.tags,
     var.database_subnet_group_tags,
+  )
+}
+
+#################
+# Load Balancer subnet
+#################
+resource "aws_subnet" "lb" {
+  count = var.create_vpc && length(var.private_subnets) > 0 ? length(var.private_subnets) : 0
+
+  vpc_id                          = local.vpc_id
+  cidr_block                      = var.private_subnets[count.index]
+  availability_zone               = length(regexall("^[a-z]{2}-", element(var.azs, count.index))) > 0 ? element(var.azs, count.index) : null
+  availability_zone_id            = length(regexall("^[a-z]{2}-", element(var.azs, count.index))) == 0 ? element(var.azs, count.index) : null
+  assign_ipv6_address_on_creation = var.private_subnet_assign_ipv6_address_on_creation == null ? var.assign_ipv6_address_on_creation : var.private_subnet_assign_ipv6_address_on_creation
+
+  ipv6_cidr_block = var.enable_ipv6 && length(var.private_subnet_ipv6_prefixes) > 0 ? cidrsubnet(aws_vpc.this[0].ipv6_cidr_block, 8, var.private_subnet_ipv6_prefixes[count.index]) : null
+
+  tags = merge(
+    map("Type", "LB"),
+    {
+      "Name" = format(
+        "%s-${var.lb_subnet_suffix}-%s",
+        var.name,
+        element(var.azs, count.index),
+      )
+    },
+    var.tags,
+    var.lb_subnet_tags,
   )
 }
 
@@ -452,6 +511,7 @@ resource "aws_elasticache_subnet_group" "elasticache" {
   description = "ElastiCache subnet group for ${var.name}"
   subnet_ids  = aws_subnet.elasticache.*.id
 }
+
 
 #####################################################
 # intra subnets - private subnet without NAT gateway
@@ -934,6 +994,16 @@ resource "aws_route_table_association" "private" {
   subnet_id = element(aws_subnet.private.*.id, count.index)
   route_table_id = element(
     aws_route_table.private.*.id,
+    var.single_nat_gateway ? 0 : count.index,
+  )
+}
+
+resource "aws_route_table_association" "lb" {
+  count = var.create_vpc && length(var.lb_subnets) > 0 ? length(var.lb_subnets) : 0
+
+  subnet_id = element(aws_subnet.lb.*.id, count.index)
+  route_table_id = element(
+    aws_route_table.lb.*.id,
     var.single_nat_gateway ? 0 : count.index,
   )
 }
