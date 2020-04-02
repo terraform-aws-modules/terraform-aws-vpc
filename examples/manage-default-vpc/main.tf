@@ -11,4 +11,3 @@ module "vpc" {
   default_vpc_name                 = "default"
   default_vpc_enable_dns_hostnames = true
 }
-
