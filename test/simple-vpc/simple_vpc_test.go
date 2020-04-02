@@ -30,11 +30,11 @@ func TestExamplesComplete(t *testing.T) {
 		Upgrade:      true,
 		// Variables to pass to our Terraform code using -var options
 		Vars: map[string]interface{}{
-			"region":                  awsRegion,
-			"cidr":                    expVpcCidr,
-			"azs":                     expAvailabilityZones,
-			"compute_private_subnets": expPrivateSubnetCidrs,
-			"compute_public_subnets":  expPublicSubnetCidrs,
+			// "region":                  awsRegion,
+			// "cidr":                    expVpcCidr,
+			// "azs":                     expAvailabilityZones,
+			// "compute_private_subnets": expPrivateSubnetCidrs,
+			// "compute_public_subnets":  expPublicSubnetCidrs,
 		},
 	}
 
@@ -50,19 +50,19 @@ func TestExamplesComplete(t *testing.T) {
 	availabilityZones := terraform.OutputList(t, terraformOptions, "azs")
 	assert.Equal(t, expAvailabilityZones, availabilityZones)
 
-	privateSubnets := terraform.OutputList(t, terraformOptions, "compute_private_subnets")
+	privateSubnets := terraform.OutputList(t, terraformOptions, "private_subnets")
 	require.Equal(t, len(expPrivateSubnetCidrs), len(privateSubnets))
 	// Verify if the network that is supposed to be private is really private
 	assert.False(t, aws.IsPublicSubnet(t, privateSubnets[0], awsRegion))
 
-	privateSubnetCidrs := terraform.OutputList(t, terraformOptions, "compute_private_subnets_cidr_blocks")
+	privateSubnetCidrs := terraform.OutputList(t, terraformOptions, "private_subnets_cidr_blocks")
 	assert.Equal(t, expPrivateSubnetCidrs, privateSubnetCidrs)
 
-	publicSubnets := terraform.OutputList(t, terraformOptions, "compute_public_subnets")
+	publicSubnets := terraform.OutputList(t, terraformOptions, "public_subnets")
 	require.Equal(t, len(expPublicSubnetCidrs), len(publicSubnets))
 	// Verify if the network that is supposed to be public is really public
 	assert.True(t, aws.IsPublicSubnet(t, publicSubnets[0], awsRegion))
 
-	publicSubnetCidrs := terraform.OutputList(t, terraformOptions, "compute_public_subnets_cidr_blocks")
+	publicSubnetCidrs := terraform.OutputList(t, terraformOptions, "public_subnets_cidr_blocks")
 	assert.Equal(t, expPublicSubnetCidrs, publicSubnetCidrs)
 }

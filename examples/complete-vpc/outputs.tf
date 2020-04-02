@@ -7,12 +7,12 @@ output "vpc_id" {
 # Subnets
 output "private_subnets" {
   description = "List of IDs of private subnets"
-  value       = module.vpc.private_subnets
+  value       = module.vpc.compute_private_subnets
 }
 
 output "public_subnets" {
   description = "List of IDs of public subnets"
-  value       = module.vpc.public_subnets
+  value       = module.vpc.compute_public_subnets
 }
 
 output "database_subnets" {
