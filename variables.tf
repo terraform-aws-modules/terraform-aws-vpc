@@ -22,13 +22,13 @@ variable "enable_ipv6" {
   default     = false
 }
 
-variable "private_subnet_ipv6_prefixes" {
+variable "compute_private_subnet_ipv6_prefixes" {
   description = "Assigns IPv6 private subnet id based on the Amazon provided /56 prefix base 10 integer (0-256). Must be of equal length to the corresponding IPv4 subnet list"
   type        = list
   default     = []
 }
 
-variable "public_subnet_ipv6_prefixes" {
+variable "compute_public_subnet_ipv6_prefixes" {
   description = "Assigns IPv6 public subnet id based on the Amazon provided /56 prefix base 10 integer (0-256). Must be of equal length to the corresponding IPv4 subnet list"
   type        = list
   default     = []
@@ -58,19 +58,25 @@ variable "intra_subnet_ipv6_prefixes" {
   default     = []
 }
 
+variable "lb_subnet_ipv6_prefixes" {
+  description = "Assigns IPv6 Load Balancer subnet id based on the Amazon provided /56 prefix base 10 integer (0-256). Must be of equal length to the corresponding IPv4 subnet list"
+  type        = list
+  default     = []
+}
+
 variable "assign_ipv6_address_on_creation" {
   description = "Assign IPv6 address on subnet, must be disabled to change IPv6 CIDRs. This is the IPv6 equivalent of map_public_ip_on_launch"
   type        = bool
   default     = false
 }
 
-variable "private_subnet_assign_ipv6_address_on_creation" {
+variable "compute_private_subnet_assign_ipv6_address_on_creation" {
   description = "Assign IPv6 address on private subnet, must be disabled to change IPv6 CIDRs. This is the IPv6 equivalent of map_public_ip_on_launch"
   type        = bool
   default     = null
 }
 
-variable "public_subnet_assign_ipv6_address_on_creation" {
+variable "compute_public_subnet_assign_ipv6_address_on_creation" {
   description = "Assign IPv6 address on public subnet, must be disabled to change IPv6 CIDRs. This is the IPv6 equivalent of map_public_ip_on_launch"
   type        = bool
   default     = null
@@ -100,6 +106,12 @@ variable "intra_subnet_assign_ipv6_address_on_creation" {
   default     = null
 }
 
+variable "lb_subnet_assign_ipv6_address_on_creation" {
+  description = "Assign IPv6 address on Load Balance subnet, must be disabled to change IPv6 CIDRs. This is the IPv6 equivalent of map_public_ip_on_launch"
+  type        = bool
+  default     = null
+}
+
 variable "secondary_cidr_blocks" {
   description = "List of secondary CIDR blocks to associate with the VPC to extend the IP Address pool"
   type        = list(string)
@@ -112,13 +124,13 @@ variable "instance_tenancy" {
   default     = "default"
 }
 
-variable "public_subnet_suffix" {
+variable "compute_public_subnet_suffix" {
   description = "Suffix to append to public subnets name"
   type        = string
   default     = "ComputePublic"
 }
 
-variable "private_subnet_suffix" {
+variable "compute_private_subnet_suffix" {
   description = "Suffix to append to private subnets name"
   type        = string
   default     = "ComputePrivate"
@@ -154,13 +166,13 @@ variable "elasticache_subnet_suffix" {
   default     = "elasticache"
 }
 
-variable "public_subnets" {
+variable "compute_public_subnets" {
   description = "A list of public subnets inside the VPC"
   type        = list(string)
   default     = []
 }
 
-variable "private_subnets" {
+variable "compute_private_subnets" {
   description = "A list of private subnets inside the VPC"
   type        = list(string)
   default     = []
@@ -1381,13 +1393,13 @@ variable "igw_tags" {
   default     = {}
 }
 
-variable "public_subnet_tags" {
+variable "compute_public_subnet_tags" {
   description = "Additional tags for the public subnets"
   type        = map(string)
   default     = {}
 }
 
-variable "private_subnet_tags" {
+variable "compute_private_subnet_tags" {
   description = "Additional tags for the private subnets"
   type        = map(string)
   default     = {}
