@@ -579,6 +579,31 @@ variable "ec2messages_endpoint_subnet_ids" {
   default     = []
 }
 
+
+variable "enable_ec2_autoscaling_endpoint" {
+  description = "Should be true if you want to provision an EC2 Autoscaling endpoint to the VPC"
+  type        = bool
+  default     = false
+}
+
+variable "ec2_autoscaling_endpoint_security_group_ids" {
+  description = "The ID of one or more security groups to associate with the network interface for EC2 Autoscaling endpoint"
+  type        = list(string)
+  default     = []
+}
+
+variable "ec2_autoscaling_endpoint_private_dns_enabled" {
+  description = "Whether or not to associate a private hosted zone with the specified VPC for EC2 Autoscaling endpoint"
+  type        = bool
+  default     = false
+}
+
+variable "ec2_autoscaling_endpoint_subnet_ids" {
+  description = "The ID of one or more subnets in which to create a network interface for EC2 Autoscaling endpoint. Only a single subnet within an AZ is supported. If omitted, private subnets will be used."
+  type        = list(string)
+  default     = []
+}
+
 variable "enable_ecr_api_endpoint" {
   description = "Should be true if you want to provision an ecr api endpoint to the VPC"
   type        = bool

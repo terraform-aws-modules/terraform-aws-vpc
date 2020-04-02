@@ -304,6 +304,9 @@ It is possible to integrate this VPC module with [terraform-aws-transit-gateway 
 | dhcp\_options\_netbios\_node\_type | Specify netbios node\_type for DHCP options set (requires enable\_dhcp\_options set to true) | `string` | `""` | no |
 | dhcp\_options\_ntp\_servers | Specify a list of NTP servers for DHCP options set (requires enable\_dhcp\_options set to true) | `list(string)` | `[]` | no |
 | dhcp\_options\_tags | Additional tags for the DHCP option set (requires enable\_dhcp\_options set to true) | `map(string)` | `{}` | no |
+| ec2\_autoscaling\_endpoint\_private\_dns\_enabled | Whether or not to associate a private hosted zone with the specified VPC for EC2 AutoScaling endpoint | bool | `"false"` | no |
+| ec2\_autoscaling\_endpoint\_security\_group\_ids | The ID of one or more security groups to associate with the network interface for EC2 AutoScaling endpoint | list(string) | `[]` | no |
+| ec2\_autoscaling\_endpoint\_subnet\_ids | The ID of one or more subnets in which to create a network interface for EC2 AutoScaling endpoint. Only a single subnet within an AZ is supported. If omitted, private subnets will be used. | list(string) | `[]` | no |
 | ec2\_endpoint\_private\_dns\_enabled | Whether or not to associate a private hosted zone with the specified VPC for EC2 endpoint | `bool` | `false` | no |
 | ec2\_endpoint\_security\_group\_ids | The ID of one or more security groups to associate with the network interface for EC2 endpoint | `list(string)` | `[]` | no |
 | ec2\_endpoint\_subnet\_ids | The ID of one or more subnets in which to create a network interface for EC2 endpoint. Only a single subnet within an AZ is supported. If omitted, private subnets will be used. | `list(string)` | `[]` | no |
@@ -358,6 +361,7 @@ It is possible to integrate this VPC module with [terraform-aws-transit-gateway 
 | enable\_dns\_hostnames | Should be true to enable DNS hostnames in the VPC | `bool` | `false` | no |
 | enable\_dns\_support | Should be true to enable DNS support in the VPC | `bool` | `true` | no |
 | enable\_dynamodb\_endpoint | Should be true if you want to provision a DynamoDB endpoint to the VPC | `bool` | `false` | no |
+| enable\_ec2\_autoscaling\_endpoint | Should be true if you want to provision an EC2AutoScaling endpoint to the VPC | bool | `"false"` | no |
 | enable\_ec2\_endpoint | Should be true if you want to provision an EC2 endpoint to the VPC | `bool` | `false` | no |
 | enable\_ec2messages\_endpoint | Should be true if you want to provision an EC2MESSAGES endpoint to the VPC | `bool` | `false` | no |
 | enable\_ecr\_api\_endpoint | Should be true if you want to provision an ecr api endpoint to the VPC | `bool` | `false` | no |
@@ -643,6 +647,9 @@ It is possible to integrate this VPC module with [terraform-aws-transit-gateway 
 | vpc\_endpoint\_ec2\_dns\_entry | The DNS entries for the VPC Endpoint for EC2. |
 | vpc\_endpoint\_ec2\_id | The ID of VPC endpoint for EC2 |
 | vpc\_endpoint\_ec2\_network\_interface\_ids | One or more network interfaces for the VPC Endpoint for EC2 |
+| vpc\_endpoint\_ec2\_autoscaling\_dns\_entry | The DNS entries for the VPC Endpoint for EC2 AutoScaling. |
+| vpc\_endpoint\_ec2\_autoscaling\_id | The ID of VPC endpoint for EC2 AutoScaling |
+| vpc\_endpoint\_ec2\_autoscaling\_network\_interface\_ids | One or more network interfaces for the VPC Endpoint for EC2 AutoScaling |
 | vpc\_endpoint\_ec2messages\_dns\_entry | The DNS entries for the VPC Endpoint for EC2MESSAGES. |
 | vpc\_endpoint\_ec2messages\_id | The ID of VPC endpoint for EC2MESSAGES |
 | vpc\_endpoint\_ec2messages\_network\_interface\_ids | One or more network interfaces for the VPC Endpoint for EC2MESSAGES |
