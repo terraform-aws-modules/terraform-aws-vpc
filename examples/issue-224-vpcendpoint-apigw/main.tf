@@ -26,8 +26,8 @@ module "vpc" {
 
   cidr = "10.15.0.0/16"
 
-  azs             = ["us-east-1a"]
-  private_subnets = ["10.15.1.0/24"]
+  azs                     = ["us-east-1a"]
+  compute_private_subnets = ["10.15.1.0/24"]
 
   enable_dns_hostnames = true
   enable_dns_support   = true
@@ -43,4 +43,3 @@ module "vpc" {
     Name        = "test-224"
   }
 }
-

@@ -9,10 +9,10 @@ module "vpc" {
 
   cidr = "10.0.0.0/16"
 
-  azs                 = ["eu-west-1a", "eu-west-1b", "eu-west-1c"]
-  private_subnets     = ["10.0.1.0/24", "10.0.2.0/24", "10.0.3.0/24"]
-  public_subnets      = ["10.0.101.0/24", "10.0.102.0/24", "10.0.103.0/24"]
-  elasticache_subnets = ["10.0.201.0/24", "10.0.202.0/24", "10.0.203.0/24"]
+  azs                     = ["eu-west-1a", "eu-west-1b", "eu-west-1c"]
+  compute_private_subnets = ["10.0.1.0/24", "10.0.2.0/24", "10.0.3.0/24"]
+  compute_public_subnets  = ["10.0.101.0/24", "10.0.102.0/24", "10.0.103.0/24"]
+  elasticache_subnets     = ["10.0.201.0/24", "10.0.202.0/24", "10.0.203.0/24"]
 
   public_dedicated_network_acl = true
   public_inbound_acl_rules = concat(
@@ -36,7 +36,7 @@ module "vpc" {
   enable_nat_gateway = false
   single_nat_gateway = true
 
-  public_subnet_tags = {
+  compute_public_subnet_tags = {
     Name = "overridden-name-public"
   }
 
@@ -200,4 +200,3 @@ locals {
     ]
   }
 }
-
