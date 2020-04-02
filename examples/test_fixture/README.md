@@ -21,6 +21,10 @@ Finished in 4.25 seconds (files took 2.75 seconds to load)
 This will destroy any existing test resources, create the resources afresh, run the tests, report back, and destroy the resources.
 
 <!-- BEGINNING OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
+## Requirements
+
+No requirements.
+
 ## Providers
 
 | Name | Version |
@@ -30,7 +34,7 @@ This will destroy any existing test resources, create the resources afresh, run 
 ## Inputs
 
 | Name | Description | Type | Default | Required |
-|------|-------------|------|---------|:-----:|
+|------|-------------|------|---------|:--------:|
 | region | n/a | `string` | `"eu-west-1"` | no |
 
 ## Outputs
