@@ -543,6 +543,21 @@ output "vpc_endpoint_ec2messages_dns_entry" {
   value       = flatten(aws_vpc_endpoint.ec2messages.*.dns_entry)
 }
 
+output "vpc_endpoint_ec2_autoscaling_id" {
+  description = "The ID of VPC endpoint for EC2 Autoscaling"
+  value       = concat(aws_vpc_endpoint.ec2_autoscaling.*.id, [""])[0]
+}
+
+output "vpc_endpoint_ec2_autoscaling_network_interface_ids" {
+  description = "One or more network interfaces for the VPC Endpoint for EC2 Autoscaling"
+  value       = flatten(aws_vpc_endpoint.ec2_autoscaling.*.network_interface_ids)
+}
+
+output "vpc_endpoint_ec2_autoscaling_dns_entry" {
+  description = "The DNS entries for the VPC Endpoint for EC2 Autoscaling."
+  value       = flatten(aws_vpc_endpoint.ec2_autoscaling.*.dns_entry)
+}
+
 output "vpc_endpoint_transferserver_id" {
   description = "The ID of VPC endpoint for transferserver"
   value       = concat(aws_vpc_endpoint.transferserver.*.id, [""])[0]
