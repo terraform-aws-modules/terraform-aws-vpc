@@ -24,6 +24,13 @@ locals {
 }
 
 ######
+# AZ name finding
+######
+data "aws_availability_zones" "all" {
+  all_availability_zones = true
+}
+
+######
 # VPC
 ######
 resource "aws_vpc" "this" {
@@ -302,6 +309,11 @@ resource "aws_subnet" "public" {
     },
     var.tags,
     var.public_subnet_tags,
+    {
+      az     = length(regexall("^[a-z]{2}-", element(var.azs, count.index))) > 0 ? substr(element(var.azs, count.index), -1, 1) : substr(data.aws_availability_zones.all.names[index(element(data.aws_availability_zones.all.zone_ids, var.azs, count.index))], -1, 1)
+      az_id  = length(regexall("^[a-z]{2}-", element(var.azs, count.index))) == 0 ? element(var.azs, count.index) : data.aws_availability_zones.all.zone_ids[index(data.aws_availability_zones.all.names, element(var.azs, count.index))]
+      serial = count.index
+    }
   )
 }
 
@@ -329,6 +341,11 @@ resource "aws_subnet" "private" {
     },
     var.tags,
     var.private_subnet_tags,
+    {
+      az     = length(regexall("^[a-z]{2}-", element(var.azs, count.index))) > 0 ? substr(element(var.azs, count.index), -1, 1) : substr(data.aws_availability_zones.all.names[index(element(data.aws_availability_zones.all.zone_ids, var.azs, count.index))], -1, 1)
+      az_id  = length(regexall("^[a-z]{2}-", element(var.azs, count.index))) == 0 ? element(var.azs, count.index) : data.aws_availability_zones.all.zone_ids[index(data.aws_availability_zones.all.names, element(var.azs, count.index))]
+      serial = count.index
+    }
   )
 }
 
@@ -356,6 +373,11 @@ resource "aws_subnet" "database" {
     },
     var.tags,
     var.database_subnet_tags,
+    {
+      az     = length(regexall("^[a-z]{2}-", element(var.azs, count.index))) > 0 ? substr(element(var.azs, count.index), -1, 1) : substr(data.aws_availability_zones.all.names[index(element(data.aws_availability_zones.all.zone_ids, var.azs, count.index))], -1, 1)
+      az_id  = length(regexall("^[a-z]{2}-", element(var.azs, count.index))) == 0 ? element(var.azs, count.index) : data.aws_availability_zones.all.zone_ids[index(data.aws_availability_zones.all.names, element(var.azs, count.index))]
+      serial = count.index
+    }
   )
 }
 
@@ -372,6 +394,11 @@ resource "aws_db_subnet_group" "database" {
     },
     var.tags,
     var.database_subnet_group_tags,
+    {
+      az     = length(regexall("^[a-z]{2}-", element(var.azs, count.index))) > 0 ? substr(element(var.azs, count.index), -1, 1) : substr(data.aws_availability_zones.all.names[index(element(data.aws_availability_zones.all.zone_ids, var.azs, count.index))], -1, 1)
+      az_id  = length(regexall("^[a-z]{2}-", element(var.azs, count.index))) == 0 ? element(var.azs, count.index) : data.aws_availability_zones.all.zone_ids[index(data.aws_availability_zones.all.names, element(var.azs, count.index))]
+      serial = count.index
+    }
   )
 }
 
@@ -399,6 +426,11 @@ resource "aws_subnet" "redshift" {
     },
     var.tags,
     var.redshift_subnet_tags,
+    {
+      az     = length(regexall("^[a-z]{2}-", element(var.azs, count.index))) > 0 ? substr(element(var.azs, count.index), -1, 1) : substr(data.aws_availability_zones.all.names[index(element(data.aws_availability_zones.all.zone_ids, var.azs, count.index))], -1, 1)
+      az_id  = length(regexall("^[a-z]{2}-", element(var.azs, count.index))) == 0 ? element(var.azs, count.index) : data.aws_availability_zones.all.zone_ids[index(data.aws_availability_zones.all.names, element(var.azs, count.index))]
+      serial = count.index
+    }
   )
 }
 
@@ -442,6 +474,11 @@ resource "aws_subnet" "elasticache" {
     },
     var.tags,
     var.elasticache_subnet_tags,
+    {
+      az     = length(regexall("^[a-z]{2}-", element(var.azs, count.index))) > 0 ? substr(element(var.azs, count.index), -1, 1) : substr(data.aws_availability_zones.all.names[index(element(data.aws_availability_zones.all.zone_ids, var.azs, count.index))], -1, 1)
+      az_id  = length(regexall("^[a-z]{2}-", element(var.azs, count.index))) == 0 ? element(var.azs, count.index) : data.aws_availability_zones.all.zone_ids[index(data.aws_availability_zones.all.names, element(var.azs, count.index))]
+      serial = count.index
+    }
   )
 }
 
@@ -477,6 +514,11 @@ resource "aws_subnet" "intra" {
     },
     var.tags,
     var.intra_subnet_tags,
+    {
+      az     = length(regexall("^[a-z]{2}-", element(var.azs, count.index))) > 0 ? substr(element(var.azs, count.index), -1, 1) : substr(data.aws_availability_zones.all.names[index(element(data.aws_availability_zones.all.zone_ids, var.azs, count.index))], -1, 1)
+      az_id  = length(regexall("^[a-z]{2}-", element(var.azs, count.index))) == 0 ? element(var.azs, count.index) : data.aws_availability_zones.all.zone_ids[index(data.aws_availability_zones.all.names, element(var.azs, count.index))]
+      serial = count.index
+    }
   )
 }
 
