@@ -10,29 +10,27 @@ data "aws_security_group" "default" {
 module "vpc" {
   source = "../../"
 
-  name = "simple-example"
+  name = "vpc-terratest"
 
-  cidr = "10.0.0.0/16"
+  cidr = "10.120.0.0/16"
 
-  azs                     = ["eu-west-1a", "eu-west-1b", "euw1-az3"]
-  compute_private_subnets = ["10.0.1.0/24", "10.0.2.0/24", "10.0.3.0/24"]
-  compute_public_subnets  = ["10.0.101.0/24", "10.0.102.0/24", "10.0.103.0/24"]
+  azs                     = ["eu-west-1a", "eu-west-1c"]
+  compute_public_subnets  = ["10.120.3.0/24", "10.120.4.0/24"]
+  compute_private_subnets = ["10.120.0.0/24", "10.120.1.0/24"]
+  lb_subnets              = ["10.120.5.0/24", "10.120.6.0/24"]
+  database_subnets        = ["10.120.7.0/24", "10.120.8.0/24"]
 
-  enable_ipv6 = true
+  enable_nat_gateway     = true
+  single_nat_gateway     = true
+  one_nat_gateway_per_az = false
+  enable_vpn_gateway     = true
 
-  enable_nat_gateway = true
-  single_nat_gateway = true
-
-  compute_public_subnet_tags = {
-    Name = "overridden-name-public"
-  }
+  create_database_subnet_group           = true
+  create_database_subnet_route_table     = true
+  create_database_internet_gateway_route = true
 
   tags = {
     Owner       = "user"
     Environment = "dev"
-  }
-
-  vpc_tags = {
-    Name = "vpc-name"
   }
 }
