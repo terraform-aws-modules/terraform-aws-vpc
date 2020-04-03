@@ -38,5 +38,9 @@ zone_names.each do |az|
     it { should have_tag('Name').value("#{vpc_name}-public-#{az}") }
     it { should have_tag('Owner').value(user_tag.to_s) }
     it { should have_tag('Environment').value(environment_tag.to_s) }
+    it { should have_tag('az').value(az[-1])}
+    # Zone ID are per AWS account. I can only assume that the AZ_ID tag is present
+    it { should have_tag('az_id')}
+    it { should have_tag('serial')}
   end
 end
