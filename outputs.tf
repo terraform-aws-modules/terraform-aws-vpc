@@ -1093,6 +1093,21 @@ output "vpc_endpoint_elasticbeanstalk_dns_entry" {
   value       = flatten(aws_vpc_endpoint.elasticbeanstalk.*.dns_entry)
 }
 
+output "vpc_endpoint_elasticbeanstalk_health_id" {
+  description = "The ID of VPC endpoint for Elastic Beanstalk Health"
+  value       = concat(aws_vpc_endpoint.elasticbeanstalk_health.*.id, [""])[0]
+}
+
+output "vpc_endpoint_elasticbeanstalk_health_network_interface_ids" {
+  description = "One or more network interfaces for the VPC Endpoint for Elastic Beanstalk Health."
+  value       = flatten(aws_vpc_endpoint.elasticbeanstalk_health.*.network_interface_ids)
+}
+
+output "vpc_endpoint_elasticbeanstalk_health_dns_entry" {
+  description = "The DNS entries for the VPC Endpoint for Elastic Beanstalk Health."
+  value       = flatten(aws_vpc_endpoint.elasticbeanstalk_health.*.dns_entry)
+}
+
 output "vpc_endpoint_workspaces_id" {
   description = "The ID of VPC endpoint for Workspaces"
   value       = concat(aws_vpc_endpoint.workspaces.*.id, [""])[0]
@@ -1181,6 +1196,21 @@ output "vpc_endpoint_access_analyzer_network_interface_ids" {
 output "vpc_endpoint_access_analyzer_dns_entry" {
   description = "The DNS entries for the VPC Endpoint for Access Analyzer."
   value       = flatten(aws_vpc_endpoint.access_analyzer.*.dns_entry)
+}
+
+output "vpc_endpoint_acm_pca_id" {
+  description = "The ID of VPC endpoint for ACM PCA"
+  value       = concat(aws_vpc_endpoint.access_analyzer.*.id, [""])[0]
+}
+
+output "vpc_endpoint_acm_pca_network_interface_ids" {
+  description = "One or more network interfaces for the VPC Endpoint for ACM PCA."
+  value       = flatten(aws_vpc_endpoint.acm_pca.*.network_interface_ids)
+}
+
+output "vpc_endpoint_acm_pca_dns_entry" {
+  description = "The DNS entries for the VPC Endpoint for ACM PCA."
+  value       = flatten(aws_vpc_endpoint.acm_pca.*.dns_entry)
 }
 
 # VPC flow log

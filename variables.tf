@@ -1563,6 +1563,30 @@ variable "elasticbeanstalk_endpoint_private_dns_enabled" {
   default     = false
 }
 
+variable "enable_elasticbeanstalk_health_endpoint" {
+  description = "Should be true if you want to provision a Elastic Beanstalk Health endpoint to the VPC"
+  type        = bool
+  default     = false
+}
+
+variable "elasticbeanstalk_health_endpoint_security_group_ids" {
+  description = "The ID of one or more security groups to associate with the network interface for Elastic Beanstalk Health endpoint"
+  type        = list(string)
+  default     = []
+}
+
+variable "elasticbeanstalk_health_endpoint_subnet_ids" {
+  description = "The ID of one or more subnets in which to create a network interface for Elastic Beanstalk Health endpoint. Only a single subnet within an AZ is supported. If omitted, private subnets will be used."
+  type        = list(string)
+  default     = []
+}
+
+variable "elasticbeanstalk_health_endpoint_private_dns_enabled" {
+  description = "Whether or not to associate a private hosted zone with the specified VPC for Elastic Beanstalk Health endpoint"
+  type        = bool
+  default     = false
+}
+
 variable "enable_states_endpoint" {
   description = "Should be true if you want to provision a Step Function endpoint to the VPC"
   type        = bool
@@ -1584,6 +1608,26 @@ variable "states_endpoint_subnet_ids" {
 variable "states_endpoint_private_dns_enabled" {
   description = "Whether or not to associate a private hosted zone with the specified VPC for Step Function endpoint"
   type        = bool
+  default     = false
+}
+
+variable "enable_acm_pca_endpoint" {
+  description = "Should be true if you want to provision an ACM PCA endpoint to the VPC"
+  default     = false
+}
+
+variable "acm_pca_endpoint_security_group_ids" {
+  description = "The ID of one or more security groups to associate with the network interface for ACM PCA endpoint"
+  default     = []
+}
+
+variable "acm_pca_endpoint_subnet_ids" {
+  description = "The ID of one or more subnets in which to create a network interface for Codebuilt endpoint. Only a single subnet within an AZ is supported. If omitted, private subnets will be used."
+  default     = []
+}
+
+variable "acm_pca_endpoint_private_dns_enabled" {
+  description = "Whether or not to associate a private hosted zone with the specified VPC for ACM PCA endpoint"
   default     = false
 }
 

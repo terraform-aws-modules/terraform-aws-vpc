@@ -1277,3 +1277,48 @@ resource "aws_vpc_endpoint" "elasticbeanstalk" {
   private_dns_enabled = var.elasticbeanstalk_endpoint_private_dns_enabled
   tags                = local.vpce_tags
 }
+
+#############################
+# VPC Endpoint for Elastic Beanstalk Health
+#############################
+data "aws_vpc_endpoint_service" "elasticbeanstalk_health" {
+  count = var.create_vpc && var.enable_elasticbeanstalk_health_endpoint ? 1 : 0
+
+  service = "elasticbeanstalk.health"
+}
+
+resource "aws_vpc_endpoint" "elasticbeanstalk_health" {
+  count = var.create_vpc && var.enable_elasticbeanstalk_health_endpoint ? 1 : 0
+
+  vpc_id            = local.vpc_id
+  service_name      = data.aws_vpc_endpoint_service.elasticbeanstalk_health[0].service_name
+  vpc_endpoint_type = "Interface"
+
+  security_group_ids  = var.elasticbeanstalk_health_endpoint_security_group_ids
+  subnet_ids          = coalescelist(var.elasticbeanstalk_health_endpoint_subnet_ids, aws_subnet.private.*.id)
+  private_dns_enabled = var.elasticbeanstalk_health_endpoint_private_dns_enabled
+  tags                = local.vpce_tags
+}
+
+#############################
+# VPC Endpoint for ACM PCA
+#############################
+data "aws_vpc_endpoint_service" "acm_pca" {
+  count = var.create_vpc && var.enable_acm_pca_endpoint ? 1 : 0
+
+  service = "acm-pca"
+}
+
+resource "aws_vpc_endpoint" "acm_pca" {
+  count = var.create_vpc && var.enable_acm_pca_endpoint ? 1 : 0
+
+  vpc_id            = local.vpc_id
+  service_name      = data.aws_vpc_endpoint_service.acm_pca[0].service_name
+  vpc_endpoint_type = "Interface"
+
+  security_group_ids  = var.acm_pca_endpoint_security_group_ids
+  subnet_ids          = coalescelist(var.acm_pca_endpoint_subnet_ids, aws_subnet.private.*.id)
+  private_dns_enabled = var.acm_pca_endpoint_private_dns_enabled
+  tags                = local.vpce_tags
+}
+
