@@ -1007,7 +1007,6 @@ output "vpc_endpoint_cloud_directory_id" {
   value       = concat(aws_vpc_endpoint.cloud_directory.*.id, [""])[0]
 }
 
-
 output "vpc_endpoint_cloud_directory_network_interface_ids" {
   description = "One or more network interfaces for the VPC Endpoint for Cloud Directory."
   value       = flatten(aws_vpc_endpoint.cloud_directory.*.network_interface_ids)
