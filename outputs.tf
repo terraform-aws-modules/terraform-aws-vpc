@@ -1,3 +1,8 @@
+output "owner_id" {
+  description = "The owner of the VPC/Account number"
+  value       = concat(aws_vpc.this.*.owner_id, [""])[0]
+}
+
 output "vpc_id" {
   description = "The ID of the VPC"
   value       = concat(aws_vpc.this.*.id, [""])[0]
