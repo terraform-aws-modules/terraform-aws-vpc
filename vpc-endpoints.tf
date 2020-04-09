@@ -295,6 +295,29 @@ resource "aws_vpc_endpoint" "ec2messages" {
   tags                = local.vpce_tags
 }
 
+###############################
+# VPC Endpoint for EC2 Autoscaling
+###############################
+data "aws_vpc_endpoint_service" "ec2_autoscaling" {
+  count = var.create_vpc && var.enable_ec2_autoscaling_endpoint ? 1 : 0
+
+  service = "autoscaling"
+}
+
+resource "aws_vpc_endpoint" "ec2_autoscaling" {
+  count = var.create_vpc && var.enable_ec2_autoscaling_endpoint ? 1 : 0
+
+  vpc_id            = local.vpc_id
+  service_name      = data.aws_vpc_endpoint_service.ec2_autoscaling[0].service_name
+  vpc_endpoint_type = "Interface"
+
+  security_group_ids  = var.ec2_autoscaling_endpoint_security_group_ids
+  subnet_ids          = coalescelist(var.ec2_autoscaling_endpoint_subnet_ids, aws_subnet.private.*.id)
+  private_dns_enabled = var.ec2_autoscaling_endpoint_private_dns_enabled
+  tags                = local.vpce_tags
+}
+
+
 ###################################
 # VPC Endpoint for Transfer Server
 ###################################
