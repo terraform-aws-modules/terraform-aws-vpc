@@ -298,6 +298,12 @@ variable "external_nat_ip_ids" {
   default     = []
 }
 
+variable "external_nat_ips" {
+  description = "List of EIPs to be assigned to the NAT Gateways (used in combination with reuse_nat_ips)"
+  type        = list(string)
+  default     = []
+}
+
 variable "enable_dynamodb_endpoint" {
   description = "Should be true if you want to provision a DynamoDB endpoint to the VPC"
   type        = bool
