@@ -299,7 +299,7 @@ variable "external_nat_ip_ids" {
 }
 
 variable "external_nat_ips" {
-  description = "List of EIPs to be assigned to the NAT Gateways (used in combination with reuse_nat_ips)"
+  description = "List of EIPs to be used for `nay_public_ips` output (used in combination with reuse_nat_ips and external_nat_ip_ids)"
   type        = list(string)
   default     = []
 }
