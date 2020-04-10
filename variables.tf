@@ -2318,3 +2318,9 @@ variable "flow_log_cloudwatch_log_group_kms_key_id" {
   type        = string
   default     = null
 }
+
+variable "flow_log_max_aggregation_interval" {
+  description = "The maximum interval of time during which a flow of packets is captured and aggregated into a flow log record. Valid Values: `60` seconds or `600` seconds."
+  type        = number
+  default     = 600
+}
