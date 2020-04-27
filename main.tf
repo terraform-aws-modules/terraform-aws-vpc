@@ -116,6 +116,7 @@ resource "aws_route_table" "public" {
 
   vpc_id = local.vpc_id
 
+
   tags = merge(
     {
       "Name" = format("%s-${var.compute_public_subnet_suffix}", var.name)
@@ -133,7 +134,8 @@ resource "aws_route" "public_internet_gateway" {
   gateway_id             = aws_internet_gateway.this[0].id
 
   timeouts {
-    create = "5m"
+    create = "20m"
+    delete = "20m"
   }
 }
 
@@ -226,7 +228,8 @@ resource "aws_route" "database_internet_gateway" {
   gateway_id             = aws_internet_gateway.this[0].id
 
   timeouts {
-    create = "5m"
+    create = "20m"
+    delete = "30m"
   }
 }
 
@@ -238,7 +241,8 @@ resource "aws_route" "database_nat_gateway" {
   nat_gateway_id         = element(aws_nat_gateway.this.*.id, count.index)
 
   timeouts {
-    create = "5m"
+    create = "20m"
+    delete = "30m"
   }
 }
 
@@ -250,7 +254,8 @@ resource "aws_route" "database_ipv6_egress" {
   egress_only_gateway_id      = aws_egress_only_internet_gateway.this[0].id
 
   timeouts {
-    create = "5m"
+    create = "20m"
+    delete = "30m"
   }
 }
 
@@ -278,6 +283,7 @@ resource "aws_route_table" "elasticache" {
   count = var.create_vpc && var.create_elasticache_subnet_route_table && length(var.elasticache_subnets) > 0 ? 1 : 0
 
   vpc_id = local.vpc_id
+
 
   tags = merge(
     var.tags,
@@ -973,7 +979,8 @@ resource "aws_route" "private_nat_gateway" {
   nat_gateway_id         = element(aws_nat_gateway.this.*.id, count.index)
 
   timeouts {
-    create = "5m"
+    create = "20m"
+    delete = "30m"
   }
 }
 

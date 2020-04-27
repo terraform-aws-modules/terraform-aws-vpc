@@ -8,7 +8,7 @@ module "vpc_with_flow_logs_cloudwatch_logs_default" {
 
   cidr = "10.10.0.0/16"
 
-  azs            = ["eu-west-1a"]
+  azs                    = ["eu-west-1a"]
   compute_public_subnets = ["10.10.101.0/24"]
 
   # Cloudwatch log group and IAM role will be created
@@ -31,7 +31,7 @@ module "vpc_with_flow_logs_cloudwatch_logs" {
 
   cidr = "10.20.0.0/16"
 
-  azs            = ["eu-west-1a"]
+  azs                    = ["eu-west-1a"]
   compute_public_subnets = ["10.20.101.0/24"]
 
   enable_flow_log                  = true

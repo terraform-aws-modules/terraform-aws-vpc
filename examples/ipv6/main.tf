@@ -26,9 +26,9 @@ module "vpc" {
 
   compute_private_subnet_assign_ipv6_address_on_creation = false
 
-  compute_public_subnet_ipv6_prefixes   = [0, 1]
-  compute_private_subnet_ipv6_prefixes  = [2, 3]
-  database_subnet_ipv6_prefixes = [4, 5]
+  compute_public_subnet_ipv6_prefixes  = [0, 1]
+  compute_private_subnet_ipv6_prefixes = [2, 3]
+  database_subnet_ipv6_prefixes        = [4, 5]
 
   tags = {
     Owner       = "user"

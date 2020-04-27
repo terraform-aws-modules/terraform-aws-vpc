@@ -1,4 +1,6 @@
 SHELL = /usr/bin/env bash
+JOB_NAME ?= local
+BUILD_NUMBER ?= 0
 
 .PHONY: help
 .DEFAULT_GOAL := help
@@ -8,11 +10,31 @@ help:
 
 ##@ Development
 
+.PHONY:
+
 .PHONY: test
-test: ## Execute tests - NOTE: this will create actual resources in AWS and incur charges!
-	@for TEST_CASE in $$(find test -mindepth 1 -maxdepth 1 -type d); do \
-		pushd $$TEST_CASE ; go test -count=1 -timeout 5m ; popd ; \
-	done
+test: ## Execute tests
+	@docker-compose -p ${JOB_NAME}_${BUILD_NUMBER} up --exit-code-from go
+
+.PHONY: clean
+clean:
+	@docker-compose -p ${JOB_NAME}_${BUILD_NUMBER} down
+
+.PHONY: tf-init
+tf-init:
+	@find . -type f -name "*.tf" -exec dirname {} \;|sort -u | while read m; do (cd "$m" && terraform init -input=false -backend=false) || exit 1; done
+
+.PHONY: tf-validate
+tf-validate:
+	@find . -name ".terraform" -prune -o -type f -name "*.tf" -exec dirname {} \;|sort -u | while read m; do (cd "$m" && terraform validate && echo "√ $m") || exit 1 ; done
+
+.PHONY: tf-fmt
+tf-fmt:
+	@if [[ -n "$(terraform fmt -write=false)" ]]; then echo "Some terraform files need be formatted, run terraform fmt to fix"; exit 1; fi
+
+.PHONY: tf-lint
+tf-lint:
+	@tflint -v
 
 ##@ Release
 

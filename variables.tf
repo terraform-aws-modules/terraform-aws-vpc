@@ -235,19 +235,19 @@ variable "create_elasticache_subnet_route_table" {
 variable "create_database_subnet_group" {
   description = "Controls if database subnet group should be created"
   type        = bool
-  default     = true
+  default     = false
 }
 
 variable "create_elasticache_subnet_group" {
   description = "Controls if elasticache subnet group should be created"
   type        = bool
-  default     = true
+  default     = false
 }
 
 variable "create_redshift_subnet_group" {
   description = "Controls if redshift subnet group should be created"
   type        = bool
-  default     = true
+  default     = false
 }
 
 variable "create_database_internet_gateway_route" {

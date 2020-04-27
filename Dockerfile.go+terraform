@@ -1,0 +1,5 @@
+FROM golang:1.14.1-stretch
+
+RUN apt-get update && apt-get install -y unzip
+
+RUN set -eu; if ! [ -x "$(command -v terraform)" ]; then wget -O /tmp/terraform.zip https://releases.hashicorp.com/terraform/0.12.24/terraform_0.12.24_linux_amd64.zip && unzip /tmp/terraform.zip -d /usr/local/bin; fi
