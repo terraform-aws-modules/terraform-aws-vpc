@@ -436,6 +436,8 @@ It is possible to integrate this VPC module with [terraform-aws-transit-gateway 
 | intra\_subnet\_suffix | Suffix to append to intra subnets name | `string` | `"intra"` | no |
 | intra\_subnet\_tags | Additional tags for the intra subnets | `map(string)` | `{}` | no |
 | intra\_subnets | A list of intra subnets | `list(string)` | `[]` | no |
+| create\_intra\_external\_gateway\_route | Controls if an external gateway route for intra subnets should be created | `bool` | `false` | no |
+| intra\_external\_gateway | An external gateway for the intra subnets | `string` | `""` | no |
 | kinesis\_firehose\_endpoint\_private\_dns\_enabled | Whether or not to associate a private hosted zone with the specified VPC for Kinesis Firehose endpoint | `bool` | `false` | no |
 | kinesis\_firehose\_endpoint\_security\_group\_ids | The ID of one or more security groups to associate with the network interface for Kinesis Firehose endpoint | `list(string)` | `[]` | no |
 | kinesis\_firehose\_endpoint\_subnet\_ids | The ID of one or more subnets in which to create a network interface for Kinesis Firehose endpoint. Only a single subnet within an AZ is supported. If omitted, private subnets will be used. | `list(string)` | `[]` | no |

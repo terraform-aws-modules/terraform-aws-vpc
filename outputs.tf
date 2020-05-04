@@ -198,6 +198,16 @@ output "intra_subnets_ipv6_cidr_blocks" {
   value       = aws_subnet.intra.*.ipv6_cidr_block
 }
 
+output "create_intra_external_gateway_route" {
+  description = "Controls if an external gateway route for intra subnets should be created"
+  value       = var.create_intra_external_gateway_route
+}
+
+output "intra_external_gateway" {
+  description = "An external gateway for the intra subnets"
+  value       = var.intra_external_gateway
+}
+
 output "elasticache_subnet_group" {
   description = "ID of elasticache subnet group"
   value       = concat(aws_elasticache_subnet_group.elasticache.*.id, [""])[0]

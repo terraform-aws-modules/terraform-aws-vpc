@@ -232,6 +232,18 @@ variable "create_database_internet_gateway_route" {
   default     = false
 }
 
+variable "create_intra_external_gateway_route" {
+  description = "Controls if an external gateway route for intra subnets should be created"
+  type        = bool
+  default     = false
+}
+
+variable "intra_external_gateway" {
+  description = "An external gateway for the intra subnets"
+  type        = string
+  default     = ""
+}
+
 variable "create_database_nat_gateway_route" {
   description = "Controls if a nat gateway route should be created to give internet access to the database subnets"
   type        = bool

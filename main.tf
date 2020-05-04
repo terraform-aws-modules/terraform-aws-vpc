@@ -277,6 +277,18 @@ resource "aws_route_table" "intra" {
   )
 }
 
+resource "aws_route" "intra_external_gateway" {
+  count = var.create_vpc && length(var.intra_subnets) > 0 && var.intra_external_gateway != "" && var.create_intra_external_gateway_route ? 1 : 0
+
+  route_table_id         = aws_route_table.intra[0].id
+  destination_cidr_block = "0.0.0.0/0"
+  gateway_id             = var.intra_external_gateway
+
+  timeouts {
+    create = "5m"
+  }
+}
+
 ################
 # Public subnet
 ################
