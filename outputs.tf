@@ -543,6 +543,21 @@ output "vpc_endpoint_ec2messages_dns_entry" {
   value       = flatten(aws_vpc_endpoint.ec2messages.*.dns_entry)
 }
 
+output "vpc_endpoint_ec2_autoscaling_id" {
+  description = "The ID of VPC endpoint for EC2 Autoscaling"
+  value       = concat(aws_vpc_endpoint.ec2_autoscaling.*.id, [""])[0]
+}
+
+output "vpc_endpoint_ec2_autoscaling_network_interface_ids" {
+  description = "One or more network interfaces for the VPC Endpoint for EC2 Autoscaling"
+  value       = flatten(aws_vpc_endpoint.ec2_autoscaling.*.network_interface_ids)
+}
+
+output "vpc_endpoint_ec2_autoscaling_dns_entry" {
+  description = "The DNS entries for the VPC Endpoint for EC2 Autoscaling."
+  value       = flatten(aws_vpc_endpoint.ec2_autoscaling.*.dns_entry)
+}
+
 output "vpc_endpoint_transferserver_id" {
   description = "The ID of VPC endpoint for transferserver"
   value       = concat(aws_vpc_endpoint.transferserver.*.id, [""])[0]
@@ -1002,6 +1017,26 @@ output "vpc_endpoint_cloud_directory_dns_entry" {
   value       = flatten(aws_vpc_endpoint.cloud_directory.*.dns_entry)
 }
 
+# VPC flow log
+output "vpc_flow_log_id" {
+  description = "The ID of the Flow Log resource"
+  value       = concat(aws_flow_log.this.*.id, [""])[0]
+}
+
+output "vpc_flow_log_destination_arn" {
+  description = "The ARN of the destination for VPC Flow Logs"
+  value       = local.flow_log_destination_arn
+}
+
+output "vpc_flow_log_destination_type" {
+  description = "The type of the destination for VPC Flow Logs"
+  value       = var.flow_log_destination_type
+}
+
+output "vpc_flow_log_cloudwatch_iam_role_arn" {
+  description = "The ARN of the IAM role used when pushing logs to Cloudwatch log group"
+  value       = local.flow_log_iam_role_arn
+}
 
 # Static values (arguments)
 output "azs" {
