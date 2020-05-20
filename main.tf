@@ -1,6 +1,7 @@
 locals {
   max_subnet_length = max(
     length(var.private_subnets),
+    length(var.kafka_subnets),
     length(var.elasticache_subnets),
     length(var.database_subnets),
     length(var.redshift_subnets),
@@ -174,6 +175,59 @@ resource "aws_route_table" "private" {
 }
 
 #################
+# Kafka routes
+#################
+resource "aws_route_table" "kafka" {
+  count = var.create_vpc && var.create_kafka_subnet_route_table && length(var.kafka_subnets) > 0 ? 1 : 0
+
+  vpc_id = local.vpc_id
+
+  tags = merge(
+    var.tags,
+    var.kafka_route_table_tags,
+    {
+      "Name" = "${var.name}-${var.kafka_subnet_suffix}"
+    },
+  )
+}
+
+resource "aws_route" "kafka_internet_gateway" {
+  count = var.create_vpc && var.create_kafka_subnet_route_table && length(var.kafka_subnets) > 0 && var.create_kafka_internet_gateway_route && false == var.create_kafka_nat_gateway_route ? 1 : 0
+
+  route_table_id         = aws_route_table.kafka[0].id
+  destination_cidr_block = "0.0.0.0/0"
+  gateway_id             = aws_internet_gateway.this[0].id
+
+  timeouts {
+    create = "5m"
+  }
+}
+
+resource "aws_route" "kafka_nat_gateway" {
+  count = var.create_vpc && var.create_kafka_subnet_route_table && length(var.kafka_subnets) > 0 && false == var.create_kafka_internet_gateway_route && var.create_kafka_nat_gateway_route && var.enable_nat_gateway ? local.nat_gateway_count : 0
+
+  route_table_id         = element(aws_route_table.private.*.id, count.index)
+  destination_cidr_block = "0.0.0.0/0"
+  nat_gateway_id         = element(aws_nat_gateway.this.*.id, count.index)
+
+  timeouts {
+    create = "5m"
+  }
+}
+
+resource "aws_route" "kafka_ipv6_egress" {
+  count = var.create_vpc && var.enable_ipv6 && var.create_kafka_subnet_route_table && length(var.kafka_subnets) > 0 && var.create_kafka_internet_gateway_route ? 1 : 0
+
+  route_table_id              = aws_route_table.kafka[0].id
+  destination_ipv6_cidr_block = "::/0"
+  egress_only_gateway_id      = aws_egress_only_internet_gateway.this[0].id
+
+  timeouts {
+    create = "5m"
+  }
+}
+
+#################
 # Database routes
 #################
 resource "aws_route_table" "database" {
@@ -329,6 +383,33 @@ resource "aws_subnet" "private" {
     },
     var.tags,
     var.private_subnet_tags,
+  )
+}
+
+#################
+# Kafka subnet
+#################
+resource "aws_subnet" "kafka" {
+  count = var.create_vpc && length(var.kafka_subnets) > 0 ? length(var.kafka_subnets) : 0
+
+  vpc_id                          = local.vpc_id
+  cidr_block                      = var.kafka_subnets[count.index]
+  availability_zone               = length(regexall("^[a-z]{2}-", element(var.azs, count.index))) > 0 ? element(var.azs, count.index) : null
+  availability_zone_id            = length(regexall("^[a-z]{2}-", element(var.azs, count.index))) == 0 ? element(var.azs, count.index) : null
+  assign_ipv6_address_on_creation = var.kafka_subnet_assign_ipv6_address_on_creation == null ? var.assign_ipv6_address_on_creation : var.kafka_subnet_assign_ipv6_address_on_creation
+
+  ipv6_cidr_block = var.enable_ipv6 && length(var.kafka_subnet_ipv6_prefixes) > 0 ? cidrsubnet(aws_vpc.this[0].ipv6_cidr_block, 8, var.kafka_subnet_ipv6_prefixes[count.index]) : null
+
+  tags = merge(
+    {
+      "Name" = format(
+        "%s-${var.kafka_subnet_suffix}-%s",
+        var.name,
+        element(var.azs, count.index),
+      )
+    },
+    var.tags,
+    var.kafka_subnet_tags,
   )
 }
 
@@ -634,6 +715,60 @@ resource "aws_network_acl_rule" "private_outbound" {
   ipv6_cidr_block = lookup(var.private_outbound_acl_rules[count.index], "ipv6_cidr_block", null)
 }
 
+#######################
+# Kafka Network ACLs
+#######################
+resource "aws_network_acl" "kafka" {
+  count = var.create_vpc && var.kafka_dedicated_network_acl && length(var.kafka_subnets) > 0 ? 1 : 0
+
+  vpc_id     = element(concat(aws_vpc.this.*.id, [""]), 0)
+  subnet_ids = aws_subnet.kafka.*.id
+
+  tags = merge(
+    {
+      "Name" = format("%s-${var.kafka_subnet_suffix}", var.name)
+    },
+    var.tags,
+    var.kafka_acl_tags,
+  )
+}
+
+resource "aws_network_acl_rule" "kafka_inbound" {
+  count = var.create_vpc && var.kafka_dedicated_network_acl && length(var.kafka_subnets) > 0 ? length(var.kafka_inbound_acl_rules) : 0
+
+  network_acl_id = aws_network_acl.kafka[0].id
+
+  egress          = false
+  rule_number     = var.kafka_inbound_acl_rules[count.index]["rule_number"]
+  rule_action     = var.kafka_inbound_acl_rules[count.index]["rule_action"]
+  from_port       = lookup(var.kafka_inbound_acl_rules[count.index], "from_port", null)
+  to_port         = lookup(var.kafka_inbound_acl_rules[count.index], "to_port", null)
+  icmp_code       = lookup(var.kafka_inbound_acl_rules[count.index], "icmp_code", null)
+  icmp_type       = lookup(var.kafka_inbound_acl_rules[count.index], "icmp_type", null)
+  protocol        = var.kafka_inbound_acl_rules[count.index]["protocol"]
+  cidr_block      = lookup(var.kafka_inbound_acl_rules[count.index], "cidr_block", null)
+  ipv6_cidr_block = lookup(var.kafka_inbound_acl_rules[count.index], "ipv6_cidr_block", null)
+}
+
+resource "aws_network_acl_rule" "kafka_outbound" {
+  count = var.create_vpc && var.kafka_dedicated_network_acl && length(var.kafka_subnets) > 0 ? length(var.kafka_outbound_acl_rules) : 0
+
+  network_acl_id = aws_network_acl.kafka[0].id
+
+  egress          = true
+  rule_number     = var.kafka_outbound_acl_rules[count.index]["rule_number"]
+  rule_action     = var.kafka_outbound_acl_rules[count.index]["rule_action"]
+  from_port       = lookup(var.kafka_outbound_acl_rules[count.index], "from_port", null)
+  to_port         = lookup(var.kafka_outbound_acl_rules[count.index], "to_port", null)
+  icmp_code       = lookup(var.kafka_outbound_acl_rules[count.index], "icmp_code", null)
+  icmp_type       = lookup(var.kafka_outbound_acl_rules[count.index], "icmp_type", null)
+  protocol        = var.kafka_outbound_acl_rules[count.index]["protocol"]
+  cidr_block      = lookup(var.kafka_outbound_acl_rules[count.index], "cidr_block", null)
+  ipv6_cidr_block = lookup(var.kafka_outbound_acl_rules[count.index], "ipv6_cidr_block", null)
+}
+
+
+
 ########################
 # Intra Network ACLs
 ########################
@@ -925,6 +1060,18 @@ resource "aws_route" "private_ipv6_egress" {
   egress_only_gateway_id      = element(aws_egress_only_internet_gateway.this.*.id, 0)
 }
 
+// resource "aws_route" "kafka_nat_gateway" {
+//   count = var.create_vpc && var.enable_nat_gateway ? local.nat_gateway_count : 0
+//
+//   route_table_id         = element(aws_route_table.kafka.*.id, count.index)
+//   destination_cidr_block = "0.0.0.0/0"
+//   nat_gateway_id         = element(aws_nat_gateway.this.*.id, count.index)
+//
+//   timeouts {
+//     create = "5m"
+//   }
+// }
+
 ##########################
 # Route table association
 ##########################
@@ -935,6 +1082,17 @@ resource "aws_route_table_association" "private" {
   route_table_id = element(
     aws_route_table.private.*.id,
     var.single_nat_gateway ? 0 : count.index,
+  )
+}
+
+resource "aws_route_table_association" "kafka" {
+  // count = var.create_vpc && length(var.kafka_subnets) > 0 && false == var.enable_public_kafka ? length(var.kafka_subnets) : 0
+  count = var.create_vpc && length(var.kafka_subnets) > 0 ? length(var.kafka_subnets) : 0
+
+  subnet_id = element(aws_subnet.kafka.*.id, count.index)
+  route_table_id = element(
+    coalescelist(aws_route_table.kafka.*.id, aws_route_table.private.*.id),
+    var.single_nat_gateway || var.create_kafka_subnet_route_table ? 0 : count.index,
   )
 }
 
@@ -1097,4 +1255,3 @@ resource "aws_default_vpc" "this" {
     var.default_vpc_tags,
   )
 }
-

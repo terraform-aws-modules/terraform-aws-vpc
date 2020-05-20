@@ -28,6 +28,12 @@ variable "private_subnet_ipv6_prefixes" {
   default     = []
 }
 
+variable "kafka_subnet_ipv6_prefixes" {
+  description = "Assigns IPv6 kafka subnet id based on the Amazon provided /56 prefix base 10 integer (0-256). Must be of equal length to the corresponding IPv4 subnet list"
+  type        = list
+  default     = []
+}
+
 variable "public_subnet_ipv6_prefixes" {
   description = "Assigns IPv6 public subnet id based on the Amazon provided /56 prefix base 10 integer (0-256). Must be of equal length to the corresponding IPv4 subnet list"
   type        = list
@@ -66,6 +72,12 @@ variable "assign_ipv6_address_on_creation" {
 
 variable "private_subnet_assign_ipv6_address_on_creation" {
   description = "Assign IPv6 address on private subnet, must be disabled to change IPv6 CIDRs. This is the IPv6 equivalent of map_public_ip_on_launch"
+  type        = bool
+  default     = null
+}
+
+variable "kafka_subnet_assign_ipv6_address_on_creation" {
+  description = "Assign IPv6 address on kafka subnet, must be disabled to change IPv6 CIDRs. This is the IPv6 equivalent of map_public_ip_on_launch"
   type        = bool
   default     = null
 }
@@ -124,6 +136,12 @@ variable "private_subnet_suffix" {
   default     = "private"
 }
 
+variable "kafka_subnet_suffix" {
+  description = "Suffix to append to kafka subnets name"
+  type        = string
+  default     = "kafka"
+}
+
 variable "intra_subnet_suffix" {
   description = "Suffix to append to intra subnets name"
   type        = string
@@ -160,6 +178,12 @@ variable "private_subnets" {
   default     = []
 }
 
+variable "kafka_subnets" {
+  description = "A list of kafka subnets inside the VPC"
+  type        = list(string)
+  default     = []
+}
+
 variable "database_subnets" {
   description = "A list of database subnets"
   type        = list(string)
@@ -182,6 +206,12 @@ variable "intra_subnets" {
   description = "A list of intra subnets"
   type        = list(string)
   default     = []
+}
+
+variable "create_kafka_subnet_route_table" {
+  description = "Controls if separate route table for database should be created"
+  type        = bool
+  default     = false
 }
 
 variable "create_database_subnet_route_table" {
@@ -226,6 +256,12 @@ variable "create_redshift_subnet_group" {
   default     = true
 }
 
+variable "create_kafka_internet_gateway_route" {
+  description = "Controls if an internet gateway route for public database access should be created"
+  type        = bool
+  default     = false
+}
+
 variable "create_database_internet_gateway_route" {
   description = "Controls if an internet gateway route for public database access should be created"
   type        = bool
@@ -233,6 +269,12 @@ variable "create_database_internet_gateway_route" {
 }
 
 variable "create_database_nat_gateway_route" {
+  description = "Controls if a nat gateway route should be created to give internet access to the database subnets"
+  type        = bool
+  default     = false
+}
+
+variable "create_kafka_nat_gateway_route" {
   description = "Controls if a nat gateway route should be created to give internet access to the database subnets"
   type        = bool
   default     = false
@@ -1406,6 +1448,12 @@ variable "private_subnet_tags" {
   default     = {}
 }
 
+variable "kafka_subnet_tags" {
+  description = "Additional tags for the kafka subnets"
+  type        = map(string)
+  default     = {}
+}
+
 variable "public_route_table_tags" {
   description = "Additional tags for the public route tables"
   type        = map(string)
@@ -1414,6 +1462,12 @@ variable "public_route_table_tags" {
 
 variable "private_route_table_tags" {
   description = "Additional tags for the private route tables"
+  type        = map(string)
+  default     = {}
+}
+
+variable "kafka_route_table_tags" {
+  description = "Additional tags for the kafka route tables"
   type        = map(string)
   default     = {}
 }
@@ -1485,6 +1539,12 @@ variable "public_acl_tags" {
 }
 
 variable "private_acl_tags" {
+  description = "Additional tags for the private subnets network ACL"
+  type        = map(string)
+  default     = {}
+}
+
+variable "kafka_acl_tags" {
   description = "Additional tags for the private subnets network ACL"
   type        = map(string)
   default     = {}
@@ -1654,6 +1714,12 @@ variable "public_dedicated_network_acl" {
 
 variable "private_dedicated_network_acl" {
   description = "Whether to use dedicated network ACL (not default) and custom rules for private subnets"
+  type        = bool
+  default     = false
+}
+
+variable "kafka_dedicated_network_acl" {
+  description = "Whether to use dedicated network ACL (not default) and custom rules for kafka subnets"
   type        = bool
   default     = false
 }
@@ -1843,6 +1909,37 @@ variable "database_inbound_acl_rules" {
 }
 
 variable "database_outbound_acl_rules" {
+  description = "Database subnets outbound network ACL rules"
+  type        = list(map(string))
+
+  default = [
+    {
+      rule_number = 100
+      rule_action = "allow"
+      from_port   = 0
+      to_port     = 0
+      protocol    = "-1"
+      cidr_block  = "0.0.0.0/0"
+    },
+  ]
+}
+variable "kafka_inbound_acl_rules" {
+  description = "Database subnets inbound network ACL rules"
+  type        = list(map(string))
+
+  default = [
+    {
+      rule_number = 100
+      rule_action = "allow"
+      from_port   = 0
+      to_port     = 0
+      protocol    = "-1"
+      cidr_block  = "0.0.0.0/0"
+    },
+  ]
+}
+
+variable "kafka_outbound_acl_rules" {
   description = "Database subnets outbound network ACL rules"
   type        = list(map(string))
 
