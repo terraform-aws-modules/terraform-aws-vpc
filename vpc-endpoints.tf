@@ -1253,7 +1253,8 @@ resource "aws_vpc_endpoint" "states" {
   security_group_ids  = var.states_endpoint_security_group_ids
   subnet_ids          = coalescelist(var.states_endpoint_subnet_ids, aws_subnet.private.*.id)
   private_dns_enabled = var.states_endpoint_private_dns_enabled
-  tags                = local.vpce_tags
+
+  tags = local.vpce_tags
 }
 
 #############################
@@ -1275,7 +1276,8 @@ resource "aws_vpc_endpoint" "elasticbeanstalk" {
   security_group_ids  = var.elasticbeanstalk_endpoint_security_group_ids
   subnet_ids          = coalescelist(var.elasticbeanstalk_endpoint_subnet_ids, aws_subnet.private.*.id)
   private_dns_enabled = var.elasticbeanstalk_endpoint_private_dns_enabled
-  tags                = local.vpce_tags
+
+  tags = local.vpce_tags
 }
 
 #############################
@@ -1297,7 +1299,8 @@ resource "aws_vpc_endpoint" "elasticbeanstalk_health" {
   security_group_ids  = var.elasticbeanstalk_health_endpoint_security_group_ids
   subnet_ids          = coalescelist(var.elasticbeanstalk_health_endpoint_subnet_ids, aws_subnet.private.*.id)
   private_dns_enabled = var.elasticbeanstalk_health_endpoint_private_dns_enabled
-  tags                = local.vpce_tags
+
+  tags = local.vpce_tags
 }
 
 #############################
@@ -1319,7 +1322,8 @@ resource "aws_vpc_endpoint" "acm_pca" {
   security_group_ids  = var.acm_pca_endpoint_security_group_ids
   subnet_ids          = coalescelist(var.acm_pca_endpoint_subnet_ids, aws_subnet.private.*.id)
   private_dns_enabled = var.acm_pca_endpoint_private_dns_enabled
-  tags                = local.vpce_tags
+
+  tags = local.vpce_tags
 }
 
 #######################
