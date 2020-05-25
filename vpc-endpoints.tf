@@ -1322,3 +1322,25 @@ resource "aws_vpc_endpoint" "acm_pca" {
   tags                = local.vpce_tags
 }
 
+#######################
+# VPC Endpoint for SES
+#######################
+data "aws_vpc_endpoint_service" "ses" {
+  count = var.create_vpc && var.enable_ses_endpoint ? 1 : 0
+
+  service = "email-smtp"
+}
+
+resource "aws_vpc_endpoint" "ses" {
+  count = var.create_vpc && var.enable_ses_endpoint ? 1 : 0
+
+  vpc_id            = local.vpc_id
+  service_name      = data.aws_vpc_endpoint_service.ses[0].service_name
+  vpc_endpoint_type = "Interface"
+
+  security_group_ids  = var.ses_endpoint_security_group_ids
+  subnet_ids          = coalescelist(var.ses_endpoint_subnet_ids, aws_subnet.private.*.id)
+  private_dns_enabled = var.ses_endpoint_private_dns_enabled
+
+  tags = local.vpce_tags
+}

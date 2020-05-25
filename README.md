@@ -20,7 +20,7 @@ These types of resources are supported:
 * [VPC Endpoint](https://www.terraform.io/docs/providers/aws/r/vpc_endpoint.html):
   * Gateway: S3, DynamoDB
   * Interface: EC2, SSM, EC2 Messages, SSM Messages, SQS, ECR API, ECR DKR, API Gateway, KMS, 
-ECS, ECS Agent, ECS Telemetry, SNS, STS, Glue, CloudWatch(Monitoring, Logs, Events), 
+ECS, ECS Agent, ECS Telemetry, SES, SNS, STS, Glue, CloudWatch(Monitoring, Logs, Events), 
 Elastic Load Balancing, CloudTrail, Secrets Manager, Config, CodeBuild, CodeCommit, 
 Git-Codecommit, Transfer Server, Kinesis Streams, Kinesis Firehose, SageMaker(Notebook, Runtime, API), 
 CloudFormation, CodePipeline, Storage Gateway, AppMesh, Transfer, Service Catalog, AppStream,
@@ -430,6 +430,7 @@ It is possible to integrate this VPC module with [terraform-aws-transit-gateway 
 | enable\_secretsmanager\_endpoint | Should be true if you want to provision an Secrets Manager endpoint to the VPC | `bool` | `false` | no |
 | enable\_servicecatalog\_endpoint | Should be true if you want to provision a Service Catalog endpoint to the VPC | `bool` | `false` | no |
 | enable\_sms\_endpoint | Should be true if you want to provision an SMS endpoint to the VPC | `bool` | `false` | no |
+| enable\_ses\_endpoint | Should be true if you want to provision an SES endpoint to the VPC | `bool` | `false` | no |
 | enable\_sns\_endpoint | Should be true if you want to provision a SNS endpoint to the VPC | `bool` | `false` | no |
 | enable\_sqs\_endpoint | Should be true if you want to provision an SQS endpoint to the VPC | `bool` | `false` | no |
 | enable\_ssm\_endpoint | Should be true if you want to provision an SSM endpoint to the VPC | `bool` | `false` | no |
@@ -551,6 +552,9 @@ It is possible to integrate this VPC module with [terraform-aws-transit-gateway 
 | servicecatalog\_endpoint\_private\_dns\_enabled | Whether or not to associate a private hosted zone with the specified VPC for Service Catalog endpoint | `bool` | `false` | no |
 | servicecatalog\_endpoint\_security\_group\_ids | The ID of one or more security groups to associate with the network interface for Service Catalog endpoint | `list(string)` | `[]` | no |
 | servicecatalog\_endpoint\_subnet\_ids | The ID of one or more subnets in which to create a network interface for Service Catalog endpoint. Only a single subnet within an AZ is supported. If omitted, private subnets will be used. | `list(string)` | `[]` | no |
+| ses\_endpoint\_private\_dns\_enabled | Whether or not to associate a private hosted zone with the specified VPC for SES endpoint | `bool` | `false` | no |
+| ses\_endpoint\_security\_group\_ids | The ID of one or more security groups to associate with the network interface for SES endpoint | `list(string)` | `[]` | no |
+| ses\_endpoint\_subnet\_ids | The ID of one or more subnets in which to create a network interface for SES endpoint. Only a single subnet within an AZ is supported. If omitted, private subnets will be used. | `list(string)` | `[]` | no |
 | single\_nat\_gateway | Should be true if you want to provision a single shared NAT Gateway across all of your private networks | `bool` | `false` | no |
 | sms\_endpoint\_private\_dns\_enabled | Whether or not to associate a private hosted zone with the specified VPC for SMS endpoint | `bool` | `false` | no |
 | sms\_endpoint\_security\_group\_ids | The ID of one or more security groups to associate with the network interface for SMS endpoint | `list(string)` | `[]` | no |
@@ -599,7 +603,11 @@ It is possible to integrate this VPC module with [terraform-aws-transit-gateway 
 |------|-------------|
 | azs | A list of availability zones specified as argument to this module |
 | cgw\_ids | List of IDs of Customer Gateway |
+| database\_internet\_gateway\_route\_id | ID of the database internet gateway route. |
+| database\_ipv6\_egress\_route\_id | ID of the database IPv6 egress route. |
+| database\_nat\_gateway\_route\_ids | List of IDs of the database nat gateway route. |
 | database\_network\_acl\_id | ID of the database network ACL |
+| database\_route\_table\_association\_ids | List of IDs of the database route table association |
 | database\_route\_table\_ids | List of IDs of database route tables |
 | database\_subnet\_arns | List of ARNs of database subnets |
 | database\_subnet\_group | ID of database subnet group |
@@ -620,6 +628,7 @@ It is possible to integrate this VPC module with [terraform-aws-transit-gateway 
 | default\_vpc\_main\_route\_table\_id | The ID of the main route table associated with this VPC |
 | egress\_only\_internet\_gateway\_id | The ID of the egress only Internet Gateway |
 | elasticache\_network\_acl\_id | ID of the elasticache network ACL |
+| elasticache\_route\_table\_association\_ids | List of IDs of the elasticache route table association |
 | elasticache\_route\_table\_ids | List of IDs of elasticache route tables |
 | elasticache\_subnet\_arns | List of ARNs of elasticache subnets |
 | elasticache\_subnet\_group | ID of elasticache subnet group |
@@ -629,6 +638,7 @@ It is possible to integrate this VPC module with [terraform-aws-transit-gateway 
 | elasticache\_subnets\_ipv6\_cidr\_blocks | List of IPv6 cidr\_blocks of elasticache subnets in an IPv6 enabled VPC |
 | igw\_id | The ID of the Internet Gateway |
 | intra\_network\_acl\_id | ID of the intra network ACL |
+| intra\_route\_table\_association\_ids | List of IDs of the intra route table association |
 | intra\_route\_table\_ids | List of IDs of intra route tables |
 | intra\_subnet\_arns | List of ARNs of intra subnets |
 | intra\_subnets | List of IDs of intra subnets |
@@ -638,19 +648,27 @@ It is possible to integrate this VPC module with [terraform-aws-transit-gateway 
 | nat\_ids | List of allocation ID of Elastic IPs created for AWS NAT Gateway |
 | nat\_public\_ips | List of public Elastic IPs created for AWS NAT Gateway |
 | natgw\_ids | List of NAT Gateway IDs |
+| private\_ipv6\_egress\_route\_ids | List of IDs of the ipv6 egress route. |
+| private\_nat\_gateway\_route\_ids | List of IDs of the private nat gateway route. |
 | private\_network\_acl\_id | ID of the private network ACL |
+| private\_route\_table\_association\_ids | List of IDs of the private route table association |
 | private\_route\_table\_ids | List of IDs of private route tables |
 | private\_subnet\_arns | List of ARNs of private subnets |
 | private\_subnets | List of IDs of private subnets |
 | private\_subnets\_cidr\_blocks | List of cidr\_blocks of private subnets |
 | private\_subnets\_ipv6\_cidr\_blocks | List of IPv6 cidr\_blocks of private subnets in an IPv6 enabled VPC |
+| public\_internet\_gateway\_ipv6\_route\_id | ID of the IPv6 internet gateway route. |
+| public\_internet\_gateway\_route\_id | ID of the internet gateway route. |
 | public\_network\_acl\_id | ID of the public network ACL |
+| public\_route\_table\_association\_ids | List of IDs of the public route table association |
 | public\_route\_table\_ids | List of IDs of public route tables |
 | public\_subnet\_arns | List of ARNs of public subnets |
 | public\_subnets | List of IDs of public subnets |
 | public\_subnets\_cidr\_blocks | List of cidr\_blocks of public subnets |
 | public\_subnets\_ipv6\_cidr\_blocks | List of IPv6 cidr\_blocks of public subnets in an IPv6 enabled VPC |
 | redshift\_network\_acl\_id | ID of the redshift network ACL |
+| redshift\_public\_route\_table\_association\_ids | List of IDs of the public redshidt route table association |
+| redshift\_route\_table\_association\_ids | List of IDs of the redshift route table association |
 | redshift\_route\_table\_ids | List of IDs of redshift route tables |
 | redshift\_subnet\_arns | List of ARNs of redshift subnets |
 | redshift\_subnet\_group | ID of redshift subnet group |
@@ -802,6 +820,9 @@ It is possible to integrate this VPC module with [terraform-aws-transit-gateway 
 | vpc\_endpoint\_sms\_dns\_entry | The DNS entries for the VPC Endpoint for SMS. |
 | vpc\_endpoint\_sms\_id | The ID of VPC endpoint for SMS |
 | vpc\_endpoint\_sms\_network\_interface\_ids | One or more network interfaces for the VPC Endpoint for SMS. |
+| vpc\_endpoint\_ses\_dns\_entry | The DNS entries for the VPC Endpoint for SES. |
+| vpc\_endpoint\_ses\_id | The ID of VPC endpoint for SES |
+| vpc\_endpoint\_ses\_network\_interface\_ids | One or more network interfaces for the VPC Endpoint for SES. |
 | vpc\_endpoint\_sns\_dns\_entry | The DNS entries for the VPC Endpoint for SNS. |
 | vpc\_endpoint\_sns\_id | The ID of VPC endpoint for SNS |
 | vpc\_endpoint\_sns\_network\_interface\_ids | One or more network interfaces for the VPC Endpoint for SNS. |
