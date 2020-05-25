@@ -397,6 +397,7 @@ It is possible to integrate this VPC module with [terraform-aws-transit-gateway 
 | enable\_sagemaker\_runtime\_endpoint | Should be true if you want to provision a SageMaker Runtime endpoint to the VPC | `bool` | `false` | no |
 | enable\_secretsmanager\_endpoint | Should be true if you want to provision an Secrets Manager endpoint to the VPC | `bool` | `false` | no |
 | enable\_servicecatalog\_endpoint | Should be true if you want to provision a Service Catalog endpoint to the VPC | `bool` | `false` | no |
+| enable\_ses\_endpoint | Should be true if you want to provision an SES endpoint to the VPC | `bool` | `false` | no |
 | enable\_sns\_endpoint | Should be true if you want to provision a SNS endpoint to the VPC | `bool` | `false` | no |
 | enable\_sqs\_endpoint | Should be true if you want to provision an SQS endpoint to the VPC | `bool` | `false` | no |
 | enable\_ssm\_endpoint | Should be true if you want to provision an SSM endpoint to the VPC | `bool` | `false` | no |
@@ -513,6 +514,9 @@ It is possible to integrate this VPC module with [terraform-aws-transit-gateway 
 | servicecatalog\_endpoint\_private\_dns\_enabled | Whether or not to associate a private hosted zone with the specified VPC for Service Catalog endpoint | `bool` | `false` | no |
 | servicecatalog\_endpoint\_security\_group\_ids | The ID of one or more security groups to associate with the network interface for Service Catalog endpoint | `list(string)` | `[]` | no |
 | servicecatalog\_endpoint\_subnet\_ids | The ID of one or more subnets in which to create a network interface for Service Catalog endpoint. Only a single subnet within an AZ is supported. If omitted, private subnets will be used. | `list(string)` | `[]` | no |
+| ses\_endpoint\_private\_dns\_enabled | Whether or not to associate a private hosted zone with the specified VPC for SES endpoint | `bool` | `false` | no |
+| ses\_endpoint\_security\_group\_ids | The ID of one or more security groups to associate with the network interface for SES endpoint | `list(string)` | `[]` | no |
+| ses\_endpoint\_subnet\_ids | The ID of one or more subnets in which to create a network interface for SES endpoint. Only a single subnet within an AZ is supported. If omitted, private subnets will be used. | `list(string)` | `[]` | no |
 | single\_nat\_gateway | Should be true if you want to provision a single shared NAT Gateway across all of your private networks | `bool` | `false` | no |
 | sns\_endpoint\_private\_dns\_enabled | Whether or not to associate a private hosted zone with the specified VPC for SNS endpoint | `bool` | `false` | no |
 | sns\_endpoint\_security\_group\_ids | The ID of one or more security groups to associate with the network interface for SNS endpoint | `list(string)` | `[]` | no |
@@ -736,6 +740,9 @@ It is possible to integrate this VPC module with [terraform-aws-transit-gateway 
 | vpc\_endpoint\_servicecatalog\_dns\_entry | The DNS entries for the VPC Endpoint for Service Catalog. |
 | vpc\_endpoint\_servicecatalog\_id | The ID of VPC endpoint for Service Catalog |
 | vpc\_endpoint\_servicecatalog\_network\_interface\_ids | One or more network interfaces for the VPC Endpoint for Service Catalog. |
+| vpc\_endpoint\_ses\_dns\_entry | The DNS entries for the VPC Endpoint for SES. |
+| vpc\_endpoint\_ses\_id | The ID of VPC endpoint for SES |
+| vpc\_endpoint\_ses\_network\_interface\_ids | One or more network interfaces for the VPC Endpoint for SES. |
 | vpc\_endpoint\_sns\_dns\_entry | The DNS entries for the VPC Endpoint for SNS. |
 | vpc\_endpoint\_sns\_id | The ID of VPC endpoint for SNS |
 | vpc\_endpoint\_sns\_network\_interface\_ids | One or more network interfaces for the VPC Endpoint for SNS. |

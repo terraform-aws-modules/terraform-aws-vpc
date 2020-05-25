@@ -1047,5 +1047,5 @@ resource "aws_vpc_endpoint" "ses" {
   subnet_ids          = coalescelist(var.ses_endpoint_subnet_ids, aws_subnet.private.*.id)
   private_dns_enabled = var.ses_endpoint_private_dns_enabled
 
-  tags                = local.vpce_tags
+  tags = local.vpce_tags
 }
