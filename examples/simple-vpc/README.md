@@ -4,6 +4,10 @@ Configuration in this directory creates set of VPC resources which may be suffic
 
 There is a public and private subnet created per availability zone in addition to single NAT Gateway shared between all 3 availability zones.
 
+This configuration uses Availability Zone IDs and Availability Zone names for demonstration purposes. Normally, you need to specify only names or IDs.
+
+[Read more about AWS regions, availability zones and local zones](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/using-regions-availability-zones.html#concepts-regions-availability-zones).
+
 ## Usage
 
 To run this example you need to execute:
