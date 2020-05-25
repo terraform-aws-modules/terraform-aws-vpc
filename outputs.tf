@@ -238,6 +238,76 @@ output "intra_route_table_ids" {
   value       = aws_route_table.intra.*.id
 }
 
+output "public_internet_gateway_route_id" {
+  description = "ID of the internet gateway route."
+  value       = concat(aws_route.public_internet_gateway.*.id, [""])[0]
+}
+
+output "public_internet_gateway_ipv6_route_id" {
+  description = "ID of the IPv6 internet gateway route."
+  value       = concat(aws_route.public_internet_gateway_ipv6.*.id, [""])[0]
+}
+
+output "database_internet_gateway_route_id" {
+  description = "ID of the database internet gateway route."
+  value       = concat(aws_route.database_internet_gateway.*.id, [""])[0]
+}
+
+output "database_nat_gateway_route_ids" {
+  description = "List of IDs of the database nat gateway route."
+  value       = aws_route.database_nat_gateway.*.id
+}
+
+output "database_ipv6_egress_route_id" {
+  description = "ID of the database IPv6 egress route."
+  value       = concat(aws_route.database_ipv6_egress.*.id, [""])[0]
+}
+
+output "private_nat_gateway_route_ids" {
+  description = "List of IDs of the private nat gateway route."
+  value       = aws_route.private_nat_gateway.*.id
+}
+
+output "private_ipv6_egress_route_ids" {
+  description = "List of IDs of the ipv6 egress route."
+  value       = aws_route.private_ipv6_egress.*.id
+}
+
+output "private_route_table_association_ids" {
+  description = "List of IDs of the private route table association"
+  value       = aws_route_table_association.private.*.id
+}
+
+output "database_route_table_association_ids" {
+  description = "List of IDs of the database route table association"
+  value       = aws_route_table_association.database.*.id
+}
+
+output "redshift_route_table_association_ids" {
+  description = "List of IDs of the redshift route table association"
+  value       = aws_route_table_association.redshift.*.id
+}
+
+output "redshift_public_route_table_association_ids" {
+  description = "List of IDs of the public redshidt route table association"
+  value       = aws_route_table_association.redshift_public.*.id
+}
+
+output "elasticache_route_table_association_ids" {
+  description = "List of IDs of the elasticache route table association"
+  value       = aws_route_table_association.elasticache.*.id
+}
+
+output "intra_route_table_association_ids" {
+  description = "List of IDs of the intra route table association"
+  value       = aws_route_table_association.intra.*.id
+}
+
+output "public_route_table_association_ids" {
+  description = "List of IDs of the public route table association"
+  value       = aws_route_table_association.public.*.id
+}
+
 output "nat_ids" {
   description = "List of allocation ID of Elastic IPs created for AWS NAT Gateway"
   value       = aws_eip.nat.*.id
