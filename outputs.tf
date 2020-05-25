@@ -68,6 +68,11 @@ output "vpc_secondary_cidr_blocks" {
   value       = aws_vpc_ipv4_cidr_block_association.this.*.cidr_block
 }
 
+output "vpc_owner_id" {
+  description = "The ID of the AWS account that owns the VPC"
+  value       = concat(aws_vpc.this.*.owner_id, [""])[0]
+}
+
 output "private_subnets" {
   description = "List of IDs of private subnets"
   value       = aws_subnet.private.*.id
