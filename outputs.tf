@@ -308,7 +308,6 @@ output "public_route_table_association_ids" {
   value       = aws_route_table_association.public.*.id
 }
 
-
 output "nat_ids" {
   description = "List of allocation ID of Elastic IPs created for AWS NAT Gateway"
   value       = aws_eip.nat.*.id
