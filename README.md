@@ -869,6 +869,7 @@ It is possible to integrate this VPC module with [terraform-aws-transit-gateway 
 | vpc\_ipv6\_association\_id | The association ID for the IPv6 CIDR block |
 | vpc\_ipv6\_cidr\_block | The IPv6 CIDR block |
 | vpc\_main\_route\_table\_id | The ID of the main route table associated with this VPC |
+| vpc\_owner\_id | The ID of the AWS account that owns the VPC |
 | vpc\_secondary\_cidr\_blocks | List of secondary CIDR blocks of the VPC |
 
 <!-- END OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
