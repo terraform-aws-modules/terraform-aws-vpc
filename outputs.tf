@@ -1,8 +1,3 @@
-output "owner_id" {
-  description = "The owner of the VPC/Account number"
-  value       = concat(aws_vpc.this.*.owner_id, [""])[0]
-}
-
 output "vpc_id" {
   description = "The ID of the VPC"
   value       = concat(aws_vpc.this.*.id, [""])[0]
@@ -71,6 +66,11 @@ output "vpc_ipv6_cidr_block" {
 output "vpc_secondary_cidr_blocks" {
   description = "List of secondary CIDR blocks of the VPC"
   value       = aws_vpc_ipv4_cidr_block_association.this.*.cidr_block
+}
+
+output "vpc_owner_id" {
+  description = "The ID of the AWS account that owns the VPC"
+  value       = concat(aws_vpc.this.*.owner_id, [""])[0]
 }
 
 output "private_subnets" {
