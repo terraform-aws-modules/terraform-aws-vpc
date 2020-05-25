@@ -1127,6 +1127,11 @@ output "vpc_endpoint_states_network_interface_ids" {
   value       = flatten(aws_vpc_endpoint.states.*.network_interface_ids)
 }
 
+output "vpc_endpoint_states_dns_entry" {
+  description = "The DNS entries for the VPC Endpoint for Step Function."
+  value       = flatten(aws_vpc_endpoint.states.*.dns_entry)
+}
+
 output "vpc_endpoint_elastic_inference_runtime_id" {
   description = "The ID of VPC endpoint for Elastic Inference Runtime"
   value       = concat(aws_vpc_endpoint.elastic_inference_runtime.*.id, [""])[0]
@@ -1140,11 +1145,6 @@ output "vpc_endpoint_elastic_inference_runtime_network_interface_ids" {
 output "vpc_endpoint_elastic_inference_runtime_dns_entry" {
   description = "The DNS entries for the VPC Endpoint for Elastic Inference Runtime."
   value       = flatten(aws_vpc_endpoint.elastic_inference_runtime.*.dns_entry)
-}
-
-output "vpc_endpoint_states_dns_entry" {
-  description = "The DNS entries for the VPC Endpoint for Step Function."
-  value       = flatten(aws_vpc_endpoint.states.*.dns_entry)
 }
 
 output "vpc_endpoint_elasticbeanstalk_id" {
