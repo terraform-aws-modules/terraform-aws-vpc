@@ -5,7 +5,7 @@ All notable changes to this project will be documented in this file.
 <a name="unreleased"></a>
 ## [Unreleased]
 
-
+- feat: add az tags on subnets
 
 <a name="v3.0.0"></a>
 ## [v3.0.0] - 2021-04-26
