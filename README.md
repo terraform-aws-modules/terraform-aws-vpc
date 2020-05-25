@@ -155,7 +155,7 @@ Since AWS Lambda functions allocate Elastic Network Interfaces in proportion to 
 
 You can add additional tags with `intra_subnet_tags` as with other subnet types.
 
-## VPC Flow Log	
+## VPC Flow Log
 
 VPC Flow Log allows to capture IP traffic for a specific network interface (ENI), subnet, or entire VPC. This module supports enabling or disabling VPC Flow Logs for entire VPC. If you need to have VPC Flow Logs for subnet or ENI, you have to manage it outside of this module with [aws_flow_log resource](https://www.terraform.io/docs/providers/aws/r/flow_log.html).
 
