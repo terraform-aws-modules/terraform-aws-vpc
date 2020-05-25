@@ -1269,7 +1269,7 @@ output "vpc_endpoint_access_analyzer_dns_entry" {
 
 output "vpc_endpoint_acm_pca_id" {
   description = "The ID of VPC endpoint for ACM PCA"
-  value       = concat(aws_vpc_endpoint.access_analyzer.*.id, [""])[0]
+  value       = concat(aws_vpc_endpoint.acm_pca.*.id, [""])[0]
 }
 
 output "vpc_endpoint_acm_pca_network_interface_ids" {
