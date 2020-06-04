@@ -594,8 +594,10 @@ It is possible to integrate this VPC module with [terraform-aws-transit-gateway 
 | transferserver\_endpoint\_private\_dns\_enabled | Whether or not to associate a private hosted zone with the specified VPC for Transfer Server endpoint | `bool` | `false` | no |
 | transferserver\_endpoint\_security\_group\_ids | The ID of one or more security groups to associate with the network interface for Transfer Server endpoint | `list(string)` | `[]` | no |
 | transferserver\_endpoint\_subnet\_ids | The ID of one or more subnets in which to create a network interface for Transfer Server endpoint. Only a single subnet within an AZ is supported. If omitted, private subnets will be used. | `list(string)` | `[]` | no |
+| use\_existing\_vpc\_id\_for\_endpoints | Whether or not to associate endpoint with an existing vpc. Used with vpc_id. | `bool` | `false` | no |
 | vpc\_endpoint\_tags | Additional tags for the VPC Endpoints | `map(string)` | `{}` | no |
 | vpc\_flow\_log\_tags | Additional tags for the VPC Flow Logs | `map(string)` | `{}` | no |
+| vpc\_id | The VPC id used to create endpoints when used in conjuction with use_existing_vpc_id_for_endpoints. | `string` | `` | no |
 | vpc\_tags | Additional tags for the VPC | `map(string)` | `{}` | no |
 | vpn\_gateway\_az | The Availability Zone for the VPN Gateway | `string` | `null` | no |
 | vpn\_gateway\_id | ID of VPN Gateway to attach to the VPC | `string` | `""` | no |

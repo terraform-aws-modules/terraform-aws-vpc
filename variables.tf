@@ -10,6 +10,12 @@ variable "name" {
   default     = ""
 }
 
+variable "vpc_id" {
+  description = "The VPC id used to create endpoints when used in conjuction with use_existing_vpc_id_for_endpoints and create_vpc."
+  type        = string
+  default     = ""
+}
+
 variable "cidr" {
   description = "The CIDR block for the VPC. Default value is a valid CIDR, but not acceptable by AWS and should be overridden"
   type        = string
@@ -1654,6 +1660,12 @@ variable "acm_pca_endpoint_private_dns_enabled" {
   description = "Whether or not to associate a private hosted zone with the specified VPC for ACM PCA endpoint"
   default     = false
 }
+
+variable "use_existing_vpc_id_for_endpoints" {
+  description = "Should be set to true if you want to create endpoints with passed varible vpc_id. Variable create_vpc must be set to false for this to take affect."
+  default     = false
+}
+
 
 variable "map_public_ip_on_launch" {
   description = "Should be false if you do not want to auto-assign public IP on launch"
