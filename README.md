@@ -597,7 +597,7 @@ It is possible to integrate this VPC module with [terraform-aws-transit-gateway 
 | use\_existing\_vpc\_id\_for\_endpoints | Whether or not to associate endpoint with an existing vpc. Used with vpc_id. | `bool` | `false` | no |
 | vpc\_endpoint\_tags | Additional tags for the VPC Endpoints | `map(string)` | `{}` | no |
 | vpc\_flow\_log\_tags | Additional tags for the VPC Flow Logs | `map(string)` | `{}` | no |
-| vpc\_id | The VPC id used to create endpoints when used in conjuction with use_existing_vpc_id_for_endpoints. | `string` | `` | no |
+| vpc\_id | The VPC id used to create endpoints when used in conjuction with use_existing_vpc_id_for_endpoints. | `string` | `""` | no |
 | vpc\_tags | Additional tags for the VPC | `map(string)` | `{}` | no |
 | vpn\_gateway\_az | The Availability Zone for the VPN Gateway | `string` | `null` | no |
 | vpn\_gateway\_id | ID of VPN Gateway to attach to the VPC | `string` | `""` | no |
