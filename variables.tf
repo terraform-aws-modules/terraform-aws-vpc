@@ -1662,7 +1662,7 @@ variable "acm_pca_endpoint_private_dns_enabled" {
 }
 
 variable "use_existing_vpc_id_for_endpoints" {
-  description = "Should be set to true if you want to create endpoints with passed varible vpc_id. Variable create_vpc must be set to false for this to take affect."
+  description = "Should be set to true if you want to create endpoints with passed varible vpc_id. Variable create_vpc must be set to false for this to take effect."
   default     = false
 }
 
