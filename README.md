@@ -473,6 +473,7 @@ It is possible to integrate this VPC module with [terraform-aws-transit-gateway 
 | intra\_dedicated\_network\_acl | Whether to use dedicated network ACL (not default) and custom rules for intra subnets | `bool` | `false` | no |
 | intra\_inbound\_acl\_rules | Intra subnets inbound network ACLs | `list(map(string))` | <pre>[<br>  {<br>    "cidr_block": "0.0.0.0/0",<br>    "from_port": 0,<br>    "protocol": "-1",<br>    "rule_action": "allow",<br>    "rule_number": 100,<br>    "to_port": 0<br>  }<br>]</pre> | no |
 | intra\_outbound\_acl\_rules | Intra subnets outbound network ACLs | `list(map(string))` | <pre>[<br>  {<br>    "cidr_block": "0.0.0.0/0",<br>    "from_port": 0,<br>    "protocol": "-1",<br>    "rule_action": "allow",<br>    "rule_number": 100,<br>    "to_port": 0<br>  }<br>]</pre> | no |
+| intra\_route\_table\_id | Used when specifying vpc\_id as a variable to provision a DynamoDB or S3 endpoint to the VPC with a intra route | `string` | `""` | no |
 | intra\_route\_table\_tags | Additional tags for the intra route tables | `map(string)` | `{}` | no |
 | intra\_subnet\_assign\_ipv6\_address\_on\_creation | Assign IPv6 address on intra subnet, must be disabled to change IPv6 CIDRs. This is the IPv6 equivalent of map\_public\_ip\_on\_launch | `bool` | `null` | no |
 | intra\_subnet\_ipv6\_prefixes | Assigns IPv6 intra subnet id based on the Amazon provided /56 prefix base 10 integer (0-256). Must be of equal length to the corresponding IPv4 subnet list | `list` | `[]` | no |
@@ -505,6 +506,7 @@ It is possible to integrate this VPC module with [terraform-aws-transit-gateway 
 | private\_dedicated\_network\_acl | Whether to use dedicated network ACL (not default) and custom rules for private subnets | `bool` | `false` | no |
 | private\_inbound\_acl\_rules | Private subnets inbound network ACLs | `list(map(string))` | <pre>[<br>  {<br>    "cidr_block": "0.0.0.0/0",<br>    "from_port": 0,<br>    "protocol": "-1",<br>    "rule_action": "allow",<br>    "rule_number": 100,<br>    "to_port": 0<br>  }<br>]</pre> | no |
 | private\_outbound\_acl\_rules | Private subnets outbound network ACLs | `list(map(string))` | <pre>[<br>  {<br>    "cidr_block": "0.0.0.0/0",<br>    "from_port": 0,<br>    "protocol": "-1",<br>    "rule_action": "allow",<br>    "rule_number": 100,<br>    "to_port": 0<br>  }<br>]</pre> | no |
+| private\_route\_table\_ids | Used when specifying vpc\_id as a variable to provision a DynamoDB or S3 endpoint to the VPC with one or more private routes | `list(string)` | `[]` | no |
 | private\_route\_table\_tags | Additional tags for the private route tables | `map(string)` | `{}` | no |
 | private\_subnet\_assign\_ipv6\_address\_on\_creation | Assign IPv6 address on private subnet, must be disabled to change IPv6 CIDRs. This is the IPv6 equivalent of map\_public\_ip\_on\_launch | `bool` | `null` | no |
 | private\_subnet\_ipv6\_prefixes | Assigns IPv6 private subnet id based on the Amazon provided /56 prefix base 10 integer (0-256). Must be of equal length to the corresponding IPv4 subnet list | `list` | `[]` | no |
@@ -518,6 +520,7 @@ It is possible to integrate this VPC module with [terraform-aws-transit-gateway 
 | public\_dedicated\_network\_acl | Whether to use dedicated network ACL (not default) and custom rules for public subnets | `bool` | `false` | no |
 | public\_inbound\_acl\_rules | Public subnets inbound network ACLs | `list(map(string))` | <pre>[<br>  {<br>    "cidr_block": "0.0.0.0/0",<br>    "from_port": 0,<br>    "protocol": "-1",<br>    "rule_action": "allow",<br>    "rule_number": 100,<br>    "to_port": 0<br>  }<br>]</pre> | no |
 | public\_outbound\_acl\_rules | Public subnets outbound network ACLs | `list(map(string))` | <pre>[<br>  {<br>    "cidr_block": "0.0.0.0/0",<br>    "from_port": 0,<br>    "protocol": "-1",<br>    "rule_action": "allow",<br>    "rule_number": 100,<br>    "to_port": 0<br>  }<br>]</pre> | no |
+| public\_route\_table\_id | Used when specifying vpc\_id as a variable to provision a DynamoDB or S3 endpoint to the VPC with a public route | `string` | `""` | no |
 | public\_route\_table\_tags | Additional tags for the public route tables | `map(string)` | `{}` | no |
 | public\_subnet\_assign\_ipv6\_address\_on\_creation | Assign IPv6 address on public subnet, must be disabled to change IPv6 CIDRs. This is the IPv6 equivalent of map\_public\_ip\_on\_launch | `bool` | `null` | no |
 | public\_subnet\_ipv6\_prefixes | Assigns IPv6 public subnet id based on the Amazon provided /56 prefix base 10 integer (0-256). Must be of equal length to the corresponding IPv4 subnet list | `list` | `[]` | no |
@@ -594,10 +597,10 @@ It is possible to integrate this VPC module with [terraform-aws-transit-gateway 
 | transferserver\_endpoint\_private\_dns\_enabled | Whether or not to associate a private hosted zone with the specified VPC for Transfer Server endpoint | `bool` | `false` | no |
 | transferserver\_endpoint\_security\_group\_ids | The ID of one or more security groups to associate with the network interface for Transfer Server endpoint | `list(string)` | `[]` | no |
 | transferserver\_endpoint\_subnet\_ids | The ID of one or more subnets in which to create a network interface for Transfer Server endpoint. Only a single subnet within an AZ is supported. If omitted, private subnets will be used. | `list(string)` | `[]` | no |
-| use\_existing\_vpc\_id\_for\_endpoints | Whether or not to associate endpoint with an existing vpc. Used with vpc_id. | `bool` | `false` | no |
+| use\_existing\_vpc\_id\_for\_endpoints | Should be set to true if you want to create endpoints with passed varible vpc\_id. Variable create\_vpc must be set to false for this to take effect. | `bool` | `false` | no |
 | vpc\_endpoint\_tags | Additional tags for the VPC Endpoints | `map(string)` | `{}` | no |
 | vpc\_flow\_log\_tags | Additional tags for the VPC Flow Logs | `map(string)` | `{}` | no |
-| vpc\_id | The VPC id used to create endpoints when used in conjuction with use_existing_vpc_id_for_endpoints. | `string` | `""` | no |
+| vpc\_id | The VPC id used to create endpoints when used in conjuction with use\_existing\_vpc\_id\_for\_endpoints and create\_vpc. | `string` | `""` | no |
 | vpc\_tags | Additional tags for the VPC | `map(string)` | `{}` | no |
 | vpn\_gateway\_az | The Availability Zone for the VPN Gateway | `string` | `null` | no |
 | vpn\_gateway\_id | ID of VPN Gateway to attach to the VPC | `string` | `""` | no |

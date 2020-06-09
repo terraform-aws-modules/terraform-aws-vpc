@@ -2,76 +2,76 @@
 # VPC Endpoint for S3
 ######################
 data "aws_vpc_endpoint_service" "s3" {
-  count = var.create_vpc && var.enable_s3_endpoint ? 1 : 0
+  count = (var.use_existing_vpc_id_for_endpoints || var.create_vpc) && var.enable_s3_endpoint ? 1 : 0
 
   service = "s3"
 }
 
 resource "aws_vpc_endpoint" "s3" {
-  count = var.create_vpc && var.enable_s3_endpoint ? 1 : 0
+  count = (var.use_existing_vpc_id_for_endpoints || var.create_vpc) && var.enable_s3_endpoint ? 1 : 0
 
-  vpc_id       = local.vpc_id
+  vpc_id       = var.use_existing_vpc_id_for_endpoints && ! var.create_vpc ? var.vpc_id : local.vpc_id
   service_name = data.aws_vpc_endpoint_service.s3[0].service_name
   tags         = local.vpce_tags
 }
 
 resource "aws_vpc_endpoint_route_table_association" "private_s3" {
-  count = var.create_vpc && var.enable_s3_endpoint ? local.nat_gateway_count : 0
+  count = (var.use_existing_vpc_id_for_endpoints || var.create_vpc) && var.enable_s3_endpoint ? (var.use_existing_vpc_id_for_endpoints ? length(var.private_route_table_ids) : local.nat_gateway_count) : 0
 
   vpc_endpoint_id = aws_vpc_endpoint.s3[0].id
-  route_table_id  = element(aws_route_table.private.*.id, count.index)
+  route_table_id  = var.use_existing_vpc_id_for_endpoints && ! var.create_vpc ? element(var.private_route_table_ids, count.index) : element(aws_route_table.private.*.id, count.index)
 }
 
 resource "aws_vpc_endpoint_route_table_association" "intra_s3" {
-  count = var.create_vpc && var.enable_s3_endpoint && length(var.intra_subnets) > 0 ? 1 : 0
+  count = (var.use_existing_vpc_id_for_endpoints || var.create_vpc) && var.enable_s3_endpoint && length(var.intra_subnets) > 0 ? 1 : 0
 
   vpc_endpoint_id = aws_vpc_endpoint.s3[0].id
-  route_table_id  = element(aws_route_table.intra.*.id, 0)
+  route_table_id  = var.use_existing_vpc_id_for_endpoints && ! var.create_vpc ? var.intra_route_table_id : element(aws_route_table.intra.*.id, 0)
 }
 
 resource "aws_vpc_endpoint_route_table_association" "public_s3" {
-  count = var.create_vpc && var.enable_s3_endpoint && length(var.public_subnets) > 0 ? 1 : 0
+  count = (var.use_existing_vpc_id_for_endpoints || var.create_vpc) && var.enable_s3_endpoint && length(var.public_subnets) > 0 ? 1 : 0
 
   vpc_endpoint_id = aws_vpc_endpoint.s3[0].id
-  route_table_id  = aws_route_table.public[0].id
+  route_table_id  = var.use_existing_vpc_id_for_endpoints && ! var.create_vpc ? var.public_route_table_id : aws_route_table.public[0].id
 }
 
 ############################
 # VPC Endpoint for DynamoDB
 ############################
 data "aws_vpc_endpoint_service" "dynamodb" {
-  count = var.create_vpc && var.enable_dynamodb_endpoint ? 1 : 0
+  count = (var.use_existing_vpc_id_for_endpoints || var.create_vpc) && var.enable_dynamodb_endpoint ? 1 : 0
 
   service = "dynamodb"
 }
 
 resource "aws_vpc_endpoint" "dynamodb" {
-  count = var.create_vpc && var.enable_dynamodb_endpoint ? 1 : 0
+  count = (var.use_existing_vpc_id_for_endpoints || var.create_vpc) && var.enable_dynamodb_endpoint ? 1 : 0
 
-  vpc_id       = local.vpc_id
+  vpc_id       = var.use_existing_vpc_id_for_endpoints && ! var.create_vpc ? var.vpc_id : local.vpc_id
   service_name = data.aws_vpc_endpoint_service.dynamodb[0].service_name
   tags         = local.vpce_tags
 }
 
 resource "aws_vpc_endpoint_route_table_association" "private_dynamodb" {
-  count = var.create_vpc && var.enable_dynamodb_endpoint ? local.nat_gateway_count : 0
+  count = (var.use_existing_vpc_id_for_endpoints || var.create_vpc) && var.enable_dynamodb_endpoint ? (var.use_existing_vpc_id_for_endpoints ? length(var.private_route_table_ids) : local.nat_gateway_count) : 0
 
   vpc_endpoint_id = aws_vpc_endpoint.dynamodb[0].id
-  route_table_id  = element(aws_route_table.private.*.id, count.index)
+  route_table_id  = var.use_existing_vpc_id_for_endpoints && ! var.create_vpc ? element(var.private_route_table_ids, count.index) : element(aws_route_table.private.*.id, count.index)
 }
 
 resource "aws_vpc_endpoint_route_table_association" "intra_dynamodb" {
-  count = var.create_vpc && var.enable_dynamodb_endpoint && length(var.intra_subnets) > 0 ? 1 : 0
+  count = (var.use_existing_vpc_id_for_endpoints || var.create_vpc) && var.enable_dynamodb_endpoint && length(var.intra_subnets) > 0 ? 1 : 0
 
   vpc_endpoint_id = aws_vpc_endpoint.dynamodb[0].id
-  route_table_id  = element(aws_route_table.intra.*.id, 0)
+  route_table_id  = var.use_existing_vpc_id_for_endpoints && ! var.create_vpc ? var.intra_route_table_id : element(aws_route_table.intra.*.id, 0)
 }
 
 resource "aws_vpc_endpoint_route_table_association" "public_dynamodb" {
-  count = var.create_vpc && var.enable_dynamodb_endpoint && length(var.public_subnets) > 0 ? 1 : 0
+  count = (var.use_existing_vpc_id_for_endpoints || var.create_vpc) && var.enable_dynamodb_endpoint && length(var.public_subnets) > 0 ? 1 : 0
 
   vpc_endpoint_id = aws_vpc_endpoint.dynamodb[0].id
-  route_table_id  = aws_route_table.public[0].id
+  route_table_id  = var.use_existing_vpc_id_for_endpoints && ! var.create_vpc ? var.public_route_table_id : aws_route_table.public[0].id
 }
 
 
@@ -87,7 +87,7 @@ data "aws_vpc_endpoint_service" "codebuild" {
 resource "aws_vpc_endpoint" "codebuild" {
   count = (var.use_existing_vpc_id_for_endpoints || var.create_vpc) && var.enable_codebuild_endpoint ? 1 : 0
 
-  vpc_id            = var.use_existing_vpc_id_for_endpoints && !var.create_vpc ? var.vpc_id : local.vpc_id
+  vpc_id            = var.use_existing_vpc_id_for_endpoints && ! var.create_vpc ? var.vpc_id : local.vpc_id
   service_name      = data.aws_vpc_endpoint_service.codebuild[0].service_name
   vpc_endpoint_type = "Interface"
 
@@ -109,7 +109,7 @@ data "aws_vpc_endpoint_service" "codecommit" {
 resource "aws_vpc_endpoint" "codecommit" {
   count = (var.use_existing_vpc_id_for_endpoints || var.create_vpc) && var.enable_codecommit_endpoint ? 1 : 0
 
-  vpc_id            = var.use_existing_vpc_id_for_endpoints && !var.create_vpc ? var.vpc_id : local.vpc_id
+  vpc_id            = var.use_existing_vpc_id_for_endpoints && ! var.create_vpc ? var.vpc_id : local.vpc_id
   service_name      = data.aws_vpc_endpoint_service.codecommit[0].service_name
   vpc_endpoint_type = "Interface"
 
@@ -131,7 +131,7 @@ data "aws_vpc_endpoint_service" "git_codecommit" {
 resource "aws_vpc_endpoint" "git_codecommit" {
   count = (var.use_existing_vpc_id_for_endpoints || var.create_vpc) && var.enable_git_codecommit_endpoint ? 1 : 0
 
-  vpc_id            = var.use_existing_vpc_id_for_endpoints && !var.create_vpc ? var.vpc_id : local.vpc_id
+  vpc_id            = var.use_existing_vpc_id_for_endpoints && ! var.create_vpc ? var.vpc_id : local.vpc_id
   service_name      = data.aws_vpc_endpoint_service.git_codecommit[0].service_name
   vpc_endpoint_type = "Interface"
 
@@ -153,7 +153,7 @@ data "aws_vpc_endpoint_service" "config" {
 resource "aws_vpc_endpoint" "config" {
   count = (var.use_existing_vpc_id_for_endpoints || var.create_vpc) && var.enable_config_endpoint ? 1 : 0
 
-  vpc_id            = var.use_existing_vpc_id_for_endpoints && !var.create_vpc ? var.vpc_id : local.vpc_id
+  vpc_id            = var.use_existing_vpc_id_for_endpoints && ! var.create_vpc ? var.vpc_id : local.vpc_id
   service_name      = data.aws_vpc_endpoint_service.config[0].service_name
   vpc_endpoint_type = "Interface"
 
@@ -175,7 +175,7 @@ data "aws_vpc_endpoint_service" "sqs" {
 resource "aws_vpc_endpoint" "sqs" {
   count = (var.use_existing_vpc_id_for_endpoints || var.create_vpc) && var.enable_sqs_endpoint ? 1 : 0
 
-  vpc_id            = var.use_existing_vpc_id_for_endpoints && !var.create_vpc ? var.vpc_id : local.vpc_id
+  vpc_id            = var.use_existing_vpc_id_for_endpoints && ! var.create_vpc ? var.vpc_id : local.vpc_id
   service_name      = data.aws_vpc_endpoint_service.sqs[0].service_name
   vpc_endpoint_type = "Interface"
 
@@ -197,7 +197,7 @@ data "aws_vpc_endpoint_service" "secretsmanager" {
 resource "aws_vpc_endpoint" "secretsmanager" {
   count = (var.use_existing_vpc_id_for_endpoints || var.create_vpc) && var.enable_secretsmanager_endpoint ? 1 : 0
 
-  vpc_id            = var.use_existing_vpc_id_for_endpoints && !var.create_vpc ? var.vpc_id : local.vpc_id
+  vpc_id            = var.use_existing_vpc_id_for_endpoints && ! var.create_vpc ? var.vpc_id : local.vpc_id
   service_name      = data.aws_vpc_endpoint_service.secretsmanager[0].service_name
   vpc_endpoint_type = "Interface"
 
@@ -219,7 +219,7 @@ data "aws_vpc_endpoint_service" "ssm" {
 resource "aws_vpc_endpoint" "ssm" {
   count = (var.use_existing_vpc_id_for_endpoints || var.create_vpc) && var.enable_ssm_endpoint ? 1 : 0
 
-  vpc_id            = var.use_existing_vpc_id_for_endpoints && !var.create_vpc ? var.vpc_id : local.vpc_id
+  vpc_id            = var.use_existing_vpc_id_for_endpoints && ! var.create_vpc ? var.vpc_id : local.vpc_id
   service_name      = data.aws_vpc_endpoint_service.ssm[0].service_name
   vpc_endpoint_type = "Interface"
 
@@ -241,7 +241,7 @@ data "aws_vpc_endpoint_service" "ssmmessages" {
 resource "aws_vpc_endpoint" "ssmmessages" {
   count = (var.use_existing_vpc_id_for_endpoints || var.create_vpc) && var.enable_ssmmessages_endpoint ? 1 : 0
 
-  vpc_id            = var.use_existing_vpc_id_for_endpoints && !var.create_vpc ? var.vpc_id : local.vpc_id
+  vpc_id            = var.use_existing_vpc_id_for_endpoints && ! var.create_vpc ? var.vpc_id : local.vpc_id
   service_name      = data.aws_vpc_endpoint_service.ssmmessages[0].service_name
   vpc_endpoint_type = "Interface"
 
@@ -263,7 +263,7 @@ data "aws_vpc_endpoint_service" "ec2" {
 resource "aws_vpc_endpoint" "ec2" {
   count = (var.use_existing_vpc_id_for_endpoints || var.create_vpc) && var.enable_ec2_endpoint ? 1 : 0
 
-  vpc_id            = var.use_existing_vpc_id_for_endpoints && !var.create_vpc ? var.vpc_id : local.vpc_id
+  vpc_id            = var.use_existing_vpc_id_for_endpoints && ! var.create_vpc ? var.vpc_id : local.vpc_id
   service_name      = data.aws_vpc_endpoint_service.ec2[0].service_name
   vpc_endpoint_type = "Interface"
 
@@ -285,7 +285,7 @@ data "aws_vpc_endpoint_service" "ec2messages" {
 resource "aws_vpc_endpoint" "ec2messages" {
   count = (var.use_existing_vpc_id_for_endpoints || var.create_vpc) && var.enable_ec2messages_endpoint ? 1 : 0
 
-  vpc_id            = var.use_existing_vpc_id_for_endpoints && !var.create_vpc ? var.vpc_id : local.vpc_id
+  vpc_id            = var.use_existing_vpc_id_for_endpoints && ! var.create_vpc ? var.vpc_id : local.vpc_id
   service_name      = data.aws_vpc_endpoint_service.ec2messages[0].service_name
   vpc_endpoint_type = "Interface"
 
@@ -307,7 +307,7 @@ data "aws_vpc_endpoint_service" "ec2_autoscaling" {
 resource "aws_vpc_endpoint" "ec2_autoscaling" {
   count = (var.use_existing_vpc_id_for_endpoints || var.create_vpc) && var.enable_ec2_autoscaling_endpoint ? 1 : 0
 
-  vpc_id            = var.use_existing_vpc_id_for_endpoints && !var.create_vpc ? var.vpc_id : local.vpc_id
+  vpc_id            = var.use_existing_vpc_id_for_endpoints && ! var.create_vpc ? var.vpc_id : local.vpc_id
   service_name      = data.aws_vpc_endpoint_service.ec2_autoscaling[0].service_name
   vpc_endpoint_type = "Interface"
 
@@ -330,7 +330,7 @@ data "aws_vpc_endpoint_service" "transferserver" {
 resource "aws_vpc_endpoint" "transferserver" {
   count = (var.use_existing_vpc_id_for_endpoints || var.create_vpc) && var.enable_transferserver_endpoint ? 1 : 0
 
-  vpc_id            = var.use_existing_vpc_id_for_endpoints && !var.create_vpc ? var.vpc_id : local.vpc_id
+  vpc_id            = var.use_existing_vpc_id_for_endpoints && ! var.create_vpc ? var.vpc_id : local.vpc_id
   service_name      = data.aws_vpc_endpoint_service.transferserver[0].service_name
   vpc_endpoint_type = "Interface"
 
@@ -352,7 +352,7 @@ data "aws_vpc_endpoint_service" "ecr_api" {
 resource "aws_vpc_endpoint" "ecr_api" {
   count = (var.use_existing_vpc_id_for_endpoints || var.create_vpc) && var.enable_ecr_api_endpoint ? 1 : 0
 
-  vpc_id            = var.use_existing_vpc_id_for_endpoints && !var.create_vpc ? var.vpc_id : local.vpc_id
+  vpc_id            = var.use_existing_vpc_id_for_endpoints && ! var.create_vpc ? var.vpc_id : local.vpc_id
   service_name      = data.aws_vpc_endpoint_service.ecr_api[0].service_name
   vpc_endpoint_type = "Interface"
 
@@ -374,7 +374,7 @@ data "aws_vpc_endpoint_service" "ecr_dkr" {
 resource "aws_vpc_endpoint" "ecr_dkr" {
   count = (var.use_existing_vpc_id_for_endpoints || var.create_vpc) && var.enable_ecr_dkr_endpoint ? 1 : 0
 
-  vpc_id            = var.use_existing_vpc_id_for_endpoints && !var.create_vpc ? var.vpc_id : local.vpc_id
+  vpc_id            = var.use_existing_vpc_id_for_endpoints && ! var.create_vpc ? var.vpc_id : local.vpc_id
   service_name      = data.aws_vpc_endpoint_service.ecr_dkr[0].service_name
   vpc_endpoint_type = "Interface"
 
@@ -396,7 +396,7 @@ data "aws_vpc_endpoint_service" "apigw" {
 resource "aws_vpc_endpoint" "apigw" {
   count = (var.use_existing_vpc_id_for_endpoints || var.create_vpc) && var.enable_apigw_endpoint ? 1 : 0
 
-  vpc_id            = var.use_existing_vpc_id_for_endpoints && !var.create_vpc ? var.vpc_id : local.vpc_id
+  vpc_id            = var.use_existing_vpc_id_for_endpoints && ! var.create_vpc ? var.vpc_id : local.vpc_id
   service_name      = data.aws_vpc_endpoint_service.apigw[0].service_name
   vpc_endpoint_type = "Interface"
 
@@ -418,7 +418,7 @@ data "aws_vpc_endpoint_service" "kms" {
 resource "aws_vpc_endpoint" "kms" {
   count = (var.use_existing_vpc_id_for_endpoints || var.create_vpc) && var.enable_kms_endpoint ? 1 : 0
 
-  vpc_id            = var.use_existing_vpc_id_for_endpoints && !var.create_vpc ? var.vpc_id : local.vpc_id
+  vpc_id            = var.use_existing_vpc_id_for_endpoints && ! var.create_vpc ? var.vpc_id : local.vpc_id
   service_name      = data.aws_vpc_endpoint_service.kms[0].service_name
   vpc_endpoint_type = "Interface"
 
@@ -440,7 +440,7 @@ data "aws_vpc_endpoint_service" "ecs" {
 resource "aws_vpc_endpoint" "ecs" {
   count = (var.use_existing_vpc_id_for_endpoints || var.create_vpc) && var.enable_ecs_endpoint ? 1 : 0
 
-  vpc_id            = var.use_existing_vpc_id_for_endpoints && !var.create_vpc ? var.vpc_id : local.vpc_id
+  vpc_id            = var.use_existing_vpc_id_for_endpoints && ! var.create_vpc ? var.vpc_id : local.vpc_id
   service_name      = data.aws_vpc_endpoint_service.ecs[0].service_name
   vpc_endpoint_type = "Interface"
 
@@ -463,7 +463,7 @@ data "aws_vpc_endpoint_service" "ecs_agent" {
 resource "aws_vpc_endpoint" "ecs_agent" {
   count = (var.use_existing_vpc_id_for_endpoints || var.create_vpc) && var.enable_ecs_agent_endpoint ? 1 : 0
 
-  vpc_id            = var.use_existing_vpc_id_for_endpoints && !var.create_vpc ? var.vpc_id : local.vpc_id
+  vpc_id            = var.use_existing_vpc_id_for_endpoints && ! var.create_vpc ? var.vpc_id : local.vpc_id
   service_name      = data.aws_vpc_endpoint_service.ecs_agent[0].service_name
   vpc_endpoint_type = "Interface"
 
@@ -486,7 +486,7 @@ data "aws_vpc_endpoint_service" "ecs_telemetry" {
 resource "aws_vpc_endpoint" "ecs_telemetry" {
   count = (var.use_existing_vpc_id_for_endpoints || var.create_vpc) && var.enable_ecs_telemetry_endpoint ? 1 : 0
 
-  vpc_id            = var.use_existing_vpc_id_for_endpoints && !var.create_vpc ? var.vpc_id : local.vpc_id
+  vpc_id            = var.use_existing_vpc_id_for_endpoints && ! var.create_vpc ? var.vpc_id : local.vpc_id
   service_name      = data.aws_vpc_endpoint_service.ecs_telemetry[0].service_name
   vpc_endpoint_type = "Interface"
 
@@ -509,7 +509,7 @@ data "aws_vpc_endpoint_service" "sns" {
 resource "aws_vpc_endpoint" "sns" {
   count = (var.use_existing_vpc_id_for_endpoints || var.create_vpc) && var.enable_sns_endpoint ? 1 : 0
 
-  vpc_id            = var.use_existing_vpc_id_for_endpoints && !var.create_vpc ? var.vpc_id : local.vpc_id
+  vpc_id            = var.use_existing_vpc_id_for_endpoints && ! var.create_vpc ? var.vpc_id : local.vpc_id
   service_name      = data.aws_vpc_endpoint_service.sns[0].service_name
   vpc_endpoint_type = "Interface"
 
@@ -532,7 +532,7 @@ data "aws_vpc_endpoint_service" "monitoring" {
 resource "aws_vpc_endpoint" "monitoring" {
   count = (var.use_existing_vpc_id_for_endpoints || var.create_vpc) && var.enable_monitoring_endpoint ? 1 : 0
 
-  vpc_id            = var.use_existing_vpc_id_for_endpoints && !var.create_vpc ? var.vpc_id : local.vpc_id
+  vpc_id            = var.use_existing_vpc_id_for_endpoints && ! var.create_vpc ? var.vpc_id : local.vpc_id
   service_name      = data.aws_vpc_endpoint_service.monitoring[0].service_name
   vpc_endpoint_type = "Interface"
 
@@ -555,7 +555,7 @@ data "aws_vpc_endpoint_service" "logs" {
 resource "aws_vpc_endpoint" "logs" {
   count = (var.use_existing_vpc_id_for_endpoints || var.create_vpc) && var.enable_logs_endpoint ? 1 : 0
 
-  vpc_id            = var.use_existing_vpc_id_for_endpoints && !var.create_vpc ? var.vpc_id : local.vpc_id
+  vpc_id            = var.use_existing_vpc_id_for_endpoints && ! var.create_vpc ? var.vpc_id : local.vpc_id
   service_name      = data.aws_vpc_endpoint_service.logs[0].service_name
   vpc_endpoint_type = "Interface"
 
@@ -578,7 +578,7 @@ data "aws_vpc_endpoint_service" "events" {
 resource "aws_vpc_endpoint" "events" {
   count = (var.use_existing_vpc_id_for_endpoints || var.create_vpc) && var.enable_events_endpoint ? 1 : 0
 
-  vpc_id            = var.use_existing_vpc_id_for_endpoints && !var.create_vpc ? var.vpc_id : local.vpc_id
+  vpc_id            = var.use_existing_vpc_id_for_endpoints && ! var.create_vpc ? var.vpc_id : local.vpc_id
   service_name      = data.aws_vpc_endpoint_service.events[0].service_name
   vpc_endpoint_type = "Interface"
 
@@ -601,7 +601,7 @@ data "aws_vpc_endpoint_service" "elasticloadbalancing" {
 resource "aws_vpc_endpoint" "elasticloadbalancing" {
   count = (var.use_existing_vpc_id_for_endpoints || var.create_vpc) && var.enable_elasticloadbalancing_endpoint ? 1 : 0
 
-  vpc_id            = var.use_existing_vpc_id_for_endpoints && !var.create_vpc ? var.vpc_id : local.vpc_id
+  vpc_id            = var.use_existing_vpc_id_for_endpoints && ! var.create_vpc ? var.vpc_id : local.vpc_id
   service_name      = data.aws_vpc_endpoint_service.elasticloadbalancing[0].service_name
   vpc_endpoint_type = "Interface"
 
@@ -624,7 +624,7 @@ data "aws_vpc_endpoint_service" "cloudtrail" {
 resource "aws_vpc_endpoint" "cloudtrail" {
   count = (var.use_existing_vpc_id_for_endpoints || var.create_vpc) && var.enable_cloudtrail_endpoint ? 1 : 0
 
-  vpc_id            = var.use_existing_vpc_id_for_endpoints && !var.create_vpc ? var.vpc_id : local.vpc_id
+  vpc_id            = var.use_existing_vpc_id_for_endpoints && ! var.create_vpc ? var.vpc_id : local.vpc_id
   service_name      = data.aws_vpc_endpoint_service.cloudtrail[0].service_name
   vpc_endpoint_type = "Interface"
 
@@ -647,7 +647,7 @@ data "aws_vpc_endpoint_service" "kinesis_streams" {
 resource "aws_vpc_endpoint" "kinesis_streams" {
   count = (var.use_existing_vpc_id_for_endpoints || var.create_vpc) && var.enable_kinesis_streams_endpoint ? 1 : 0
 
-  vpc_id            = var.use_existing_vpc_id_for_endpoints && !var.create_vpc ? var.vpc_id : local.vpc_id
+  vpc_id            = var.use_existing_vpc_id_for_endpoints && ! var.create_vpc ? var.vpc_id : local.vpc_id
   service_name      = data.aws_vpc_endpoint_service.kinesis_streams[0].service_name
   vpc_endpoint_type = "Interface"
 
@@ -670,7 +670,7 @@ data "aws_vpc_endpoint_service" "kinesis_firehose" {
 resource "aws_vpc_endpoint" "kinesis_firehose" {
   count = (var.use_existing_vpc_id_for_endpoints || var.create_vpc) && var.enable_kinesis_firehose_endpoint ? 1 : 0
 
-  vpc_id            = var.use_existing_vpc_id_for_endpoints && !var.create_vpc ? var.vpc_id : local.vpc_id
+  vpc_id            = var.use_existing_vpc_id_for_endpoints && ! var.create_vpc ? var.vpc_id : local.vpc_id
   service_name      = data.aws_vpc_endpoint_service.kinesis_firehose[0].service_name
   vpc_endpoint_type = "Interface"
 
@@ -692,7 +692,7 @@ data "aws_vpc_endpoint_service" "glue" {
 resource "aws_vpc_endpoint" "glue" {
   count = (var.use_existing_vpc_id_for_endpoints || var.create_vpc) && var.enable_glue_endpoint ? 1 : 0
 
-  vpc_id            = var.use_existing_vpc_id_for_endpoints && !var.create_vpc ? var.vpc_id : local.vpc_id
+  vpc_id            = var.use_existing_vpc_id_for_endpoints && ! var.create_vpc ? var.vpc_id : local.vpc_id
   service_name      = data.aws_vpc_endpoint_service.glue[0].service_name
   vpc_endpoint_type = "Interface"
 
@@ -714,7 +714,7 @@ data "aws_vpc_endpoint_service" "sagemaker_notebook" {
 resource "aws_vpc_endpoint" "sagemaker_notebook" {
   count = (var.use_existing_vpc_id_for_endpoints || var.create_vpc) && var.enable_sagemaker_notebook_endpoint ? 1 : 0
 
-  vpc_id            = var.use_existing_vpc_id_for_endpoints && !var.create_vpc ? var.vpc_id : local.vpc_id
+  vpc_id            = var.use_existing_vpc_id_for_endpoints && ! var.create_vpc ? var.vpc_id : local.vpc_id
   service_name      = data.aws_vpc_endpoint_service.sagemaker_notebook[0].service_name
   vpc_endpoint_type = "Interface"
 
@@ -736,7 +736,7 @@ data "aws_vpc_endpoint_service" "sts" {
 resource "aws_vpc_endpoint" "sts" {
   count = (var.use_existing_vpc_id_for_endpoints || var.create_vpc) && var.enable_sts_endpoint ? 1 : 0
 
-  vpc_id            = var.use_existing_vpc_id_for_endpoints && !var.create_vpc ? var.vpc_id : local.vpc_id
+  vpc_id            = var.use_existing_vpc_id_for_endpoints && ! var.create_vpc ? var.vpc_id : local.vpc_id
   service_name      = data.aws_vpc_endpoint_service.sts[0].service_name
   vpc_endpoint_type = "Interface"
 
@@ -758,7 +758,7 @@ data "aws_vpc_endpoint_service" "cloudformation" {
 resource "aws_vpc_endpoint" "cloudformation" {
   count = (var.use_existing_vpc_id_for_endpoints || var.create_vpc) && var.enable_cloudformation_endpoint ? 1 : 0
 
-  vpc_id            = var.use_existing_vpc_id_for_endpoints && !var.create_vpc ? var.vpc_id : local.vpc_id
+  vpc_id            = var.use_existing_vpc_id_for_endpoints && ! var.create_vpc ? var.vpc_id : local.vpc_id
   service_name      = data.aws_vpc_endpoint_service.cloudformation[0].service_name
   vpc_endpoint_type = "Interface"
 
@@ -779,7 +779,7 @@ data "aws_vpc_endpoint_service" "codepipeline" {
 resource "aws_vpc_endpoint" "codepipeline" {
   count = (var.use_existing_vpc_id_for_endpoints || var.create_vpc) && var.enable_codepipeline_endpoint ? 1 : 0
 
-  vpc_id            = var.use_existing_vpc_id_for_endpoints && !var.create_vpc ? var.vpc_id : local.vpc_id
+  vpc_id            = var.use_existing_vpc_id_for_endpoints && ! var.create_vpc ? var.vpc_id : local.vpc_id
   service_name      = data.aws_vpc_endpoint_service.codepipeline[0].service_name
   vpc_endpoint_type = "Interface"
 
@@ -800,7 +800,7 @@ data "aws_vpc_endpoint_service" "appmesh_envoy_management" {
 resource "aws_vpc_endpoint" "appmesh_envoy_management" {
   count = (var.use_existing_vpc_id_for_endpoints || var.create_vpc) && var.enable_appmesh_envoy_management_endpoint ? 1 : 0
 
-  vpc_id            = var.use_existing_vpc_id_for_endpoints && !var.create_vpc ? var.vpc_id : local.vpc_id
+  vpc_id            = var.use_existing_vpc_id_for_endpoints && ! var.create_vpc ? var.vpc_id : local.vpc_id
   service_name      = data.aws_vpc_endpoint_service.appmesh_envoy_management[0].service_name
   vpc_endpoint_type = "Interface"
 
@@ -821,7 +821,7 @@ data "aws_vpc_endpoint_service" "servicecatalog" {
 resource "aws_vpc_endpoint" "servicecatalog" {
   count = (var.use_existing_vpc_id_for_endpoints || var.create_vpc) && var.enable_servicecatalog_endpoint ? 1 : 0
 
-  vpc_id            = var.use_existing_vpc_id_for_endpoints && !var.create_vpc ? var.vpc_id : local.vpc_id
+  vpc_id            = var.use_existing_vpc_id_for_endpoints && ! var.create_vpc ? var.vpc_id : local.vpc_id
   service_name      = data.aws_vpc_endpoint_service.servicecatalog[0].service_name
   vpc_endpoint_type = "Interface"
 
@@ -842,7 +842,7 @@ data "aws_vpc_endpoint_service" "storagegateway" {
 resource "aws_vpc_endpoint" "storagegateway" {
   count = (var.use_existing_vpc_id_for_endpoints || var.create_vpc) && var.enable_storagegateway_endpoint ? 1 : 0
 
-  vpc_id            = var.use_existing_vpc_id_for_endpoints && !var.create_vpc ? var.vpc_id : local.vpc_id
+  vpc_id            = var.use_existing_vpc_id_for_endpoints && ! var.create_vpc ? var.vpc_id : local.vpc_id
   service_name      = data.aws_vpc_endpoint_service.storagegateway[0].service_name
   vpc_endpoint_type = "Interface"
 
@@ -863,7 +863,7 @@ data "aws_vpc_endpoint_service" "transfer" {
 resource "aws_vpc_endpoint" "transfer" {
   count = (var.use_existing_vpc_id_for_endpoints || var.create_vpc) && var.enable_transfer_endpoint ? 1 : 0
 
-  vpc_id            = var.use_existing_vpc_id_for_endpoints && !var.create_vpc ? var.vpc_id : local.vpc_id
+  vpc_id            = var.use_existing_vpc_id_for_endpoints && ! var.create_vpc ? var.vpc_id : local.vpc_id
   service_name      = data.aws_vpc_endpoint_service.transfer[0].service_name
   vpc_endpoint_type = "Interface"
 
@@ -884,7 +884,7 @@ data "aws_vpc_endpoint_service" "sagemaker_api" {
 resource "aws_vpc_endpoint" "sagemaker_api" {
   count = (var.use_existing_vpc_id_for_endpoints || var.create_vpc) && var.enable_sagemaker_api_endpoint ? 1 : 0
 
-  vpc_id            = var.use_existing_vpc_id_for_endpoints && !var.create_vpc ? var.vpc_id : local.vpc_id
+  vpc_id            = var.use_existing_vpc_id_for_endpoints && ! var.create_vpc ? var.vpc_id : local.vpc_id
   service_name      = data.aws_vpc_endpoint_service.sagemaker_api[0].service_name
   vpc_endpoint_type = "Interface"
 
@@ -905,7 +905,7 @@ data "aws_vpc_endpoint_service" "sagemaker_runtime" {
 resource "aws_vpc_endpoint" "sagemaker_runtime" {
   count = (var.use_existing_vpc_id_for_endpoints || var.create_vpc) && var.enable_sagemaker_runtime_endpoint ? 1 : 0
 
-  vpc_id            = var.use_existing_vpc_id_for_endpoints && !var.create_vpc ? var.vpc_id : local.vpc_id
+  vpc_id            = var.use_existing_vpc_id_for_endpoints && ! var.create_vpc ? var.vpc_id : local.vpc_id
   service_name      = data.aws_vpc_endpoint_service.sagemaker_runtime[0].service_name
   vpc_endpoint_type = "Interface"
 
@@ -927,7 +927,7 @@ data "aws_vpc_endpoint_service" "appstream" {
 resource "aws_vpc_endpoint" "appstream" {
   count = (var.use_existing_vpc_id_for_endpoints || var.create_vpc) && var.enable_appstream_endpoint ? 1 : 0
 
-  vpc_id            = var.use_existing_vpc_id_for_endpoints && !var.create_vpc ? var.vpc_id : local.vpc_id
+  vpc_id            = var.use_existing_vpc_id_for_endpoints && ! var.create_vpc ? var.vpc_id : local.vpc_id
   service_name      = data.aws_vpc_endpoint_service.appstream[0].service_name
   vpc_endpoint_type = "Interface"
 
@@ -949,7 +949,7 @@ data "aws_vpc_endpoint_service" "athena" {
 resource "aws_vpc_endpoint" "athena" {
   count = (var.use_existing_vpc_id_for_endpoints || var.create_vpc) && var.enable_athena_endpoint ? 1 : 0
 
-  vpc_id            = var.use_existing_vpc_id_for_endpoints && !var.create_vpc ? var.vpc_id : local.vpc_id
+  vpc_id            = var.use_existing_vpc_id_for_endpoints && ! var.create_vpc ? var.vpc_id : local.vpc_id
   service_name      = data.aws_vpc_endpoint_service.athena[0].service_name
   vpc_endpoint_type = "Interface"
 
@@ -971,7 +971,7 @@ data "aws_vpc_endpoint_service" "rekognition" {
 resource "aws_vpc_endpoint" "rekognition" {
   count = (var.use_existing_vpc_id_for_endpoints || var.create_vpc) && var.enable_rekognition_endpoint ? 1 : 0
 
-  vpc_id            = var.use_existing_vpc_id_for_endpoints && !var.create_vpc ? var.vpc_id : local.vpc_id
+  vpc_id            = var.use_existing_vpc_id_for_endpoints && ! var.create_vpc ? var.vpc_id : local.vpc_id
   service_name      = data.aws_vpc_endpoint_service.rekognition[0].service_name
   vpc_endpoint_type = "Interface"
 
@@ -993,7 +993,7 @@ data "aws_vpc_endpoint_service" "efs" {
 resource "aws_vpc_endpoint" "efs" {
   count = (var.use_existing_vpc_id_for_endpoints || var.create_vpc) && var.enable_efs_endpoint ? 1 : 0
 
-  vpc_id            = var.use_existing_vpc_id_for_endpoints && !var.create_vpc ? var.vpc_id : local.vpc_id
+  vpc_id            = var.use_existing_vpc_id_for_endpoints && ! var.create_vpc ? var.vpc_id : local.vpc_id
   service_name      = data.aws_vpc_endpoint_service.efs[0].service_name
   vpc_endpoint_type = "Interface"
 
@@ -1016,7 +1016,7 @@ data "aws_vpc_endpoint_service" "cloud_directory" {
 resource "aws_vpc_endpoint" "cloud_directory" {
   count = (var.use_existing_vpc_id_for_endpoints || var.create_vpc) && var.enable_cloud_directory_endpoint ? 1 : 0
 
-  vpc_id            = var.use_existing_vpc_id_for_endpoints && !var.create_vpc ? var.vpc_id : local.vpc_id
+  vpc_id            = var.use_existing_vpc_id_for_endpoints && ! var.create_vpc ? var.vpc_id : local.vpc_id
   service_name      = data.aws_vpc_endpoint_service.cloud_directory[0].service_name
   vpc_endpoint_type = "Interface"
 
@@ -1039,7 +1039,7 @@ data "aws_vpc_endpoint_service" "auto_scaling_plans" {
 resource "aws_vpc_endpoint" "auto_scaling_plans" {
   count = (var.use_existing_vpc_id_for_endpoints || var.create_vpc) && var.enable_auto_scaling_plans_endpoint ? 1 : 0
 
-  vpc_id            = var.use_existing_vpc_id_for_endpoints && !var.create_vpc ? var.vpc_id : local.vpc_id
+  vpc_id            = var.use_existing_vpc_id_for_endpoints && ! var.create_vpc ? var.vpc_id : local.vpc_id
   service_name      = data.aws_vpc_endpoint_service.auto_scaling_plans[0].service_name
   vpc_endpoint_type = "Interface"
 
@@ -1062,7 +1062,7 @@ data "aws_vpc_endpoint_service" "workspaces" {
 resource "aws_vpc_endpoint" "workspaces" {
   count = (var.use_existing_vpc_id_for_endpoints || var.create_vpc) && var.enable_workspaces_endpoint ? 1 : 0
 
-  vpc_id            = var.use_existing_vpc_id_for_endpoints && !var.create_vpc ? var.vpc_id : local.vpc_id
+  vpc_id            = var.use_existing_vpc_id_for_endpoints && ! var.create_vpc ? var.vpc_id : local.vpc_id
   service_name      = data.aws_vpc_endpoint_service.workspaces[0].service_name
   vpc_endpoint_type = "Interface"
 
@@ -1085,7 +1085,7 @@ data "aws_vpc_endpoint_service" "access_analyzer" {
 resource "aws_vpc_endpoint" "access_analyzer" {
   count = (var.use_existing_vpc_id_for_endpoints || var.create_vpc) && var.enable_access_analyzer_endpoint ? 1 : 0
 
-  vpc_id            = var.use_existing_vpc_id_for_endpoints && !var.create_vpc ? var.vpc_id : local.vpc_id
+  vpc_id            = var.use_existing_vpc_id_for_endpoints && ! var.create_vpc ? var.vpc_id : local.vpc_id
   service_name      = data.aws_vpc_endpoint_service.access_analyzer[0].service_name
   vpc_endpoint_type = "Interface"
 
@@ -1108,7 +1108,7 @@ data "aws_vpc_endpoint_service" "ebs" {
 resource "aws_vpc_endpoint" "ebs" {
   count = (var.use_existing_vpc_id_for_endpoints || var.create_vpc) && var.enable_ebs_endpoint ? 1 : 0
 
-  vpc_id            = var.use_existing_vpc_id_for_endpoints && !var.create_vpc ? var.vpc_id : local.vpc_id
+  vpc_id            = var.use_existing_vpc_id_for_endpoints && ! var.create_vpc ? var.vpc_id : local.vpc_id
   service_name      = data.aws_vpc_endpoint_service.ebs[0].service_name
   vpc_endpoint_type = "Interface"
 
@@ -1131,7 +1131,7 @@ data "aws_vpc_endpoint_service" "datasync" {
 resource "aws_vpc_endpoint" "datasync" {
   count = (var.use_existing_vpc_id_for_endpoints || var.create_vpc) && var.enable_datasync_endpoint ? 1 : 0
 
-  vpc_id            = var.use_existing_vpc_id_for_endpoints && !var.create_vpc ? var.vpc_id : local.vpc_id
+  vpc_id            = var.use_existing_vpc_id_for_endpoints && ! var.create_vpc ? var.vpc_id : local.vpc_id
   service_name      = data.aws_vpc_endpoint_service.datasync[0].service_name
   vpc_endpoint_type = "Interface"
 
@@ -1154,7 +1154,7 @@ data "aws_vpc_endpoint_service" "elastic_inference_runtime" {
 resource "aws_vpc_endpoint" "elastic_inference_runtime" {
   count = (var.use_existing_vpc_id_for_endpoints || var.create_vpc) && var.enable_elastic_inference_runtime_endpoint ? 1 : 0
 
-  vpc_id            = var.use_existing_vpc_id_for_endpoints && !var.create_vpc ? var.vpc_id : local.vpc_id
+  vpc_id            = var.use_existing_vpc_id_for_endpoints && ! var.create_vpc ? var.vpc_id : local.vpc_id
   service_name      = data.aws_vpc_endpoint_service.elastic_inference_runtime[0].service_name
   vpc_endpoint_type = "Interface"
 
@@ -1177,7 +1177,7 @@ data "aws_vpc_endpoint_service" "sms" {
 resource "aws_vpc_endpoint" "sms" {
   count = (var.use_existing_vpc_id_for_endpoints || var.create_vpc) && var.enable_sms_endpoint ? 1 : 0
 
-  vpc_id            = var.use_existing_vpc_id_for_endpoints && !var.create_vpc ? var.vpc_id : local.vpc_id
+  vpc_id            = var.use_existing_vpc_id_for_endpoints && ! var.create_vpc ? var.vpc_id : local.vpc_id
   service_name      = data.aws_vpc_endpoint_service.sms[0].service_name
   vpc_endpoint_type = "Interface"
 
@@ -1200,7 +1200,7 @@ data "aws_vpc_endpoint_service" "emr" {
 resource "aws_vpc_endpoint" "emr" {
   count = (var.use_existing_vpc_id_for_endpoints || var.create_vpc) && var.enable_emr_endpoint ? 1 : 0
 
-  vpc_id            = var.use_existing_vpc_id_for_endpoints && !var.create_vpc ? var.vpc_id : local.vpc_id
+  vpc_id            = var.use_existing_vpc_id_for_endpoints && ! var.create_vpc ? var.vpc_id : local.vpc_id
   service_name      = data.aws_vpc_endpoint_service.emr[0].service_name
   vpc_endpoint_type = "Interface"
 
@@ -1223,7 +1223,7 @@ data "aws_vpc_endpoint_service" "qldb_session" {
 resource "aws_vpc_endpoint" "qldb_session" {
   count = (var.use_existing_vpc_id_for_endpoints || var.create_vpc) && var.enable_qldb_session_endpoint ? 1 : 0
 
-  vpc_id            = var.use_existing_vpc_id_for_endpoints && !var.create_vpc ? var.vpc_id : local.vpc_id
+  vpc_id            = var.use_existing_vpc_id_for_endpoints && ! var.create_vpc ? var.vpc_id : local.vpc_id
   service_name      = data.aws_vpc_endpoint_service.qldb_session[0].service_name
   vpc_endpoint_type = "Interface"
 
@@ -1246,7 +1246,7 @@ data "aws_vpc_endpoint_service" "states" {
 resource "aws_vpc_endpoint" "states" {
   count = (var.use_existing_vpc_id_for_endpoints || var.create_vpc) && var.enable_states_endpoint ? 1 : 0
 
-  vpc_id            = var.use_existing_vpc_id_for_endpoints && !var.create_vpc ? var.vpc_id : local.vpc_id
+  vpc_id            = var.use_existing_vpc_id_for_endpoints && ! var.create_vpc ? var.vpc_id : local.vpc_id
   service_name      = data.aws_vpc_endpoint_service.states[0].service_name
   vpc_endpoint_type = "Interface"
 
@@ -1269,7 +1269,7 @@ data "aws_vpc_endpoint_service" "elasticbeanstalk" {
 resource "aws_vpc_endpoint" "elasticbeanstalk" {
   count = (var.use_existing_vpc_id_for_endpoints || var.create_vpc) && var.enable_elasticbeanstalk_endpoint ? 1 : 0
 
-  vpc_id            = var.use_existing_vpc_id_for_endpoints && !var.create_vpc ? var.vpc_id : local.vpc_id
+  vpc_id            = var.use_existing_vpc_id_for_endpoints && ! var.create_vpc ? var.vpc_id : local.vpc_id
   service_name      = data.aws_vpc_endpoint_service.elasticbeanstalk[0].service_name
   vpc_endpoint_type = "Interface"
 
@@ -1292,7 +1292,7 @@ data "aws_vpc_endpoint_service" "elasticbeanstalk_health" {
 resource "aws_vpc_endpoint" "elasticbeanstalk_health" {
   count = (var.use_existing_vpc_id_for_endpoints || var.create_vpc) && var.enable_elasticbeanstalk_health_endpoint ? 1 : 0
 
-  vpc_id            = var.use_existing_vpc_id_for_endpoints && !var.create_vpc ? var.vpc_id : local.vpc_id
+  vpc_id            = var.use_existing_vpc_id_for_endpoints && ! var.create_vpc ? var.vpc_id : local.vpc_id
   service_name      = data.aws_vpc_endpoint_service.elasticbeanstalk_health[0].service_name
   vpc_endpoint_type = "Interface"
 
@@ -1315,7 +1315,7 @@ data "aws_vpc_endpoint_service" "acm_pca" {
 resource "aws_vpc_endpoint" "acm_pca" {
   count = (var.use_existing_vpc_id_for_endpoints || var.create_vpc) && var.enable_acm_pca_endpoint ? 1 : 0
 
-  vpc_id            = var.use_existing_vpc_id_for_endpoints && !var.create_vpc ? var.vpc_id : local.vpc_id
+  vpc_id            = var.use_existing_vpc_id_for_endpoints && ! var.create_vpc ? var.vpc_id : local.vpc_id
   service_name      = data.aws_vpc_endpoint_service.acm_pca[0].service_name
   vpc_endpoint_type = "Interface"
 
@@ -1338,7 +1338,7 @@ data "aws_vpc_endpoint_service" "ses" {
 resource "aws_vpc_endpoint" "ses" {
   count = (var.use_existing_vpc_id_for_endpoints || var.create_vpc) && var.enable_ses_endpoint ? 1 : 0
 
-  vpc_id            = var.use_existing_vpc_id_for_endpoints && !var.create_vpc ? var.vpc_id : local.vpc_id
+  vpc_id            = var.use_existing_vpc_id_for_endpoints && ! var.create_vpc ? var.vpc_id : local.vpc_id
   service_name      = data.aws_vpc_endpoint_service.ses[0].service_name
   vpc_endpoint_type = "Interface"
 

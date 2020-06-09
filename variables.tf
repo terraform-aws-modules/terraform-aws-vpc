@@ -304,6 +304,24 @@ variable "external_nat_ip_ids" {
   default     = []
 }
 
+variable "public_route_table_id" {
+  description = "Used when specifying vpc_id as a variable to provision a DynamoDB or S3 endpoint to the VPC with a public route"
+  type        = string
+  default     = ""
+}
+
+variable "intra_route_table_id" {
+  description = "Used when specifying vpc_id as a variable to provision a DynamoDB or S3 endpoint to the VPC with a intra route"
+  type        = string
+  default     = ""
+}
+
+variable "private_route_table_ids" {
+  description = "Used when specifying vpc_id as a variable to provision a DynamoDB or S3 endpoint to the VPC with one or more private routes"
+  type        = list(string)
+  default     = []
+}
+
 variable "enable_dynamodb_endpoint" {
   description = "Should be true if you want to provision a DynamoDB endpoint to the VPC"
   type        = bool
