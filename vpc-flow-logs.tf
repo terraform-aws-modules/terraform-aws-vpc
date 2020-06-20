@@ -15,12 +15,13 @@ locals {
 resource "aws_flow_log" "this" {
   count = local.enable_flow_log ? 1 : 0
 
-  log_destination_type = var.flow_log_destination_type
-  log_destination      = local.flow_log_destination_arn
-  log_format           = var.flow_log_log_format
-  iam_role_arn         = local.flow_log_iam_role_arn
-  traffic_type         = var.flow_log_traffic_type
-  vpc_id               = local.vpc_id
+  log_destination_type     = var.flow_log_destination_type
+  log_destination          = local.flow_log_destination_arn
+  log_format               = var.flow_log_log_format
+  iam_role_arn             = local.flow_log_iam_role_arn
+  traffic_type             = var.flow_log_traffic_type
+  vpc_id                   = local.vpc_id
+  max_aggregation_interval = var.flow_log_max_aggregation_interval
 
   tags = merge(var.tags, var.vpc_flow_log_tags)
 }

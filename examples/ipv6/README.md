@@ -33,8 +33,8 @@ No input.
 
 | Name | Description |
 |------|-------------|
-| ipv6\_association\_id | The IPv6 CIDR block |
-| ipv6\_cidr\_block | The association ID for the IPv6 CIDR block |
+| ipv6\_association\_id | The association ID for the IPv6 CIDR block |
+| ipv6\_cidr\_block | The IPv6 CIDR block |
 | vpc\_id | The ID of the VPC |
 
 <!-- END OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
