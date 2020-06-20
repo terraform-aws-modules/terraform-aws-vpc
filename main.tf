@@ -190,11 +190,11 @@ resource "aws_route_table" "database" {
   vpc_id = local.vpc_id
 
   tags = merge(
-    var.tags,
-    var.database_route_table_tags,
     {
       "Name" = "${var.name}-${var.database_subnet_suffix}"
     },
+    var.tags,
+    var.database_route_table_tags,
   )
 }
 
@@ -243,11 +243,11 @@ resource "aws_route_table" "redshift" {
   vpc_id = local.vpc_id
 
   tags = merge(
-    var.tags,
-    var.redshift_route_table_tags,
     {
       "Name" = "${var.name}-${var.redshift_subnet_suffix}"
     },
+    var.tags,
+    var.redshift_route_table_tags,
   )
 }
 
@@ -260,11 +260,11 @@ resource "aws_route_table" "elasticache" {
   vpc_id = local.vpc_id
 
   tags = merge(
-    var.tags,
-    var.elasticache_route_table_tags,
     {
       "Name" = "${var.name}-${var.elasticache_subnet_suffix}"
     },
+    var.tags,
+    var.elasticache_route_table_tags,
   )
 }
 
