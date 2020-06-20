@@ -2268,21 +2268,13 @@ variable "manage_default_security_group" {
 variable "default_security_group_name" {
   description = "Name to be used on the default security group"
   type        = string
-  default     = ""
+  default     = "default"
 }
 
 variable "default_security_group_ingress" {
   description = "List of maps of ingress rules to set on the default security group"
   type        = list(map(string))
-
-  default = [
-    {
-      self      = true
-      from_port = 0
-      to_port   = 0
-      protocol  = "-1"
-    }
-  ]
+  default     = null
 }
 
 variable "enable_flow_log" {
@@ -2294,15 +2286,7 @@ variable "enable_flow_log" {
 variable "default_security_group_egress" {
   description = "List of maps of egress rules to set on the default security group"
   type        = list(map(string))
-
-  default = [
-    {
-      cidr_blocks = "0.0.0.0/0"
-      from_port   = 0
-      to_port     = 0
-      protocol    = "-1"
-    }
-  ]
+  default     = null
 }
 
 variable "default_security_group_tags" {

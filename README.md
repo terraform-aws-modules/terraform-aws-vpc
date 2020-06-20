@@ -314,9 +314,9 @@ It is possible to integrate this VPC module with [terraform-aws-transit-gateway 
 | default\_network\_acl\_ingress | List of maps of ingress rules to set on the Default Network ACL | `list(map(string))` | <pre>[<br>  {<br>    "action": "allow",<br>    "cidr_block": "0.0.0.0/0",<br>    "from_port": 0,<br>    "protocol": "-1",<br>    "rule_no": 100,<br>    "to_port": 0<br>  },<br>  {<br>    "action": "allow",<br>    "from_port": 0,<br>    "ipv6_cidr_block": "::/0",<br>    "protocol": "-1",<br>    "rule_no": 101,<br>    "to_port": 0<br>  }<br>]</pre> | no |
 | default\_network\_acl\_name | Name to be used on the Default Network ACL | `string` | `""` | no |
 | default\_network\_acl\_tags | Additional tags for the Default Network ACL | `map(string)` | `{}` | no |
-| default\_security\_group\_egress | List of maps of egress rules to set on the default security group | `list(map(string))` | <pre>[<br>  {<br>    "cidr_blocks": "0.0.0.0/0",<br>    "from_port": 0,<br>    "protocol": "-1",<br>    "to_port": 0<br>  }<br>]</pre> | no |
-| default\_security\_group\_ingress | List of maps of ingress rules to set on the default security group | `list(map(string))` | <pre>[<br>  {<br>    "from_port": 0,<br>    "protocol": "-1",<br>    "self": true,<br>    "to_port": 0<br>  }<br>]</pre> | no |
-| default\_security\_group\_name | Name to be used on the default security group | `string` | `""` | no |
+| default\_security\_group\_egress | List of maps of egress rules to set on the default security group | `list(map(string))` | `null` | no |
+| default\_security\_group\_ingress | List of maps of ingress rules to set on the default security group | `list(map(string))` | `null` | no |
+| default\_security\_group\_name | Name to be used on the default security group | `string` | `"default"` | no |
 | default\_security\_group\_tags | Additional tags for the default security group | `map(string)` | `{}` | no |
 | default\_vpc\_enable\_classiclink | Should be true to enable ClassicLink in the Default VPC | `bool` | `false` | no |
 | default\_vpc\_enable\_dns\_hostnames | Should be true to enable DNS hostnames in the Default VPC | `bool` | `false` | no |

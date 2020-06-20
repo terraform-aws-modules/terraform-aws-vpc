@@ -57,7 +57,7 @@ resource "aws_vpc_ipv4_cidr_block_association" "this" {
 resource "aws_default_security_group" "this" {
   count = var.create_vpc && var.manage_default_security_group ? 1 : 0
 
-  vpc_id = element(concat(aws_vpc.this.*.id, [""]), 0)
+  vpc_id = aws_vpc.this[0].id
 
   dynamic "ingress" {
     for_each = var.default_security_group_ingress
