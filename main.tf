@@ -103,7 +103,7 @@ resource "aws_internet_gateway" "this" {
 }
 
 resource "aws_egress_only_internet_gateway" "this" {
-  count = var.create_vpc && var.enable_ipv6 && local.max_subnet_length > 0 ? 1 : 0
+  count = var.create_vpc && var.create_egress_only_igw && var.enable_ipv6 && local.max_subnet_length > 0 ? 1 : 0
 
   vpc_id = local.vpc_id
 
@@ -223,7 +223,7 @@ resource "aws_route" "database_nat_gateway" {
 }
 
 resource "aws_route" "database_ipv6_egress" {
-  count = var.create_vpc && var.enable_ipv6 && var.create_database_subnet_route_table && length(var.database_subnets) > 0 && var.create_database_internet_gateway_route ? 1 : 0
+  count = var.create_vpc && var.create_egress_only_igw && var.enable_ipv6 && var.create_database_subnet_route_table && length(var.database_subnets) > 0 && var.create_database_internet_gateway_route ? 1 : 0
 
   route_table_id              = aws_route_table.database[0].id
   destination_ipv6_cidr_block = "::/0"
@@ -926,7 +926,7 @@ resource "aws_route" "private_nat_gateway" {
 }
 
 resource "aws_route" "private_ipv6_egress" {
-  count = var.create_vpc && var.enable_ipv6 ? length(var.private_subnets) : 0
+  count = var.create_vpc && var.create_egress_only_igw && var.enable_ipv6 ? length(var.private_subnets) : 0
 
   route_table_id              = element(aws_route_table.private.*.id, count.index)
   destination_ipv6_cidr_block = "::/0"
