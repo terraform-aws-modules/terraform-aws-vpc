@@ -2331,8 +2331,8 @@ variable "flow_log_max_aggregation_interval" {
   default     = 600
 }
 
-variable "disable_igw_creation" {
+variable "create_igw" {
   description = "Controls if an Internet Gateway is created for public subnets and the related routes that connect them."
   type        = bool
-  default     = false
+  default     = true
 }

@@ -291,6 +291,7 @@ It is possible to integrate this VPC module with [terraform-aws-transit-gateway 
 | create\_elasticache\_subnet\_route\_table | Controls if separate route table for elasticache should be created | `bool` | `false` | no |
 | create\_flow\_log\_cloudwatch\_iam\_role | Whether to create IAM role for VPC Flow Logs | `bool` | `false` | no |
 | create\_flow\_log\_cloudwatch\_log\_group | Whether to create CloudWatch log group for VPC Flow Logs | `bool` | `false` | no |
+| create\_igw | Controls if an Internet Gateway is created for public subnets and the related routes that connect them. | `bool` | `true` | no |
 | create\_redshift\_subnet\_group | Controls if redshift subnet group should be created | `bool` | `true` | no |
 | create\_redshift\_subnet\_route\_table | Controls if separate route table for redshift should be created | `bool` | `false` | no |
 | create\_vpc | Controls if VPC should be created (it affects almost all resources) | `bool` | `true` | no |
@@ -325,7 +326,6 @@ It is possible to integrate this VPC module with [terraform-aws-transit-gateway 
 | dhcp\_options\_netbios\_node\_type | Specify netbios node\_type for DHCP options set (requires enable\_dhcp\_options set to true) | `string` | `""` | no |
 | dhcp\_options\_ntp\_servers | Specify a list of NTP servers for DHCP options set (requires enable\_dhcp\_options set to true) | `list(string)` | `[]` | no |
 | dhcp\_options\_tags | Additional tags for the DHCP option set (requires enable\_dhcp\_options set to true) | `map(string)` | `{}` | no |
-| disable\_igw\_creation | Controls if an Internet Gateway is created for public subnets and the related routes that connect them. | `bool` | `false` | no |
 | ebs\_endpoint\_private\_dns\_enabled | Whether or not to associate a private hosted zone with the specified VPC for EBS endpoint | `bool` | `false` | no |
 | ebs\_endpoint\_security\_group\_ids | The ID of one or more security groups to associate with the network interface for EBS endpoint | `list(string)` | `[]` | no |
 | ebs\_endpoint\_subnet\_ids | The ID of one or more subnets in which to create a network interface for EBS endpoint. Only a single subnet within an AZ is supported. Ifomitted, private subnets will be used. | `list(string)` | `[]` | no |
