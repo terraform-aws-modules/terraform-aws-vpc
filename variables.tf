@@ -2259,10 +2259,40 @@ variable "elasticache_outbound_acl_rules" {
   ]
 }
 
+variable "manage_default_security_group" {
+  description = "Should be true to adopt and manage default security group"
+  type        = bool
+  default     = false
+}
+
+variable "default_security_group_name" {
+  description = "Name to be used on the default security group"
+  type        = string
+  default     = "default"
+}
+
+variable "default_security_group_ingress" {
+  description = "List of maps of ingress rules to set on the default security group"
+  type        = list(map(string))
+  default     = null
+}
+
 variable "enable_flow_log" {
   description = "Whether or not to enable VPC Flow Logs"
   type        = bool
   default     = false
+}
+
+variable "default_security_group_egress" {
+  description = "List of maps of egress rules to set on the default security group"
+  type        = list(map(string))
+  default     = null
+}
+
+variable "default_security_group_tags" {
+  description = "Additional tags for the default security group"
+  type        = map(string)
+  default     = {}
 }
 
 variable "create_flow_log_cloudwatch_log_group" {
