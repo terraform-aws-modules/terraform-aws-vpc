@@ -7,6 +7,12 @@ All notable changes to this project will be documented in this file.
 
 
 
+<a name="v2.44.0"></a>
+## [v2.44.0] - 2020-06-21
+
+- feat: manage default security group ([#382](https://github.com/terraform-aws-modules/terraform-aws-vpc/issues/382))
+
+
 <a name="v2.43.0"></a>
 ## [v2.43.0] - 2020-06-20
 
@@ -930,7 +936,8 @@ All notable changes to this project will be documented in this file.
 - Initial commit
 
 
-[Unreleased]: https://github.com/terraform-aws-modules/terraform-aws-vpc/compare/v2.43.0...HEAD
+[Unreleased]: https://github.com/terraform-aws-modules/terraform-aws-vpc/compare/v2.44.0...HEAD
+[v2.44.0]: https://github.com/terraform-aws-modules/terraform-aws-vpc/compare/v2.43.0...v2.44.0
 [v2.43.0]: https://github.com/terraform-aws-modules/terraform-aws-vpc/compare/v2.42.0...v2.43.0
 [v2.42.0]: https://github.com/terraform-aws-modules/terraform-aws-vpc/compare/v2.41.0...v2.42.0
 [v2.41.0]: https://github.com/terraform-aws-modules/terraform-aws-vpc/compare/v2.40.0...v2.41.0
