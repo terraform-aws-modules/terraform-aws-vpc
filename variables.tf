@@ -4,6 +4,24 @@ variable "create_vpc" {
   default     = true
 }
 
+# Lines I added ###################################
+variable "enable_ram_share" {
+  description = "Controls if the subnets should be shared with resource access manager"
+  type        = bool
+  default     = false
+}
+
+variable "principal_id" {
+  type    = string
+  default = ""
+}
+
+variable "allow_external_principals" {
+  type    = bool
+  default = false
+}
+###################################################
+
 variable "name" {
   description = "Name to be used on all the resources as identifier"
   type        = string
