@@ -101,10 +101,16 @@ module "vpc" {
   sqs_endpoint_private_dns_enabled = true
   sqs_endpoint_default_security_group  = true
 
+  # Default security group - ingress/egress rules cleared to deny all
+  manage_default_security_group  = true
+  default_security_group_ingress = [{}]
+  default_security_group_egress  = [{}]
+
   # VPC Flow Logs (Cloudwatch log group and IAM role will be created)
   enable_flow_log                      = true
   create_flow_log_cloudwatch_log_group = true
   create_flow_log_cloudwatch_iam_role  = true
+  flow_log_max_aggregation_interval    = 60
 
   tags = {
     Owner       = "user"

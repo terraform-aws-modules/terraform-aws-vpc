@@ -298,6 +298,12 @@ variable "external_nat_ip_ids" {
   default     = []
 }
 
+variable "external_nat_ips" {
+  description = "List of EIPs to be used for `nat_public_ips` output (used in combination with reuse_nat_ips and external_nat_ip_ids)"
+  type        = list(string)
+  default     = []
+}
+
 variable "enable_dynamodb_endpoint" {
   description = "Should be true if you want to provision a DynamoDB endpoint to the VPC"
   type        = bool
@@ -1328,6 +1334,337 @@ variable "cloud_directory_endpoint_private_dns_enabled" {
   default     = false
 }
 
+variable "enable_ses_endpoint" {
+  description = "Should be true if you want to provision an SES endpoint to the VPC"
+  type        = bool
+  default     = false
+}
+
+variable "ses_endpoint_security_group_ids" {
+  description = "The ID of one or more security groups to associate with the network interface for SES endpoint"
+  type        = list(string)
+  default     = []
+}
+
+variable "ses_endpoint_subnet_ids" {
+  description = "The ID of one or more subnets in which to create a network interface for SES endpoint. Only a single subnet within an AZ is supported. If omitted, private subnets will be used."
+  type        = list(string)
+  default     = []
+}
+
+variable "enable_auto_scaling_plans_endpoint" {
+  description = "Should be true if you want to provision an Auto Scaling Plans endpoint to the VPC"
+  type        = bool
+  default     = false
+}
+
+variable "auto_scaling_plans_endpoint_security_group_ids" {
+  description = "The ID of one or more security groups to associate with the network interface for Auto Scaling Plans endpoint"
+  type        = list(string)
+  default     = []
+}
+
+variable "auto_scaling_plans_endpoint_subnet_ids" {
+  description = "The ID of one or more subnets in which to create a network interface for Auto Scaling Plans endpoint. Only a single subnet within an AZ is supported. Ifomitted, private subnets will be used."
+  type        = list(string)
+  default     = []
+}
+
+variable "auto_scaling_plans_endpoint_private_dns_enabled" {
+  description = "Whether or not to associate a private hosted zone with the specified VPC for Auto Scaling Plans endpoint"
+  type        = bool
+  default     = false
+}
+
+variable "ses_endpoint_private_dns_enabled" {
+  description = "Whether or not to associate a private hosted zone with the specified VPC for SES endpoint"
+  type        = bool
+  default     = false
+}
+
+variable "enable_workspaces_endpoint" {
+  description = "Should be true if you want to provision an Workspaces endpoint to the VPC"
+  type        = bool
+  default     = false
+}
+
+variable "workspaces_endpoint_security_group_ids" {
+  description = "The ID of one or more security groups to associate with the network interface for Workspaces endpoint"
+  type        = list(string)
+  default     = []
+}
+
+variable "workspaces_endpoint_subnet_ids" {
+  description = "The ID of one or more subnets in which to create a network interface for Workspaces endpoint. Only a single subnet within an AZ is supported. Ifomitted, private subnets will be used."
+  type        = list(string)
+  default     = []
+}
+
+variable "workspaces_endpoint_private_dns_enabled" {
+  description = "Whether or not to associate a private hosted zone with the specified VPC for Workspaces endpoint"
+  type        = bool
+  default     = false
+}
+
+variable "enable_access_analyzer_endpoint" {
+  description = "Should be true if you want to provision an Access Analyzer endpoint to the VPC"
+  type        = bool
+  default     = false
+}
+
+variable "access_analyzer_endpoint_security_group_ids" {
+  description = "The ID of one or more security groups to associate with the network interface for Access Analyzer endpoint"
+  type        = list(string)
+  default     = []
+}
+
+variable "access_analyzer_endpoint_subnet_ids" {
+  description = "The ID of one or more subnets in which to create a network interface for Access Analyzer endpoint. Only a single subnet within an AZ is supported. Ifomitted, private subnets will be used."
+  type        = list(string)
+  default     = []
+}
+
+variable "access_analyzer_endpoint_private_dns_enabled" {
+  description = "Whether or not to associate a private hosted zone with the specified VPC for Access Analyzer endpoint"
+  type        = bool
+  default     = false
+}
+
+variable "enable_ebs_endpoint" {
+  description = "Should be true if you want to provision an EBS endpoint to the VPC"
+  type        = bool
+  default     = false
+}
+
+variable "ebs_endpoint_security_group_ids" {
+  description = "The ID of one or more security groups to associate with the network interface for EBS endpoint"
+  type        = list(string)
+  default     = []
+}
+
+variable "ebs_endpoint_subnet_ids" {
+  description = "The ID of one or more subnets in which to create a network interface for EBS endpoint. Only a single subnet within an AZ is supported. Ifomitted, private subnets will be used."
+  type        = list(string)
+  default     = []
+}
+
+variable "ebs_endpoint_private_dns_enabled" {
+  description = "Whether or not to associate a private hosted zone with the specified VPC for EBS endpoint"
+  type        = bool
+  default     = false
+}
+
+variable "enable_datasync_endpoint" {
+  description = "Should be true if you want to provision an Data Sync endpoint to the VPC"
+  type        = bool
+  default     = false
+}
+
+variable "datasync_endpoint_security_group_ids" {
+  description = "The ID of one or more security groups to associate with the network interface for Data Sync endpoint"
+  type        = list(string)
+  default     = []
+}
+
+variable "datasync_endpoint_subnet_ids" {
+  description = "The ID of one or more subnets in which to create a network interface for Data Sync endpoint. Only a single subnet within an AZ is supported. Ifomitted, private subnets will be used."
+  type        = list(string)
+  default     = []
+}
+
+variable "datasync_endpoint_private_dns_enabled" {
+  description = "Whether or not to associate a private hosted zone with the specified VPC for Data Sync endpoint"
+  type        = bool
+  default     = false
+}
+
+variable "enable_elastic_inference_runtime_endpoint" {
+  description = "Should be true if you want to provision an Elastic Inference Runtime endpoint to the VPC"
+  type        = bool
+  default     = false
+}
+
+variable "elastic_inference_runtime_endpoint_security_group_ids" {
+  description = "The ID of one or more security groups to associate with the network interface for Elastic Inference Runtime endpoint"
+  type        = list(string)
+  default     = []
+}
+
+variable "elastic_inference_runtime_endpoint_subnet_ids" {
+  description = "The ID of one or more subnets in which to create a network interface for Elastic Inference Runtime endpoint. Only a single subnet within an AZ is supported. Ifomitted, private subnets will be used."
+  type        = list(string)
+  default     = []
+}
+
+variable "elastic_inference_runtime_endpoint_private_dns_enabled" {
+  description = "Whether or not to associate a private hosted zone with the specified VPC for Elastic Inference Runtime endpoint"
+  type        = bool
+  default     = false
+}
+
+variable "enable_sms_endpoint" {
+  description = "Should be true if you want to provision an SMS endpoint to the VPC"
+  type        = bool
+  default     = false
+}
+
+variable "sms_endpoint_security_group_ids" {
+  description = "The ID of one or more security groups to associate with the network interface for SMS endpoint"
+  type        = list(string)
+  default     = []
+}
+
+variable "sms_endpoint_subnet_ids" {
+  description = "The ID of one or more subnets in which to create a network interface for SMS endpoint. Only a single subnet within an AZ is supported. Ifomitted, private subnets will be used."
+  type        = list(string)
+  default     = []
+}
+
+variable "sms_endpoint_private_dns_enabled" {
+  description = "Whether or not to associate a private hosted zone with the specified VPC for SMS endpoint"
+  type        = bool
+  default     = false
+}
+
+variable "enable_emr_endpoint" {
+  description = "Should be true if you want to provision an EMR endpoint to the VPC"
+  type        = bool
+  default     = false
+}
+
+variable "emr_endpoint_security_group_ids" {
+  description = "The ID of one or more security groups to associate with the network interface for EMR endpoint"
+  type        = list(string)
+  default     = []
+}
+
+variable "emr_endpoint_subnet_ids" {
+  description = "The ID of one or more subnets in which to create a network interface for EMR endpoint. Only a single subnet within an AZ is supported. Ifomitted, private subnets will be used."
+  type        = list(string)
+  default     = []
+}
+
+variable "emr_endpoint_private_dns_enabled" {
+  description = "Whether or not to associate a private hosted zone with the specified VPC for EMR endpoint"
+  type        = bool
+  default     = false
+}
+
+variable "enable_qldb_session_endpoint" {
+  description = "Should be true if you want to provision an QLDB Session endpoint to the VPC"
+  type        = bool
+  default     = false
+}
+
+variable "qldb_session_endpoint_security_group_ids" {
+  description = "The ID of one or more security groups to associate with the network interface for QLDB Session endpoint"
+  type        = list(string)
+  default     = []
+}
+
+variable "qldb_session_endpoint_subnet_ids" {
+  description = "The ID of one or more subnets in which to create a network interface for QLDB Session endpoint. Only a single subnet within an AZ is supported. Ifomitted, private subnets will be used."
+  type        = list(string)
+  default     = []
+}
+
+variable "qldb_session_endpoint_private_dns_enabled" {
+  description = "Whether or not to associate a private hosted zone with the specified VPC for QLDB Session endpoint"
+  type        = bool
+  default     = false
+}
+
+variable "enable_elasticbeanstalk_endpoint" {
+  description = "Should be true if you want to provision a Elastic Beanstalk endpoint to the VPC"
+  type        = bool
+  default     = false
+}
+
+variable "elasticbeanstalk_endpoint_security_group_ids" {
+  description = "The ID of one or more security groups to associate with the network interface for Elastic Beanstalk endpoint"
+  type        = list(string)
+  default     = []
+}
+
+variable "elasticbeanstalk_endpoint_subnet_ids" {
+  description = "The ID of one or more subnets in which to create a network interface for Elastic Beanstalk endpoint. Only a single subnet within an AZ is supported. If omitted, private subnets will be used."
+  type        = list(string)
+  default     = []
+}
+
+variable "elasticbeanstalk_endpoint_private_dns_enabled" {
+  description = "Whether or not to associate a private hosted zone with the specified VPC for Elastic Beanstalk endpoint"
+  type        = bool
+  default     = false
+}
+
+variable "enable_elasticbeanstalk_health_endpoint" {
+  description = "Should be true if you want to provision a Elastic Beanstalk Health endpoint to the VPC"
+  type        = bool
+  default     = false
+}
+
+variable "elasticbeanstalk_health_endpoint_security_group_ids" {
+  description = "The ID of one or more security groups to associate with the network interface for Elastic Beanstalk Health endpoint"
+  type        = list(string)
+  default     = []
+}
+
+variable "elasticbeanstalk_health_endpoint_subnet_ids" {
+  description = "The ID of one or more subnets in which to create a network interface for Elastic Beanstalk Health endpoint. Only a single subnet within an AZ is supported. If omitted, private subnets will be used."
+  type        = list(string)
+  default     = []
+}
+
+variable "elasticbeanstalk_health_endpoint_private_dns_enabled" {
+  description = "Whether or not to associate a private hosted zone with the specified VPC for Elastic Beanstalk Health endpoint"
+  type        = bool
+  default     = false
+}
+
+variable "enable_states_endpoint" {
+  description = "Should be true if you want to provision a Step Function endpoint to the VPC"
+  type        = bool
+  default     = false
+}
+
+variable "states_endpoint_security_group_ids" {
+  description = "The ID of one or more security groups to associate with the network interface for Step Function endpoint"
+  type        = list(string)
+  default     = []
+}
+
+variable "states_endpoint_subnet_ids" {
+  description = "The ID of one or more subnets in which to create a network interface for Step Function endpoint. Only a single subnet within an AZ is supported. If omitted, private subnets will be used."
+  type        = list(string)
+  default     = []
+}
+
+variable "states_endpoint_private_dns_enabled" {
+  description = "Whether or not to associate a private hosted zone with the specified VPC for Step Function endpoint"
+  type        = bool
+  default     = false
+}
+
+variable "enable_acm_pca_endpoint" {
+  description = "Should be true if you want to provision an ACM PCA endpoint to the VPC"
+  default     = false
+}
+
+variable "acm_pca_endpoint_security_group_ids" {
+  description = "The ID of one or more security groups to associate with the network interface for ACM PCA endpoint"
+  default     = []
+}
+
+variable "acm_pca_endpoint_subnet_ids" {
+  description = "The ID of one or more subnets in which to create a network interface for Codebuilt endpoint. Only a single subnet within an AZ is supported. If omitted, private subnets will be used."
+  default     = []
+}
+
+variable "acm_pca_endpoint_private_dns_enabled" {
+  description = "Whether or not to associate a private hosted zone with the specified VPC for ACM PCA endpoint"
+  default     = false
+}
 
 variable "map_public_ip_on_launch" {
   description = "Should be false if you do not want to auto-assign public IP on launch"
@@ -1927,10 +2264,40 @@ variable "elasticache_outbound_acl_rules" {
   ]
 }
 
+variable "manage_default_security_group" {
+  description = "Should be true to adopt and manage default security group"
+  type        = bool
+  default     = false
+}
+
+variable "default_security_group_name" {
+  description = "Name to be used on the default security group"
+  type        = string
+  default     = "default"
+}
+
+variable "default_security_group_ingress" {
+  description = "List of maps of ingress rules to set on the default security group"
+  type        = list(map(string))
+  default     = null
+}
+
 variable "enable_flow_log" {
   description = "Whether or not to enable VPC Flow Logs"
   type        = bool
   default     = false
+}
+
+variable "default_security_group_egress" {
+  description = "List of maps of egress rules to set on the default security group"
+  type        = list(map(string))
+  default     = null
+}
+
+variable "default_security_group_tags" {
+  description = "Additional tags for the default security group"
+  type        = map(string)
+  default     = {}
 }
 
 variable "create_flow_log_cloudwatch_log_group" {
@@ -1991,4 +2358,22 @@ variable "flow_log_cloudwatch_log_group_kms_key_id" {
   description = "The ARN of the KMS Key to use when encrypting log data for VPC flow logs."
   type        = string
   default     = null
+}
+
+variable "flow_log_max_aggregation_interval" {
+  description = "The maximum interval of time during which a flow of packets is captured and aggregated into a flow log record. Valid Values: `60` seconds or `600` seconds."
+  type        = number
+  default     = 600
+}
+
+variable "create_igw" {
+  description = "Controls if an Internet Gateway is created for public subnets and the related routes that connect them."
+  type        = bool
+  default     = true
+}
+
+variable "create_egress_only_igw" {
+  description = "Controls if an Egress Only Internet Gateway is created and its related routes."
+  type        = bool
+  default     = true
 }
