@@ -7,6 +7,93 @@ All notable changes to this project will be documented in this file.
 
 
 
+<a name="v2.44.0"></a>
+## [v2.44.0] - 2020-06-21
+
+- feat: manage default security group ([#382](https://github.com/terraform-aws-modules/terraform-aws-vpc/issues/382))
+
+
+<a name="v2.43.0"></a>
+## [v2.43.0] - 2020-06-20
+
+- feat: add support for disabling IGW for public subnets ([#457](https://github.com/terraform-aws-modules/terraform-aws-vpc/issues/457))
+
+
+<a name="v2.42.0"></a>
+## [v2.42.0] - 2020-06-20
+
+- fix: Reorder tags to allow overriding Name tag in route tables ([#458](https://github.com/terraform-aws-modules/terraform-aws-vpc/issues/458))
+
+
+<a name="v2.41.0"></a>
+## [v2.41.0] - 2020-06-20
+
+- fix: Output list of external_nat_ips when using external eips ([#432](https://github.com/terraform-aws-modules/terraform-aws-vpc/issues/432))
+
+
+<a name="v2.40.0"></a>
+## [v2.40.0] - 2020-06-20
+
+- Updated pre-commit hooks
+- feat: Add support for VPC flow log max_aggregation_interval ([#431](https://github.com/terraform-aws-modules/terraform-aws-vpc/issues/431))
+- feat: Add support for tagging egress only internet gateway ([#430](https://github.com/terraform-aws-modules/terraform-aws-vpc/issues/430))
+
+
+<a name="v2.39.0"></a>
+## [v2.39.0] - 2020-06-06
+
+- feat: Enable support for Terraform 0.13 as a valid version by setting minimum version required ([#455](https://github.com/terraform-aws-modules/terraform-aws-vpc/issues/455))
+
+
+<a name="v2.38.0"></a>
+## [v2.38.0] - 2020-05-25
+
+- feat: add vpc_owner_id to outputs ([#428](https://github.com/terraform-aws-modules/terraform-aws-vpc/issues/428))
+- docs: Fixed README
+- Merge branch 'master' into master
+- Updated description of vpc_owner_id
+- added owner_id output ([#1](https://github.com/terraform-aws-modules/terraform-aws-vpc/issues/1))
+
+
+<a name="v2.37.0"></a>
+## [v2.37.0] - 2020-05-25
+
+- fix: Fix wrong ACM PCA output ([#450](https://github.com/terraform-aws-modules/terraform-aws-vpc/issues/450))
+
+
+<a name="v2.36.0"></a>
+## [v2.36.0] - 2020-05-25
+
+- feat: Added support for more VPC endpoints ([#369](https://github.com/terraform-aws-modules/terraform-aws-vpc/issues/369))
+
+
+<a name="v2.35.0"></a>
+## [v2.35.0] - 2020-05-25
+
+- feat: Add VPC Endpoint for SES ([#449](https://github.com/terraform-aws-modules/terraform-aws-vpc/issues/449))
+
+
+<a name="v2.34.0"></a>
+## [v2.34.0] - 2020-05-25
+
+- feat: Add routes table association and route attachment outputs ([#398](https://github.com/terraform-aws-modules/terraform-aws-vpc/issues/398))
+- fix: Updated outputs in ipv6 example ([#375](https://github.com/terraform-aws-modules/terraform-aws-vpc/issues/375))
+
+
+<a name="v2.33.0"></a>
+## [v2.33.0] - 2020-04-02
+
+- docs: Updated required versions of Terraform
+- feat: Add EC2 Auto Scaling VPC endpoint ([#374](https://github.com/terraform-aws-modules/terraform-aws-vpc/issues/374))
+- docs: Document create_database_subnet_group requiring database_subnets ([#424](https://github.com/terraform-aws-modules/terraform-aws-vpc/issues/424))
+
+
+<a name="v2.32.0"></a>
+## [v2.32.0] - 2020-03-24
+
+- feat: Add intra subnet VPN route propagation ([#421](https://github.com/terraform-aws-modules/terraform-aws-vpc/issues/421))
+
+
 <a name="v2.31.0"></a>
 ## [v2.31.0] - 2020-03-20
 
@@ -770,13 +857,13 @@ All notable changes to this project will be documented in this file.
 - Reverted bad merge, fixed [#33](https://github.com/terraform-aws-modules/terraform-aws-vpc/issues/33)
 
 
-<a name="v1.5.1"></a>
-## [v1.5.1] - 2017-11-23
-
-
-
 <a name="v1.5.0"></a>
 ## [v1.5.0] - 2017-11-23
+
+
+
+<a name="v1.5.1"></a>
+## [v1.5.1] - 2017-11-23
 
 - Reverted bad merge, fixed [#33](https://github.com/terraform-aws-modules/terraform-aws-vpc/issues/33)
 - Set enable_dns_support=true by default
@@ -849,7 +936,20 @@ All notable changes to this project will be documented in this file.
 - Initial commit
 
 
-[Unreleased]: https://github.com/terraform-aws-modules/terraform-aws-vpc/compare/v2.31.0...HEAD
+[Unreleased]: https://github.com/terraform-aws-modules/terraform-aws-vpc/compare/v2.44.0...HEAD
+[v2.44.0]: https://github.com/terraform-aws-modules/terraform-aws-vpc/compare/v2.43.0...v2.44.0
+[v2.43.0]: https://github.com/terraform-aws-modules/terraform-aws-vpc/compare/v2.42.0...v2.43.0
+[v2.42.0]: https://github.com/terraform-aws-modules/terraform-aws-vpc/compare/v2.41.0...v2.42.0
+[v2.41.0]: https://github.com/terraform-aws-modules/terraform-aws-vpc/compare/v2.40.0...v2.41.0
+[v2.40.0]: https://github.com/terraform-aws-modules/terraform-aws-vpc/compare/v2.39.0...v2.40.0
+[v2.39.0]: https://github.com/terraform-aws-modules/terraform-aws-vpc/compare/v2.38.0...v2.39.0
+[v2.38.0]: https://github.com/terraform-aws-modules/terraform-aws-vpc/compare/v2.37.0...v2.38.0
+[v2.37.0]: https://github.com/terraform-aws-modules/terraform-aws-vpc/compare/v2.36.0...v2.37.0
+[v2.36.0]: https://github.com/terraform-aws-modules/terraform-aws-vpc/compare/v2.35.0...v2.36.0
+[v2.35.0]: https://github.com/terraform-aws-modules/terraform-aws-vpc/compare/v2.34.0...v2.35.0
+[v2.34.0]: https://github.com/terraform-aws-modules/terraform-aws-vpc/compare/v2.33.0...v2.34.0
+[v2.33.0]: https://github.com/terraform-aws-modules/terraform-aws-vpc/compare/v2.32.0...v2.33.0
+[v2.32.0]: https://github.com/terraform-aws-modules/terraform-aws-vpc/compare/v2.31.0...v2.32.0
 [v2.31.0]: https://github.com/terraform-aws-modules/terraform-aws-vpc/compare/v2.30.0...v2.31.0
 [v2.30.0]: https://github.com/terraform-aws-modules/terraform-aws-vpc/compare/v2.29.0...v2.30.0
 [v2.29.0]: https://github.com/terraform-aws-modules/terraform-aws-vpc/compare/v2.28.0...v2.29.0
@@ -953,9 +1053,9 @@ All notable changes to this project will be documented in this file.
 [v1.8.0]: https://github.com/terraform-aws-modules/terraform-aws-vpc/compare/v1.7.0...v1.8.0
 [v1.7.0]: https://github.com/terraform-aws-modules/terraform-aws-vpc/compare/v1.6.0...v1.7.0
 [v1.6.0]: https://github.com/terraform-aws-modules/terraform-aws-vpc/compare/v1.4.1...v1.6.0
-[v1.4.1]: https://github.com/terraform-aws-modules/terraform-aws-vpc/compare/v1.5.1...v1.4.1
-[v1.5.1]: https://github.com/terraform-aws-modules/terraform-aws-vpc/compare/v1.5.0...v1.5.1
-[v1.5.0]: https://github.com/terraform-aws-modules/terraform-aws-vpc/compare/v1.4.0...v1.5.0
+[v1.4.1]: https://github.com/terraform-aws-modules/terraform-aws-vpc/compare/v1.5.0...v1.4.1
+[v1.5.0]: https://github.com/terraform-aws-modules/terraform-aws-vpc/compare/v1.5.1...v1.5.0
+[v1.5.1]: https://github.com/terraform-aws-modules/terraform-aws-vpc/compare/v1.4.0...v1.5.1
 [v1.4.0]: https://github.com/terraform-aws-modules/terraform-aws-vpc/compare/v1.3.0...v1.4.0
 [v1.3.0]: https://github.com/terraform-aws-modules/terraform-aws-vpc/compare/v1.2.0...v1.3.0
 [v1.2.0]: https://github.com/terraform-aws-modules/terraform-aws-vpc/compare/v1.1.0...v1.2.0
