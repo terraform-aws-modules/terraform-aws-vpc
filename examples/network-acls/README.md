@@ -36,11 +36,14 @@ No input.
 | Name | Description |
 |------|-------------|
 | default\_network\_acl\_id | The ID of the default network ACL |
+| elasticache\_network\_acl\_arn | ARN of the elasticache network ACL |
 | elasticache\_network\_acl\_id | ID of the elasticache network ACL |
 | module\_vpc | Module VPC |
 | nat\_public\_ips | List of public Elastic IPs created for AWS NAT Gateway |
+| private\_network\_acl\_arn | ARN of the private network ACL |
 | private\_network\_acl\_id | ID of the private network ACL |
 | private\_subnets | List of IDs of private subnets |
+| public\_network\_acl\_arn | ARN of the public network ACL |
 | public\_network\_acl\_id | ID of the public network ACL |
 | public\_subnets | List of IDs of public subnets |
 | vpc\_cidr\_block | The CIDR block of the VPC |
