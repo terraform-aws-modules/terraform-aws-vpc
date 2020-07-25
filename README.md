@@ -225,13 +225,13 @@ It is possible to integrate this VPC module with [terraform-aws-transit-gateway 
 | Name | Version |
 |------|---------|
 | terraform | >= 0.12.6, < 0.14 |
-| aws | ~> 2.57 |
+| aws | ~> 2.68 |
 
 ## Providers
 
 | Name | Version |
 |------|---------|
-| aws | ~> 2.57 |
+| aws | ~> 2.68 |
 
 ## Inputs
 
@@ -618,10 +618,12 @@ It is possible to integrate this VPC module with [terraform-aws-transit-gateway 
 | Name | Description |
 |------|-------------|
 | azs | A list of availability zones specified as argument to this module |
+| cgw\_arns | List of ARNs of Customer Gateway |
 | cgw\_ids | List of IDs of Customer Gateway |
 | database\_internet\_gateway\_route\_id | ID of the database internet gateway route. |
 | database\_ipv6\_egress\_route\_id | ID of the database IPv6 egress route. |
 | database\_nat\_gateway\_route\_ids | List of IDs of the database nat gateway route. |
+| database\_network\_acl\_arn | ARN of the database network ACL |
 | database\_network\_acl\_id | ID of the database network ACL |
 | database\_route\_table\_association\_ids | List of IDs of the database route table association |
 | database\_route\_table\_ids | List of IDs of database route tables |
@@ -633,6 +635,7 @@ It is possible to integrate this VPC module with [terraform-aws-transit-gateway 
 | default\_network\_acl\_id | The ID of the default network ACL |
 | default\_route\_table\_id | The ID of the default route table |
 | default\_security\_group\_id | The ID of the security group created by default on VPC creation |
+| default\_vpc\_arn | The ARN of the VPC |
 | default\_vpc\_cidr\_block | The CIDR block of the VPC |
 | default\_vpc\_default\_network\_acl\_id | The ID of the default network ACL |
 | default\_vpc\_default\_route\_table\_id | The ID of the default route table |
@@ -643,6 +646,7 @@ It is possible to integrate this VPC module with [terraform-aws-transit-gateway 
 | default\_vpc\_instance\_tenancy | Tenancy of instances spin up within VPC |
 | default\_vpc\_main\_route\_table\_id | The ID of the main route table associated with this VPC |
 | egress\_only\_internet\_gateway\_id | The ID of the egress only Internet Gateway |
+| elasticache\_network\_acl\_arn | ARN of the elasticache network ACL |
 | elasticache\_network\_acl\_id | ID of the elasticache network ACL |
 | elasticache\_route\_table\_association\_ids | List of IDs of the elasticache route table association |
 | elasticache\_route\_table\_ids | List of IDs of elasticache route tables |
@@ -652,7 +656,9 @@ It is possible to integrate this VPC module with [terraform-aws-transit-gateway 
 | elasticache\_subnets | List of IDs of elasticache subnets |
 | elasticache\_subnets\_cidr\_blocks | List of cidr\_blocks of elasticache subnets |
 | elasticache\_subnets\_ipv6\_cidr\_blocks | List of IPv6 cidr\_blocks of elasticache subnets in an IPv6 enabled VPC |
+| igw\_arn | The ARN of the Internet Gateway |
 | igw\_id | The ID of the Internet Gateway |
+| intra\_network\_acl\_arn | ARN of the intra network ACL |
 | intra\_network\_acl\_id | ID of the intra network ACL |
 | intra\_route\_table\_association\_ids | List of IDs of the intra route table association |
 | intra\_route\_table\_ids | List of IDs of intra route tables |
@@ -666,6 +672,7 @@ It is possible to integrate this VPC module with [terraform-aws-transit-gateway 
 | natgw\_ids | List of NAT Gateway IDs |
 | private\_ipv6\_egress\_route\_ids | List of IDs of the ipv6 egress route. |
 | private\_nat\_gateway\_route\_ids | List of IDs of the private nat gateway route. |
+| private\_network\_acl\_arn | ARN of the private network ACL |
 | private\_network\_acl\_id | ID of the private network ACL |
 | private\_route\_table\_association\_ids | List of IDs of the private route table association |
 | private\_route\_table\_ids | List of IDs of private route tables |
@@ -675,6 +682,7 @@ It is possible to integrate this VPC module with [terraform-aws-transit-gateway 
 | private\_subnets\_ipv6\_cidr\_blocks | List of IPv6 cidr\_blocks of private subnets in an IPv6 enabled VPC |
 | public\_internet\_gateway\_ipv6\_route\_id | ID of the IPv6 internet gateway route. |
 | public\_internet\_gateway\_route\_id | ID of the internet gateway route. |
+| public\_network\_acl\_arn | ARN of the public network ACL |
 | public\_network\_acl\_id | ID of the public network ACL |
 | public\_route\_table\_association\_ids | List of IDs of the public route table association |
 | public\_route\_table\_ids | List of IDs of public route tables |
@@ -682,6 +690,7 @@ It is possible to integrate this VPC module with [terraform-aws-transit-gateway 
 | public\_subnets | List of IDs of public subnets |
 | public\_subnets\_cidr\_blocks | List of cidr\_blocks of public subnets |
 | public\_subnets\_ipv6\_cidr\_blocks | List of IPv6 cidr\_blocks of public subnets in an IPv6 enabled VPC |
+| redshift\_network\_acl\_arn | ARN of the redshift network ACL |
 | redshift\_network\_acl\_id | ID of the redshift network ACL |
 | redshift\_public\_route\_table\_association\_ids | List of IDs of the public redshidt route table association |
 | redshift\_route\_table\_association\_ids | List of IDs of the redshift route table association |
@@ -692,6 +701,7 @@ It is possible to integrate this VPC module with [terraform-aws-transit-gateway 
 | redshift\_subnets\_cidr\_blocks | List of cidr\_blocks of redshift subnets |
 | redshift\_subnets\_ipv6\_cidr\_blocks | List of IPv6 cidr\_blocks of redshift subnets in an IPv6 enabled VPC |
 | this\_customer\_gateway | Map of Customer Gateway attributes |
+| vgw\_arn | The ARN of the VPN Gateway |
 | vgw\_id | The ID of the VPN Gateway |
 | vpc\_arn | The ARN of the VPC |
 | vpc\_cidr\_block | The CIDR block of the VPC |
