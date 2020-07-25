@@ -369,10 +369,7 @@ output "vgw_id" {
 
 output "vgw_arn" {
   description = "The ARN of the VPN Gateway"
-  value = concat(
-    aws_vpn_gateway.this.*.arn,
-    [""],
-  )[0]
+  value       = concat(aws_vpn_gateway.this.*.arn, [""])[0]
 }
 
 output "default_vpc_id" {
