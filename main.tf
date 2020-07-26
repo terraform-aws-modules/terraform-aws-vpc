@@ -1083,6 +1083,13 @@ resource "aws_vpn_gateway" "this" {
   )
 }
 
+resource "aws_vpn_gateway_attachment" "that" {
+  count = var.enable_vpn_gateway ? 1 : 0
+
+  vpc_id         = local.vpc_id
+  vpn_gateway_id = aws_vpn_gateway.this[0].id
+}
+
 resource "aws_vpn_gateway_attachment" "this" {
   count = var.vpn_gateway_id != "" ? 1 : 0
 
