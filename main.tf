@@ -38,11 +38,11 @@ resource "aws_vpc" "this" {
   assign_generated_ipv6_cidr_block = var.enable_ipv6
 
   tags = merge(
-    {
-      "Name" = format("%s", var.name)
-    },
     var.tags,
     var.vpc_tags,
+    {
+      "Name" = format("%s", var.name)
+    }
   )
 }
 
@@ -88,11 +88,11 @@ resource "aws_default_security_group" "this" {
   }
 
   tags = merge(
-    {
-      "Name" = format("%s", var.default_security_group_name)
-    },
     var.tags,
     var.default_security_group_tags,
+    {
+      "Name" = format("%s", var.default_security_group_name)
+    }
   )
 }
 
@@ -109,11 +109,11 @@ resource "aws_vpc_dhcp_options" "this" {
   netbios_node_type    = var.dhcp_options_netbios_node_type
 
   tags = merge(
-    {
-      "Name" = format("%s", var.name)
-    },
     var.tags,
     var.dhcp_options_tags,
+    {
+      "Name" = format("%s", var.name)
+    }
   )
 }
 
@@ -136,11 +136,11 @@ resource "aws_internet_gateway" "this" {
   vpc_id = local.vpc_id
 
   tags = merge(
-    {
-      "Name" = format("%s", var.name)
-    },
     var.tags,
     var.igw_tags,
+    {
+      "Name" = format("%s", var.name)
+    }
   )
 }
 
@@ -150,11 +150,11 @@ resource "aws_egress_only_internet_gateway" "this" {
   vpc_id = local.vpc_id
 
   tags = merge(
-    {
-      "Name" = format("%s", var.name)
-    },
     var.tags,
     var.igw_tags,
+    {
+      "Name" = format("%s", var.name)
+    }
   )
 }
 
@@ -167,11 +167,11 @@ resource "aws_route_table" "public" {
   vpc_id = local.vpc_id
 
   tags = merge(
-    {
-      "Name" = format("%s-${var.public_subnet_suffix}", var.name)
-    },
     var.tags,
     var.public_route_table_tags,
+    {
+      "Name" = format("%s-${var.public_subnet_suffix}", var.name)
+    }
   )
 }
 
@@ -205,15 +205,15 @@ resource "aws_route_table" "private" {
   vpc_id = local.vpc_id
 
   tags = merge(
+    var.tags,
+    var.private_route_table_tags,
     {
       "Name" = var.single_nat_gateway ? "${var.name}-${var.private_subnet_suffix}" : format(
         "%s-${var.private_subnet_suffix}-%s",
         var.name,
         element(var.azs, count.index),
       )
-    },
-    var.tags,
-    var.private_route_table_tags,
+    }
   )
 
   lifecycle {
@@ -232,11 +232,11 @@ resource "aws_route_table" "database" {
   vpc_id = local.vpc_id
 
   tags = merge(
-    {
-      "Name" = "${var.name}-${var.database_subnet_suffix}"
-    },
     var.tags,
     var.database_route_table_tags,
+    {
+      "Name" = "${var.name}-${var.database_subnet_suffix}"
+    }
   )
 }
 
@@ -285,11 +285,11 @@ resource "aws_route_table" "redshift" {
   vpc_id = local.vpc_id
 
   tags = merge(
-    {
-      "Name" = "${var.name}-${var.redshift_subnet_suffix}"
-    },
     var.tags,
     var.redshift_route_table_tags,
+    {
+      "Name" = "${var.name}-${var.redshift_subnet_suffix}"
+    }
   )
 }
 
@@ -302,11 +302,11 @@ resource "aws_route_table" "elasticache" {
   vpc_id = local.vpc_id
 
   tags = merge(
-    {
-      "Name" = "${var.name}-${var.elasticache_subnet_suffix}"
-    },
     var.tags,
     var.elasticache_route_table_tags,
+    {
+      "Name" = "${var.name}-${var.elasticache_subnet_suffix}"
+    }
   )
 }
 
@@ -319,11 +319,11 @@ resource "aws_route_table" "intra" {
   vpc_id = local.vpc_id
 
   tags = merge(
-    {
-      "Name" = "${var.name}-${var.intra_subnet_suffix}"
-    },
     var.tags,
     var.intra_route_table_tags,
+    {
+      "Name" = "${var.name}-${var.intra_subnet_suffix}"
+    }
   )
 }
 
@@ -343,15 +343,15 @@ resource "aws_subnet" "public" {
   ipv6_cidr_block = var.enable_ipv6 && length(var.public_subnet_ipv6_prefixes) > 0 ? cidrsubnet(aws_vpc.this[0].ipv6_cidr_block, 8, var.public_subnet_ipv6_prefixes[count.index]) : null
 
   tags = merge(
+    var.tags,
+    var.public_subnet_tags,
     {
       "Name" = format(
         "%s-${var.public_subnet_suffix}-%s",
         var.name,
         element(var.azs, count.index),
       )
-    },
-    var.tags,
-    var.public_subnet_tags,
+    }
   )
 }
 
@@ -370,15 +370,15 @@ resource "aws_subnet" "private" {
   ipv6_cidr_block = var.enable_ipv6 && length(var.private_subnet_ipv6_prefixes) > 0 ? cidrsubnet(aws_vpc.this[0].ipv6_cidr_block, 8, var.private_subnet_ipv6_prefixes[count.index]) : null
 
   tags = merge(
+    var.tags,
+    var.private_subnet_tags,
     {
       "Name" = format(
         "%s-${var.private_subnet_suffix}-%s",
         var.name,
         element(var.azs, count.index),
       )
-    },
-    var.tags,
-    var.private_subnet_tags,
+    }
   )
 }
 
@@ -397,15 +397,15 @@ resource "aws_subnet" "database" {
   ipv6_cidr_block = var.enable_ipv6 && length(var.database_subnet_ipv6_prefixes) > 0 ? cidrsubnet(aws_vpc.this[0].ipv6_cidr_block, 8, var.database_subnet_ipv6_prefixes[count.index]) : null
 
   tags = merge(
+    var.tags,
+    var.database_subnet_tags,
     {
       "Name" = format(
         "%s-${var.database_subnet_suffix}-%s",
         var.name,
         element(var.azs, count.index),
       )
-    },
-    var.tags,
-    var.database_subnet_tags,
+    }
   )
 }
 
@@ -417,11 +417,11 @@ resource "aws_db_subnet_group" "database" {
   subnet_ids  = aws_subnet.database.*.id
 
   tags = merge(
-    {
-      "Name" = format("%s", var.name)
-    },
     var.tags,
     var.database_subnet_group_tags,
+    {
+      "Name" = format("%s", var.name)
+    }
   )
 }
 
