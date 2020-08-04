@@ -4,7 +4,10 @@ variable "create_vpc" {
   default     = true
 }
 
-# Lines I added ###################################
+# Lines I added for sps ###################################
+# Support for RAM sharing is only enabled for 
+# private, public and database subnets
+# because we will only be deploying those subnets.
 variable "enable_ram_share" {
   description = "Controls if the subnets should be shared with resource access manager"
   type        = bool

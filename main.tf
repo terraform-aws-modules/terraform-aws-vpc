@@ -975,43 +975,53 @@ resource "aws_route" "private_ipv6_egress" {
   egress_only_gateway_id      = element(aws_egress_only_internet_gateway.this.*.id, 0)
 }
 
-##########################
-# Ram Share
-# Ram sharing with organizations needs to be enabled
-#
-# add tags later
-##########################
+#################################
+# Ram Share, added by spscommerce 
+#################################
 
 
-resource "aws_ram_resource_share" "ram_subnet_share" {
+resource "aws_ram_resource_share" "sps_subnet_ram_share" {
   count = var.create_vpc && var.enable_ram_share ? 1 : 0
 
-  name                      = "ram_subnet_share"
+  name                      = "sps_subnet_ram_share"
   allow_external_principals = var.allow_external_principals
+
+  tags = var.tags
 }
 
-resource "aws_ram_principal_association" "example" {
+resource "aws_ram_principal_association" "orgassociation" {
   count = var.create_vpc && var.enable_ram_share ? 1 : 0
 
   principal          = var.principal_id
-  resource_share_arn = aws_ram_resource_share.ram_subnet_share[0].arn
+  resource_share_arn = aws_ram_resource_share.sps_subnet_ram_share[0].arn
+
 }
 
 resource "aws_ram_resource_association" "private" {
   count = var.create_vpc && var.enable_ram_share && length(var.private_subnets) > 0 ? length(var.private_subnets) : 0
 
   resource_arn       = element(aws_subnet.private.*.arn, count.index)
-  resource_share_arn = aws_ram_resource_share.ram_subnet_share[0].arn
+  resource_share_arn = aws_ram_resource_share.sps_subnet_ram_share[0].arn
+
 }
 
 resource "aws_ram_resource_association" "database" {
   count = var.create_vpc && var.enable_ram_share && length(var.database_subnets) > 0 ? length(var.database_subnets) : 0
 
   resource_arn       = element(aws_subnet.database.*.arn, count.index)
-  resource_share_arn = aws_ram_resource_share.ram_subnet_share[0].arn
+  resource_share_arn = aws_ram_resource_share.sps_subnet_ram_share[0].arn
+
 }
 
-# take a closer look at redshift count block and contitions. for testing, leave those out
+resource "aws_ram_resource_association" "public" {
+  count = var.create_vpc && var.enable_ram_share && length(var.public_subnets) > 0 && (false == var.one_nat_gateway_per_az || length(var.public_subnets) >= length(var.azs)) ? length(var.public_subnets) : 0
+
+  resource_arn       = element(aws_subnet.public.*.arn, count.index)
+  resource_share_arn = aws_ram_resource_share.sps_subnet_ram_share[0].arn
+
+}
+
+
 
 ##########################
 # Route table association

@@ -1,5 +1,6 @@
 provider "aws" {
-  region = "us-east-1"
+  region  = "us-east-1"
+  version = "~> 2.6"
 }
 
 data "aws_security_group" "default" {
@@ -13,21 +14,22 @@ module "vpc" {
   name = "simple-example"
 
   enable_ram_share = true
-  principal_id = "arn:aws:organizations::880141098094:ou/o-45gl6wapoa/ou-24vr-k9bsbjlu"
+  principal_id     = "arn:aws:organizations::880141098094:ou/o-45gl6wapoa/ou-24vr-k9bsbjlu"
 
   cidr = "10.0.0.0/16"
 
-  azs             = ["us-east-1a", "us-east-1b", "us-east-1b"]
-  private_subnets = ["10.0.1.0/24", "10.0.2.0/24", "10.0.3.0/24"]
-  database_subnets  = ["10.0.101.0/24", "10.0.102.0/24", "10.0.103.0/24"]
+  azs              = ["use1-az1", "use1-az2", "use1-az3"]
+  public_subnets   = ["10.0.10.0/24", "10.0.20.0/24", "10.0.30.0/24"]
+  private_subnets  = ["10.0.11.0/24", "10.0.12.0/24", "10.0.13.0/24"]
+  database_subnets = ["10.0.101.0/24", "10.0.102.0/24", "10.0.103.0/24"]
 
   # enable_ipv6 = true
 
-  # enable_nat_gateway = true
-  # single_nat_gateway = true
+  enable_nat_gateway                 = true
+  create_database_subnet_route_table = true
 
   public_subnet_tags = {
-    Name = "overridden-name-public"
+    Name = "tftestpublic"
   }
 
   tags = {
@@ -36,7 +38,7 @@ module "vpc" {
   }
 
   vpc_tags = {
-    Name = "vpc-name"
+    Name = "tfmodtest"
   }
 }
 
