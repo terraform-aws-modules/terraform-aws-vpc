@@ -1286,7 +1286,7 @@ resource "aws_vpc_endpoint" "elasticbeanstalk" {
 data "aws_vpc_endpoint_service" "elasticbeanstalk_health" {
   count = var.create_vpc && var.enable_elasticbeanstalk_health_endpoint ? 1 : 0
 
-  service = "elasticbeanstalk.health"
+  service = "elasticbeanstalk-health"
 }
 
 resource "aws_vpc_endpoint" "elasticbeanstalk_health" {
