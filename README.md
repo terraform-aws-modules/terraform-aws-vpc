@@ -163,14 +163,14 @@ VPC Flow Log allows to capture IP traffic for a specific network interface (ENI)
 
 ## Conditional creation
 
-Sometimes you need to have a way to create VPC resources conditionally but Terraform does not allow to use `count` inside `module` block, so the solution is to specify argument `create_vpc`.
+With terraform ~> 0.13.0 it is allowed to use `count` on modules.
 
 ```hcl
-# This VPC will not be created
+# This VPC will be created conditional on `var.create_vpc`
 module "vpc" {
   source = "terraform-aws-modules/vpc/aws"
-
-  create_vpc = false
+  count = var.create_vpc ? 0 : 1
+  
   # ... omitted
 }
 ```
