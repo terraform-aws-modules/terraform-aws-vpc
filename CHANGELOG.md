@@ -7,6 +7,12 @@ All notable changes to this project will be documented in this file.
 
 
 
+<a name="v2.47.0"></a>
+## [v2.47.0] - 2020-08-13
+
+- feat: add arn outputs for: igw, cgw, vgw, default vpc, acls ([#471](https://github.com/terraform-aws-modules/terraform-aws-vpc/issues/471))
+
+
 <a name="v2.46.0"></a>
 ## [v2.46.0] - 2020-08-13
 
@@ -950,7 +956,8 @@ All notable changes to this project will be documented in this file.
 - Initial commit
 
 
-[Unreleased]: https://github.com/terraform-aws-modules/terraform-aws-vpc/compare/v2.46.0...HEAD
+[Unreleased]: https://github.com/terraform-aws-modules/terraform-aws-vpc/compare/v2.47.0...HEAD
+[v2.47.0]: https://github.com/terraform-aws-modules/terraform-aws-vpc/compare/v2.46.0...v2.47.0
 [v2.46.0]: https://github.com/terraform-aws-modules/terraform-aws-vpc/compare/v2.45.0...v2.46.0
 [v2.45.0]: https://github.com/terraform-aws-modules/terraform-aws-vpc/compare/v2.44.0...v2.45.0
 [v2.44.0]: https://github.com/terraform-aws-modules/terraform-aws-vpc/compare/v2.43.0...v2.44.0
