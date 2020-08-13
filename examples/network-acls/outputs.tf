@@ -53,6 +53,21 @@ output "default_network_acl_id" {
   value       = module.vpc.default_network_acl_id
 }
 
+output "public_network_acl_arn" {
+  description = "ARN of the public network ACL"
+  value       = module.vpc.public_network_acl_arn
+}
+
+output "private_network_acl_arn" {
+  description = "ARN of the private network ACL"
+  value       = module.vpc.private_network_acl_arn
+}
+
+output "elasticache_network_acl_arn" {
+  description = "ARN of the elasticache network ACL"
+  value       = module.vpc.elasticache_network_acl_arn
+}
+
 output "module_vpc" {
   description = "Module VPC"
   value       = module.vpc
