@@ -7,6 +7,14 @@ All notable changes to this project will be documented in this file.
 
 
 
+<a name="v2.45.0"></a>
+## [v2.45.0] - 2020-08-13
+
+- feat: bump version of aws provider version to support 3.* ([#479](https://github.com/terraform-aws-modules/terraform-aws-vpc/issues/479))
+- fix: bumping terraform version from 0.12.6 to 0.12.7 in circleci to include regexall function ([#474](https://github.com/terraform-aws-modules/terraform-aws-vpc/issues/474))
+- docs: Fix typo in nat_public_ips ([#460](https://github.com/terraform-aws-modules/terraform-aws-vpc/issues/460))
+
+
 <a name="v2.44.0"></a>
 ## [v2.44.0] - 2020-06-21
 
@@ -936,7 +944,8 @@ All notable changes to this project will be documented in this file.
 - Initial commit
 
 
-[Unreleased]: https://github.com/terraform-aws-modules/terraform-aws-vpc/compare/v2.44.0...HEAD
+[Unreleased]: https://github.com/terraform-aws-modules/terraform-aws-vpc/compare/v2.45.0...HEAD
+[v2.45.0]: https://github.com/terraform-aws-modules/terraform-aws-vpc/compare/v2.44.0...v2.45.0
 [v2.44.0]: https://github.com/terraform-aws-modules/terraform-aws-vpc/compare/v2.43.0...v2.44.0
 [v2.43.0]: https://github.com/terraform-aws-modules/terraform-aws-vpc/compare/v2.42.0...v2.43.0
 [v2.42.0]: https://github.com/terraform-aws-modules/terraform-aws-vpc/compare/v2.41.0...v2.42.0
