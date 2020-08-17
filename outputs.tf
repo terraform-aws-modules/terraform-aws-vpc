@@ -333,6 +333,11 @@ output "igw_id" {
   value       = concat(aws_internet_gateway.this.*.id, [""])[0]
 }
 
+output "igw_arn" {
+  description = "The ARN of the Internet Gateway"
+  value       = concat(aws_internet_gateway.this.*.arn, [""])[0]
+}
+
 output "egress_only_internet_gateway_id" {
   description = "The ID of the egress only Internet Gateway"
   value       = concat(aws_egress_only_internet_gateway.this.*.id, [""])[0]
@@ -341,6 +346,11 @@ output "egress_only_internet_gateway_id" {
 output "cgw_ids" {
   description = "List of IDs of Customer Gateway"
   value       = [for k, v in aws_customer_gateway.this : v.id]
+}
+
+output "cgw_arns" {
+  description = "List of ARNs of Customer Gateway"
+  value       = [for k, v in aws_customer_gateway.this : v.arn]
 }
 
 output "this_customer_gateway" {
@@ -357,9 +367,19 @@ output "vgw_id" {
   )[0]
 }
 
+output "vgw_arn" {
+  description = "The ARN of the VPN Gateway"
+  value       = concat(aws_vpn_gateway.this.*.arn, [""])[0]
+}
+
 output "default_vpc_id" {
   description = "The ID of the VPC"
   value       = concat(aws_default_vpc.this.*.id, [""])[0]
+}
+
+output "default_vpc_arn" {
+  description = "The ARN of the VPC"
+  value       = concat(aws_default_vpc.this.*.arn, [""])[0]
 }
 
 output "default_vpc_cidr_block" {
@@ -422,9 +442,19 @@ output "public_network_acl_id" {
   value       = concat(aws_network_acl.public.*.id, [""])[0]
 }
 
+output "public_network_acl_arn" {
+  description = "ARN of the public network ACL"
+  value       = concat(aws_network_acl.public.*.arn, [""])[0]
+}
+
 output "private_network_acl_id" {
   description = "ID of the private network ACL"
   value       = concat(aws_network_acl.private.*.id, [""])[0]
+}
+
+output "private_network_acl_arn" {
+  description = "ARN of the private network ACL"
+  value       = concat(aws_network_acl.private.*.arn, [""])[0]
 }
 
 output "intra_network_acl_id" {
@@ -432,9 +462,19 @@ output "intra_network_acl_id" {
   value       = concat(aws_network_acl.intra.*.id, [""])[0]
 }
 
+output "intra_network_acl_arn" {
+  description = "ARN of the intra network ACL"
+  value       = concat(aws_network_acl.intra.*.arn, [""])[0]
+}
+
 output "database_network_acl_id" {
   description = "ID of the database network ACL"
   value       = concat(aws_network_acl.database.*.id, [""])[0]
+}
+
+output "database_network_acl_arn" {
+  description = "ARN of the database network ACL"
+  value       = concat(aws_network_acl.database.*.arn, [""])[0]
 }
 
 output "redshift_network_acl_id" {
@@ -442,9 +482,19 @@ output "redshift_network_acl_id" {
   value       = concat(aws_network_acl.redshift.*.id, [""])[0]
 }
 
+output "redshift_network_acl_arn" {
+  description = "ARN of the redshift network ACL"
+  value       = concat(aws_network_acl.redshift.*.arn, [""])[0]
+}
+
 output "elasticache_network_acl_id" {
   description = "ID of the elasticache network ACL"
   value       = concat(aws_network_acl.elasticache.*.id, [""])[0]
+}
+
+output "elasticache_network_acl_arn" {
+  description = "ARN of the elasticache network ACL"
+  value       = concat(aws_network_acl.elasticache.*.arn, [""])[0]
 }
 
 # VPC Endpoints
