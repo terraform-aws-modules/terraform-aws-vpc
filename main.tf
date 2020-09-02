@@ -227,13 +227,17 @@ resource "aws_route_table" "private" {
 # Database routes
 #################
 resource "aws_route_table" "database" {
-  count = var.create_vpc && var.create_database_subnet_route_table && length(var.database_subnets) > 0 ? 1 : 0
+  count = var.create_vpc && var.create_database_subnet_route_table && length(var.database_subnets) > 0 ? var.single_nat_gateway || var.create_database_internet_gateway_route ? 1 : length(var.database_subnets) : 0
 
   vpc_id = local.vpc_id
 
   tags = merge(
     {
-      "Name" = "${var.name}-${var.database_subnet_suffix}"
+      "Name" = var.single_nat_gateway || var.create_database_internet_gateway_route ? "${var.name}-${var.database_subnet_suffix}" : format(
+        "%s-${var.database_subnet_suffix}-%s",
+        var.name,
+        element(var.azs, count.index),
+      )
     },
     var.tags,
     var.database_route_table_tags,
@@ -253,7 +257,7 @@ resource "aws_route" "database_internet_gateway" {
 }
 
 resource "aws_route" "database_nat_gateway" {
-  count = var.create_vpc && var.create_database_subnet_route_table && length(var.database_subnets) > 0 && false == var.create_database_internet_gateway_route && var.create_database_nat_gateway_route && var.enable_nat_gateway ? local.nat_gateway_count : 0
+  count = var.create_vpc && var.create_database_subnet_route_table && length(var.database_subnets) > 0 && false == var.create_database_internet_gateway_route && var.create_database_nat_gateway_route && var.enable_nat_gateway ? var.single_nat_gateway ? 1 : length(var.database_subnets) : 0
 
   route_table_id         = element(aws_route_table.database.*.id, count.index)
   destination_cidr_block = "0.0.0.0/0"
@@ -994,7 +998,7 @@ resource "aws_route_table_association" "database" {
   subnet_id = element(aws_subnet.database.*.id, count.index)
   route_table_id = element(
     coalescelist(aws_route_table.database.*.id, aws_route_table.private.*.id),
-    var.single_nat_gateway || var.create_database_subnet_route_table ? 0 : count.index,
+    var.create_database_subnet_route_table ? var.single_nat_gateway || var.create_database_internet_gateway_route ? 0 : count.index : count.index,
   )
 }
 
