@@ -120,7 +120,6 @@ module "vpc" {
   tags = {
     Owner       = "user"
     Environment = "staging"
-    Name        = "complete"
   }
 
   vpc_endpoint_tags = {
