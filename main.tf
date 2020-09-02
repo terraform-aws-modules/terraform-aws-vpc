@@ -5,7 +5,7 @@ locals {
     length(var.database_subnets),
     length(var.redshift_subnets),
   )
-  nat_gateway_count = var.single_nat_gateway ? 1 : var.one_nat_gateway_per_az ? length(var.azs) : local.max_subnet_length
+  nat_gateway_count = var.single_nat_gateway ? 1 : var.one_nat_gateway_per_az ? length(var.azs) : local.max_subnet_length < length(var.public_subnets) ? local.max_subnet_length : length(var.public_subnets)
 
   # Use `local.vpc_id` to give a hint to Terraform that subnets should be deleted before secondary CIDR blocks can be free!
   vpc_id = element(
@@ -200,7 +200,7 @@ resource "aws_route" "public_internet_gateway_ipv6" {
 # There are as many routing tables as the number of NAT gateways
 #################
 resource "aws_route_table" "private" {
-  count = var.create_vpc && local.max_subnet_length > 0 ? local.nat_gateway_count : 0
+  count = var.create_vpc && length(var.private_subnets) > 0 ? var.single_nat_gateway ? 1 : length(var.private_subnets) : 0
 
   vpc_id = local.vpc_id
 
@@ -956,7 +956,7 @@ resource "aws_nat_gateway" "this" {
 }
 
 resource "aws_route" "private_nat_gateway" {
-  count = var.create_vpc && var.enable_nat_gateway ? local.nat_gateway_count : 0
+  count = var.create_vpc && var.enable_nat_gateway ? var.single_nat_gateway ? 1 : length(var.private_subnets) : 0
 
   route_table_id         = element(aws_route_table.private.*.id, count.index)
   destination_cidr_block = "0.0.0.0/0"
