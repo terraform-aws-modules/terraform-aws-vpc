@@ -1,3 +1,17 @@
+data "aws_iam_policy_document" "default" {
+  version = "2008-10-17"
+
+  statement {
+    actions   = ["*"]
+    resources = ["*"]
+
+    principals {
+      type        = "*"
+      identifiers = ["*"]
+    }
+  }
+}
+
 ######################
 # VPC Endpoint for S3
 ######################
@@ -12,6 +26,7 @@ resource "aws_vpc_endpoint" "s3" {
 
   vpc_id       = local.vpc_id
   service_name = data.aws_vpc_endpoint_service.s3[0].service_name
+  policy       = var.s3_endpoint_policy == "" ? data.aws_iam_policy_document.default.json : var.s3_endpoint_policy
   tags         = local.vpce_tags
 }
 
@@ -50,6 +65,7 @@ resource "aws_vpc_endpoint" "dynamodb" {
 
   vpc_id       = local.vpc_id
   service_name = data.aws_vpc_endpoint_service.dynamodb[0].service_name
+  policy       = var.dynamodb_endpoint_policy == "" ? data.aws_iam_policy_document.default.json : var.dynamodb_endpoint_policy
   tags         = local.vpce_tags
 }
 
@@ -94,6 +110,7 @@ resource "aws_vpc_endpoint" "codebuild" {
   security_group_ids  = var.codebuild_endpoint_security_group_ids
   subnet_ids          = coalescelist(var.codebuild_endpoint_subnet_ids, aws_subnet.private.*.id)
   private_dns_enabled = var.codebuild_endpoint_private_dns_enabled
+  policy              = var.codebuild_endpoint_policy == "" ? data.aws_iam_policy_document.default.json : var.codebuild_endpoint_policy
   tags                = local.vpce_tags
 }
 
@@ -116,6 +133,7 @@ resource "aws_vpc_endpoint" "codecommit" {
   security_group_ids  = var.codecommit_endpoint_security_group_ids
   subnet_ids          = coalescelist(var.codecommit_endpoint_subnet_ids, aws_subnet.private.*.id)
   private_dns_enabled = var.codecommit_endpoint_private_dns_enabled
+  policy              = var.codecommit_endpoint_policy == "" ? data.aws_iam_policy_document.default.json : var.codecommit_endpoint_policy
   tags                = local.vpce_tags
 }
 
@@ -182,6 +200,7 @@ resource "aws_vpc_endpoint" "sqs" {
   security_group_ids  = var.sqs_endpoint_security_group_ids
   subnet_ids          = coalescelist(var.sqs_endpoint_subnet_ids, aws_subnet.private.*.id)
   private_dns_enabled = var.sqs_endpoint_private_dns_enabled
+  policy              = var.sqs_endpoint_policy == "" ? data.aws_iam_policy_document.default.json : var.sqs_endpoint_policy
   tags                = local.vpce_tags
 }
 
@@ -204,6 +223,7 @@ resource "aws_vpc_endpoint" "secretsmanager" {
   security_group_ids  = var.secretsmanager_endpoint_security_group_ids
   subnet_ids          = coalescelist(var.secretsmanager_endpoint_subnet_ids, aws_subnet.private.*.id)
   private_dns_enabled = var.secretsmanager_endpoint_private_dns_enabled
+  policy              = var.secretsmanager_endpoint_policy == "" ? data.aws_iam_policy_document.default.json : var.secretsmanager_endpoint_policy
   tags                = local.vpce_tags
 }
 
@@ -270,6 +290,7 @@ resource "aws_vpc_endpoint" "ec2" {
   security_group_ids  = var.ec2_endpoint_security_group_ids
   subnet_ids          = coalescelist(var.ec2_endpoint_subnet_ids, aws_subnet.private.*.id)
   private_dns_enabled = var.ec2_endpoint_private_dns_enabled
+  policy              = var.ec2_endpoint_policy == "" ? data.aws_iam_policy_document.default.json : var.ec2_endpoint_policy
   tags                = local.vpce_tags
 }
 
@@ -314,6 +335,7 @@ resource "aws_vpc_endpoint" "ec2_autoscaling" {
   security_group_ids  = var.ec2_autoscaling_endpoint_security_group_ids
   subnet_ids          = coalescelist(var.ec2_autoscaling_endpoint_subnet_ids, aws_subnet.private.*.id)
   private_dns_enabled = var.ec2_autoscaling_endpoint_private_dns_enabled
+  policy              = var.ec2_autoscaling_endpoint_policy == "" ? data.aws_iam_policy_document.default.json : var.ec2_autoscaling_endpoint_policy
   tags                = local.vpce_tags
 }
 
@@ -359,6 +381,7 @@ resource "aws_vpc_endpoint" "ecr_api" {
   security_group_ids  = var.ecr_api_endpoint_security_group_ids
   subnet_ids          = coalescelist(var.ecr_api_endpoint_subnet_ids, aws_subnet.private.*.id)
   private_dns_enabled = var.ecr_api_endpoint_private_dns_enabled
+  policy              = var.ecr_api_endpoint_policy == "" ? data.aws_iam_policy_document.default.json : var.ecr_api_endpoint_policy
   tags                = local.vpce_tags
 }
 
@@ -381,6 +404,7 @@ resource "aws_vpc_endpoint" "ecr_dkr" {
   security_group_ids  = var.ecr_dkr_endpoint_security_group_ids
   subnet_ids          = coalescelist(var.ecr_dkr_endpoint_subnet_ids, aws_subnet.private.*.id)
   private_dns_enabled = var.ecr_dkr_endpoint_private_dns_enabled
+  policy              = var.ecr_dkr_endpoint_policy == "" ? data.aws_iam_policy_document.default.json : var.ecr_dkr_endpoint_policy
   tags                = local.vpce_tags
 }
 
@@ -403,6 +427,7 @@ resource "aws_vpc_endpoint" "apigw" {
   security_group_ids  = var.apigw_endpoint_security_group_ids
   subnet_ids          = coalescelist(var.apigw_endpoint_subnet_ids, aws_subnet.private.*.id)
   private_dns_enabled = var.apigw_endpoint_private_dns_enabled
+  policy              = var.apigw_endpoint_policy == "" ? data.aws_iam_policy_document.default.json : var.apigw_endpoint_policy
   tags                = local.vpce_tags
 }
 
@@ -425,6 +450,7 @@ resource "aws_vpc_endpoint" "kms" {
   security_group_ids  = var.kms_endpoint_security_group_ids
   subnet_ids          = coalescelist(var.kms_endpoint_subnet_ids, aws_subnet.private.*.id)
   private_dns_enabled = var.kms_endpoint_private_dns_enabled
+  policy              = var.kms_endpoint_policy == "" ? data.aws_iam_policy_document.default.json : var.kms_endpoint_policy
   tags                = local.vpce_tags
 }
 
@@ -516,6 +542,7 @@ resource "aws_vpc_endpoint" "sns" {
   security_group_ids  = var.sns_endpoint_security_group_ids
   subnet_ids          = coalescelist(var.sns_endpoint_subnet_ids, aws_subnet.private.*.id)
   private_dns_enabled = var.sns_endpoint_private_dns_enabled
+  policy              = var.sns_endpoint_policy == "" ? data.aws_iam_policy_document.default.json : var.sns_endpoint_policy
   tags                = local.vpce_tags
 }
 
@@ -539,6 +566,7 @@ resource "aws_vpc_endpoint" "monitoring" {
   security_group_ids  = var.monitoring_endpoint_security_group_ids
   subnet_ids          = coalescelist(var.monitoring_endpoint_subnet_ids, aws_subnet.private.*.id)
   private_dns_enabled = var.monitoring_endpoint_private_dns_enabled
+  policy              = var.monitoring_endpoint_policy == "" ? data.aws_iam_policy_document.default.json : var.monitoring_endpoint_policy
   tags                = local.vpce_tags
 }
 
@@ -562,6 +590,7 @@ resource "aws_vpc_endpoint" "logs" {
   security_group_ids  = var.logs_endpoint_security_group_ids
   subnet_ids          = coalescelist(var.logs_endpoint_subnet_ids, aws_subnet.private.*.id)
   private_dns_enabled = var.logs_endpoint_private_dns_enabled
+  policy              = var.logs_endpoint_policy == "" ? data.aws_iam_policy_document.default.json : var.logs_endpoint_policy
   tags                = local.vpce_tags
 }
 
@@ -585,6 +614,7 @@ resource "aws_vpc_endpoint" "events" {
   security_group_ids  = var.events_endpoint_security_group_ids
   subnet_ids          = coalescelist(var.events_endpoint_subnet_ids, aws_subnet.private.*.id)
   private_dns_enabled = var.events_endpoint_private_dns_enabled
+  policy              = var.events_endpoint_policy == "" ? data.aws_iam_policy_document.default.json : var.events_endpoint_policy
   tags                = local.vpce_tags
 }
 
@@ -608,6 +638,7 @@ resource "aws_vpc_endpoint" "elasticloadbalancing" {
   security_group_ids  = var.elasticloadbalancing_endpoint_security_group_ids
   subnet_ids          = coalescelist(var.elasticloadbalancing_endpoint_subnet_ids, aws_subnet.private.*.id)
   private_dns_enabled = var.elasticloadbalancing_endpoint_private_dns_enabled
+  policy              = var.elasticloadbalancing_endpoint_policy == "" ? data.aws_iam_policy_document.default.json : var.elasticloadbalancing_endpoint_policy
   tags                = local.vpce_tags
 }
 
@@ -654,6 +685,7 @@ resource "aws_vpc_endpoint" "kinesis_streams" {
   security_group_ids  = var.kinesis_streams_endpoint_security_group_ids
   subnet_ids          = coalescelist(var.kinesis_streams_endpoint_subnet_ids, aws_subnet.private.*.id)
   private_dns_enabled = var.kinesis_streams_endpoint_private_dns_enabled
+  policy              = var.kinesis_streams_endpoint_policy == "" ? data.aws_iam_policy_document.default.json : var.kinesis_streams_endpoint_policy
   tags                = local.vpce_tags
 }
 
@@ -677,6 +709,7 @@ resource "aws_vpc_endpoint" "kinesis_firehose" {
   security_group_ids  = var.kinesis_firehose_endpoint_security_group_ids
   subnet_ids          = coalescelist(var.kinesis_firehose_endpoint_subnet_ids, aws_subnet.private.*.id)
   private_dns_enabled = var.kinesis_firehose_endpoint_private_dns_enabled
+  policy              = var.kinesis_firehose_endpoint_policy == "" ? data.aws_iam_policy_document.default.json : var.kinesis_firehose_endpoint_policy
   tags                = local.vpce_tags
 }
 
@@ -721,6 +754,7 @@ resource "aws_vpc_endpoint" "sagemaker_notebook" {
   security_group_ids  = var.sagemaker_notebook_endpoint_security_group_ids
   subnet_ids          = coalescelist(var.sagemaker_notebook_endpoint_subnet_ids, aws_subnet.private.*.id)
   private_dns_enabled = var.sagemaker_notebook_endpoint_private_dns_enabled
+  policy              = var.sagemaker_notebook_endpoint_policy == "" ? data.aws_iam_policy_document.default.json : var.sagemaker_notebook_endpoint_policy
   tags                = local.vpce_tags
 }
 
@@ -743,6 +777,7 @@ resource "aws_vpc_endpoint" "sts" {
   security_group_ids  = var.sts_endpoint_security_group_ids
   subnet_ids          = coalescelist(var.sts_endpoint_subnet_ids, aws_subnet.private.*.id)
   private_dns_enabled = var.sts_endpoint_private_dns_enabled
+  policy              = var.sts_endpoint_policy == "" ? data.aws_iam_policy_document.default.json : var.sts_endpoint_policy
   tags                = local.vpce_tags
 }
 
@@ -891,6 +926,7 @@ resource "aws_vpc_endpoint" "sagemaker_api" {
   security_group_ids  = var.sagemaker_api_endpoint_security_group_ids
   subnet_ids          = coalescelist(var.sagemaker_api_endpoint_subnet_ids, aws_subnet.private.*.id)
   private_dns_enabled = var.sagemaker_api_endpoint_private_dns_enabled
+  policy              = var.sagemaker_api_endpoint_policy == "" ? data.aws_iam_policy_document.default.json : var.sagemaker_api_endpoint_policy
   tags                = local.vpce_tags
 }
 #############################
@@ -912,6 +948,7 @@ resource "aws_vpc_endpoint" "sagemaker_runtime" {
   security_group_ids  = var.sagemaker_runtime_endpoint_security_group_ids
   subnet_ids          = coalescelist(var.sagemaker_runtime_endpoint_subnet_ids, aws_subnet.private.*.id)
   private_dns_enabled = var.sagemaker_runtime_endpoint_private_dns_enabled
+  policy              = var.sagemaker_runtime_endpoint_policy == "" ? data.aws_iam_policy_document.default.json : var.sagemaker_runtime_endpoint_policy
   tags                = local.vpce_tags
 }
 
@@ -956,6 +993,7 @@ resource "aws_vpc_endpoint" "athena" {
   security_group_ids  = var.athena_endpoint_security_group_ids
   subnet_ids          = coalescelist(var.athena_endpoint_subnet_ids, aws_subnet.private.*.id)
   private_dns_enabled = var.athena_endpoint_private_dns_enabled
+  policy              = var.athena_endpoint_policy == "" ? data.aws_iam_policy_document.default.json : var.athena_endpoint_policy
   tags                = local.vpce_tags
 }
 
@@ -978,6 +1016,7 @@ resource "aws_vpc_endpoint" "rekognition" {
   security_group_ids  = var.rekognition_endpoint_security_group_ids
   subnet_ids          = coalescelist(var.rekognition_endpoint_subnet_ids, aws_subnet.private.*.id)
   private_dns_enabled = var.rekognition_endpoint_private_dns_enabled
+  policy              = var.rekognition_endpoint_policy == "" ? data.aws_iam_policy_document.default.json : var.rekognition_endpoint_policy
   tags                = local.vpce_tags
 }
 
@@ -1000,8 +1039,8 @@ resource "aws_vpc_endpoint" "efs" {
   security_group_ids  = var.efs_endpoint_security_group_ids
   subnet_ids          = coalescelist(var.efs_endpoint_subnet_ids, aws_subnet.private.*.id)
   private_dns_enabled = var.efs_endpoint_private_dns_enabled
-
-  tags = local.vpce_tags
+  policy              = var.efs_endpoint_policy == "" ? data.aws_iam_policy_document.default.json : var.efs_endpoint_policy
+  tags                = local.vpce_tags
 }
 
 #######################
@@ -1023,8 +1062,8 @@ resource "aws_vpc_endpoint" "cloud_directory" {
   security_group_ids  = var.cloud_directory_endpoint_security_group_ids
   subnet_ids          = coalescelist(var.cloud_directory_endpoint_subnet_ids, aws_subnet.private.*.id)
   private_dns_enabled = var.cloud_directory_endpoint_private_dns_enabled
-
-  tags = local.vpce_tags
+  policy              = var.cloud_directory_endpoint_policy == "" ? data.aws_iam_policy_document.default.json : var.cloud_directory_endpoint_policy
+  tags                = local.vpce_tags
 }
 
 #######################
@@ -1046,8 +1085,8 @@ resource "aws_vpc_endpoint" "auto_scaling_plans" {
   security_group_ids  = var.auto_scaling_plans_endpoint_security_group_ids
   subnet_ids          = coalescelist(var.auto_scaling_plans_endpoint_subnet_ids, aws_subnet.private.*.id)
   private_dns_enabled = var.auto_scaling_plans_endpoint_private_dns_enabled
-
-  tags = local.vpce_tags
+  policy              = var.auto_scaling_plans_endpoint_policy == "" ? data.aws_iam_policy_document.default.json : var.auto_scaling_plans_endpoint_policy
+  tags                = local.vpce_tags
 }
 
 #######################
@@ -1069,8 +1108,8 @@ resource "aws_vpc_endpoint" "workspaces" {
   security_group_ids  = var.workspaces_endpoint_security_group_ids
   subnet_ids          = coalescelist(var.workspaces_endpoint_subnet_ids, aws_subnet.private.*.id)
   private_dns_enabled = var.workspaces_endpoint_private_dns_enabled
-
-  tags = local.vpce_tags
+  policy              = var.workspaces_endpoint_policy == "" ? data.aws_iam_policy_document.default.json : var.workspaces_endpoint_policy
+  tags                = local.vpce_tags
 }
 
 #######################
@@ -1092,8 +1131,8 @@ resource "aws_vpc_endpoint" "access_analyzer" {
   security_group_ids  = var.access_analyzer_endpoint_security_group_ids
   subnet_ids          = coalescelist(var.access_analyzer_endpoint_subnet_ids, aws_subnet.private.*.id)
   private_dns_enabled = var.access_analyzer_endpoint_private_dns_enabled
-
-  tags = local.vpce_tags
+  policy              = var.access_analyzer_endpoint_policy == "" ? data.aws_iam_policy_document.default.json : var.access_analyzer_endpoint_policy
+  tags                = local.vpce_tags
 }
 
 #######################
@@ -1207,8 +1246,8 @@ resource "aws_vpc_endpoint" "emr" {
   security_group_ids  = var.emr_endpoint_security_group_ids
   subnet_ids          = coalescelist(var.emr_endpoint_subnet_ids, aws_subnet.private.*.id)
   private_dns_enabled = var.emr_endpoint_private_dns_enabled
-
-  tags = local.vpce_tags
+  policy              = var.emr_endpoint_policy == "" ? data.aws_iam_policy_document.default.json : var.emr_endpoint_policy
+  tags                = local.vpce_tags
 }
 
 #######################
@@ -1253,8 +1292,8 @@ resource "aws_vpc_endpoint" "states" {
   security_group_ids  = var.states_endpoint_security_group_ids
   subnet_ids          = coalescelist(var.states_endpoint_subnet_ids, aws_subnet.private.*.id)
   private_dns_enabled = var.states_endpoint_private_dns_enabled
-
-  tags = local.vpce_tags
+  policy              = var.states_endpoint_policy == "" ? data.aws_iam_policy_document.default.json : var.states_endpoint_policy
+  tags                = local.vpce_tags
 }
 
 #############################
@@ -1276,8 +1315,8 @@ resource "aws_vpc_endpoint" "elasticbeanstalk" {
   security_group_ids  = var.elasticbeanstalk_endpoint_security_group_ids
   subnet_ids          = coalescelist(var.elasticbeanstalk_endpoint_subnet_ids, aws_subnet.private.*.id)
   private_dns_enabled = var.elasticbeanstalk_endpoint_private_dns_enabled
-
-  tags = local.vpce_tags
+  policy              = var.elasticbeanstalk_endpoint_policy == "" ? data.aws_iam_policy_document.default.json : var.elasticbeanstalk_endpoint_policy
+  tags                = local.vpce_tags
 }
 
 #############################
@@ -1322,8 +1361,8 @@ resource "aws_vpc_endpoint" "acm_pca" {
   security_group_ids  = var.acm_pca_endpoint_security_group_ids
   subnet_ids          = coalescelist(var.acm_pca_endpoint_subnet_ids, aws_subnet.private.*.id)
   private_dns_enabled = var.acm_pca_endpoint_private_dns_enabled
-
-  tags = local.vpce_tags
+  policy              = var.acm_pca_endpoint_policy == "" ? data.aws_iam_policy_document.default.json : var.acm_pca_endpoint_policy
+  tags                = local.vpce_tags
 }
 
 #######################

@@ -237,13 +237,16 @@ It is possible to integrate this VPC module with [terraform-aws-transit-gateway 
 
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
+| access\_analyzer\_endpoint\_policy | Custom IAM policy for Access Analyzer VPC endpoint | `string` | `""` | no |
 | access\_analyzer\_endpoint\_private\_dns\_enabled | Whether or not to associate a private hosted zone with the specified VPC for Access Analyzer endpoint | `bool` | `false` | no |
 | access\_analyzer\_endpoint\_security\_group\_ids | The ID of one or more security groups to associate with the network interface for Access Analyzer endpoint | `list(string)` | `[]` | no |
 | access\_analyzer\_endpoint\_subnet\_ids | The ID of one or more subnets in which to create a network interface for Access Analyzer endpoint. Only a single subnet within an AZ is supported. Ifomitted, private subnets will be used. | `list(string)` | `[]` | no |
+| acm\_pca\_endpoint\_policy | Custom IAM policy for ACM PCA VPC endpoint | `string` | `""` | no |
 | acm\_pca\_endpoint\_private\_dns\_enabled | Whether or not to associate a private hosted zone with the specified VPC for ACM PCA endpoint | `bool` | `false` | no |
 | acm\_pca\_endpoint\_security\_group\_ids | The ID of one or more security groups to associate with the network interface for ACM PCA endpoint | `list` | `[]` | no |
 | acm\_pca\_endpoint\_subnet\_ids | The ID of one or more subnets in which to create a network interface for Codebuilt endpoint. Only a single subnet within an AZ is supported. If omitted, private subnets will be used. | `list` | `[]` | no |
 | amazon\_side\_asn | The Autonomous System Number (ASN) for the Amazon side of the gateway. By default the virtual private gateway is created with the current default Amazon ASN. | `string` | `"64512"` | no |
+| apigw\_endpoint\_policy | Custom IAM policy for API Gateway VPC endpoint | `string` | `""` | no |
 | apigw\_endpoint\_private\_dns\_enabled | Whether or not to associate a private hosted zone with the specified VPC for API GW endpoint | `bool` | `false` | no |
 | apigw\_endpoint\_security\_group\_ids | The ID of one or more security groups to associate with the network interface for API GW  endpoint | `list(string)` | `[]` | no |
 | apigw\_endpoint\_subnet\_ids | The ID of one or more subnets in which to create a network interface for API GW endpoint. Only a single subnet within an AZ is supported. If omitted, private subnets will be used. | `list(string)` | `[]` | no |
@@ -254,14 +257,17 @@ It is possible to integrate this VPC module with [terraform-aws-transit-gateway 
 | appstream\_endpoint\_security\_group\_ids | The ID of one or more security groups to associate with the network interface for AppStream endpoint | `list(string)` | `[]` | no |
 | appstream\_endpoint\_subnet\_ids | The ID of one or more subnets in which to create a network interface for AppStream endpoint. Only a single subnet within an AZ is supported. If omitted, private subnets will be used. | `list(string)` | `[]` | no |
 | assign\_ipv6\_address\_on\_creation | Assign IPv6 address on subnet, must be disabled to change IPv6 CIDRs. This is the IPv6 equivalent of map\_public\_ip\_on\_launch | `bool` | `false` | no |
+| athena\_endpoint\_policy | Custom IAM policy for Athena VPC endpoint | `string` | `""` | no |
 | athena\_endpoint\_private\_dns\_enabled | Whether or not to associate a private hosted zone with the specified VPC for Athena endpoint | `bool` | `false` | no |
 | athena\_endpoint\_security\_group\_ids | The ID of one or more security groups to associate with the network interface for Athena endpoint | `list(string)` | `[]` | no |
 | athena\_endpoint\_subnet\_ids | The ID of one or more subnets in which to create a network interface for Athena endpoint. Only a single subnet within an AZ is supported. If omitted, private subnets will be used. | `list(string)` | `[]` | no |
+| auto\_scaling\_plans\_endpoint\_policy | Custom IAM policy for Auto Scaling Plans VPC endpoint | `string` | `""` | no |
 | auto\_scaling\_plans\_endpoint\_private\_dns\_enabled | Whether or not to associate a private hosted zone with the specified VPC for Auto Scaling Plans endpoint | `bool` | `false` | no |
 | auto\_scaling\_plans\_endpoint\_security\_group\_ids | The ID of one or more security groups to associate with the network interface for Auto Scaling Plans endpoint | `list(string)` | `[]` | no |
 | auto\_scaling\_plans\_endpoint\_subnet\_ids | The ID of one or more subnets in which to create a network interface for Auto Scaling Plans endpoint. Only a single subnet within an AZ is supported. Ifomitted, private subnets will be used. | `list(string)` | `[]` | no |
 | azs | A list of availability zones names or ids in the region | `list(string)` | `[]` | no |
 | cidr | The CIDR block for the VPC. Default value is a valid CIDR, but not acceptable by AWS and should be overridden | `string` | `"0.0.0.0/0"` | no |
+| cloud\_directory\_endpoint\_policy | Custom IAM policy for Cloud Directory VPC endpoint | `string` | `""` | no |
 | cloud\_directory\_endpoint\_private\_dns\_enabled | Whether or not to associate a private hosted zone with the specified VPC for Cloud Directory endpoint | `bool` | `false` | no |
 | cloud\_directory\_endpoint\_security\_group\_ids | The ID of one or more security groups to associate with the network interface for Cloud Directory endpoint | `list(string)` | `[]` | no |
 | cloud\_directory\_endpoint\_subnet\_ids | The ID of one or more subnets in which to create a network interface for Cloud Directory endpoint. Only a single subnet within an AZ is supported. Ifomitted, private subnets will be used. | `list(string)` | `[]` | no |
@@ -271,9 +277,11 @@ It is possible to integrate this VPC module with [terraform-aws-transit-gateway 
 | cloudtrail\_endpoint\_private\_dns\_enabled | Whether or not to associate a private hosted zone with the specified VPC for CloudTrail endpoint | `bool` | `false` | no |
 | cloudtrail\_endpoint\_security\_group\_ids | The ID of one or more security groups to associate with the network interface for CloudTrail endpoint | `list(string)` | `[]` | no |
 | cloudtrail\_endpoint\_subnet\_ids | The ID of one or more subnets in which to create a network interface for CloudTrail endpoint. Only a single subnet within an AZ is supported. If omitted, private subnets will be used. | `list(string)` | `[]` | no |
+| codebuild\_endpoint\_policy | Custom IAM policy for Codebuild VPC endpoint | `string` | `""` | no |
 | codebuild\_endpoint\_private\_dns\_enabled | Whether or not to associate a private hosted zone with the specified VPC for Codebuild endpoint | `bool` | `false` | no |
 | codebuild\_endpoint\_security\_group\_ids | The ID of one or more security groups to associate with the network interface for Codebuild endpoint | `list` | `[]` | no |
 | codebuild\_endpoint\_subnet\_ids | The ID of one or more subnets in which to create a network interface for Codebuilt endpoint. Only a single subnet within an AZ is supported. If omitted, private subnets will be used. | `list` | `[]` | no |
+| codecommit\_endpoint\_policy | Custom IAM policy for Code Commit VPC endpoint | `string` | `""` | no |
 | codecommit\_endpoint\_private\_dns\_enabled | Whether or not to associate a private hosted zone with the specified VPC for Codecommit endpoint | `bool` | `false` | no |
 | codecommit\_endpoint\_security\_group\_ids | The ID of one or more security groups to associate with the network interface for Codecommit endpoint | `list` | `[]` | no |
 | codecommit\_endpoint\_subnet\_ids | The ID of one or more subnets in which to create a network interface for Codecommit endpoint. Only a single subnet within an AZ is supported. If omitted, private subnets will be used. | `list` | `[]` | no |
@@ -331,21 +339,26 @@ It is possible to integrate this VPC module with [terraform-aws-transit-gateway 
 | dhcp\_options\_netbios\_node\_type | Specify netbios node\_type for DHCP options set (requires enable\_dhcp\_options set to true) | `string` | `""` | no |
 | dhcp\_options\_ntp\_servers | Specify a list of NTP servers for DHCP options set (requires enable\_dhcp\_options set to true) | `list(string)` | `[]` | no |
 | dhcp\_options\_tags | Additional tags for the DHCP option set (requires enable\_dhcp\_options set to true) | `map(string)` | `{}` | no |
+| dynamodb\_endpoint\_policy | Custom IAM policy for DynamoDB VPC endpoint | `string` | `""` | no |
 | ebs\_endpoint\_private\_dns\_enabled | Whether or not to associate a private hosted zone with the specified VPC for EBS endpoint | `bool` | `false` | no |
 | ebs\_endpoint\_security\_group\_ids | The ID of one or more security groups to associate with the network interface for EBS endpoint | `list(string)` | `[]` | no |
 | ebs\_endpoint\_subnet\_ids | The ID of one or more subnets in which to create a network interface for EBS endpoint. Only a single subnet within an AZ is supported. Ifomitted, private subnets will be used. | `list(string)` | `[]` | no |
+| ec2\_autoscaling\_endpoint\_policy | Custom IAM policy for EC2 Autoscaling VPC endpoint | `string` | `""` | no |
 | ec2\_autoscaling\_endpoint\_private\_dns\_enabled | Whether or not to associate a private hosted zone with the specified VPC for EC2 Autoscaling endpoint | `bool` | `false` | no |
 | ec2\_autoscaling\_endpoint\_security\_group\_ids | The ID of one or more security groups to associate with the network interface for EC2 Autoscaling endpoint | `list(string)` | `[]` | no |
 | ec2\_autoscaling\_endpoint\_subnet\_ids | The ID of one or more subnets in which to create a network interface for EC2 Autoscaling endpoint. Only a single subnet within an AZ is supported. If omitted, private subnets will be used. | `list(string)` | `[]` | no |
+| ec2\_endpoint\_policy | Custom IAM policy for EC2 VPC endpoint | `string` | `""` | no |
 | ec2\_endpoint\_private\_dns\_enabled | Whether or not to associate a private hosted zone with the specified VPC for EC2 endpoint | `bool` | `false` | no |
 | ec2\_endpoint\_security\_group\_ids | The ID of one or more security groups to associate with the network interface for EC2 endpoint | `list(string)` | `[]` | no |
 | ec2\_endpoint\_subnet\_ids | The ID of one or more subnets in which to create a network interface for EC2 endpoint. Only a single subnet within an AZ is supported. If omitted, private subnets will be used. | `list(string)` | `[]` | no |
 | ec2messages\_endpoint\_private\_dns\_enabled | Whether or not to associate a private hosted zone with the specified VPC for EC2MESSAGES endpoint | `bool` | `false` | no |
 | ec2messages\_endpoint\_security\_group\_ids | The ID of one or more security groups to associate with the network interface for EC2MESSAGES endpoint | `list(string)` | `[]` | no |
 | ec2messages\_endpoint\_subnet\_ids | The ID of one or more subnets in which to create a network interface for EC2MESSAGES endpoint. Only a single subnet within an AZ is supported. If omitted, private subnets will be used. | `list(string)` | `[]` | no |
+| ecr\_api\_endpoint\_policy | Custom IAM policy for ECR API VPC endpoint | `string` | `""` | no |
 | ecr\_api\_endpoint\_private\_dns\_enabled | Whether or not to associate a private hosted zone with the specified VPC for ECR API endpoint | `bool` | `false` | no |
 | ecr\_api\_endpoint\_security\_group\_ids | The ID of one or more security groups to associate with the network interface for ECR API endpoint | `list(string)` | `[]` | no |
 | ecr\_api\_endpoint\_subnet\_ids | The ID of one or more subnets in which to create a network interface for ECR api endpoint. If omitted, private subnets will be used. | `list(string)` | `[]` | no |
+| ecr\_dkr\_endpoint\_policy | Custom IAM policy for ECR DKR VPC endpoint | `string` | `""` | no |
 | ecr\_dkr\_endpoint\_private\_dns\_enabled | Whether or not to associate a private hosted zone with the specified VPC for ECR DKR endpoint | `bool` | `false` | no |
 | ecr\_dkr\_endpoint\_security\_group\_ids | The ID of one or more security groups to associate with the network interface for ECR DKR endpoint | `list(string)` | `[]` | no |
 | ecr\_dkr\_endpoint\_subnet\_ids | The ID of one or more subnets in which to create a network interface for ECR dkr endpoint. If omitted, private subnets will be used. | `list(string)` | `[]` | no |
@@ -358,6 +371,7 @@ It is possible to integrate this VPC module with [terraform-aws-transit-gateway 
 | ecs\_telemetry\_endpoint\_private\_dns\_enabled | Whether or not to associate a private hosted zone with the specified VPC for ECS Telemetry endpoint | `bool` | `false` | no |
 | ecs\_telemetry\_endpoint\_security\_group\_ids | The ID of one or more security groups to associate with the network interface for ECS Telemetry endpoint | `list(string)` | `[]` | no |
 | ecs\_telemetry\_endpoint\_subnet\_ids | The ID of one or more subnets in which to create a network interface for ECS Telemetry endpoint. Only a single subnet within an AZ is supported. If omitted, private subnets will be used. | `list(string)` | `[]` | no |
+| efs\_endpoint\_policy | Custom IAM policy for EFS VPC endpoint | `string` | `""` | no |
 | efs\_endpoint\_private\_dns\_enabled | Whether or not to associate a private hosted zone with the specified VPC for EFS endpoint | `bool` | `false` | no |
 | efs\_endpoint\_security\_group\_ids | The ID of one or more security groups to associate with the network interface for EFS endpoint | `list(string)` | `[]` | no |
 | efs\_endpoint\_subnet\_ids | The ID of one or more subnets in which to create a network interface for EFS endpoint. Only a single subnet within an AZ is supported. Ifomitted, private subnets will be used. | `list(string)` | `[]` | no |
@@ -374,15 +388,18 @@ It is possible to integrate this VPC module with [terraform-aws-transit-gateway 
 | elasticache\_subnet\_suffix | Suffix to append to elasticache subnets name | `string` | `"elasticache"` | no |
 | elasticache\_subnet\_tags | Additional tags for the elasticache subnets | `map(string)` | `{}` | no |
 | elasticache\_subnets | A list of elasticache subnets | `list(string)` | `[]` | no |
+| elasticbeanstalk\_endpoint\_policy | Custom IAM policy for Elastic Beanstalk VPC endpoint | `string` | `""` | no |
 | elasticbeanstalk\_endpoint\_private\_dns\_enabled | Whether or not to associate a private hosted zone with the specified VPC for Elastic Beanstalk endpoint | `bool` | `false` | no |
 | elasticbeanstalk\_endpoint\_security\_group\_ids | The ID of one or more security groups to associate with the network interface for Elastic Beanstalk endpoint | `list(string)` | `[]` | no |
 | elasticbeanstalk\_endpoint\_subnet\_ids | The ID of one or more subnets in which to create a network interface for Elastic Beanstalk endpoint. Only a single subnet within an AZ is supported. If omitted, private subnets will be used. | `list(string)` | `[]` | no |
 | elasticbeanstalk\_health\_endpoint\_private\_dns\_enabled | Whether or not to associate a private hosted zone with the specified VPC for Elastic Beanstalk Health endpoint | `bool` | `false` | no |
 | elasticbeanstalk\_health\_endpoint\_security\_group\_ids | The ID of one or more security groups to associate with the network interface for Elastic Beanstalk Health endpoint | `list(string)` | `[]` | no |
 | elasticbeanstalk\_health\_endpoint\_subnet\_ids | The ID of one or more subnets in which to create a network interface for Elastic Beanstalk Health endpoint. Only a single subnet within an AZ is supported. If omitted, private subnets will be used. | `list(string)` | `[]` | no |
+| elasticloadbalancing\_endpoint\_policy | Custom IAM policy for Elastic Load Balancing VPC endpoint | `string` | `""` | no |
 | elasticloadbalancing\_endpoint\_private\_dns\_enabled | Whether or not to associate a private hosted zone with the specified VPC for Elastic Load Balancing endpoint | `bool` | `false` | no |
 | elasticloadbalancing\_endpoint\_security\_group\_ids | The ID of one or more security groups to associate with the network interface for Elastic Load Balancing endpoint | `list(string)` | `[]` | no |
 | elasticloadbalancing\_endpoint\_subnet\_ids | The ID of one or more subnets in which to create a network interface for Elastic Load Balancing endpoint. Only a single subnet within an AZ is supported. If omitted, private subnets will be used. | `list(string)` | `[]` | no |
+| emr\_endpoint\_policy | Custom IAM policy for EMR VPC endpoint | `string` | `""` | no |
 | emr\_endpoint\_private\_dns\_enabled | Whether or not to associate a private hosted zone with the specified VPC for EMR endpoint | `bool` | `false` | no |
 | emr\_endpoint\_security\_group\_ids | The ID of one or more security groups to associate with the network interface for EMR endpoint | `list(string)` | `[]` | no |
 | emr\_endpoint\_subnet\_ids | The ID of one or more subnets in which to create a network interface for EMR endpoint. Only a single subnet within an AZ is supported. Ifomitted, private subnets will be used. | `list(string)` | `[]` | no |
@@ -455,6 +472,7 @@ It is possible to integrate this VPC module with [terraform-aws-transit-gateway 
 | enable\_transferserver\_endpoint | Should be true if you want to provision a Transfer Server endpoint to the VPC | `bool` | `false` | no |
 | enable\_vpn\_gateway | Should be true if you want to create a new VPN Gateway resource and attach it to the VPC | `bool` | `false` | no |
 | enable\_workspaces\_endpoint | Should be true if you want to provision an Workspaces endpoint to the VPC | `bool` | `false` | no |
+| events\_endpoint\_policy | Custom IAM policy for CloudWatch Events VPC endpoint | `string` | `""` | no |
 | events\_endpoint\_private\_dns\_enabled | Whether or not to associate a private hosted zone with the specified VPC for CloudWatch Events endpoint | `bool` | `false` | no |
 | events\_endpoint\_security\_group\_ids | The ID of one or more security groups to associate with the network interface for CloudWatch Events endpoint | `list(string)` | `[]` | no |
 | events\_endpoint\_subnet\_ids | The ID of one or more subnets in which to create a network interface for CloudWatch Events endpoint. Only a single subnet within an AZ is supported. If omitted, private subnets will be used. | `list(string)` | `[]` | no |
@@ -487,15 +505,19 @@ It is possible to integrate this VPC module with [terraform-aws-transit-gateway 
 | intra\_subnet\_suffix | Suffix to append to intra subnets name | `string` | `"intra"` | no |
 | intra\_subnet\_tags | Additional tags for the intra subnets | `map(string)` | `{}` | no |
 | intra\_subnets | A list of intra subnets | `list(string)` | `[]` | no |
+| kinesis\_firehose\_endpoint\_policy | Custom IAM policy for Kinesis Firehose VPC endpoint | `string` | `""` | no |
 | kinesis\_firehose\_endpoint\_private\_dns\_enabled | Whether or not to associate a private hosted zone with the specified VPC for Kinesis Firehose endpoint | `bool` | `false` | no |
 | kinesis\_firehose\_endpoint\_security\_group\_ids | The ID of one or more security groups to associate with the network interface for Kinesis Firehose endpoint | `list(string)` | `[]` | no |
 | kinesis\_firehose\_endpoint\_subnet\_ids | The ID of one or more subnets in which to create a network interface for Kinesis Firehose endpoint. Only a single subnet within an AZ is supported. If omitted, private subnets will be used. | `list(string)` | `[]` | no |
+| kinesis\_streams\_endpoint\_policy | Custom IAM policy for Kinesis Streams VPC endpoint | `string` | `""` | no |
 | kinesis\_streams\_endpoint\_private\_dns\_enabled | Whether or not to associate a private hosted zone with the specified VPC for Kinesis Streams endpoint | `bool` | `false` | no |
 | kinesis\_streams\_endpoint\_security\_group\_ids | The ID of one or more security groups to associate with the network interface for Kinesis Streams endpoint | `list(string)` | `[]` | no |
 | kinesis\_streams\_endpoint\_subnet\_ids | The ID of one or more subnets in which to create a network interface for Kinesis Streams endpoint. Only a single subnet within an AZ is supported. If omitted, private subnets will be used. | `list(string)` | `[]` | no |
+| kms\_endpoint\_policy | Custom IAM policy for KMS VPC endpoint | `string` | `""` | no |
 | kms\_endpoint\_private\_dns\_enabled | Whether or not to associate a private hosted zone with the specified VPC for KMS endpoint | `bool` | `false` | no |
 | kms\_endpoint\_security\_group\_ids | The ID of one or more security groups to associate with the network interface for KMS endpoint | `list(string)` | `[]` | no |
 | kms\_endpoint\_subnet\_ids | The ID of one or more subnets in which to create a network interface for KMS endpoint. Only a single subnet within an AZ is supported. If omitted, private subnets will be used. | `list(string)` | `[]` | no |
+| logs\_endpoint\_policy | Custom IAM policy for CloudWatch Logs VPC endpoint | `string` | `""` | no |
 | logs\_endpoint\_private\_dns\_enabled | Whether or not to associate a private hosted zone with the specified VPC for CloudWatch Logs endpoint | `bool` | `false` | no |
 | logs\_endpoint\_security\_group\_ids | The ID of one or more security groups to associate with the network interface for CloudWatch Logs endpoint | `list(string)` | `[]` | no |
 | logs\_endpoint\_subnet\_ids | The ID of one or more subnets in which to create a network interface for CloudWatch Logs endpoint. Only a single subnet within an AZ is supported. If omitted, private subnets will be used. | `list(string)` | `[]` | no |
@@ -503,6 +525,7 @@ It is possible to integrate this VPC module with [terraform-aws-transit-gateway 
 | manage\_default\_security\_group | Should be true to adopt and manage default security group | `bool` | `false` | no |
 | manage\_default\_vpc | Should be true to adopt and manage Default VPC | `bool` | `false` | no |
 | map\_public\_ip\_on\_launch | Should be false if you do not want to auto-assign public IP on launch | `bool` | `true` | no |
+| monitoring\_endpoint\_policy | Custom IAM policy for CloudWatch Monitoring VPC endpoint | `string` | `""` | no |
 | monitoring\_endpoint\_private\_dns\_enabled | Whether or not to associate a private hosted zone with the specified VPC for CloudWatch Monitoring endpoint | `bool` | `false` | no |
 | monitoring\_endpoint\_security\_group\_ids | The ID of one or more security groups to associate with the network interface for CloudWatch Monitoring endpoint | `list(string)` | `[]` | no |
 | monitoring\_endpoint\_subnet\_ids | The ID of one or more subnets in which to create a network interface for CloudWatch Monitoring endpoint. Only a single subnet within an AZ is supported. If omitted, private subnets will be used. | `list(string)` | `[]` | no |
@@ -547,21 +570,27 @@ It is possible to integrate this VPC module with [terraform-aws-transit-gateway 
 | redshift\_subnet\_suffix | Suffix to append to redshift subnets name | `string` | `"redshift"` | no |
 | redshift\_subnet\_tags | Additional tags for the redshift subnets | `map(string)` | `{}` | no |
 | redshift\_subnets | A list of redshift subnets | `list(string)` | `[]` | no |
+| rekognition\_endpoint\_policy | Custom IAM policy for Rekognition VPC endpoint | `string` | `""` | no |
 | rekognition\_endpoint\_private\_dns\_enabled | Whether or not to associate a private hosted zone with the specified VPC for Rekognition endpoint | `bool` | `false` | no |
 | rekognition\_endpoint\_security\_group\_ids | The ID of one or more security groups to associate with the network interface for Rekognition endpoint | `list(string)` | `[]` | no |
 | rekognition\_endpoint\_subnet\_ids | The ID of one or more subnets in which to create a network interface for Rekognition endpoint. Only a single subnet within an AZ is supported. If omitted, private subnets will be used. | `list(string)` | `[]` | no |
 | reuse\_nat\_ips | Should be true if you don't want EIPs to be created for your NAT Gateways and will instead pass them in via the 'external\_nat\_ip\_ids' variable | `bool` | `false` | no |
+| s3\_endpoint\_policy | Custom IAM policy for S3 VPC endpoint | `string` | `""` | no |
+| sagemaker\_api\_endpoint\_policy | Custom IAM policy for SageMaker API VPC endpoint | `string` | `""` | no |
 | sagemaker\_api\_endpoint\_private\_dns\_enabled | Whether or not to associate a private hosted zone with the specified VPC for SageMaker API endpoint | `bool` | `false` | no |
 | sagemaker\_api\_endpoint\_security\_group\_ids | The ID of one or more security groups to associate with the network interface for SageMaker API endpoint | `list(string)` | `[]` | no |
 | sagemaker\_api\_endpoint\_subnet\_ids | The ID of one or more subnets in which to create a network interface for SageMaker API endpoint. Only a single subnet within an AZ is supported. If omitted, private subnets will be used. | `list(string)` | `[]` | no |
+| sagemaker\_notebook\_endpoint\_policy | Custom IAM policy for Sagemaker Notebooks VPC endpoint | `string` | `""` | no |
 | sagemaker\_notebook\_endpoint\_private\_dns\_enabled | Whether or not to associate a private hosted zone with the specified VPC for Sagemaker Notebook endpoint | `bool` | `false` | no |
 | sagemaker\_notebook\_endpoint\_region | Region to use for Sagemaker Notebook endpoint | `string` | `""` | no |
 | sagemaker\_notebook\_endpoint\_security\_group\_ids | The ID of one or more security groups to associate with the network interface for Sagemaker Notebook endpoint | `list(string)` | `[]` | no |
 | sagemaker\_notebook\_endpoint\_subnet\_ids | The ID of one or more subnets in which to create a network interface for Sagemaker Notebook endpoint. Only a single subnet within an AZ is supported. If omitted, private subnets will be used. | `list(string)` | `[]` | no |
+| sagemaker\_runtime\_endpoint\_policy | Custom IAM policy for SageMaker Runtime VPC endpoint | `string` | `""` | no |
 | sagemaker\_runtime\_endpoint\_private\_dns\_enabled | Whether or not to associate a private hosted zone with the specified VPC for SageMaker Runtime endpoint | `bool` | `false` | no |
 | sagemaker\_runtime\_endpoint\_security\_group\_ids | The ID of one or more security groups to associate with the network interface for SageMaker Runtime endpoint | `list(string)` | `[]` | no |
 | sagemaker\_runtime\_endpoint\_subnet\_ids | The ID of one or more subnets in which to create a network interface for SageMaker Runtime endpoint. Only a single subnet within an AZ is supported. If omitted, private subnets will be used. | `list(string)` | `[]` | no |
 | secondary\_cidr\_blocks | List of secondary CIDR blocks to associate with the VPC to extend the IP Address pool | `list(string)` | `[]` | no |
+| secretsmanager\_endpoint\_policy | Custom IAM policy for Secrets Manager VPC endpoint | `string` | `""` | no |
 | secretsmanager\_endpoint\_private\_dns\_enabled | Whether or not to associate a private hosted zone with the specified VPC for Secrets Manager endpoint | `bool` | `false` | no |
 | secretsmanager\_endpoint\_security\_group\_ids | The ID of one or more security groups to associate with the network interface for Secrets Manager endpoint | `list(string)` | `[]` | no |
 | secretsmanager\_endpoint\_subnet\_ids | The ID of one or more subnets in which to create a network interface for Secrets Manager endpoint. Only a single subnet within an AZ is supported. If omitted, private subnets will be used. | `list(string)` | `[]` | no |
@@ -575,9 +604,11 @@ It is possible to integrate this VPC module with [terraform-aws-transit-gateway 
 | sms\_endpoint\_private\_dns\_enabled | Whether or not to associate a private hosted zone with the specified VPC for SMS endpoint | `bool` | `false` | no |
 | sms\_endpoint\_security\_group\_ids | The ID of one or more security groups to associate with the network interface for SMS endpoint | `list(string)` | `[]` | no |
 | sms\_endpoint\_subnet\_ids | The ID of one or more subnets in which to create a network interface for SMS endpoint. Only a single subnet within an AZ is supported. Ifomitted, private subnets will be used. | `list(string)` | `[]` | no |
+| sns\_endpoint\_policy | Custom IAM policy for SNS VPC endpoint | `string` | `""` | no |
 | sns\_endpoint\_private\_dns\_enabled | Whether or not to associate a private hosted zone with the specified VPC for SNS endpoint | `bool` | `false` | no |
 | sns\_endpoint\_security\_group\_ids | The ID of one or more security groups to associate with the network interface for SNS endpoint | `list(string)` | `[]` | no |
 | sns\_endpoint\_subnet\_ids | The ID of one or more subnets in which to create a network interface for SNS endpoint. Only a single subnet within an AZ is supported. If omitted, private subnets will be used. | `list(string)` | `[]` | no |
+| sqs\_endpoint\_policy | Custom IAM policy for SQS VPC endpoint | `string` | `""` | no |
 | sqs\_endpoint\_private\_dns\_enabled | Whether or not to associate a private hosted zone with the specified VPC for SQS endpoint | `bool` | `false` | no |
 | sqs\_endpoint\_security\_group\_ids | The ID of one or more security groups to associate with the network interface for SQS endpoint | `list` | `[]` | no |
 | sqs\_endpoint\_subnet\_ids | The ID of one or more subnets in which to create a network interface for SQS endpoint. Only a single subnet within an AZ is supported. If omitted, private subnets will be used. | `list` | `[]` | no |
@@ -587,12 +618,14 @@ It is possible to integrate this VPC module with [terraform-aws-transit-gateway 
 | ssmmessages\_endpoint\_private\_dns\_enabled | Whether or not to associate a private hosted zone with the specified VPC for SSMMESSAGES endpoint | `bool` | `false` | no |
 | ssmmessages\_endpoint\_security\_group\_ids | The ID of one or more security groups to associate with the network interface for SSMMESSAGES endpoint | `list(string)` | `[]` | no |
 | ssmmessages\_endpoint\_subnet\_ids | The ID of one or more subnets in which to create a network interface for SSMMESSAGES endpoint. Only a single subnet within an AZ is supported. If omitted, private subnets will be used. | `list(string)` | `[]` | no |
+| states\_endpoint\_policy | Custom IAM policy for Step Functions VPC endpoint | `string` | `""` | no |
 | states\_endpoint\_private\_dns\_enabled | Whether or not to associate a private hosted zone with the specified VPC for Step Function endpoint | `bool` | `false` | no |
 | states\_endpoint\_security\_group\_ids | The ID of one or more security groups to associate with the network interface for Step Function endpoint | `list(string)` | `[]` | no |
 | states\_endpoint\_subnet\_ids | The ID of one or more subnets in which to create a network interface for Step Function endpoint. Only a single subnet within an AZ is supported. If omitted, private subnets will be used. | `list(string)` | `[]` | no |
 | storagegateway\_endpoint\_private\_dns\_enabled | Whether or not to associate a private hosted zone with the specified VPC for Storage Gateway endpoint | `bool` | `false` | no |
 | storagegateway\_endpoint\_security\_group\_ids | The ID of one or more security groups to associate with the network interface for Storage Gateway endpoint | `list(string)` | `[]` | no |
 | storagegateway\_endpoint\_subnet\_ids | The ID of one or more subnets in which to create a network interface for Storage Gateway endpoint. Only a single subnet within an AZ is supported. If omitted, private subnets will be used. | `list(string)` | `[]` | no |
+| sts\_endpoint\_policy | Custom IAM policy for STS VPC endpoint | `string` | `""` | no |
 | sts\_endpoint\_private\_dns\_enabled | Whether or not to associate a private hosted zone with the specified VPC for STS endpoint | `bool` | `false` | no |
 | sts\_endpoint\_security\_group\_ids | The ID of one or more security groups to associate with the network interface for STS endpoint | `list(string)` | `[]` | no |
 | sts\_endpoint\_subnet\_ids | The ID of one or more subnets in which to create a network interface for STS endpoint. Only a single subnet within an AZ is supported. If omitted, private subnets will be used. | `list(string)` | `[]` | no |
@@ -609,6 +642,7 @@ It is possible to integrate this VPC module with [terraform-aws-transit-gateway 
 | vpn\_gateway\_az | The Availability Zone for the VPN Gateway | `string` | `null` | no |
 | vpn\_gateway\_id | ID of VPN Gateway to attach to the VPC | `string` | `""` | no |
 | vpn\_gateway\_tags | Additional tags for the VPN gateway | `map(string)` | `{}` | no |
+| workspaces\_endpoint\_policy | Custom IAM policy for Workspaces VPC endpoint | `string` | `""` | no |
 | workspaces\_endpoint\_private\_dns\_enabled | Whether or not to associate a private hosted zone with the specified VPC for Workspaces endpoint | `bool` | `false` | no |
 | workspaces\_endpoint\_security\_group\_ids | The ID of one or more security groups to associate with the network interface for Workspaces endpoint | `list(string)` | `[]` | no |
 | workspaces\_endpoint\_subnet\_ids | The ID of one or more subnets in which to create a network interface for Workspaces endpoint. Only a single subnet within an AZ is supported. Ifomitted, private subnets will be used. | `list(string)` | `[]` | no |

@@ -2372,3 +2372,207 @@ variable "create_egress_only_igw" {
   type        = bool
   default     = true
 }
+
+variable "s3_endpoint_policy" {
+  description = "Custom IAM policy for S3 VPC endpoint"
+  type        = string
+  default     = ""
+}
+
+variable "dynamodb_endpoint_policy" {
+  description = "Custom IAM policy for DynamoDB VPC endpoint"
+  type        = string
+  default     = ""
+}
+
+variable "codebuild_endpoint_policy" {
+  description = "Custom IAM policy for Codebuild VPC endpoint"
+  type        = string
+  default     = ""
+}
+
+variable "codecommit_endpoint_policy" {
+  description = "Custom IAM policy for Code Commit VPC endpoint"
+  type        = string
+  default     = ""
+}
+
+variable "sqs_endpoint_policy" {
+  description = "Custom IAM policy for SQS VPC endpoint"
+  type        = string
+  default     = ""
+}
+
+variable "secretsmanager_endpoint_policy" {
+  description = "Custom IAM policy for Secrets Manager VPC endpoint"
+  type        = string
+  default     = ""
+}
+
+variable "ec2_endpoint_policy" {
+  description = "Custom IAM policy for EC2 VPC endpoint"
+  type        = string
+  default     = ""
+}
+
+variable "ec2_autoscaling_endpoint_policy" {
+  description = "Custom IAM policy for EC2 Autoscaling VPC endpoint"
+  type        = string
+  default     = ""
+}
+
+variable "ecr_api_endpoint_policy" {
+  description = "Custom IAM policy for ECR API VPC endpoint"
+  type        = string
+  default     = ""
+}
+
+variable "ecr_dkr_endpoint_policy" {
+  description = "Custom IAM policy for ECR DKR VPC endpoint"
+  type        = string
+  default     = ""
+}
+
+variable "apigw_endpoint_policy" {
+  description = "Custom IAM policy for API Gateway VPC endpoint"
+  type        = string
+  default     = ""
+}
+
+variable "kms_endpoint_policy" {
+  description = "Custom IAM policy for KMS VPC endpoint"
+  type        = string
+  default     = ""
+}
+
+variable "sns_endpoint_policy" {
+  description = "Custom IAM policy for SNS VPC endpoint"
+  type        = string
+  default     = ""
+}
+
+variable "monitoring_endpoint_policy" {
+  description = "Custom IAM policy for CloudWatch Monitoring VPC endpoint"
+  type        = string
+  default     = ""
+}
+
+variable "logs_endpoint_policy" {
+  description = "Custom IAM policy for CloudWatch Logs VPC endpoint"
+  type        = string
+  default     = ""
+}
+
+variable "events_endpoint_policy" {
+  description = "Custom IAM policy for CloudWatch Events VPC endpoint"
+  type        = string
+  default     = ""
+}
+
+variable "elasticloadbalancing_endpoint_policy" {
+  description = "Custom IAM policy for Elastic Load Balancing VPC endpoint"
+  type        = string
+  default     = ""
+}
+
+variable "kinesis_streams_endpoint_policy" {
+  description = "Custom IAM policy for Kinesis Streams VPC endpoint"
+  type        = string
+  default     = ""
+}
+
+variable "kinesis_firehose_endpoint_policy" {
+  description = "Custom IAM policy for Kinesis Firehose VPC endpoint"
+  type        = string
+  default     = ""
+}
+
+variable "sagemaker_notebook_endpoint_policy" {
+  description = "Custom IAM policy for Sagemaker Notebooks VPC endpoint"
+  type        = string
+  default     = ""
+}
+
+variable "sts_endpoint_policy" {
+  description = "Custom IAM policy for STS VPC endpoint"
+  type        = string
+  default     = ""
+}
+
+variable "sagemaker_api_endpoint_policy" {
+  description = "Custom IAM policy for SageMaker API VPC endpoint"
+  type        = string
+  default     = ""
+}
+
+variable "sagemaker_runtime_endpoint_policy" {
+  description = "Custom IAM policy for SageMaker Runtime VPC endpoint"
+  type        = string
+  default     = ""
+}
+
+variable "athena_endpoint_policy" {
+  description = "Custom IAM policy for Athena VPC endpoint"
+  type        = string
+  default     = ""
+}
+
+variable "rekognition_endpoint_policy" {
+  description = "Custom IAM policy for Rekognition VPC endpoint"
+  type        = string
+  default     = ""
+}
+
+variable "efs_endpoint_policy" {
+  description = "Custom IAM policy for EFS VPC endpoint"
+  type        = string
+  default     = ""
+}
+
+variable "cloud_directory_endpoint_policy" {
+  description = "Custom IAM policy for Cloud Directory VPC endpoint"
+  type        = string
+  default     = ""
+}
+
+variable "auto_scaling_plans_endpoint_policy" {
+  description = "Custom IAM policy for Auto Scaling Plans VPC endpoint"
+  type        = string
+  default     = ""
+}
+
+variable "workspaces_endpoint_policy" {
+  description = "Custom IAM policy for Workspaces VPC endpoint"
+  type        = string
+  default     = ""
+}
+
+variable "access_analyzer_endpoint_policy" {
+  description = "Custom IAM policy for Access Analyzer VPC endpoint"
+  type        = string
+  default     = ""
+}
+
+variable "emr_endpoint_policy" {
+  description = "Custom IAM policy for EMR VPC endpoint"
+  type        = string
+  default     = ""
+}
+
+variable "states_endpoint_policy" {
+  description = "Custom IAM policy for Step Functions VPC endpoint"
+  type        = string
+  default     = ""
+}
+
+variable "elasticbeanstalk_endpoint_policy" {
+  description = "Custom IAM policy for Elastic Beanstalk VPC endpoint"
+  type        = string
+  default     = ""
+}
+
+variable "acm_pca_endpoint_policy" {
+  description = "Custom IAM policy for ACM PCA VPC endpoint"
+  type        = string
+  default     = ""
+}
