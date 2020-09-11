@@ -1348,3 +1348,26 @@ resource "aws_vpc_endpoint" "ses" {
 
   tags = local.vpce_tags
 }
+
+######################
+# VPC Endpoint for RDS
+######################
+data "aws_vpc_endpoint_service" "rds" {
+  count = var.create_vpc && var.enable_rds_endpoint ? 1 : 0
+
+  service = "rds"
+}
+
+resource "aws_vpc_endpoint" "rds" {
+  count = var.create_vpc && var.enable_rds_endpoint ? 1 : 0
+
+  vpc_id            = local.vpc_id
+  service_name      = data.aws_vpc_endpoint_service.rds[0].service_name
+  vpc_endpoint_type = "Interface"
+
+  security_group_ids  = var.rds_endpoint_security_group_ids
+  subnet_ids          = coalescelist(var.rds_endpoint_subnet_ids, aws_subnet.private.*.id)
+  private_dns_enabled = var.rds_endpoint_private_dns_enabled
+
+  tags = local.vpce_tags
+}
