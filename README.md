@@ -26,7 +26,7 @@ Git-Codecommit, Transfer Server, Kinesis Streams, Kinesis Firehose, SageMaker(No
 CloudFormation, CodePipeline, Storage Gateway, AppMesh, Transfer, Service Catalog, AppStream,
 Athena, Rekognition, Elastic File System (EFS), Cloud Directory, Elastic Beanstalk (+ Health), Elastic Map Reduce(EMR),
 DataSync, EBS, SMS, Elastic Inference Runtime, QLDB Session, Step Functions, Access Analyzer, Auto Scaling Plans,
-Application Auto Scaling, Workspaces, ACM PCA, RDS.
+Application Auto Scaling, Workspaces, ACM PCA, RDS, CodeDeploy, CodeDeploy Commands Secure
 
 * [RDS DB Subnet Group](https://www.terraform.io/docs/providers/aws/r/db_subnet_group.html)
 * [ElastiCache Subnet Group](https://www.terraform.io/docs/providers/aws/r/elasticache_subnet_group.html)
@@ -277,6 +277,9 @@ It is possible to integrate this VPC module with [terraform-aws-transit-gateway 
 | codecommit\_endpoint\_private\_dns\_enabled | Whether or not to associate a private hosted zone with the specified VPC for Codecommit endpoint | `bool` | `false` | no |
 | codecommit\_endpoint\_security\_group\_ids | The ID of one or more security groups to associate with the network interface for Codecommit endpoint | `list` | `[]` | no |
 | codecommit\_endpoint\_subnet\_ids | The ID of one or more subnets in which to create a network interface for Codecommit endpoint. Only a single subnet within an AZ is supported. If omitted, private subnets will be used. | `list` | `[]` | no |
+| codedeploy\_commands\_secure\_endpoint\_private\_dns\_enabled | Whether or not to associate a private hosted zone with the specified VPC for CodeDeploy Commands Secure endpoint | `bool` | `false` | no |
+| codedeploy\_commands\_secure\_endpoint\_security\_group\_ids | The ID of one or more security groups to associate with the network interface for CodeDeploy Commands Secure endpoint | `list(string)` | `[]` | no |
+| codedeploy\_commands\_secure\_endpoint\_subnet\_ids | The ID of one or more subnets in which to create a network interface for CodeDeploy Commands Secure endpoint. Only a single subnet within an AZ is supported. If omitted, private subnets will be used. | `list(string)` | `[]` | no |
 | codedeploy\_endpoint\_private\_dns\_enabled | Whether or not to associate a private hosted zone with the specified VPC for CodeDeploy endpoint | `bool` | `false` | no |
 | codedeploy\_endpoint\_security\_group\_ids | The ID of one or more security groups to associate with the network interface for CodeDeploy endpoint | `list(string)` | `[]` | no |
 | codedeploy\_endpoint\_subnet\_ids | The ID of one or more subnets in which to create a network interface for CodeDeploy endpoint. Only a single subnet within an AZ is supported. If omitted, private subnets will be used. | `list(string)` | `[]` | no |
@@ -403,6 +406,7 @@ It is possible to integrate this VPC module with [terraform-aws-transit-gateway 
 | enable\_cloudtrail\_endpoint | Should be true if you want to provision a CloudTrail endpoint to the VPC | `bool` | `false` | no |
 | enable\_codebuild\_endpoint | Should be true if you want to provision an Codebuild endpoint to the VPC | `bool` | `false` | no |
 | enable\_codecommit\_endpoint | Should be true if you want to provision an Codecommit endpoint to the VPC | `bool` | `false` | no |
+| enable\_codedeploy\_commands\_secure\_endpoint | Should be true if you want to provision an CodeDeploy Commands Secure endpoint to the VPC | `bool` | `false` | no |
 | enable\_codedeploy\_endpoint | Should be true if you want to provision an CodeDeploy endpoint to the VPC | `bool` | `false` | no |
 | enable\_codepipeline\_endpoint | Should be true if you want to provision a CodePipeline endpoint to the VPC | `bool` | `false` | no |
 | enable\_config\_endpoint | Should be true if you want to provision an config endpoint to the VPC | `bool` | `false` | no |

@@ -1394,3 +1394,26 @@ resource "aws_vpc_endpoint" "codedeploy" {
 
   tags = local.vpce_tags
 }
+
+#############################################
+# VPC Endpoint for CodeDeploy Commands Secure
+#############################################
+data "aws_vpc_endpoint_service" "codedeploy_commands_secure" {
+  count = var.create_vpc && var.enable_codedeploy_commands_secure_endpoint ? 1 : 0
+
+  service = "codedeploy-commands-secure"
+}
+
+resource "aws_vpc_endpoint" "codedeploy_commands_secure" {
+  count = var.create_vpc && var.enable_codedeploy_commands_secure_endpoint ? 1 : 0
+
+  vpc_id            = local.vpc_id
+  service_name      = data.aws_vpc_endpoint_service.codedeploy_commands_secure[0].service_name
+  vpc_endpoint_type = "Interface"
+
+  security_group_ids  = var.codedeploy_commands_secure_endpoint_security_group_ids
+  subnet_ids          = coalescelist(var.codedeploy_commands_secure_endpoint_subnet_ids, aws_subnet.private.*.id)
+  private_dns_enabled = var.codedeploy_commands_secure_endpoint_private_dns_enabled
+
+  tags = local.vpce_tags
+}
