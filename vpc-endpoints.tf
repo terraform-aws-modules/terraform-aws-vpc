@@ -1371,3 +1371,26 @@ resource "aws_vpc_endpoint" "rds" {
 
   tags = local.vpce_tags
 }
+
+#############################
+# VPC Endpoint for CodeDeploy
+#############################
+data "aws_vpc_endpoint_service" "codedeploy" {
+  count = var.create_vpc && var.enable_codedeploy_endpoint ? 1 : 0
+
+  service = "codedeploy"
+}
+
+resource "aws_vpc_endpoint" "codedeploy" {
+  count = var.create_vpc && var.enable_codedeploy_endpoint ? 1 : 0
+
+  vpc_id            = local.vpc_id
+  service_name      = data.aws_vpc_endpoint_service.codedeploy[0].service_name
+  vpc_endpoint_type = "Interface"
+
+  security_group_ids  = var.codedeploy_endpoint_security_group_ids
+  subnet_ids          = coalescelist(var.codedeploy_endpoint_subnet_ids, aws_subnet.private.*.id)
+  private_dns_enabled = var.codedeploy_endpoint_private_dns_enabled
+
+  tags = local.vpce_tags
+}
