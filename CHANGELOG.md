@@ -7,6 +7,12 @@ All notable changes to this project will be documented in this file.
 
 
 
+<a name="v2.50.0"></a>
+## [v2.50.0] - 2020-09-11
+
+- feat: Add ability to create CodeDeploy endpoint to VPC ([#501](https://github.com/terraform-aws-modules/terraform-aws-vpc/issues/501))
+
+
 <a name="v2.49.0"></a>
 ## [v2.49.0] - 2020-09-11
 
@@ -968,7 +974,8 @@ All notable changes to this project will be documented in this file.
 - Initial commit
 
 
-[Unreleased]: https://github.com/terraform-aws-modules/terraform-aws-vpc/compare/v2.49.0...HEAD
+[Unreleased]: https://github.com/terraform-aws-modules/terraform-aws-vpc/compare/v2.50.0...HEAD
+[v2.50.0]: https://github.com/terraform-aws-modules/terraform-aws-vpc/compare/v2.49.0...v2.50.0
 [v2.49.0]: https://github.com/terraform-aws-modules/terraform-aws-vpc/compare/v2.48.0...v2.49.0
 [v2.48.0]: https://github.com/terraform-aws-modules/terraform-aws-vpc/compare/v2.47.0...v2.48.0
 [v2.47.0]: https://github.com/terraform-aws-modules/terraform-aws-vpc/compare/v2.46.0...v2.47.0
