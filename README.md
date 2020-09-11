@@ -26,7 +26,7 @@ Git-Codecommit, Transfer Server, Kinesis Streams, Kinesis Firehose, SageMaker(No
 CloudFormation, CodePipeline, Storage Gateway, AppMesh, Transfer, Service Catalog, AppStream,
 Athena, Rekognition, Elastic File System (EFS), Cloud Directory, Elastic Beanstalk (+ Health), Elastic Map Reduce(EMR),
 DataSync, EBS, SMS, Elastic Inference Runtime, QLDB Session, Step Functions, Access Analyzer, Auto Scaling Plans,
-Application Auto Scaling, Workspaces, ACM PCA.
+Application Auto Scaling, Workspaces, ACM PCA, RDS.
 
 * [RDS DB Subnet Group](https://www.terraform.io/docs/providers/aws/r/db_subnet_group.html)
 * [ElastiCache Subnet Group](https://www.terraform.io/docs/providers/aws/r/elasticache_subnet_group.html)
@@ -446,6 +446,7 @@ It is possible to integrate this VPC module with [terraform-aws-transit-gateway 
 | enable\_sms\_endpoint | Should be true if you want to provision an SMS endpoint to the VPC | `bool` | `false` | no |
 | enable\_sns\_endpoint | Should be true if you want to provision a SNS endpoint to the VPC | `bool` | `false` | no |
 | enable\_sqs\_endpoint | Should be true if you want to provision an SQS endpoint to the VPC | `bool` | `false` | no |
+| enable\_rds\_endpoint | Should be true if you want to provision an RDS endpoint to the VPC | `bool` | `false` | no |
 | enable\_ssm\_endpoint | Should be true if you want to provision an SSM endpoint to the VPC | `bool` | `false` | no |
 | enable\_ssmmessages\_endpoint | Should be true if you want to provision a SSMMESSAGES endpoint to the VPC | `bool` | `false` | no |
 | enable\_states\_endpoint | Should be true if you want to provision a Step Function endpoint to the VPC | `bool` | `false` | no |
@@ -581,6 +582,9 @@ It is possible to integrate this VPC module with [terraform-aws-transit-gateway 
 | sqs\_endpoint\_private\_dns\_enabled | Whether or not to associate a private hosted zone with the specified VPC for SQS endpoint | `bool` | `false` | no |
 | sqs\_endpoint\_security\_group\_ids | The ID of one or more security groups to associate with the network interface for SQS endpoint | `list` | `[]` | no |
 | sqs\_endpoint\_subnet\_ids | The ID of one or more subnets in which to create a network interface for SQS endpoint. Only a single subnet within an AZ is supported. If omitted, private subnets will be used. | `list` | `[]` | no |
+| rds\_endpoint\_private\_dns\_enabled | Whether or not to associate a private hosted zone with the specified VPC for RDS endpoint | `bool` | `false` | no |
+| rds\_endpoint\_security\_group\_ids | The ID of one or more security groups to associate with the network interface for RDS endpoint | `list` | `[]` | no |
+| rds\_endpoint\_subnet\_ids | The ID of one or more subnets in which to create a network interface for RDS endpoint. Only a single subnet within an AZ is supported. If omitted, private subnets will be used. | `list` | `[]` | no |
 | ssm\_endpoint\_private\_dns\_enabled | Whether or not to associate a private hosted zone with the specified VPC for SSM endpoint | `bool` | `false` | no |
 | ssm\_endpoint\_security\_group\_ids | The ID of one or more security groups to associate with the network interface for SSM endpoint | `list(string)` | `[]` | no |
 | ssm\_endpoint\_subnet\_ids | The ID of one or more subnets in which to create a network interface for SSM endpoint. Only a single subnet within an AZ is supported. If omitted, private subnets will be used. | `list(string)` | `[]` | no |
@@ -853,8 +857,11 @@ It is possible to integrate this VPC module with [terraform-aws-transit-gateway 
 | vpc\_endpoint\_sns\_id | The ID of VPC endpoint for SNS |
 | vpc\_endpoint\_sns\_network\_interface\_ids | One or more network interfaces for the VPC Endpoint for SNS. |
 | vpc\_endpoint\_sqs\_dns\_entry | The DNS entries for the VPC Endpoint for SQS. |
-| vpc\_endpoint\_sqs\_id | The ID of VPC endpoint for SQS |
+| vpc\_endpoint\_sqs\_id | The ID of VPC endpoint for RDS |
 | vpc\_endpoint\_sqs\_network\_interface\_ids | One or more network interfaces for the VPC Endpoint for SQS. |
+| vpc\_endpoint\_rds\_dns\_entry | The DNS entries for the VPC Endpoint for RDS. |
+| vpc\_endpoint\_rds\_id | The ID of VPC endpoint for RDS |
+| vpc\_endpoint\_rds\_network\_interface\_ids | One or more network interfaces for the VPC Endpoint for RDS. |
 | vpc\_endpoint\_ssm\_dns\_entry | The DNS entries for the VPC Endpoint for SSM. |
 | vpc\_endpoint\_ssm\_id | The ID of VPC endpoint for SSM |
 | vpc\_endpoint\_ssm\_network\_interface\_ids | One or more network interfaces for the VPC Endpoint for SSM. |
