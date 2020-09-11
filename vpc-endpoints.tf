@@ -1363,19 +1363,11 @@ resource "aws_vpc_endpoint" "rds" {
 
   vpc_id       = local.vpc_id
   service_name = data.aws_vpc_endpoint_service.rds[0].service_name
-  tags         = local.vpce_tags
-}
+  vpc_endpoint_type = "Interface"
 
-resource "aws_vpc_endpoint_route_table_association" "private_rds" {
-  count = var.create_vpc && var.enable_rds_endpoint ? local.nat_gateway_count : 0
+  security_group_ids  = var.rds_endpoint_security_group_ids
+  subnet_ids          = coalescelist(var.rds_endpoint_subnet_ids, aws_subnet.private.*.id)
+  private_dns_enabled = var.rds_endpoint_private_dns_enabled
 
-  vpc_endpoint_id = aws_vpc_endpoint.rds[0].id
-  route_table_id  = element(aws_route_table.private.*.id, count.index)
-}
-
-resource "aws_vpc_endpoint_route_table_association" "intra_rds" {
-  count = var.create_vpc && var.enable_rds_endpoint && length(var.intra_subnets) > 0 ? 1 : 0
-
-  vpc_endpoint_id = aws_vpc_endpoint.rds[0].id
-  route_table_id  = element(aws_route_table.intra.*.id, 0)
+  tags = local.vpce_tags
 }
