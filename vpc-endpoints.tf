@@ -1361,8 +1361,8 @@ data "aws_vpc_endpoint_service" "rds" {
 resource "aws_vpc_endpoint" "rds" {
   count = var.create_vpc && var.enable_rds_endpoint ? 1 : 0
 
-  vpc_id       = local.vpc_id
-  service_name = data.aws_vpc_endpoint_service.rds[0].service_name
+  vpc_id            = local.vpc_id
+  service_name      = data.aws_vpc_endpoint_service.rds[0].service_name
   vpc_endpoint_type = "Interface"
 
   security_group_ids  = var.rds_endpoint_security_group_ids

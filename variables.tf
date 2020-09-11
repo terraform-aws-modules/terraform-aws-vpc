@@ -1676,7 +1676,7 @@ variable "acm_pca_endpoint_security_group_ids" {
 }
 
 variable "acm_pca_endpoint_subnet_ids" {
-  description = "The ID of one or more subnets in which to create a network interface for Codebuilt endpoint. Only a single subnet within an AZ is supported. If omitted, private subnets will be used."
+  description = "The ID of one or more subnets in which to create a network interface for ACM PCA endpoint. Only a single subnet within an AZ is supported. If omitted, private subnets will be used."
   default     = []
 }
 

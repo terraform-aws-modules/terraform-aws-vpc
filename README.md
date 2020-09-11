@@ -242,7 +242,7 @@ It is possible to integrate this VPC module with [terraform-aws-transit-gateway 
 | access\_analyzer\_endpoint\_subnet\_ids | The ID of one or more subnets in which to create a network interface for Access Analyzer endpoint. Only a single subnet within an AZ is supported. Ifomitted, private subnets will be used. | `list(string)` | `[]` | no |
 | acm\_pca\_endpoint\_private\_dns\_enabled | Whether or not to associate a private hosted zone with the specified VPC for ACM PCA endpoint | `bool` | `false` | no |
 | acm\_pca\_endpoint\_security\_group\_ids | The ID of one or more security groups to associate with the network interface for ACM PCA endpoint | `list` | `[]` | no |
-| acm\_pca\_endpoint\_subnet\_ids | The ID of one or more subnets in which to create a network interface for Codebuilt endpoint. Only a single subnet within an AZ is supported. If omitted, private subnets will be used. | `list` | `[]` | no |
+| acm\_pca\_endpoint\_subnet\_ids | The ID of one or more subnets in which to create a network interface for ACM PCA endpoint. Only a single subnet within an AZ is supported. If omitted, private subnets will be used. | `list` | `[]` | no |
 | amazon\_side\_asn | The Autonomous System Number (ASN) for the Amazon side of the gateway. By default the virtual private gateway is created with the current default Amazon ASN. | `string` | `"64512"` | no |
 | apigw\_endpoint\_private\_dns\_enabled | Whether or not to associate a private hosted zone with the specified VPC for API GW endpoint | `bool` | `false` | no |
 | apigw\_endpoint\_security\_group\_ids | The ID of one or more security groups to associate with the network interface for API GW  endpoint | `list(string)` | `[]` | no |
@@ -435,6 +435,7 @@ It is possible to integrate this VPC module with [terraform-aws-transit-gateway 
 | enable\_nat\_gateway | Should be true if you want to provision NAT Gateways for each of your private networks | `bool` | `false` | no |
 | enable\_public\_redshift | Controls if redshift should have public routing table | `bool` | `false` | no |
 | enable\_qldb\_session\_endpoint | Should be true if you want to provision an QLDB Session endpoint to the VPC | `bool` | `false` | no |
+| enable\_rds\_endpoint | Should be true if you want to provision an RDS endpoint to the VPC | `bool` | `false` | no |
 | enable\_rekognition\_endpoint | Should be true if you want to provision a Rekognition endpoint to the VPC | `bool` | `false` | no |
 | enable\_s3\_endpoint | Should be true if you want to provision an S3 endpoint to the VPC | `bool` | `false` | no |
 | enable\_sagemaker\_api\_endpoint | Should be true if you want to provision a SageMaker API endpoint to the VPC | `bool` | `false` | no |
@@ -446,7 +447,6 @@ It is possible to integrate this VPC module with [terraform-aws-transit-gateway 
 | enable\_sms\_endpoint | Should be true if you want to provision an SMS endpoint to the VPC | `bool` | `false` | no |
 | enable\_sns\_endpoint | Should be true if you want to provision a SNS endpoint to the VPC | `bool` | `false` | no |
 | enable\_sqs\_endpoint | Should be true if you want to provision an SQS endpoint to the VPC | `bool` | `false` | no |
-| enable\_rds\_endpoint | Should be true if you want to provision an RDS endpoint to the VPC | `bool` | `false` | no |
 | enable\_ssm\_endpoint | Should be true if you want to provision an SSM endpoint to the VPC | `bool` | `false` | no |
 | enable\_ssmmessages\_endpoint | Should be true if you want to provision a SSMMESSAGES endpoint to the VPC | `bool` | `false` | no |
 | enable\_states\_endpoint | Should be true if you want to provision a Step Function endpoint to the VPC | `bool` | `false` | no |
@@ -537,6 +537,9 @@ It is possible to integrate this VPC module with [terraform-aws-transit-gateway 
 | qldb\_session\_endpoint\_private\_dns\_enabled | Whether or not to associate a private hosted zone with the specified VPC for QLDB Session endpoint | `bool` | `false` | no |
 | qldb\_session\_endpoint\_security\_group\_ids | The ID of one or more security groups to associate with the network interface for QLDB Session endpoint | `list(string)` | `[]` | no |
 | qldb\_session\_endpoint\_subnet\_ids | The ID of one or more subnets in which to create a network interface for QLDB Session endpoint. Only a single subnet within an AZ is supported. Ifomitted, private subnets will be used. | `list(string)` | `[]` | no |
+| rds\_endpoint\_private\_dns\_enabled | Whether or not to associate a private hosted zone with the specified VPC for RDS endpoint | `bool` | `false` | no |
+| rds\_endpoint\_security\_group\_ids | The ID of one or more security groups to associate with the network interface for RDS endpoint | `list(string)` | `[]` | no |
+| rds\_endpoint\_subnet\_ids | The ID of one or more subnets in which to create a network interface for RDS endpoint. Only a single subnet within an AZ is supported. If omitted, private subnets will be used. | `list(string)` | `[]` | no |
 | redshift\_acl\_tags | Additional tags for the redshift subnets network ACL | `map(string)` | `{}` | no |
 | redshift\_dedicated\_network\_acl | Whether to use dedicated network ACL (not default) and custom rules for redshift subnets | `bool` | `false` | no |
 | redshift\_inbound\_acl\_rules | Redshift subnets inbound network ACL rules | `list(map(string))` | <pre>[<br>  {<br>    "cidr_block": "0.0.0.0/0",<br>    "from_port": 0,<br>    "protocol": "-1",<br>    "rule_action": "allow",<br>    "rule_number": 100,<br>    "to_port": 0<br>  }<br>]</pre> | no |
@@ -582,9 +585,6 @@ It is possible to integrate this VPC module with [terraform-aws-transit-gateway 
 | sqs\_endpoint\_private\_dns\_enabled | Whether or not to associate a private hosted zone with the specified VPC for SQS endpoint | `bool` | `false` | no |
 | sqs\_endpoint\_security\_group\_ids | The ID of one or more security groups to associate with the network interface for SQS endpoint | `list` | `[]` | no |
 | sqs\_endpoint\_subnet\_ids | The ID of one or more subnets in which to create a network interface for SQS endpoint. Only a single subnet within an AZ is supported. If omitted, private subnets will be used. | `list` | `[]` | no |
-| rds\_endpoint\_private\_dns\_enabled | Whether or not to associate a private hosted zone with the specified VPC for RDS endpoint | `bool` | `false` | no |
-| rds\_endpoint\_security\_group\_ids | The ID of one or more security groups to associate with the network interface for RDS endpoint | `list` | `[]` | no |
-| rds\_endpoint\_subnet\_ids | The ID of one or more subnets in which to create a network interface for RDS endpoint. Only a single subnet within an AZ is supported. If omitted, private subnets will be used. | `list` | `[]` | no |
 | ssm\_endpoint\_private\_dns\_enabled | Whether or not to associate a private hosted zone with the specified VPC for SSM endpoint | `bool` | `false` | no |
 | ssm\_endpoint\_security\_group\_ids | The ID of one or more security groups to associate with the network interface for SSM endpoint | `list(string)` | `[]` | no |
 | ssm\_endpoint\_subnet\_ids | The ID of one or more subnets in which to create a network interface for SSM endpoint. Only a single subnet within an AZ is supported. If omitted, private subnets will be used. | `list(string)` | `[]` | no |
@@ -859,9 +859,6 @@ It is possible to integrate this VPC module with [terraform-aws-transit-gateway 
 | vpc\_endpoint\_sqs\_dns\_entry | The DNS entries for the VPC Endpoint for SQS. |
 | vpc\_endpoint\_sqs\_id | The ID of VPC endpoint for SQS |
 | vpc\_endpoint\_sqs\_network\_interface\_ids | One or more network interfaces for the VPC Endpoint for SQS. |
-| vpc\_endpoint\_rds\_dns\_entry | The DNS entries for the VPC Endpoint for RDS. |
-| vpc\_endpoint\_rds\_id | The ID of VPC endpoint for RDS |
-| vpc\_endpoint\_rds\_network\_interface\_ids | One or more network interfaces for the VPC Endpoint for RDS. |
 | vpc\_endpoint\_ssm\_dns\_entry | The DNS entries for the VPC Endpoint for SSM. |
 | vpc\_endpoint\_ssm\_id | The ID of VPC endpoint for SSM |
 | vpc\_endpoint\_ssm\_network\_interface\_ids | One or more network interfaces for the VPC Endpoint for SSM. |
