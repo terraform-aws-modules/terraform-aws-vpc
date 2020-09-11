@@ -1646,6 +1646,12 @@ variable "enable_acm_pca_endpoint" {
   default     = false
 }
 
+variable "enable_rds_endpoint" {
+  description = "Should be true if you want to provision an RDS endpoint to the VPC"
+  type        = bool
+  default     = false
+}
+
 variable "acm_pca_endpoint_security_group_ids" {
   description = "The ID of one or more security groups to associate with the network interface for ACM PCA endpoint"
   default     = []

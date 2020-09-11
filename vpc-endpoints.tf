@@ -1348,3 +1348,34 @@ resource "aws_vpc_endpoint" "ses" {
 
   tags = local.vpce_tags
 }
+
+######################
+# VPC Endpoint for RDS
+######################
+data "aws_vpc_endpoint_service" "rds" {
+  count = var.create_vpc && var.enable_rds_endpoint ? 1 : 0
+
+  service = "rds"
+}
+
+resource "aws_vpc_endpoint" "rds" {
+  count = var.create_vpc && var.enable_rds_endpoint ? 1 : 0
+
+  vpc_id       = local.vpc_id
+  service_name = data.aws_vpc_endpoint_service.rds[0].service_name
+  tags         = local.vpce_tags
+}
+
+resource "aws_vpc_endpoint_route_table_association" "private_rds" {
+  count = var.create_vpc && var.enable_rds_endpoint ? local.nat_gateway_count : 0
+
+  vpc_endpoint_id = aws_vpc_endpoint.rds[0].id
+  route_table_id  = element(aws_route_table.private.*.id, count.index)
+}
+
+resource "aws_vpc_endpoint_route_table_association" "intra_rds" {
+  count = var.create_vpc && var.enable_rds_endpoint && length(var.intra_subnets) > 0 ? 1 : 0
+
+  vpc_endpoint_id = aws_vpc_endpoint.rds[0].id
+  route_table_id  = element(aws_route_table.intra.*.id, 0)
+}
