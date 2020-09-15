@@ -304,6 +304,12 @@ variable "external_nat_ips" {
   default     = []
 }
 
+variable "enable_public_s3_endpoint" {
+  description = "Whether to enable S3 VPC Endpoint for public subnets"
+  default     = true
+  type        = bool
+}
+
 variable "enable_dynamodb_endpoint" {
   description = "Should be true if you want to provision a DynamoDB endpoint to the VPC"
   type        = bool
