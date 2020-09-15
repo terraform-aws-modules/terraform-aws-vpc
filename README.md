@@ -442,6 +442,7 @@ It is possible to integrate this VPC module with [terraform-aws-transit-gateway 
 | enable\_monitoring\_endpoint | Should be true if you want to provision a CloudWatch Monitoring endpoint to the VPC | `bool` | `false` | no |
 | enable\_nat\_gateway | Should be true if you want to provision NAT Gateways for each of your private networks | `bool` | `false` | no |
 | enable\_public\_redshift | Controls if redshift should have public routing table | `bool` | `false` | no |
+| enable\_public\_s3\_endpoint | Whether to enable S3 VPC Endpoint for public subnets | `bool` | `true` | no |
 | enable\_qldb\_session\_endpoint | Should be true if you want to provision an QLDB Session endpoint to the VPC | `bool` | `false` | no |
 | enable\_rds\_endpoint | Should be true if you want to provision an RDS endpoint to the VPC | `bool` | `false` | no |
 | enable\_rekognition\_endpoint | Should be true if you want to provision a Rekognition endpoint to the VPC | `bool` | `false` | no |
