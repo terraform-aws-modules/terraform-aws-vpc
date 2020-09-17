@@ -3,6 +3,6 @@ resource "aws_vpc" "AWS_Training" {
   instance_tenancy = "default"
 
   tags = {
-    Name = "Gabor Training TF"
+    Name = "AWS_Training"
   }
 }
