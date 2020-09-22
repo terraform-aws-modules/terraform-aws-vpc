@@ -23,13 +23,14 @@ Note that this example may create resources which can cost money (AWS Elastic IP
 <!-- BEGINNING OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
 ## Requirements
 
-No requirements.
+| Name | Version |
+|------|---------|
+| terraform | >= 0.12.7, < 0.14 |
+| aws | >= 2.68, < 4.0 |
 
 ## Providers
 
-| Name | Version |
-|------|---------|
-| aws | n/a |
+No provider.
 
 ## Inputs
 
