@@ -7,6 +7,12 @@ All notable changes to this project will be documented in this file.
 
 
 
+<a name="v2.54.0"></a>
+## [v2.54.0] - 2020-09-23
+
+- fix: Split appstream to appstream_api and appstream_streaming ([#508](https://github.com/terraform-aws-modules/terraform-aws-vpc/issues/508))
+
+
 <a name="v2.53.0"></a>
 ## [v2.53.0] - 2020-09-23
 
@@ -992,7 +998,8 @@ All notable changes to this project will be documented in this file.
 - Initial commit
 
 
-[Unreleased]: https://github.com/terraform-aws-modules/terraform-aws-vpc/compare/v2.53.0...HEAD
+[Unreleased]: https://github.com/terraform-aws-modules/terraform-aws-vpc/compare/v2.54.0...HEAD
+[v2.54.0]: https://github.com/terraform-aws-modules/terraform-aws-vpc/compare/v2.53.0...v2.54.0
 [v2.53.0]: https://github.com/terraform-aws-modules/terraform-aws-vpc/compare/v2.52.0...v2.53.0
 [v2.52.0]: https://github.com/terraform-aws-modules/terraform-aws-vpc/compare/v2.51.0...v2.52.0
 [v2.51.0]: https://github.com/terraform-aws-modules/terraform-aws-vpc/compare/v2.50.0...v2.51.0
