@@ -1235,26 +1235,50 @@ variable "sagemaker_runtime_endpoint_private_dns_enabled" {
   default     = false
 }
 
-variable "enable_appstream_endpoint" {
-  description = "Should be true if you want to provision a AppStream endpoint to the VPC"
+variable "enable_appstream_api_endpoint" {
+  description = "Should be true if you want to provision a AppStream API endpoint to the VPC"
   type        = bool
   default     = false
 }
 
-variable "appstream_endpoint_security_group_ids" {
-  description = "The ID of one or more security groups to associate with the network interface for AppStream endpoint"
+variable "appstream_api_endpoint_security_group_ids" {
+  description = "The ID of one or more security groups to associate with the network interface for AppStream API endpoint"
   type        = list(string)
   default     = []
 }
 
-variable "appstream_endpoint_subnet_ids" {
-  description = "The ID of one or more subnets in which to create a network interface for AppStream endpoint. Only a single subnet within an AZ is supported. If omitted, private subnets will be used."
+variable "appstream_api_endpoint_subnet_ids" {
+  description = "The ID of one or more subnets in which to create a network interface for AppStream API endpoint. Only a single subnet within an AZ is supported. If omitted, private subnets will be used."
   type        = list(string)
   default     = []
 }
 
-variable "appstream_endpoint_private_dns_enabled" {
-  description = "Whether or not to associate a private hosted zone with the specified VPC for AppStream endpoint"
+variable "appstream_api_endpoint_private_dns_enabled" {
+  description = "Whether or not to associate a private hosted zone with the specified VPC for AppStream API endpoint"
+  type        = bool
+  default     = false
+}
+
+variable "enable_appstream_streaming_endpoint" {
+  description = "Should be true if you want to provision a AppStream Streaming endpoint to the VPC"
+  type        = bool
+  default     = false
+}
+
+variable "appstream_streaming_endpoint_security_group_ids" {
+  description = "The ID of one or more security groups to associate with the network interface for AppStream Streaming endpoint"
+  type        = list(string)
+  default     = []
+}
+
+variable "appstream_streaming_endpoint_subnet_ids" {
+  description = "The ID of one or more subnets in which to create a network interface for AppStream Streaming endpoint. Only a single subnet within an AZ is supported. If omitted, private subnets will be used."
+  type        = list(string)
+  default     = []
+}
+
+variable "appstream_streaming_endpoint_private_dns_enabled" {
+  description = "Whether or not to associate a private hosted zone with the specified VPC for AppStream Streaming endpoint"
   type        = bool
   default     = false
 }

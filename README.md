@@ -23,7 +23,7 @@ These types of resources are supported:
 ECS, ECS Agent, ECS Telemetry, SES, SNS, STS, Glue, CloudWatch(Monitoring, Logs, Events),
 Elastic Load Balancing, CloudTrail, Secrets Manager, Config, CodeBuild, CodeCommit,
 Git-Codecommit, Transfer Server, Kinesis Streams, Kinesis Firehose, SageMaker(Notebook, Runtime, API),
-CloudFormation, CodePipeline, Storage Gateway, AppMesh, Transfer, Service Catalog, AppStream,
+CloudFormation, CodePipeline, Storage Gateway, AppMesh, Transfer, Service Catalog, AppStream API, AppStream Streaming,
 Athena, Rekognition, Elastic File System (EFS), Cloud Directory, Elastic Beanstalk (+ Health), Elastic Map Reduce(EMR),
 DataSync, EBS, SMS, Elastic Inference Runtime, QLDB Session, Step Functions, Access Analyzer, Auto Scaling Plans,
 Application Auto Scaling, Workspaces, ACM PCA, RDS, CodeDeploy, CodeDeploy Commands Secure
@@ -250,9 +250,12 @@ It is possible to integrate this VPC module with [terraform-aws-transit-gateway 
 | appmesh\_envoy\_management\_endpoint\_private\_dns\_enabled | Whether or not to associate a private hosted zone with the specified VPC for AppMesh endpoint | `bool` | `false` | no |
 | appmesh\_envoy\_management\_endpoint\_security\_group\_ids | The ID of one or more security groups to associate with the network interface for AppMesh endpoint | `list(string)` | `[]` | no |
 | appmesh\_envoy\_management\_endpoint\_subnet\_ids | The ID of one or more subnets in which to create a network interface for AppMesh endpoint. Only a single subnet within an AZ is supported. If omitted, private subnets will be used. | `list(string)` | `[]` | no |
-| appstream\_endpoint\_private\_dns\_enabled | Whether or not to associate a private hosted zone with the specified VPC for AppStream endpoint | `bool` | `false` | no |
-| appstream\_endpoint\_security\_group\_ids | The ID of one or more security groups to associate with the network interface for AppStream endpoint | `list(string)` | `[]` | no |
-| appstream\_endpoint\_subnet\_ids | The ID of one or more subnets in which to create a network interface for AppStream endpoint. Only a single subnet within an AZ is supported. If omitted, private subnets will be used. | `list(string)` | `[]` | no |
+| appstream\_api\_endpoint\_private\_dns\_enabled | Whether or not to associate a private hosted zone with the specified VPC for AppStream API endpoint | `bool` | `false` | no |
+| appstream\_api\_endpoint\_security\_group\_ids | The ID of one or more security groups to associate with the network interface for AppStream API endpoint | `list(string)` | `[]` | no |
+| appstream\_api\_endpoint\_subnet\_ids | The ID of one or more subnets in which to create a network interface for AppStream API endpoint. Only a single subnet within an AZ is supported. If omitted, private subnets will be used. | `list(string)` | `[]` | no |
+| appstream\_streaming\_endpoint\_private\_dns\_enabled | Whether or not to associate a private hosted zone with the specified VPC for AppStream Streaming endpoint | `bool` | `false` | no |
+| appstream\_streaming\_endpoint\_security\_group\_ids | The ID of one or more security groups to associate with the network interface for AppStream Streaming endpoint | `list(string)` | `[]` | no |
+| appstream\_streaming\_endpoint\_subnet\_ids | The ID of one or more subnets in which to create a network interface for AppStream Streaming endpoint. Only a single subnet within an AZ is supported. If omitted, private subnets will be used. | `list(string)` | `[]` | no |
 | assign\_ipv6\_address\_on\_creation | Assign IPv6 address on subnet, must be disabled to change IPv6 CIDRs. This is the IPv6 equivalent of map\_public\_ip\_on\_launch | `bool` | `false` | no |
 | athena\_endpoint\_private\_dns\_enabled | Whether or not to associate a private hosted zone with the specified VPC for Athena endpoint | `bool` | `false` | no |
 | athena\_endpoint\_security\_group\_ids | The ID of one or more security groups to associate with the network interface for Athena endpoint | `list(string)` | `[]` | no |
@@ -396,7 +399,8 @@ It is possible to integrate this VPC module with [terraform-aws-transit-gateway 
 | enable\_acm\_pca\_endpoint | Should be true if you want to provision an ACM PCA endpoint to the VPC | `bool` | `false` | no |
 | enable\_apigw\_endpoint | Should be true if you want to provision an api gateway endpoint to the VPC | `bool` | `false` | no |
 | enable\_appmesh\_envoy\_management\_endpoint | Should be true if you want to provision a AppMesh endpoint to the VPC | `bool` | `false` | no |
-| enable\_appstream\_endpoint | Should be true if you want to provision a AppStream endpoint to the VPC | `bool` | `false` | no |
+| enable\_appstream\_api\_endpoint | Should be true if you want to provision a AppStream API endpoint to the VPC | `bool` | `false` | no |
+| enable\_appstream\_streaming\_endpoint | Should be true if you want to provision a AppStream Streaming endpoint to the VPC | `bool` | `false` | no |
 | enable\_athena\_endpoint | Should be true if you want to provision a Athena endpoint to the VPC | `bool` | `false` | no |
 | enable\_auto\_scaling\_plans\_endpoint | Should be true if you want to provision an Auto Scaling Plans endpoint to the VPC | `bool` | `false` | no |
 | enable\_classiclink | Should be true to enable ClassicLink for the VPC. Only valid in regions and accounts that support EC2 Classic. | `bool` | `null` | no |
@@ -732,9 +736,12 @@ It is possible to integrate this VPC module with [terraform-aws-transit-gateway 
 | vpc\_endpoint\_appmesh\_envoy\_management\_dns\_entry | The DNS entries for the VPC Endpoint for AppMesh. |
 | vpc\_endpoint\_appmesh\_envoy\_management\_id | The ID of VPC endpoint for AppMesh |
 | vpc\_endpoint\_appmesh\_envoy\_management\_network\_interface\_ids | One or more network interfaces for the VPC Endpoint for AppMesh. |
-| vpc\_endpoint\_appstream\_dns\_entry | The DNS entries for the VPC Endpoint for AppStream. |
-| vpc\_endpoint\_appstream\_id | The ID of VPC endpoint for AppStream |
-| vpc\_endpoint\_appstream\_network\_interface\_ids | One or more network interfaces for the VPC Endpoint for AppStream. |
+| vpc\_endpoint\_appstream\_api\_dns\_entry | The DNS entries for the VPC Endpoint for AppStream API. |
+| vpc\_endpoint\_appstream\_api\_id | The ID of VPC endpoint for AppStream API |
+| vpc\_endpoint\_appstream\_api\_network\_interface\_ids | One or more network interfaces for the VPC Endpoint for AppStream API. |
+| vpc\_endpoint\_appstream\_streaming\_dns\_entry | The DNS entries for the VPC Endpoint for AppStream Streaming. |
+| vpc\_endpoint\_appstream\_streaming\_id | The ID of VPC endpoint for AppStream Streaming |
+| vpc\_endpoint\_appstream\_streaming\_network\_interface\_ids | One or more network interfaces for the VPC Endpoint for AppStream Streaming. |
 | vpc\_endpoint\_athena\_dns\_entry | The DNS entries for the VPC Endpoint for Athena. |
 | vpc\_endpoint\_athena\_id | The ID of VPC endpoint for Athena |
 | vpc\_endpoint\_athena\_network\_interface\_ids | One or more network interfaces for the VPC Endpoint for Athena. |
