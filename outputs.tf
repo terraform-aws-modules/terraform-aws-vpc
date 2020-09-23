@@ -43,11 +43,6 @@ output "vpc_enable_dns_hostnames" {
   value       = concat(aws_vpc.this.*.enable_dns_hostnames, [""])[0]
 }
 
-//output "vpc_enable_classiclink" {
-//  description = "Whether or not the VPC has Classiclink enabled"
-//  value       = concat(aws_vpc.this.*.enable_classiclink, [""])[0]
-//}
-
 output "vpc_main_route_table_id" {
   description = "The ID of the main route table associated with this VPC"
   value       = concat(aws_vpc.this.*.main_route_table_id, [""])[0]
@@ -417,25 +412,10 @@ output "default_vpc_enable_dns_hostnames" {
   value       = concat(aws_default_vpc.this.*.enable_dns_hostnames, [""])[0]
 }
 
-//output "default_vpc_enable_classiclink" {
-//  description = "Whether or not the VPC has Classiclink enabled"
-//  value       = concat(aws_default_vpc.this.*.enable_classiclink, [""])[0]
-//}
-
 output "default_vpc_main_route_table_id" {
   description = "The ID of the main route table associated with this VPC"
   value       = concat(aws_default_vpc.this.*.main_route_table_id, [""])[0]
 }
-
-//output "default_vpc_ipv6_association_id" {
-//  description = "The association ID for the IPv6 CIDR block"
-//  value       = concat(aws_default_vpc.this.*.ipv6_association_id, [""])[0]
-//}
-//
-//output "default_vpc_ipv6_cidr_block" {
-//  description = "The IPv6 CIDR block"
-//  value       = concat(aws_default_vpc.this.*.ipv6_cidr_block, [""])[0]
-//}
 
 output "public_network_acl_id" {
   description = "ID of the public network ACL"

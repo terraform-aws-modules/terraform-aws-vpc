@@ -24,37 +24,37 @@ variable "enable_ipv6" {
 
 variable "private_subnet_ipv6_prefixes" {
   description = "Assigns IPv6 private subnet id based on the Amazon provided /56 prefix base 10 integer (0-256). Must be of equal length to the corresponding IPv4 subnet list"
-  type        = list
+  type        = list(string)
   default     = []
 }
 
 variable "public_subnet_ipv6_prefixes" {
   description = "Assigns IPv6 public subnet id based on the Amazon provided /56 prefix base 10 integer (0-256). Must be of equal length to the corresponding IPv4 subnet list"
-  type        = list
+  type        = list(string)
   default     = []
 }
 
 variable "database_subnet_ipv6_prefixes" {
   description = "Assigns IPv6 database subnet id based on the Amazon provided /56 prefix base 10 integer (0-256). Must be of equal length to the corresponding IPv4 subnet list"
-  type        = list
+  type        = list(string)
   default     = []
 }
 
 variable "redshift_subnet_ipv6_prefixes" {
   description = "Assigns IPv6 redshift subnet id based on the Amazon provided /56 prefix base 10 integer (0-256). Must be of equal length to the corresponding IPv4 subnet list"
-  type        = list
+  type        = list(string)
   default     = []
 }
 
 variable "elasticache_subnet_ipv6_prefixes" {
   description = "Assigns IPv6 elasticache subnet id based on the Amazon provided /56 prefix base 10 integer (0-256). Must be of equal length to the corresponding IPv4 subnet list"
-  type        = list
+  type        = list(string)
   default     = []
 }
 
 variable "intra_subnet_ipv6_prefixes" {
   description = "Assigns IPv6 intra subnet id based on the Amazon provided /56 prefix base 10 integer (0-256). Must be of equal length to the corresponding IPv4 subnet list"
-  type        = list
+  type        = list(string)
   default     = []
 }
 
@@ -304,6 +304,12 @@ variable "external_nat_ips" {
   default     = []
 }
 
+variable "enable_public_s3_endpoint" {
+  description = "Whether to enable S3 VPC Endpoint for public subnets"
+  default     = true
+  type        = bool
+}
+
 variable "enable_dynamodb_endpoint" {
   description = "Should be true if you want to provision a DynamoDB endpoint to the VPC"
   type        = bool
@@ -318,101 +324,121 @@ variable "enable_s3_endpoint" {
 
 variable "enable_codebuild_endpoint" {
   description = "Should be true if you want to provision an Codebuild endpoint to the VPC"
+  type        = bool
   default     = false
 }
 
 variable "codebuild_endpoint_security_group_ids" {
   description = "The ID of one or more security groups to associate with the network interface for Codebuild endpoint"
+  type        = list(string)
   default     = []
 }
 
 variable "codebuild_endpoint_subnet_ids" {
   description = "The ID of one or more subnets in which to create a network interface for Codebuilt endpoint. Only a single subnet within an AZ is supported. If omitted, private subnets will be used."
+  type        = list(string)
   default     = []
 }
 
 variable "codebuild_endpoint_private_dns_enabled" {
   description = "Whether or not to associate a private hosted zone with the specified VPC for Codebuild endpoint"
+  type        = bool
   default     = false
 }
 
 variable "enable_codecommit_endpoint" {
   description = "Should be true if you want to provision an Codecommit endpoint to the VPC"
+  type        = bool
   default     = false
 }
 
 variable "codecommit_endpoint_security_group_ids" {
   description = "The ID of one or more security groups to associate with the network interface for Codecommit endpoint"
+  type        = list(string)
   default     = []
 }
 
 variable "codecommit_endpoint_subnet_ids" {
   description = "The ID of one or more subnets in which to create a network interface for Codecommit endpoint. Only a single subnet within an AZ is supported. If omitted, private subnets will be used."
+  type        = list(string)
   default     = []
 }
 
 variable "codecommit_endpoint_private_dns_enabled" {
   description = "Whether or not to associate a private hosted zone with the specified VPC for Codecommit endpoint"
+  type        = bool
   default     = false
 }
 
 variable "enable_git_codecommit_endpoint" {
   description = "Should be true if you want to provision an Git Codecommit endpoint to the VPC"
+  type        = bool
   default     = false
 }
 
 variable "git_codecommit_endpoint_security_group_ids" {
   description = "The ID of one or more security groups to associate with the network interface for Git Codecommit endpoint"
+  type        = list(string)
   default     = []
 }
 
 variable "git_codecommit_endpoint_subnet_ids" {
   description = "The ID of one or more subnets in which to create a network interface for Git Codecommit endpoint. Only a single subnet within an AZ is supported. If omitted, private subnets will be used."
+  type        = list(string)
   default     = []
 }
 
 variable "git_codecommit_endpoint_private_dns_enabled" {
   description = "Whether or not to associate a private hosted zone with the specified VPC for Git Codecommit endpoint"
+  type        = bool
   default     = false
 }
 
 variable "enable_config_endpoint" {
   description = "Should be true if you want to provision an config endpoint to the VPC"
+  type        = bool
   default     = false
 }
 
 variable "config_endpoint_security_group_ids" {
   description = "The ID of one or more security groups to associate with the network interface for config endpoint"
+  type        = list(string)
   default     = []
 }
 
 variable "config_endpoint_subnet_ids" {
   description = "The ID of one or more subnets in which to create a network interface for config endpoint. Only a single subnet within an AZ is supported. If omitted, private subnets will be used."
+  type        = list(string)
   default     = []
 }
 
 variable "config_endpoint_private_dns_enabled" {
   description = "Whether or not to associate a private hosted zone with the specified VPC for config endpoint"
+  type        = bool
   default     = false
 }
 
 variable "enable_sqs_endpoint" {
   description = "Should be true if you want to provision an SQS endpoint to the VPC"
+  type        = bool
   default     = false
 }
 
 variable "sqs_endpoint_security_group_ids" {
   description = "The ID of one or more security groups to associate with the network interface for SQS endpoint"
+  type        = list(string)
   default     = []
 }
 
 variable "sqs_endpoint_subnet_ids" {
   description = "The ID of one or more subnets in which to create a network interface for SQS endpoint. Only a single subnet within an AZ is supported. If omitted, private subnets will be used."
+  type        = list(string)
   default     = []
 }
 
 variable "sqs_endpoint_private_dns_enabled" {
   description = "Whether or not to associate a private hosted zone with the specified VPC for SQS endpoint"
+  type        = bool
   default     = false
 }
 
@@ -1643,21 +1669,97 @@ variable "states_endpoint_private_dns_enabled" {
 
 variable "enable_acm_pca_endpoint" {
   description = "Should be true if you want to provision an ACM PCA endpoint to the VPC"
+  type        = bool
+  default     = false
+}
+
+variable "enable_rds_endpoint" {
+  description = "Should be true if you want to provision an RDS endpoint to the VPC"
+  type        = bool
+  default     = false
+}
+
+variable "rds_endpoint_security_group_ids" {
+  description = "The ID of one or more security groups to associate with the network interface for RDS endpoint"
+  type        = list(string)
+  default     = []
+}
+
+variable "rds_endpoint_subnet_ids" {
+  description = "The ID of one or more subnets in which to create a network interface for RDS endpoint. Only a single subnet within an AZ is supported. If omitted, private subnets will be used."
+  type        = list(string)
+  default     = []
+}
+
+variable "rds_endpoint_private_dns_enabled" {
+  description = "Whether or not to associate a private hosted zone with the specified VPC for RDS endpoint"
+  type        = bool
+  default     = false
+}
+
+variable "enable_codedeploy_endpoint" {
+  description = "Should be true if you want to provision an CodeDeploy endpoint to the VPC"
+  type        = bool
+  default     = false
+}
+
+variable "codedeploy_endpoint_security_group_ids" {
+  description = "The ID of one or more security groups to associate with the network interface for CodeDeploy endpoint"
+  type        = list(string)
+  default     = []
+}
+
+variable "codedeploy_endpoint_subnet_ids" {
+  description = "The ID of one or more subnets in which to create a network interface for CodeDeploy endpoint. Only a single subnet within an AZ is supported. If omitted, private subnets will be used."
+  type        = list(string)
+  default     = []
+}
+
+variable "codedeploy_endpoint_private_dns_enabled" {
+  description = "Whether or not to associate a private hosted zone with the specified VPC for CodeDeploy endpoint"
+  type        = bool
+  default     = false
+}
+
+variable "enable_codedeploy_commands_secure_endpoint" {
+  description = "Should be true if you want to provision an CodeDeploy Commands Secure endpoint to the VPC"
+  type        = bool
+  default     = false
+}
+
+variable "codedeploy_commands_secure_endpoint_security_group_ids" {
+  description = "The ID of one or more security groups to associate with the network interface for CodeDeploy Commands Secure endpoint"
+  type        = list(string)
+  default     = []
+}
+
+variable "codedeploy_commands_secure_endpoint_subnet_ids" {
+  description = "The ID of one or more subnets in which to create a network interface for CodeDeploy Commands Secure endpoint. Only a single subnet within an AZ is supported. If omitted, private subnets will be used."
+  type        = list(string)
+  default     = []
+}
+
+variable "codedeploy_commands_secure_endpoint_private_dns_enabled" {
+  description = "Whether or not to associate a private hosted zone with the specified VPC for CodeDeploy Commands Secure endpoint"
+  type        = bool
   default     = false
 }
 
 variable "acm_pca_endpoint_security_group_ids" {
   description = "The ID of one or more security groups to associate with the network interface for ACM PCA endpoint"
+  type        = list(string)
   default     = []
 }
 
 variable "acm_pca_endpoint_subnet_ids" {
-  description = "The ID of one or more subnets in which to create a network interface for Codebuilt endpoint. Only a single subnet within an AZ is supported. If omitted, private subnets will be used."
+  description = "The ID of one or more subnets in which to create a network interface for ACM PCA endpoint. Only a single subnet within an AZ is supported. If omitted, private subnets will be used."
+  type        = list(string)
   default     = []
 }
 
 variable "acm_pca_endpoint_private_dns_enabled" {
   description = "Whether or not to associate a private hosted zone with the specified VPC for ACM PCA endpoint"
+  type        = bool
   default     = false
 }
 
@@ -1681,11 +1783,13 @@ variable "enable_vpn_gateway" {
 
 variable "vpn_gateway_id" {
   description = "ID of VPN Gateway to attach to the VPC"
+  type        = string
   default     = ""
 }
 
 variable "amazon_side_asn" {
   description = "The Autonomous System Number (ASN) for the Amazon side of the gateway. By default the virtual private gateway is created with the current default Amazon ASN."
+  type        = string
   default     = "64512"
 }
 

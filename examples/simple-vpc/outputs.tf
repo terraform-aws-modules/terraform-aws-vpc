@@ -10,11 +10,6 @@ output "vpc_cidr_block" {
   value       = module.vpc.vpc_cidr_block
 }
 
-//output "vpc_ipv6_cidr_block" {
-//  description = "The IPv6 CIDR block"
-//  value       = ["${module.vpc.vpc_ipv6_cidr_block}"]
-//}
-
 # Subnets
 output "private_subnets" {
   description = "List of IDs of private subnets"
