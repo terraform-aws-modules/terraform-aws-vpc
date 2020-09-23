@@ -7,6 +7,12 @@ All notable changes to this project will be documented in this file.
 
 
 
+<a name="v2.53.0"></a>
+## [v2.53.0] - 2020-09-23
+
+- feat: Add support for security groups ids in default sg's rules ([#491](https://github.com/terraform-aws-modules/terraform-aws-vpc/issues/491))
+
+
 <a name="v2.52.0"></a>
 ## [v2.52.0] - 2020-09-22
 
@@ -986,7 +992,8 @@ All notable changes to this project will be documented in this file.
 - Initial commit
 
 
-[Unreleased]: https://github.com/terraform-aws-modules/terraform-aws-vpc/compare/v2.52.0...HEAD
+[Unreleased]: https://github.com/terraform-aws-modules/terraform-aws-vpc/compare/v2.53.0...HEAD
+[v2.53.0]: https://github.com/terraform-aws-modules/terraform-aws-vpc/compare/v2.52.0...v2.53.0
 [v2.52.0]: https://github.com/terraform-aws-modules/terraform-aws-vpc/compare/v2.51.0...v2.52.0
 [v2.51.0]: https://github.com/terraform-aws-modules/terraform-aws-vpc/compare/v2.50.0...v2.51.0
 [v2.50.0]: https://github.com/terraform-aws-modules/terraform-aws-vpc/compare/v2.49.0...v2.50.0
