@@ -101,10 +101,15 @@ module "vpc" {
   ecs_telemetry_endpoint_private_dns_enabled = true
   ecs_telemetry_endpoint_security_group_ids  = [data.aws_security_group.default.id]
 
-  # VPC endpoint for SQS
-  enable_sqs_endpoint              = true
-  sqs_endpoint_private_dns_enabled = true
-  sqs_endpoint_security_group_ids  = [data.aws_security_group.default.id]
+  # VPC endpoint for CodeDeploy
+  enable_codedeploy_endpoint              = true
+  codedeploy_endpoint_private_dns_enabled = true
+  codedeploy_endpoint_security_group_ids  = [data.aws_security_group.default.id]
+
+  # VPC endpoint for CodeDeploy Commands Secure
+  enable_codedeploy_commands_secure_endpoint              = true
+  codedeploy_commands_secure_endpoint_private_dns_enabled = true
+  codedeploy_commands_secure_endpoint_security_group_ids  = [data.aws_security_group.default.id]
 
   # Default security group - ingress/egress rules cleared to deny all
   manage_default_security_group  = true

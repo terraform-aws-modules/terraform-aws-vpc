@@ -43,11 +43,6 @@ output "vpc_enable_dns_hostnames" {
   value       = concat(aws_vpc.this.*.enable_dns_hostnames, [""])[0]
 }
 
-//output "vpc_enable_classiclink" {
-//  description = "Whether or not the VPC has Classiclink enabled"
-//  value       = concat(aws_vpc.this.*.enable_classiclink, [""])[0]
-//}
-
 output "vpc_main_route_table_id" {
   description = "The ID of the main route table associated with this VPC"
   value       = concat(aws_vpc.this.*.main_route_table_id, [""])[0]
@@ -417,25 +412,10 @@ output "default_vpc_enable_dns_hostnames" {
   value       = concat(aws_default_vpc.this.*.enable_dns_hostnames, [""])[0]
 }
 
-//output "default_vpc_enable_classiclink" {
-//  description = "Whether or not the VPC has Classiclink enabled"
-//  value       = concat(aws_default_vpc.this.*.enable_classiclink, [""])[0]
-//}
-
 output "default_vpc_main_route_table_id" {
   description = "The ID of the main route table associated with this VPC"
   value       = concat(aws_default_vpc.this.*.main_route_table_id, [""])[0]
 }
-
-//output "default_vpc_ipv6_association_id" {
-//  description = "The association ID for the IPv6 CIDR block"
-//  value       = concat(aws_default_vpc.this.*.ipv6_association_id, [""])[0]
-//}
-//
-//output "default_vpc_ipv6_cidr_block" {
-//  description = "The IPv6 CIDR block"
-//  value       = concat(aws_default_vpc.this.*.ipv6_cidr_block, [""])[0]
-//}
 
 output "public_network_acl_id" {
   description = "ID of the public network ACL"
@@ -1067,19 +1047,34 @@ output "vpc_endpoint_sagemaker_runtime_dns_entry" {
   value       = flatten(aws_vpc_endpoint.sagemaker_runtime.*.dns_entry)
 }
 
-output "vpc_endpoint_appstream_id" {
-  description = "The ID of VPC endpoint for AppStream"
-  value       = concat(aws_vpc_endpoint.appstream.*.id, [""])[0]
+output "vpc_endpoint_appstream_api_id" {
+  description = "The ID of VPC endpoint for AppStream API"
+  value       = concat(aws_vpc_endpoint.appstream_api.*.id, [""])[0]
 }
 
-output "vpc_endpoint_appstream_network_interface_ids" {
-  description = "One or more network interfaces for the VPC Endpoint for AppStream."
-  value       = flatten(aws_vpc_endpoint.appstream.*.network_interface_ids)
+output "vpc_endpoint_appstream_api_network_interface_ids" {
+  description = "One or more network interfaces for the VPC Endpoint for AppStream API."
+  value       = flatten(aws_vpc_endpoint.appstream_api.*.network_interface_ids)
 }
 
-output "vpc_endpoint_appstream_dns_entry" {
-  description = "The DNS entries for the VPC Endpoint for AppStream."
-  value       = flatten(aws_vpc_endpoint.appstream.*.dns_entry)
+output "vpc_endpoint_appstream_api_dns_entry" {
+  description = "The DNS entries for the VPC Endpoint for AppStream API."
+  value       = flatten(aws_vpc_endpoint.appstream_api.*.dns_entry)
+}
+
+output "vpc_endpoint_appstream_streaming_id" {
+  description = "The ID of VPC endpoint for AppStream Streaming"
+  value       = concat(aws_vpc_endpoint.appstream_streaming.*.id, [""])[0]
+}
+
+output "vpc_endpoint_appstream_streaming_network_interface_ids" {
+  description = "One or more network interfaces for the VPC Endpoint for AppStream Streaming."
+  value       = flatten(aws_vpc_endpoint.appstream_streaming.*.network_interface_ids)
+}
+
+output "vpc_endpoint_appstream_streaming_dns_entry" {
+  description = "The DNS entries for the VPC Endpoint for AppStream Streaming."
+  value       = flatten(aws_vpc_endpoint.appstream_streaming.*.dns_entry)
 }
 
 output "vpc_endpoint_athena_id" {

@@ -30,7 +30,7 @@ resource "aws_vpc_endpoint_route_table_association" "intra_s3" {
 }
 
 resource "aws_vpc_endpoint_route_table_association" "public_s3" {
-  count = var.create_vpc && var.enable_s3_endpoint && length(var.public_subnets) > 0 ? 1 : 0
+  count = var.create_vpc && var.enable_s3_endpoint && var.enable_public_s3_endpoint && length(var.public_subnets) > 0 ? 1 : 0
 
   vpc_endpoint_id = aws_vpc_endpoint.s3[0].id
   route_table_id  = aws_route_table.public[0].id
@@ -916,24 +916,46 @@ resource "aws_vpc_endpoint" "sagemaker_runtime" {
 }
 
 #############################
-# VPC Endpoint for AppStream
+# VPC Endpoint for AppStream API
 #############################
-data "aws_vpc_endpoint_service" "appstream" {
-  count = var.create_vpc && var.enable_appstream_endpoint ? 1 : 0
+data "aws_vpc_endpoint_service" "appstream_api" {
+  count = var.create_vpc && var.enable_appstream_streaming_endpoint ? 1 : 0
 
-  service = "appstream"
+  service = "appstream.api"
 }
 
-resource "aws_vpc_endpoint" "appstream" {
-  count = var.create_vpc && var.enable_appstream_endpoint ? 1 : 0
+resource "aws_vpc_endpoint" "appstream_api" {
+  count = var.create_vpc && var.enable_appstream_api_endpoint ? 1 : 0
 
   vpc_id            = local.vpc_id
-  service_name      = data.aws_vpc_endpoint_service.appstream[0].service_name
+  service_name      = data.aws_vpc_endpoint_service.appstream_api[0].service_name
   vpc_endpoint_type = "Interface"
 
-  security_group_ids  = var.appstream_endpoint_security_group_ids
-  subnet_ids          = coalescelist(var.appstream_endpoint_subnet_ids, aws_subnet.private.*.id)
-  private_dns_enabled = var.appstream_endpoint_private_dns_enabled
+  security_group_ids  = var.appstream_api_endpoint_security_group_ids
+  subnet_ids          = coalescelist(var.appstream_api_endpoint_subnet_ids, aws_subnet.private.*.id)
+  private_dns_enabled = var.appstream_api_endpoint_private_dns_enabled
+  tags                = local.vpce_tags
+}
+
+#############################
+# VPC Endpoint for AppStream STREAMING
+#############################
+data "aws_vpc_endpoint_service" "appstream_streaming" {
+  count = var.create_vpc && var.enable_appstream_streaming_endpoint ? 1 : 0
+
+  service = "appstream.streaming"
+}
+
+resource "aws_vpc_endpoint" "appstream_streaming" {
+  count = var.create_vpc && var.enable_appstream_streaming_endpoint ? 1 : 0
+
+  vpc_id            = local.vpc_id
+  service_name      = data.aws_vpc_endpoint_service.appstream_streaming[0].service_name
+  vpc_endpoint_type = "Interface"
+
+  security_group_ids  = var.appstream_streaming_endpoint_security_group_ids
+  subnet_ids          = coalescelist(var.appstream_streaming_endpoint_subnet_ids, aws_subnet.private.*.id)
+  private_dns_enabled = var.appstream_streaming_endpoint_private_dns_enabled
   tags                = local.vpce_tags
 }
 
@@ -1345,6 +1367,75 @@ resource "aws_vpc_endpoint" "ses" {
   security_group_ids  = var.ses_endpoint_security_group_ids
   subnet_ids          = coalescelist(var.ses_endpoint_subnet_ids, aws_subnet.private.*.id)
   private_dns_enabled = var.ses_endpoint_private_dns_enabled
+
+  tags = local.vpce_tags
+}
+
+######################
+# VPC Endpoint for RDS
+######################
+data "aws_vpc_endpoint_service" "rds" {
+  count = var.create_vpc && var.enable_rds_endpoint ? 1 : 0
+
+  service = "rds"
+}
+
+resource "aws_vpc_endpoint" "rds" {
+  count = var.create_vpc && var.enable_rds_endpoint ? 1 : 0
+
+  vpc_id            = local.vpc_id
+  service_name      = data.aws_vpc_endpoint_service.rds[0].service_name
+  vpc_endpoint_type = "Interface"
+
+  security_group_ids  = var.rds_endpoint_security_group_ids
+  subnet_ids          = coalescelist(var.rds_endpoint_subnet_ids, aws_subnet.private.*.id)
+  private_dns_enabled = var.rds_endpoint_private_dns_enabled
+
+  tags = local.vpce_tags
+}
+
+#############################
+# VPC Endpoint for CodeDeploy
+#############################
+data "aws_vpc_endpoint_service" "codedeploy" {
+  count = var.create_vpc && var.enable_codedeploy_endpoint ? 1 : 0
+
+  service = "codedeploy"
+}
+
+resource "aws_vpc_endpoint" "codedeploy" {
+  count = var.create_vpc && var.enable_codedeploy_endpoint ? 1 : 0
+
+  vpc_id            = local.vpc_id
+  service_name      = data.aws_vpc_endpoint_service.codedeploy[0].service_name
+  vpc_endpoint_type = "Interface"
+
+  security_group_ids  = var.codedeploy_endpoint_security_group_ids
+  subnet_ids          = coalescelist(var.codedeploy_endpoint_subnet_ids, aws_subnet.private.*.id)
+  private_dns_enabled = var.codedeploy_endpoint_private_dns_enabled
+
+  tags = local.vpce_tags
+}
+
+#############################################
+# VPC Endpoint for CodeDeploy Commands Secure
+#############################################
+data "aws_vpc_endpoint_service" "codedeploy_commands_secure" {
+  count = var.create_vpc && var.enable_codedeploy_commands_secure_endpoint ? 1 : 0
+
+  service = "codedeploy-commands-secure"
+}
+
+resource "aws_vpc_endpoint" "codedeploy_commands_secure" {
+  count = var.create_vpc && var.enable_codedeploy_commands_secure_endpoint ? 1 : 0
+
+  vpc_id            = local.vpc_id
+  service_name      = data.aws_vpc_endpoint_service.codedeploy_commands_secure[0].service_name
+  vpc_endpoint_type = "Interface"
+
+  security_group_ids  = var.codedeploy_commands_secure_endpoint_security_group_ids
+  subnet_ids          = coalescelist(var.codedeploy_commands_secure_endpoint_subnet_ids, aws_subnet.private.*.id)
+  private_dns_enabled = var.codedeploy_commands_secure_endpoint_private_dns_enabled
 
   tags = local.vpce_tags
 }
