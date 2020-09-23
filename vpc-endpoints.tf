@@ -916,24 +916,46 @@ resource "aws_vpc_endpoint" "sagemaker_runtime" {
 }
 
 #############################
-# VPC Endpoint for AppStream
+# VPC Endpoint for AppStream API
 #############################
-data "aws_vpc_endpoint_service" "appstream" {
-  count = var.create_vpc && var.enable_appstream_endpoint ? 1 : 0
+data "aws_vpc_endpoint_service" "appstream_api" {
+  count = var.create_vpc && var.enable_appstream_streaming_endpoint ? 1 : 0
 
-  service = "appstream"
+  service = "appstream.api"
 }
 
-resource "aws_vpc_endpoint" "appstream" {
-  count = var.create_vpc && var.enable_appstream_endpoint ? 1 : 0
+resource "aws_vpc_endpoint" "appstream_api" {
+  count = var.create_vpc && var.enable_appstream_api_endpoint ? 1 : 0
 
   vpc_id            = local.vpc_id
-  service_name      = data.aws_vpc_endpoint_service.appstream[0].service_name
+  service_name      = data.aws_vpc_endpoint_service.appstream_api[0].service_name
   vpc_endpoint_type = "Interface"
 
-  security_group_ids  = var.appstream_endpoint_security_group_ids
-  subnet_ids          = coalescelist(var.appstream_endpoint_subnet_ids, aws_subnet.private.*.id)
-  private_dns_enabled = var.appstream_endpoint_private_dns_enabled
+  security_group_ids  = var.appstream_api_endpoint_security_group_ids
+  subnet_ids          = coalescelist(var.appstream_api_endpoint_subnet_ids, aws_subnet.private.*.id)
+  private_dns_enabled = var.appstream_api_endpoint_private_dns_enabled
+  tags                = local.vpce_tags
+}
+
+#############################
+# VPC Endpoint for AppStream STREAMING
+#############################
+data "aws_vpc_endpoint_service" "appstream_streaming" {
+  count = var.create_vpc && var.enable_appstream_streaming_endpoint ? 1 : 0
+
+  service = "appstream.streaming"
+}
+
+resource "aws_vpc_endpoint" "appstream_streaming" {
+  count = var.create_vpc && var.enable_appstream_streaming_endpoint ? 1 : 0
+
+  vpc_id            = local.vpc_id
+  service_name      = data.aws_vpc_endpoint_service.appstream_streaming[0].service_name
+  vpc_endpoint_type = "Interface"
+
+  security_group_ids  = var.appstream_streaming_endpoint_security_group_ids
+  subnet_ids          = coalescelist(var.appstream_streaming_endpoint_subnet_ids, aws_subnet.private.*.id)
+  private_dns_enabled = var.appstream_streaming_endpoint_private_dns_enabled
   tags                = local.vpce_tags
 }
 

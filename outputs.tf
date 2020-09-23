@@ -1047,19 +1047,34 @@ output "vpc_endpoint_sagemaker_runtime_dns_entry" {
   value       = flatten(aws_vpc_endpoint.sagemaker_runtime.*.dns_entry)
 }
 
-output "vpc_endpoint_appstream_id" {
-  description = "The ID of VPC endpoint for AppStream"
-  value       = concat(aws_vpc_endpoint.appstream.*.id, [""])[0]
+output "vpc_endpoint_appstream_api_id" {
+  description = "The ID of VPC endpoint for AppStream API"
+  value       = concat(aws_vpc_endpoint.appstream_api.*.id, [""])[0]
 }
 
-output "vpc_endpoint_appstream_network_interface_ids" {
-  description = "One or more network interfaces for the VPC Endpoint for AppStream."
-  value       = flatten(aws_vpc_endpoint.appstream.*.network_interface_ids)
+output "vpc_endpoint_appstream_api_network_interface_ids" {
+  description = "One or more network interfaces for the VPC Endpoint for AppStream API."
+  value       = flatten(aws_vpc_endpoint.appstream_api.*.network_interface_ids)
 }
 
-output "vpc_endpoint_appstream_dns_entry" {
-  description = "The DNS entries for the VPC Endpoint for AppStream."
-  value       = flatten(aws_vpc_endpoint.appstream.*.dns_entry)
+output "vpc_endpoint_appstream_api_dns_entry" {
+  description = "The DNS entries for the VPC Endpoint for AppStream API."
+  value       = flatten(aws_vpc_endpoint.appstream_api.*.dns_entry)
+}
+
+output "vpc_endpoint_appstream_streaming_id" {
+  description = "The ID of VPC endpoint for AppStream Streaming"
+  value       = concat(aws_vpc_endpoint.appstream_streaming.*.id, [""])[0]
+}
+
+output "vpc_endpoint_appstream_streaming_network_interface_ids" {
+  description = "One or more network interfaces for the VPC Endpoint for AppStream Streaming."
+  value       = flatten(aws_vpc_endpoint.appstream_streaming.*.network_interface_ids)
+}
+
+output "vpc_endpoint_appstream_streaming_dns_entry" {
+  description = "The DNS entries for the VPC Endpoint for AppStream Streaming."
+  value       = flatten(aws_vpc_endpoint.appstream_streaming.*.dns_entry)
 }
 
 output "vpc_endpoint_athena_id" {
