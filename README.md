@@ -465,7 +465,7 @@ It is possible to integrate this VPC module with [terraform-aws-transit-gateway 
 | enable\_states\_endpoint | Should be true if you want to provision a Step Function endpoint to the VPC | `bool` | `false` | no |
 | enable\_storagegateway\_endpoint | Should be true if you want to provision a Storage Gateway endpoint to the VPC | `bool` | `false` | no |
 | enable\_sts\_endpoint | Should be true if you want to provision a STS endpoint to the VPC | `bool` | `false` | no |
-| enable\_textract\_endpoint | Should be true if you want to provision a Textract endpoint to the VPC | `bool` | `false` | no |
+| enable\_textract\_endpoint | Should be true if you want to provision an Textract endpoint to the VPC | `bool` | `false` | no |
 | enable\_transfer\_endpoint | Should be true if you want to provision a Transfer endpoint to the VPC | `bool` | `false` | no |
 | enable\_transferserver\_endpoint | Should be true if you want to provision a Transfer Server endpoint to the VPC | `bool` | `false` | no |
 | enable\_vpn\_gateway | Should be true if you want to create a new VPN Gateway resource and attach it to the VPC | `bool` | `false` | no |
@@ -615,7 +615,7 @@ It is possible to integrate this VPC module with [terraform-aws-transit-gateway 
 | sts\_endpoint\_security\_group\_ids | The ID of one or more security groups to associate with the network interface for STS endpoint | `list(string)` | `[]` | no |
 | sts\_endpoint\_subnet\_ids | The ID of one or more subnets in which to create a network interface for STS endpoint. Only a single subnet within an AZ is supported. If omitted, private subnets will be used. | `list(string)` | `[]` | no |
 | tags | A map of tags to add to all resources | `map(string)` | `{}` | no |
-| textract\_endpoint\_private\_dns\_enabled | Whether or not to associate a private hosted zone with the specified VPC for Textract | `bool` | `false` | no |
+| textract\_endpoint\_private\_dns\_enabled | Whether or not to associate a private hosted zone with the specified VPC for Textract endpoint | `bool` | `false` | no |
 | textract\_endpoint\_security\_group\_ids | The ID of one or more security groups to associate with the network interface for Textract endpoint | `list(string)` | `[]` | no |
 | textract\_endpoint\_subnet\_ids | The ID of one or more subnets in which to create a network interface for Textract endpoint. Only a single subnet within an AZ is supported. If omitted, private subnets will be used. | `list(string)` | `[]` | no |
 | transfer\_endpoint\_private\_dns\_enabled | Whether or not to associate a private hosted zone with the specified VPC for Transfer endpoint | `bool` | `false` | no |
@@ -894,9 +894,9 @@ It is possible to integrate this VPC module with [terraform-aws-transit-gateway 
 | vpc\_endpoint\_sts\_dns\_entry | The DNS entries for the VPC Endpoint for STS. |
 | vpc\_endpoint\_sts\_id | The ID of VPC endpoint for STS |
 | vpc\_endpoint\_sts\_network\_interface\_ids | One or more network interfaces for the VPC Endpoint for STS. |
-| vpc\_endpoint\_textract\_dns\_entry | The DNS entries for the VPC Endpoint for textract. |
-| vpc\_endpoint\_textract\_id | The ID of VPC endpoint for textract. |
-| vpc\_endpoint\_textract\_network\_interface\_ids | One or more network interfaces for the VPC Endpoint for textract. |
+| vpc\_endpoint\_textract\_dns\_entry | The DNS entries for the VPC Endpoint for Textract. |
+| vpc\_endpoint\_textract\_id | The ID of VPC endpoint for Textract |
+| vpc\_endpoint\_textract\_network\_interface\_ids | One or more network interfaces for the VPC Endpoint for Textract. |
 | vpc\_endpoint\_transfer\_dns\_entry | The DNS entries for the VPC Endpoint for Transfer. |
 | vpc\_endpoint\_transfer\_id | The ID of VPC endpoint for Transfer |
 | vpc\_endpoint\_transfer\_network\_interface\_ids | One or more network interfaces for the VPC Endpoint for Transfer. |

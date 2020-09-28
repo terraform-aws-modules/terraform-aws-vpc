@@ -1202,7 +1202,7 @@ variable "transfer_endpoint_security_group_ids" {
 }
 
 variable "transfer_endpoint_subnet_ids" {
-  description = "The ID of one or more subnets in which to create a network interface for Transfer endpoint. Only a single subnet within an AZ is supported. Ifomitted, private subnets will be used."
+  description = "The ID of one or more subnets in which to create a network interface for Transfer endpoint. Only a single subnet within an AZ is supported. If omitted, private subnets will be used."
   type        = list(string)
   default     = []
 }
