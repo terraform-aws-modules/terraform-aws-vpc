@@ -1362,6 +1362,36 @@ output "vpc_endpoint_textract_dns_entry" {
   value       = flatten(aws_vpc_endpoint.textract.*.dns_entry)
 }
 
+output "vpc_endpoint_codeartifact_api_id" {
+  description = "The ID of VPC endpoint for Codeartifact API"
+  value       = concat(aws_vpc_endpoint.codeartifact_api.*.id, [""])[0]
+}
+
+output "vpc_endpoint_codeartifact_api_network_interface_ids" {
+  description = "One or more network interfaces for the VPC Endpoint for Codeartifact API."
+  value       = flatten(aws_vpc_endpoint.codeartifact_api.*.network_interface_ids)
+}
+
+output "vpc_endpoint_codeartifact_api_dns_entry" {
+  description = "The DNS entries for the VPC Endpoint for Codeartifact API."
+  value       = flatten(aws_vpc_endpoint.codeartifact_api.*.dns_entry)
+}
+
+output "vpc_endpoint_codeartifact_repositories_id" {
+  description = "The ID of VPC endpoint for Codeartifact repositories"
+  value       = concat(aws_vpc_endpoint.codeartifact_repositories.*.id, [""])[0]
+}
+
+output "vpc_endpoint_codeartifact_repositories_network_interface_ids" {
+  description = "One or more network interfaces for the VPC Endpoint for Codeartifact repositories."
+  value       = flatten(aws_vpc_endpoint.codeartifact_repositories.*.network_interface_ids)
+}
+
+output "vpc_endpoint_codeartifact_repositories_dns_entry" {
+  description = "The DNS entries for the VPC Endpoint for Codeartifact repositories."
+  value       = flatten(aws_vpc_endpoint.codeartifact_repositories.*.dns_entry)
+}
+
 # VPC flow log
 output "vpc_flow_log_id" {
   description = "The ID of the Flow Log resource"
