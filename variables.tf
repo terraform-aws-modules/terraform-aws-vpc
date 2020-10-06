@@ -538,6 +538,30 @@ variable "ssmmessages_endpoint_private_dns_enabled" {
   default     = false
 }
 
+variable "enable_textract_endpoint" {
+  description = "Should be true if you want to provision an Textract endpoint to the VPC"
+  type        = bool
+  default     = false
+}
+
+variable "textract_endpoint_security_group_ids" {
+  description = "The ID of one or more security groups to associate with the network interface for Textract endpoint"
+  type        = list(string)
+  default     = []
+}
+
+variable "textract_endpoint_subnet_ids" {
+  description = "The ID of one or more subnets in which to create a network interface for Textract endpoint. Only a single subnet within an AZ is supported. If omitted, private subnets will be used."
+  type        = list(string)
+  default     = []
+}
+
+variable "textract_endpoint_private_dns_enabled" {
+  description = "Whether or not to associate a private hosted zone with the specified VPC for Textract endpoint"
+  type        = bool
+  default     = false
+}
+
 variable "enable_transferserver_endpoint" {
   description = "Should be true if you want to provision a Transfer Server endpoint to the VPC"
   type        = bool
@@ -1178,7 +1202,7 @@ variable "transfer_endpoint_security_group_ids" {
 }
 
 variable "transfer_endpoint_subnet_ids" {
-  description = "The ID of one or more subnets in which to create a network interface for Transfer endpoint. Only a single subnet within an AZ is supported. Ifomitted, private subnets will be used."
+  description = "The ID of one or more subnets in which to create a network interface for Transfer endpoint. Only a single subnet within an AZ is supported. If omitted, private subnets will be used."
   type        = list(string)
   default     = []
 }

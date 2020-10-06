@@ -1439,3 +1439,26 @@ resource "aws_vpc_endpoint" "codedeploy_commands_secure" {
 
   tags = local.vpce_tags
 }
+
+#############################################
+# VPC Endpoint for Textract
+#############################################
+data "aws_vpc_endpoint_service" "textract" {
+  count = var.create_vpc && var.enable_textract_endpoint ? 1 : 0
+
+  service = "textract"
+}
+
+resource "aws_vpc_endpoint" "textract" {
+  count = var.create_vpc && var.enable_textract_endpoint ? 1 : 0
+
+  vpc_id            = local.vpc_id
+  service_name      = data.aws_vpc_endpoint_service.textract[0].service_name
+  vpc_endpoint_type = "Interface"
+
+  security_group_ids  = var.textract_endpoint_security_group_ids
+  subnet_ids          = coalescelist(var.textract_endpoint_subnet_ids, aws_subnet.private.*.id)
+  private_dns_enabled = var.textract_endpoint_private_dns_enabled
+
+  tags = local.vpce_tags
+}

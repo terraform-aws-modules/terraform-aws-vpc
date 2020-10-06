@@ -1347,6 +1347,21 @@ output "vpc_endpoint_ses_dns_entry" {
   value       = flatten(aws_vpc_endpoint.ses.*.dns_entry)
 }
 
+output "vpc_endpoint_textract_id" {
+  description = "The ID of VPC endpoint for Textract"
+  value       = concat(aws_vpc_endpoint.textract.*.id, [""])[0]
+}
+
+output "vpc_endpoint_textract_network_interface_ids" {
+  description = "One or more network interfaces for the VPC Endpoint for Textract."
+  value       = flatten(aws_vpc_endpoint.textract.*.network_interface_ids)
+}
+
+output "vpc_endpoint_textract_dns_entry" {
+  description = "The DNS entries for the VPC Endpoint for Textract."
+  value       = flatten(aws_vpc_endpoint.textract.*.dns_entry)
+}
+
 # VPC flow log
 output "vpc_flow_log_id" {
   description = "The ID of the Flow Log resource"
