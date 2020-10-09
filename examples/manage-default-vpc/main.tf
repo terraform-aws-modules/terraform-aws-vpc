@@ -5,7 +5,7 @@ provider "aws" {
 module "vpc" {
   source = "../../"
 
-  create_vpc = false
+  enabled = false
 
   manage_default_vpc               = true
   default_vpc_name                 = "default"

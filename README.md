@@ -1,5 +1,7 @@
 # AWS VPC Terraform module
 
+this module was copied from [community module release v2.57.0](https://github.com/terraform-aws-modules/terraform-aws-vpc/releases/tag/v2.57.0) and modified to integrate [null label module](https://github.com/upside-services/terraform-null-label/releases/tag/0.19.2)
+
 [![Help Contribute to Open Source](https://www.codetriage.com/terraform-aws-modules/terraform-aws-vpc/badges/users.svg)](https://www.codetriage.com/terraform-aws-modules/terraform-aws-vpc)
 ![GitHub tag (latest by date)](https://img.shields.io/github/v/tag/terraform-aws-modules/terraform-aws-vpc)
 
@@ -163,14 +165,14 @@ VPC Flow Log allows to capture IP traffic for a specific network interface (ENI)
 
 ## Conditional creation
 
-Sometimes you need to have a way to create VPC resources conditionally but Terraform does not allow to use `count` inside `module` block, so the solution is to specify argument `create_vpc`.
+Sometimes you need to have a way to create VPC resources conditionally but Terraform does not allow to use `count` inside `module` block, so the solution is to specify argument `enabled`.
 
 ```hcl
 # This VPC will not be created
 module "vpc" {
   source = "terraform-aws-modules/vpc/aws"
 
-  create_vpc = false
+  enabled = false
   # ... omitted
 }
 ```

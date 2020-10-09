@@ -2,13 +2,13 @@
 # VPC Endpoint for S3
 ######################
 data "aws_vpc_endpoint_service" "s3" {
-  count = var.create_vpc && var.enable_s3_endpoint ? 1 : 0
+  count = var.enabled && var.enable_s3_endpoint ? 1 : 0
 
   service = "s3"
 }
 
 resource "aws_vpc_endpoint" "s3" {
-  count = var.create_vpc && var.enable_s3_endpoint ? 1 : 0
+  count = var.enabled && var.enable_s3_endpoint ? 1 : 0
 
   vpc_id       = local.vpc_id
   service_name = data.aws_vpc_endpoint_service.s3[0].service_name
@@ -16,21 +16,21 @@ resource "aws_vpc_endpoint" "s3" {
 }
 
 resource "aws_vpc_endpoint_route_table_association" "private_s3" {
-  count = var.create_vpc && var.enable_s3_endpoint ? local.nat_gateway_count : 0
+  count = var.enabled && var.enable_s3_endpoint ? local.nat_gateway_count : 0
 
   vpc_endpoint_id = aws_vpc_endpoint.s3[0].id
   route_table_id  = element(aws_route_table.private.*.id, count.index)
 }
 
 resource "aws_vpc_endpoint_route_table_association" "intra_s3" {
-  count = var.create_vpc && var.enable_s3_endpoint && length(var.intra_subnets) > 0 ? 1 : 0
+  count = var.enabled && var.enable_s3_endpoint && length(var.intra_subnets) > 0 ? 1 : 0
 
   vpc_endpoint_id = aws_vpc_endpoint.s3[0].id
   route_table_id  = element(aws_route_table.intra.*.id, 0)
 }
 
 resource "aws_vpc_endpoint_route_table_association" "public_s3" {
-  count = var.create_vpc && var.enable_s3_endpoint && var.enable_public_s3_endpoint && length(var.public_subnets) > 0 ? 1 : 0
+  count = var.enabled && var.enable_s3_endpoint && var.enable_public_s3_endpoint && length(var.public_subnets) > 0 ? 1 : 0
 
   vpc_endpoint_id = aws_vpc_endpoint.s3[0].id
   route_table_id  = aws_route_table.public[0].id
@@ -40,13 +40,13 @@ resource "aws_vpc_endpoint_route_table_association" "public_s3" {
 # VPC Endpoint for DynamoDB
 ############################
 data "aws_vpc_endpoint_service" "dynamodb" {
-  count = var.create_vpc && var.enable_dynamodb_endpoint ? 1 : 0
+  count = var.enabled && var.enable_dynamodb_endpoint ? 1 : 0
 
   service = "dynamodb"
 }
 
 resource "aws_vpc_endpoint" "dynamodb" {
-  count = var.create_vpc && var.enable_dynamodb_endpoint ? 1 : 0
+  count = var.enabled && var.enable_dynamodb_endpoint ? 1 : 0
 
   vpc_id       = local.vpc_id
   service_name = data.aws_vpc_endpoint_service.dynamodb[0].service_name
@@ -54,21 +54,21 @@ resource "aws_vpc_endpoint" "dynamodb" {
 }
 
 resource "aws_vpc_endpoint_route_table_association" "private_dynamodb" {
-  count = var.create_vpc && var.enable_dynamodb_endpoint ? local.nat_gateway_count : 0
+  count = var.enabled && var.enable_dynamodb_endpoint ? local.nat_gateway_count : 0
 
   vpc_endpoint_id = aws_vpc_endpoint.dynamodb[0].id
   route_table_id  = element(aws_route_table.private.*.id, count.index)
 }
 
 resource "aws_vpc_endpoint_route_table_association" "intra_dynamodb" {
-  count = var.create_vpc && var.enable_dynamodb_endpoint && length(var.intra_subnets) > 0 ? 1 : 0
+  count = var.enabled && var.enable_dynamodb_endpoint && length(var.intra_subnets) > 0 ? 1 : 0
 
   vpc_endpoint_id = aws_vpc_endpoint.dynamodb[0].id
   route_table_id  = element(aws_route_table.intra.*.id, 0)
 }
 
 resource "aws_vpc_endpoint_route_table_association" "public_dynamodb" {
-  count = var.create_vpc && var.enable_dynamodb_endpoint && length(var.public_subnets) > 0 ? 1 : 0
+  count = var.enabled && var.enable_dynamodb_endpoint && length(var.public_subnets) > 0 ? 1 : 0
 
   vpc_endpoint_id = aws_vpc_endpoint.dynamodb[0].id
   route_table_id  = aws_route_table.public[0].id
@@ -79,13 +79,13 @@ resource "aws_vpc_endpoint_route_table_association" "public_dynamodb" {
 # VPC Endpoint for Codebuild
 #############################
 data "aws_vpc_endpoint_service" "codebuild" {
-  count = var.create_vpc && var.enable_codebuild_endpoint ? 1 : 0
+  count = var.enabled && var.enable_codebuild_endpoint ? 1 : 0
 
   service = "codebuild"
 }
 
 resource "aws_vpc_endpoint" "codebuild" {
-  count = var.create_vpc && var.enable_codebuild_endpoint ? 1 : 0
+  count = var.enabled && var.enable_codebuild_endpoint ? 1 : 0
 
   vpc_id            = local.vpc_id
   service_name      = data.aws_vpc_endpoint_service.codebuild[0].service_name
@@ -101,13 +101,13 @@ resource "aws_vpc_endpoint" "codebuild" {
 # VPC Endpoint for Code Commit
 ###############################
 data "aws_vpc_endpoint_service" "codecommit" {
-  count = var.create_vpc && var.enable_codecommit_endpoint ? 1 : 0
+  count = var.enabled && var.enable_codecommit_endpoint ? 1 : 0
 
   service = "codecommit"
 }
 
 resource "aws_vpc_endpoint" "codecommit" {
-  count = var.create_vpc && var.enable_codecommit_endpoint ? 1 : 0
+  count = var.enabled && var.enable_codecommit_endpoint ? 1 : 0
 
   vpc_id            = local.vpc_id
   service_name      = data.aws_vpc_endpoint_service.codecommit[0].service_name
@@ -123,13 +123,13 @@ resource "aws_vpc_endpoint" "codecommit" {
 # VPC Endpoint for Git Code Commit
 ###################################
 data "aws_vpc_endpoint_service" "git_codecommit" {
-  count = var.create_vpc && var.enable_git_codecommit_endpoint ? 1 : 0
+  count = var.enabled && var.enable_git_codecommit_endpoint ? 1 : 0
 
   service = "git-codecommit"
 }
 
 resource "aws_vpc_endpoint" "git_codecommit" {
-  count = var.create_vpc && var.enable_git_codecommit_endpoint ? 1 : 0
+  count = var.enabled && var.enable_git_codecommit_endpoint ? 1 : 0
 
   vpc_id            = local.vpc_id
   service_name      = data.aws_vpc_endpoint_service.git_codecommit[0].service_name
@@ -145,13 +145,13 @@ resource "aws_vpc_endpoint" "git_codecommit" {
 # VPC Endpoint for Config
 ##########################
 data "aws_vpc_endpoint_service" "config" {
-  count = var.create_vpc && var.enable_config_endpoint ? 1 : 0
+  count = var.enabled && var.enable_config_endpoint ? 1 : 0
 
   service = "config"
 }
 
 resource "aws_vpc_endpoint" "config" {
-  count = var.create_vpc && var.enable_config_endpoint ? 1 : 0
+  count = var.enabled && var.enable_config_endpoint ? 1 : 0
 
   vpc_id            = local.vpc_id
   service_name      = data.aws_vpc_endpoint_service.config[0].service_name
@@ -167,13 +167,13 @@ resource "aws_vpc_endpoint" "config" {
 # VPC Endpoint for SQS
 #######################
 data "aws_vpc_endpoint_service" "sqs" {
-  count = var.create_vpc && var.enable_sqs_endpoint ? 1 : 0
+  count = var.enabled && var.enable_sqs_endpoint ? 1 : 0
 
   service = "sqs"
 }
 
 resource "aws_vpc_endpoint" "sqs" {
-  count = var.create_vpc && var.enable_sqs_endpoint ? 1 : 0
+  count = var.enabled && var.enable_sqs_endpoint ? 1 : 0
 
   vpc_id            = local.vpc_id
   service_name      = data.aws_vpc_endpoint_service.sqs[0].service_name
@@ -189,13 +189,13 @@ resource "aws_vpc_endpoint" "sqs" {
 # VPC Endpoint for Secrets Manager
 ###################################
 data "aws_vpc_endpoint_service" "secretsmanager" {
-  count = var.create_vpc && var.enable_secretsmanager_endpoint ? 1 : 0
+  count = var.enabled && var.enable_secretsmanager_endpoint ? 1 : 0
 
   service = "secretsmanager"
 }
 
 resource "aws_vpc_endpoint" "secretsmanager" {
-  count = var.create_vpc && var.enable_secretsmanager_endpoint ? 1 : 0
+  count = var.enabled && var.enable_secretsmanager_endpoint ? 1 : 0
 
   vpc_id            = local.vpc_id
   service_name      = data.aws_vpc_endpoint_service.secretsmanager[0].service_name
@@ -211,13 +211,13 @@ resource "aws_vpc_endpoint" "secretsmanager" {
 # VPC Endpoint for SSM
 #######################
 data "aws_vpc_endpoint_service" "ssm" {
-  count = var.create_vpc && var.enable_ssm_endpoint ? 1 : 0
+  count = var.enabled && var.enable_ssm_endpoint ? 1 : 0
 
   service = "ssm"
 }
 
 resource "aws_vpc_endpoint" "ssm" {
-  count = var.create_vpc && var.enable_ssm_endpoint ? 1 : 0
+  count = var.enabled && var.enable_ssm_endpoint ? 1 : 0
 
   vpc_id            = local.vpc_id
   service_name      = data.aws_vpc_endpoint_service.ssm[0].service_name
@@ -233,13 +233,13 @@ resource "aws_vpc_endpoint" "ssm" {
 # VPC Endpoint for SSMMESSAGES
 ###############################
 data "aws_vpc_endpoint_service" "ssmmessages" {
-  count = var.create_vpc && var.enable_ssmmessages_endpoint ? 1 : 0
+  count = var.enabled && var.enable_ssmmessages_endpoint ? 1 : 0
 
   service = "ssmmessages"
 }
 
 resource "aws_vpc_endpoint" "ssmmessages" {
-  count = var.create_vpc && var.enable_ssmmessages_endpoint ? 1 : 0
+  count = var.enabled && var.enable_ssmmessages_endpoint ? 1 : 0
 
   vpc_id            = local.vpc_id
   service_name      = data.aws_vpc_endpoint_service.ssmmessages[0].service_name
@@ -255,13 +255,13 @@ resource "aws_vpc_endpoint" "ssmmessages" {
 # VPC Endpoint for EC2
 #######################
 data "aws_vpc_endpoint_service" "ec2" {
-  count = var.create_vpc && var.enable_ec2_endpoint ? 1 : 0
+  count = var.enabled && var.enable_ec2_endpoint ? 1 : 0
 
   service = "ec2"
 }
 
 resource "aws_vpc_endpoint" "ec2" {
-  count = var.create_vpc && var.enable_ec2_endpoint ? 1 : 0
+  count = var.enabled && var.enable_ec2_endpoint ? 1 : 0
 
   vpc_id            = local.vpc_id
   service_name      = data.aws_vpc_endpoint_service.ec2[0].service_name
@@ -277,13 +277,13 @@ resource "aws_vpc_endpoint" "ec2" {
 # VPC Endpoint for EC2MESSAGES
 ###############################
 data "aws_vpc_endpoint_service" "ec2messages" {
-  count = var.create_vpc && var.enable_ec2messages_endpoint ? 1 : 0
+  count = var.enabled && var.enable_ec2messages_endpoint ? 1 : 0
 
   service = "ec2messages"
 }
 
 resource "aws_vpc_endpoint" "ec2messages" {
-  count = var.create_vpc && var.enable_ec2messages_endpoint ? 1 : 0
+  count = var.enabled && var.enable_ec2messages_endpoint ? 1 : 0
 
   vpc_id            = local.vpc_id
   service_name      = data.aws_vpc_endpoint_service.ec2messages[0].service_name
@@ -299,13 +299,13 @@ resource "aws_vpc_endpoint" "ec2messages" {
 # VPC Endpoint for EC2 Autoscaling
 ###############################
 data "aws_vpc_endpoint_service" "ec2_autoscaling" {
-  count = var.create_vpc && var.enable_ec2_autoscaling_endpoint ? 1 : 0
+  count = var.enabled && var.enable_ec2_autoscaling_endpoint ? 1 : 0
 
   service = "autoscaling"
 }
 
 resource "aws_vpc_endpoint" "ec2_autoscaling" {
-  count = var.create_vpc && var.enable_ec2_autoscaling_endpoint ? 1 : 0
+  count = var.enabled && var.enable_ec2_autoscaling_endpoint ? 1 : 0
 
   vpc_id            = local.vpc_id
   service_name      = data.aws_vpc_endpoint_service.ec2_autoscaling[0].service_name
@@ -322,13 +322,13 @@ resource "aws_vpc_endpoint" "ec2_autoscaling" {
 # VPC Endpoint for Transfer Server
 ###################################
 data "aws_vpc_endpoint_service" "transferserver" {
-  count = var.create_vpc && var.enable_transferserver_endpoint ? 1 : 0
+  count = var.enabled && var.enable_transferserver_endpoint ? 1 : 0
 
   service = "transfer.server"
 }
 
 resource "aws_vpc_endpoint" "transferserver" {
-  count = var.create_vpc && var.enable_transferserver_endpoint ? 1 : 0
+  count = var.enabled && var.enable_transferserver_endpoint ? 1 : 0
 
   vpc_id            = local.vpc_id
   service_name      = data.aws_vpc_endpoint_service.transferserver[0].service_name
@@ -344,13 +344,13 @@ resource "aws_vpc_endpoint" "transferserver" {
 # VPC Endpoint for ECR API
 ###########################
 data "aws_vpc_endpoint_service" "ecr_api" {
-  count = var.create_vpc && var.enable_ecr_api_endpoint ? 1 : 0
+  count = var.enabled && var.enable_ecr_api_endpoint ? 1 : 0
 
   service = "ecr.api"
 }
 
 resource "aws_vpc_endpoint" "ecr_api" {
-  count = var.create_vpc && var.enable_ecr_api_endpoint ? 1 : 0
+  count = var.enabled && var.enable_ecr_api_endpoint ? 1 : 0
 
   vpc_id            = local.vpc_id
   service_name      = data.aws_vpc_endpoint_service.ecr_api[0].service_name
@@ -366,13 +366,13 @@ resource "aws_vpc_endpoint" "ecr_api" {
 # VPC Endpoint for ECR DKR
 ###########################
 data "aws_vpc_endpoint_service" "ecr_dkr" {
-  count = var.create_vpc && var.enable_ecr_dkr_endpoint ? 1 : 0
+  count = var.enabled && var.enable_ecr_dkr_endpoint ? 1 : 0
 
   service = "ecr.dkr"
 }
 
 resource "aws_vpc_endpoint" "ecr_dkr" {
-  count = var.create_vpc && var.enable_ecr_dkr_endpoint ? 1 : 0
+  count = var.enabled && var.enable_ecr_dkr_endpoint ? 1 : 0
 
   vpc_id            = local.vpc_id
   service_name      = data.aws_vpc_endpoint_service.ecr_dkr[0].service_name
@@ -388,13 +388,13 @@ resource "aws_vpc_endpoint" "ecr_dkr" {
 # VPC Endpoint for API Gateway
 #######################
 data "aws_vpc_endpoint_service" "apigw" {
-  count = var.create_vpc && var.enable_apigw_endpoint ? 1 : 0
+  count = var.enabled && var.enable_apigw_endpoint ? 1 : 0
 
   service = "execute-api"
 }
 
 resource "aws_vpc_endpoint" "apigw" {
-  count = var.create_vpc && var.enable_apigw_endpoint ? 1 : 0
+  count = var.enabled && var.enable_apigw_endpoint ? 1 : 0
 
   vpc_id            = local.vpc_id
   service_name      = data.aws_vpc_endpoint_service.apigw[0].service_name
@@ -410,13 +410,13 @@ resource "aws_vpc_endpoint" "apigw" {
 # VPC Endpoint for KMS
 #######################
 data "aws_vpc_endpoint_service" "kms" {
-  count = var.create_vpc && var.enable_kms_endpoint ? 1 : 0
+  count = var.enabled && var.enable_kms_endpoint ? 1 : 0
 
   service = "kms"
 }
 
 resource "aws_vpc_endpoint" "kms" {
-  count = var.create_vpc && var.enable_kms_endpoint ? 1 : 0
+  count = var.enabled && var.enable_kms_endpoint ? 1 : 0
 
   vpc_id            = local.vpc_id
   service_name      = data.aws_vpc_endpoint_service.kms[0].service_name
@@ -432,13 +432,13 @@ resource "aws_vpc_endpoint" "kms" {
 # VPC Endpoint for ECS
 #######################
 data "aws_vpc_endpoint_service" "ecs" {
-  count = var.create_vpc && var.enable_ecs_endpoint ? 1 : 0
+  count = var.enabled && var.enable_ecs_endpoint ? 1 : 0
 
   service = "ecs"
 }
 
 resource "aws_vpc_endpoint" "ecs" {
-  count = var.create_vpc && var.enable_ecs_endpoint ? 1 : 0
+  count = var.enabled && var.enable_ecs_endpoint ? 1 : 0
 
   vpc_id            = local.vpc_id
   service_name      = data.aws_vpc_endpoint_service.ecs[0].service_name
@@ -455,13 +455,13 @@ resource "aws_vpc_endpoint" "ecs" {
 # VPC Endpoint for ECS Agent
 #######################
 data "aws_vpc_endpoint_service" "ecs_agent" {
-  count = var.create_vpc && var.enable_ecs_agent_endpoint ? 1 : 0
+  count = var.enabled && var.enable_ecs_agent_endpoint ? 1 : 0
 
   service = "ecs-agent"
 }
 
 resource "aws_vpc_endpoint" "ecs_agent" {
-  count = var.create_vpc && var.enable_ecs_agent_endpoint ? 1 : 0
+  count = var.enabled && var.enable_ecs_agent_endpoint ? 1 : 0
 
   vpc_id            = local.vpc_id
   service_name      = data.aws_vpc_endpoint_service.ecs_agent[0].service_name
@@ -478,13 +478,13 @@ resource "aws_vpc_endpoint" "ecs_agent" {
 # VPC Endpoint for ECS Telemetry
 #######################
 data "aws_vpc_endpoint_service" "ecs_telemetry" {
-  count = var.create_vpc && var.enable_ecs_telemetry_endpoint ? 1 : 0
+  count = var.enabled && var.enable_ecs_telemetry_endpoint ? 1 : 0
 
   service = "ecs-telemetry"
 }
 
 resource "aws_vpc_endpoint" "ecs_telemetry" {
-  count = var.create_vpc && var.enable_ecs_telemetry_endpoint ? 1 : 0
+  count = var.enabled && var.enable_ecs_telemetry_endpoint ? 1 : 0
 
   vpc_id            = local.vpc_id
   service_name      = data.aws_vpc_endpoint_service.ecs_telemetry[0].service_name
@@ -501,13 +501,13 @@ resource "aws_vpc_endpoint" "ecs_telemetry" {
 # VPC Endpoint for SNS
 #######################
 data "aws_vpc_endpoint_service" "sns" {
-  count = var.create_vpc && var.enable_sns_endpoint ? 1 : 0
+  count = var.enabled && var.enable_sns_endpoint ? 1 : 0
 
   service = "sns"
 }
 
 resource "aws_vpc_endpoint" "sns" {
-  count = var.create_vpc && var.enable_sns_endpoint ? 1 : 0
+  count = var.enabled && var.enable_sns_endpoint ? 1 : 0
 
   vpc_id            = local.vpc_id
   service_name      = data.aws_vpc_endpoint_service.sns[0].service_name
@@ -524,13 +524,13 @@ resource "aws_vpc_endpoint" "sns" {
 # VPC Endpoint for CloudWatch Monitoring
 #######################
 data "aws_vpc_endpoint_service" "monitoring" {
-  count = var.create_vpc && var.enable_monitoring_endpoint ? 1 : 0
+  count = var.enabled && var.enable_monitoring_endpoint ? 1 : 0
 
   service = "monitoring"
 }
 
 resource "aws_vpc_endpoint" "monitoring" {
-  count = var.create_vpc && var.enable_monitoring_endpoint ? 1 : 0
+  count = var.enabled && var.enable_monitoring_endpoint ? 1 : 0
 
   vpc_id            = local.vpc_id
   service_name      = data.aws_vpc_endpoint_service.monitoring[0].service_name
@@ -547,13 +547,13 @@ resource "aws_vpc_endpoint" "monitoring" {
 # VPC Endpoint for CloudWatch Logs
 #######################
 data "aws_vpc_endpoint_service" "logs" {
-  count = var.create_vpc && var.enable_logs_endpoint ? 1 : 0
+  count = var.enabled && var.enable_logs_endpoint ? 1 : 0
 
   service = "logs"
 }
 
 resource "aws_vpc_endpoint" "logs" {
-  count = var.create_vpc && var.enable_logs_endpoint ? 1 : 0
+  count = var.enabled && var.enable_logs_endpoint ? 1 : 0
 
   vpc_id            = local.vpc_id
   service_name      = data.aws_vpc_endpoint_service.logs[0].service_name
@@ -570,13 +570,13 @@ resource "aws_vpc_endpoint" "logs" {
 # VPC Endpoint for CloudWatch Events
 #######################
 data "aws_vpc_endpoint_service" "events" {
-  count = var.create_vpc && var.enable_events_endpoint ? 1 : 0
+  count = var.enabled && var.enable_events_endpoint ? 1 : 0
 
   service = "events"
 }
 
 resource "aws_vpc_endpoint" "events" {
-  count = var.create_vpc && var.enable_events_endpoint ? 1 : 0
+  count = var.enabled && var.enable_events_endpoint ? 1 : 0
 
   vpc_id            = local.vpc_id
   service_name      = data.aws_vpc_endpoint_service.events[0].service_name
@@ -593,13 +593,13 @@ resource "aws_vpc_endpoint" "events" {
 # VPC Endpoint for Elastic Load Balancing
 #######################
 data "aws_vpc_endpoint_service" "elasticloadbalancing" {
-  count = var.create_vpc && var.enable_elasticloadbalancing_endpoint ? 1 : 0
+  count = var.enabled && var.enable_elasticloadbalancing_endpoint ? 1 : 0
 
   service = "elasticloadbalancing"
 }
 
 resource "aws_vpc_endpoint" "elasticloadbalancing" {
-  count = var.create_vpc && var.enable_elasticloadbalancing_endpoint ? 1 : 0
+  count = var.enabled && var.enable_elasticloadbalancing_endpoint ? 1 : 0
 
   vpc_id            = local.vpc_id
   service_name      = data.aws_vpc_endpoint_service.elasticloadbalancing[0].service_name
@@ -616,13 +616,13 @@ resource "aws_vpc_endpoint" "elasticloadbalancing" {
 # VPC Endpoint for CloudTrail
 #######################
 data "aws_vpc_endpoint_service" "cloudtrail" {
-  count = var.create_vpc && var.enable_cloudtrail_endpoint ? 1 : 0
+  count = var.enabled && var.enable_cloudtrail_endpoint ? 1 : 0
 
   service = "cloudtrail"
 }
 
 resource "aws_vpc_endpoint" "cloudtrail" {
-  count = var.create_vpc && var.enable_cloudtrail_endpoint ? 1 : 0
+  count = var.enabled && var.enable_cloudtrail_endpoint ? 1 : 0
 
   vpc_id            = local.vpc_id
   service_name      = data.aws_vpc_endpoint_service.cloudtrail[0].service_name
@@ -639,13 +639,13 @@ resource "aws_vpc_endpoint" "cloudtrail" {
 # VPC Endpoint for Kinesis Streams
 #######################
 data "aws_vpc_endpoint_service" "kinesis_streams" {
-  count = var.create_vpc && var.enable_kinesis_streams_endpoint ? 1 : 0
+  count = var.enabled && var.enable_kinesis_streams_endpoint ? 1 : 0
 
   service = "kinesis-streams"
 }
 
 resource "aws_vpc_endpoint" "kinesis_streams" {
-  count = var.create_vpc && var.enable_kinesis_streams_endpoint ? 1 : 0
+  count = var.enabled && var.enable_kinesis_streams_endpoint ? 1 : 0
 
   vpc_id            = local.vpc_id
   service_name      = data.aws_vpc_endpoint_service.kinesis_streams[0].service_name
@@ -662,13 +662,13 @@ resource "aws_vpc_endpoint" "kinesis_streams" {
 # VPC Endpoint for Kinesis Firehose
 #######################
 data "aws_vpc_endpoint_service" "kinesis_firehose" {
-  count = var.create_vpc && var.enable_kinesis_firehose_endpoint ? 1 : 0
+  count = var.enabled && var.enable_kinesis_firehose_endpoint ? 1 : 0
 
   service = "kinesis-firehose"
 }
 
 resource "aws_vpc_endpoint" "kinesis_firehose" {
-  count = var.create_vpc && var.enable_kinesis_firehose_endpoint ? 1 : 0
+  count = var.enabled && var.enable_kinesis_firehose_endpoint ? 1 : 0
 
   vpc_id            = local.vpc_id
   service_name      = data.aws_vpc_endpoint_service.kinesis_firehose[0].service_name
@@ -684,13 +684,13 @@ resource "aws_vpc_endpoint" "kinesis_firehose" {
 # VPC Endpoint for Glue
 #######################
 data "aws_vpc_endpoint_service" "glue" {
-  count = var.create_vpc && var.enable_glue_endpoint ? 1 : 0
+  count = var.enabled && var.enable_glue_endpoint ? 1 : 0
 
   service = "glue"
 }
 
 resource "aws_vpc_endpoint" "glue" {
-  count = var.create_vpc && var.enable_glue_endpoint ? 1 : 0
+  count = var.enabled && var.enable_glue_endpoint ? 1 : 0
 
   vpc_id            = local.vpc_id
   service_name      = data.aws_vpc_endpoint_service.glue[0].service_name
@@ -706,13 +706,13 @@ resource "aws_vpc_endpoint" "glue" {
 # VPC Endpoint for Sagemaker Notebooks
 ######################################
 data "aws_vpc_endpoint_service" "sagemaker_notebook" {
-  count = var.create_vpc && var.enable_sagemaker_notebook_endpoint ? 1 : 0
+  count = var.enabled && var.enable_sagemaker_notebook_endpoint ? 1 : 0
 
   service_name = "aws.sagemaker.${var.sagemaker_notebook_endpoint_region}.notebook"
 }
 
 resource "aws_vpc_endpoint" "sagemaker_notebook" {
-  count = var.create_vpc && var.enable_sagemaker_notebook_endpoint ? 1 : 0
+  count = var.enabled && var.enable_sagemaker_notebook_endpoint ? 1 : 0
 
   vpc_id            = local.vpc_id
   service_name      = data.aws_vpc_endpoint_service.sagemaker_notebook[0].service_name
@@ -728,13 +728,13 @@ resource "aws_vpc_endpoint" "sagemaker_notebook" {
 # VPC Endpoint for STS
 #######################
 data "aws_vpc_endpoint_service" "sts" {
-  count = var.create_vpc && var.enable_sts_endpoint ? 1 : 0
+  count = var.enabled && var.enable_sts_endpoint ? 1 : 0
 
   service = "sts"
 }
 
 resource "aws_vpc_endpoint" "sts" {
-  count = var.create_vpc && var.enable_sts_endpoint ? 1 : 0
+  count = var.enabled && var.enable_sts_endpoint ? 1 : 0
 
   vpc_id            = local.vpc_id
   service_name      = data.aws_vpc_endpoint_service.sts[0].service_name
@@ -750,13 +750,13 @@ resource "aws_vpc_endpoint" "sts" {
 # VPC Endpoint for Cloudformation
 #############################
 data "aws_vpc_endpoint_service" "cloudformation" {
-  count = var.create_vpc && var.enable_cloudformation_endpoint ? 1 : 0
+  count = var.enabled && var.enable_cloudformation_endpoint ? 1 : 0
 
   service = "cloudformation"
 }
 
 resource "aws_vpc_endpoint" "cloudformation" {
-  count = var.create_vpc && var.enable_cloudformation_endpoint ? 1 : 0
+  count = var.enabled && var.enable_cloudformation_endpoint ? 1 : 0
 
   vpc_id            = local.vpc_id
   service_name      = data.aws_vpc_endpoint_service.cloudformation[0].service_name
@@ -771,13 +771,13 @@ resource "aws_vpc_endpoint" "cloudformation" {
 # VPC Endpoint for CodePipeline
 #############################
 data "aws_vpc_endpoint_service" "codepipeline" {
-  count = var.create_vpc && var.enable_codepipeline_endpoint ? 1 : 0
+  count = var.enabled && var.enable_codepipeline_endpoint ? 1 : 0
 
   service = "codepipeline"
 }
 
 resource "aws_vpc_endpoint" "codepipeline" {
-  count = var.create_vpc && var.enable_codepipeline_endpoint ? 1 : 0
+  count = var.enabled && var.enable_codepipeline_endpoint ? 1 : 0
 
   vpc_id            = local.vpc_id
   service_name      = data.aws_vpc_endpoint_service.codepipeline[0].service_name
@@ -792,13 +792,13 @@ resource "aws_vpc_endpoint" "codepipeline" {
 # VPC Endpoint for AppMesh
 #############################
 data "aws_vpc_endpoint_service" "appmesh_envoy_management" {
-  count = var.create_vpc && var.enable_appmesh_envoy_management_endpoint ? 1 : 0
+  count = var.enabled && var.enable_appmesh_envoy_management_endpoint ? 1 : 0
 
   service = "appmesh-envoy-management"
 }
 
 resource "aws_vpc_endpoint" "appmesh_envoy_management" {
-  count = var.create_vpc && var.enable_appmesh_envoy_management_endpoint ? 1 : 0
+  count = var.enabled && var.enable_appmesh_envoy_management_endpoint ? 1 : 0
 
   vpc_id            = local.vpc_id
   service_name      = data.aws_vpc_endpoint_service.appmesh_envoy_management[0].service_name
@@ -813,13 +813,13 @@ resource "aws_vpc_endpoint" "appmesh_envoy_management" {
 # VPC Endpoint for Service Catalog
 #############################
 data "aws_vpc_endpoint_service" "servicecatalog" {
-  count = var.create_vpc && var.enable_servicecatalog_endpoint ? 1 : 0
+  count = var.enabled && var.enable_servicecatalog_endpoint ? 1 : 0
 
   service = "servicecatalog"
 }
 
 resource "aws_vpc_endpoint" "servicecatalog" {
-  count = var.create_vpc && var.enable_servicecatalog_endpoint ? 1 : 0
+  count = var.enabled && var.enable_servicecatalog_endpoint ? 1 : 0
 
   vpc_id            = local.vpc_id
   service_name      = data.aws_vpc_endpoint_service.servicecatalog[0].service_name
@@ -834,13 +834,13 @@ resource "aws_vpc_endpoint" "servicecatalog" {
 # VPC Endpoint for Storage Gateway
 #############################
 data "aws_vpc_endpoint_service" "storagegateway" {
-  count = var.create_vpc && var.enable_storagegateway_endpoint ? 1 : 0
+  count = var.enabled && var.enable_storagegateway_endpoint ? 1 : 0
 
   service = "storagegateway"
 }
 
 resource "aws_vpc_endpoint" "storagegateway" {
-  count = var.create_vpc && var.enable_storagegateway_endpoint ? 1 : 0
+  count = var.enabled && var.enable_storagegateway_endpoint ? 1 : 0
 
   vpc_id            = local.vpc_id
   service_name      = data.aws_vpc_endpoint_service.storagegateway[0].service_name
@@ -855,13 +855,13 @@ resource "aws_vpc_endpoint" "storagegateway" {
 # VPC Endpoint for Transfer
 #############################
 data "aws_vpc_endpoint_service" "transfer" {
-  count = var.create_vpc && var.enable_transfer_endpoint ? 1 : 0
+  count = var.enabled && var.enable_transfer_endpoint ? 1 : 0
 
   service = "transfer"
 }
 
 resource "aws_vpc_endpoint" "transfer" {
-  count = var.create_vpc && var.enable_transfer_endpoint ? 1 : 0
+  count = var.enabled && var.enable_transfer_endpoint ? 1 : 0
 
   vpc_id            = local.vpc_id
   service_name      = data.aws_vpc_endpoint_service.transfer[0].service_name
@@ -876,13 +876,13 @@ resource "aws_vpc_endpoint" "transfer" {
 # VPC Endpoint for SageMaker API
 #############################
 data "aws_vpc_endpoint_service" "sagemaker_api" {
-  count = var.create_vpc && var.enable_sagemaker_api_endpoint ? 1 : 0
+  count = var.enabled && var.enable_sagemaker_api_endpoint ? 1 : 0
 
   service = "sagemaker.api"
 }
 
 resource "aws_vpc_endpoint" "sagemaker_api" {
-  count = var.create_vpc && var.enable_sagemaker_api_endpoint ? 1 : 0
+  count = var.enabled && var.enable_sagemaker_api_endpoint ? 1 : 0
 
   vpc_id            = local.vpc_id
   service_name      = data.aws_vpc_endpoint_service.sagemaker_api[0].service_name
@@ -897,13 +897,13 @@ resource "aws_vpc_endpoint" "sagemaker_api" {
 # VPC Endpoint for SageMaker Runtime
 #############################
 data "aws_vpc_endpoint_service" "sagemaker_runtime" {
-  count = var.create_vpc && var.enable_sagemaker_runtime_endpoint ? 1 : 0
+  count = var.enabled && var.enable_sagemaker_runtime_endpoint ? 1 : 0
 
   service = "sagemaker.runtime"
 }
 
 resource "aws_vpc_endpoint" "sagemaker_runtime" {
-  count = var.create_vpc && var.enable_sagemaker_runtime_endpoint ? 1 : 0
+  count = var.enabled && var.enable_sagemaker_runtime_endpoint ? 1 : 0
 
   vpc_id            = local.vpc_id
   service_name      = data.aws_vpc_endpoint_service.sagemaker_runtime[0].service_name
@@ -919,13 +919,13 @@ resource "aws_vpc_endpoint" "sagemaker_runtime" {
 # VPC Endpoint for AppStream API
 #############################
 data "aws_vpc_endpoint_service" "appstream_api" {
-  count = var.create_vpc && var.enable_appstream_streaming_endpoint ? 1 : 0
+  count = var.enabled && var.enable_appstream_streaming_endpoint ? 1 : 0
 
   service = "appstream.api"
 }
 
 resource "aws_vpc_endpoint" "appstream_api" {
-  count = var.create_vpc && var.enable_appstream_api_endpoint ? 1 : 0
+  count = var.enabled && var.enable_appstream_api_endpoint ? 1 : 0
 
   vpc_id            = local.vpc_id
   service_name      = data.aws_vpc_endpoint_service.appstream_api[0].service_name
@@ -941,13 +941,13 @@ resource "aws_vpc_endpoint" "appstream_api" {
 # VPC Endpoint for AppStream STREAMING
 #############################
 data "aws_vpc_endpoint_service" "appstream_streaming" {
-  count = var.create_vpc && var.enable_appstream_streaming_endpoint ? 1 : 0
+  count = var.enabled && var.enable_appstream_streaming_endpoint ? 1 : 0
 
   service = "appstream.streaming"
 }
 
 resource "aws_vpc_endpoint" "appstream_streaming" {
-  count = var.create_vpc && var.enable_appstream_streaming_endpoint ? 1 : 0
+  count = var.enabled && var.enable_appstream_streaming_endpoint ? 1 : 0
 
   vpc_id            = local.vpc_id
   service_name      = data.aws_vpc_endpoint_service.appstream_streaming[0].service_name
@@ -963,13 +963,13 @@ resource "aws_vpc_endpoint" "appstream_streaming" {
 # VPC Endpoint for Athena
 #############################
 data "aws_vpc_endpoint_service" "athena" {
-  count = var.create_vpc && var.enable_athena_endpoint ? 1 : 0
+  count = var.enabled && var.enable_athena_endpoint ? 1 : 0
 
   service = "athena"
 }
 
 resource "aws_vpc_endpoint" "athena" {
-  count = var.create_vpc && var.enable_athena_endpoint ? 1 : 0
+  count = var.enabled && var.enable_athena_endpoint ? 1 : 0
 
   vpc_id            = local.vpc_id
   service_name      = data.aws_vpc_endpoint_service.athena[0].service_name
@@ -985,13 +985,13 @@ resource "aws_vpc_endpoint" "athena" {
 # VPC Endpoint for Rekognition
 #############################
 data "aws_vpc_endpoint_service" "rekognition" {
-  count = var.create_vpc && var.enable_rekognition_endpoint ? 1 : 0
+  count = var.enabled && var.enable_rekognition_endpoint ? 1 : 0
 
   service = "rekognition"
 }
 
 resource "aws_vpc_endpoint" "rekognition" {
-  count = var.create_vpc && var.enable_rekognition_endpoint ? 1 : 0
+  count = var.enabled && var.enable_rekognition_endpoint ? 1 : 0
 
   vpc_id            = local.vpc_id
   service_name      = data.aws_vpc_endpoint_service.rekognition[0].service_name
@@ -1007,13 +1007,13 @@ resource "aws_vpc_endpoint" "rekognition" {
 # VPC Endpoint for EFS
 #######################
 data "aws_vpc_endpoint_service" "efs" {
-  count = var.create_vpc && var.enable_efs_endpoint ? 1 : 0
+  count = var.enabled && var.enable_efs_endpoint ? 1 : 0
 
   service = "elasticfilesystem"
 }
 
 resource "aws_vpc_endpoint" "efs" {
-  count = var.create_vpc && var.enable_efs_endpoint ? 1 : 0
+  count = var.enabled && var.enable_efs_endpoint ? 1 : 0
 
   vpc_id            = local.vpc_id
   service_name      = data.aws_vpc_endpoint_service.efs[0].service_name
@@ -1030,13 +1030,13 @@ resource "aws_vpc_endpoint" "efs" {
 # VPC Endpoint for Cloud Directory
 #######################
 data "aws_vpc_endpoint_service" "cloud_directory" {
-  count = var.create_vpc && var.enable_cloud_directory_endpoint ? 1 : 0
+  count = var.enabled && var.enable_cloud_directory_endpoint ? 1 : 0
 
   service = "clouddirectory"
 }
 
 resource "aws_vpc_endpoint" "cloud_directory" {
-  count = var.create_vpc && var.enable_cloud_directory_endpoint ? 1 : 0
+  count = var.enabled && var.enable_cloud_directory_endpoint ? 1 : 0
 
   vpc_id            = local.vpc_id
   service_name      = data.aws_vpc_endpoint_service.cloud_directory[0].service_name
@@ -1053,13 +1053,13 @@ resource "aws_vpc_endpoint" "cloud_directory" {
 # VPC Endpoint for Auto Scaling Plans
 #######################
 data "aws_vpc_endpoint_service" "auto_scaling_plans" {
-  count = var.create_vpc && var.enable_auto_scaling_plans_endpoint ? 1 : 0
+  count = var.enabled && var.enable_auto_scaling_plans_endpoint ? 1 : 0
 
   service = "autoscaling-plans"
 }
 
 resource "aws_vpc_endpoint" "auto_scaling_plans" {
-  count = var.create_vpc && var.enable_auto_scaling_plans_endpoint ? 1 : 0
+  count = var.enabled && var.enable_auto_scaling_plans_endpoint ? 1 : 0
 
   vpc_id            = local.vpc_id
   service_name      = data.aws_vpc_endpoint_service.auto_scaling_plans[0].service_name
@@ -1076,13 +1076,13 @@ resource "aws_vpc_endpoint" "auto_scaling_plans" {
 # VPC Endpoint for Workspaces
 #######################
 data "aws_vpc_endpoint_service" "workspaces" {
-  count = var.create_vpc && var.enable_workspaces_endpoint ? 1 : 0
+  count = var.enabled && var.enable_workspaces_endpoint ? 1 : 0
 
   service = "workspaces"
 }
 
 resource "aws_vpc_endpoint" "workspaces" {
-  count = var.create_vpc && var.enable_workspaces_endpoint ? 1 : 0
+  count = var.enabled && var.enable_workspaces_endpoint ? 1 : 0
 
   vpc_id            = local.vpc_id
   service_name      = data.aws_vpc_endpoint_service.workspaces[0].service_name
@@ -1099,13 +1099,13 @@ resource "aws_vpc_endpoint" "workspaces" {
 # VPC Endpoint for Access Analyzer
 #######################
 data "aws_vpc_endpoint_service" "access_analyzer" {
-  count = var.create_vpc && var.enable_access_analyzer_endpoint ? 1 : 0
+  count = var.enabled && var.enable_access_analyzer_endpoint ? 1 : 0
 
   service = "access-analyzer"
 }
 
 resource "aws_vpc_endpoint" "access_analyzer" {
-  count = var.create_vpc && var.enable_access_analyzer_endpoint ? 1 : 0
+  count = var.enabled && var.enable_access_analyzer_endpoint ? 1 : 0
 
   vpc_id            = local.vpc_id
   service_name      = data.aws_vpc_endpoint_service.access_analyzer[0].service_name
@@ -1122,13 +1122,13 @@ resource "aws_vpc_endpoint" "access_analyzer" {
 # VPC Endpoint for EBS
 #######################
 data "aws_vpc_endpoint_service" "ebs" {
-  count = var.create_vpc && var.enable_ebs_endpoint ? 1 : 0
+  count = var.enabled && var.enable_ebs_endpoint ? 1 : 0
 
   service = "ebs"
 }
 
 resource "aws_vpc_endpoint" "ebs" {
-  count = var.create_vpc && var.enable_ebs_endpoint ? 1 : 0
+  count = var.enabled && var.enable_ebs_endpoint ? 1 : 0
 
   vpc_id            = local.vpc_id
   service_name      = data.aws_vpc_endpoint_service.ebs[0].service_name
@@ -1145,13 +1145,13 @@ resource "aws_vpc_endpoint" "ebs" {
 # VPC Endpoint for Data Sync
 #######################
 data "aws_vpc_endpoint_service" "datasync" {
-  count = var.create_vpc && var.enable_datasync_endpoint ? 1 : 0
+  count = var.enabled && var.enable_datasync_endpoint ? 1 : 0
 
   service = "datasync"
 }
 
 resource "aws_vpc_endpoint" "datasync" {
-  count = var.create_vpc && var.enable_datasync_endpoint ? 1 : 0
+  count = var.enabled && var.enable_datasync_endpoint ? 1 : 0
 
   vpc_id            = local.vpc_id
   service_name      = data.aws_vpc_endpoint_service.datasync[0].service_name
@@ -1168,13 +1168,13 @@ resource "aws_vpc_endpoint" "datasync" {
 # VPC Endpoint for Elastic Inference Runtime
 #######################
 data "aws_vpc_endpoint_service" "elastic_inference_runtime" {
-  count = var.create_vpc && var.enable_elastic_inference_runtime_endpoint ? 1 : 0
+  count = var.enabled && var.enable_elastic_inference_runtime_endpoint ? 1 : 0
 
   service = "elastic-inference.runtime"
 }
 
 resource "aws_vpc_endpoint" "elastic_inference_runtime" {
-  count = var.create_vpc && var.enable_elastic_inference_runtime_endpoint ? 1 : 0
+  count = var.enabled && var.enable_elastic_inference_runtime_endpoint ? 1 : 0
 
   vpc_id            = local.vpc_id
   service_name      = data.aws_vpc_endpoint_service.elastic_inference_runtime[0].service_name
@@ -1191,13 +1191,13 @@ resource "aws_vpc_endpoint" "elastic_inference_runtime" {
 # VPC Endpoint for SMS
 #######################
 data "aws_vpc_endpoint_service" "sms" {
-  count = var.create_vpc && var.enable_sms_endpoint ? 1 : 0
+  count = var.enabled && var.enable_sms_endpoint ? 1 : 0
 
   service = "sms"
 }
 
 resource "aws_vpc_endpoint" "sms" {
-  count = var.create_vpc && var.enable_sms_endpoint ? 1 : 0
+  count = var.enabled && var.enable_sms_endpoint ? 1 : 0
 
   vpc_id            = local.vpc_id
   service_name      = data.aws_vpc_endpoint_service.sms[0].service_name
@@ -1214,13 +1214,13 @@ resource "aws_vpc_endpoint" "sms" {
 # VPC Endpoint for EMR
 #######################
 data "aws_vpc_endpoint_service" "emr" {
-  count = var.create_vpc && var.enable_emr_endpoint ? 1 : 0
+  count = var.enabled && var.enable_emr_endpoint ? 1 : 0
 
   service = "elasticmapreduce"
 }
 
 resource "aws_vpc_endpoint" "emr" {
-  count = var.create_vpc && var.enable_emr_endpoint ? 1 : 0
+  count = var.enabled && var.enable_emr_endpoint ? 1 : 0
 
   vpc_id            = local.vpc_id
   service_name      = data.aws_vpc_endpoint_service.emr[0].service_name
@@ -1237,13 +1237,13 @@ resource "aws_vpc_endpoint" "emr" {
 # VPC Endpoint for QLDB Session
 #######################
 data "aws_vpc_endpoint_service" "qldb_session" {
-  count = var.create_vpc && var.enable_qldb_session_endpoint ? 1 : 0
+  count = var.enabled && var.enable_qldb_session_endpoint ? 1 : 0
 
   service = "qldb.session"
 }
 
 resource "aws_vpc_endpoint" "qldb_session" {
-  count = var.create_vpc && var.enable_qldb_session_endpoint ? 1 : 0
+  count = var.enabled && var.enable_qldb_session_endpoint ? 1 : 0
 
   vpc_id            = local.vpc_id
   service_name      = data.aws_vpc_endpoint_service.qldb_session[0].service_name
@@ -1260,13 +1260,13 @@ resource "aws_vpc_endpoint" "qldb_session" {
 # VPC Endpoint for Step Function
 #############################
 data "aws_vpc_endpoint_service" "states" {
-  count = var.create_vpc && var.enable_states_endpoint ? 1 : 0
+  count = var.enabled && var.enable_states_endpoint ? 1 : 0
 
   service = "states"
 }
 
 resource "aws_vpc_endpoint" "states" {
-  count = var.create_vpc && var.enable_states_endpoint ? 1 : 0
+  count = var.enabled && var.enable_states_endpoint ? 1 : 0
 
   vpc_id            = local.vpc_id
   service_name      = data.aws_vpc_endpoint_service.states[0].service_name
@@ -1283,13 +1283,13 @@ resource "aws_vpc_endpoint" "states" {
 # VPC Endpoint for Elastic Beanstalk
 #############################
 data "aws_vpc_endpoint_service" "elasticbeanstalk" {
-  count = var.create_vpc && var.enable_elasticbeanstalk_endpoint ? 1 : 0
+  count = var.enabled && var.enable_elasticbeanstalk_endpoint ? 1 : 0
 
   service = "elasticbeanstalk"
 }
 
 resource "aws_vpc_endpoint" "elasticbeanstalk" {
-  count = var.create_vpc && var.enable_elasticbeanstalk_endpoint ? 1 : 0
+  count = var.enabled && var.enable_elasticbeanstalk_endpoint ? 1 : 0
 
   vpc_id            = local.vpc_id
   service_name      = data.aws_vpc_endpoint_service.elasticbeanstalk[0].service_name
@@ -1306,13 +1306,13 @@ resource "aws_vpc_endpoint" "elasticbeanstalk" {
 # VPC Endpoint for Elastic Beanstalk Health
 #############################
 data "aws_vpc_endpoint_service" "elasticbeanstalk_health" {
-  count = var.create_vpc && var.enable_elasticbeanstalk_health_endpoint ? 1 : 0
+  count = var.enabled && var.enable_elasticbeanstalk_health_endpoint ? 1 : 0
 
   service = "elasticbeanstalk-health"
 }
 
 resource "aws_vpc_endpoint" "elasticbeanstalk_health" {
-  count = var.create_vpc && var.enable_elasticbeanstalk_health_endpoint ? 1 : 0
+  count = var.enabled && var.enable_elasticbeanstalk_health_endpoint ? 1 : 0
 
   vpc_id            = local.vpc_id
   service_name      = data.aws_vpc_endpoint_service.elasticbeanstalk_health[0].service_name
@@ -1329,13 +1329,13 @@ resource "aws_vpc_endpoint" "elasticbeanstalk_health" {
 # VPC Endpoint for ACM PCA
 #############################
 data "aws_vpc_endpoint_service" "acm_pca" {
-  count = var.create_vpc && var.enable_acm_pca_endpoint ? 1 : 0
+  count = var.enabled && var.enable_acm_pca_endpoint ? 1 : 0
 
   service = "acm-pca"
 }
 
 resource "aws_vpc_endpoint" "acm_pca" {
-  count = var.create_vpc && var.enable_acm_pca_endpoint ? 1 : 0
+  count = var.enabled && var.enable_acm_pca_endpoint ? 1 : 0
 
   vpc_id            = local.vpc_id
   service_name      = data.aws_vpc_endpoint_service.acm_pca[0].service_name
@@ -1352,13 +1352,13 @@ resource "aws_vpc_endpoint" "acm_pca" {
 # VPC Endpoint for SES
 #######################
 data "aws_vpc_endpoint_service" "ses" {
-  count = var.create_vpc && var.enable_ses_endpoint ? 1 : 0
+  count = var.enabled && var.enable_ses_endpoint ? 1 : 0
 
   service = "email-smtp"
 }
 
 resource "aws_vpc_endpoint" "ses" {
-  count = var.create_vpc && var.enable_ses_endpoint ? 1 : 0
+  count = var.enabled && var.enable_ses_endpoint ? 1 : 0
 
   vpc_id            = local.vpc_id
   service_name      = data.aws_vpc_endpoint_service.ses[0].service_name
@@ -1375,13 +1375,13 @@ resource "aws_vpc_endpoint" "ses" {
 # VPC Endpoint for RDS
 ######################
 data "aws_vpc_endpoint_service" "rds" {
-  count = var.create_vpc && var.enable_rds_endpoint ? 1 : 0
+  count = var.enabled && var.enable_rds_endpoint ? 1 : 0
 
   service = "rds"
 }
 
 resource "aws_vpc_endpoint" "rds" {
-  count = var.create_vpc && var.enable_rds_endpoint ? 1 : 0
+  count = var.enabled && var.enable_rds_endpoint ? 1 : 0
 
   vpc_id            = local.vpc_id
   service_name      = data.aws_vpc_endpoint_service.rds[0].service_name
@@ -1398,13 +1398,13 @@ resource "aws_vpc_endpoint" "rds" {
 # VPC Endpoint for CodeDeploy
 #############################
 data "aws_vpc_endpoint_service" "codedeploy" {
-  count = var.create_vpc && var.enable_codedeploy_endpoint ? 1 : 0
+  count = var.enabled && var.enable_codedeploy_endpoint ? 1 : 0
 
   service = "codedeploy"
 }
 
 resource "aws_vpc_endpoint" "codedeploy" {
-  count = var.create_vpc && var.enable_codedeploy_endpoint ? 1 : 0
+  count = var.enabled && var.enable_codedeploy_endpoint ? 1 : 0
 
   vpc_id            = local.vpc_id
   service_name      = data.aws_vpc_endpoint_service.codedeploy[0].service_name
@@ -1421,13 +1421,13 @@ resource "aws_vpc_endpoint" "codedeploy" {
 # VPC Endpoint for CodeDeploy Commands Secure
 #############################################
 data "aws_vpc_endpoint_service" "codedeploy_commands_secure" {
-  count = var.create_vpc && var.enable_codedeploy_commands_secure_endpoint ? 1 : 0
+  count = var.enabled && var.enable_codedeploy_commands_secure_endpoint ? 1 : 0
 
   service = "codedeploy-commands-secure"
 }
 
 resource "aws_vpc_endpoint" "codedeploy_commands_secure" {
-  count = var.create_vpc && var.enable_codedeploy_commands_secure_endpoint ? 1 : 0
+  count = var.enabled && var.enable_codedeploy_commands_secure_endpoint ? 1 : 0
 
   vpc_id            = local.vpc_id
   service_name      = data.aws_vpc_endpoint_service.codedeploy_commands_secure[0].service_name
@@ -1444,13 +1444,13 @@ resource "aws_vpc_endpoint" "codedeploy_commands_secure" {
 # VPC Endpoint for Textract
 #############################################
 data "aws_vpc_endpoint_service" "textract" {
-  count = var.create_vpc && var.enable_textract_endpoint ? 1 : 0
+  count = var.enabled && var.enable_textract_endpoint ? 1 : 0
 
   service = "textract"
 }
 
 resource "aws_vpc_endpoint" "textract" {
-  count = var.create_vpc && var.enable_textract_endpoint ? 1 : 0
+  count = var.enabled && var.enable_textract_endpoint ? 1 : 0
 
   vpc_id            = local.vpc_id
   service_name      = data.aws_vpc_endpoint_service.textract[0].service_name

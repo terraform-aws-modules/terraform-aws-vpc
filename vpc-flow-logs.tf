@@ -1,6 +1,6 @@
 locals {
   # Only create flow log if user selected to create a VPC as well
-  enable_flow_log = var.create_vpc && var.enable_flow_log
+  enable_flow_log = var.enabled && var.enable_flow_log
 
   create_flow_log_cloudwatch_iam_role  = local.enable_flow_log && var.flow_log_destination_type != "s3" && var.create_flow_log_cloudwatch_iam_role
   create_flow_log_cloudwatch_log_group = local.enable_flow_log && var.flow_log_destination_type != "s3" && var.create_flow_log_cloudwatch_log_group
@@ -23,7 +23,7 @@ resource "aws_flow_log" "this" {
   vpc_id                   = local.vpc_id
   max_aggregation_interval = var.flow_log_max_aggregation_interval
 
-  tags = merge(var.tags, var.vpc_flow_log_tags)
+  tags = merge(module.label.tags, var.vpc_flow_log_tags)
 }
 
 #####################
@@ -36,7 +36,7 @@ resource "aws_cloudwatch_log_group" "flow_log" {
   retention_in_days = var.flow_log_cloudwatch_log_group_retention_in_days
   kms_key_id        = var.flow_log_cloudwatch_log_group_kms_key_id
 
-  tags = merge(var.tags, var.vpc_flow_log_tags)
+  tags = merge(module.label.tags, var.vpc_flow_log_tags)
 }
 
 #########################
@@ -48,7 +48,7 @@ resource "aws_iam_role" "vpc_flow_log_cloudwatch" {
   name_prefix        = "vpc-flow-log-role-"
   assume_role_policy = data.aws_iam_policy_document.flow_log_cloudwatch_assume_role[0].json
 
-  tags = merge(var.tags, var.vpc_flow_log_tags)
+  tags = merge(module.label.tags, var.vpc_flow_log_tags)
 }
 
 data "aws_iam_policy_document" "flow_log_cloudwatch_assume_role" {
