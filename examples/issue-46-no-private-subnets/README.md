@@ -17,6 +17,21 @@ $ terraform apply
 Note that this example may create resources which can cost money (AWS Elastic IP, for example). Run `terraform destroy` when you don't need these resources.
 
 <!-- BEGINNING OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
+## Requirements
+
+| Name | Version |
+|------|---------|
+| terraform | >= 0.12.7, < 0.14 |
+| aws | >= 2.68, < 4.0 |
+
+## Providers
+
+No provider.
+
+## Inputs
+
+No input.
+
 ## Outputs
 
 | Name | Description |

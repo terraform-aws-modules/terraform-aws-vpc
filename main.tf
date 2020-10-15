@@ -54,6 +54,50 @@ resource "aws_vpc_ipv4_cidr_block_association" "this" {
   cidr_block = element(var.secondary_cidr_blocks, count.index)
 }
 
+resource "aws_default_security_group" "this" {
+  count = var.create_vpc && var.manage_default_security_group ? 1 : 0
+
+  vpc_id = aws_vpc.this[0].id
+
+  dynamic "ingress" {
+    for_each = var.default_security_group_ingress
+    content {
+      self             = lookup(ingress.value, "self", null)
+      cidr_blocks      = compact(split(",", lookup(ingress.value, "cidr_blocks", "")))
+      ipv6_cidr_blocks = compact(split(",", lookup(ingress.value, "ipv6_cidr_blocks", "")))
+      prefix_list_ids  = compact(split(",", lookup(ingress.value, "prefix_list_ids", "")))
+      security_groups  = compact(split(",", lookup(ingress.value, "security_groups", "")))
+      description      = lookup(ingress.value, "description", null)
+      from_port        = lookup(ingress.value, "from_port", 0)
+      to_port          = lookup(ingress.value, "to_port", 0)
+      protocol         = lookup(ingress.value, "protocol", "-1")
+    }
+  }
+
+  dynamic "egress" {
+    for_each = var.default_security_group_egress
+    content {
+      self             = lookup(egress.value, "self", null)
+      cidr_blocks      = compact(split(",", lookup(egress.value, "cidr_blocks", "")))
+      ipv6_cidr_blocks = compact(split(",", lookup(egress.value, "ipv6_cidr_blocks", "")))
+      prefix_list_ids  = compact(split(",", lookup(egress.value, "prefix_list_ids", "")))
+      security_groups  = compact(split(",", lookup(egress.value, "security_groups", "")))
+      description      = lookup(egress.value, "description", null)
+      from_port        = lookup(egress.value, "from_port", 0)
+      to_port          = lookup(egress.value, "to_port", 0)
+      protocol         = lookup(egress.value, "protocol", "-1")
+    }
+  }
+
+  tags = merge(
+    {
+      "Name" = format("%s", var.default_security_group_name)
+    },
+    var.tags,
+    var.default_security_group_tags,
+  )
+}
+
 ###################
 # DHCP Options Set
 ###################
@@ -89,7 +133,7 @@ resource "aws_vpc_dhcp_options_association" "this" {
 # Internet Gateway
 ###################
 resource "aws_internet_gateway" "this" {
-  count = var.create_vpc && length(var.public_subnets) > 0 ? 1 : 0
+  count = var.create_vpc && var.create_igw && length(var.public_subnets) > 0 ? 1 : 0
 
   vpc_id = local.vpc_id
 
@@ -103,9 +147,17 @@ resource "aws_internet_gateway" "this" {
 }
 
 resource "aws_egress_only_internet_gateway" "this" {
-  count = var.create_vpc && var.enable_ipv6 && local.max_subnet_length > 0 ? 1 : 0
+  count = var.create_vpc && var.create_egress_only_igw && var.enable_ipv6 && local.max_subnet_length > 0 ? 1 : 0
 
   vpc_id = local.vpc_id
+
+  tags = merge(
+    {
+      "Name" = format("%s", var.name)
+    },
+    var.tags,
+    var.igw_tags,
+  )
 }
 
 ################
@@ -126,7 +178,7 @@ resource "aws_route_table" "public" {
 }
 
 resource "aws_route" "public_internet_gateway" {
-  count = var.create_vpc && length(var.public_subnets) > 0 ? 1 : 0
+  count = var.create_vpc && var.create_igw && length(var.public_subnets) > 0 ? 1 : 0
 
   route_table_id         = aws_route_table.public[0].id
   destination_cidr_block = "0.0.0.0/0"
@@ -138,7 +190,7 @@ resource "aws_route" "public_internet_gateway" {
 }
 
 resource "aws_route" "public_internet_gateway_ipv6" {
-  count = var.create_vpc && var.enable_ipv6 && length(var.public_subnets) > 0 ? 1 : 0
+  count = var.create_vpc && var.create_igw && var.enable_ipv6 && length(var.public_subnets) > 0 ? 1 : 0
 
   route_table_id              = aws_route_table.public[0].id
   destination_ipv6_cidr_block = "::/0"
@@ -182,16 +234,16 @@ resource "aws_route_table" "database" {
   vpc_id = local.vpc_id
 
   tags = merge(
-    var.tags,
-    var.database_route_table_tags,
     {
       "Name" = "${var.name}-${var.database_subnet_suffix}"
     },
+    var.tags,
+    var.database_route_table_tags,
   )
 }
 
 resource "aws_route" "database_internet_gateway" {
-  count = var.create_vpc && var.create_database_subnet_route_table && length(var.database_subnets) > 0 && var.create_database_internet_gateway_route && false == var.create_database_nat_gateway_route ? 1 : 0
+  count = var.create_vpc && var.create_igw && var.create_database_subnet_route_table && length(var.database_subnets) > 0 && var.create_database_internet_gateway_route && false == var.create_database_nat_gateway_route ? 1 : 0
 
   route_table_id         = aws_route_table.database[0].id
   destination_cidr_block = "0.0.0.0/0"
@@ -205,7 +257,7 @@ resource "aws_route" "database_internet_gateway" {
 resource "aws_route" "database_nat_gateway" {
   count = var.create_vpc && var.create_database_subnet_route_table && length(var.database_subnets) > 0 && false == var.create_database_internet_gateway_route && var.create_database_nat_gateway_route && var.enable_nat_gateway ? local.nat_gateway_count : 0
 
-  route_table_id         = element(aws_route_table.private.*.id, count.index)
+  route_table_id         = element(aws_route_table.database.*.id, count.index)
   destination_cidr_block = "0.0.0.0/0"
   nat_gateway_id         = element(aws_nat_gateway.this.*.id, count.index)
 
@@ -215,7 +267,7 @@ resource "aws_route" "database_nat_gateway" {
 }
 
 resource "aws_route" "database_ipv6_egress" {
-  count = var.create_vpc && var.enable_ipv6 && var.create_database_subnet_route_table && length(var.database_subnets) > 0 && var.create_database_internet_gateway_route ? 1 : 0
+  count = var.create_vpc && var.create_egress_only_igw && var.enable_ipv6 && var.create_database_subnet_route_table && length(var.database_subnets) > 0 && var.create_database_internet_gateway_route ? 1 : 0
 
   route_table_id              = aws_route_table.database[0].id
   destination_ipv6_cidr_block = "::/0"
@@ -235,11 +287,11 @@ resource "aws_route_table" "redshift" {
   vpc_id = local.vpc_id
 
   tags = merge(
-    var.tags,
-    var.redshift_route_table_tags,
     {
       "Name" = "${var.name}-${var.redshift_subnet_suffix}"
     },
+    var.tags,
+    var.redshift_route_table_tags,
   )
 }
 
@@ -252,11 +304,11 @@ resource "aws_route_table" "elasticache" {
   vpc_id = local.vpc_id
 
   tags = merge(
-    var.tags,
-    var.elasticache_route_table_tags,
     {
       "Name" = "${var.name}-${var.elasticache_subnet_suffix}"
     },
+    var.tags,
+    var.elasticache_route_table_tags,
   )
 }
 
@@ -285,7 +337,8 @@ resource "aws_subnet" "public" {
 
   vpc_id                          = local.vpc_id
   cidr_block                      = element(concat(var.public_subnets, [""]), count.index)
-  availability_zone               = element(var.azs, count.index)
+  availability_zone               = length(regexall("^[a-z]{2}-", element(var.azs, count.index))) > 0 ? element(var.azs, count.index) : null
+  availability_zone_id            = length(regexall("^[a-z]{2}-", element(var.azs, count.index))) == 0 ? element(var.azs, count.index) : null
   map_public_ip_on_launch         = var.map_public_ip_on_launch
   assign_ipv6_address_on_creation = var.public_subnet_assign_ipv6_address_on_creation == null ? var.assign_ipv6_address_on_creation : var.public_subnet_assign_ipv6_address_on_creation
 
@@ -312,7 +365,8 @@ resource "aws_subnet" "private" {
 
   vpc_id                          = local.vpc_id
   cidr_block                      = var.private_subnets[count.index]
-  availability_zone               = element(var.azs, count.index)
+  availability_zone               = length(regexall("^[a-z]{2}-", element(var.azs, count.index))) > 0 ? element(var.azs, count.index) : null
+  availability_zone_id            = length(regexall("^[a-z]{2}-", element(var.azs, count.index))) == 0 ? element(var.azs, count.index) : null
   assign_ipv6_address_on_creation = var.private_subnet_assign_ipv6_address_on_creation == null ? var.assign_ipv6_address_on_creation : var.private_subnet_assign_ipv6_address_on_creation
 
   ipv6_cidr_block = var.enable_ipv6 && length(var.private_subnet_ipv6_prefixes) > 0 ? cidrsubnet(aws_vpc.this[0].ipv6_cidr_block, 8, var.private_subnet_ipv6_prefixes[count.index]) : null
@@ -338,7 +392,8 @@ resource "aws_subnet" "database" {
 
   vpc_id                          = local.vpc_id
   cidr_block                      = var.database_subnets[count.index]
-  availability_zone               = element(var.azs, count.index)
+  availability_zone               = length(regexall("^[a-z]{2}-", element(var.azs, count.index))) > 0 ? element(var.azs, count.index) : null
+  availability_zone_id            = length(regexall("^[a-z]{2}-", element(var.azs, count.index))) == 0 ? element(var.azs, count.index) : null
   assign_ipv6_address_on_creation = var.database_subnet_assign_ipv6_address_on_creation == null ? var.assign_ipv6_address_on_creation : var.database_subnet_assign_ipv6_address_on_creation
 
   ipv6_cidr_block = var.enable_ipv6 && length(var.database_subnet_ipv6_prefixes) > 0 ? cidrsubnet(aws_vpc.this[0].ipv6_cidr_block, 8, var.database_subnet_ipv6_prefixes[count.index]) : null
@@ -380,7 +435,8 @@ resource "aws_subnet" "redshift" {
 
   vpc_id                          = local.vpc_id
   cidr_block                      = var.redshift_subnets[count.index]
-  availability_zone               = element(var.azs, count.index)
+  availability_zone               = length(regexall("^[a-z]{2}-", element(var.azs, count.index))) > 0 ? element(var.azs, count.index) : null
+  availability_zone_id            = length(regexall("^[a-z]{2}-", element(var.azs, count.index))) == 0 ? element(var.azs, count.index) : null
   assign_ipv6_address_on_creation = var.redshift_subnet_assign_ipv6_address_on_creation == null ? var.assign_ipv6_address_on_creation : var.redshift_subnet_assign_ipv6_address_on_creation
 
   ipv6_cidr_block = var.enable_ipv6 && length(var.redshift_subnet_ipv6_prefixes) > 0 ? cidrsubnet(aws_vpc.this[0].ipv6_cidr_block, 8, var.redshift_subnet_ipv6_prefixes[count.index]) : null
@@ -423,7 +479,8 @@ resource "aws_subnet" "elasticache" {
 
   vpc_id                          = local.vpc_id
   cidr_block                      = var.elasticache_subnets[count.index]
-  availability_zone               = element(var.azs, count.index)
+  availability_zone               = length(regexall("^[a-z]{2}-", element(var.azs, count.index))) > 0 ? element(var.azs, count.index) : null
+  availability_zone_id            = length(regexall("^[a-z]{2}-", element(var.azs, count.index))) == 0 ? element(var.azs, count.index) : null
   assign_ipv6_address_on_creation = var.elasticache_subnet_assign_ipv6_address_on_creation == null ? var.assign_ipv6_address_on_creation : var.elasticache_subnet_assign_ipv6_address_on_creation
 
   ipv6_cidr_block = var.enable_ipv6 && length(var.elasticache_subnet_ipv6_prefixes) > 0 ? cidrsubnet(aws_vpc.this[0].ipv6_cidr_block, 8, var.elasticache_subnet_ipv6_prefixes[count.index]) : null
@@ -457,7 +514,8 @@ resource "aws_subnet" "intra" {
 
   vpc_id                          = local.vpc_id
   cidr_block                      = var.intra_subnets[count.index]
-  availability_zone               = element(var.azs, count.index)
+  availability_zone               = length(regexall("^[a-z]{2}-", element(var.azs, count.index))) > 0 ? element(var.azs, count.index) : null
+  availability_zone_id            = length(regexall("^[a-z]{2}-", element(var.azs, count.index))) == 0 ? element(var.azs, count.index) : null
   assign_ipv6_address_on_creation = var.intra_subnet_assign_ipv6_address_on_creation == null ? var.assign_ipv6_address_on_creation : var.intra_subnet_assign_ipv6_address_on_creation
 
   ipv6_cidr_block = var.enable_ipv6 && length(var.intra_subnet_ipv6_prefixes) > 0 ? cidrsubnet(aws_vpc.this[0].ipv6_cidr_block, 8, var.intra_subnet_ipv6_prefixes[count.index]) : null
@@ -548,15 +606,16 @@ resource "aws_network_acl_rule" "public_inbound" {
 
   network_acl_id = aws_network_acl.public[0].id
 
-  egress      = false
-  rule_number = var.public_inbound_acl_rules[count.index]["rule_number"]
-  rule_action = var.public_inbound_acl_rules[count.index]["rule_action"]
-  from_port   = lookup(var.public_inbound_acl_rules[count.index], "from_port", null)
-  to_port     = lookup(var.public_inbound_acl_rules[count.index], "to_port", null)
-  icmp_code   = lookup(var.public_inbound_acl_rules[count.index], "icmp_code", null)
-  icmp_type   = lookup(var.public_inbound_acl_rules[count.index], "icmp_type", null)
-  protocol    = var.public_inbound_acl_rules[count.index]["protocol"]
-  cidr_block  = var.public_inbound_acl_rules[count.index]["cidr_block"]
+  egress          = false
+  rule_number     = var.public_inbound_acl_rules[count.index]["rule_number"]
+  rule_action     = var.public_inbound_acl_rules[count.index]["rule_action"]
+  from_port       = lookup(var.public_inbound_acl_rules[count.index], "from_port", null)
+  to_port         = lookup(var.public_inbound_acl_rules[count.index], "to_port", null)
+  icmp_code       = lookup(var.public_inbound_acl_rules[count.index], "icmp_code", null)
+  icmp_type       = lookup(var.public_inbound_acl_rules[count.index], "icmp_type", null)
+  protocol        = var.public_inbound_acl_rules[count.index]["protocol"]
+  cidr_block      = lookup(var.public_inbound_acl_rules[count.index], "cidr_block", null)
+  ipv6_cidr_block = lookup(var.public_inbound_acl_rules[count.index], "ipv6_cidr_block", null)
 }
 
 resource "aws_network_acl_rule" "public_outbound" {
@@ -564,15 +623,16 @@ resource "aws_network_acl_rule" "public_outbound" {
 
   network_acl_id = aws_network_acl.public[0].id
 
-  egress      = true
-  rule_number = var.public_outbound_acl_rules[count.index]["rule_number"]
-  rule_action = var.public_outbound_acl_rules[count.index]["rule_action"]
-  from_port   = lookup(var.public_outbound_acl_rules[count.index], "from_port", null)
-  to_port     = lookup(var.public_outbound_acl_rules[count.index], "to_port", null)
-  icmp_code   = lookup(var.public_outbound_acl_rules[count.index], "icmp_code", null)
-  icmp_type   = lookup(var.public_outbound_acl_rules[count.index], "icmp_type", null)
-  protocol    = var.public_outbound_acl_rules[count.index]["protocol"]
-  cidr_block  = var.public_outbound_acl_rules[count.index]["cidr_block"]
+  egress          = true
+  rule_number     = var.public_outbound_acl_rules[count.index]["rule_number"]
+  rule_action     = var.public_outbound_acl_rules[count.index]["rule_action"]
+  from_port       = lookup(var.public_outbound_acl_rules[count.index], "from_port", null)
+  to_port         = lookup(var.public_outbound_acl_rules[count.index], "to_port", null)
+  icmp_code       = lookup(var.public_outbound_acl_rules[count.index], "icmp_code", null)
+  icmp_type       = lookup(var.public_outbound_acl_rules[count.index], "icmp_type", null)
+  protocol        = var.public_outbound_acl_rules[count.index]["protocol"]
+  cidr_block      = lookup(var.public_outbound_acl_rules[count.index], "cidr_block", null)
+  ipv6_cidr_block = lookup(var.public_outbound_acl_rules[count.index], "ipv6_cidr_block", null)
 }
 
 #######################
@@ -598,15 +658,16 @@ resource "aws_network_acl_rule" "private_inbound" {
 
   network_acl_id = aws_network_acl.private[0].id
 
-  egress      = false
-  rule_number = var.private_inbound_acl_rules[count.index]["rule_number"]
-  rule_action = var.private_inbound_acl_rules[count.index]["rule_action"]
-  from_port   = lookup(var.private_inbound_acl_rules[count.index], "from_port", null)
-  to_port     = lookup(var.private_inbound_acl_rules[count.index], "to_port", null)
-  icmp_code   = lookup(var.private_inbound_acl_rules[count.index], "icmp_code", null)
-  icmp_type   = lookup(var.private_inbound_acl_rules[count.index], "icmp_type", null)
-  protocol    = var.private_inbound_acl_rules[count.index]["protocol"]
-  cidr_block  = var.private_inbound_acl_rules[count.index]["cidr_block"]
+  egress          = false
+  rule_number     = var.private_inbound_acl_rules[count.index]["rule_number"]
+  rule_action     = var.private_inbound_acl_rules[count.index]["rule_action"]
+  from_port       = lookup(var.private_inbound_acl_rules[count.index], "from_port", null)
+  to_port         = lookup(var.private_inbound_acl_rules[count.index], "to_port", null)
+  icmp_code       = lookup(var.private_inbound_acl_rules[count.index], "icmp_code", null)
+  icmp_type       = lookup(var.private_inbound_acl_rules[count.index], "icmp_type", null)
+  protocol        = var.private_inbound_acl_rules[count.index]["protocol"]
+  cidr_block      = lookup(var.private_inbound_acl_rules[count.index], "cidr_block", null)
+  ipv6_cidr_block = lookup(var.private_inbound_acl_rules[count.index], "ipv6_cidr_block", null)
 }
 
 resource "aws_network_acl_rule" "private_outbound" {
@@ -614,15 +675,16 @@ resource "aws_network_acl_rule" "private_outbound" {
 
   network_acl_id = aws_network_acl.private[0].id
 
-  egress      = true
-  rule_number = var.private_outbound_acl_rules[count.index]["rule_number"]
-  rule_action = var.private_outbound_acl_rules[count.index]["rule_action"]
-  from_port   = lookup(var.private_outbound_acl_rules[count.index], "from_port", null)
-  to_port     = lookup(var.private_outbound_acl_rules[count.index], "to_port", null)
-  icmp_code   = lookup(var.private_outbound_acl_rules[count.index], "icmp_code", null)
-  icmp_type   = lookup(var.private_outbound_acl_rules[count.index], "icmp_type", null)
-  protocol    = var.private_outbound_acl_rules[count.index]["protocol"]
-  cidr_block  = var.private_outbound_acl_rules[count.index]["cidr_block"]
+  egress          = true
+  rule_number     = var.private_outbound_acl_rules[count.index]["rule_number"]
+  rule_action     = var.private_outbound_acl_rules[count.index]["rule_action"]
+  from_port       = lookup(var.private_outbound_acl_rules[count.index], "from_port", null)
+  to_port         = lookup(var.private_outbound_acl_rules[count.index], "to_port", null)
+  icmp_code       = lookup(var.private_outbound_acl_rules[count.index], "icmp_code", null)
+  icmp_type       = lookup(var.private_outbound_acl_rules[count.index], "icmp_type", null)
+  protocol        = var.private_outbound_acl_rules[count.index]["protocol"]
+  cidr_block      = lookup(var.private_outbound_acl_rules[count.index], "cidr_block", null)
+  ipv6_cidr_block = lookup(var.private_outbound_acl_rules[count.index], "ipv6_cidr_block", null)
 }
 
 ########################
@@ -648,15 +710,16 @@ resource "aws_network_acl_rule" "intra_inbound" {
 
   network_acl_id = aws_network_acl.intra[0].id
 
-  egress      = false
-  rule_number = var.intra_inbound_acl_rules[count.index]["rule_number"]
-  rule_action = var.intra_inbound_acl_rules[count.index]["rule_action"]
-  from_port   = lookup(var.intra_inbound_acl_rules[count.index], "from_port", null)
-  to_port     = lookup(var.intra_inbound_acl_rules[count.index], "to_port", null)
-  icmp_code   = lookup(var.intra_inbound_acl_rules[count.index], "icmp_code", null)
-  icmp_type   = lookup(var.intra_inbound_acl_rules[count.index], "icmp_type", null)
-  protocol    = var.intra_inbound_acl_rules[count.index]["protocol"]
-  cidr_block  = var.intra_inbound_acl_rules[count.index]["cidr_block"]
+  egress          = false
+  rule_number     = var.intra_inbound_acl_rules[count.index]["rule_number"]
+  rule_action     = var.intra_inbound_acl_rules[count.index]["rule_action"]
+  from_port       = lookup(var.intra_inbound_acl_rules[count.index], "from_port", null)
+  to_port         = lookup(var.intra_inbound_acl_rules[count.index], "to_port", null)
+  icmp_code       = lookup(var.intra_inbound_acl_rules[count.index], "icmp_code", null)
+  icmp_type       = lookup(var.intra_inbound_acl_rules[count.index], "icmp_type", null)
+  protocol        = var.intra_inbound_acl_rules[count.index]["protocol"]
+  cidr_block      = lookup(var.intra_inbound_acl_rules[count.index], "cidr_block", null)
+  ipv6_cidr_block = lookup(var.intra_inbound_acl_rules[count.index], "ipv6_cidr_block", null)
 }
 
 resource "aws_network_acl_rule" "intra_outbound" {
@@ -664,15 +727,16 @@ resource "aws_network_acl_rule" "intra_outbound" {
 
   network_acl_id = aws_network_acl.intra[0].id
 
-  egress      = true
-  rule_number = var.intra_outbound_acl_rules[count.index]["rule_number"]
-  rule_action = var.intra_outbound_acl_rules[count.index]["rule_action"]
-  from_port   = lookup(var.intra_outbound_acl_rules[count.index], "from_port", null)
-  to_port     = lookup(var.intra_outbound_acl_rules[count.index], "to_port", null)
-  icmp_code   = lookup(var.intra_outbound_acl_rules[count.index], "icmp_code", null)
-  icmp_type   = lookup(var.intra_outbound_acl_rules[count.index], "icmp_type", null)
-  protocol    = var.intra_outbound_acl_rules[count.index]["protocol"]
-  cidr_block  = var.intra_outbound_acl_rules[count.index]["cidr_block"]
+  egress          = true
+  rule_number     = var.intra_outbound_acl_rules[count.index]["rule_number"]
+  rule_action     = var.intra_outbound_acl_rules[count.index]["rule_action"]
+  from_port       = lookup(var.intra_outbound_acl_rules[count.index], "from_port", null)
+  to_port         = lookup(var.intra_outbound_acl_rules[count.index], "to_port", null)
+  icmp_code       = lookup(var.intra_outbound_acl_rules[count.index], "icmp_code", null)
+  icmp_type       = lookup(var.intra_outbound_acl_rules[count.index], "icmp_type", null)
+  protocol        = var.intra_outbound_acl_rules[count.index]["protocol"]
+  cidr_block      = lookup(var.intra_outbound_acl_rules[count.index], "cidr_block", null)
+  ipv6_cidr_block = lookup(var.intra_outbound_acl_rules[count.index], "ipv6_cidr_block", null)
 }
 
 ########################
@@ -698,15 +762,16 @@ resource "aws_network_acl_rule" "database_inbound" {
 
   network_acl_id = aws_network_acl.database[0].id
 
-  egress      = false
-  rule_number = var.database_inbound_acl_rules[count.index]["rule_number"]
-  rule_action = var.database_inbound_acl_rules[count.index]["rule_action"]
-  from_port   = lookup(var.database_inbound_acl_rules[count.index], "from_port", null)
-  to_port     = lookup(var.database_inbound_acl_rules[count.index], "to_port", null)
-  icmp_code   = lookup(var.database_inbound_acl_rules[count.index], "icmp_code", null)
-  icmp_type   = lookup(var.database_inbound_acl_rules[count.index], "icmp_type", null)
-  protocol    = var.database_inbound_acl_rules[count.index]["protocol"]
-  cidr_block  = var.database_inbound_acl_rules[count.index]["cidr_block"]
+  egress          = false
+  rule_number     = var.database_inbound_acl_rules[count.index]["rule_number"]
+  rule_action     = var.database_inbound_acl_rules[count.index]["rule_action"]
+  from_port       = lookup(var.database_inbound_acl_rules[count.index], "from_port", null)
+  to_port         = lookup(var.database_inbound_acl_rules[count.index], "to_port", null)
+  icmp_code       = lookup(var.database_inbound_acl_rules[count.index], "icmp_code", null)
+  icmp_type       = lookup(var.database_inbound_acl_rules[count.index], "icmp_type", null)
+  protocol        = var.database_inbound_acl_rules[count.index]["protocol"]
+  cidr_block      = lookup(var.database_inbound_acl_rules[count.index], "cidr_block", null)
+  ipv6_cidr_block = lookup(var.database_inbound_acl_rules[count.index], "ipv6_cidr_block", null)
 }
 
 resource "aws_network_acl_rule" "database_outbound" {
@@ -714,15 +779,16 @@ resource "aws_network_acl_rule" "database_outbound" {
 
   network_acl_id = aws_network_acl.database[0].id
 
-  egress      = true
-  rule_number = var.database_outbound_acl_rules[count.index]["rule_number"]
-  rule_action = var.database_outbound_acl_rules[count.index]["rule_action"]
-  from_port   = lookup(var.database_outbound_acl_rules[count.index], "from_port", null)
-  to_port     = lookup(var.database_outbound_acl_rules[count.index], "to_port", null)
-  icmp_code   = lookup(var.database_outbound_acl_rules[count.index], "icmp_code", null)
-  icmp_type   = lookup(var.database_outbound_acl_rules[count.index], "icmp_type", null)
-  protocol    = var.database_outbound_acl_rules[count.index]["protocol"]
-  cidr_block  = var.database_outbound_acl_rules[count.index]["cidr_block"]
+  egress          = true
+  rule_number     = var.database_outbound_acl_rules[count.index]["rule_number"]
+  rule_action     = var.database_outbound_acl_rules[count.index]["rule_action"]
+  from_port       = lookup(var.database_outbound_acl_rules[count.index], "from_port", null)
+  to_port         = lookup(var.database_outbound_acl_rules[count.index], "to_port", null)
+  icmp_code       = lookup(var.database_outbound_acl_rules[count.index], "icmp_code", null)
+  icmp_type       = lookup(var.database_outbound_acl_rules[count.index], "icmp_type", null)
+  protocol        = var.database_outbound_acl_rules[count.index]["protocol"]
+  cidr_block      = lookup(var.database_outbound_acl_rules[count.index], "cidr_block", null)
+  ipv6_cidr_block = lookup(var.database_outbound_acl_rules[count.index], "ipv6_cidr_block", null)
 }
 
 ########################
@@ -748,15 +814,16 @@ resource "aws_network_acl_rule" "redshift_inbound" {
 
   network_acl_id = aws_network_acl.redshift[0].id
 
-  egress      = false
-  rule_number = var.redshift_inbound_acl_rules[count.index]["rule_number"]
-  rule_action = var.redshift_inbound_acl_rules[count.index]["rule_action"]
-  from_port   = lookup(var.redshift_inbound_acl_rules[count.index], "from_port", null)
-  to_port     = lookup(var.redshift_inbound_acl_rules[count.index], "to_port", null)
-  icmp_code   = lookup(var.redshift_inbound_acl_rules[count.index], "icmp_code", null)
-  icmp_type   = lookup(var.redshift_inbound_acl_rules[count.index], "icmp_type", null)
-  protocol    = var.redshift_inbound_acl_rules[count.index]["protocol"]
-  cidr_block  = var.redshift_inbound_acl_rules[count.index]["cidr_block"]
+  egress          = false
+  rule_number     = var.redshift_inbound_acl_rules[count.index]["rule_number"]
+  rule_action     = var.redshift_inbound_acl_rules[count.index]["rule_action"]
+  from_port       = lookup(var.redshift_inbound_acl_rules[count.index], "from_port", null)
+  to_port         = lookup(var.redshift_inbound_acl_rules[count.index], "to_port", null)
+  icmp_code       = lookup(var.redshift_inbound_acl_rules[count.index], "icmp_code", null)
+  icmp_type       = lookup(var.redshift_inbound_acl_rules[count.index], "icmp_type", null)
+  protocol        = var.redshift_inbound_acl_rules[count.index]["protocol"]
+  cidr_block      = lookup(var.redshift_inbound_acl_rules[count.index], "cidr_block", null)
+  ipv6_cidr_block = lookup(var.redshift_inbound_acl_rules[count.index], "ipv6_cidr_block", null)
 }
 
 resource "aws_network_acl_rule" "redshift_outbound" {
@@ -764,15 +831,16 @@ resource "aws_network_acl_rule" "redshift_outbound" {
 
   network_acl_id = aws_network_acl.redshift[0].id
 
-  egress      = true
-  rule_number = var.redshift_outbound_acl_rules[count.index]["rule_number"]
-  rule_action = var.redshift_outbound_acl_rules[count.index]["rule_action"]
-  from_port   = lookup(var.redshift_outbound_acl_rules[count.index], "from_port", null)
-  to_port     = lookup(var.redshift_outbound_acl_rules[count.index], "to_port", null)
-  icmp_code   = lookup(var.redshift_outbound_acl_rules[count.index], "icmp_code", null)
-  icmp_type   = lookup(var.redshift_outbound_acl_rules[count.index], "icmp_type", null)
-  protocol    = var.redshift_outbound_acl_rules[count.index]["protocol"]
-  cidr_block  = var.redshift_outbound_acl_rules[count.index]["cidr_block"]
+  egress          = true
+  rule_number     = var.redshift_outbound_acl_rules[count.index]["rule_number"]
+  rule_action     = var.redshift_outbound_acl_rules[count.index]["rule_action"]
+  from_port       = lookup(var.redshift_outbound_acl_rules[count.index], "from_port", null)
+  to_port         = lookup(var.redshift_outbound_acl_rules[count.index], "to_port", null)
+  icmp_code       = lookup(var.redshift_outbound_acl_rules[count.index], "icmp_code", null)
+  icmp_type       = lookup(var.redshift_outbound_acl_rules[count.index], "icmp_type", null)
+  protocol        = var.redshift_outbound_acl_rules[count.index]["protocol"]
+  cidr_block      = lookup(var.redshift_outbound_acl_rules[count.index], "cidr_block", null)
+  ipv6_cidr_block = lookup(var.redshift_outbound_acl_rules[count.index], "ipv6_cidr_block", null)
 }
 
 ###########################
@@ -798,15 +866,16 @@ resource "aws_network_acl_rule" "elasticache_inbound" {
 
   network_acl_id = aws_network_acl.elasticache[0].id
 
-  egress      = false
-  rule_number = var.elasticache_inbound_acl_rules[count.index]["rule_number"]
-  rule_action = var.elasticache_inbound_acl_rules[count.index]["rule_action"]
-  from_port   = lookup(var.elasticache_inbound_acl_rules[count.index], "from_port", null)
-  to_port     = lookup(var.elasticache_inbound_acl_rules[count.index], "to_port", null)
-  icmp_code   = lookup(var.elasticache_inbound_acl_rules[count.index], "icmp_code", null)
-  icmp_type   = lookup(var.elasticache_inbound_acl_rules[count.index], "icmp_type", null)
-  protocol    = var.elasticache_inbound_acl_rules[count.index]["protocol"]
-  cidr_block  = var.elasticache_inbound_acl_rules[count.index]["cidr_block"]
+  egress          = false
+  rule_number     = var.elasticache_inbound_acl_rules[count.index]["rule_number"]
+  rule_action     = var.elasticache_inbound_acl_rules[count.index]["rule_action"]
+  from_port       = lookup(var.elasticache_inbound_acl_rules[count.index], "from_port", null)
+  to_port         = lookup(var.elasticache_inbound_acl_rules[count.index], "to_port", null)
+  icmp_code       = lookup(var.elasticache_inbound_acl_rules[count.index], "icmp_code", null)
+  icmp_type       = lookup(var.elasticache_inbound_acl_rules[count.index], "icmp_type", null)
+  protocol        = var.elasticache_inbound_acl_rules[count.index]["protocol"]
+  cidr_block      = lookup(var.elasticache_inbound_acl_rules[count.index], "cidr_block", null)
+  ipv6_cidr_block = lookup(var.elasticache_inbound_acl_rules[count.index], "ipv6_cidr_block", null)
 }
 
 resource "aws_network_acl_rule" "elasticache_outbound" {
@@ -814,15 +883,16 @@ resource "aws_network_acl_rule" "elasticache_outbound" {
 
   network_acl_id = aws_network_acl.elasticache[0].id
 
-  egress      = true
-  rule_number = var.elasticache_outbound_acl_rules[count.index]["rule_number"]
-  rule_action = var.elasticache_outbound_acl_rules[count.index]["rule_action"]
-  from_port   = lookup(var.elasticache_outbound_acl_rules[count.index], "from_port", null)
-  to_port     = lookup(var.elasticache_outbound_acl_rules[count.index], "to_port", null)
-  icmp_code   = lookup(var.elasticache_outbound_acl_rules[count.index], "icmp_code", null)
-  icmp_type   = lookup(var.elasticache_outbound_acl_rules[count.index], "icmp_type", null)
-  protocol    = var.elasticache_outbound_acl_rules[count.index]["protocol"]
-  cidr_block  = var.elasticache_outbound_acl_rules[count.index]["cidr_block"]
+  egress          = true
+  rule_number     = var.elasticache_outbound_acl_rules[count.index]["rule_number"]
+  rule_action     = var.elasticache_outbound_acl_rules[count.index]["rule_action"]
+  from_port       = lookup(var.elasticache_outbound_acl_rules[count.index], "from_port", null)
+  to_port         = lookup(var.elasticache_outbound_acl_rules[count.index], "to_port", null)
+  icmp_code       = lookup(var.elasticache_outbound_acl_rules[count.index], "icmp_code", null)
+  icmp_type       = lookup(var.elasticache_outbound_acl_rules[count.index], "icmp_type", null)
+  protocol        = var.elasticache_outbound_acl_rules[count.index]["protocol"]
+  cidr_block      = lookup(var.elasticache_outbound_acl_rules[count.index], "cidr_block", null)
+  ipv6_cidr_block = lookup(var.elasticache_outbound_acl_rules[count.index], "ipv6_cidr_block", null)
 }
 
 ##############
@@ -901,7 +971,7 @@ resource "aws_route" "private_nat_gateway" {
 }
 
 resource "aws_route" "private_ipv6_egress" {
-  count = var.enable_ipv6 ? length(var.private_subnets) : 0
+  count = var.create_vpc && var.create_egress_only_igw && var.enable_ipv6 ? length(var.private_subnets) : 0
 
   route_table_id              = element(aws_route_table.private.*.id, count.index)
   destination_ipv6_cidr_block = "::/0"
@@ -978,14 +1048,34 @@ resource "aws_route_table_association" "public" {
   route_table_id = aws_route_table.public[0].id
 }
 
+####################
+# Customer Gateways
+####################
+resource "aws_customer_gateway" "this" {
+  for_each = var.customer_gateways
+
+  bgp_asn    = each.value["bgp_asn"]
+  ip_address = each.value["ip_address"]
+  type       = "ipsec.1"
+
+  tags = merge(
+    {
+      Name = format("%s-%s", var.name, each.key)
+    },
+    var.tags,
+    var.customer_gateway_tags,
+  )
+}
+
 ##############
 # VPN Gateway
 ##############
 resource "aws_vpn_gateway" "this" {
   count = var.create_vpc && var.enable_vpn_gateway ? 1 : 0
 
-  vpc_id          = local.vpc_id
-  amazon_side_asn = var.amazon_side_asn
+  vpc_id            = local.vpc_id
+  amazon_side_asn   = var.amazon_side_asn
+  availability_zone = var.vpn_gateway_az
 
   tags = merge(
     {
@@ -1029,6 +1119,19 @@ resource "aws_vpn_gateway_route_propagation" "private" {
   )
 }
 
+resource "aws_vpn_gateway_route_propagation" "intra" {
+  count = var.create_vpc && var.propagate_intra_route_tables_vgw && (var.enable_vpn_gateway || var.vpn_gateway_id != "") ? length(var.intra_subnets) : 0
+
+  route_table_id = element(aws_route_table.intra.*.id, count.index)
+  vpn_gateway_id = element(
+    concat(
+      aws_vpn_gateway.this.*.id,
+      aws_vpn_gateway_attachment.this.*.vpn_gateway_id,
+    ),
+    count.index,
+  )
+}
+
 ###########
 # Defaults
 ###########
@@ -1047,4 +1150,3 @@ resource "aws_default_vpc" "this" {
     var.default_vpc_tags,
   )
 }
-
