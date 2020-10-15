@@ -470,7 +470,6 @@ resource "aws_redshift_subnet_group" "redshift" {
   )
 }
 
-
 #####################
 # ElastiCache subnet
 #####################
