@@ -1383,11 +1383,6 @@ output "vpc_flow_log_cloudwatch_iam_role_arn" {
   value       = local.flow_log_iam_role_arn
 }
 
-# Static values (arguments)
-output "azs" {
-  description = "A list of availability zones specified as argument to this module"
-  value       = var.azs
-}
 
 output "name" {
   description = "The name of the VPC specified as argument to this module"

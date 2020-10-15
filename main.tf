@@ -5,7 +5,30 @@ locals {
     length(var.database_subnets),
     length(var.redshift_subnets),
   )
-  nat_gateway_count = var.single_nat_gateway ? 1 : var.one_nat_gateway_per_az ? length(var.azs) : local.max_subnet_length < length(var.public_subnets) ? local.max_subnet_length : length(var.public_subnets)
+  azs = flatten([
+    [
+      for elem in values(var.private_subnets) :
+      elem["az"]
+    ],
+    [
+      for elem in values(var.public_subnets) :
+      elem["az"]
+    ],
+    [
+      for elem in values(var.redshift_subnets) :
+      elem["az"]
+    ],
+    [
+      for elem in values(var.database_subnets) :
+      elem["az"]
+    ],
+    [
+      for elem in values(var.elasticache_subnets) :
+      elem["az"]
+    ],
+  ])
+
+  nat_gateway_count = var.single_nat_gateway ? 1 : var.one_nat_gateway_per_az ? length(local.azs) : local.max_subnet_length
 
   # Use `local.vpc_id` to give a hint to Terraform that subnets should be deleted before secondary CIDR blocks can be free!
   vpc_id = element(
@@ -21,6 +44,7 @@ locals {
     var.tags,
     var.vpc_endpoint_tags,
   )
+
 }
 
 ######
@@ -211,7 +235,7 @@ resource "aws_route_table" "private" {
       "Name" = var.single_nat_gateway ? "${var.name}-${var.private_subnet_suffix}" : format(
         "%s-${var.private_subnet_suffix}-%s",
         var.name,
-        element(var.azs, count.index),
+        element(keys(var.private_subnets), count.index),
       )
     },
     var.tags,
@@ -333,12 +357,12 @@ resource "aws_route_table" "intra" {
 # Public subnet
 ################
 resource "aws_subnet" "public" {
-  count = var.create_vpc && length(var.public_subnets) > 0 && (false == var.one_nat_gateway_per_az || length(var.public_subnets) >= length(var.azs)) ? length(var.public_subnets) : 0
+  count = var.create_vpc && length(var.public_subnets) > 0 && (false == var.one_nat_gateway_per_az || length(var.public_subnets) > 0) ? length(var.public_subnets) : 0
 
   vpc_id                          = local.vpc_id
-  cidr_block                      = element(concat(var.public_subnets, [""]), count.index)
-  availability_zone               = length(regexall("^[a-z]{2}-", element(var.azs, count.index))) > 0 ? element(var.azs, count.index) : null
-  availability_zone_id            = length(regexall("^[a-z]{2}-", element(var.azs, count.index))) == 0 ? element(var.azs, count.index) : null
+  cidr_block                      = var.public_subnets[element(keys(var.public_subnets), count.index)]["cidr"]
+  availability_zone               = length(regexall("^[a-z]{2}-", var.public_subnets[element(keys(var.public_subnets), count.index)]["az"])) > 0 ? var.public_subnets[element(keys(var.public_subnets), count.index)]["az"] : null
+  availability_zone_id            = length(regexall("^[a-z]{2}-", var.public_subnets[element(keys(var.public_subnets), count.index)]["az"])) == 0 ? var.public_subnets[element(keys(var.public_subnets), count.index)]["az"] : null
   map_public_ip_on_launch         = var.map_public_ip_on_launch
   assign_ipv6_address_on_creation = var.public_subnet_assign_ipv6_address_on_creation == null ? var.assign_ipv6_address_on_creation : var.public_subnet_assign_ipv6_address_on_creation
 
@@ -349,13 +373,14 @@ resource "aws_subnet" "public" {
       "Name" = format(
         "%s-${var.public_subnet_suffix}-%s",
         var.name,
-        element(var.azs, count.index),
+        element(keys(var.public_subnets), count.index),
       )
     },
     var.tags,
     var.public_subnet_tags,
   )
 }
+
 
 #################
 # Private subnet
@@ -364,9 +389,9 @@ resource "aws_subnet" "private" {
   count = var.create_vpc && length(var.private_subnets) > 0 ? length(var.private_subnets) : 0
 
   vpc_id                          = local.vpc_id
-  cidr_block                      = var.private_subnets[count.index]
-  availability_zone               = length(regexall("^[a-z]{2}-", element(var.azs, count.index))) > 0 ? element(var.azs, count.index) : null
-  availability_zone_id            = length(regexall("^[a-z]{2}-", element(var.azs, count.index))) == 0 ? element(var.azs, count.index) : null
+  cidr_block                      = var.private_subnets[element(keys(var.private_subnets), count.index)]["cidr"]
+  availability_zone               = length(regexall("^[a-z]{2}-", var.private_subnets[element(keys(var.private_subnets), count.index)]["az"])) > 0 ? var.private_subnets[element(keys(var.private_subnets), count.index)]["az"] : null
+  availability_zone_id            = length(regexall("^[a-z]{2}-", var.private_subnets[element(keys(var.private_subnets), count.index)]["az"])) == 0 ? var.private_subnets[element(keys(var.private_subnets), count.index)]["az"] : null
   assign_ipv6_address_on_creation = var.private_subnet_assign_ipv6_address_on_creation == null ? var.assign_ipv6_address_on_creation : var.private_subnet_assign_ipv6_address_on_creation
 
   ipv6_cidr_block = var.enable_ipv6 && length(var.private_subnet_ipv6_prefixes) > 0 ? cidrsubnet(aws_vpc.this[0].ipv6_cidr_block, 8, var.private_subnet_ipv6_prefixes[count.index]) : null
@@ -376,13 +401,14 @@ resource "aws_subnet" "private" {
       "Name" = format(
         "%s-${var.private_subnet_suffix}-%s",
         var.name,
-        element(var.azs, count.index),
+        element(keys(var.private_subnets), count.index),
       )
     },
     var.tags,
     var.private_subnet_tags,
   )
 }
+
 
 ##################
 # Database subnet
@@ -391,9 +417,9 @@ resource "aws_subnet" "database" {
   count = var.create_vpc && length(var.database_subnets) > 0 ? length(var.database_subnets) : 0
 
   vpc_id                          = local.vpc_id
-  cidr_block                      = var.database_subnets[count.index]
-  availability_zone               = length(regexall("^[a-z]{2}-", element(var.azs, count.index))) > 0 ? element(var.azs, count.index) : null
-  availability_zone_id            = length(regexall("^[a-z]{2}-", element(var.azs, count.index))) == 0 ? element(var.azs, count.index) : null
+  cidr_block                      = var.database_subnets[element(keys(var.database_subnets), count.index)]["cidr"]
+  availability_zone               = length(regexall("^[a-z]{2}-", var.database_subnets[element(keys(var.database_subnets), count.index)]["az"])) > 0 ? var.database_subnets[element(keys(var.database_subnets), count.index)]["az"] : null
+  availability_zone_id            = length(regexall("^[a-z]{2}-", var.database_subnets[element(keys(var.database_subnets), count.index)]["az"])) == 0 ? var.database_subnets[element(keys(var.database_subnets), count.index)]["az"] : null
   assign_ipv6_address_on_creation = var.database_subnet_assign_ipv6_address_on_creation == null ? var.assign_ipv6_address_on_creation : var.database_subnet_assign_ipv6_address_on_creation
 
   ipv6_cidr_block = var.enable_ipv6 && length(var.database_subnet_ipv6_prefixes) > 0 ? cidrsubnet(aws_vpc.this[0].ipv6_cidr_block, 8, var.database_subnet_ipv6_prefixes[count.index]) : null
@@ -403,7 +429,7 @@ resource "aws_subnet" "database" {
       "Name" = format(
         "%s-${var.database_subnet_suffix}-%s",
         var.name,
-        element(var.azs, count.index),
+        element(keys(var.database_subnets), count.index),
       )
     },
     var.tags,
@@ -433,10 +459,11 @@ resource "aws_db_subnet_group" "database" {
 resource "aws_subnet" "redshift" {
   count = var.create_vpc && length(var.redshift_subnets) > 0 ? length(var.redshift_subnets) : 0
 
-  vpc_id                          = local.vpc_id
-  cidr_block                      = var.redshift_subnets[count.index]
-  availability_zone               = length(regexall("^[a-z]{2}-", element(var.azs, count.index))) > 0 ? element(var.azs, count.index) : null
-  availability_zone_id            = length(regexall("^[a-z]{2}-", element(var.azs, count.index))) == 0 ? element(var.azs, count.index) : null
+  vpc_id               = local.vpc_id
+  cidr_block           = var.redshift_subnets[element(keys(var.redshift_subnets), count.index)]["cidr"]
+  availability_zone    = length(regexall("^[a-z]{2}-", var.redshift_subnets[element(keys(var.redshift_subnets), count.index)]["az"])) > 0 ? var.redshift_subnets[element(keys(var.redshift_subnets), count.index)]["az"] : null
+  availability_zone_id = length(regexall("^[a-z]{2}-", var.redshift_subnets[element(keys(var.redshift_subnets), count.index)]["az"])) == 0 ? var.redshift_subnets[element(keys(var.redshift_subnets), count.index)]["az"] : null
+
   assign_ipv6_address_on_creation = var.redshift_subnet_assign_ipv6_address_on_creation == null ? var.assign_ipv6_address_on_creation : var.redshift_subnet_assign_ipv6_address_on_creation
 
   ipv6_cidr_block = var.enable_ipv6 && length(var.redshift_subnet_ipv6_prefixes) > 0 ? cidrsubnet(aws_vpc.this[0].ipv6_cidr_block, 8, var.redshift_subnet_ipv6_prefixes[count.index]) : null
@@ -446,7 +473,7 @@ resource "aws_subnet" "redshift" {
       "Name" = format(
         "%s-${var.redshift_subnet_suffix}-%s",
         var.name,
-        element(var.azs, count.index),
+        element(keys(var.redshift_subnets), count.index),
       )
     },
     var.tags,
@@ -476,10 +503,11 @@ resource "aws_redshift_subnet_group" "redshift" {
 resource "aws_subnet" "elasticache" {
   count = var.create_vpc && length(var.elasticache_subnets) > 0 ? length(var.elasticache_subnets) : 0
 
-  vpc_id                          = local.vpc_id
-  cidr_block                      = var.elasticache_subnets[count.index]
-  availability_zone               = length(regexall("^[a-z]{2}-", element(var.azs, count.index))) > 0 ? element(var.azs, count.index) : null
-  availability_zone_id            = length(regexall("^[a-z]{2}-", element(var.azs, count.index))) == 0 ? element(var.azs, count.index) : null
+  vpc_id               = local.vpc_id
+  cidr_block           = var.elasticache_subnets[element(keys(var.elasticache_subnets), count.index)]["cidr"]
+  availability_zone    = length(regexall("^[a-z]{2}-", var.elasticache_subnets[element(keys(var.elasticache_subnets), count.index)]["az"])) > 0 ? var.elasticache_subnets[element(keys(var.elasticache_subnets), count.index)]["az"] : null
+  availability_zone_id = length(regexall("^[a-z]{2}-", var.elasticache_subnets[element(keys(var.elasticache_subnets), count.index)]["az"])) == 0 ? var.elasticache_subnets[element(keys(var.elasticache_subnets), count.index)]["az"] : null
+
   assign_ipv6_address_on_creation = var.elasticache_subnet_assign_ipv6_address_on_creation == null ? var.assign_ipv6_address_on_creation : var.elasticache_subnet_assign_ipv6_address_on_creation
 
   ipv6_cidr_block = var.enable_ipv6 && length(var.elasticache_subnet_ipv6_prefixes) > 0 ? cidrsubnet(aws_vpc.this[0].ipv6_cidr_block, 8, var.elasticache_subnet_ipv6_prefixes[count.index]) : null
@@ -489,7 +517,7 @@ resource "aws_subnet" "elasticache" {
       "Name" = format(
         "%s-${var.elasticache_subnet_suffix}-%s",
         var.name,
-        element(var.azs, count.index),
+        element(keys(var.elasticache_subnets), count.index),
       )
     },
     var.tags,
@@ -512,9 +540,9 @@ resource "aws_subnet" "intra" {
   count = var.create_vpc && length(var.intra_subnets) > 0 ? length(var.intra_subnets) : 0
 
   vpc_id                          = local.vpc_id
-  cidr_block                      = var.intra_subnets[count.index]
-  availability_zone               = length(regexall("^[a-z]{2}-", element(var.azs, count.index))) > 0 ? element(var.azs, count.index) : null
-  availability_zone_id            = length(regexall("^[a-z]{2}-", element(var.azs, count.index))) == 0 ? element(var.azs, count.index) : null
+  cidr_block                      = var.intra_subnets[element(keys(var.intra_subnets), count.index)]["cidr"]
+  availability_zone               = length(regexall("^[a-z]{2}-", var.intra_subnets[element(keys(var.intra_subnets), count.index)]["az"])) > 0 ? var.intra_subnets[element(keys(var.intra_subnets), count.index)]["az"] : null
+  availability_zone_id            = length(regexall("^[a-z]{2}-", var.intra_subnets[element(keys(var.intra_subnets), count.index)]["az"])) == 0 ? var.intra_subnets[element(keys(var.intra_subnets), count.index)]["az"] : null
   assign_ipv6_address_on_creation = var.intra_subnet_assign_ipv6_address_on_creation == null ? var.assign_ipv6_address_on_creation : var.intra_subnet_assign_ipv6_address_on_creation
 
   ipv6_cidr_block = var.enable_ipv6 && length(var.intra_subnet_ipv6_prefixes) > 0 ? cidrsubnet(aws_vpc.this[0].ipv6_cidr_block, 8, var.intra_subnet_ipv6_prefixes[count.index]) : null
@@ -524,7 +552,7 @@ resource "aws_subnet" "intra" {
       "Name" = format(
         "%s-${var.intra_subnet_suffix}-%s",
         var.name,
-        element(var.azs, count.index),
+        element(keys(var.intra_subnets), count.index),
       )
     },
     var.tags,
@@ -922,7 +950,7 @@ resource "aws_eip" "nat" {
       "Name" = format(
         "%s-%s",
         var.name,
-        element(var.azs, var.single_nat_gateway ? 0 : count.index),
+        element(local.azs, var.single_nat_gateway ? 0 : count.index),
       )
     },
     var.tags,
@@ -947,7 +975,7 @@ resource "aws_nat_gateway" "this" {
       "Name" = format(
         "%s-%s",
         var.name,
-        element(var.azs, var.single_nat_gateway ? 0 : count.index),
+        element(local.azs, var.single_nat_gateway ? 0 : count.index),
       )
     },
     var.tags,

@@ -54,10 +54,29 @@ module "vpc" {
   name = "my-vpc"
   cidr = "10.0.0.0/16"
 
-  azs             = ["eu-west-1a", "eu-west-1b", "eu-west-1c"]
-  private_subnets = ["10.0.1.0/24", "10.0.2.0/24", "10.0.3.0/24"]
-  public_subnets  = ["10.0.101.0/24", "10.0.102.0/24", "10.0.103.0/24"]
+  private_subnets = {
+    "subnet-1" = {
+      cidr = "10.0.1.0/24",
+      az   = "eu-west-1a"
+    },
+    "subnet-2" = {
+      cidr = "10.0.2.0/24",
+      az   = "eu-west-1a"
+    }
 
+  }
+  public_subnets = {
+    "subnet-3" = {
+      cidr = "10.0.101.0/24",
+      az   = "eu-west-1a"
+    },
+     "subnet-4" = {
+      cidr = "10.0.102.0/24",
+      az   = "eu-west-1b"
+    }
+
+
+ }
   enable_nat_gateway = true
   enable_vpn_gateway = true
 
@@ -127,11 +146,76 @@ If both `single_nat_gateway` and `one_nat_gateway_per_az` are set to `true`, the
 By default, the module will determine the number of NAT Gateways to create based on the the `max()` of the private subnet lists (`database_subnets`, `elasticache_subnets`, `private_subnets`, and `redshift_subnets`). The module **does not** take into account the number of `intra_subnets`, since the latter are designed to have no Internet access via NAT Gateway.  For example, if your configuration looks like the following:
 
 ```hcl
-database_subnets    = ["10.0.21.0/24", "10.0.22.0/24"]
-elasticache_subnets = ["10.0.31.0/24", "10.0.32.0/24"]
-private_subnets     = ["10.0.1.0/24", "10.0.2.0/24", "10.0.3.0/24", "10.0.4.0/24", "10.0.5.0/24"]
-redshift_subnets    = ["10.0.41.0/24", "10.0.42.0/24"]
-intra_subnets       = ["10.0.51.0/24", "10.0.52.0/24", "10.0.53.0/24"]
+database__subnets = {
+    "subnet-1" = {
+      cidr = "10.0.21.0/24",
+      az   = "eu-west-1a"
+    },
+    "subnet-2" = {
+      cidr = "10.0.22.0/24",
+      az   = "eu-west-1a"
+    }
+
+  }
+elasticache_subnets = {
+    "subnet-3" = {
+      cidr = "10.0.31.0/24",
+      az   = "eu-west-1a"
+    },
+    "subnet-4" = {
+      cidr = "10.0.32.0/24",
+      az   = "eu-west-1a"
+    }
+
+  }
+private_subnets = {
+    "subnet-5" = {
+      cidr = "10.0.1.0/24",
+      az   = "eu-west-1a"
+    },
+    "subnet-6" = {
+      cidr = "10.0.2.0/24",
+      az   = "eu-west-1a"
+    },
+    "subnet-7" = {
+      cidr = "10.0.3.0/24",
+      az   = "eu-west-1a"
+    },
+    "subnet-8" = {
+      cidr = "10.0.4.0/24",
+      az   = "eu-west-1a"
+    },
+    "subnet-9" = {
+      cidr = "10.0.5.0/24",
+      az   = "eu-west-1a"
+    }
+  }
+redshift_subnets = {
+    "subnet-10" = {
+      cidr = "10.0.41.0/24",
+      az   = "eu-west-1a"
+    },
+    "subnet-11" = {
+      cidr = "10.0.42.0/24",
+      az   = "eu-west-1a"
+    }
+
+  }
+
+intra_subnets = {
+    "subnet-12" = {
+      cidr = "10.0.51.0/24",
+      az   = "eu-west-1a"
+    },
+    "subnet-13" = {
+      cidr = "10.0.52.0/24",
+      az   = "eu-west-1a"
+    },
+    "subnet-14" = {
+      cidr = "10.0.53.0/24",
+      az   = "eu-west-1a"
+    }
+  }
 ```
 
 Then `5` NAT Gateways will be created since `5` private subnet CIDR blocks were specified.
@@ -263,7 +347,6 @@ It is possible to integrate this VPC module with [terraform-aws-transit-gateway 
 | auto\_scaling\_plans\_endpoint\_private\_dns\_enabled | Whether or not to associate a private hosted zone with the specified VPC for Auto Scaling Plans endpoint | `bool` | `false` | no |
 | auto\_scaling\_plans\_endpoint\_security\_group\_ids | The ID of one or more security groups to associate with the network interface for Auto Scaling Plans endpoint | `list(string)` | `[]` | no |
 | auto\_scaling\_plans\_endpoint\_subnet\_ids | The ID of one or more subnets in which to create a network interface for Auto Scaling Plans endpoint. Only a single subnet within an AZ is supported. Ifomitted, private subnets will be used. | `list(string)` | `[]` | no |
-| azs | A list of availability zones names or ids in the region | `list(string)` | `[]` | no |
 | cidr | The CIDR block for the VPC. Default value is a valid CIDR, but not acceptable by AWS and should be overridden | `string` | `"0.0.0.0/0"` | no |
 | cloud\_directory\_endpoint\_private\_dns\_enabled | Whether or not to associate a private hosted zone with the specified VPC for Cloud Directory endpoint | `bool` | `false` | no |
 | cloud\_directory\_endpoint\_security\_group\_ids | The ID of one or more security groups to associate with the network interface for Cloud Directory endpoint | `list(string)` | `[]` | no |
@@ -317,7 +400,7 @@ It is possible to integrate this VPC module with [terraform-aws-transit-gateway 
 | database\_subnet\_ipv6\_prefixes | Assigns IPv6 database subnet id based on the Amazon provided /56 prefix base 10 integer (0-256). Must be of equal length to the corresponding IPv4 subnet list | `list(string)` | `[]` | no |
 | database\_subnet\_suffix | Suffix to append to database subnets name | `string` | `"db"` | no |
 | database\_subnet\_tags | Additional tags for the database subnets | `map(string)` | `{}` | no |
-| database\_subnets | A list of database subnets | `list(string)` | `[]` | no |
+| database\_subnets | A list of database subnets | <pre>map(object({<br>    cidr = string,<br>    az   = string<br>  }))</pre> | `{}` | no |
 | datasync\_endpoint\_private\_dns\_enabled | Whether or not to associate a private hosted zone with the specified VPC for Data Sync endpoint | `bool` | `false` | no |
 | datasync\_endpoint\_security\_group\_ids | The ID of one or more security groups to associate with the network interface for Data Sync endpoint | `list(string)` | `[]` | no |
 | datasync\_endpoint\_subnet\_ids | The ID of one or more subnets in which to create a network interface for Data Sync endpoint. Only a single subnet within an AZ is supported. Ifomitted, private subnets will be used. | `list(string)` | `[]` | no |
@@ -382,7 +465,7 @@ It is possible to integrate this VPC module with [terraform-aws-transit-gateway 
 | elasticache\_subnet\_ipv6\_prefixes | Assigns IPv6 elasticache subnet id based on the Amazon provided /56 prefix base 10 integer (0-256). Must be of equal length to the corresponding IPv4 subnet list | `list(string)` | `[]` | no |
 | elasticache\_subnet\_suffix | Suffix to append to elasticache subnets name | `string` | `"elasticache"` | no |
 | elasticache\_subnet\_tags | Additional tags for the elasticache subnets | `map(string)` | `{}` | no |
-| elasticache\_subnets | A list of elasticache subnets | `list(string)` | `[]` | no |
+| elasticache\_subnets | A list of elasticache subnets | <pre>map(object({<br>    cidr = string,<br>    az   = string<br>  }))</pre> | `{}` | no |
 | elasticbeanstalk\_endpoint\_private\_dns\_enabled | Whether or not to associate a private hosted zone with the specified VPC for Elastic Beanstalk endpoint | `bool` | `false` | no |
 | elasticbeanstalk\_endpoint\_security\_group\_ids | The ID of one or more security groups to associate with the network interface for Elastic Beanstalk endpoint | `list(string)` | `[]` | no |
 | elasticbeanstalk\_endpoint\_subnet\_ids | The ID of one or more subnets in which to create a network interface for Elastic Beanstalk endpoint. Only a single subnet within an AZ is supported. If omitted, private subnets will be used. | `list(string)` | `[]` | no |
@@ -501,7 +584,7 @@ It is possible to integrate this VPC module with [terraform-aws-transit-gateway 
 | intra\_subnet\_ipv6\_prefixes | Assigns IPv6 intra subnet id based on the Amazon provided /56 prefix base 10 integer (0-256). Must be of equal length to the corresponding IPv4 subnet list | `list(string)` | `[]` | no |
 | intra\_subnet\_suffix | Suffix to append to intra subnets name | `string` | `"intra"` | no |
 | intra\_subnet\_tags | Additional tags for the intra subnets | `map(string)` | `{}` | no |
-| intra\_subnets | A list of intra subnets | `list(string)` | `[]` | no |
+| intra\_subnets | A list of intra subnets | <pre>map(object({<br>    cidr = string,<br>    az   = string<br>  }))</pre> | `{}` | no |
 | kinesis\_firehose\_endpoint\_private\_dns\_enabled | Whether or not to associate a private hosted zone with the specified VPC for Kinesis Firehose endpoint | `bool` | `false` | no |
 | kinesis\_firehose\_endpoint\_security\_group\_ids | The ID of one or more security groups to associate with the network interface for Kinesis Firehose endpoint | `list(string)` | `[]` | no |
 | kinesis\_firehose\_endpoint\_subnet\_ids | The ID of one or more subnets in which to create a network interface for Kinesis Firehose endpoint. Only a single subnet within an AZ is supported. If omitted, private subnets will be used. | `list(string)` | `[]` | no |
@@ -534,7 +617,7 @@ It is possible to integrate this VPC module with [terraform-aws-transit-gateway 
 | private\_subnet\_ipv6\_prefixes | Assigns IPv6 private subnet id based on the Amazon provided /56 prefix base 10 integer (0-256). Must be of equal length to the corresponding IPv4 subnet list | `list(string)` | `[]` | no |
 | private\_subnet\_suffix | Suffix to append to private subnets name | `string` | `"private"` | no |
 | private\_subnet\_tags | Additional tags for the private subnets | `map(string)` | `{}` | no |
-| private\_subnets | A list of private subnets inside the VPC | `list(string)` | `[]` | no |
+| private\_subnets | A list of private subnets inside the VPC | <pre>map(object({<br>    cidr = string,<br>    az   = string<br>  }))</pre> | `{}` | no |
 | propagate\_intra\_route\_tables\_vgw | Should be true if you want route table propagation | `bool` | `false` | no |
 | propagate\_private\_route\_tables\_vgw | Should be true if you want route table propagation | `bool` | `false` | no |
 | propagate\_public\_route\_tables\_vgw | Should be true if you want route table propagation | `bool` | `false` | no |
@@ -547,7 +630,7 @@ It is possible to integrate this VPC module with [terraform-aws-transit-gateway 
 | public\_subnet\_ipv6\_prefixes | Assigns IPv6 public subnet id based on the Amazon provided /56 prefix base 10 integer (0-256). Must be of equal length to the corresponding IPv4 subnet list | `list(string)` | `[]` | no |
 | public\_subnet\_suffix | Suffix to append to public subnets name | `string` | `"public"` | no |
 | public\_subnet\_tags | Additional tags for the public subnets | `map(string)` | `{}` | no |
-| public\_subnets | A list of public subnets inside the VPC | `list(string)` | `[]` | no |
+| public\_subnets | A list of public subnets inside the VPC | <pre>map(object({<br>    cidr = string,<br>    az   = string<br>  }))</pre> | `{}` | no |
 | qldb\_session\_endpoint\_private\_dns\_enabled | Whether or not to associate a private hosted zone with the specified VPC for QLDB Session endpoint | `bool` | `false` | no |
 | qldb\_session\_endpoint\_security\_group\_ids | The ID of one or more security groups to associate with the network interface for QLDB Session endpoint | `list(string)` | `[]` | no |
 | qldb\_session\_endpoint\_subnet\_ids | The ID of one or more subnets in which to create a network interface for QLDB Session endpoint. Only a single subnet within an AZ is supported. Ifomitted, private subnets will be used. | `list(string)` | `[]` | no |
@@ -564,7 +647,7 @@ It is possible to integrate this VPC module with [terraform-aws-transit-gateway 
 | redshift\_subnet\_ipv6\_prefixes | Assigns IPv6 redshift subnet id based on the Amazon provided /56 prefix base 10 integer (0-256). Must be of equal length to the corresponding IPv4 subnet list | `list(string)` | `[]` | no |
 | redshift\_subnet\_suffix | Suffix to append to redshift subnets name | `string` | `"redshift"` | no |
 | redshift\_subnet\_tags | Additional tags for the redshift subnets | `map(string)` | `{}` | no |
-| redshift\_subnets | A list of redshift subnets | `list(string)` | `[]` | no |
+| redshift\_subnets | A list of redshift subnets | <pre>map(object({<br>    cidr = string,<br>    az   = string<br>  }))</pre> | `{}` | no |
 | rekognition\_endpoint\_private\_dns\_enabled | Whether or not to associate a private hosted zone with the specified VPC for Rekognition endpoint | `bool` | `false` | no |
 | rekognition\_endpoint\_security\_group\_ids | The ID of one or more security groups to associate with the network interface for Rekognition endpoint | `list(string)` | `[]` | no |
 | rekognition\_endpoint\_subnet\_ids | The ID of one or more subnets in which to create a network interface for Rekognition endpoint. Only a single subnet within an AZ is supported. If omitted, private subnets will be used. | `list(string)` | `[]` | no |
@@ -638,7 +721,6 @@ It is possible to integrate this VPC module with [terraform-aws-transit-gateway 
 
 | Name | Description |
 |------|-------------|
-| azs | A list of availability zones specified as argument to this module |
 | cgw\_arns | List of ARNs of Customer Gateway |
 | cgw\_ids | List of IDs of Customer Gateway |
 | database\_internet\_gateway\_route\_id | ID of the database internet gateway route. |

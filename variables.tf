@@ -150,38 +150,56 @@ variable "elasticache_subnet_suffix" {
 
 variable "public_subnets" {
   description = "A list of public subnets inside the VPC"
-  type        = list(string)
-  default     = []
+  type = map(object({
+    cidr = string,
+    az   = string
+  }))
+  default = {}
 }
 
 variable "private_subnets" {
   description = "A list of private subnets inside the VPC"
-  type        = list(string)
-  default     = []
+  type = map(object({
+    cidr = string,
+    az   = string
+  }))
+  default = {}
 }
 
 variable "database_subnets" {
   description = "A list of database subnets"
-  type        = list(string)
-  default     = []
+  type = map(object({
+    cidr = string,
+    az   = string
+  }))
+  default = {}
 }
 
 variable "redshift_subnets" {
   description = "A list of redshift subnets"
-  type        = list(string)
-  default     = []
+  type = map(object({
+    cidr = string,
+    az   = string
+  }))
+  default = {}
 }
 
 variable "elasticache_subnets" {
   description = "A list of elasticache subnets"
-  type        = list(string)
-  default     = []
+  type = map(object({
+    cidr = string,
+    az   = string
+  }))
+  default = {}
 }
 
 variable "intra_subnets" {
   description = "A list of intra subnets"
-  type        = list(string)
-  default     = []
+  type = map(object({
+    cidr = string,
+    az   = string
+  }))
+  default = {}
 }
 
 variable "create_database_subnet_route_table" {
@@ -236,12 +254,6 @@ variable "create_database_nat_gateway_route" {
   description = "Controls if a nat gateway route should be created to give internet access to the database subnets"
   type        = bool
   default     = false
-}
-
-variable "azs" {
-  description = "A list of availability zones names or ids in the region"
-  type        = list(string)
-  default     = []
 }
 
 variable "enable_dns_hostnames" {

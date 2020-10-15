@@ -14,13 +14,90 @@ module "vpc" {
 
   cidr = "20.10.0.0/16" # 10.0.0.0/8 is reserved for EC2-Classic
 
-  azs                 = ["eu-west-1a", "eu-west-1b", "eu-west-1c"]
-  private_subnets     = ["20.10.1.0/24", "20.10.2.0/24", "20.10.3.0/24"]
-  public_subnets      = ["20.10.11.0/24", "20.10.12.0/24", "20.10.13.0/24"]
-  database_subnets    = ["20.10.21.0/24", "20.10.22.0/24", "20.10.23.0/24"]
-  elasticache_subnets = ["20.10.31.0/24", "20.10.32.0/24", "20.10.33.0/24"]
-  redshift_subnets    = ["20.10.41.0/24", "20.10.42.0/24", "20.10.43.0/24"]
-  intra_subnets       = ["20.10.51.0/24", "20.10.52.0/24", "20.10.53.0/24"]
+  private_subnets = {
+    "subnet-1" = {
+      cidr = "20.10.1.0/24",
+      az   = "eu-west-1a"
+    },
+    "subnet-2" = {
+      cidr = "20.10.2.0/24",
+      az   = "eu-west-1b"
+    },
+    "subnet-3" = {
+      cidr = "20.10.3.0/24",
+      az   = "eu-west-1c"
+    }
+  }
+  public_subnets = {
+    "subnet-4" = {
+      cidr = "20.10.11.0/24",
+      az   = "eu-west-1a"
+    },
+    "subnet-5" = {
+      cidr = "20.10.12.0/24",
+      az   = "eu-west-1b"
+    },
+    "subnet-6" = {
+      cidr = "20.10.13.0/24",
+      az   = "eu-west-1c"
+    }
+  }
+  database_subnets = {
+    "subnet-7" = {
+      cidr = "20.10.21.0/24",
+      az   = "eu-west-1a"
+    },
+    "subnet-8" = {
+      cidr = "20.10.22.0/24",
+      az   = "eu-west-1b"
+    },
+    "subnet-9" = {
+      cidr = "20.10.23.0/24",
+      az   = "eu-west-1c"
+    }
+  }
+  elasticache_subnets = {
+    "subnet-10" = {
+      cidr = "20.10.31.0/24",
+      az   = "eu-west-1a"
+    },
+    "subnet-11" = {
+      cidr = "20.10.32.0/24",
+      az   = "eu-west-1b"
+    },
+    "subnet-12" = {
+      cidr = "20.10.33.0/24",
+      az   = "eu-west-1c"
+    }
+  }
+  redshift_subnets = {
+    "subnet-13" = {
+      cidr = "20.10.41.0/24",
+      az   = "eu-west-1a"
+    },
+    "subnet-14" = {
+      cidr = "20.10.42.0/24",
+      az   = "eu-west-1b"
+    },
+    "subnet-15" = {
+      cidr = "20.10.43.0/24",
+      az   = "eu-west-1c"
+    }
+  }
+  intra_subnets = {
+    "subnet-16" = {
+      cidr = "20.10.51.0/24",
+      az   = "eu-west-1a"
+    },
+    "subnet-17" = {
+      cidr = "20.0.52.0/24",
+      az   = "eu-west-1b"
+    },
+    "subnet-18" = {
+      cidr = "20.0.53.0/24",
+      az   = "eu-west-1c"
+    }
+  }
 
   create_database_subnet_group = false
 
