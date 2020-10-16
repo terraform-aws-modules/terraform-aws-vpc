@@ -7,6 +7,12 @@ All notable changes to this project will be documented in this file.
 
 
 
+<a name="v2.58.0"></a>
+## [v2.58.0] - 2020-10-16
+
+- feat: Added support for Terraform 0.14 ([#525](https://github.com/terraform-aws-modules/terraform-aws-vpc/issues/525))
+
+
 <a name="v2.57.0"></a>
 ## [v2.57.0] - 2020-10-06
 
@@ -1017,7 +1023,8 @@ All notable changes to this project will be documented in this file.
 - Initial commit
 
 
-[Unreleased]: https://github.com/terraform-aws-modules/terraform-aws-vpc/compare/v2.57.0...HEAD
+[Unreleased]: https://github.com/terraform-aws-modules/terraform-aws-vpc/compare/v2.58.0...HEAD
+[v2.58.0]: https://github.com/terraform-aws-modules/terraform-aws-vpc/compare/v2.57.0...v2.58.0
 [v2.57.0]: https://github.com/terraform-aws-modules/terraform-aws-vpc/compare/v2.56.0...v2.57.0
 [v2.56.0]: https://github.com/terraform-aws-modules/terraform-aws-vpc/compare/v2.55.0...v2.56.0
 [v2.55.0]: https://github.com/terraform-aws-modules/terraform-aws-vpc/compare/v2.54.0...v2.55.0
