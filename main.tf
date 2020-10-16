@@ -5,7 +5,7 @@ locals {
     length(var.database_subnets),
     length(var.redshift_subnets),
   )
-  azs = flatten([
+  azs = distinct(flatten([
     [
       for elem in values(var.private_subnets) :
       elem["az"]
@@ -26,7 +26,7 @@ locals {
       for elem in values(var.elasticache_subnets) :
       elem["az"]
     ],
-  ])
+  ]))
 
   nat_gateway_count = var.single_nat_gateway ? 1 : var.one_nat_gateway_per_az ? length(local.azs) : local.max_subnet_length
 
@@ -1016,7 +1016,7 @@ resource "aws_route_table_association" "database" {
 
   subnet_id = aws_subnet.database[each.key].id
   route_table_id = element(
-    coalescelist([for u in aws_subnet.database : u.id], [for u in aws_subnet.private : u.id]),
+    coalescelist(aws_route_table.database.*.id, aws_route_table.private.*.id),
     var.single_nat_gateway || var.create_database_subnet_route_table ? 0 : index(keys(var.database_subnets), each.key),
   )
 }
@@ -1026,7 +1026,7 @@ resource "aws_route_table_association" "redshift" {
 
   subnet_id = aws_subnet.redshift[each.key].id
   route_table_id = element(
-    coalescelist([for u in aws_subnet.redshift : u.id], [for u in aws_subnet.private : u.id]),
+    coalescelist(aws_route_table.redshift.*.id, aws_route_table.private.*.id),
     var.single_nat_gateway || var.create_redshift_subnet_route_table ? 0 : index(keys(var.redshift_subnets), each.key),
   )
 }
@@ -1036,7 +1036,7 @@ resource "aws_route_table_association" "redshift_public" {
 
   subnet_id = aws_subnet.redshift[each.key].id
   route_table_id = element(
-    coalescelist([for u in aws_subnet.redshift : u.id], [for u in aws_subnet.public : u.id]),
+    coalescelist(aws_route_table.redshift.*.id, aws_route_table.public.*.id),
     var.single_nat_gateway || var.create_redshift_subnet_route_table ? 0 : index(keys(var.redshift_subnets), each.key),
   )
 }
@@ -1047,8 +1047,8 @@ resource "aws_route_table_association" "elasticache" {
   subnet_id = aws_subnet.elasticache[each.key].id
   route_table_id = element(
     coalescelist(
-      [for u in aws_subnet.elasticache : u.id],
-      [for u in aws_subnet.private : u.id],
+      aws_route_table.elasticache.*.id,
+      aws_route_table.private.*.id,
     ),
     var.single_nat_gateway || var.create_elasticache_subnet_route_table ? 0 : index(keys(var.elasticache_subnets), each.key),
   )
