@@ -570,10 +570,6 @@ resource "aws_default_network_acl" "this" {
     var.tags,
     var.default_network_acl_tags,
   )
-
-  lifecycle {
-    ignore_changes = [subnet_ids]
-  }
 }
 
 ########################
