@@ -70,62 +70,62 @@ output "vpc_owner_id" {
 
 output "private_subnets" {
   description = "List of IDs of private subnets"
-  value       = [for u in aws_subnet.private : u.id]
+  value       = [for u in aws_subnet.private: u.id]
 }
 
 output "private_subnet_arns" {
   description = "List of ARNs of private subnets"
-  value       = [for u in aws_subnet.private : u.arn]
+  value       = [for u in aws_subnet.private: u.arn]
 }
 
 output "private_subnets_cidr_blocks" {
   description = "List of cidr_blocks of private subnets"
-  value       = [for u in aws_subnet.private : u.cidr_block]
+  value       = [for u in aws_subnet.private: u.cidr_block]
 }
 
 output "private_subnets_ipv6_cidr_blocks" {
   description = "List of IPv6 cidr_blocks of private subnets in an IPv6 enabled VPC"
-  value       = [for u in aws_subnet.private : u.ipv6_cidr_block]
+  value       = [for u in aws_subnet.private: u.ipv6_cidr_block]
 }
 
 output "public_subnets" {
   description = "List of IDs of public subnets"
-  value       = [for u in aws_subnet.public : u.id]
+  value       = [for u in aws_subnet.public: u.id]
 }
 
 output "public_subnet_arns" {
   description = "List of ARNs of public subnets"
-  value       = [for u in aws_subnet.public : u.arn]
+  value       = [for u in aws_subnet.public: u.arn]
 }
 
 output "public_subnets_cidr_blocks" {
   description = "List of cidr_blocks of public subnets"
-  value       = [for u in aws_subnet.public : u.cidr_block]
+  value       = [for u in aws_subnet.public: u.cidr_block]
 }
 
 output "public_subnets_ipv6_cidr_blocks" {
   description = "List of IPv6 cidr_blocks of public subnets in an IPv6 enabled VPC"
-  value       = [for u in aws_subnet.public : u.ipv6_cidr_block]
+  value       = [for u in aws_subnet.public: u.ipv6_cidr_block]
 }
 
 output "database_subnets" {
   description = "List of IDs of database subnets"
-  value       = [for u in aws_subnet.database : u.id]
+  value       = [for u in aws_subnet.database: u.id]
 }
 
 output "database_subnet_arns" {
   description = "List of ARNs of database subnets"
-  value       = [for u in aws_subnet.database : u.arn]
+  value       = [for u in aws_subnet.database: u.arn]
 }
 
 output "database_subnets_cidr_blocks" {
   description = "List of cidr_blocks of database subnets"
-  value       = [for u in aws_subnet.database : u.cidr_block]
+  value       = [for u in aws_subnet.database: u.cidr_block]
 }
 
 output "database_subnets_ipv6_cidr_blocks" {
   description = "List of IPv6 cidr_blocks of database subnets in an IPv6 enabled VPC"
-  value       = [for u in aws_subnet.database : u.ipv6_cidr_block]
+  value       = [for u in aws_subnet.database: u.ipv6_cidr_block]
 }
 
 output "database_subnet_group" {
@@ -135,22 +135,22 @@ output "database_subnet_group" {
 
 output "redshift_subnets" {
   description = "List of IDs of redshift subnets"
-  value       = [for u in aws_subnet.redshift : u.id]
+  value       = [for u in aws_subnet.redshift: u.id]
 }
 
 output "redshift_subnet_arns" {
   description = "List of ARNs of redshift subnets"
-  value       = [for u in aws_subnet.redshift : u.arn]
+  value       = [for u in aws_subnet.redshift: u.arn]
 }
 
 output "redshift_subnets_cidr_blocks" {
   description = "List of cidr_blocks of redshift subnets"
-  value       = [for u in aws_subnet.redshift : u.cidr_block]
+  value       = [for u in aws_subnet.redshift: u.cidr_block]
 }
 
 output "redshift_subnets_ipv6_cidr_blocks" {
   description = "List of IPv6 cidr_blocks of redshift subnets in an IPv6 enabled VPC"
-  value       = [for u in aws_subnet.redshift : u.ipv6_cidr_block]
+  value       = [for u in aws_subnet.redshift: u.ipv6_cidr_block]
 }
 
 output "redshift_subnet_group" {
@@ -160,42 +160,42 @@ output "redshift_subnet_group" {
 
 output "elasticache_subnets" {
   description = "List of IDs of elasticache subnets"
-  value       = [for u in aws_subnet.elasticache : u.id]
+  value       = [for u in aws_subnet.elasticache: u.id]
 }
 
 output "elasticache_subnet_arns" {
   description = "List of ARNs of elasticache subnets"
-  value       = [for u in aws_subnet.elasticache : u.arn]
+  value       = [for u in aws_subnet.elasticache: u.arn]
 }
 
 output "elasticache_subnets_cidr_blocks" {
   description = "List of cidr_blocks of elasticache subnets"
-  value       = [for u in aws_subnet.elasticache : u.cidr_block]
+  value       = [for u in aws_subnet.elasticache: u.cidr_block]
 }
 
 output "elasticache_subnets_ipv6_cidr_blocks" {
   description = "List of IPv6 cidr_blocks of elasticache subnets in an IPv6 enabled VPC"
-  value       = [for u in aws_subnet.elasticache : u.ipv6_cidr_block]
+  value       = [for u in aws_subnet.elasticache: u.ipv6_cidr_block]
 }
 
 output "intra_subnets" {
   description = "List of IDs of intra subnets"
-  value       = [for u in aws_subnet.intra : u.id]
+  value       = [for u in aws_subnet.intra: u.id]
 }
 
 output "intra_subnet_arns" {
   description = "List of ARNs of intra subnets"
-  value       = [for u in aws_subnet.intra : u.arn]
+  value       = [for u in aws_subnet.intra: u.arn]
 }
 
 output "intra_subnets_cidr_blocks" {
   description = "List of cidr_blocks of intra subnets"
-  value       = [for u in aws_subnet.intra : u.cidr_block]
+  value       = [for u in aws_subnet.intra: u.cidr_block]
 }
 
 output "intra_subnets_ipv6_cidr_blocks" {
   description = "List of IPv6 cidr_blocks of intra subnets in an IPv6 enabled VPC"
-  value       = [for u in aws_subnet.intra : u.ipv6_cidr_block]
+  value       = [for u in aws_subnet.intra: u.ipv6_cidr_block]
 }
 
 output "elasticache_subnet_group" {
@@ -275,41 +275,41 @@ output "private_ipv6_egress_route_ids" {
 
 output "private_route_table_association_ids" {
   description = "List of IDs of the private route table association"
-  value       = [for u in aws_route_table_association.private : u.id]
+  value       = [for u in aws_route_table_association.private: u.id]
 }
 
 output "database_route_table_association_ids" {
   description = "List of IDs of the database route table association"
-  value       = [for u in aws_route_table_association.database : u.id]
+  value       = [for u in aws_route_table_association.database: u.id]
 }
 
 output "redshift_route_table_association_ids" {
   description = "List of IDs of the redshift route table association"
-  value       = [for u in aws_route_table_association.redshift : u.id]
+  value       = [for u in aws_route_table_association.redshift: u.id]
 
 }
 
 output "redshift_public_route_table_association_ids" {
   description = "List of IDs of the public redshidt route table association"
-  value       = [for u in aws_route_table_association.redshift_public : u.id]
+  value       = [for u in aws_route_table_association.redshift_public: u.id]
 
 }
 
 output "elasticache_route_table_association_ids" {
   description = "List of IDs of the elasticache route table association"
-  value       = [for u in aws_route_table_association.elasticache : u.id]
+  value       = [for u in aws_route_table_association.elasticache: u.id]
 
 }
 
 output "intra_route_table_association_ids" {
   description = "List of IDs of the intra route table association"
-  value       = [for u in aws_route_table_association.intra : u.id]
+  value       = [for u in aws_route_table_association.intra: u.id]
 
 }
 
 output "public_route_table_association_ids" {
   description = "List of IDs of the public route table association"
-  value       = [for u in aws_route_table_association.public : u.id]
+  value       = [for u in aws_route_table_association.public: u.id]
 
 }
 
