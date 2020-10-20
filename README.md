@@ -224,14 +224,14 @@ It is possible to integrate this VPC module with [terraform-aws-transit-gateway 
 
 | Name | Version |
 |------|---------|
-| terraform | >= 0.12.7, < 0.14 |
-| aws | >= 2.68, < 4.0 |
+| terraform | >= 0.12.7 |
+| aws | >= 2.68 |
 
 ## Providers
 
 | Name | Version |
 |------|---------|
-| aws | >= 2.68, < 4.0 |
+| aws | >= 2.68 |
 
 ## Inputs
 

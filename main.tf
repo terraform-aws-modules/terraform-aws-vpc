@@ -217,12 +217,6 @@ resource "aws_route_table" "private" {
     var.tags,
     var.private_route_table_tags,
   )
-
-  lifecycle {
-    # When attaching VPN gateways it is common to define aws_vpn_gateway_route_propagation
-    # resources that manipulate the attributes of the routing table (typically for the private subnets)
-    ignore_changes = [propagating_vgws]
-  }
 }
 
 #################
@@ -580,10 +574,6 @@ resource "aws_default_network_acl" "this" {
     var.tags,
     var.default_network_acl_tags,
   )
-
-  lifecycle {
-    ignore_changes = [subnet_ids]
-  }
 }
 
 ########################
