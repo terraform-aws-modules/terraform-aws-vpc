@@ -31,6 +31,8 @@ module "vpc" {
   private_dedicated_network_acl     = true
   elasticache_dedicated_network_acl = true
 
+  manage_default_network_acl = true
+
   enable_ipv6 = true
 
   enable_nat_gateway = false
@@ -200,4 +202,3 @@ locals {
     ]
   }
 }
-
