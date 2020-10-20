@@ -8,11 +8,44 @@ module "vpc" {
 
   cidr = "10.0.0.0/16"
 
-  azs                 = ["eu-west-1a", "eu-west-1b", "eu-west-1c"]
-  public_subnets      = ["10.0.0.0/22", "10.0.4.0/22", "10.0.8.0/22"]
-  private_subnets     = []
-  database_subnets    = ["10.0.128.0/24", "10.0.129.0/24"]
-  elasticache_subnets = ["10.0.131.0/24", "10.0.132.0/24", "10.0.133.0/24"]
+  public_subnets = {
+    "subnet-1" = {
+      cidr = "10.0.0.0/22",
+      az   = "eu-west-1a"
+    },
+    "subnet-2" = {
+      cidr = "10.0.4.0/22",
+      az   = "eu-west-1b"
+    },
+    "subnet-3" = {
+      cidr = "10.0.8.0/22",
+      az   = "eu-west-1c"
+    }
+  }
+  database_subnets = {
+    "subnet-4" = {
+      cidr = "10.0.128.0/24",
+      az   = "eu-west-1a"
+    },
+    "subnet-5" = {
+      cidr = "10.0.129.0/24",
+      az   = "eu-west-1b"
+    }
+  }
+  elasticache_subnets = {
+    "subnet-6" = {
+      cidr = "10.0.131.0/24",
+      az   = "eu-west-1a"
+    },
+    "subnet-7" = {
+      cidr = "10.0.132.0/24",
+      az   = "eu-west-1b"
+    },
+    "subnet-8" = {
+      cidr = "10.0.133.0/24",
+      az   = "eu-west-1c"
+    }
+  }
 
   enable_dns_support   = true
   enable_dns_hostnames = true

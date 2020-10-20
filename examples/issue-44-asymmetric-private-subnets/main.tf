@@ -12,10 +12,36 @@ module "vpc" {
 
   cidr = "10.0.0.0/16"
 
-  azs              = ["eu-west-1a", "eu-west-1b", "eu-west-1c"]
-  private_subnets  = ["10.0.1.0/24"]
-  public_subnets   = ["10.0.101.0/24", "10.0.102.0/24"]
-  database_subnets = ["10.0.21.0/24", "10.0.22.0/24", "10.0.23.0/24"]
+  private_subnets = {
+    "subnet-1" = {
+      cidr = "10.0.1.0/24",
+      az   = "eu-west-1a"
+    }
+  }
+  public_subnets = {
+    "subnet-2" = {
+      cidr = "10.0.101.0/24",
+      az   = "eu-west-1a"
+    },
+    "subnet-3" = {
+      cidr = "10.0.102.0/24",
+      az   = "eu-west-1b"
+    }
+  }
+  database_subnets = {
+    "subnet-4" = {
+      cidr = "10.0.21.0/24",
+      az   = "eu-west-1a"
+    },
+    "subnet-5" = {
+      cidr = "10.0.22.0/24",
+      az   = "eu-west-1b"
+    },
+    "subnet-6" = {
+      cidr = "10.0.23.0/24",
+      az   = "eu-west-1c"
+    }
+  }
 
   create_database_subnet_group = true
   enable_nat_gateway           = true
