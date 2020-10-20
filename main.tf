@@ -1,4 +1,4 @@
-ocals {
+locals {
   max_subnet_length = max(
     length(var.private_subnets),
     length(var.elasticache_subnets),
