@@ -274,6 +274,12 @@ It is possible to integrate this VPC module with [terraform-aws-transit-gateway 
 | cloudtrail\_endpoint\_private\_dns\_enabled | Whether or not to associate a private hosted zone with the specified VPC for CloudTrail endpoint | `bool` | `false` | no |
 | cloudtrail\_endpoint\_security\_group\_ids | The ID of one or more security groups to associate with the network interface for CloudTrail endpoint | `list(string)` | `[]` | no |
 | cloudtrail\_endpoint\_subnet\_ids | The ID of one or more subnets in which to create a network interface for CloudTrail endpoint. Only a single subnet within an AZ is supported. If omitted, private subnets will be used. | `list(string)` | `[]` | no |
+| codeartifact\_api\_endpoint\_private\_dns\_enabled | Whether or not to associate a private hosted zone with the specified VPC for Codeartifact API endpoint | `bool` | `false` | no |
+| codeartifact\_api\_endpoint\_security\_group\_ids | The ID of one or more security groups to associate with the network interface for Codeartifact API endpoint | `list(string)` | `[]` | no |
+| codeartifact\_api\_endpoint\_subnet\_ids | The ID of one or more subnets in which to create a network interface for Codeartifact API endpoint. Only a single subnet within an AZ is supported. If omitted, private subnets will be used. | `list(string)` | `[]` | no |
+| codeartifact\_repositories\_endpoint\_private\_dns\_enabled | Whether or not to associate a private hosted zone with the specified VPC for Codeartifact repositories endpoint | `bool` | `false` | no |
+| codeartifact\_repositories\_endpoint\_security\_group\_ids | The ID of one or more security groups to associate with the network interface for Codeartifact repositories endpoint | `list(string)` | `[]` | no |
+| codeartifact\_repositories\_endpoint\_subnet\_ids | The ID of one or more subnets in which to create a network interface for Codeartifact repositories endpoint. Only a single subnet within an AZ is supported. If omitted, private subnets will be used. | `list(string)` | `[]` | no |
 | codebuild\_endpoint\_private\_dns\_enabled | Whether or not to associate a private hosted zone with the specified VPC for Codebuild endpoint | `bool` | `false` | no |
 | codebuild\_endpoint\_security\_group\_ids | The ID of one or more security groups to associate with the network interface for Codebuild endpoint | `list(string)` | `[]` | no |
 | codebuild\_endpoint\_subnet\_ids | The ID of one or more subnets in which to create a network interface for Codebuilt endpoint. Only a single subnet within an AZ is supported. If omitted, private subnets will be used. | `list(string)` | `[]` | no |
@@ -408,8 +414,8 @@ It is possible to integrate this VPC module with [terraform-aws-transit-gateway 
 | enable\_cloud\_directory\_endpoint | Should be true if you want to provision an Cloud Directory endpoint to the VPC | `bool` | `false` | no |
 | enable\_cloudformation\_endpoint | Should be true if you want to provision a Cloudformation endpoint to the VPC | `bool` | `false` | no |
 | enable\_cloudtrail\_endpoint | Should be true if you want to provision a CloudTrail endpoint to the VPC | `bool` | `false` | no |
-| enable\_codeartifact_api\_endpoint | Should be true if you want to provision an Codeartifact API endpoint to the VPC | `bool` | `false` | no |
-| enable\_codeartifact_repositories\_endpoint | Should be true if you want to provision an Codeartifact repositories endpoint to the VPC | `bool` | `false` | no |
+| enable\_codeartifact\_api\_endpoint | Should be true if you want to provision an Codeartifact API endpoint to the VPC | `bool` | `false` | no |
+| enable\_codeartifact\_repositories\_endpoint | Should be true if you want to provision an Codeartifact repositories endpoint to the VPC | `bool` | `false` | no |
 | enable\_codebuild\_endpoint | Should be true if you want to provision an Codebuild endpoint to the VPC | `bool` | `false` | no |
 | enable\_codecommit\_endpoint | Should be true if you want to provision an Codecommit endpoint to the VPC | `bool` | `false` | no |
 | enable\_codedeploy\_commands\_secure\_endpoint | Should be true if you want to provision an CodeDeploy Commands Secure endpoint to the VPC | `bool` | `false` | no |
@@ -763,12 +769,12 @@ It is possible to integrate this VPC module with [terraform-aws-transit-gateway 
 | vpc\_endpoint\_cloudtrail\_dns\_entry | The DNS entries for the VPC Endpoint for CloudTrail. |
 | vpc\_endpoint\_cloudtrail\_id | The ID of VPC endpoint for CloudTrail |
 | vpc\_endpoint\_cloudtrail\_network\_interface\_ids | One or more network interfaces for the VPC Endpoint for CloudTrail. |
-| vpc\_endpoint\_codeartifact_api\_dns\_entry | The DNS entries for the VPC Endpoint for Codeartifact API. |
-| vpc\_endpoint\_codeartifact_api\_id | The ID of VPC endpoint for Codeartifact API |
-| vpc\_endpoint\_codeartifact_api\_network\_interface\_ids | One or more network interfaces for the VPC Endpoint for Codeartifact API. |
-| vpc\_endpoint\_codeartifact_repositories\_dns\_entry | The DNS entries for the VPC Endpoint for Codeartifact repositories. |
-| vpc\_endpoint\_codeartifact_repositories\_id | The ID of VPC endpoint for Codeartifact repositories |
-| vpc\_endpoint\_codeartifact_repositories\_network\_interface\_ids | One or more network interfaces for the VPC Endpoint for Codeartifact repositories. |
+| vpc\_endpoint\_codeartifact\_api\_dns\_entry | The DNS entries for the VPC Endpoint for Codeartifact API. |
+| vpc\_endpoint\_codeartifact\_api\_id | The ID of VPC endpoint for Codeartifact API |
+| vpc\_endpoint\_codeartifact\_api\_network\_interface\_ids | One or more network interfaces for the VPC Endpoint for Codeartifact API. |
+| vpc\_endpoint\_codeartifact\_repositories\_dns\_entry | The DNS entries for the VPC Endpoint for Codeartifact repositories. |
+| vpc\_endpoint\_codeartifact\_repositories\_id | The ID of VPC endpoint for Codeartifact repositories |
+| vpc\_endpoint\_codeartifact\_repositories\_network\_interface\_ids | One or more network interfaces for the VPC Endpoint for Codeartifact repositories. |
 | vpc\_endpoint\_codebuild\_dns\_entry | The DNS entries for the VPC Endpoint for codebuild. |
 | vpc\_endpoint\_codebuild\_id | The ID of VPC endpoint for codebuild |
 | vpc\_endpoint\_codebuild\_network\_interface\_ids | One or more network interfaces for the VPC Endpoint for codebuild. |
