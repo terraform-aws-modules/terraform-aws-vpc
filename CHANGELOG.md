@@ -7,6 +7,13 @@ All notable changes to this project will be documented in this file.
 
 
 
+<a name="v2.61.0"></a>
+## [v2.61.0] - 2020-10-22
+
+- fix: Updated min required version of Terraform to 0.12.21 ([#532](https://github.com/terraform-aws-modules/terraform-aws-vpc/issues/532))
+- Fixed circleci configs
+
+
 <a name="v2.60.0"></a>
 ## [v2.60.0] - 2020-10-21
 
@@ -1035,7 +1042,8 @@ All notable changes to this project will be documented in this file.
 - Initial commit
 
 
-[Unreleased]: https://github.com/terraform-aws-modules/terraform-aws-vpc/compare/v2.60.0...HEAD
+[Unreleased]: https://github.com/terraform-aws-modules/terraform-aws-vpc/compare/v2.61.0...HEAD
+[v2.61.0]: https://github.com/terraform-aws-modules/terraform-aws-vpc/compare/v2.60.0...v2.61.0
 [v2.60.0]: https://github.com/terraform-aws-modules/terraform-aws-vpc/compare/v2.59.0...v2.60.0
 [v2.59.0]: https://github.com/terraform-aws-modules/terraform-aws-vpc/compare/v2.58.0...v2.59.0
 [v2.58.0]: https://github.com/terraform-aws-modules/terraform-aws-vpc/compare/v2.57.0...v2.58.0
