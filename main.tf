@@ -359,8 +359,7 @@ resource "aws_subnet" "public" {
   availability_zone_id            = length(regexall("^[a-z]{2}-", each.value["az"])) == 0 ? each.value["az"] : null
   map_public_ip_on_launch         = var.map_public_ip_on_launch
   assign_ipv6_address_on_creation = var.public_subnet_assign_ipv6_address_on_creation == null ? var.assign_ipv6_address_on_creation : var.public_subnet_assign_ipv6_address_on_creation
-
-  ipv6_cidr_block = var.enable_ipv6 && length(var.public_subnet_ipv6_prefixes) > 0 ? cidrsubnet(aws_vpc.this[0].ipv6_cidr_block, 8, var.public_subnet_ipv6_prefixes[index(keys(var.private_subnets), each.key)]) : null
+  ipv6_cidr_block = var.enable_ipv6 && lookup(each.value, "public_subnet_ipv6_prefixes", null) != null ?  cidrsubnet(aws_vpc.this[0].ipv6_cidr_block, 8, each.value["public_subnet_ipv6_prefixes"]) : null
 
   tags = merge(
     {
@@ -386,9 +385,7 @@ resource "aws_subnet" "private" {
   availability_zone               = length(regexall("^[a-z]{2}-", each.value["az"])) > 0 ? each.value["az"] : null
   availability_zone_id            = length(regexall("^[a-z]{2}-", each.value["az"])) == 0 ? each.value["az"] : null
   assign_ipv6_address_on_creation = var.private_subnet_assign_ipv6_address_on_creation == null ? var.assign_ipv6_address_on_creation : var.private_subnet_assign_ipv6_address_on_creation
-
-  #ipv6_cidr_block = var.enable_ipv6 && length(var.private_subnet_ipv6_prefixes) > 0 ? cidrsubnet(aws_vpc.this[0].ipv6_cidr_block, 8, var.private_subnet_ipv6_prefixes[count.index]) : null
-  ipv6_cidr_block = var.enable_ipv6 && length(var.private_subnet_ipv6_prefixes) > 0 ? cidrsubnet(aws_vpc.this[0].ipv6_cidr_block, 8, var.private_subnet_ipv6_prefixes[index(keys(var.private_subnets), each.key)]) : null
+  ipv6_cidr_block = var.enable_ipv6 && lookup(each.value, "private_subnet_ipv6_prefixes", null) != null ?  cidrsubnet(aws_vpc.this[0].ipv6_cidr_block, 8, each.value["private_subnet_ipv6_prefixes"]) : null
 
   tags = merge(
     {
@@ -413,8 +410,7 @@ resource "aws_subnet" "database" {
   availability_zone               = length(regexall("^[a-z]{2}-", each.value["az"])) > 0 ? each.value["az"] : null
   availability_zone_id            = length(regexall("^[a-z]{2}-", each.value["az"])) == 0 ? each.value["az"] : null
   assign_ipv6_address_on_creation = var.database_subnet_assign_ipv6_address_on_creation == null ? var.assign_ipv6_address_on_creation : var.database_subnet_assign_ipv6_address_on_creation
-
-  ipv6_cidr_block = var.enable_ipv6 && length(var.database_subnet_ipv6_prefixes) > 0 ? cidrsubnet(aws_vpc.this[0].ipv6_cidr_block, 8, var.database_subnet_ipv6_prefixes[index(keys(var.database_subnets), each.key)]) : null
+  ipv6_cidr_block = var.enable_ipv6 && lookup(each.value, "database_subnet_ipv6_prefixes", null) != null ?  cidrsubnet(aws_vpc.this[0].ipv6_cidr_block, 8, each.value["database_subnet_ipv6_prefixes"]) : null
 
   tags = merge(
     {
@@ -453,10 +449,8 @@ resource "aws_subnet" "redshift" {
   cidr_block           = each.value["cidr"]
   availability_zone    = length(regexall("^[a-z]{2}-", each.value["az"])) > 0 ? each.value["az"] : null
   availability_zone_id = length(regexall("^[a-z]{2}-", each.value["az"])) == 0 ? each.value["az"] : null
-
   assign_ipv6_address_on_creation = var.redshift_subnet_assign_ipv6_address_on_creation == null ? var.assign_ipv6_address_on_creation : var.redshift_subnet_assign_ipv6_address_on_creation
-
-  ipv6_cidr_block = var.enable_ipv6 && length(var.redshift_subnet_ipv6_prefixes) > 0 ? cidrsubnet(aws_vpc.this[0].ipv6_cidr_block, 8, var.redshift_subnet_ipv6_prefixes[index(keys(var.redshift_subnets), each.key)]) : null
+  ipv6_cidr_block = var.enable_ipv6 && lookup(each.value, "redshift_subnet_ipv6_prefixes", null) != null ?  cidrsubnet(aws_vpc.this[0].ipv6_cidr_block, 8, each.value["redshift_subnet_ipv6_prefixes"]) : null
 
   tags = merge(
     {
@@ -496,10 +490,8 @@ resource "aws_subnet" "elasticache" {
   cidr_block           = each.value["cidr"]
   availability_zone    = length(regexall("^[a-z]{2}-", each.value["az"])) > 0 ? each.value["az"] : null
   availability_zone_id = length(regexall("^[a-z]{2}-", each.value["az"])) == 0 ? each.value["az"] : null
-
   assign_ipv6_address_on_creation = var.elasticache_subnet_assign_ipv6_address_on_creation == null ? var.assign_ipv6_address_on_creation : var.elasticache_subnet_assign_ipv6_address_on_creation
-
-  ipv6_cidr_block = var.enable_ipv6 && length(var.elasticache_subnet_ipv6_prefixes) > 0 ? cidrsubnet(aws_vpc.this[0].ipv6_cidr_block, 8, var.elasticache_subnet_ipv6_prefixes[index(keys(var.elasticache_subnets), each.key)]) : null
+  ipv6_cidr_block = var.enable_ipv6 && lookup(each.value, "elasticache_subnet_ipv6_prefixes", null) != null ?  cidrsubnet(aws_vpc.this[0].ipv6_cidr_block, 8, each.value["elasticache_subnet_ipv6_prefixes"]) : null
 
   tags = merge(
     {
@@ -532,8 +524,7 @@ resource "aws_subnet" "intra" {
   availability_zone               = length(regexall("^[a-z]{2}-", each.value["az"])) > 0 ? each.value["az"] : null
   availability_zone_id            = length(regexall("^[a-z]{2}-", each.value["az"])) == 0 ? each.value["az"] : null
   assign_ipv6_address_on_creation = var.intra_subnet_assign_ipv6_address_on_creation == null ? var.assign_ipv6_address_on_creation : var.intra_subnet_assign_ipv6_address_on_creation
-
-  ipv6_cidr_block = var.enable_ipv6 && length(var.intra_subnet_ipv6_prefixes) > 0 ? cidrsubnet(aws_vpc.this[0].ipv6_cidr_block, 8, var.intra_subnet_ipv6_prefixes[index(keys(var.intra_subnets), each.key)]) : null
+  ipv6_cidr_block = var.enable_ipv6 && lookup(each.value, "intra_subnet_ipv6_prefixes", null) != null ?  cidrsubnet(aws_vpc.this[0].ipv6_cidr_block, 8, each.value["intra_subnet_ipv6_prefixes"]) : null
 
   tags = merge(
     {
@@ -559,12 +550,12 @@ resource "aws_default_network_acl" "this" {
   #   for any of the non-default network ACLs
   subnet_ids = setsubtract(
     compact(flatten([
-      aws_subnet.public.*.id,
-      aws_subnet.private.*.id,
-      aws_subnet.intra.*.id,
-      aws_subnet.database.*.id,
-      aws_subnet.redshift.*.id,
-      aws_subnet.elasticache.*.id,
+      [for u in aws_subnet.public : u.id],
+      [for u in aws_subnet.private : u.id],
+      [for u in aws_subnet.intra : u.id],
+      [for u in aws_subnet.database : u.id],
+      [for u in aws_subnet.redshift : u.id],
+      [for u in aws_subnet.elasticache : u.id],
     ])),
     compact(flatten([
       aws_network_acl.public.*.subnet_ids,
@@ -621,7 +612,7 @@ resource "aws_network_acl" "public" {
   count = var.create_vpc && var.public_dedicated_network_acl && length(var.public_subnets) > 0 ? 1 : 0
 
   vpc_id     = element(concat(aws_vpc.this.*.id, [""]), 0)
-  subnet_ids = aws_subnet.public.*.id
+  subnet_ids = [for u in aws_subnet.public : u.id]
 
   tags = merge(
     {
@@ -673,7 +664,7 @@ resource "aws_network_acl" "private" {
   count = var.create_vpc && var.private_dedicated_network_acl && length(var.private_subnets) > 0 ? 1 : 0
 
   vpc_id     = element(concat(aws_vpc.this.*.id, [""]), 0)
-  subnet_ids = aws_subnet.private.*.id
+  subnet_ids =  [for u in aws_subnet.private : u.id]
 
   tags = merge(
     {
@@ -725,7 +716,7 @@ resource "aws_network_acl" "intra" {
   count = var.create_vpc && var.intra_dedicated_network_acl && length(var.intra_subnets) > 0 ? 1 : 0
 
   vpc_id     = element(concat(aws_vpc.this.*.id, [""]), 0)
-  subnet_ids = aws_subnet.intra.*.id
+  subnet_ids = [for u in aws_subnet.intra : u.id]
 
   tags = merge(
     {
@@ -777,7 +768,7 @@ resource "aws_network_acl" "database" {
   count = var.create_vpc && var.database_dedicated_network_acl && length(var.database_subnets) > 0 ? 1 : 0
 
   vpc_id     = element(concat(aws_vpc.this.*.id, [""]), 0)
-  subnet_ids = aws_subnet.database.*.id
+  subnet_ids = [for u in aws_subnet.database : u.id]
 
   tags = merge(
     {
@@ -829,7 +820,7 @@ resource "aws_network_acl" "redshift" {
   count = var.create_vpc && var.redshift_dedicated_network_acl && length(var.redshift_subnets) > 0 ? 1 : 0
 
   vpc_id     = element(concat(aws_vpc.this.*.id, [""]), 0)
-  subnet_ids = aws_subnet.redshift.*.id
+  subnet_ids = [for u in aws_subnet.redshift : u.id]
 
   tags = merge(
     {
@@ -881,7 +872,7 @@ resource "aws_network_acl" "elasticache" {
   count = var.create_vpc && var.elasticache_dedicated_network_acl && length(var.elasticache_subnets) > 0 ? 1 : 0
 
   vpc_id     = element(concat(aws_vpc.this.*.id, [""]), 0)
-  subnet_ids = aws_subnet.elasticache.*.id
+  subnet_ids = [for u in aws_subnet.elasticache : u.id]
 
   tags = merge(
     {
