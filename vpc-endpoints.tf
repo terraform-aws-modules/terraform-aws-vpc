@@ -1,3 +1,5 @@
+data "aws_region" "current" {}
+
 ######################
 # VPC Endpoint for S3
 ######################
@@ -182,6 +184,22 @@ resource "aws_vpc_endpoint" "sqs" {
   security_group_ids  = var.sqs_endpoint_security_group_ids
   subnet_ids          = coalescelist(var.sqs_endpoint_subnet_ids, aws_subnet.private.*.id)
   private_dns_enabled = var.sqs_endpoint_private_dns_enabled
+  tags                = local.vpce_tags
+}
+
+#########################
+# VPC Endpoint for Lambda
+#########################
+resource "aws_vpc_endpoint" "lambda" {
+  count = var.create_vpc && var.enable_lambda_endpoint ? 1 : 0
+
+  vpc_id            = local.vpc_id
+  service_name      = format("com.amazonaws.%s.lambda", data.aws_region.current.name)
+  vpc_endpoint_type = "Interface"
+
+  security_group_ids  = var.lambda_endpoint_security_group_ids
+  subnet_ids          = coalescelist(var.lambda_endpoint_subnet_ids, aws_subnet.private.*.id)
+  private_dns_enabled = var.lambda_endpoint_private_dns_enabled
   tags                = local.vpce_tags
 }
 
