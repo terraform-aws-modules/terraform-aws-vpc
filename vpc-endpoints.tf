@@ -1,5 +1,3 @@
-data "aws_region" "current" {}
-
 ######################
 # VPC Endpoint for S3
 ######################

@@ -47,6 +47,9 @@ No input.
 | public\_subnets | List of IDs of public subnets |
 | redshift\_subnets | List of IDs of redshift subnets |
 | this\_customer\_gateway | Map of Customer Gateway attributes |
+| vpc\_endpoint\_lambda\_dns\_entry | The DNS entries for the VPC Endpoint for Lambda. |
+| vpc\_endpoint\_lambda\_id | The ID of VPC endpoint for Lambda |
+| vpc\_endpoint\_lambda\_network\_interface\_ids | One or more network interfaces for the VPC Endpoint for Lambda. |
 | vpc\_endpoint\_ssm\_dns\_entry | The DNS entries for the VPC Endpoint for SSM. |
 | vpc\_endpoint\_ssm\_id | The ID of VPC endpoint for SSM |
 | vpc\_endpoint\_ssm\_network\_interface\_ids | One or more network interfaces for the VPC Endpoint for SSM. |
