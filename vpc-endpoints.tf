@@ -190,11 +190,16 @@ resource "aws_vpc_endpoint" "sqs" {
 #########################
 # VPC Endpoint for Lambda
 #########################
+data "aws_vpc_endpoint_service" "lambda" {
+  count = var.create_vpc && var.enable_lambda_endpoint ? 1 : 0
+
+  service = "lambda"
+}
 resource "aws_vpc_endpoint" "lambda" {
   count = var.create_vpc && var.enable_lambda_endpoint ? 1 : 0
 
   vpc_id            = local.vpc_id
-  service_name      = format("com.amazonaws.%s.lambda", data.aws_region.current.name)
+  service_name      = data.aws_vpc_endpoint_service.lambda[0].service_name
   vpc_endpoint_type = "Interface"
 
   security_group_ids  = var.lambda_endpoint_security_group_ids
