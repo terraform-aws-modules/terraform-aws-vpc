@@ -513,6 +513,21 @@ output "vpc_endpoint_sqs_dns_entry" {
   value       = flatten(aws_vpc_endpoint.sqs.*.dns_entry)
 }
 
+output "vpc_endpoint_lambda_id" {
+  description = "The ID of VPC endpoint for Lambda"
+  value       = concat(aws_vpc_endpoint.lambda.*.id, [""])[0]
+}
+
+output "vpc_endpoint_lambda_network_interface_ids" {
+  description = "One or more network interfaces for the VPC Endpoint for Lambda."
+  value       = flatten(aws_vpc_endpoint.lambda.*.network_interface_ids)
+}
+
+output "vpc_endpoint_lambda_dns_entry" {
+  description = "The DNS entries for the VPC Endpoint for Lambda."
+  value       = flatten(aws_vpc_endpoint.lambda.*.dns_entry)
+}
+
 output "vpc_endpoint_codebuild_id" {
   description = "The ID of VPC endpoint for codebuild"
   value       = concat(aws_vpc_endpoint.codebuild.*.id, [""])[0]
