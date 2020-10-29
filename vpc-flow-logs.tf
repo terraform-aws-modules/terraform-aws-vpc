@@ -48,7 +48,7 @@ resource "aws_iam_role" "vpc_flow_log_cloudwatch" {
   name_prefix        = "vpc-flow-log-role-"
   assume_role_policy = data.aws_iam_policy_document.flow_log_cloudwatch_assume_role[0].json
 
-  tags = merge(var.tags, var.vpc_flow_log_tags)
+  tags                 = merge(var.tags, var.vpc_flow_log_tags)
   permissions_boundary = var.vpc_flow_log_permissions_boundary
 }
 
