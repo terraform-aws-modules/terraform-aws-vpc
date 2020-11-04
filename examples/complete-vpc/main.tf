@@ -61,6 +61,11 @@ module "vpc" {
   ssm_endpoint_private_dns_enabled = true
   ssm_endpoint_security_group_ids  = [data.aws_security_group.default.id]
 
+  # VPC endpoint for Lambda
+  enable_lambda_endpoint              = true
+  lambda_endpoint_private_dns_enabled = true
+  lambda_endpoint_security_group_ids  = [data.aws_security_group.default.id]
+
   # VPC endpoint for SSMMESSAGES
   enable_ssmmessages_endpoint              = true
   ssmmessages_endpoint_private_dns_enabled = true
@@ -133,4 +138,3 @@ module "vpc" {
     Endpoint = "true"
   }
 }
-

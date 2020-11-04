@@ -57,6 +57,21 @@ output "vpc_endpoint_ssm_dns_entry" {
   value       = module.vpc.vpc_endpoint_ssm_dns_entry
 }
 
+output "vpc_endpoint_lambda_id" {
+  description = "The ID of VPC endpoint for Lambda"
+  value       = module.vpc.vpc_endpoint_lambda_id
+}
+
+output "vpc_endpoint_lambda_network_interface_ids" {
+  description = "One or more network interfaces for the VPC Endpoint for Lambda."
+  value       = module.vpc.vpc_endpoint_lambda_network_interface_ids
+}
+
+output "vpc_endpoint_lambda_dns_entry" {
+  description = "The DNS entries for the VPC Endpoint for Lambda."
+  value       = module.vpc.vpc_endpoint_lambda_dns_entry
+}
+
 # Customer Gateway
 output "cgw_ids" {
   description = "List of IDs of Customer Gateway"

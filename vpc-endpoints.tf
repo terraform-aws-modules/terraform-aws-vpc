@@ -185,6 +185,27 @@ resource "aws_vpc_endpoint" "sqs" {
   tags                = local.vpce_tags
 }
 
+#########################
+# VPC Endpoint for Lambda
+#########################
+data "aws_vpc_endpoint_service" "lambda" {
+  count = var.create_vpc && var.enable_lambda_endpoint ? 1 : 0
+
+  service = "lambda"
+}
+resource "aws_vpc_endpoint" "lambda" {
+  count = var.create_vpc && var.enable_lambda_endpoint ? 1 : 0
+
+  vpc_id            = local.vpc_id
+  service_name      = data.aws_vpc_endpoint_service.lambda[0].service_name
+  vpc_endpoint_type = "Interface"
+
+  security_group_ids  = var.lambda_endpoint_security_group_ids
+  subnet_ids          = coalescelist(var.lambda_endpoint_subnet_ids, aws_subnet.private.*.id)
+  private_dns_enabled = var.lambda_endpoint_private_dns_enabled
+  tags                = local.vpce_tags
+}
+
 ###################################
 # VPC Endpoint for Secrets Manager
 ###################################
@@ -1459,6 +1480,52 @@ resource "aws_vpc_endpoint" "textract" {
   security_group_ids  = var.textract_endpoint_security_group_ids
   subnet_ids          = coalescelist(var.textract_endpoint_subnet_ids, aws_subnet.private.*.id)
   private_dns_enabled = var.textract_endpoint_private_dns_enabled
+
+  tags = local.vpce_tags
+}
+
+#############################################
+# VPC Endpoint for Codeartifact API
+#############################################
+data "aws_vpc_endpoint_service" "codeartifact_api" {
+  count = var.create_vpc && var.enable_codeartifact_api_endpoint ? 1 : 0
+
+  service = "codeartifact.api"
+}
+
+resource "aws_vpc_endpoint" "codeartifact_api" {
+  count = var.create_vpc && var.enable_codeartifact_api_endpoint ? 1 : 0
+
+  vpc_id            = local.vpc_id
+  service_name      = data.aws_vpc_endpoint_service.codeartifact_api[0].service_name
+  vpc_endpoint_type = "Interface"
+
+  security_group_ids  = var.codeartifact_api_endpoint_security_group_ids
+  subnet_ids          = coalescelist(var.codeartifact_api_endpoint_subnet_ids, aws_subnet.private.*.id)
+  private_dns_enabled = var.codeartifact_api_endpoint_private_dns_enabled
+
+  tags = local.vpce_tags
+}
+
+#############################################
+# VPC Endpoint for Codeartifact repositories
+#############################################
+data "aws_vpc_endpoint_service" "codeartifact_repositories" {
+  count = var.create_vpc && var.enable_codeartifact_repositories_endpoint ? 1 : 0
+
+  service = "codeartifact.repositories"
+}
+
+resource "aws_vpc_endpoint" "codeartifact_repositories" {
+  count = var.create_vpc && var.enable_codeartifact_repositories_endpoint ? 1 : 0
+
+  vpc_id            = local.vpc_id
+  service_name      = data.aws_vpc_endpoint_service.codeartifact_repositories[0].service_name
+  vpc_endpoint_type = "Interface"
+
+  security_group_ids  = var.codeartifact_repositories_endpoint_security_group_ids
+  subnet_ids          = coalescelist(var.codeartifact_repositories_endpoint_subnet_ids, aws_subnet.private.*.id)
+  private_dns_enabled = var.codeartifact_repositories_endpoint_private_dns_enabled
 
   tags = local.vpce_tags
 }

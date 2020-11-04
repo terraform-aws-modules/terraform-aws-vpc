@@ -217,12 +217,6 @@ resource "aws_route_table" "private" {
     var.tags,
     var.private_route_table_tags,
   )
-
-  lifecycle {
-    # When attaching VPN gateways it is common to define aws_vpn_gateway_route_propagation
-    # resources that manipulate the attributes of the routing table (typically for the private subnets)
-    ignore_changes = [propagating_vgws]
-  }
 }
 
 #################
@@ -544,6 +538,27 @@ resource "aws_default_network_acl" "this" {
 
   default_network_acl_id = element(concat(aws_vpc.this.*.default_network_acl_id, [""]), 0)
 
+  # The value of subnet_ids should be any subnet IDs that are not set as subnet_ids
+  #   for any of the non-default network ACLs
+  subnet_ids = setsubtract(
+    compact(flatten([
+      aws_subnet.public.*.id,
+      aws_subnet.private.*.id,
+      aws_subnet.intra.*.id,
+      aws_subnet.database.*.id,
+      aws_subnet.redshift.*.id,
+      aws_subnet.elasticache.*.id,
+    ])),
+    compact(flatten([
+      aws_network_acl.public.*.subnet_ids,
+      aws_network_acl.private.*.subnet_ids,
+      aws_network_acl.intra.*.subnet_ids,
+      aws_network_acl.database.*.subnet_ids,
+      aws_network_acl.redshift.*.subnet_ids,
+      aws_network_acl.elasticache.*.subnet_ids,
+    ]))
+  )
+
   dynamic "ingress" {
     for_each = var.default_network_acl_ingress
     content {
@@ -580,10 +595,6 @@ resource "aws_default_network_acl" "this" {
     var.tags,
     var.default_network_acl_tags,
   )
-
-  lifecycle {
-    ignore_changes = [subnet_ids]
-  }
 }
 
 ########################
