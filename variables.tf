@@ -490,6 +490,30 @@ variable "sqs_endpoint_private_dns_enabled" {
   default     = false
 }
 
+variable "enable_lambda_endpoint" {
+  description = "Should be true if you want to provision a Lambda endpoint to the VPC"
+  type        = bool
+  default     = false
+}
+
+variable "lambda_endpoint_security_group_ids" {
+  description = "The ID of one or more security groups to associate with the network interface for Lambda endpoint"
+  type        = list(string)
+  default     = []
+}
+
+variable "lambda_endpoint_subnet_ids" {
+  description = "The ID of one or more subnets in which to create a network interface for Lambda endpoint. Only a single subnet within an AZ is supported. If omitted, private subnets will be used."
+  type        = list(string)
+  default     = []
+}
+
+variable "lambda_endpoint_private_dns_enabled" {
+  description = "Whether or not to associate a private hosted zone with the specified VPC for Lambda endpoint"
+  type        = bool
+  default     = false
+}
+
 variable "enable_ssm_endpoint" {
   description = "Should be true if you want to provision an SSM endpoint to the VPC"
   type        = bool
