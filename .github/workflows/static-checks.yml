@@ -1,0 +1,73 @@
+name: static-checks
+
+on:
+  pull_request:
+
+jobs:
+  versionExtract:
+    name: Get min/max versions
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Terraform min/max versions
+        id: minMax
+        uses: clowdhaus/terraform-min-max@main
+    outputs:
+      minVersion: ${{ steps.minMax.outputs.minVersion }}
+      maxVersion: ${{ steps.minMax.outputs.maxVersion }}
+
+  versionEvaluate:
+    name: Evaluate Terraform versions
+    runs-on: ubuntu-latest
+    needs: versionExtract
+    strategy:
+      fail-fast: false
+      matrix:
+        version:
+          - ${{ needs.versionExtract.outputs.minVersion }}
+          - ${{ needs.versionExtract.outputs.maxVersion }}
+        directory: [examples/complete-vpc, examples/ipv6, examples/simple-vpc, examples/network-acls]
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Install Terraform v${{ matrix.version }}
+        uses: hashicorp/setup-terraform@v1
+        with:
+          terraform_version: ${{ matrix.version }}
+
+      - name: Init & validate v${{ matrix.version }}
+        run: |
+          cd ${{ matrix.directory }}
+          terraform init
+          terraform validate
+
+      - name: tflint
+        uses: reviewdog/action-tflint@master
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          working_directory: ${{ matrix.directory }}
+          fail_on_error: 'true'
+          filter_mode: 'nofilter'
+          flags: '--module'
+
+  format:
+    name: Check code format
+    runs-on: ubuntu-latest
+    needs: versionExtract
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Install Terraform v${{ needs.versionExtract.outputs.maxVersion }}
+        uses: hashicorp/setup-terraform@v1
+        with:
+          terraform_version: ${{ needs.versionExtract.outputs.maxVersion }}
+
+      - name: Check Terraform format changes
+        run: terraform fmt --recursive -check=true
