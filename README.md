@@ -35,9 +35,9 @@ Application Auto Scaling, Workspaces, ACM PCA, RDS, CodeDeploy, CodeDeploy Comma
 * [Default VPC](https://www.terraform.io/docs/providers/aws/r/default_vpc.html)
 * [Default Network ACL](https://www.terraform.io/docs/providers/aws/r/default_network_acl.html)
 
-Sponsored by [Cloudcraft - the best way to draw AWS diagrams](https://cloudcraft.co/?utm_source=terraform-aws-vpc)
+Sponsored by [Cloudcraft - the best way to draw AWS diagrams](https://www.cloudcraft.co/?utm_source=terraform-aws-vpc)
 
-<a href="https://cloudcraft.co/?utm_source=terraform-aws-vpc" target="_blank"><img src="https://raw.githubusercontent.com/antonbabenko/modules.tf-lambda/master/misc/cloudcraft-logo.png" alt="Cloudcraft - the best way to draw AWS diagrams" width="211" height="56" /></a>
+<a href="https://www.cloudcraft.co/?utm_source=terraform-aws-vpc" target="_blank"><img src="https://raw.githubusercontent.com/antonbabenko/modules.tf-lambda/master/misc/cloudcraft-logo.png" alt="Cloudcraft - the best way to draw AWS diagrams" width="211" height="56" /></a>
 
 ## Terraform versions
 
