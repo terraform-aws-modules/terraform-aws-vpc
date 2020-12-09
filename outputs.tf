@@ -93,6 +93,11 @@ output "public_subnets" {
   value       = aws_subnet.public.*.id
 }
 
+output "outpost_subnets" {
+  description = "List of IDs of outpost subnets"
+  value = aws_subnet.outpost.*.id
+}
+
 output "public_subnet_arns" {
   description = "List of ARNs of public subnets"
   value       = aws_subnet.public.*.arn
