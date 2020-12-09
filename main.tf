@@ -419,6 +419,30 @@ resource "aws_subnet" "private" {
   )
 }
 
+#################
+# Outpost subnet
+#################
+resource "aws_subnet" "outpost" {
+  count = var.create_vpc && var.create_outpost_subnet == true ? length(var.outpost_subnets) : 0
+
+  vpc_id     = local.vpc_id
+  cidr_block = var.outpost_subnets[count.index]
+  availability_zone    = var.outpost_az
+  outpost_arn = var.outpost_arn
+
+  tags = merge(
+    {
+      "Name" = format(
+        "%s-${var.outpost_subnet_suffix}-%s",
+        var.name,
+        element(var.azs, count.index),
+      )
+    },
+    var.tags,
+    var.outpost_subnet_tags,
+  )
+}
+
 ##################
 # Database subnet
 ##################
@@ -1042,6 +1066,16 @@ resource "aws_route_table_association" "private" {
   )
 }
 
+resource "aws_route_table_association" "outpost" {
+  count = var.create_vpc && var.create_outpost_subnet == true ? length(var.outpost_subnets) : 0
+
+  subnet_id = element(aws_subnet.outpost.*.id, count.index)
+  route_table_id = element(
+  aws_route_table.private.*.id,
+  var.single_nat_gateway ? 0 : count.index,
+  )
+}
+
 resource "aws_route_table_association" "database" {
   count = var.create_vpc && length(var.database_subnets) > 0 ? length(var.database_subnets) : 0
 
@@ -1201,3 +1235,4 @@ resource "aws_default_vpc" "this" {
     var.default_vpc_tags,
   )
 }
+

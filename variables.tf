@@ -124,6 +124,12 @@ variable "private_subnet_suffix" {
   default     = "private"
 }
 
+variable "outpost_subnet_suffix" {
+  description = "Suffix to append to outpost subnets name"
+  type        = string
+  default     = "outpost"
+}
+
 variable "intra_subnet_suffix" {
   description = "Suffix to append to intra subnets name"
   type        = string
@@ -156,6 +162,12 @@ variable "public_subnets" {
 
 variable "private_subnets" {
   description = "A list of private subnets inside the VPC"
+  type        = list(string)
+  default     = []
+}
+
+variable "outpost_subnets" {
+  description = "A list of outpost subnets inside the VPC"
   type        = list(string)
   default     = []
 }
@@ -2267,6 +2279,12 @@ variable "private_subnet_tags" {
   default     = {}
 }
 
+variable "outpost_subnet_tags" {
+  description = "Additional tags for the outpost subnets"
+  type        = map(string)
+  default     = {}
+}
+
 variable "public_route_table_tags" {
   description = "Additional tags for the public route tables"
   type        = map(string)
@@ -2901,4 +2919,22 @@ variable "create_egress_only_igw" {
   description = "Controls if an Egress Only Internet Gateway is created and its related routes."
   type        = bool
   default     = true
+}
+
+variable "create_outpost_subnet" {
+  description = "Controls if an outpost subnet is deployed"
+  type        = bool
+  default     = false
+}
+
+variable "outpost_arn" {
+  description = "ARN of outpost you want to create a subnet in"
+  type = string
+  default = ""
+}
+
+variable "outpost_az" {
+  description = "AZ where outpost is anchored"
+  type = string
+  default = ""
 }
