@@ -240,7 +240,7 @@ resource "aws_route" "public_internet_gateway_ipv6" {
 ################################################################################
 
 resource "aws_route_table" "private" {
-  count = var.create_vpc && local.max_subnet_length > 0 ? local.nat_gateway_count : 0
+  count = var.create_vpc && length(var.private_subnets) > 0 ? length(var.private_subnets) : 0
 
   vpc_id = local.vpc_id
 
