@@ -160,6 +160,22 @@ resource "aws_egress_only_internet_gateway" "this" {
   )
 }
 
+
+################
+# Default route
+################
+resource "aws_default_route_table" "default" {
+  count                  = var.create_vpc ? 1 : 0
+  default_route_table_id = aws_vpc.this[0].default_route_table_id
+  tags = merge(
+    {
+      "Name" = format("%s", var.name)
+    },
+    var.tags,
+    var.default_route_table_tags,
+  )
+}
+
 ################
 # Publiс routes
 ################

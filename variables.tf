@@ -2596,3 +2596,9 @@ variable "create_egress_only_igw" {
   type        = bool
   default     = true
 }
+
+variable "default_route_table_tags" {
+  description = "Additional tags for the Default Route Table"
+  type        = map(string)
+  default     = {}
+}
