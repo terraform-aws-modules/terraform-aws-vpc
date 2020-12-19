@@ -2120,7 +2120,7 @@ variable "vpc_flow_log_tags" {
 variable "vpc_flow_log_permissions_boundary" {
   description = "The ARN of the Permissions Boundary for the VPC Flow Log IAM Role"
   type        = string
-  default     = ""
+  default     = null
 }
 
 variable "enable_dhcp_options" {
