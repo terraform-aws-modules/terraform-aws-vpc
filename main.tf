@@ -76,7 +76,6 @@ resource "aws_vpc_dhcp_options" "this" {
   lifecycle {
     ignore_changes = [
       tags["Owner"],
-      tags["DataClassification"],
       tags["Type"],
    ]
   }
@@ -134,7 +133,6 @@ resource "aws_route_table" "public" {
   lifecycle {
     ignore_changes = [
       tags["Owner"],
-      tags["DataClassification"],
       tags["Type"],
    ]
   }
@@ -240,7 +238,6 @@ resource "aws_route_table" "redshift" {
   lifecycle {
     ignore_changes = [
       tags["Owner"],
-      tags["DataClassification"],
       tags["Type"],
    ]
   }
@@ -290,7 +287,6 @@ resource "aws_route_table" "intra" {
   lifecycle {
     ignore_changes = [
       tags["Owner"],
-      tags["DataClassification"],
       tags["Type"],
    ]
   }
@@ -322,7 +318,6 @@ resource "aws_subnet" "public" {
   lifecycle {
     ignore_changes = [
       tags["Owner"],
-      tags["DataClassification"],
       tags["Type"],
    ]
   }
@@ -353,7 +348,6 @@ resource "aws_subnet" "private" {
   lifecycle {
     ignore_changes = [
       tags["Owner"],
-      tags["DataClassification"],
       tags["Type"],
    ]
   }
@@ -384,7 +378,6 @@ resource "aws_subnet" "database" {
   lifecycle {
     ignore_changes = [
       tags["Owner"],
-      tags["DataClassification"],
       tags["Type"],
    ]
   }
@@ -408,7 +401,6 @@ resource "aws_db_subnet_group" "database" {
   lifecycle {
     ignore_changes = [
       tags["Owner"],
-      tags["DataClassification"],
       tags["Type"],
    ]
   }
@@ -439,7 +431,6 @@ resource "aws_subnet" "redshift" {
   lifecycle {
     ignore_changes = [
       tags["Owner"],
-      tags["DataClassification"],
       tags["Type"],
    ]
   }
@@ -463,7 +454,6 @@ resource "aws_redshift_subnet_group" "redshift" {
   lifecycle {
     ignore_changes = [
       tags["Owner"],
-      tags["DataClassification"],
       tags["Type"],
    ]
   }
@@ -494,7 +484,6 @@ resource "aws_subnet" "elasticache" {
   lifecycle {
     ignore_changes = [
       tags["Owner"],
-      tags["DataClassification"],
       tags["Type"],
    ]
   }
@@ -533,7 +522,6 @@ resource "aws_subnet" "intra" {
   lifecycle {
     ignore_changes = [
       tags["Owner"],
-      tags["DataClassification"],
       tags["Type"],
    ]
   }
@@ -609,7 +597,6 @@ resource "aws_network_acl" "public" {
   lifecycle {
     ignore_changes = [
       tags["Owner"],
-      tags["DataClassification"],
       tags["Type"],
    ]
   }
@@ -663,7 +650,6 @@ resource "aws_network_acl" "private" {
   lifecycle {
     ignore_changes = [
       tags["Owner"],
-      tags["DataClassification"],
       tags["Type"],
    ]
   }
@@ -717,7 +703,6 @@ resource "aws_network_acl" "intra" {
   lifecycle {
     ignore_changes = [
       tags["Owner"],
-      tags["DataClassification"],
       tags["Type"],
    ]
   }
@@ -771,7 +756,6 @@ resource "aws_network_acl" "database" {
   lifecycle {
     ignore_changes = [
       tags["Owner"],
-      tags["DataClassification"],
       tags["Type"],
    ]
   }
@@ -825,7 +809,6 @@ resource "aws_network_acl" "redshift" {
   lifecycle {
     ignore_changes = [
       tags["Owner"],
-      tags["DataClassification"],
       tags["Type"],
    ]
   }
@@ -879,7 +862,6 @@ resource "aws_network_acl" "elasticache" {
   lifecycle {
     ignore_changes = [
       tags["Owner"],
-      tags["DataClassification"],
       tags["Type"],
    ]
   }
@@ -976,7 +958,6 @@ resource "aws_nat_gateway" "this" {
   lifecycle {
     ignore_changes = [
       tags["Owner"],
-      tags["DataClassification"],
       tags["Type"],
    ]
   }
@@ -1548,7 +1529,6 @@ resource "aws_vpn_gateway" "this" {
   lifecycle {
     ignore_changes = [
       tags["Owner"],
-      tags["DataClassification"],
       tags["Type"],
    ]
   }
@@ -1608,7 +1588,6 @@ resource "aws_default_vpc" "this" {
   lifecycle {
     ignore_changes = [
       tags["Owner"],
-      tags["DataClassification"],
       tags["Type"],
    ]
   }
