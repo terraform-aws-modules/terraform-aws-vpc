@@ -89,7 +89,6 @@ data "aws_iam_policy_document" "vpc_flow_log_cloudwatch" {
     effect = "Allow"
 
     actions = [
-      "logs:CreateLogGroup",
       "logs:CreateLogStream",
       "logs:PutLogEvents",
       "logs:DescribeLogGroups",
