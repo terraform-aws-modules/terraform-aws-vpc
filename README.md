@@ -668,16 +668,16 @@ It is possible to integrate this VPC module with [terraform-aws-transit-gateway 
 | default\_network\_acl\_id | The ID of the default network ACL |
 | default\_route\_table\_id | The ID of the default route table |
 | default\_security\_group\_id | The ID of the security group created by default on VPC creation |
-| default\_vpc\_arn | The ARN of the VPC |
-| default\_vpc\_cidr\_block | The CIDR block of the VPC |
-| default\_vpc\_default\_network\_acl\_id | The ID of the default network ACL |
-| default\_vpc\_default\_route\_table\_id | The ID of the default route table |
-| default\_vpc\_default\_security\_group\_id | The ID of the security group created by default on VPC creation |
-| default\_vpc\_enable\_dns\_hostnames | Whether or not the VPC has DNS hostname support |
-| default\_vpc\_enable\_dns\_support | Whether or not the VPC has DNS support |
-| default\_vpc\_id | The ID of the VPC |
-| default\_vpc\_instance\_tenancy | Tenancy of instances spin up within VPC |
-| default\_vpc\_main\_route\_table\_id | The ID of the main route table associated with this VPC |
+| default\_vpc\_arn | The ARN of the Default VPC |
+| default\_vpc\_cidr\_block | The CIDR block of the Default VPC |
+| default\_vpc\_default\_network\_acl\_id | The ID of the default network ACL of the Default VPC |
+| default\_vpc\_default\_route\_table\_id | The ID of the default route table of the Default VPC |
+| default\_vpc\_default\_security\_group\_id | The ID of the security group created by default on Default VPC creation |
+| default\_vpc\_enable\_dns\_hostnames | Whether or not the Default VPC has DNS hostname support |
+| default\_vpc\_enable\_dns\_support | Whether or not the Default VPC has DNS support |
+| default\_vpc\_id | The ID of the Default VPC |
+| default\_vpc\_instance\_tenancy | Tenancy of instances spin up within Default VPC |
+| default\_vpc\_main\_route\_table\_id | The ID of the main route table associated with the Default VPC |
 | egress\_only\_internet\_gateway\_id | The ID of the egress only Internet Gateway |
 | elasticache\_network\_acl\_arn | ARN of the elasticache network ACL |
 | elasticache\_network\_acl\_id | ID of the elasticache network ACL |
