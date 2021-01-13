@@ -148,8 +148,14 @@ variable "elasticache_subnet_suffix" {
   default     = "elasticache"
 }
 
-variable "public_subnets" {
-  description = "A list of public subnets inside the VPC"
+variable "public-app_subnets" {
+  description = "A list of public-app subnets inside the VPC"
+  type        = list(string)
+  default     = []
+}
+
+variable "public-network_subnets" {
+  description = "A list of public-network subnets inside the VPC"
   type        = list(string)
   default     = []
 }
@@ -1955,7 +1961,13 @@ variable "igw_tags" {
   default     = {}
 }
 
-variable "public_subnet_tags" {
+variable "public-app_subnet_tags" {
+  description = "Additional tags for the public subnets"
+  type        = map(string)
+  default     = {}
+}
+
+variable "public-network_subnet_tags" {
   description = "Additional tags for the public subnets"
   type        = map(string)
   default     = {}
