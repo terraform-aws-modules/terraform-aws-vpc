@@ -7,6 +7,18 @@ All notable changes to this project will be documented in this file.
 
 
 
+<a name="v2.66.0"></a>
+## [v2.66.0] - 2021-01-14
+
+- docs: Clarifies default_vpc attributes ([#552](https://github.com/terraform-aws-modules/terraform-aws-vpc/issues/552))
+
+
+<a name="v2.65.0"></a>
+## [v2.65.0] - 2021-01-14
+
+- feat: Adding vpc_flow_log_permissions_boundary ([#536](https://github.com/terraform-aws-modules/terraform-aws-vpc/issues/536))
+
+
 <a name="v2.64.0"></a>
 ## [v2.64.0] - 2020-11-04
 
@@ -1061,7 +1073,9 @@ All notable changes to this project will be documented in this file.
 - Initial commit
 
 
-[Unreleased]: https://github.com/terraform-aws-modules/terraform-aws-vpc/compare/v2.64.0...HEAD
+[Unreleased]: https://github.com/terraform-aws-modules/terraform-aws-vpc/compare/v2.66.0...HEAD
+[v2.66.0]: https://github.com/terraform-aws-modules/terraform-aws-vpc/compare/v2.65.0...v2.66.0
+[v2.65.0]: https://github.com/terraform-aws-modules/terraform-aws-vpc/compare/v2.64.0...v2.65.0
 [v2.64.0]: https://github.com/terraform-aws-modules/terraform-aws-vpc/compare/v2.63.0...v2.64.0
 [v2.63.0]: https://github.com/terraform-aws-modules/terraform-aws-vpc/compare/v2.62.0...v2.63.0
 [v2.62.0]: https://github.com/terraform-aws-modules/terraform-aws-vpc/compare/v2.61.0...v2.62.0

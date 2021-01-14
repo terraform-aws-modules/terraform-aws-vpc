@@ -2117,6 +2117,12 @@ variable "vpc_flow_log_tags" {
   default     = {}
 }
 
+variable "vpc_flow_log_permissions_boundary" {
+  description = "The ARN of the Permissions Boundary for the VPC Flow Log IAM Role"
+  type        = string
+  default     = null
+}
+
 variable "enable_dhcp_options" {
   description = "Should be true if you want to specify a DHCP options set with a custom domain name, DNS servers, NTP servers, netbios servers, and/or netbios server type"
   type        = bool

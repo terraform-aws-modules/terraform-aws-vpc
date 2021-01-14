@@ -45,8 +45,9 @@ resource "aws_cloudwatch_log_group" "flow_log" {
 resource "aws_iam_role" "vpc_flow_log_cloudwatch" {
   count = local.create_flow_log_cloudwatch_iam_role ? 1 : 0
 
-  name_prefix        = "vpc-flow-log-role-"
-  assume_role_policy = data.aws_iam_policy_document.flow_log_cloudwatch_assume_role[0].json
+  name_prefix          = "vpc-flow-log-role-"
+  assume_role_policy   = data.aws_iam_policy_document.flow_log_cloudwatch_assume_role[0].json
+  permissions_boundary = var.vpc_flow_log_permissions_boundary
 
   tags = merge(var.tags, var.vpc_flow_log_tags)
 }
