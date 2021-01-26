@@ -932,7 +932,7 @@ resource "aws_eip" "nat" {
     {
       "Name" = format(
         "%s-%s",
-        var.name,
+        var.nat_gateway_eips_name_prefix != "" ? var.nat_gateway_eips_name_prefix : var.name,
         element(var.azs, var.single_nat_gateway ? 0 : count.index),
       )
     },
@@ -957,7 +957,7 @@ resource "aws_nat_gateway" "this" {
     {
       "Name" = format(
         "%s-%s",
-        var.name,
+        var.nat_gateway_name_prefix != "" ? var.nat_gateway_name_prefix : var.name,
         element(var.azs, var.single_nat_gateway ? 0 : count.index),
       )
     },

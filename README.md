@@ -540,6 +540,8 @@ It is possible to integrate this VPC module with [terraform-aws-transit-gateway 
 | name | Name to be used on all the resources as identifier | `string` | `""` | no |
 | nat\_eip\_tags | Additional tags for the NAT EIP | `map(string)` | `{}` | no |
 | nat\_gateway\_tags | Additional tags for the NAT gateways | `map(string)` | `{}` | no |
+| nat\_gateway\_name\_prefix | Specify the prefix name for the nat gateway | `string` | `""` | no |
+| nat\_gateway\_eips\_name\_prefix | Specify the prefix name for the nat gateway's EIP's | `string` | `""` | no |
 | one\_nat\_gateway\_per\_az | Should be true if you want only one NAT Gateway per availability zone. Requires `var.azs` to be set, and the number of `public_subnets` created to be greater than or equal to the number of availability zones specified in `var.azs`. | `bool` | `false` | no |
 | private\_acl\_tags | Additional tags for the private subnets network ACL | `map(string)` | `{}` | no |
 | private\_dedicated\_network\_acl | Whether to use dedicated network ACL (not default) and custom rules for private subnets | `bool` | `false` | no |

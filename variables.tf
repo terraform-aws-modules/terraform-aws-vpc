@@ -274,6 +274,12 @@ variable "enable_nat_gateway" {
   default     = false
 }
 
+variable "nat_gateway_name_prefix" {
+  description = "Optionally specify a name for your nat gateways, if not var.name will be used"
+  type        = string
+  default     = ""
+}
+
 variable "single_nat_gateway" {
   description = "Should be true if you want to provision a single shared NAT Gateway across all of your private networks"
   type        = bool
@@ -302,6 +308,12 @@ variable "external_nat_ips" {
   description = "List of EIPs to be used for `nat_public_ips` output (used in combination with reuse_nat_ips and external_nat_ip_ids)"
   type        = list(string)
   default     = []
+}
+
+variable "nat_gateway_eips_name_prefix" {
+  description = "Optionally specify a name for your nat gateways's eips, if not var.name will be used"
+  type        = string
+  default     = ""
 }
 
 variable "enable_public_s3_endpoint" {
