@@ -1407,6 +1407,22 @@ output "vpc_endpoint_codeartifact_repositories_dns_entry" {
   value       = flatten(aws_vpc_endpoint.codeartifact_repositories.*.dns_entry)
 }
 
+output "vpc_endpoint_rds_id" {
+  description = "The ID of VPC endpoint for RDS"
+  value       = concat(aws_vpc_endpoint.rds.*.id, [""])[0]
+}
+
+output "vpc_endpoint_rds_network_interface_ids" {
+  description = "One or more network interfaces for the VPC Endpoint for RDS."
+  value       = flatten(aws_vpc_endpoint.rds.*.network_interface_ids)
+}
+
+output "vpc_endpoint_rds_dns_entry" {
+  description = "The DNS entries for the VPC Endpoint for RDS."
+  value       = flatten(aws_vpc_endpoint.rds.*.dns_entry)
+}
+
+
 # VPC flow log
 output "vpc_flow_log_id" {
   description = "The ID of the Flow Log resource"
