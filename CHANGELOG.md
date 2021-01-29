@@ -7,6 +7,19 @@ All notable changes to this project will be documented in this file.
 
 
 
+<a name="v2.68.0"></a>
+## [v2.68.0] - 2021-01-29
+
+- fix: Fixed wrong count in DMS endpoint ([#566](https://github.com/terraform-aws-modules/terraform-aws-vpc/issues/566))
+
+
+<a name="v2.67.0"></a>
+## [v2.67.0] - 2021-01-29
+
+- feat: Adding VPC endpoint for DMS ([#564](https://github.com/terraform-aws-modules/terraform-aws-vpc/issues/564))
+- fix: Adding missing RDS endpoint to output.tf ([#563](https://github.com/terraform-aws-modules/terraform-aws-vpc/issues/563))
+
+
 <a name="v2.66.0"></a>
 ## [v2.66.0] - 2021-01-14
 
@@ -1073,7 +1086,9 @@ All notable changes to this project will be documented in this file.
 - Initial commit
 
 
-[Unreleased]: https://github.com/terraform-aws-modules/terraform-aws-vpc/compare/v2.66.0...HEAD
+[Unreleased]: https://github.com/terraform-aws-modules/terraform-aws-vpc/compare/v2.68.0...HEAD
+[v2.68.0]: https://github.com/terraform-aws-modules/terraform-aws-vpc/compare/v2.67.0...v2.68.0
+[v2.67.0]: https://github.com/terraform-aws-modules/terraform-aws-vpc/compare/v2.66.0...v2.67.0
 [v2.66.0]: https://github.com/terraform-aws-modules/terraform-aws-vpc/compare/v2.65.0...v2.66.0
 [v2.65.0]: https://github.com/terraform-aws-modules/terraform-aws-vpc/compare/v2.64.0...v2.65.0
 [v2.64.0]: https://github.com/terraform-aws-modules/terraform-aws-vpc/compare/v2.63.0...v2.64.0
