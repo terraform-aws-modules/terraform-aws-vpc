@@ -1883,6 +1883,30 @@ variable "acm_pca_endpoint_private_dns_enabled" {
   default     = false
 }
 
+variable "enable_dms_endpoint" {
+  description = "Should be true if you want to provision a DMS endpoint to the VPC"
+  type        = bool
+  default     = false
+}
+
+variable "dms_endpoint_security_group_ids" {
+  description = "The ID of one or more security groups to associate with the network interface for DMS endpoint"
+  type        = list(string)
+  default     = []
+}
+
+variable "dms_endpoint_subnet_ids" {
+  description = "The ID of one or more subnets in which to create a network interface for DMS endpoint. Only a single subnet within an AZ is supported. If omitted, private subnets will be used."
+  type        = list(string)
+  default     = []
+}
+
+variable "dms_endpoint_private_dns_enabled" {
+  description = "Whether or not to associate a private hosted zone with the specified VPC for DMS endpoint"
+  type        = bool
+  default     = false
+}
+
 variable "map_public_ip_on_launch" {
   description = "Should be false if you do not want to auto-assign public IP on launch"
   type        = bool
