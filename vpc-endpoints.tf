@@ -1529,3 +1529,27 @@ resource "aws_vpc_endpoint" "codeartifact_repositories" {
 
   tags = local.vpce_tags
 }
+
+
+#############################################
+# VPC Endpoint for Database Migration Service
+#############################################
+data "aws_vpc_endpoint_service" "dms" {
+  count = var.create_vpc && var.dms_endpoint_subnet_ids ? 1 : 0
+
+  service = "dms"
+}
+
+resource "aws_vpc_endpoint" "dms" {
+  count = var.create_vpc && var.enable_dms_endpoint ? 1 : 0
+
+  vpc_id            = local.vpc_id
+  service_name      = data.aws_vpc_endpoint_service.dms[0].service_name
+  vpc_endpoint_type = "Interface"
+
+  security_group_ids  = var.dms_endpoint_security_group_ids
+  subnet_ids          = coalescelist(var.dms_endpoint_subnet_ids, aws_subnet.private.*.id)
+  private_dns_enabled = var.dms_endpoint_private_dns_enabled
+
+  tags = local.vpce_tags
+}
