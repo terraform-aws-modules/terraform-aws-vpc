@@ -883,6 +883,9 @@ It is possible to integrate this VPC module with [terraform-aws-transit-gateway 
 | vpc\_endpoint\_qldb\_session\_dns\_entry | The DNS entries for the VPC Endpoint for QLDB Session. |
 | vpc\_endpoint\_qldb\_session\_id | The ID of VPC endpoint for QLDB Session |
 | vpc\_endpoint\_qldb\_session\_network\_interface\_ids | One or more network interfaces for the VPC Endpoint for QLDB Session. |
+| vpc\_endpoint\_rds\_dns\_entry | The DNS entries for the VPC Endpoint for RDS. |
+| vpc\_endpoint\_rds\_id | The ID of VPC endpoint for RDS |
+| vpc\_endpoint\_rds\_network\_interface\_ids | One or more network interfaces for the VPC Endpoint for RDS. |
 | vpc\_endpoint\_rekognition\_dns\_entry | The DNS entries for the VPC Endpoint for Rekognition. |
 | vpc\_endpoint\_rekognition\_id | The ID of VPC endpoint for Rekognition |
 | vpc\_endpoint\_rekognition\_network\_interface\_ids | One or more network interfaces for the VPC Endpoint for Rekognition. |
