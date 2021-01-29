@@ -1535,7 +1535,7 @@ resource "aws_vpc_endpoint" "codeartifact_repositories" {
 # VPC Endpoint for Database Migration Service
 #############################################
 data "aws_vpc_endpoint_service" "dms" {
-  count = var.create_vpc && var.dms_endpoint_subnet_ids ? 1 : 0
+  count = var.create_vpc && var.enable_dms_endpoint ? 1 : 0
 
   service = "dms"
 }
