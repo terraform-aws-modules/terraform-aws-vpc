@@ -355,10 +355,10 @@ output "this_customer_gateway" {
 
 output "vgw_id" {
   description = "The ID of the VPN Gateway"
-  value = concat(
-    aws_vpn_gateway.this.*.id,
-    aws_vpn_gateway_attachment.this.*.vpn_gateway_id,
-    [""],
+  value       = concat(
+  aws_vpn_gateway.this.*.id,
+  aws_vpn_gateway_attachment.this.*.vpn_gateway_id,
+  [""],
   )[0]
 }
 
@@ -384,7 +384,8 @@ output "default_vpc_cidr_block" {
 
 output "default_vpc_default_security_group_id" {
   description = "The ID of the security group created by default on Default VPC creation"
-  value       = concat(aws_default_vpc.this.*.default_security_group_id, [""])[0]
+  value       = concat(aws_default_vpc.this.*.default_security_group_id, [
+    ""])[0]
 }
 
 output "default_vpc_default_network_acl_id" {
