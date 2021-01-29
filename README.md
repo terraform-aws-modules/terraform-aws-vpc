@@ -805,7 +805,7 @@ It is possible to integrate this VPC module with [terraform-aws-transit-gateway 
 | vpc\_endpoint\_datasync\_network\_interface\_ids | One or more network interfaces for the VPC Endpoint for DataSync. |
 | vpc\_endpoint\_dms\_dns\_entry | The DNS entries for the VPC Endpoint for DMS. |
 | vpc\_endpoint\_dms\_id | The ID of VPC endpoint for DMS |
-| vpc\_endpoint\_dms\_network\_interface\_ids | One or more network interfaces for the VPC Endpoint for DMS∂rds. |
+| vpc\_endpoint\_dms\_network\_interface\_ids | One or more network interfaces for the VPC Endpoint for DMS. |
 | vpc\_endpoint\_dynamodb\_id | The ID of VPC endpoint for DynamoDB |
 | vpc\_endpoint\_dynamodb\_pl\_id | The prefix list for the DynamoDB VPC endpoint. |
 | vpc\_endpoint\_ebs\_dns\_entry | The DNS entries for the VPC Endpoint for EBS. |
