@@ -1,10 +1,10 @@
-######################
-# VPC Endpoint for S3
-######################
+#####################################
+# VPC Endpoint for S3 - gateway type
+#####################################
 data "aws_vpc_endpoint_service" "s3" {
   count = var.create_vpc && var.enable_s3_endpoint ? 1 : 0
 
-  service_type = var.s3_endpoint_type
+  service_type = "Gateway"
   service      = "s3"
 }
 
@@ -13,7 +13,7 @@ resource "aws_vpc_endpoint" "s3" {
 
   vpc_id            = local.vpc_id
   service_name      = data.aws_vpc_endpoint_service.s3[0].service_name
-  vpc_endpoint_type = var.s3_endpoint_type
+  vpc_endpoint_type = "Gateway"
 
   tags = local.vpce_tags
 }
@@ -37,6 +37,30 @@ resource "aws_vpc_endpoint_route_table_association" "public_s3" {
 
   vpc_endpoint_id = aws_vpc_endpoint.s3[0].id
   route_table_id  = aws_route_table.public[0].id
+}
+
+#######################################
+# VPC Endpoint for S3 - interface type
+#######################################
+
+data "aws_vpc_endpoint_service" "s3_interface" {
+  count = var.create_vpc && var.enable_s3_interface_endpoint ? 1 : 0
+
+  service_type = "Interface"
+  service      = "s3"
+}
+
+resource "aws_vpc_endpoint" "s3_interface" {
+  count = var.create_vpc && var.enable_s3_interface_endpoint ? 1 : 0
+
+  vpc_id            = local.vpc_id
+  service_name      = data.aws_vpc_endpoint_service.s3_interface[0].service_name
+  vpc_endpoint_type = "Interface"
+
+  security_group_ids  = var.s3_interface_endpoint_security_group_ids
+  subnet_ids          = coalescelist(var.s3_interface_endpoint_subnet_ids, aws_subnet.private.*.id)
+  private_dns_enabled = var.s3_interface_endpoint_private_dns_enabled
+  tags                = local.vpce_tags
 }
 
 ############################

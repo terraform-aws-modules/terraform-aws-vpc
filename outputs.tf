@@ -1409,17 +1409,17 @@ output "vpc_endpoint_codeartifact_repositories_dns_entry" {
 
 output "vpc_endpoint_dms_id" {
   description = "The ID of VPC endpoint for DMS"
-  value       = concat(aws_vpc_endpoint.sns.*.id, [""])[0]
+  value       = concat(aws_vpc_endpoint.dms.*.id, [""])[0]
 }
 
 output "vpc_endpoint_dms_network_interface_ids" {
   description = "One or more network interfaces for the VPC Endpoint for DMS."
-  value       = flatten(aws_vpc_endpoint.sns.*.network_interface_ids)
+  value       = flatten(aws_vpc_endpoint.dms.*.network_interface_ids)
 }
 
 output "vpc_endpoint_dms_dns_entry" {
   description = "The DNS entries for the VPC Endpoint for DMS."
-  value       = flatten(aws_vpc_endpoint.sns.*.dns_entry)
+  value       = flatten(aws_vpc_endpoint.dms.*.dns_entry)
 }
 
 output "vpc_endpoint_rds_id" {
@@ -1435,6 +1435,21 @@ output "vpc_endpoint_rds_network_interface_ids" {
 output "vpc_endpoint_rds_dns_entry" {
   description = "The DNS entries for the VPC Endpoint for RDS."
   value       = flatten(aws_vpc_endpoint.rds.*.dns_entry)
+}
+
+output "vpc_endpoint_s3_interface_id" {
+  description = "The ID of VPC endpoint for S3 interface"
+  value       = concat(aws_vpc_endpoint.s3_interface.*.id, [""])[0]
+}
+
+output "vpc_endpoint_s3_interface_network_interface_ids" {
+  description = "One or more network interfaces for the VPC Endpoint for S3 interface."
+  value       = flatten(aws_vpc_endpoint.s3_interface.*.network_interface_ids)
+}
+
+output "vpc_endpoint_s3_interface_dns_entry" {
+  description = "The DNS entries for the VPC Endpoint for S3 interface."
+  value       = flatten(aws_vpc_endpoint.s3_interface.*.dns_entry)
 }
 
 # VPC flow log
