@@ -212,6 +212,10 @@ Sometimes it is handy to have public access to Redshift clusters (for example if
 
 It is possible to integrate this VPC module with [terraform-aws-transit-gateway module](https://github.com/terraform-aws-modules/terraform-aws-transit-gateway) which handles the creation of TGW resources and VPC attachments. See [complete example there](https://github.com/terraform-aws-modules/terraform-aws-transit-gateway/tree/master/examples/complete).
 
+## S3 gateway type vs S3 interface type endpoint
+
+AWS currently support two types of S3 endpoint: gateway type and interface type. To preserve backwards compatibility 'enable\_s3\_endpoint' means it will create gateway type endpoint and attach it to the route table of the VPC. The new 'enable\_s3\_interface\_endpoint' acts as a rest of the interface type endpoint and does not attach itself to the route table of the VPC.
+
 ## Examples
 
 * [Simple VPC](https://github.com/terraform-aws-modules/terraform-aws-vpc/tree/master/examples/simple-vpc)
@@ -468,7 +472,8 @@ It is possible to integrate this VPC module with [terraform-aws-transit-gateway 
 | enable\_qldb\_session\_endpoint | Should be true if you want to provision an QLDB Session endpoint to the VPC | `bool` | `false` | no |
 | enable\_rds\_endpoint | Should be true if you want to provision an RDS endpoint to the VPC | `bool` | `false` | no |
 | enable\_rekognition\_endpoint | Should be true if you want to provision a Rekognition endpoint to the VPC | `bool` | `false` | no |
-| enable\_s3\_endpoint | Should be true if you want to provision an S3 endpoint to the VPC | `bool` | `false` | no |
+| enable\_s3\_endpoint | Should be true if you want to provision an S3 gateway type endpoint to the VPC | `bool` | `false` | no |
+| enable\_s3\_interface\_endpoint | Should be true if you want to provision an S3 interface type endpoint to the VPC | `bool` | `false` | no |
 | enable\_sagemaker\_api\_endpoint | Should be true if you want to provision a SageMaker API endpoint to the VPC | `bool` | `false` | no |
 | enable\_sagemaker\_notebook\_endpoint | Should be true if you want to provision a Sagemaker Notebook endpoint to the VPC | `bool` | `false` | no |
 | enable\_sagemaker\_runtime\_endpoint | Should be true if you want to provision a SageMaker Runtime endpoint to the VPC | `bool` | `false` | no |
@@ -590,7 +595,10 @@ It is possible to integrate this VPC module with [terraform-aws-transit-gateway 
 | rekognition\_endpoint\_security\_group\_ids | The ID of one or more security groups to associate with the network interface for Rekognition endpoint | `list(string)` | `[]` | no |
 | rekognition\_endpoint\_subnet\_ids | The ID of one or more subnets in which to create a network interface for Rekognition endpoint. Only a single subnet within an AZ is supported. If omitted, private subnets will be used. | `list(string)` | `[]` | no |
 | reuse\_nat\_ips | Should be true if you don't want EIPs to be created for your NAT Gateways and will instead pass them in via the 'external\_nat\_ip\_ids' variable | `bool` | `false` | no |
-| s3\_endpoint\_type | S3 VPC endpoint type | `string` | `"Gateway"` | no |
+| s3\_interface\_endpoint\_private\_dns\_enabled | Whether or not to associate a private hosted zone with the specified VPC for S3 interface type endpoint | `bool` | `false` | no |
+| s3\_interface\_endpoint\_security\_group\_ids | The ID of one or more security groups to associate with the network interface for S3 interface type endpoint | `list(string)` | `[]` | no |
+| s3\_interface\_endpoint\_subnet\_ids | The ID of one or more subnets in which to create a network interface for S3 interface type endpoint. Only a single subnet within an AZ is supported. If omitted, private subnets will be used. | `list(string)` | `[]` | no |
+| sagemaker\_api\_endpoint\_private\_dns\_enabled | Whether or not to associate a private hosted zone with the specified VPC for SageMaker API endpoint | `bool` | `false` | no |
 | sagemaker\_api\_endpoint\_private\_dns\_enabled | Whether or not to associate a private hosted zone with the specified VPC for SageMaker API endpoint | `bool` | `false` | no |
 | sagemaker\_api\_endpoint\_security\_group\_ids | The ID of one or more security groups to associate with the network interface for SageMaker API endpoint | `list(string)` | `[]` | no |
 | sagemaker\_api\_endpoint\_subnet\_ids | The ID of one or more subnets in which to create a network interface for SageMaker API endpoint. Only a single subnet within an AZ is supported. If omitted, private subnets will be used. | `list(string)` | `[]` | no |
@@ -893,6 +901,9 @@ It is possible to integrate this VPC module with [terraform-aws-transit-gateway 
 | vpc\_endpoint\_rekognition\_network\_interface\_ids | One or more network interfaces for the VPC Endpoint for Rekognition. |
 | vpc\_endpoint\_s3\_id | The ID of VPC endpoint for S3 |
 | vpc\_endpoint\_s3\_pl\_id | The prefix list for the S3 VPC endpoint. |
+| vpc\_endpoint\_s3\_interface\_dns\_entry | The DNS entries for the VPC Endpoint for S3 interface. |
+| vpc\_endpoint\_s3\_interface\_id | The ID of VPC endpoint for S3 interface |
+| vpc\_endpoint\_s3\_interface\_network\_interface\_ids | One or more network interfaces for the VPC Endpoint for S3 interface. |
 | vpc\_endpoint\_sagemaker\_api\_dns\_entry | The DNS entries for the VPC Endpoint for SageMaker API. |
 | vpc\_endpoint\_sagemaker\_api\_id | The ID of VPC endpoint for SageMaker API |
 | vpc\_endpoint\_sagemaker\_api\_network\_interface\_ids | One or more network interfaces for the VPC Endpoint for SageMaker API. |

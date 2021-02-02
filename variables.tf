@@ -323,16 +323,35 @@ variable "dynamodb_endpoint_type" {
 }
 
 variable "enable_s3_endpoint" {
-  description = "Should be true if you want to provision an S3 endpoint to the VPC"
+  description = "Should be true if you want to provision an S3 gateway type endpoint to the VPC"
   type        = bool
   default     = false
 }
 
-variable "s3_endpoint_type" {
-  description = "S3 VPC endpoint type"
-  type        = string
-  default     = "Gateway"
+variable "enable_s3_interface_endpoint" {
+  description = "Should be true if you want to provision an S3 interface type endpoint to the VPC"
+  type        = bool
+  default     = false
 }
+
+variable "s3_interface_endpoint_security_group_ids" {
+  description = "The ID of one or more security groups to associate with the network interface for S3 interface type endpoint"
+  type        = list(string)
+  default     = []
+}
+
+variable "s3_interface_endpoint_subnet_ids" {
+  description = "The ID of one or more subnets in which to create a network interface for S3 interface type endpoint. Only a single subnet within an AZ is supported. If omitted, private subnets will be used."
+  type        = list(string)
+  default     = []
+}
+
+variable "s3_interface_endpoint_private_dns_enabled" {
+  description = "Whether or not to associate a private hosted zone with the specified VPC for S3 interface type endpoint"
+  type        = bool
+  default     = false
+}
+
 
 variable "enable_codeartifact_api_endpoint" {
   description = "Should be true if you want to provision an Codeartifact API endpoint to the VPC"
