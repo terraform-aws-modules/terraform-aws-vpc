@@ -18,6 +18,11 @@ module "vpc" {
   enable_nat_gateway = true
   single_nat_gateway = true
 
+  #  s3_endpoint_type = "Interface"
+
+  enable_s3_endpoint       = true
+  enable_dynamodb_endpoint = true
+
   public_subnet_tags = {
     Name = "overridden-name-public"
   }
