@@ -467,6 +467,7 @@ It is possible to integrate this VPC module with [terraform-aws-transit-gateway 
 | enable\_public\_s3\_endpoint | Whether to enable S3 VPC Endpoint for public subnets | `bool` | `true` | no |
 | enable\_qldb\_session\_endpoint | Should be true if you want to provision an QLDB Session endpoint to the VPC | `bool` | `false` | no |
 | enable\_rds\_endpoint | Should be true if you want to provision an RDS endpoint to the VPC | `bool` | `false` | no |
+| enable\_rds\_data\_endpoint | Should be true if you want to provision an RDS-Data endpoint to the VPC | `bool` | `false` | no |
 | enable\_rekognition\_endpoint | Should be true if you want to provision a Rekognition endpoint to the VPC | `bool` | `false` | no |
 | enable\_s3\_endpoint | Should be true if you want to provision an S3 endpoint to the VPC | `bool` | `false` | no |
 | enable\_sagemaker\_api\_endpoint | Should be true if you want to provision a SageMaker API endpoint to the VPC | `bool` | `false` | no |
@@ -575,6 +576,9 @@ It is possible to integrate this VPC module with [terraform-aws-transit-gateway 
 | rds\_endpoint\_private\_dns\_enabled | Whether or not to associate a private hosted zone with the specified VPC for RDS endpoint | `bool` | `false` | no |
 | rds\_endpoint\_security\_group\_ids | The ID of one or more security groups to associate with the network interface for RDS endpoint | `list(string)` | `[]` | no |
 | rds\_endpoint\_subnet\_ids | The ID of one or more subnets in which to create a network interface for RDS endpoint. Only a single subnet within an AZ is supported. If omitted, private subnets will be used. | `list(string)` | `[]` | no |
+| rds\_data\_endpoint\_private\_dns\_enabled | Whether or not to associate a private hosted zone with the specified VPC for RDS-Data endpoint | `bool` | `false` | no |
+| rds\_data\_endpoint\_security\_group\_ids | The ID of one or more security groups to associate with the network interface for RDS-Data endpoint | `list(string)` | `[]` | no |
+| rds\_data\_endpoint\_subnet\_ids | The ID of one or more subnets in which to create a network interface for RDS-Data endpoint. Only a single subnet within an AZ is supported. If omitted, private subnets will be used. | `list(string)` | `[]` | no |
 | redshift\_acl\_tags | Additional tags for the redshift subnets network ACL | `map(string)` | `{}` | no |
 | redshift\_dedicated\_network\_acl | Whether to use dedicated network ACL (not default) and custom rules for redshift subnets | `bool` | `false` | no |
 | redshift\_inbound\_acl\_rules | Redshift subnets inbound network ACL rules | `list(map(string))` | <pre>[<br>  {<br>    "cidr_block": "0.0.0.0/0",<br>    "from_port": 0,<br>    "protocol": "-1",<br>    "rule_action": "allow",<br>    "rule_number": 100,<br>    "to_port": 0<br>  }<br>]</pre> | no |
