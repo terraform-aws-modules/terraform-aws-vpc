@@ -1421,8 +1421,6 @@ resource "aws_vpc_endpoint" "rds" {
   tags = local.vpce_tags
 }
 
-
-
 data "aws_vpc_endpoint_service" "rds_data" {
   count = var.create_vpc && var.enable_rds_data_endpoint ? 1 : 0
 
