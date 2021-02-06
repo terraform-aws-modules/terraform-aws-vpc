@@ -1,11 +1,15 @@
 ######################
 # VPC Endpoint for S3
 ######################
+
 data "aws_vpc_endpoint_service" "s3" {
   count = var.create_vpc && var.enable_s3_endpoint ? 1 : 0
 
-  service_type = var.s3_endpoint_type
-  service      = "s3"
+  service = "s3"
+  filter {
+    name   = "service-type"
+    values = [var.s3_endpoint_type]
+  }
 }
 
 resource "aws_vpc_endpoint" "s3" {
@@ -45,8 +49,11 @@ resource "aws_vpc_endpoint_route_table_association" "public_s3" {
 data "aws_vpc_endpoint_service" "dynamodb" {
   count = var.create_vpc && var.enable_dynamodb_endpoint ? 1 : 0
 
-  service_type = var.dynamodb_endpoint_type
-  service      = "dynamodb"
+  service = "dynamodb"
+  filter {
+    name   = "service-type"
+    values = [var.dynamodb_endpoint_type]
+  }
 }
 
 resource "aws_vpc_endpoint" "dynamodb" {
