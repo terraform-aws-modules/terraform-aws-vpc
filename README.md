@@ -19,14 +19,14 @@ These types of resources are supported:
 * [VPC Flow Log](https://www.terraform.io/docs/providers/aws/r/flow_log.html)
 * [VPC Endpoint](https://www.terraform.io/docs/providers/aws/r/vpc_endpoint.html):
   * Gateway: S3, DynamoDB
-  * Interface: EC2, SSM, EC2 Messages, SSM Messages, SQS, ECR API, ECR DKR, API Gateway, KMS,
+  * Interface: S3, EC2, SSM, EC2 Messages, SSM Messages, SQS, ECR API, ECR DKR, API Gateway, KMS,
 ECS, ECS Agent, ECS Telemetry, SES, SNS, STS, Glue, CloudWatch(Monitoring, Logs, Events),
 Elastic Load Balancing, CloudTrail, Secrets Manager, Config, Codeartifact(API, Repositories), CodeBuild, CodeCommit,
 Git-Codecommit, Textract, Transfer Server, Kinesis Streams, Kinesis Firehose, SageMaker(Notebook, Runtime, API),
 CloudFormation, CodePipeline, Storage Gateway, AppMesh, Transfer, Service Catalog, AppStream API, AppStream Streaming,
 Athena, Rekognition, Elastic File System (EFS), Cloud Directory, Elastic Beanstalk (+ Health), Elastic Map Reduce(EMR),
 DataSync, EBS, SMS, Elastic Inference Runtime, QLDB Session, Step Functions, Access Analyzer, Auto Scaling Plans,
-Application Auto Scaling, Workspaces, ACM PCA, RDS, CodeDeploy, CodeDeploy Commands Secure
+Application Auto Scaling, Workspaces, ACM PCA, RDS, CodeDeploy, CodeDeploy Commands Secure, DMS
 
 * [RDS DB Subnet Group](https://www.terraform.io/docs/providers/aws/r/db_subnet_group.html)
 * [ElastiCache Subnet Group](https://www.terraform.io/docs/providers/aws/r/elasticache_subnet_group.html)
@@ -229,13 +229,13 @@ It is possible to integrate this VPC module with [terraform-aws-transit-gateway 
 | Name | Version |
 |------|---------|
 | terraform | >= 0.12.21 |
-| aws | >= 2.68 |
+| aws | >= 3.10 |
 
 ## Providers
 
 | Name | Version |
 |------|---------|
-| aws | >= 2.68 |
+| aws | >= 3.10 |
 
 ## Inputs
 
@@ -350,6 +350,10 @@ It is possible to integrate this VPC module with [terraform-aws-transit-gateway 
 | dhcp\_options\_netbios\_node\_type | Specify netbios node\_type for DHCP options set (requires enable\_dhcp\_options set to true) | `string` | `""` | no |
 | dhcp\_options\_ntp\_servers | Specify a list of NTP servers for DHCP options set (requires enable\_dhcp\_options set to true) | `list(string)` | `[]` | no |
 | dhcp\_options\_tags | Additional tags for the DHCP option set (requires enable\_dhcp\_options set to true) | `map(string)` | `{}` | no |
+| dms\_endpoint\_private\_dns\_enabled | Whether or not to associate a private hosted zone with the specified VPC for DMS endpoint | `bool` | `false` | no |
+| dms\_endpoint\_security\_group\_ids | The ID of one or more security groups to associate with the network interface for DMS endpoint | `list(string)` | `[]` | no |
+| dms\_endpoint\_subnet\_ids | The ID of one or more subnets in which to create a network interface for DMS endpoint. Only a single subnet within an AZ is supported. If omitted, private subnets will be used. | `list(string)` | `[]` | no |
+| dynamodb\_endpoint\_type | DynamoDB VPC endpoint type | `string` | `"Gateway"` | no |
 | ebs\_endpoint\_private\_dns\_enabled | Whether or not to associate a private hosted zone with the specified VPC for EBS endpoint | `bool` | `false` | no |
 | ebs\_endpoint\_security\_group\_ids | The ID of one or more security groups to associate with the network interface for EBS endpoint | `list(string)` | `[]` | no |
 | ebs\_endpoint\_subnet\_ids | The ID of one or more subnets in which to create a network interface for EBS endpoint. Only a single subnet within an AZ is supported. Ifomitted, private subnets will be used. | `list(string)` | `[]` | no |
@@ -428,6 +432,7 @@ It is possible to integrate this VPC module with [terraform-aws-transit-gateway 
 | enable\_config\_endpoint | Should be true if you want to provision an config endpoint to the VPC | `bool` | `false` | no |
 | enable\_datasync\_endpoint | Should be true if you want to provision an Data Sync endpoint to the VPC | `bool` | `false` | no |
 | enable\_dhcp\_options | Should be true if you want to specify a DHCP options set with a custom domain name, DNS servers, NTP servers, netbios servers, and/or netbios server type | `bool` | `false` | no |
+| enable\_dms\_endpoint | Should be true if you want to provision a DMS endpoint to the VPC | `bool` | `false` | no |
 | enable\_dns\_hostnames | Should be true to enable DNS hostnames in the VPC | `bool` | `false` | no |
 | enable\_dns\_support | Should be true to enable DNS support in the VPC | `bool` | `true` | no |
 | enable\_dynamodb\_endpoint | Should be true if you want to provision a DynamoDB endpoint to the VPC | `bool` | `false` | no |
@@ -585,6 +590,7 @@ It is possible to integrate this VPC module with [terraform-aws-transit-gateway 
 | rekognition\_endpoint\_security\_group\_ids | The ID of one or more security groups to associate with the network interface for Rekognition endpoint | `list(string)` | `[]` | no |
 | rekognition\_endpoint\_subnet\_ids | The ID of one or more subnets in which to create a network interface for Rekognition endpoint. Only a single subnet within an AZ is supported. If omitted, private subnets will be used. | `list(string)` | `[]` | no |
 | reuse\_nat\_ips | Should be true if you don't want EIPs to be created for your NAT Gateways and will instead pass them in via the 'external\_nat\_ip\_ids' variable | `bool` | `false` | no |
+| s3\_endpoint\_type | S3 VPC endpoint type | `string` | `"Gateway"` | no |
 | sagemaker\_api\_endpoint\_private\_dns\_enabled | Whether or not to associate a private hosted zone with the specified VPC for SageMaker API endpoint | `bool` | `false` | no |
 | sagemaker\_api\_endpoint\_security\_group\_ids | The ID of one or more security groups to associate with the network interface for SageMaker API endpoint | `list(string)` | `[]` | no |
 | sagemaker\_api\_endpoint\_subnet\_ids | The ID of one or more subnets in which to create a network interface for SageMaker API endpoint. Only a single subnet within an AZ is supported. If omitted, private subnets will be used. | `list(string)` | `[]` | no |
@@ -799,6 +805,9 @@ It is possible to integrate this VPC module with [terraform-aws-transit-gateway 
 | vpc\_endpoint\_datasync\_dns\_entry | The DNS entries for the VPC Endpoint for DataSync. |
 | vpc\_endpoint\_datasync\_id | The ID of VPC endpoint for DataSync |
 | vpc\_endpoint\_datasync\_network\_interface\_ids | One or more network interfaces for the VPC Endpoint for DataSync. |
+| vpc\_endpoint\_dms\_dns\_entry | The DNS entries for the VPC Endpoint for DMS. |
+| vpc\_endpoint\_dms\_id | The ID of VPC endpoint for DMS |
+| vpc\_endpoint\_dms\_network\_interface\_ids | One or more network interfaces for the VPC Endpoint for DMS. |
 | vpc\_endpoint\_dynamodb\_id | The ID of VPC endpoint for DynamoDB |
 | vpc\_endpoint\_dynamodb\_pl\_id | The prefix list for the DynamoDB VPC endpoint. |
 | vpc\_endpoint\_ebs\_dns\_entry | The DNS entries for the VPC Endpoint for EBS. |
@@ -876,6 +885,9 @@ It is possible to integrate this VPC module with [terraform-aws-transit-gateway 
 | vpc\_endpoint\_qldb\_session\_dns\_entry | The DNS entries for the VPC Endpoint for QLDB Session. |
 | vpc\_endpoint\_qldb\_session\_id | The ID of VPC endpoint for QLDB Session |
 | vpc\_endpoint\_qldb\_session\_network\_interface\_ids | One or more network interfaces for the VPC Endpoint for QLDB Session. |
+| vpc\_endpoint\_rds\_dns\_entry | The DNS entries for the VPC Endpoint for RDS. |
+| vpc\_endpoint\_rds\_id | The ID of VPC endpoint for RDS |
+| vpc\_endpoint\_rds\_network\_interface\_ids | One or more network interfaces for the VPC Endpoint for RDS. |
 | vpc\_endpoint\_rekognition\_dns\_entry | The DNS entries for the VPC Endpoint for Rekognition. |
 | vpc\_endpoint\_rekognition\_id | The ID of VPC endpoint for Rekognition |
 | vpc\_endpoint\_rekognition\_network\_interface\_ids | One or more network interfaces for the VPC Endpoint for Rekognition. |
