@@ -14,8 +14,12 @@ resource "aws_vpc_endpoint" "s3" {
   vpc_id            = local.vpc_id
   service_name      = data.aws_vpc_endpoint_service.s3[0].service_name
   vpc_endpoint_type = var.s3_endpoint_type
-
-  tags = local.vpce_tags
+  tags = merge(
+    {
+      "Name" = format("%s-%s", var.name, data.aws_vpc_endpoint_service.s3[0].service)
+    },
+    local.vpce_tags
+  )
 }
 
 resource "aws_vpc_endpoint_route_table_association" "private_s3" {
@@ -53,10 +57,14 @@ resource "aws_vpc_endpoint" "dynamodb" {
   count = var.create_vpc && var.enable_dynamodb_endpoint ? 1 : 0
 
   vpc_id            = local.vpc_id
-  vpc_endpoint_type = var.dynamodb_endpoint_type
   service_name      = data.aws_vpc_endpoint_service.dynamodb[0].service_name
-
-  tags = local.vpce_tags
+  vpc_endpoint_type = var.dynamodb_endpoint_type
+  tags = merge(
+    {
+      "Name" = format("%s-%s", var.name, data.aws_vpc_endpoint_service.dynamodb[0].service)
+    },
+    local.vpce_tags
+  )
 }
 
 resource "aws_vpc_endpoint_route_table_association" "private_dynamodb" {
@@ -80,7 +88,6 @@ resource "aws_vpc_endpoint_route_table_association" "public_dynamodb" {
   route_table_id  = aws_route_table.public[0].id
 }
 
-
 #############################
 # VPC Endpoint for Codebuild
 #############################
@@ -102,7 +109,7 @@ resource "aws_vpc_endpoint" "codebuild" {
   private_dns_enabled = var.codebuild_endpoint_private_dns_enabled
   tags = merge(
     {
-      "Name" = format("%s-codebuild", var.name)
+      "Name" = format("%s-%s", var.name, data.aws_vpc_endpoint_service.codebuild[0].service)
     },
     local.vpce_tags
   )
@@ -129,7 +136,7 @@ resource "aws_vpc_endpoint" "codecommit" {
   private_dns_enabled = var.codecommit_endpoint_private_dns_enabled
   tags = merge(
     {
-      "Name" = format("%s-codecommit", var.name)
+      "Name" = format("%s-%s", var.name, data.aws_vpc_endpoint_service.codecommit[0].service)
     },
     local.vpce_tags
   )
@@ -156,7 +163,7 @@ resource "aws_vpc_endpoint" "git_codecommit" {
   private_dns_enabled = var.git_codecommit_endpoint_private_dns_enabled
   tags = merge(
     {
-      "Name" = format("%s-git-codecommit", var.name)
+      "Name" = format("%s-%s", var.name, data.aws_vpc_endpoint_service.git_codecommit[0].service)
     },
     local.vpce_tags
   )
@@ -183,7 +190,7 @@ resource "aws_vpc_endpoint" "config" {
   private_dns_enabled = var.config_endpoint_private_dns_enabled
   tags = merge(
     {
-      "Name" = format("%s-config", var.name)
+      "Name" = format("%s-%s", var.name, data.aws_vpc_endpoint_service.config[0].service)
     },
     local.vpce_tags
   )
@@ -210,7 +217,7 @@ resource "aws_vpc_endpoint" "sqs" {
   private_dns_enabled = var.sqs_endpoint_private_dns_enabled
   tags = merge(
     {
-      "Name" = format("%s-sqs", var.name)
+      "Name" = format("%s-%s", var.name, data.aws_vpc_endpoint_service.sqs[0].service)
     },
     local.vpce_tags
   )
@@ -237,7 +244,7 @@ resource "aws_vpc_endpoint" "lambda" {
   private_dns_enabled = var.lambda_endpoint_private_dns_enabled
   tags = merge(
     {
-      "Name" = format("%s-lambda", var.name)
+      "Name" = format("%s-%s", var.name, data.aws_vpc_endpoint_service.lambda[0].service)
     },
     local.vpce_tags
   )
@@ -264,7 +271,7 @@ resource "aws_vpc_endpoint" "secretsmanager" {
   private_dns_enabled = var.secretsmanager_endpoint_private_dns_enabled
   tags = merge(
     {
-      "Name" = format("%s-secretsmanager", var.name)
+      "Name" = format("%s-%s", var.name, data.aws_vpc_endpoint_service.secretsmanager[0].service)
     },
     local.vpce_tags
   )
@@ -291,7 +298,7 @@ resource "aws_vpc_endpoint" "ssm" {
   private_dns_enabled = var.ssm_endpoint_private_dns_enabled
   tags = merge(
     {
-      "Name" = format("%s-ssm", var.name)
+      "Name" = format("%s-%s", var.name, data.aws_vpc_endpoint_service.ssm[0].service)
     },
     local.vpce_tags
   )
@@ -318,7 +325,7 @@ resource "aws_vpc_endpoint" "ssmmessages" {
   private_dns_enabled = var.ssmmessages_endpoint_private_dns_enabled
   tags = merge(
     {
-      "Name" = format("%s-ssmmessages", var.name)
+      "Name" = format("%s-%s", var.name, data.aws_vpc_endpoint_service.ssmmessages[0].service)
     },
     local.vpce_tags
   )
@@ -345,7 +352,7 @@ resource "aws_vpc_endpoint" "ec2" {
   private_dns_enabled = var.ec2_endpoint_private_dns_enabled
   tags = merge(
     {
-      "Name" = format("%s-ec2", var.name)
+      "Name" = format("%s-%s", var.name, data.aws_vpc_endpoint_service.ec2[0].service)
     },
     local.vpce_tags
   )
@@ -372,7 +379,7 @@ resource "aws_vpc_endpoint" "ec2messages" {
   private_dns_enabled = var.ec2messages_endpoint_private_dns_enabled
   tags = merge(
     {
-      "Name" = format("%s-ec2messages", var.name)
+      "Name" = format("%s-%s", var.name, data.aws_vpc_endpoint_service.ec2messages[0].service)
     },
     local.vpce_tags
   )
@@ -399,7 +406,7 @@ resource "aws_vpc_endpoint" "ec2_autoscaling" {
   private_dns_enabled = var.ec2_autoscaling_endpoint_private_dns_enabled
   tags = merge(
     {
-      "Name" = format("%s-autoscaling", var.name)
+      "Name" = format("%s-%s", var.name, data.aws_vpc_endpoint_service.ec2_autoscaling[0].service)
     },
     local.vpce_tags
   )
@@ -427,7 +434,7 @@ resource "aws_vpc_endpoint" "transferserver" {
   private_dns_enabled = var.transferserver_endpoint_private_dns_enabled
   tags = merge(
     {
-      "Name" = format("%s-transfer.server", var.name)
+      "Name" = format("%s-%s", var.name, data.aws_vpc_endpoint_service.transferserver[0].service)
     },
     local.vpce_tags
   )
@@ -454,7 +461,7 @@ resource "aws_vpc_endpoint" "ecr_api" {
   private_dns_enabled = var.ecr_api_endpoint_private_dns_enabled
   tags = merge(
     {
-      "Name" = format("%s-ecr.api", var.name)
+      "Name" = format("%s-%s", var.name, data.aws_vpc_endpoint_service.ecr_api[0].service)
     },
     local.vpce_tags
   )
@@ -481,7 +488,7 @@ resource "aws_vpc_endpoint" "ecr_dkr" {
   private_dns_enabled = var.ecr_dkr_endpoint_private_dns_enabled
   tags = merge(
     {
-      "Name" = format("%s-ecr.dkr", var.name)
+      "Name" = format("%s-%s", var.name, data.aws_vpc_endpoint_service.ecr_dkr[0].service)
     },
     local.vpce_tags
   )
@@ -508,7 +515,7 @@ resource "aws_vpc_endpoint" "apigw" {
   private_dns_enabled = var.apigw_endpoint_private_dns_enabled
   tags = merge(
     {
-      "Name" = format("%s-execute-api", var.name)
+      "Name" = format("%s-%s", var.name, data.aws_vpc_endpoint_service.apigw[0].service)
     },
     local.vpce_tags
   )
@@ -535,7 +542,7 @@ resource "aws_vpc_endpoint" "kms" {
   private_dns_enabled = var.kms_endpoint_private_dns_enabled
   tags = merge(
     {
-      "Name" = format("%s-kms", var.name)
+      "Name" = format("%s-%s", var.name, data.aws_vpc_endpoint_service.kms[0].service)
     },
     local.vpce_tags
   )
@@ -562,7 +569,7 @@ resource "aws_vpc_endpoint" "ecs" {
   private_dns_enabled = var.ecs_endpoint_private_dns_enabled
   tags = merge(
     {
-      "Name" = format("%s-ecs", var.name)
+      "Name" = format("%s-%s", var.name, data.aws_vpc_endpoint_service.ecs[0].service)
     },
     local.vpce_tags
   )
@@ -590,7 +597,7 @@ resource "aws_vpc_endpoint" "ecs_agent" {
   private_dns_enabled = var.ecs_agent_endpoint_private_dns_enabled
   tags = merge(
     {
-      "Name" = format("%s-ecs-agent", var.name)
+      "Name" = format("%s-%s", var.name, data.aws_vpc_endpoint_service.ecs_agent[0].service)
     },
     local.vpce_tags
   )
@@ -618,7 +625,7 @@ resource "aws_vpc_endpoint" "ecs_telemetry" {
   private_dns_enabled = var.ecs_telemetry_endpoint_private_dns_enabled
   tags = merge(
     {
-      "Name" = format("%s-ecs-telemetry", var.name)
+      "Name" = format("%s-%s", var.name, data.aws_vpc_endpoint_service.ecs_telemetry[0].service)
     },
     local.vpce_tags
   )
@@ -646,7 +653,7 @@ resource "aws_vpc_endpoint" "sns" {
   private_dns_enabled = var.sns_endpoint_private_dns_enabled
   tags = merge(
     {
-      "Name" = format("%s-sns", var.name)
+      "Name" = format("%s-%s", var.name, data.aws_vpc_endpoint_service.sns[0].service)
     },
     local.vpce_tags
   )
@@ -674,7 +681,7 @@ resource "aws_vpc_endpoint" "monitoring" {
   private_dns_enabled = var.monitoring_endpoint_private_dns_enabled
   tags = merge(
     {
-      "Name" = format("%s-monitoring", var.name)
+      "Name" = format("%s-%s", var.name, data.aws_vpc_endpoint_service.monitoring[0].service)
     },
     local.vpce_tags
   )
@@ -702,7 +709,7 @@ resource "aws_vpc_endpoint" "logs" {
   private_dns_enabled = var.logs_endpoint_private_dns_enabled
   tags = merge(
     {
-      "Name" = format("%s-logs", var.name)
+      "Name" = format("%s-%s", var.name, data.aws_vpc_endpoint_service.logs[0].service)
     },
     local.vpce_tags
   )
@@ -730,7 +737,7 @@ resource "aws_vpc_endpoint" "events" {
   private_dns_enabled = var.events_endpoint_private_dns_enabled
   tags = merge(
     {
-      "Name" = format("%s-events", var.name)
+      "Name" = format("%s-%s", var.name, data.aws_vpc_endpoint_service.events[0].service)
     },
     local.vpce_tags
   )
@@ -758,7 +765,7 @@ resource "aws_vpc_endpoint" "elasticloadbalancing" {
   private_dns_enabled = var.elasticloadbalancing_endpoint_private_dns_enabled
   tags = merge(
     {
-      "Name" = format("%s-elasticloadbalancing", var.name)
+      "Name" = format("%s-%s", var.name, data.aws_vpc_endpoint_service.elasticloadbalancing[0].service)
     },
     local.vpce_tags
   )
@@ -786,7 +793,7 @@ resource "aws_vpc_endpoint" "cloudtrail" {
   private_dns_enabled = var.cloudtrail_endpoint_private_dns_enabled
   tags = merge(
     {
-      "Name" = format("%s-cloudtrail", var.name)
+      "Name" = format("%s-%s", var.name, data.aws_vpc_endpoint_service.cloudtrail[0].service)
     },
     local.vpce_tags
   )
@@ -814,7 +821,7 @@ resource "aws_vpc_endpoint" "kinesis_streams" {
   private_dns_enabled = var.kinesis_streams_endpoint_private_dns_enabled
   tags = merge(
     {
-      "Name" = format("%s-kinesis-streams", var.name)
+      "Name" = format("%s-%s", var.name, data.aws_vpc_endpoint_service.kinesis_streams[0].service)
     },
     local.vpce_tags
   )
@@ -842,7 +849,7 @@ resource "aws_vpc_endpoint" "kinesis_firehose" {
   private_dns_enabled = var.kinesis_firehose_endpoint_private_dns_enabled
   tags = merge(
     {
-      "Name" = format("%s-kinesis-firehose", var.name)
+      "Name" = format("%s-%s", var.name, data.aws_vpc_endpoint_service.kinesis_firehose[0].service)
     },
     local.vpce_tags
   )
@@ -869,7 +876,7 @@ resource "aws_vpc_endpoint" "glue" {
   private_dns_enabled = var.glue_endpoint_private_dns_enabled
   tags = merge(
     {
-      "Name" = format("%s-glue", var.name)
+      "Name" = format("%s-%s", var.name, data.aws_vpc_endpoint_service.glue[0].service)
     },
     local.vpce_tags
   )
@@ -896,7 +903,7 @@ resource "aws_vpc_endpoint" "sagemaker_notebook" {
   private_dns_enabled = var.sagemaker_notebook_endpoint_private_dns_enabled
   tags = merge(
     {
-      "Name" = format("%s-aws.sagemaker.${var.sagemaker_notebook_endpoint_region}.notebook", var.name)
+      "Name" = format("%s-%s", var.name, data.aws_vpc_endpoint_service.sagemaker_notebook[0].service_name)
     },
     local.vpce_tags
   )
@@ -923,7 +930,7 @@ resource "aws_vpc_endpoint" "sts" {
   private_dns_enabled = var.sts_endpoint_private_dns_enabled
   tags = merge(
     {
-      "Name" = format("%s-sts", var.name)
+      "Name" = format("%s-%s", var.name, data.aws_vpc_endpoint_service.sts[0].service)
     },
     local.vpce_tags
   )
@@ -950,7 +957,7 @@ resource "aws_vpc_endpoint" "cloudformation" {
   private_dns_enabled = var.cloudformation_endpoint_private_dns_enabled
   tags = merge(
     {
-      "Name" = format("%s-cloudformation", var.name)
+      "Name" = format("%s-%s", var.name, data.aws_vpc_endpoint_service.cloudformation[0].service)
     },
     local.vpce_tags
   )
@@ -976,7 +983,7 @@ resource "aws_vpc_endpoint" "codepipeline" {
   private_dns_enabled = var.codepipeline_endpoint_private_dns_enabled
   tags = merge(
     {
-      "Name" = format("%s-codepipeline", var.name)
+      "Name" = format("%s-%s", var.name, data.aws_vpc_endpoint_service.codepipeline[0].service)
     },
     local.vpce_tags
   )
@@ -1002,7 +1009,7 @@ resource "aws_vpc_endpoint" "appmesh_envoy_management" {
   private_dns_enabled = var.appmesh_envoy_management_endpoint_private_dns_enabled
   tags = merge(
     {
-      "Name" = format("%s-appmesh-envoy-management", var.name)
+      "Name" = format("%s-%s", var.name, data.aws_vpc_endpoint_service.appmesh_envoy_management[0].service)
     },
     local.vpce_tags
   )
@@ -1028,7 +1035,7 @@ resource "aws_vpc_endpoint" "servicecatalog" {
   private_dns_enabled = var.servicecatalog_endpoint_private_dns_enabled
   tags = merge(
     {
-      "Name" = format("%s-servicecatalog", var.name)
+      "Name" = format("%s-%s", var.name, data.aws_vpc_endpoint_service.servicecatalog[0].service)
     },
     local.vpce_tags
   )
@@ -1054,7 +1061,7 @@ resource "aws_vpc_endpoint" "storagegateway" {
   private_dns_enabled = var.storagegateway_endpoint_private_dns_enabled
   tags = merge(
     {
-      "Name" = format("%s-storagegateway", var.name)
+      "Name" = format("%s-%s", var.name, data.aws_vpc_endpoint_service.storagegateway[0].service)
     },
     local.vpce_tags
   )
@@ -1080,7 +1087,7 @@ resource "aws_vpc_endpoint" "transfer" {
   private_dns_enabled = var.transfer_endpoint_private_dns_enabled
   tags = merge(
     {
-      "Name" = format("%s-transfer", var.name)
+      "Name" = format("%s-%s", var.name, data.aws_vpc_endpoint_service.transfer[0].service)
     },
     local.vpce_tags
   )
@@ -1106,7 +1113,7 @@ resource "aws_vpc_endpoint" "sagemaker_api" {
   private_dns_enabled = var.sagemaker_api_endpoint_private_dns_enabled
   tags = merge(
     {
-      "Name" = format("%s-sagemaker.api", var.name)
+      "Name" = format("%s-%s", var.name, data.aws_vpc_endpoint_service.sagemaker_api[0].service)
     },
     local.vpce_tags
   )
@@ -1132,7 +1139,7 @@ resource "aws_vpc_endpoint" "sagemaker_runtime" {
   private_dns_enabled = var.sagemaker_runtime_endpoint_private_dns_enabled
   tags = merge(
     {
-      "Name" = format("%s-sagemaker.runtime", var.name)
+      "Name" = format("%s-%s", var.name, data.aws_vpc_endpoint_service.sagemaker_runtime[0].service)
     },
     local.vpce_tags
   )
@@ -1159,7 +1166,7 @@ resource "aws_vpc_endpoint" "appstream_api" {
   private_dns_enabled = var.appstream_api_endpoint_private_dns_enabled
   tags = merge(
     {
-      "Name" = format("%s-appstream.api", var.name)
+      "Name" = format("%s-%s", var.name, data.aws_vpc_endpoint_service.appstream_api[0].service)
     },
     local.vpce_tags
   )
@@ -1186,7 +1193,7 @@ resource "aws_vpc_endpoint" "appstream_streaming" {
   private_dns_enabled = var.appstream_streaming_endpoint_private_dns_enabled
   tags = merge(
     {
-      "Name" = format("%s-appstream.streaming", var.name)
+      "Name" = format("%s-%s", var.name, data.aws_vpc_endpoint_service.appstream_streaming[0].service)
     },
     local.vpce_tags
   )
@@ -1213,7 +1220,7 @@ resource "aws_vpc_endpoint" "athena" {
   private_dns_enabled = var.athena_endpoint_private_dns_enabled
   tags = merge(
     {
-      "Name" = format("%s-athena", var.name)
+      "Name" = format("%s-%s", var.name, data.aws_vpc_endpoint_service.athena[0].service)
     },
     local.vpce_tags
   )
@@ -1240,7 +1247,7 @@ resource "aws_vpc_endpoint" "rekognition" {
   private_dns_enabled = var.rekognition_endpoint_private_dns_enabled
   tags = merge(
     {
-      "Name" = format("%s-rekognition", var.name)
+      "Name" = format("%s-%s", var.name, data.aws_vpc_endpoint_service.rekognition[0].service)
     },
     local.vpce_tags
   )
@@ -1267,7 +1274,7 @@ resource "aws_vpc_endpoint" "efs" {
   private_dns_enabled = var.efs_endpoint_private_dns_enabled
   tags = merge(
     {
-      "Name" = format("%s-elasticfilesystem", var.name)
+      "Name" = format("%s-%s", var.name, data.aws_vpc_endpoint_service.efs[0].service)
     },
     local.vpce_tags
   )
@@ -1294,7 +1301,7 @@ resource "aws_vpc_endpoint" "cloud_directory" {
   private_dns_enabled = var.cloud_directory_endpoint_private_dns_enabled
   tags = merge(
     {
-      "Name" = format("%s-clouddirectory", var.name)
+      "Name" = format("%s-%s", var.name, data.aws_vpc_endpoint_service.cloud_directory[0].service)
     },
     local.vpce_tags
   )
@@ -1321,7 +1328,7 @@ resource "aws_vpc_endpoint" "auto_scaling_plans" {
   private_dns_enabled = var.auto_scaling_plans_endpoint_private_dns_enabled
   tags = merge(
     {
-      "Name" = format("%s-autoscaling-plans", var.name)
+      "Name" = format("%s-%s", var.name, data.aws_vpc_endpoint_service.auto_scaling_plans[0].service)
     },
     local.vpce_tags
   )
@@ -1348,7 +1355,7 @@ resource "aws_vpc_endpoint" "workspaces" {
   private_dns_enabled = var.workspaces_endpoint_private_dns_enabled
   tags = merge(
     {
-      "Name" = format("%s-workspaces", var.name)
+      "Name" = format("%s-%s", var.name, data.aws_vpc_endpoint_service.workspaces[0].service)
     },
     local.vpce_tags
   )
@@ -1375,7 +1382,7 @@ resource "aws_vpc_endpoint" "access_analyzer" {
   private_dns_enabled = var.access_analyzer_endpoint_private_dns_enabled
   tags = merge(
     {
-      "Name" = format("%s-access-analyzer", var.name)
+      "Name" = format("%s-%s", var.name, data.aws_vpc_endpoint_service.access_analyzer[0].service)
     },
     local.vpce_tags
   )
@@ -1402,7 +1409,7 @@ resource "aws_vpc_endpoint" "ebs" {
   private_dns_enabled = var.ebs_endpoint_private_dns_enabled
   tags = merge(
     {
-      "Name" = format("%s-ebs", var.name)
+      "Name" = format("%s-%s", var.name, data.aws_vpc_endpoint_service.ebs[0].service)
     },
     local.vpce_tags
   )
@@ -1429,7 +1436,7 @@ resource "aws_vpc_endpoint" "datasync" {
   private_dns_enabled = var.datasync_endpoint_private_dns_enabled
   tags = merge(
     {
-      "Name" = format("%s-datasync", var.name)
+      "Name" = format("%s-%s", var.name, data.aws_vpc_endpoint_service.datasync[0].service)
     },
     local.vpce_tags
   )
@@ -1456,7 +1463,7 @@ resource "aws_vpc_endpoint" "elastic_inference_runtime" {
   private_dns_enabled = var.elastic_inference_runtime_endpoint_private_dns_enabled
   tags = merge(
     {
-      "Name" = format("%s-elastic-inference.runtime", var.name)
+      "Name" = format("%s-%s", var.name, data.aws_vpc_endpoint_service.elastic_inference_runtime[0].service)
     },
     local.vpce_tags
   )
@@ -1483,7 +1490,7 @@ resource "aws_vpc_endpoint" "sms" {
   private_dns_enabled = var.sms_endpoint_private_dns_enabled
   tags = merge(
     {
-      "Name" = format("%s-sms", var.name)
+      "Name" = format("%s-%s", var.name, data.aws_vpc_endpoint_service.sms[0].service)
     },
     local.vpce_tags
   )
@@ -1510,7 +1517,7 @@ resource "aws_vpc_endpoint" "emr" {
   private_dns_enabled = var.emr_endpoint_private_dns_enabled
   tags = merge(
     {
-      "Name" = format("%s-elasticmapreduce", var.name)
+      "Name" = format("%s-%s", var.name, data.aws_vpc_endpoint_service.emr[0].service)
     },
     local.vpce_tags
   )
@@ -1537,7 +1544,7 @@ resource "aws_vpc_endpoint" "qldb_session" {
   private_dns_enabled = var.qldb_session_endpoint_private_dns_enabled
   tags = merge(
     {
-      "Name" = format("%s-qldb.session", var.name)
+      "Name" = format("%s-%s", var.name, data.aws_vpc_endpoint_service.qldb_session[0].service)
     },
     local.vpce_tags
   )
@@ -1564,7 +1571,7 @@ resource "aws_vpc_endpoint" "states" {
   private_dns_enabled = var.states_endpoint_private_dns_enabled
   tags = merge(
     {
-      "Name" = format("%s-states", var.name)
+      "Name" = format("%s-%s", var.name, data.aws_vpc_endpoint_service.states[0].service)
     },
     local.vpce_tags
   )
@@ -1591,7 +1598,7 @@ resource "aws_vpc_endpoint" "elasticbeanstalk" {
   private_dns_enabled = var.elasticbeanstalk_endpoint_private_dns_enabled
   tags = merge(
     {
-      "Name" = format("%s-elasticbeanstalk", var.name)
+      "Name" = format("%s-%s", var.name, data.aws_vpc_endpoint_service.elasticbeanstalk[0].service)
     },
     local.vpce_tags
   )
@@ -1618,7 +1625,7 @@ resource "aws_vpc_endpoint" "elasticbeanstalk_health" {
   private_dns_enabled = var.elasticbeanstalk_health_endpoint_private_dns_enabled
   tags = merge(
     {
-      "Name" = format("%s-elasticbeanstalk-health", var.name)
+      "Name" = format("%s-%s", var.name, data.aws_vpc_endpoint_service.elasticbeanstalk_health[0].service)
     },
     local.vpce_tags
   )
@@ -1645,7 +1652,7 @@ resource "aws_vpc_endpoint" "acm_pca" {
   private_dns_enabled = var.acm_pca_endpoint_private_dns_enabled
   tags = merge(
     {
-      "Name" = format("%s-acm-pca", var.name)
+      "Name" = format("%s-%s", var.name, data.aws_vpc_endpoint_service.acm_pca[0].service)
     },
     local.vpce_tags
   )
@@ -1672,7 +1679,7 @@ resource "aws_vpc_endpoint" "ses" {
   private_dns_enabled = var.ses_endpoint_private_dns_enabled
   tags = merge(
     {
-      "Name" = format("%s-email-smtp", var.name)
+      "Name" = format("%s-%s", var.name, data.aws_vpc_endpoint_service.ses[0].service)
     },
     local.vpce_tags
   )
@@ -1699,7 +1706,7 @@ resource "aws_vpc_endpoint" "rds" {
   private_dns_enabled = var.rds_endpoint_private_dns_enabled
   tags = merge(
     {
-      "Name" = format("%s-rds", var.name)
+      "Name" = format("%s-%s", var.name, data.aws_vpc_endpoint_service.rds[0].service)
     },
     local.vpce_tags
   )
@@ -1726,7 +1733,7 @@ resource "aws_vpc_endpoint" "codedeploy" {
   private_dns_enabled = var.codedeploy_endpoint_private_dns_enabled
   tags = merge(
     {
-      "Name" = format("%s-codedeploy", var.name)
+      "Name" = format("%s-%s", var.name, data.aws_vpc_endpoint_service.codedeploy[0].service)
     },
     local.vpce_tags
   )
@@ -1753,7 +1760,7 @@ resource "aws_vpc_endpoint" "codedeploy_commands_secure" {
   private_dns_enabled = var.codedeploy_commands_secure_endpoint_private_dns_enabled
   tags = merge(
     {
-      "Name" = format("%s-codedeploy-commands-secure", var.name)
+      "Name" = format("%s-%s", var.name, data.aws_vpc_endpoint_service.codedeploy_commands_secure[0].service)
     },
     local.vpce_tags
   )
@@ -1780,7 +1787,7 @@ resource "aws_vpc_endpoint" "textract" {
   private_dns_enabled = var.textract_endpoint_private_dns_enabled
   tags = merge(
     {
-      "Name" = format("%s-textract", var.name)
+      "Name" = format("%s-%s", var.name, data.aws_vpc_endpoint_service.textract[0].service)
     },
     local.vpce_tags
   )
@@ -1807,7 +1814,7 @@ resource "aws_vpc_endpoint" "codeartifact_api" {
   private_dns_enabled = var.codeartifact_api_endpoint_private_dns_enabled
   tags = merge(
     {
-      "Name" = format("%s-codeartifact.api", var.name)
+      "Name" = format("%s-%s", var.name, data.aws_vpc_endpoint_service.codeartifact_api[0].service)
     },
     local.vpce_tags
   )
@@ -1834,7 +1841,7 @@ resource "aws_vpc_endpoint" "codeartifact_repositories" {
   private_dns_enabled = var.codeartifact_repositories_endpoint_private_dns_enabled
   tags = merge(
     {
-      "Name" = format("%s-codeartifact.repositories", var.name)
+      "Name" = format("%s-%s", var.name, data.aws_vpc_endpoint_service.codeartifact_repositories[0].service)
     },
     local.vpce_tags
   )
@@ -1860,6 +1867,10 @@ resource "aws_vpc_endpoint" "dms" {
   security_group_ids  = var.dms_endpoint_security_group_ids
   subnet_ids          = coalescelist(var.dms_endpoint_subnet_ids, aws_subnet.private.*.id)
   private_dns_enabled = var.dms_endpoint_private_dns_enabled
-
-  tags = local.vpce_tags
+  tags = merge(
+    {
+      "Name" = format("%s-%s", var.name, data.aws_vpc_endpoint_service.dms[0].service)
+    },
+    local.vpce_tags
+  )
 }
