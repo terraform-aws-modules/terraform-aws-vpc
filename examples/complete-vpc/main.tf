@@ -118,8 +118,8 @@ module "vpc" {
 
   # Default security group - ingress/egress rules cleared to deny all
   manage_default_security_group  = true
-  default_security_group_ingress = [{}]
-  default_security_group_egress  = [{}]
+  default_security_group_ingress = []
+  default_security_group_egress  = []
 
   # VPC Flow Logs (Cloudwatch log group and IAM role will be created)
   enable_flow_log                      = true
