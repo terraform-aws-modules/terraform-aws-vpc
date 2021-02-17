@@ -30,6 +30,18 @@ Note that this example may create resources which can cost money (AWS Elastic IP
 |------|---------|
 | aws | >= 3.10 |
 
+## Modules
+
+| Name | Source | Version |
+|------|--------|---------|
+| vpc | ../../ |  |
+
+## Resources
+
+| Name |
+|------|
+| [aws_security_group](https://registry.terraform.io/providers/hashicorp/aws/3.10/docs/data-sources/security_group) |
+
 ## Inputs
 
 No input.
@@ -54,5 +66,4 @@ No input.
 | vpc\_endpoint\_ssm\_id | The ID of VPC endpoint for SSM |
 | vpc\_endpoint\_ssm\_network\_interface\_ids | One or more network interfaces for the VPC Endpoint for SSM. |
 | vpc\_id | The ID of the VPC |
-
 <!-- END OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
