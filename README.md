@@ -255,29 +255,29 @@ No Modules.
 | [aws_eip](https://registry.terraform.io/providers/hashicorp/aws/3.10/docs/resources/eip) |
 | [aws_elasticache_subnet_group](https://registry.terraform.io/providers/hashicorp/aws/3.10/docs/resources/elasticache_subnet_group) |
 | [aws_flow_log](https://registry.terraform.io/providers/hashicorp/aws/3.10/docs/resources/flow_log) |
-| [aws_iam_policy](https://registry.terraform.io/providers/hashicorp/aws/3.10/docs/resources/iam_policy) |
 | [aws_iam_policy_document](https://registry.terraform.io/providers/hashicorp/aws/3.10/docs/data-sources/iam_policy_document) |
-| [aws_iam_role](https://registry.terraform.io/providers/hashicorp/aws/3.10/docs/resources/iam_role) |
+| [aws_iam_policy](https://registry.terraform.io/providers/hashicorp/aws/3.10/docs/resources/iam_policy) |
 | [aws_iam_role_policy_attachment](https://registry.terraform.io/providers/hashicorp/aws/3.10/docs/resources/iam_role_policy_attachment) |
+| [aws_iam_role](https://registry.terraform.io/providers/hashicorp/aws/3.10/docs/resources/iam_role) |
 | [aws_internet_gateway](https://registry.terraform.io/providers/hashicorp/aws/3.10/docs/resources/internet_gateway) |
 | [aws_nat_gateway](https://registry.terraform.io/providers/hashicorp/aws/3.10/docs/resources/nat_gateway) |
-| [aws_network_acl](https://registry.terraform.io/providers/hashicorp/aws/3.10/docs/resources/network_acl) |
 | [aws_network_acl_rule](https://registry.terraform.io/providers/hashicorp/aws/3.10/docs/resources/network_acl_rule) |
+| [aws_network_acl](https://registry.terraform.io/providers/hashicorp/aws/3.10/docs/resources/network_acl) |
 | [aws_redshift_subnet_group](https://registry.terraform.io/providers/hashicorp/aws/3.10/docs/resources/redshift_subnet_group) |
-| [aws_route](https://registry.terraform.io/providers/hashicorp/aws/3.10/docs/resources/route) |
-| [aws_route_table](https://registry.terraform.io/providers/hashicorp/aws/3.10/docs/resources/route_table) |
 | [aws_route_table_association](https://registry.terraform.io/providers/hashicorp/aws/3.10/docs/resources/route_table_association) |
+| [aws_route_table](https://registry.terraform.io/providers/hashicorp/aws/3.10/docs/resources/route_table) |
+| [aws_route](https://registry.terraform.io/providers/hashicorp/aws/3.10/docs/resources/route) |
 | [aws_subnet](https://registry.terraform.io/providers/hashicorp/aws/3.10/docs/resources/subnet) |
-| [aws_vpc](https://registry.terraform.io/providers/hashicorp/aws/3.10/docs/resources/vpc) |
-| [aws_vpc_dhcp_options](https://registry.terraform.io/providers/hashicorp/aws/3.10/docs/resources/vpc_dhcp_options) |
 | [aws_vpc_dhcp_options_association](https://registry.terraform.io/providers/hashicorp/aws/3.10/docs/resources/vpc_dhcp_options_association) |
-| [aws_vpc_endpoint](https://registry.terraform.io/providers/hashicorp/aws/3.10/docs/resources/vpc_endpoint) |
+| [aws_vpc_dhcp_options](https://registry.terraform.io/providers/hashicorp/aws/3.10/docs/resources/vpc_dhcp_options) |
 | [aws_vpc_endpoint_route_table_association](https://registry.terraform.io/providers/hashicorp/aws/3.10/docs/resources/vpc_endpoint_route_table_association) |
 | [aws_vpc_endpoint_service](https://registry.terraform.io/providers/hashicorp/aws/3.10/docs/data-sources/vpc_endpoint_service) |
+| [aws_vpc_endpoint](https://registry.terraform.io/providers/hashicorp/aws/3.10/docs/resources/vpc_endpoint) |
 | [aws_vpc_ipv4_cidr_block_association](https://registry.terraform.io/providers/hashicorp/aws/3.10/docs/resources/vpc_ipv4_cidr_block_association) |
-| [aws_vpn_gateway](https://registry.terraform.io/providers/hashicorp/aws/3.10/docs/resources/vpn_gateway) |
+| [aws_vpc](https://registry.terraform.io/providers/hashicorp/aws/3.10/docs/resources/vpc) |
 | [aws_vpn_gateway_attachment](https://registry.terraform.io/providers/hashicorp/aws/3.10/docs/resources/vpn_gateway_attachment) |
 | [aws_vpn_gateway_route_propagation](https://registry.terraform.io/providers/hashicorp/aws/3.10/docs/resources/vpn_gateway_route_propagation) |
+| [aws_vpn_gateway](https://registry.terraform.io/providers/hashicorp/aws/3.10/docs/resources/vpn_gateway) |
 
 ## Inputs
 
