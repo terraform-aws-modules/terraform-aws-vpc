@@ -34,6 +34,26 @@ Note that this example may create resources which can cost money (AWS Elastic IP
 | aws | >= 3.10 |
 | random | >= 2 |
 
+## Modules
+
+| Name | Source | Version |
+|------|--------|---------|
+| s3_bucket | terraform-aws-modules/s3-bucket/aws | ~> 1.0 |
+| vpc_with_flow_logs_cloudwatch_logs | ../../ |  |
+| vpc_with_flow_logs_cloudwatch_logs_default | ../../ |  |
+| vpc_with_flow_logs_s3_bucket | ../../ |  |
+
+## Resources
+
+| Name |
+|------|
+| [aws_cloudwatch_log_group](https://registry.terraform.io/providers/hashicorp/aws/3.10/docs/resources/cloudwatch_log_group) |
+| [aws_iam_policy_document](https://registry.terraform.io/providers/hashicorp/aws/3.10/docs/data-sources/iam_policy_document) |
+| [aws_iam_policy](https://registry.terraform.io/providers/hashicorp/aws/3.10/docs/resources/iam_policy) |
+| [aws_iam_role_policy_attachment](https://registry.terraform.io/providers/hashicorp/aws/3.10/docs/resources/iam_role_policy_attachment) |
+| [aws_iam_role](https://registry.terraform.io/providers/hashicorp/aws/3.10/docs/resources/iam_role) |
+| [random_pet](https://registry.terraform.io/providers/hashicorp/random/2/docs/resources/pet) |
+
 ## Inputs
 
 No input.
@@ -53,5 +73,4 @@ No input.
 | vpc\_with\_flow\_logs\_cloudwatch\_logs\_vpc\_flow\_log\_destination\_arn | The ARN of the destination for VPC Flow Logs |
 | vpc\_with\_flow\_logs\_cloudwatch\_logs\_vpc\_flow\_log\_destination\_type | The type of the destination for VPC Flow Logs |
 | vpc\_with\_flow\_logs\_cloudwatch\_logs\_vpc\_flow\_log\_id | The ID of the Flow Log resource |
-
 <!-- END OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
