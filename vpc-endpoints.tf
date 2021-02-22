@@ -4,8 +4,13 @@
 data "aws_vpc_endpoint_service" "s3" {
   count = var.create_vpc && var.enable_s3_endpoint ? 1 : 0
 
-  service_type = var.s3_endpoint_type
-  service      = "s3"
+  service = "s3"
+
+  # Used for backwards compatability where `service_type` is not yet available in the provider used
+  filter {
+    name   = "service-type"
+    values = [var.s3_endpoint_type]
+  }
 }
 
 resource "aws_vpc_endpoint" "s3" {
@@ -15,25 +20,29 @@ resource "aws_vpc_endpoint" "s3" {
   service_name      = data.aws_vpc_endpoint_service.s3[0].service_name
   vpc_endpoint_type = var.s3_endpoint_type
 
+  security_group_ids  = var.s3_endpoint_type == "Interface" ? var.s3_endpoint_security_group_ids : null
+  subnet_ids          = var.s3_endpoint_type == "Interface" ? coalescelist(var.s3_endpoint_subnet_ids, aws_subnet.private.*.id) : null
+  private_dns_enabled = var.s3_endpoint_type == "Interface" ? var.s3_endpoint_private_dns_enabled : null
+
   tags = local.vpce_tags
 }
 
 resource "aws_vpc_endpoint_route_table_association" "private_s3" {
-  count = var.create_vpc && var.enable_s3_endpoint ? local.nat_gateway_count : 0
+  count = var.create_vpc && var.enable_s3_endpoint && var.s3_endpoint_type == "Gateway" ? local.nat_gateway_count : 0
 
   vpc_endpoint_id = aws_vpc_endpoint.s3[0].id
   route_table_id  = element(aws_route_table.private.*.id, count.index)
 }
 
 resource "aws_vpc_endpoint_route_table_association" "intra_s3" {
-  count = var.create_vpc && var.enable_s3_endpoint && length(var.intra_subnets) > 0 ? 1 : 0
+  count = var.create_vpc && var.enable_s3_endpoint && length(var.intra_subnets) > 0 && var.s3_endpoint_type == "Gateway" ? 1 : 0
 
   vpc_endpoint_id = aws_vpc_endpoint.s3[0].id
   route_table_id  = element(aws_route_table.intra.*.id, 0)
 }
 
 resource "aws_vpc_endpoint_route_table_association" "public_s3" {
-  count = var.create_vpc && var.enable_s3_endpoint && var.enable_public_s3_endpoint && length(var.public_subnets) > 0 ? 1 : 0
+  count = var.create_vpc && var.enable_s3_endpoint && var.enable_public_s3_endpoint && length(var.public_subnets) > 0 && var.s3_endpoint_type == "Gateway" ? 1 : 0
 
   vpc_endpoint_id = aws_vpc_endpoint.s3[0].id
   route_table_id  = aws_route_table.public[0].id
