@@ -30,6 +30,16 @@ Note that this example may create resources which can cost money (AWS Elastic IP
 
 No provider.
 
+## Modules
+
+| Name | Source | Version |
+|------|--------|---------|
+| vpc | ../../ |  |
+
+## Resources
+
+No resources.
+
 ## Inputs
 
 No input.
@@ -51,5 +61,4 @@ No input.
 | public\_subnets | List of IDs of public subnets |
 | vpc\_cidr\_block | The CIDR block of the VPC |
 | vpc\_id | The ID of the VPC |
-
 <!-- END OF PRE-COMMIT-TERRAFORM DOCS HOOK -->

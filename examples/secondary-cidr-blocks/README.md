@@ -28,6 +28,16 @@ Note that this example may create resources which can cost money (AWS Elastic IP
 
 No provider.
 
+## Modules
+
+| Name | Source | Version |
+|------|--------|---------|
+| vpc | ../../ |  |
+
+## Resources
+
+No resources.
+
 ## Inputs
 
 No input.
@@ -42,5 +52,4 @@ No input.
 | vpc\_cidr\_block | The CIDR block of the VPC |
 | vpc\_id | The ID of the VPC |
 | vpc\_secondary\_cidr\_blocks | List of secondary CIDR blocks of the VPC |
-
  <!-- END OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
