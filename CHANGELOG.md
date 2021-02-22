@@ -7,6 +7,13 @@ All notable changes to this project will be documented in this file.
 
 
 
+<a name="v2.74.0"></a>
+## [v2.74.0] - 2021-02-22
+
+- fix: use filter for getting service type for S3 endpoint and update to allow s3 to use interface endpoint types ([#597](https://github.com/terraform-aws-modules/terraform-aws-vpc/issues/597))
+- chore: Updated the conditional creation section of the README ([#584](https://github.com/terraform-aws-modules/terraform-aws-vpc/issues/584))
+
+
 <a name="v2.73.0"></a>
 ## [v2.73.0] - 2021-02-22
 
@@ -1228,7 +1235,8 @@ All notable changes to this project will be documented in this file.
 - Initial commit
 
 
-[Unreleased]: https://github.com/terraform-aws-modules/terraform-aws-vpc/compare/v2.73.0...HEAD
+[Unreleased]: https://github.com/terraform-aws-modules/terraform-aws-vpc/compare/v2.74.0...HEAD
+[v2.74.0]: https://github.com/terraform-aws-modules/terraform-aws-vpc/compare/v2.73.0...v2.74.0
 [v2.73.0]: https://github.com/terraform-aws-modules/terraform-aws-vpc/compare/v2.72.0...v2.73.0
 [v2.72.0]: https://github.com/terraform-aws-modules/terraform-aws-vpc/compare/v2.71.0...v2.72.0
 [v2.71.0]: https://github.com/terraform-aws-modules/terraform-aws-vpc/compare/v1.73.0...v2.71.0
