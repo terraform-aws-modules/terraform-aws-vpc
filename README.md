@@ -167,7 +167,7 @@ If your organization requires a permissions boundary to be attached to the VPC F
 
 ## Conditional creation
 
-Sometimes you need to have a way to create VPC resources conditionally but Terraform does not allow to use `count` inside `module` block, so the solution is to specify argument `create_vpc`.
+Prior to Terraform 0.13, you were unable to specify `count` in a module block. If you wish to toggle the creation of the module's resources in an older (pre 0.13) version of Terraform, you can use the `create_vpc` argument.
 
 ```hcl
 # This VPC will not be created
@@ -721,6 +721,7 @@ No Modules.
 | database\_route\_table\_ids | List of IDs of database route tables |
 | database\_subnet\_arns | List of ARNs of database subnets |
 | database\_subnet\_group | ID of database subnet group |
+| database\_subnet\_group\_name | Name of database subnet group |
 | database\_subnets | List of IDs of database subnets |
 | database\_subnets\_cidr\_blocks | List of cidr\_blocks of database subnets |
 | database\_subnets\_ipv6\_cidr\_blocks | List of IPv6 cidr\_blocks of database subnets in an IPv6 enabled VPC |

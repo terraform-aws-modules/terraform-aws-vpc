@@ -133,6 +133,11 @@ output "database_subnet_group" {
   value       = concat(aws_db_subnet_group.database.*.id, [""])[0]
 }
 
+output "database_subnet_group_name" {
+  description = "Name of database subnet group"
+  value       = concat(aws_db_subnet_group.database.*.name, [""])[0]
+}
+
 output "redshift_subnets" {
   description = "List of IDs of redshift subnets"
   value       = aws_subnet.redshift.*.id
