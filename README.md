@@ -395,6 +395,10 @@ No Modules.
 | dms\_endpoint\_private\_dns\_enabled | Whether or not to associate a private hosted zone with the specified VPC for DMS endpoint | `bool` | `false` | no |
 | dms\_endpoint\_security\_group\_ids | The ID of one or more security groups to associate with the network interface for DMS endpoint | `list(string)` | `[]` | no |
 | dms\_endpoint\_subnet\_ids | The ID of one or more subnets in which to create a network interface for DMS endpoint. Only a single subnet within an AZ is supported. If omitted, private subnets will be used. | `list(string)` | `[]` | no |
+| dynamodb\_endpoint\_private\_dns\_enabled | Whether or not to associate a private hosted zone with the specified VPC for DynamoDB interface endpoint | `bool` | `false` | no |
+| dynamodb\_endpoint\_security\_group\_ids | The ID of one or more security groups to associate with the network interface for DynamoDB interface endpoint | `list(string)` | `[]` | no |
+| dynamodb\_endpoint\_subnet\_ids | The ID of one or more subnets in which to create a network interface for DynamoDB interface endpoint. Only a single subnet within an AZ is supported. If omitted, private subnets will be used. | `list(string)` | `[]` | no |
+| dynamodb\_endpoint\_type | DynamoDB VPC endpoint type. Note - DynamoDB Interface type support is not yet available | `string` | `"Gateway"` | no |
 | ebs\_endpoint\_private\_dns\_enabled | Whether or not to associate a private hosted zone with the specified VPC for EBS endpoint | `bool` | `false` | no |
 | ebs\_endpoint\_security\_group\_ids | The ID of one or more security groups to associate with the network interface for EBS endpoint | `list(string)` | `[]` | no |
 | ebs\_endpoint\_subnet\_ids | The ID of one or more subnets in which to create a network interface for EBS endpoint. Only a single subnet within an AZ is supported. Ifomitted, private subnets will be used. | `list(string)` | `[]` | no |

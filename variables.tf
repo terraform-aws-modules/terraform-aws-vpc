@@ -316,6 +316,30 @@ variable "enable_dynamodb_endpoint" {
   default     = false
 }
 
+variable "dynamodb_endpoint_type" {
+  description = "DynamoDB VPC endpoint type. Note - DynamoDB Interface type support is not yet available"
+  type        = string
+  default     = "Gateway"
+}
+
+variable "dynamodb_endpoint_security_group_ids" {
+  description = "The ID of one or more security groups to associate with the network interface for DynamoDB interface endpoint"
+  type        = list(string)
+  default     = []
+}
+
+variable "dynamodb_endpoint_subnet_ids" {
+  description = "The ID of one or more subnets in which to create a network interface for DynamoDB interface endpoint. Only a single subnet within an AZ is supported. If omitted, private subnets will be used."
+  type        = list(string)
+  default     = []
+}
+
+variable "dynamodb_endpoint_private_dns_enabled" {
+  description = "Whether or not to associate a private hosted zone with the specified VPC for DynamoDB interface endpoint"
+  type        = bool
+  default     = false
+}
+
 variable "enable_s3_endpoint" {
   description = "Should be true if you want to provision an S3 endpoint to the VPC"
   type        = bool
