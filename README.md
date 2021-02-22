@@ -715,6 +715,7 @@ No Modules.
 | database\_route\_table\_ids | List of IDs of database route tables |
 | database\_subnet\_arns | List of ARNs of database subnets |
 | database\_subnet\_group | ID of database subnet group |
+| database\_subnet\_group\_name | Name of database subnet group |
 | database\_subnets | List of IDs of database subnets |
 | database\_subnets\_cidr\_blocks | List of cidr\_blocks of database subnets |
 | database\_subnets\_ipv6\_cidr\_blocks | List of IPv6 cidr\_blocks of database subnets in an IPv6 enabled VPC |
