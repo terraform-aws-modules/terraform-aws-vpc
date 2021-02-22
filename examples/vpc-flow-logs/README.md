@@ -24,14 +24,14 @@ Note that this example may create resources which can cost money (AWS Elastic IP
 | Name | Version |
 |------|---------|
 | terraform | >= 0.12.21 |
-| aws | >= 3.10 |
+| aws | >= 2.70 |
 | random | >= 2 |
 
 ## Providers
 
 | Name | Version |
 |------|---------|
-| aws | >= 3.10 |
+| aws | >= 2.70 |
 | random | >= 2 |
 
 ## Modules
@@ -47,11 +47,11 @@ Note that this example may create resources which can cost money (AWS Elastic IP
 
 | Name |
 |------|
-| [aws_cloudwatch_log_group](https://registry.terraform.io/providers/hashicorp/aws/3.10/docs/resources/cloudwatch_log_group) |
-| [aws_iam_policy_document](https://registry.terraform.io/providers/hashicorp/aws/3.10/docs/data-sources/iam_policy_document) |
-| [aws_iam_policy](https://registry.terraform.io/providers/hashicorp/aws/3.10/docs/resources/iam_policy) |
-| [aws_iam_role_policy_attachment](https://registry.terraform.io/providers/hashicorp/aws/3.10/docs/resources/iam_role_policy_attachment) |
-| [aws_iam_role](https://registry.terraform.io/providers/hashicorp/aws/3.10/docs/resources/iam_role) |
+| [aws_cloudwatch_log_group](https://registry.terraform.io/providers/hashicorp/aws/2.70/docs/resources/cloudwatch_log_group) |
+| [aws_iam_policy_document](https://registry.terraform.io/providers/hashicorp/aws/2.70/docs/data-sources/iam_policy_document) |
+| [aws_iam_policy](https://registry.terraform.io/providers/hashicorp/aws/2.70/docs/resources/iam_policy) |
+| [aws_iam_role_policy_attachment](https://registry.terraform.io/providers/hashicorp/aws/2.70/docs/resources/iam_role_policy_attachment) |
+| [aws_iam_role](https://registry.terraform.io/providers/hashicorp/aws/2.70/docs/resources/iam_role) |
 | [random_pet](https://registry.terraform.io/providers/hashicorp/random/2/docs/resources/pet) |
 
 ## Inputs

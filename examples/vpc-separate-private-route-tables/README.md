@@ -22,7 +22,7 @@ Note that this example may create resources which can cost money (AWS Elastic IP
 | Name | Version |
 |------|---------|
 | terraform | >= 0.12.21 |
-| aws | >= 2.68 |
+| aws | >= 2.70 |
 
 ## Providers
 
