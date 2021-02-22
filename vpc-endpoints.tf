@@ -54,18 +54,15 @@ resource "aws_vpc_endpoint_route_table_association" "public_s3" {
 data "aws_vpc_endpoint_service" "dynamodb" {
   count = var.create_vpc && var.enable_dynamodb_endpoint ? 1 : 0
 
-  service_type = var.dynamodb_endpoint_type
-  service      = "dynamodb"
+  service = "dynamodb"
 }
 
 resource "aws_vpc_endpoint" "dynamodb" {
   count = var.create_vpc && var.enable_dynamodb_endpoint ? 1 : 0
 
-  vpc_id            = local.vpc_id
-  vpc_endpoint_type = var.dynamodb_endpoint_type
-  service_name      = data.aws_vpc_endpoint_service.dynamodb[0].service_name
-
-  tags = local.vpce_tags
+  vpc_id       = local.vpc_id
+  service_name = data.aws_vpc_endpoint_service.dynamodb[0].service_name
+  tags         = local.vpce_tags
 }
 
 resource "aws_vpc_endpoint_route_table_association" "private_dynamodb" {

@@ -316,12 +316,6 @@ variable "enable_dynamodb_endpoint" {
   default     = false
 }
 
-variable "dynamodb_endpoint_type" {
-  description = "DynamoDB VPC endpoint type"
-  type        = string
-  default     = "Gateway"
-}
-
 variable "enable_s3_endpoint" {
   description = "Should be true if you want to provision an S3 endpoint to the VPC"
   type        = bool
