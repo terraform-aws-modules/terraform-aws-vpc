@@ -20,13 +20,13 @@ Note that this example may create resources which can cost money (AWS Elastic IP
 | Name | Version |
 |------|---------|
 | terraform | >= 0.12.21 |
-| aws | >= 3.10 |
+| aws | >= 2.70 |
 
 ## Providers
 
 | Name | Version |
 |------|---------|
-| aws | >= 3.10 |
+| aws | >= 2.70 |
 
 ## Modules
 
@@ -38,7 +38,7 @@ Note that this example may create resources which can cost money (AWS Elastic IP
 
 | Name |
 |------|
-| [aws_availability_zones](https://registry.terraform.io/providers/hashicorp/aws/3.10/docs/data-sources/availability_zones) |
+| [aws_availability_zones](https://registry.terraform.io/providers/hashicorp/aws/2.70/docs/data-sources/availability_zones) |
 
 ## Inputs
 

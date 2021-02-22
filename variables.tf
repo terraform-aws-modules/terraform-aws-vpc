@@ -329,7 +329,7 @@ variable "enable_s3_endpoint" {
 }
 
 variable "s3_endpoint_type" {
-  description = "S3 VPC endpoint type"
+  description = "S3 VPC endpoint type. Note - S3 Interface type support is only available on AWS provider 3.10 and later"
   type        = string
   default     = "Gateway"
 }

@@ -22,7 +22,7 @@ Run `terraform destroy` when you don't need these resources.
 | Name | Version |
 |------|---------|
 | terraform | >= 0.12.21 |
-| aws | >= 3.10 |
+| aws | >= 2.70 |
 
 ## Providers
 

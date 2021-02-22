@@ -229,13 +229,13 @@ It is possible to integrate this VPC module with [terraform-aws-transit-gateway 
 | Name | Version |
 |------|---------|
 | terraform | >= 0.12.21 |
-| aws | >= 3.10 |
+| aws | >= 2.70 |
 
 ## Providers
 
 | Name | Version |
 |------|---------|
-| aws | >= 3.10 |
+| aws | >= 2.70 |
 
 ## Modules
 
@@ -245,39 +245,39 @@ No Modules.
 
 | Name |
 |------|
-| [aws_cloudwatch_log_group](https://registry.terraform.io/providers/hashicorp/aws/3.10/docs/resources/cloudwatch_log_group) |
-| [aws_customer_gateway](https://registry.terraform.io/providers/hashicorp/aws/3.10/docs/resources/customer_gateway) |
-| [aws_db_subnet_group](https://registry.terraform.io/providers/hashicorp/aws/3.10/docs/resources/db_subnet_group) |
-| [aws_default_network_acl](https://registry.terraform.io/providers/hashicorp/aws/3.10/docs/resources/default_network_acl) |
-| [aws_default_security_group](https://registry.terraform.io/providers/hashicorp/aws/3.10/docs/resources/default_security_group) |
-| [aws_default_vpc](https://registry.terraform.io/providers/hashicorp/aws/3.10/docs/resources/default_vpc) |
-| [aws_egress_only_internet_gateway](https://registry.terraform.io/providers/hashicorp/aws/3.10/docs/resources/egress_only_internet_gateway) |
-| [aws_eip](https://registry.terraform.io/providers/hashicorp/aws/3.10/docs/resources/eip) |
-| [aws_elasticache_subnet_group](https://registry.terraform.io/providers/hashicorp/aws/3.10/docs/resources/elasticache_subnet_group) |
-| [aws_flow_log](https://registry.terraform.io/providers/hashicorp/aws/3.10/docs/resources/flow_log) |
-| [aws_iam_policy_document](https://registry.terraform.io/providers/hashicorp/aws/3.10/docs/data-sources/iam_policy_document) |
-| [aws_iam_policy](https://registry.terraform.io/providers/hashicorp/aws/3.10/docs/resources/iam_policy) |
-| [aws_iam_role_policy_attachment](https://registry.terraform.io/providers/hashicorp/aws/3.10/docs/resources/iam_role_policy_attachment) |
-| [aws_iam_role](https://registry.terraform.io/providers/hashicorp/aws/3.10/docs/resources/iam_role) |
-| [aws_internet_gateway](https://registry.terraform.io/providers/hashicorp/aws/3.10/docs/resources/internet_gateway) |
-| [aws_nat_gateway](https://registry.terraform.io/providers/hashicorp/aws/3.10/docs/resources/nat_gateway) |
-| [aws_network_acl_rule](https://registry.terraform.io/providers/hashicorp/aws/3.10/docs/resources/network_acl_rule) |
-| [aws_network_acl](https://registry.terraform.io/providers/hashicorp/aws/3.10/docs/resources/network_acl) |
-| [aws_redshift_subnet_group](https://registry.terraform.io/providers/hashicorp/aws/3.10/docs/resources/redshift_subnet_group) |
-| [aws_route_table_association](https://registry.terraform.io/providers/hashicorp/aws/3.10/docs/resources/route_table_association) |
-| [aws_route_table](https://registry.terraform.io/providers/hashicorp/aws/3.10/docs/resources/route_table) |
-| [aws_route](https://registry.terraform.io/providers/hashicorp/aws/3.10/docs/resources/route) |
-| [aws_subnet](https://registry.terraform.io/providers/hashicorp/aws/3.10/docs/resources/subnet) |
-| [aws_vpc_dhcp_options_association](https://registry.terraform.io/providers/hashicorp/aws/3.10/docs/resources/vpc_dhcp_options_association) |
-| [aws_vpc_dhcp_options](https://registry.terraform.io/providers/hashicorp/aws/3.10/docs/resources/vpc_dhcp_options) |
-| [aws_vpc_endpoint_route_table_association](https://registry.terraform.io/providers/hashicorp/aws/3.10/docs/resources/vpc_endpoint_route_table_association) |
-| [aws_vpc_endpoint_service](https://registry.terraform.io/providers/hashicorp/aws/3.10/docs/data-sources/vpc_endpoint_service) |
-| [aws_vpc_endpoint](https://registry.terraform.io/providers/hashicorp/aws/3.10/docs/resources/vpc_endpoint) |
-| [aws_vpc_ipv4_cidr_block_association](https://registry.terraform.io/providers/hashicorp/aws/3.10/docs/resources/vpc_ipv4_cidr_block_association) |
-| [aws_vpc](https://registry.terraform.io/providers/hashicorp/aws/3.10/docs/resources/vpc) |
-| [aws_vpn_gateway_attachment](https://registry.terraform.io/providers/hashicorp/aws/3.10/docs/resources/vpn_gateway_attachment) |
-| [aws_vpn_gateway_route_propagation](https://registry.terraform.io/providers/hashicorp/aws/3.10/docs/resources/vpn_gateway_route_propagation) |
-| [aws_vpn_gateway](https://registry.terraform.io/providers/hashicorp/aws/3.10/docs/resources/vpn_gateway) |
+| [aws_cloudwatch_log_group](https://registry.terraform.io/providers/hashicorp/aws/2.70/docs/resources/cloudwatch_log_group) |
+| [aws_customer_gateway](https://registry.terraform.io/providers/hashicorp/aws/2.70/docs/resources/customer_gateway) |
+| [aws_db_subnet_group](https://registry.terraform.io/providers/hashicorp/aws/2.70/docs/resources/db_subnet_group) |
+| [aws_default_network_acl](https://registry.terraform.io/providers/hashicorp/aws/2.70/docs/resources/default_network_acl) |
+| [aws_default_security_group](https://registry.terraform.io/providers/hashicorp/aws/2.70/docs/resources/default_security_group) |
+| [aws_default_vpc](https://registry.terraform.io/providers/hashicorp/aws/2.70/docs/resources/default_vpc) |
+| [aws_egress_only_internet_gateway](https://registry.terraform.io/providers/hashicorp/aws/2.70/docs/resources/egress_only_internet_gateway) |
+| [aws_eip](https://registry.terraform.io/providers/hashicorp/aws/2.70/docs/resources/eip) |
+| [aws_elasticache_subnet_group](https://registry.terraform.io/providers/hashicorp/aws/2.70/docs/resources/elasticache_subnet_group) |
+| [aws_flow_log](https://registry.terraform.io/providers/hashicorp/aws/2.70/docs/resources/flow_log) |
+| [aws_iam_policy_document](https://registry.terraform.io/providers/hashicorp/aws/2.70/docs/data-sources/iam_policy_document) |
+| [aws_iam_policy](https://registry.terraform.io/providers/hashicorp/aws/2.70/docs/resources/iam_policy) |
+| [aws_iam_role_policy_attachment](https://registry.terraform.io/providers/hashicorp/aws/2.70/docs/resources/iam_role_policy_attachment) |
+| [aws_iam_role](https://registry.terraform.io/providers/hashicorp/aws/2.70/docs/resources/iam_role) |
+| [aws_internet_gateway](https://registry.terraform.io/providers/hashicorp/aws/2.70/docs/resources/internet_gateway) |
+| [aws_nat_gateway](https://registry.terraform.io/providers/hashicorp/aws/2.70/docs/resources/nat_gateway) |
+| [aws_network_acl_rule](https://registry.terraform.io/providers/hashicorp/aws/2.70/docs/resources/network_acl_rule) |
+| [aws_network_acl](https://registry.terraform.io/providers/hashicorp/aws/2.70/docs/resources/network_acl) |
+| [aws_redshift_subnet_group](https://registry.terraform.io/providers/hashicorp/aws/2.70/docs/resources/redshift_subnet_group) |
+| [aws_route_table_association](https://registry.terraform.io/providers/hashicorp/aws/2.70/docs/resources/route_table_association) |
+| [aws_route_table](https://registry.terraform.io/providers/hashicorp/aws/2.70/docs/resources/route_table) |
+| [aws_route](https://registry.terraform.io/providers/hashicorp/aws/2.70/docs/resources/route) |
+| [aws_subnet](https://registry.terraform.io/providers/hashicorp/aws/2.70/docs/resources/subnet) |
+| [aws_vpc_dhcp_options_association](https://registry.terraform.io/providers/hashicorp/aws/2.70/docs/resources/vpc_dhcp_options_association) |
+| [aws_vpc_dhcp_options](https://registry.terraform.io/providers/hashicorp/aws/2.70/docs/resources/vpc_dhcp_options) |
+| [aws_vpc_endpoint_route_table_association](https://registry.terraform.io/providers/hashicorp/aws/2.70/docs/resources/vpc_endpoint_route_table_association) |
+| [aws_vpc_endpoint_service](https://registry.terraform.io/providers/hashicorp/aws/2.70/docs/data-sources/vpc_endpoint_service) |
+| [aws_vpc_endpoint](https://registry.terraform.io/providers/hashicorp/aws/2.70/docs/resources/vpc_endpoint) |
+| [aws_vpc_ipv4_cidr_block_association](https://registry.terraform.io/providers/hashicorp/aws/2.70/docs/resources/vpc_ipv4_cidr_block_association) |
+| [aws_vpc](https://registry.terraform.io/providers/hashicorp/aws/2.70/docs/resources/vpc) |
+| [aws_vpn_gateway_attachment](https://registry.terraform.io/providers/hashicorp/aws/2.70/docs/resources/vpn_gateway_attachment) |
+| [aws_vpn_gateway_route_propagation](https://registry.terraform.io/providers/hashicorp/aws/2.70/docs/resources/vpn_gateway_route_propagation) |
+| [aws_vpn_gateway](https://registry.terraform.io/providers/hashicorp/aws/2.70/docs/resources/vpn_gateway) |
 
 ## Inputs
 
@@ -635,7 +635,7 @@ No Modules.
 | s3\_endpoint\_private\_dns\_enabled | Whether or not to associate a private hosted zone with the specified VPC for S3 interface endpoint | `bool` | `false` | no |
 | s3\_endpoint\_security\_group\_ids | The ID of one or more security groups to associate with the network interface for S3 interface endpoint | `list(string)` | `[]` | no |
 | s3\_endpoint\_subnet\_ids | The ID of one or more subnets in which to create a network interface for S3 interface endpoint. Only a single subnet within an AZ is supported. If omitted, private subnets will be used. | `list(string)` | `[]` | no |
-| s3\_endpoint\_type | S3 VPC endpoint type | `string` | `"Gateway"` | no |
+| s3\_endpoint\_type | S3 VPC endpoint type. Note - S3 Interface type support is only available on AWS provider 3.10 and later | `string` | `"Gateway"` | no |
 | sagemaker\_api\_endpoint\_private\_dns\_enabled | Whether or not to associate a private hosted zone with the specified VPC for SageMaker API endpoint | `bool` | `false` | no |
 | sagemaker\_api\_endpoint\_security\_group\_ids | The ID of one or more security groups to associate with the network interface for SageMaker API endpoint | `list(string)` | `[]` | no |
 | sagemaker\_api\_endpoint\_subnet\_ids | The ID of one or more subnets in which to create a network interface for SageMaker API endpoint. Only a single subnet within an AZ is supported. If omitted, private subnets will be used. | `list(string)` | `[]` | no |

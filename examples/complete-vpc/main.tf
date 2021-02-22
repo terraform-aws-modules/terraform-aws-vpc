@@ -51,6 +51,7 @@ module "vpc" {
   dhcp_options_domain_name_servers = ["127.0.0.1", "10.10.0.2"]
 
   # VPC endpoint for S3
+  # Note - S3 Interface type support is only available on AWS provider 3.10 and later
   enable_s3_endpoint              = true
   s3_endpoint_type                = "Interface"
   s3_endpoint_private_dns_enabled = false
