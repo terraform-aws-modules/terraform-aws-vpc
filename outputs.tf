@@ -135,7 +135,7 @@ output "database_subnet_group" {
 
 output "database_subnet_group_name" {
   description = "Name of database subnet group"
-  value       = aws_db_subnet_group.database.*.name[0]
+  value       = concat(aws_db_subnet_group.database.*.name, [""])[0]
 }
 
 output "redshift_subnets" {
