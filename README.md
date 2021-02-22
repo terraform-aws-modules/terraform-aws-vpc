@@ -167,7 +167,7 @@ If your organization requires a permissions boundary to be attached to the VPC F
 
 ## Conditional creation
 
-Sometimes you need to have a way to create VPC resources conditionally but Terraform does not allow to use `count` inside `module` block, so the solution is to specify argument `create_vpc`.
+Prior to Terraform 0.13, you were unable to specify `count` in a module block. If you wish to toggle the creation of the module's resources in an older (pre 0.13) version of Terraform, you can use the `create_vpc` argument.
 
 ```hcl
 # This VPC will not be created
