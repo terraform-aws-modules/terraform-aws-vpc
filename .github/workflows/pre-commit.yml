@@ -1,0 +1,62 @@
+name: Pre-Commit
+
+on:
+  pull_request:
+  push:
+    branches:
+      - master
+
+jobs:
+  getBaseVersion:
+    name: Get min/max versions
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Terraform min/max versions
+        id: minMax
+        uses: clowdhaus/terraform-min-max@v1.0.1
+    outputs:
+      minVersion: ${{ steps.minMax.outputs.minVersion }}
+      maxVersion: ${{ steps.minMax.outputs.maxVersion }}
+
+  preCommit:
+    name: Pre-commit check
+    runs-on: ubuntu-latest
+    needs: getBaseVersion
+    strategy:
+      fail-fast: false
+      matrix:
+        version:
+          - ${{ needs.getBaseVersion.outputs.minVersion }}
+          - ${{ needs.getBaseVersion.outputs.maxVersion }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Install Python
+        uses: actions/setup-python@v2
+
+      - name: Install Terraform v${{ matrix.version }}
+        uses: hashicorp/setup-terraform@v1
+        with:
+          terraform_version: ${{ matrix.version }}
+
+      - name: Install pre-commit dependencies
+        run: |
+          pip install pre-commit
+          curl -L "$(curl -s https://api.github.com/repos/terraform-docs/terraform-docs/releases/latest | grep -o -E "https://.+?-linux-amd64" | head -n1)" > terraform-docs && chmod +x terraform-docs && sudo mv terraform-docs /usr/bin/
+          curl -L "$(curl -s https://api.github.com/repos/terraform-linters/tflint/releases/latest | grep -o -E "https://.+?_linux_amd64.zip")" > tflint.zip && unzip tflint.zip && rm tflint.zip && sudo mv tflint /usr/bin/
+
+      - name: Execute pre-commit
+        # Run only validate pre-commit check on min version supported
+        if: ${{ matrix.version ==  needs.getBaseVersion.outputs.minVersion }}
+        run: pre-commit run --color=always --show-diff-on-failure --all-files terraform_validate
+
+      - name: Execute pre-commit
+        # Run all pre-commit checks on max version supported
+        if: ${{ matrix.version ==  needs.getBaseVersion.outputs.maxVersion }}
+        run: pre-commit run --color=always --show-diff-on-failure --all-files

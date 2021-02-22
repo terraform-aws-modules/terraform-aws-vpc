@@ -28,6 +28,16 @@ Run `terraform destroy` when you don't need these resources.
 
 No provider.
 
+## Modules
+
+| Name | Source | Version |
+|------|--------|---------|
+| vpc | ../../ |  |
+
+## Resources
+
+No resources.
+
 ## Inputs
 
 No input.
@@ -38,5 +48,4 @@ No input.
 |------|-------------|
 | default\_vpc\_cidr\_block | The CIDR block of the VPC |
 | default\_vpc\_id | The ID of the Default VPC |
-
 <!-- END OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
