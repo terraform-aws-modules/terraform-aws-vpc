@@ -7,6 +7,13 @@ All notable changes to this project will be documented in this file.
 
 
 
+<a name="v2.73.0"></a>
+## [v2.73.0] - 2021-02-22
+
+- chore: Adds database_subnet_group_name as an output variable ([#592](https://github.com/terraform-aws-modules/terraform-aws-vpc/issues/592))
+- fix: aws_default_security_group was always dirty when manage_default_security_group was set  ([#591](https://github.com/terraform-aws-modules/terraform-aws-vpc/issues/591))
+
+
 <a name="v2.72.0"></a>
 ## [v2.72.0] - 2021-02-22
 
@@ -1221,7 +1228,8 @@ All notable changes to this project will be documented in this file.
 - Initial commit
 
 
-[Unreleased]: https://github.com/terraform-aws-modules/terraform-aws-vpc/compare/v2.72.0...HEAD
+[Unreleased]: https://github.com/terraform-aws-modules/terraform-aws-vpc/compare/v2.73.0...HEAD
+[v2.73.0]: https://github.com/terraform-aws-modules/terraform-aws-vpc/compare/v2.72.0...v2.73.0
 [v2.72.0]: https://github.com/terraform-aws-modules/terraform-aws-vpc/compare/v2.71.0...v2.72.0
 [v2.71.0]: https://github.com/terraform-aws-modules/terraform-aws-vpc/compare/v1.73.0...v2.71.0
 [v1.73.0]: https://github.com/terraform-aws-modules/terraform-aws-vpc/compare/v2.70.0...v1.73.0
