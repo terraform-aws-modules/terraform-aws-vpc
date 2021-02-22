@@ -249,6 +249,7 @@ No Modules.
 | [aws_customer_gateway](https://registry.terraform.io/providers/hashicorp/aws/2.70/docs/resources/customer_gateway) |
 | [aws_db_subnet_group](https://registry.terraform.io/providers/hashicorp/aws/2.70/docs/resources/db_subnet_group) |
 | [aws_default_network_acl](https://registry.terraform.io/providers/hashicorp/aws/2.70/docs/resources/default_network_acl) |
+| [aws_default_route_table](https://registry.terraform.io/providers/hashicorp/aws/2.70/docs/resources/default_route_table) |
 | [aws_default_security_group](https://registry.terraform.io/providers/hashicorp/aws/2.70/docs/resources/default_security_group) |
 | [aws_default_vpc](https://registry.terraform.io/providers/hashicorp/aws/2.70/docs/resources/default_vpc) |
 | [aws_egress_only_internet_gateway](https://registry.terraform.io/providers/hashicorp/aws/2.70/docs/resources/egress_only_internet_gateway) |
@@ -377,6 +378,9 @@ No Modules.
 | default\_network\_acl\_ingress | List of maps of ingress rules to set on the Default Network ACL | `list(map(string))` | <pre>[<br>  {<br>    "action": "allow",<br>    "cidr_block": "0.0.0.0/0",<br>    "from_port": 0,<br>    "protocol": "-1",<br>    "rule_no": 100,<br>    "to_port": 0<br>  },<br>  {<br>    "action": "allow",<br>    "from_port": 0,<br>    "ipv6_cidr_block": "::/0",<br>    "protocol": "-1",<br>    "rule_no": 101,<br>    "to_port": 0<br>  }<br>]</pre> | no |
 | default\_network\_acl\_name | Name to be used on the Default Network ACL | `string` | `""` | no |
 | default\_network\_acl\_tags | Additional tags for the Default Network ACL | `map(string)` | `{}` | no |
+| default\_route\_table\_propagating\_vgws | List of virtual gateways for propagation | `list(string)` | `[]` | no |
+| default\_route\_table\_routes | Configuration block of routes. See https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/default_route_table#route | `list(map(string))` | `[]` | no |
+| default\_route\_table\_tags | Additional tags for the default route table | `map(string)` | `{}` | no |
 | default\_security\_group\_egress | List of maps of egress rules to set on the default security group | `list(map(string))` | `null` | no |
 | default\_security\_group\_ingress | List of maps of ingress rules to set on the default security group | `list(map(string))` | `null` | no |
 | default\_security\_group\_name | Name to be used on the default security group | `string` | `"default"` | no |
@@ -581,6 +585,7 @@ No Modules.
 | logs\_endpoint\_security\_group\_ids | The ID of one or more security groups to associate with the network interface for CloudWatch Logs endpoint | `list(string)` | `[]` | no |
 | logs\_endpoint\_subnet\_ids | The ID of one or more subnets in which to create a network interface for CloudWatch Logs endpoint. Only a single subnet within an AZ is supported. If omitted, private subnets will be used. | `list(string)` | `[]` | no |
 | manage\_default\_network\_acl | Should be true to adopt and manage Default Network ACL | `bool` | `false` | no |
+| manage\_default\_route\_table | Should be true to manage default route table | `bool` | `false` | no |
 | manage\_default\_security\_group | Should be true to adopt and manage default security group | `bool` | `false` | no |
 | manage\_default\_vpc | Should be true to adopt and manage Default VPC | `bool` | `false` | no |
 | map\_public\_ip\_on\_launch | Should be false if you do not want to auto-assign public IP on launch | `bool` | `true` | no |
