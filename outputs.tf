@@ -133,6 +133,11 @@ output "database_subnet_group" {
   value       = concat(aws_db_subnet_group.database.*.id, [""])[0]
 }
 
+output "database_subnet_group_name" {
+  description = "Name of database subnet group"
+  value       = concat(aws_db_subnet_group.database.*.name, [""])[0]
+}
+
 output "redshift_subnets" {
   description = "List of IDs of redshift subnets"
   value       = aws_subnet.redshift.*.id
@@ -1405,6 +1410,36 @@ output "vpc_endpoint_codeartifact_repositories_network_interface_ids" {
 output "vpc_endpoint_codeartifact_repositories_dns_entry" {
   description = "The DNS entries for the VPC Endpoint for Codeartifact repositories."
   value       = flatten(aws_vpc_endpoint.codeartifact_repositories.*.dns_entry)
+}
+
+output "vpc_endpoint_dms_id" {
+  description = "The ID of VPC endpoint for DMS"
+  value       = concat(aws_vpc_endpoint.sns.*.id, [""])[0]
+}
+
+output "vpc_endpoint_dms_network_interface_ids" {
+  description = "One or more network interfaces for the VPC Endpoint for DMS."
+  value       = flatten(aws_vpc_endpoint.sns.*.network_interface_ids)
+}
+
+output "vpc_endpoint_dms_dns_entry" {
+  description = "The DNS entries for the VPC Endpoint for DMS."
+  value       = flatten(aws_vpc_endpoint.sns.*.dns_entry)
+}
+
+output "vpc_endpoint_rds_id" {
+  description = "The ID of VPC endpoint for RDS"
+  value       = concat(aws_vpc_endpoint.rds.*.id, [""])[0]
+}
+
+output "vpc_endpoint_rds_network_interface_ids" {
+  description = "One or more network interfaces for the VPC Endpoint for RDS."
+  value       = flatten(aws_vpc_endpoint.rds.*.network_interface_ids)
+}
+
+output "vpc_endpoint_rds_dns_entry" {
+  description = "The DNS entries for the VPC Endpoint for RDS."
+  value       = flatten(aws_vpc_endpoint.rds.*.dns_entry)
 }
 
 # VPC flow log

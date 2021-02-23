@@ -316,10 +316,70 @@ variable "enable_dynamodb_endpoint" {
   default     = false
 }
 
+variable "dynamodb_endpoint_type" {
+  description = "DynamoDB VPC endpoint type. Note - DynamoDB Interface type support is not yet available"
+  type        = string
+  default     = "Gateway"
+}
+
+variable "dynamodb_endpoint_security_group_ids" {
+  description = "The ID of one or more security groups to associate with the network interface for DynamoDB interface endpoint"
+  type        = list(string)
+  default     = []
+}
+
+variable "dynamodb_endpoint_subnet_ids" {
+  description = "The ID of one or more subnets in which to create a network interface for DynamoDB interface endpoint. Only a single subnet within an AZ is supported. If omitted, private subnets will be used."
+  type        = list(string)
+  default     = []
+}
+
+variable "dynamodb_endpoint_private_dns_enabled" {
+  description = "Whether or not to associate a private hosted zone with the specified VPC for DynamoDB interface endpoint"
+  type        = bool
+  default     = false
+}
+
+variable "dynamodb_endpoint_policy" {
+  description = "A policy to attach to the endpoint that controls access to the service. Defaults to full access"
+  type        = string
+  default     = null
+}
+
 variable "enable_s3_endpoint" {
   description = "Should be true if you want to provision an S3 endpoint to the VPC"
   type        = bool
   default     = false
+}
+
+variable "s3_endpoint_type" {
+  description = "S3 VPC endpoint type. Note - S3 Interface type support is only available on AWS provider 3.10 and later"
+  type        = string
+  default     = "Gateway"
+}
+
+variable "s3_endpoint_security_group_ids" {
+  description = "The ID of one or more security groups to associate with the network interface for S3 interface endpoint"
+  type        = list(string)
+  default     = []
+}
+
+variable "s3_endpoint_subnet_ids" {
+  description = "The ID of one or more subnets in which to create a network interface for S3 interface endpoint. Only a single subnet within an AZ is supported. If omitted, private subnets will be used."
+  type        = list(string)
+  default     = []
+}
+
+variable "s3_endpoint_private_dns_enabled" {
+  description = "Whether or not to associate a private hosted zone with the specified VPC for S3 interface endpoint"
+  type        = bool
+  default     = false
+}
+
+variable "s3_endpoint_policy" {
+  description = "A policy to attach to the endpoint that controls access to the service. Defaults to full access"
+  type        = string
+  default     = null
 }
 
 variable "enable_codeartifact_api_endpoint" {
@@ -388,6 +448,12 @@ variable "codebuild_endpoint_subnet_ids" {
   default     = []
 }
 
+variable "codebuild_endpoint_policy" {
+  description = "A policy to attach to the endpoint that controls access to the service. Defaults to full access"
+  type        = string
+  default     = null
+}
+
 variable "codebuild_endpoint_private_dns_enabled" {
   description = "Whether or not to associate a private hosted zone with the specified VPC for Codebuild endpoint"
   type        = bool
@@ -410,6 +476,12 @@ variable "codecommit_endpoint_subnet_ids" {
   description = "The ID of one or more subnets in which to create a network interface for Codecommit endpoint. Only a single subnet within an AZ is supported. If omitted, private subnets will be used."
   type        = list(string)
   default     = []
+}
+
+variable "codecommit_endpoint_policy" {
+  description = "A policy to attach to the endpoint that controls access to the service. Defaults to full access"
+  type        = string
+  default     = null
 }
 
 variable "codecommit_endpoint_private_dns_enabled" {
@@ -484,6 +556,12 @@ variable "sqs_endpoint_subnet_ids" {
   default     = []
 }
 
+variable "sqs_endpoint_policy" {
+  description = "A policy to attach to the endpoint that controls access to the service. Defaults to full access"
+  type        = string
+  default     = null
+}
+
 variable "sqs_endpoint_private_dns_enabled" {
   description = "Whether or not to associate a private hosted zone with the specified VPC for SQS endpoint"
   type        = bool
@@ -556,6 +634,12 @@ variable "secretsmanager_endpoint_subnet_ids" {
   default     = []
 }
 
+variable "secretsmanager_endpoint_policy" {
+  description = "A policy to attach to the endpoint that controls access to the service. Defaults to full access"
+  type        = string
+  default     = null
+}
+
 variable "secretsmanager_endpoint_private_dns_enabled" {
   description = "Whether or not to associate a private hosted zone with the specified VPC for Secrets Manager endpoint"
   type        = bool
@@ -572,6 +656,12 @@ variable "apigw_endpoint_security_group_ids" {
   description = "The ID of one or more security groups to associate with the network interface for API GW  endpoint"
   type        = list(string)
   default     = []
+}
+
+variable "apigw_endpoint_policy" {
+  description = "A policy to attach to the endpoint that controls access to the service. Defaults to full access"
+  type        = string
+  default     = null
 }
 
 variable "apigw_endpoint_private_dns_enabled" {
@@ -671,6 +761,12 @@ variable "ec2_endpoint_security_group_ids" {
   default     = []
 }
 
+variable "ec2_endpoint_policy" {
+  description = "A policy to attach to the endpoint that controls access to the service. Defaults to full access"
+  type        = string
+  default     = null
+}
+
 variable "ec2_endpoint_private_dns_enabled" {
   description = "Whether or not to associate a private hosted zone with the specified VPC for EC2 endpoint"
   type        = bool
@@ -720,6 +816,12 @@ variable "ec2_autoscaling_endpoint_security_group_ids" {
   default     = []
 }
 
+variable "ec2_autoscaling_endpoint_policy" {
+  description = "A policy to attach to the endpoint that controls access to the service. Defaults to full access"
+  type        = string
+  default     = null
+}
+
 variable "ec2_autoscaling_endpoint_private_dns_enabled" {
   description = "Whether or not to associate a private hosted zone with the specified VPC for EC2 Autoscaling endpoint"
   type        = bool
@@ -744,6 +846,12 @@ variable "ecr_api_endpoint_subnet_ids" {
   default     = []
 }
 
+variable "ecr_api_endpoint_policy" {
+  description = "A policy to attach to the endpoint that controls access to the service. Defaults to full access"
+  type        = string
+  default     = null
+}
+
 variable "ecr_api_endpoint_private_dns_enabled" {
   description = "Whether or not to associate a private hosted zone with the specified VPC for ECR API endpoint"
   type        = bool
@@ -766,6 +874,12 @@ variable "ecr_dkr_endpoint_subnet_ids" {
   description = "The ID of one or more subnets in which to create a network interface for ECR dkr endpoint. If omitted, private subnets will be used."
   type        = list(string)
   default     = []
+}
+
+variable "ecr_dkr_endpoint_policy" {
+  description = "A policy to attach to the endpoint that controls access to the service. Defaults to full access"
+  type        = string
+  default     = null
 }
 
 variable "ecr_dkr_endpoint_private_dns_enabled" {
@@ -796,6 +910,12 @@ variable "kms_endpoint_subnet_ids" {
   description = "The ID of one or more subnets in which to create a network interface for KMS endpoint. Only a single subnet within an AZ is supported. If omitted, private subnets will be used."
   type        = list(string)
   default     = []
+}
+
+variable "kms_endpoint_policy" {
+  description = "A policy to attach to the endpoint that controls access to the service. Defaults to full access"
+  type        = string
+  default     = null
 }
 
 variable "kms_endpoint_private_dns_enabled" {
@@ -894,6 +1014,12 @@ variable "sns_endpoint_subnet_ids" {
   default     = []
 }
 
+variable "sns_endpoint_policy" {
+  description = "A policy to attach to the endpoint that controls access to the service. Defaults to full access"
+  type        = string
+  default     = null
+}
+
 variable "sns_endpoint_private_dns_enabled" {
   description = "Whether or not to associate a private hosted zone with the specified VPC for SNS endpoint"
   type        = bool
@@ -916,6 +1042,12 @@ variable "monitoring_endpoint_subnet_ids" {
   description = "The ID of one or more subnets in which to create a network interface for CloudWatch Monitoring endpoint. Only a single subnet within an AZ is supported. If omitted, private subnets will be used."
   type        = list(string)
   default     = []
+}
+
+variable "monitoring_endpoint_policy" {
+  description = "A policy to attach to the endpoint that controls access to the service. Defaults to full access"
+  type        = string
+  default     = null
 }
 
 variable "monitoring_endpoint_private_dns_enabled" {
@@ -942,6 +1074,12 @@ variable "elasticloadbalancing_endpoint_subnet_ids" {
   default     = []
 }
 
+variable "elasticloadbalancing_endpoint_policy" {
+  description = "A policy to attach to the endpoint that controls access to the service. Defaults to full access"
+  type        = string
+  default     = null
+}
+
 variable "elasticloadbalancing_endpoint_private_dns_enabled" {
   description = "Whether or not to associate a private hosted zone with the specified VPC for Elastic Load Balancing endpoint"
   type        = bool
@@ -966,6 +1104,12 @@ variable "events_endpoint_subnet_ids" {
   default     = []
 }
 
+variable "events_endpoint_policy" {
+  description = "A policy to attach to the endpoint that controls access to the service. Defaults to full access"
+  type        = string
+  default     = null
+}
+
 variable "events_endpoint_private_dns_enabled" {
   description = "Whether or not to associate a private hosted zone with the specified VPC for CloudWatch Events endpoint"
   type        = bool
@@ -988,6 +1132,12 @@ variable "logs_endpoint_subnet_ids" {
   description = "The ID of one or more subnets in which to create a network interface for CloudWatch Logs endpoint. Only a single subnet within an AZ is supported. If omitted, private subnets will be used."
   type        = list(string)
   default     = []
+}
+
+variable "logs_endpoint_policy" {
+  description = "A policy to attach to the endpoint that controls access to the service. Defaults to full access"
+  type        = string
+  default     = null
 }
 
 variable "logs_endpoint_private_dns_enabled" {
@@ -1038,6 +1188,12 @@ variable "kinesis_streams_endpoint_subnet_ids" {
   default     = []
 }
 
+variable "kinesis_streams_endpoint_policy" {
+  description = "A policy to attach to the endpoint that controls access to the service. Defaults to full access"
+  type        = string
+  default     = null
+}
+
 variable "kinesis_streams_endpoint_private_dns_enabled" {
   description = "Whether or not to associate a private hosted zone with the specified VPC for Kinesis Streams endpoint"
   type        = bool
@@ -1060,6 +1216,12 @@ variable "kinesis_firehose_endpoint_subnet_ids" {
   description = "The ID of one or more subnets in which to create a network interface for Kinesis Firehose endpoint. Only a single subnet within an AZ is supported. If omitted, private subnets will be used."
   type        = list(string)
   default     = []
+}
+
+variable "kinesis_firehose_endpoint_policy" {
+  description = "A policy to attach to the endpoint that controls access to the service. Defaults to full access"
+  type        = string
+  default     = null
 }
 
 variable "kinesis_firehose_endpoint_private_dns_enabled" {
@@ -1116,6 +1278,12 @@ variable "sagemaker_notebook_endpoint_subnet_ids" {
   default     = []
 }
 
+variable "sagemaker_notebook_endpoint_policy" {
+  description = "A policy to attach to the endpoint that controls access to the service. Defaults to full access"
+  type        = string
+  default     = null
+}
+
 variable "sagemaker_notebook_endpoint_private_dns_enabled" {
   description = "Whether or not to associate a private hosted zone with the specified VPC for Sagemaker Notebook endpoint"
   type        = bool
@@ -1138,6 +1306,12 @@ variable "sts_endpoint_subnet_ids" {
   description = "The ID of one or more subnets in which to create a network interface for STS endpoint. Only a single subnet within an AZ is supported. If omitted, private subnets will be used."
   type        = list(string)
   default     = []
+}
+
+variable "sts_endpoint_policy" {
+  description = "A policy to attach to the endpoint that controls access to the service. Defaults to full access"
+  type        = string
+  default     = null
 }
 
 variable "sts_endpoint_private_dns_enabled" {
@@ -1302,6 +1476,12 @@ variable "sagemaker_api_endpoint_subnet_ids" {
   default     = []
 }
 
+variable "sagemaker_api_endpoint_policy" {
+  description = "A policy to attach to the endpoint that controls access to the service. Defaults to full access"
+  type        = string
+  default     = null
+}
+
 variable "sagemaker_api_endpoint_private_dns_enabled" {
   description = "Whether or not to associate a private hosted zone with the specified VPC for SageMaker API endpoint"
   type        = bool
@@ -1323,6 +1503,12 @@ variable "sagemaker_runtime_endpoint_subnet_ids" {
   description = "The ID of one or more subnets in which to create a network interface for SageMaker Runtime endpoint. Only a single subnet within an AZ is supported. If omitted, private subnets will be used."
   type        = list(string)
   default     = []
+}
+
+variable "sagemaker_runtime_endpoint_policy" {
+  description = "A policy to attach to the endpoint that controls access to the service. Defaults to full access"
+  type        = string
+  default     = null
 }
 
 variable "sagemaker_runtime_endpoint_private_dns_enabled" {
@@ -1397,6 +1583,12 @@ variable "athena_endpoint_subnet_ids" {
   default     = []
 }
 
+variable "athena_endpoint_policy" {
+  description = "A policy to attach to the endpoint that controls access to the service. Defaults to full access"
+  type        = string
+  default     = null
+}
+
 variable "athena_endpoint_private_dns_enabled" {
   description = "Whether or not to associate a private hosted zone with the specified VPC for Athena endpoint"
   type        = bool
@@ -1419,6 +1611,12 @@ variable "rekognition_endpoint_subnet_ids" {
   description = "The ID of one or more subnets in which to create a network interface for Rekognition endpoint. Only a single subnet within an AZ is supported. If omitted, private subnets will be used."
   type        = list(string)
   default     = []
+}
+
+variable "rekognition_endpoint_policy" {
+  description = "A policy to attach to the endpoint that controls access to the service. Defaults to full access"
+  type        = string
+  default     = null
 }
 
 variable "rekognition_endpoint_private_dns_enabled" {
@@ -1445,6 +1643,12 @@ variable "efs_endpoint_subnet_ids" {
   default     = []
 }
 
+variable "efs_endpoint_policy" {
+  description = "A policy to attach to the endpoint that controls access to the service. Defaults to full access"
+  type        = string
+  default     = null
+}
+
 variable "efs_endpoint_private_dns_enabled" {
   description = "Whether or not to associate a private hosted zone with the specified VPC for EFS endpoint"
   type        = bool
@@ -1467,6 +1671,12 @@ variable "cloud_directory_endpoint_subnet_ids" {
   description = "The ID of one or more subnets in which to create a network interface for Cloud Directory endpoint. Only a single subnet within an AZ is supported. Ifomitted, private subnets will be used."
   type        = list(string)
   default     = []
+}
+
+variable "cloud_directory_endpoint_policy" {
+  description = "A policy to attach to the endpoint that controls access to the service. Defaults to full access"
+  type        = string
+  default     = null
 }
 
 variable "cloud_directory_endpoint_private_dns_enabled" {
@@ -1511,6 +1721,12 @@ variable "auto_scaling_plans_endpoint_subnet_ids" {
   default     = []
 }
 
+variable "auto_scaling_plans_endpoint_policy" {
+  description = "A policy to attach to the endpoint that controls access to the service. Defaults to full access"
+  type        = string
+  default     = null
+}
+
 variable "auto_scaling_plans_endpoint_private_dns_enabled" {
   description = "Whether or not to associate a private hosted zone with the specified VPC for Auto Scaling Plans endpoint"
   type        = bool
@@ -1541,6 +1757,12 @@ variable "workspaces_endpoint_subnet_ids" {
   default     = []
 }
 
+variable "workspaces_endpoint_policy" {
+  description = "A policy to attach to the endpoint that controls access to the service. Defaults to full access"
+  type        = string
+  default     = null
+}
+
 variable "workspaces_endpoint_private_dns_enabled" {
   description = "Whether or not to associate a private hosted zone with the specified VPC for Workspaces endpoint"
   type        = bool
@@ -1563,6 +1785,12 @@ variable "access_analyzer_endpoint_subnet_ids" {
   description = "The ID of one or more subnets in which to create a network interface for Access Analyzer endpoint. Only a single subnet within an AZ is supported. Ifomitted, private subnets will be used."
   type        = list(string)
   default     = []
+}
+
+variable "access_analyzer_endpoint_policy" {
+  description = "A policy to attach to the endpoint that controls access to the service. Defaults to full access"
+  type        = string
+  default     = null
 }
 
 variable "access_analyzer_endpoint_private_dns_enabled" {
@@ -1685,6 +1913,12 @@ variable "emr_endpoint_subnet_ids" {
   default     = []
 }
 
+variable "emr_endpoint_policy" {
+  description = "A policy to attach to the endpoint that controls access to the service. Defaults to full access"
+  type        = string
+  default     = null
+}
+
 variable "emr_endpoint_private_dns_enabled" {
   description = "Whether or not to associate a private hosted zone with the specified VPC for EMR endpoint"
   type        = bool
@@ -1731,6 +1965,12 @@ variable "elasticbeanstalk_endpoint_subnet_ids" {
   description = "The ID of one or more subnets in which to create a network interface for Elastic Beanstalk endpoint. Only a single subnet within an AZ is supported. If omitted, private subnets will be used."
   type        = list(string)
   default     = []
+}
+
+variable "elasticbeanstalk_endpoint_policy" {
+  description = "A policy to attach to the endpoint that controls access to the service. Defaults to full access"
+  type        = string
+  default     = null
 }
 
 variable "elasticbeanstalk_endpoint_private_dns_enabled" {
@@ -1781,14 +2021,14 @@ variable "states_endpoint_subnet_ids" {
   default     = []
 }
 
-variable "states_endpoint_private_dns_enabled" {
-  description = "Whether or not to associate a private hosted zone with the specified VPC for Step Function endpoint"
-  type        = bool
-  default     = false
+variable "states_endpoint_policy" {
+  description = "A policy to attach to the endpoint that controls access to the service. Defaults to full access"
+  type        = string
+  default     = null
 }
 
-variable "enable_acm_pca_endpoint" {
-  description = "Should be true if you want to provision an ACM PCA endpoint to the VPC"
+variable "states_endpoint_private_dns_enabled" {
+  description = "Whether or not to associate a private hosted zone with the specified VPC for Step Function endpoint"
   type        = bool
   default     = false
 }
@@ -1865,6 +2105,12 @@ variable "codedeploy_commands_secure_endpoint_private_dns_enabled" {
   default     = false
 }
 
+variable "enable_acm_pca_endpoint" {
+  description = "Should be true if you want to provision an ACM PCA endpoint to the VPC"
+  type        = bool
+  default     = false
+}
+
 variable "acm_pca_endpoint_security_group_ids" {
   description = "The ID of one or more security groups to associate with the network interface for ACM PCA endpoint"
   type        = list(string)
@@ -1877,8 +2123,38 @@ variable "acm_pca_endpoint_subnet_ids" {
   default     = []
 }
 
+variable "acm_pca_endpoint_policy" {
+  description = "A policy to attach to the endpoint that controls access to the service. Defaults to full access"
+  type        = string
+  default     = null
+}
+
 variable "acm_pca_endpoint_private_dns_enabled" {
   description = "Whether or not to associate a private hosted zone with the specified VPC for ACM PCA endpoint"
+  type        = bool
+  default     = false
+}
+
+variable "enable_dms_endpoint" {
+  description = "Should be true if you want to provision a DMS endpoint to the VPC"
+  type        = bool
+  default     = false
+}
+
+variable "dms_endpoint_security_group_ids" {
+  description = "The ID of one or more security groups to associate with the network interface for DMS endpoint"
+  type        = list(string)
+  default     = []
+}
+
+variable "dms_endpoint_subnet_ids" {
+  description = "The ID of one or more subnets in which to create a network interface for DMS endpoint. Only a single subnet within an AZ is supported. If omitted, private subnets will be used."
+  type        = list(string)
+  default     = []
+}
+
+variable "dms_endpoint_private_dns_enabled" {
+  description = "Whether or not to associate a private hosted zone with the specified VPC for DMS endpoint"
   type        = bool
   default     = false
 }

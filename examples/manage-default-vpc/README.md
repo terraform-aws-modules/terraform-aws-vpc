@@ -22,11 +22,21 @@ Run `terraform destroy` when you don't need these resources.
 | Name | Version |
 |------|---------|
 | terraform | >= 0.12.21 |
-| aws | >= 2.68 |
+| aws | >= 2.70 |
 
 ## Providers
 
 No provider.
+
+## Modules
+
+| Name | Source | Version |
+|------|--------|---------|
+| vpc | ../../ |  |
+
+## Resources
+
+No resources.
 
 ## Inputs
 
@@ -38,5 +48,4 @@ No input.
 |------|-------------|
 | default\_vpc\_cidr\_block | The CIDR block of the VPC |
 | default\_vpc\_id | The ID of the Default VPC |
-
 <!-- END OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
