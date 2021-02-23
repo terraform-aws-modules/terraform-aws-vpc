@@ -2213,6 +2213,30 @@ variable "propagate_public_route_tables_vgw" {
   default     = false
 }
 
+variable "manage_default_route_table" {
+  description = "Should be true to manage default route table"
+  type        = bool
+  default     = false
+}
+
+variable "default_route_table_propagating_vgws" {
+  description = "List of virtual gateways for propagation"
+  type        = list(string)
+  default     = []
+}
+
+variable "default_route_table_routes" {
+  description = "Configuration block of routes. See https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/default_route_table#route"
+  type        = list(map(string))
+  default     = []
+}
+
+variable "default_route_table_tags" {
+  description = "Additional tags for the default route table"
+  type        = map(string)
+  default     = {}
+}
+
 variable "tags" {
   description = "A map of tags to add to all resources"
   type        = map(string)
