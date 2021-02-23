@@ -7,6 +7,12 @@ All notable changes to this project will be documented in this file.
 
 
 
+<a name="v2.77.0"></a>
+## [v2.77.0] - 2021-02-23
+
+- feat: add default route table resource to manage default route table, its tags, routes, etc. ([#599](https://github.com/terraform-aws-modules/terraform-aws-vpc/issues/599))
+
+
 <a name="v2.76.0"></a>
 ## [v2.76.0] - 2021-02-23
 
@@ -1247,7 +1253,8 @@ All notable changes to this project will be documented in this file.
 - Initial commit
 
 
-[Unreleased]: https://github.com/terraform-aws-modules/terraform-aws-vpc/compare/v2.76.0...HEAD
+[Unreleased]: https://github.com/terraform-aws-modules/terraform-aws-vpc/compare/v2.77.0...HEAD
+[v2.77.0]: https://github.com/terraform-aws-modules/terraform-aws-vpc/compare/v2.76.0...v2.77.0
 [v2.76.0]: https://github.com/terraform-aws-modules/terraform-aws-vpc/compare/v2.75.0...v2.76.0
 [v2.75.0]: https://github.com/terraform-aws-modules/terraform-aws-vpc/compare/v2.74.0...v2.75.0
 [v2.74.0]: https://github.com/terraform-aws-modules/terraform-aws-vpc/compare/v2.73.0...v2.74.0
