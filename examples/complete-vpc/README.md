@@ -40,7 +40,9 @@ Note that this example may create resources which can cost money (AWS Elastic IP
 
 | Name |
 |------|
-| [aws_security_group](https://registry.terraform.io/providers/hashicorp/aws/3.10/docs/data-sources/security_group) |
+| [aws_iam_policy_document](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/iam_policy_document) |
+| [aws_security_group](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/security_group) |
+| [aws_vpc_endpoint](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/vpc_endpoint) |
 
 ## Inputs
 

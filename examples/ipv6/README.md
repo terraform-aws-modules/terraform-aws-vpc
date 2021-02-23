@@ -38,7 +38,7 @@ Note that this example may create resources which can cost money (AWS Elastic IP
 
 | Name |
 |------|
-| [aws_availability_zones](https://registry.terraform.io/providers/hashicorp/aws/2.70/docs/data-sources/availability_zones) |
+| [aws_availability_zones](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/availability_zones) |
 
 ## Inputs
 
