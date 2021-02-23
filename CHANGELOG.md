@@ -7,6 +7,18 @@ All notable changes to this project will be documented in this file.
 
 
 
+<a name="v2.76.0"></a>
+## [v2.76.0] - 2021-02-23
+
+- fix: Remove CreateLogGroup permission from service role ([#550](https://github.com/terraform-aws-modules/terraform-aws-vpc/issues/550))
+
+
+<a name="v2.75.0"></a>
+## [v2.75.0] - 2021-02-23
+
+- feat: add vpc endpoint policies to supported services ([#601](https://github.com/terraform-aws-modules/terraform-aws-vpc/issues/601))
+
+
 <a name="v2.74.0"></a>
 ## [v2.74.0] - 2021-02-22
 
@@ -1235,7 +1247,9 @@ All notable changes to this project will be documented in this file.
 - Initial commit
 
 
-[Unreleased]: https://github.com/terraform-aws-modules/terraform-aws-vpc/compare/v2.74.0...HEAD
+[Unreleased]: https://github.com/terraform-aws-modules/terraform-aws-vpc/compare/v2.76.0...HEAD
+[v2.76.0]: https://github.com/terraform-aws-modules/terraform-aws-vpc/compare/v2.75.0...v2.76.0
+[v2.75.0]: https://github.com/terraform-aws-modules/terraform-aws-vpc/compare/v2.74.0...v2.75.0
 [v2.74.0]: https://github.com/terraform-aws-modules/terraform-aws-vpc/compare/v2.73.0...v2.74.0
 [v2.73.0]: https://github.com/terraform-aws-modules/terraform-aws-vpc/compare/v2.72.0...v2.73.0
 [v2.72.0]: https://github.com/terraform-aws-modules/terraform-aws-vpc/compare/v2.71.0...v2.72.0

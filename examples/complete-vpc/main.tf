@@ -62,6 +62,7 @@ module "vpc" {
 
   # VPC endpoint for DynamoDB
   enable_dynamodb_endpoint = true
+  dynamodb_endpoint_policy = data.aws_iam_policy_document.dynamodb_endpoint_policy.json
 
   # VPC endpoint for SSM
   enable_ssm_endpoint              = true
@@ -80,6 +81,7 @@ module "vpc" {
 
   # VPC Endpoint for EC2
   enable_ec2_endpoint              = true
+  ec2_endpoint_policy              = data.aws_iam_policy_document.generic_endpoint_policy.json
   ec2_endpoint_private_dns_enabled = true
   ec2_endpoint_security_group_ids  = [data.aws_security_group.default.id]
 
@@ -90,11 +92,13 @@ module "vpc" {
 
   # VPC Endpoint for ECR API
   enable_ecr_api_endpoint              = true
+  ecr_api_endpoint_policy              = data.aws_iam_policy_document.generic_endpoint_policy.json
   ecr_api_endpoint_private_dns_enabled = true
   ecr_api_endpoint_security_group_ids  = [data.aws_security_group.default.id]
 
   # VPC Endpoint for ECR DKR
   enable_ecr_dkr_endpoint              = true
+  ecr_dkr_endpoint_policy              = data.aws_iam_policy_document.generic_endpoint_policy.json
   ecr_dkr_endpoint_private_dns_enabled = true
   ecr_dkr_endpoint_security_group_ids  = [data.aws_security_group.default.id]
 
@@ -143,5 +147,51 @@ module "vpc" {
   vpc_endpoint_tags = {
     Project  = "Secret"
     Endpoint = "true"
+  }
+}
+
+# Data source used to avoid race condition
+data "aws_vpc_endpoint" "dynamodb" {
+  vpc_id       = module.vpc.vpc_id
+  service_name = "com.amazonaws.eu-west-1.dynamodb"
+}
+
+data "aws_iam_policy_document" "dynamodb_endpoint_policy" {
+  statement {
+    effect    = "Deny"
+    actions   = ["dynamodb:*"]
+    resources = ["*"]
+
+    principals {
+      type        = "*"
+      identifiers = ["*"]
+    }
+
+    condition {
+      test     = "StringNotEquals"
+      variable = "aws:sourceVpce"
+
+      values = [data.aws_vpc_endpoint.dynamodb.id]
+    }
+  }
+}
+
+data "aws_iam_policy_document" "generic_endpoint_policy" {
+  statement {
+    effect    = "Deny"
+    actions   = ["*"]
+    resources = ["*"]
+
+    principals {
+      type        = "*"
+      identifiers = ["*"]
+    }
+
+    condition {
+      test     = "StringNotEquals"
+      variable = "aws:sourceVpce"
+
+      values = [data.aws_vpc_endpoint.dynamodb.id]
+    }
   }
 }
