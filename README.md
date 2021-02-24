@@ -534,7 +534,8 @@ No Modules.
 | enable\_qldb\_session\_endpoint | Should be true if you want to provision an QLDB Session endpoint to the VPC | `bool` | `false` | no |
 | enable\_rds\_endpoint | Should be true if you want to provision an RDS endpoint to the VPC | `bool` | `false` | no |
 | enable\_rekognition\_endpoint | Should be true if you want to provision a Rekognition endpoint to the VPC | `bool` | `false` | no |
-| enable\_s3\_endpoint | Should be true if you want to provision an S3 endpoint to the VPC | `bool` | `false` | no |
+| enable\_s3\_endpoint | Should be true if you want to provision an S3 gateway endpoint to the VPC | `bool` | `false` | no |
+| enable\_s3\_interface\_endpoint | Should be true if you want to provision an S3 interface endpoint to the VPC | `bool` | `false` | no |
 | enable\_sagemaker\_api\_endpoint | Should be true if you want to provision a SageMaker API endpoint to the VPC | `bool` | `false` | no |
 | enable\_sagemaker\_notebook\_endpoint | Should be true if you want to provision a Sagemaker Notebook endpoint to the VPC | `bool` | `false` | no |
 | enable\_sagemaker\_runtime\_endpoint | Should be true if you want to provision a SageMaker Runtime endpoint to the VPC | `bool` | `false` | no |
@@ -665,10 +666,10 @@ No Modules.
 | rekognition\_endpoint\_subnet\_ids | The ID of one or more subnets in which to create a network interface for Rekognition endpoint. Only a single subnet within an AZ is supported. If omitted, private subnets will be used. | `list(string)` | `[]` | no |
 | reuse\_nat\_ips | Should be true if you don't want EIPs to be created for your NAT Gateways and will instead pass them in via the 'external\_nat\_ip\_ids' variable | `bool` | `false` | no |
 | s3\_endpoint\_policy | A policy to attach to the endpoint that controls access to the service. Defaults to full access | `string` | `null` | no |
-| s3\_endpoint\_private\_dns\_enabled | Whether or not to associate a private hosted zone with the specified VPC for S3 interface endpoint | `bool` | `false` | no |
-| s3\_endpoint\_security\_group\_ids | The ID of one or more security groups to associate with the network interface for S3 interface endpoint | `list(string)` | `[]` | no |
-| s3\_endpoint\_subnet\_ids | The ID of one or more subnets in which to create a network interface for S3 interface endpoint. Only a single subnet within an AZ is supported. If omitted, private subnets will be used. | `list(string)` | `[]` | no |
-| s3\_endpoint\_type | S3 VPC endpoint type. Note - S3 Interface type support is only available on AWS provider 3.10 and later | `string` | `"Gateway"` | no |
+| s3\_interface\_endpoint\_policy | A policy to attach to the endpoint that controls access to the service. Defaults to full access | `string` | `null` | no |
+| s3\_interface\_endpoint\_private\_dns\_enabled | Whether or not to associate a private hosted zone with the specified VPC for S3 interface endpoint | `bool` | `false` | no |
+| s3\_interface\_endpoint\_security\_group\_ids | The ID of one or more security groups to associate with the network interface for S3 interface endpoint | `list(string)` | `[]` | no |
+| s3\_interface\_endpoint\_subnet\_ids | The ID of one or more subnets in which to create a network interface for S3 interface endpoint. Only a single subnet within an AZ is supported. If omitted, private subnets will be used. | `list(string)` | `[]` | no |
 | sagemaker\_api\_endpoint\_policy | A policy to attach to the endpoint that controls access to the service. Defaults to full access | `string` | `null` | no |
 | sagemaker\_api\_endpoint\_private\_dns\_enabled | Whether or not to associate a private hosted zone with the specified VPC for SageMaker API endpoint | `bool` | `false` | no |
 | sagemaker\_api\_endpoint\_security\_group\_ids | The ID of one or more security groups to associate with the network interface for SageMaker API endpoint | `list(string)` | `[]` | no |
@@ -981,6 +982,9 @@ No Modules.
 | vpc\_endpoint\_rekognition\_network\_interface\_ids | One or more network interfaces for the VPC Endpoint for Rekognition. |
 | vpc\_endpoint\_s3\_id | The ID of VPC endpoint for S3 |
 | vpc\_endpoint\_s3\_pl\_id | The prefix list for the S3 VPC endpoint. |
+| vpc\_endpoint\_s3\_interface\_dns\_entry | The DNS entries for the VPC Endpoint for S3 interface. |
+| vpc\_endpoint\_s3\_interface\_id | The ID of VPC endpoint for S3 interface |
+| vpc\_endpoint\_s3\_interface\_network\_interface\_ids | One or more network interfaces for the VPC Endpoint for S3 interface. |
 | vpc\_endpoint\_sagemaker\_api\_dns\_entry | The DNS entries for the VPC Endpoint for SageMaker API. |
 | vpc\_endpoint\_sagemaker\_api\_id | The ID of VPC endpoint for SageMaker API |
 | vpc\_endpoint\_sagemaker\_api\_network\_interface\_ids | One or more network interfaces for the VPC Endpoint for SageMaker API. |

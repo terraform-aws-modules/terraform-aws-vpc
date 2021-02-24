@@ -484,12 +484,12 @@ output "elasticache_network_acl_arn" {
 
 # VPC Endpoints
 output "vpc_endpoint_s3_id" {
-  description = "The ID of VPC endpoint for S3"
+  description = "The ID of VPC endpoint for S3 gateway"
   value       = concat(aws_vpc_endpoint.s3.*.id, [""])[0]
 }
 
 output "vpc_endpoint_s3_pl_id" {
-  description = "The prefix list for the S3 VPC endpoint."
+  description = "The prefix list for the S3 gateway VPC endpoint."
   value       = concat(aws_vpc_endpoint.s3.*.prefix_list_id, [""])[0]
 }
 
@@ -1440,6 +1440,21 @@ output "vpc_endpoint_rds_network_interface_ids" {
 output "vpc_endpoint_rds_dns_entry" {
   description = "The DNS entries for the VPC Endpoint for RDS."
   value       = flatten(aws_vpc_endpoint.rds.*.dns_entry)
+}
+
+output "vpc_endpoint_s3_interface_id" {
+  description = "The ID of VPC endpoint for S3 interface"
+  value       = concat(aws_vpc_endpoint.s3_interface.*.id, [""])[0]
+}
+
+output "vpc_endpoint_s3_interface_network_interface_ids" {
+  description = "One or more network interfaces for the VPC Endpoint for S3 interface."
+  value       = flatten(aws_vpc_endpoint.s3_interface.*.network_interface_ids)
+}
+
+output "vpc_endpoint_s3_interface_dns_entry" {
+  description = "The DNS entries for the VPC Endpoint for S3 interface."
+  value       = flatten(aws_vpc_endpoint.s3_interface.*.dns_entry)
 }
 
 # VPC flow log
