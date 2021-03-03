@@ -617,6 +617,12 @@ No Modules.
 | monitoring\_endpoint\_subnet\_ids | The ID of one or more subnets in which to create a network interface for CloudWatch Monitoring endpoint. Only a single subnet within an AZ is supported. If omitted, private subnets will be used. | `list(string)` | `[]` | no |
 | name | Name to be used on all the resources as identifier | `string` | `""` | no |
 | nat\_eip\_tags | Additional tags for the NAT EIP | `map(string)` | `{}` | no |
+| nat\_gateway\_route\_table\_tags | Additional tags for the nat gateway route tables | `map(string)` | `{}` | no |
+| nat\_gateway\_subnet\_assign\_ipv6\_address\_on\_creation | Assign IPv6 address on nat\_gateway subnet, must be disabled to change IPv6 CIDRs. This is the IPv6 equivalent of map\_public\_ip\_on\_launch | `bool` | `null` | no |
+| nat\_gateway\_subnet\_ipv6\_prefixes | Assigns IPv6 nat\_gateway subnet id based on the Amazon provided /56 prefix base 10 integer (0-256). Must be of equal length to the corresponding IPv4 subnet list | `list(string)` | `[]` | no |
+| nat\_gateway\_subnet\_suffix | Suffix to append to public subnets name | `string` | `"nat-gateway"` | no |
+| nat\_gateway\_subnet\_tags | Additional tags for the nat gateway subnets | `map(string)` | `{}` | no |
+| nat\_gateway\_subnets | A list of nat gateway subnets inside the VPC | `list(string)` | `[]` | no |
 | nat\_gateway\_tags | Additional tags for the NAT gateways | `map(string)` | `{}` | no |
 | one\_nat\_gateway\_per\_az | Should be true if you want only one NAT Gateway per availability zone. Requires `var.azs` to be set, and the number of `public_subnets` created to be greater than or equal to the number of availability zones specified in `var.azs`. | `bool` | `false` | no |
 | private\_acl\_tags | Additional tags for the private subnets network ACL | `map(string)` | `{}` | no |
@@ -799,6 +805,7 @@ No Modules.
 | intra\_subnets\_cidr\_blocks | List of cidr\_blocks of intra subnets |
 | intra\_subnets\_ipv6\_cidr\_blocks | List of IPv6 cidr\_blocks of intra subnets in an IPv6 enabled VPC |
 | name | The name of the VPC specified as argument to this module |
+| nat\_gateway\_route\_table\_ids | List of IDs of nat gateway route tables |
 | nat\_ids | List of allocation ID of Elastic IPs created for AWS NAT Gateway |
 | nat\_public\_ips | List of public Elastic IPs created for AWS NAT Gateway |
 | natgw\_ids | List of NAT Gateway IDs |

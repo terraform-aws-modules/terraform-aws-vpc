@@ -1011,7 +1011,7 @@ resource "aws_subnet" "nat_gateway" {
   map_public_ip_on_launch         = var.map_public_ip_on_launch
   assign_ipv6_address_on_creation = var.nat_gateway_subnet_assign_ipv6_address_on_creation == null ? var.assign_ipv6_address_on_creation : var.nat_gateway_subnet_assign_ipv6_address_on_creation
 
-  ipv6_cidr_block = var.enable_ipv6 && length(var.public_subnet_ipv6_prefixes) > 0 ? cidrsubnet(aws_vpc.this[0].ipv6_cidr_block, 8, var.public_subnet_ipv6_prefixes[count.index]) : null
+  ipv6_cidr_block = var.enable_ipv6 && length(var.nat_gateway_subnet_ipv6_prefixes) > 0 ? cidrsubnet(aws_vpc.this[0].ipv6_cidr_block, 8, var.nat_gateway_subnet_ipv6_prefixes[count.index]) : null
 
   tags = merge(
     {
@@ -1022,7 +1022,7 @@ resource "aws_subnet" "nat_gateway" {
       )
     },
     var.tags,
-    var.public_subnet_tags,
+    var.nat_gateway_subnet_tags,
   )
 }
 
