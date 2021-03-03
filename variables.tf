@@ -310,6 +310,12 @@ variable "enable_public_s3_endpoint" {
   type        = bool
 }
 
+variable "enable_database_s3_endpoint" {
+  description = "Whether to enable S3 VPC Endpoint for database subnets"
+  default     = false
+  type        = bool
+}
+
 variable "enable_dynamodb_endpoint" {
   description = "Should be true if you want to provision a DynamoDB endpoint to the VPC"
   type        = bool
