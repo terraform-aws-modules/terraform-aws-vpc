@@ -58,6 +58,12 @@ variable "intra_subnet_ipv6_prefixes" {
   default     = []
 }
 
+variable "nat_gateway_subnet_ipv6_prefixes" {
+  description = "Assigns IPv6 nat_gateway subnet id based on the Amazon provided /56 prefix base 10 integer (0-256). Must be of equal length to the corresponding IPv4 subnet list"
+  type        = list(string)
+  default     = []
+}
+
 variable "assign_ipv6_address_on_creation" {
   description = "Assign IPv6 address on subnet, must be disabled to change IPv6 CIDRs. This is the IPv6 equivalent of map_public_ip_on_launch"
   type        = bool
@@ -96,6 +102,12 @@ variable "elasticache_subnet_assign_ipv6_address_on_creation" {
 
 variable "intra_subnet_assign_ipv6_address_on_creation" {
   description = "Assign IPv6 address on intra subnet, must be disabled to change IPv6 CIDRs. This is the IPv6 equivalent of map_public_ip_on_launch"
+  type        = bool
+  default     = null
+}
+
+variable "nat_gateway_subnet_assign_ipv6_address_on_creation" {
+  description = "Assign IPv6 address on nat_gateway subnet, must be disabled to change IPv6 CIDRs. This is the IPv6 equivalent of map_public_ip_on_launch"
   type        = bool
   default     = null
 }
@@ -148,6 +160,12 @@ variable "elasticache_subnet_suffix" {
   default     = "elasticache"
 }
 
+variable "nat_gateway_subnet_suffix" {
+  description = "Suffix to append to public subnets name"
+  type        = string
+  default     = "nat-gateway"
+}
+
 variable "public_subnets" {
   description = "A list of public subnets inside the VPC"
   type        = list(string)
@@ -180,6 +198,12 @@ variable "elasticache_subnets" {
 
 variable "intra_subnets" {
   description = "A list of intra subnets"
+  type        = list(string)
+  default     = []
+}
+
+variable "nat_gateway_subnets" {
+  description = "A list of nat gateway subnets inside the VPC"
   type        = list(string)
   default     = []
 }
@@ -2267,6 +2291,12 @@ variable "private_subnet_tags" {
   default     = {}
 }
 
+variable "nat_gateway_subnet_tags" {
+  description = "Additional tags for the nat gateway subnets"
+  type        = map(string)
+  default     = {}
+}
+
 variable "public_route_table_tags" {
   description = "Additional tags for the public route tables"
   type        = map(string)
@@ -2299,6 +2329,12 @@ variable "elasticache_route_table_tags" {
 
 variable "intra_route_table_tags" {
   description = "Additional tags for the intra route tables"
+  type        = map(string)
+  default     = {}
+}
+
+variable "nat_gateway_route_table_tags" {
+  description = "Additional tags for the nat gateway route tables"
   type        = map(string)
   default     = {}
 }

@@ -243,6 +243,11 @@ output "intra_route_table_ids" {
   value       = aws_route_table.intra.*.id
 }
 
+output "nat_gateway_route_table_ids" {
+  description = "List of IDs of nat gateway route tables"
+  value       = aws_route_table.nat_gateway.*.id
+}
+
 output "public_internet_gateway_route_id" {
   description = "ID of the internet gateway route."
   value       = concat(aws_route.public_internet_gateway.*.id, [""])[0]

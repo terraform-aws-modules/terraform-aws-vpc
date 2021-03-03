@@ -364,6 +364,43 @@ resource "aws_route_table" "intra" {
   )
 }
 
+#####################
+# NAT Gateway routes
+#####################
+resource "aws_route_table" "nat_gateway" {
+  count = var.create_vpc && length(var.nat_gateway_subnets) > 0 ? (var.single_nat_gateway ? 1 : length(var.nat_gateway_subnets)) : 0
+
+  vpc_id = local.vpc_id
+
+  tags = merge(
+    {
+      "Name" = "${var.name}-${var.nat_gateway_subnet_suffix}"
+    },
+    var.tags,
+    var.nat_gateway_route_table_tags,
+  )
+}
+
+resource "aws_route" "nat_gateway_internet_gateway" {
+  count = var.create_vpc && var.create_igw && length(var.nat_gateway_subnets) > 0 ? (var.single_nat_gateway ? 1 : length(var.nat_gateway_subnets)) : 0
+
+  route_table_id         = element(aws_route_table.nat_gateway.*.id, count.index)
+  destination_cidr_block = "0.0.0.0/0"
+  gateway_id             = aws_internet_gateway.this[0].id
+
+  timeouts {
+    create = "5m"
+  }
+}
+
+resource "aws_route" "nat_gateway_ipv6" {
+  count = var.create_vpc && var.create_igw && var.enable_ipv6 && length(var.nat_gateway_subnets) > 0 ? (var.single_nat_gateway ? 1 : length(var.nat_gateway_subnets)) : 0
+
+  route_table_id              = element(aws_route_table.nat_gateway.*.id, count.index)
+  destination_ipv6_cidr_block = "::/0"
+  gateway_id                  = aws_internet_gateway.this[0].id
+}
+
 ################
 # Public subnet
 ################
@@ -964,6 +1001,31 @@ locals {
   )
 }
 
+resource "aws_subnet" "nat_gateway" {
+  count = var.create_vpc && var.enable_nat_gateway && length(var.nat_gateway_subnets) > 0 ? local.nat_gateway_count : 0
+
+  vpc_id                          = local.vpc_id
+  cidr_block                      = element(concat(var.nat_gateway_subnets, [""]), count.index)
+  availability_zone               = length(regexall("^[a-z]{2}-", element(var.azs, count.index))) > 0 ? element(var.azs, count.index) : null
+  availability_zone_id            = length(regexall("^[a-z]{2}-", element(var.azs, count.index))) == 0 ? element(var.azs, count.index) : null
+  map_public_ip_on_launch         = var.map_public_ip_on_launch
+  assign_ipv6_address_on_creation = var.nat_gateway_subnet_assign_ipv6_address_on_creation == null ? var.assign_ipv6_address_on_creation : var.nat_gateway_subnet_assign_ipv6_address_on_creation
+
+  ipv6_cidr_block = var.enable_ipv6 && length(var.public_subnet_ipv6_prefixes) > 0 ? cidrsubnet(aws_vpc.this[0].ipv6_cidr_block, 8, var.public_subnet_ipv6_prefixes[count.index]) : null
+
+  tags = merge(
+    {
+      "Name" = format(
+        "%s-${var.nat_gateway_subnet_suffix}-%s",
+        var.name,
+        element(var.azs, count.index),
+      )
+    },
+    var.tags,
+    var.public_subnet_tags,
+  )
+}
+
 resource "aws_eip" "nat" {
   count = var.create_vpc && var.enable_nat_gateway && false == var.reuse_nat_ips ? local.nat_gateway_count : 0
 
@@ -990,7 +1052,7 @@ resource "aws_nat_gateway" "this" {
     var.single_nat_gateway ? 0 : count.index,
   )
   subnet_id = element(
-    aws_subnet.public.*.id,
+    length(var.nat_gateway_subnets) > 0 ? aws_subnet.nat_gateway.*.id : aws_subnet.public.*.id,
     var.single_nat_gateway ? 0 : count.index,
   )
 
@@ -1097,6 +1159,16 @@ resource "aws_route_table_association" "public" {
 
   subnet_id      = element(aws_subnet.public.*.id, count.index)
   route_table_id = aws_route_table.public[0].id
+}
+
+resource "aws_route_table_association" "nat_gateway" {
+  count = var.create_vpc && length(var.nat_gateway_subnets) > 0 ? length(var.nat_gateway_subnets) : 0
+
+  subnet_id = element(aws_subnet.nat_gateway.*.id, count.index)
+  route_table_id = element(
+    aws_route_table.nat_gateway.*.id,
+    var.single_nat_gateway ? 0 : count.index,
+  )
 }
 
 ####################
