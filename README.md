@@ -496,6 +496,7 @@ No Modules.
 | enable\_codedeploy\_endpoint | Should be true if you want to provision an CodeDeploy endpoint to the VPC | `bool` | `false` | no |
 | enable\_codepipeline\_endpoint | Should be true if you want to provision a CodePipeline endpoint to the VPC | `bool` | `false` | no |
 | enable\_config\_endpoint | Should be true if you want to provision an config endpoint to the VPC | `bool` | `false` | no |
+| enable\_database\_s3\_endpoint | Whether to enable S3 VPC Endpoint for database subnets | `bool` | `false` | no |
 | enable\_datasync\_endpoint | Should be true if you want to provision an Data Sync endpoint to the VPC | `bool` | `false` | no |
 | enable\_dhcp\_options | Should be true if you want to specify a DHCP options set with a custom domain name, DNS servers, NTP servers, netbios servers, and/or netbios server type | `bool` | `false` | no |
 | enable\_dms\_endpoint | Should be true if you want to provision a DMS endpoint to the VPC | `bool` | `false` | no |
@@ -531,7 +532,6 @@ No Modules.
 | enable\_nat\_gateway | Should be true if you want to provision NAT Gateways for each of your private networks | `bool` | `false` | no |
 | enable\_public\_redshift | Controls if redshift should have public routing table | `bool` | `false` | no |
 | enable\_public\_s3\_endpoint | Whether to enable S3 VPC Endpoint for public subnets | `bool` | `true` | no |
-| enable\_database\_s3\_endpoint | Whether to enable S3 VPC Endpoint for database subnets | `bool` | `false` | no |
 | enable\_qldb\_session\_endpoint | Should be true if you want to provision an QLDB Session endpoint to the VPC | `bool` | `false` | no |
 | enable\_rds\_endpoint | Should be true if you want to provision an RDS endpoint to the VPC | `bool` | `false` | no |
 | enable\_rekognition\_endpoint | Should be true if you want to provision a Rekognition endpoint to the VPC | `bool` | `false` | no |
