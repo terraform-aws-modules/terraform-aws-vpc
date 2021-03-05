@@ -1588,3 +1588,26 @@ resource "aws_vpc_endpoint" "dms" {
   private_dns_enabled = var.dms_endpoint_private_dns_enabled
   tags                = local.vpce_tags
 }
+
+#############################
+# VPC Endpoint for Redshift
+#############################
+data "aws_vpc_endpoint_service" "redshift" {
+  count = var.create_vpc && var.enable_redshift_endpoint ? 1 : 0
+
+  service = "redshift"
+}
+
+resource "aws_vpc_endpoint" "redshift" {
+  count = var.create_vpc && var.enable_redshift_endpoint ? 1 : 0
+
+  vpc_id            = local.vpc_id
+  service_name      = data.aws_vpc_endpoint_service.redshift[0].service_name
+  vpc_endpoint_type = "Interface"
+
+  security_group_ids  = var.redshift_endpoint_security_group_ids
+  subnet_ids          = coalescelist(var.redshift_endpoint_subnet_ids, aws_subnet.private.*.id)
+  private_dns_enabled = var.redshift_endpoint_private_dns_enabled
+
+  tags = local.vpce_tags
+}

@@ -1442,6 +1442,21 @@ output "vpc_endpoint_rds_dns_entry" {
   value       = flatten(aws_vpc_endpoint.rds.*.dns_entry)
 }
 
+output "vpc_endpoint_redshift_id" {
+  description = "The ID of VPC endpoint for Redshift"
+  value       = concat(aws_vpc_endpoint.redshift.*.id, [""])[0]
+}
+
+output "vpc_endpoint_redshift_network_interface_ids" {
+  description = "The ID of VPC endpoint for Redshift"
+  value       = flatten(aws_vpc_endpoint.redshift.*.network_interface_ids)
+}
+
+output "vpc_endpoint_redshift_dns_entry" {
+  description = "The DNS entries for the VPC Endpoint for Redshift."
+  value       = flatten(aws_vpc_endpoint.redshift.*.dns_entry)
+}
+
 # VPC flow log
 output "vpc_flow_log_id" {
   description = "The ID of the Flow Log resource"
