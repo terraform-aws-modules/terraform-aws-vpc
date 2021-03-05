@@ -64,6 +64,9 @@ No input.
 | vpc\_endpoint\_lambda\_dns\_entry | The DNS entries for the VPC Endpoint for Lambda. |
 | vpc\_endpoint\_lambda\_id | The ID of VPC endpoint for Lambda |
 | vpc\_endpoint\_lambda\_network\_interface\_ids | One or more network interfaces for the VPC Endpoint for Lambda. |
+| vpc\_endpoint\_redshift\_dns\_entry | The DNS entries for the VPC Endpoint for Redshift. |
+| vpc\_endpoint\_redshift\_id | The ID of VPC endpoint for Redshift. |
+| vpc\_endpoint\_redshift\_network\_interface\_ids | One or more network interfaces for the VPC Endpoint for Redhsift. |
 | vpc\_endpoint\_ssm\_dns\_entry | The DNS entries for the VPC Endpoint for SSM. |
 | vpc\_endpoint\_ssm\_id | The ID of VPC endpoint for SSM |
 | vpc\_endpoint\_ssm\_network\_interface\_ids | One or more network interfaces for the VPC Endpoint for SSM. |
