@@ -74,17 +74,17 @@ output "vpc_endpoint_lambda_dns_entry" {
 
 output "vpc_endpoint_redshift_id" {
   description = "The ID of VPC endpoint for Redshift."
-  value = module.vpc.vpc_endpoint_redshift_id
+  value       = module.vpc.vpc_endpoint_redshift_id
 }
 
 output "vpc_endpoint_redshift_network_interface_ids" {
   description = "One or more network interfaces for the VPC Endpoint for Redhsift."
-  value = module.vpc.vpc_endpoint_redshift_network_interface_ids
+  value       = module.vpc.vpc_endpoint_redshift_network_interface_ids
 }
 
 output "vpc_endpoint_redshift_dns_entry" {
   description = "The DNS entries for the VPC Endpoint for Redshift."
-  value = module.vpc.vpc_endpoint_redshift_dns_entry
+  value       = module.vpc.vpc_endpoint_redshift_dns_entry
 }
 
 # Customer Gateway
