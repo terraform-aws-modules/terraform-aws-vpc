@@ -276,6 +276,7 @@ resource "aws_vpc_endpoint" "ssm" {
 
   security_group_ids  = var.ssm_endpoint_security_group_ids
   subnet_ids          = coalescelist(var.ssm_endpoint_subnet_ids, aws_subnet.private.*.id)
+  policy              = var.ssm_endpoint_policy
   private_dns_enabled = var.ssm_endpoint_private_dns_enabled
   tags                = local.vpce_tags
 }

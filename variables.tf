@@ -610,6 +610,12 @@ variable "ssm_endpoint_subnet_ids" {
   default     = []
 }
 
+variable "ssm_endpoint_policy" {
+  description = "A policy to attach to the endpoint that controls access to the service. Defaults to full access"
+  type        = string
+  default     = null
+}
+
 variable "ssm_endpoint_private_dns_enabled" {
   description = "Whether or not to associate a private hosted zone with the specified VPC for SSM endpoint"
   type        = bool
