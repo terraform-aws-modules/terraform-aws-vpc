@@ -521,6 +521,7 @@ No Modules.
 | enable\_flow\_log | Whether or not to enable VPC Flow Logs | `bool` | `false` | no |
 | enable\_git\_codecommit\_endpoint | Should be true if you want to provision an Git Codecommit endpoint to the VPC | `bool` | `false` | no |
 | enable\_glue\_endpoint | Should be true if you want to provision a Glue endpoint to the VPC | `bool` | `false` | no |
+| enable\_imagebuilder\_endpoint | Should be true if you want to provision an EC2 Image Builder endpoint to the VPC | `bool` | `false` | no |
 | enable\_ipv6 | Requests an Amazon-provided IPv6 CIDR block with a /56 prefix length for the VPC. You cannot specify the range of IP addresses, or the size of the CIDR block. | `bool` | `false` | no |
 | enable\_kinesis\_firehose\_endpoint | Should be true if you want to provision a Kinesis Firehose endpoint to the VPC | `bool` | `false` | no |
 | enable\_kinesis\_streams\_endpoint | Should be true if you want to provision a Kinesis Streams endpoint to the VPC | `bool` | `false` | no |
@@ -576,6 +577,10 @@ No Modules.
 | glue\_endpoint\_security\_group\_ids | The ID of one or more security groups to associate with the network interface for Glue endpoint | `list(string)` | `[]` | no |
 | glue\_endpoint\_subnet\_ids | The ID of one or more subnets in which to create a network interface for Glue endpoint. Only a single subnet within an AZ is supported. If omitted, private subnets will be used. | `list(string)` | `[]` | no |
 | igw\_tags | Additional tags for the internet gateway | `map(string)` | `{}` | no |
+| imagebuilder\_endpoint\_policy | A policy to attach to the endpoint that controls access to the service. Defaults to full access | `string` | `null` | no |
+| imagebuilder\_endpoint\_private\_dns\_enabled | Whether or not to associate a private hosted zone with the specified VPC for EC2 Image Builder endpoint | `bool` | `false` | no |
+| imagebuilder\_endpoint\_security\_group\_ids | The ID of one or more security groups to associate with the network interface for EC2 Image Builder endpoint | `list(string)` | `[]` | no |
+| imagebuilder\_endpoint\_subnet\_ids | The ID of one or more subnets in which to create a network interface for EC2 Image Builder endpoint. Only a single subnet within an AZ is supported. If omitted, private subnets will be used. | `list(string)` | `[]` | no |
 | instance\_tenancy | A tenancy option for instances launched into the VPC | `string` | `"default"` | no |
 | intra\_acl\_tags | Additional tags for the intra subnets network ACL | `map(string)` | `{}` | no |
 | intra\_dedicated\_network\_acl | Whether to use dedicated network ACL (not default) and custom rules for intra subnets | `bool` | `false` | no |
@@ -952,6 +957,9 @@ No Modules.
 | vpc\_endpoint\_glue\_dns\_entry | The DNS entries for the VPC Endpoint for Glue. |
 | vpc\_endpoint\_glue\_id | The ID of VPC endpoint for Glue |
 | vpc\_endpoint\_glue\_network\_interface\_ids | One or more network interfaces for the VPC Endpoint for Glue. |
+| vpc\_endpoint\_imagebuilder\_dns\_entry | The DNS entries for the VPC Endpoint for EC2 Image Builder. |
+| vpc\_endpoint\_imagebuilder\_id | The ID of VPC endpoint for EC2 Image Builder |
+| vpc\_endpoint\_imagebuilder\_network\_interface\_ids | One or more network interfaces for the VPC Endpoint for EC2 Image Builder. |
 | vpc\_endpoint\_kinesis\_firehose\_dns\_entry | The DNS entries for the VPC Endpoint for Kinesis Firehose. |
 | vpc\_endpoint\_kinesis\_firehose\_id | The ID of VPC endpoint for Kinesis Firehose |
 | vpc\_endpoint\_kinesis\_firehose\_network\_interface\_ids | One or more network interfaces for the VPC Endpoint for Kinesis Firehose. |

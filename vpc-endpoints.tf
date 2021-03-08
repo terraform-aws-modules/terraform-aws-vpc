@@ -1588,3 +1588,26 @@ resource "aws_vpc_endpoint" "dms" {
   private_dns_enabled = var.dms_endpoint_private_dns_enabled
   tags                = local.vpce_tags
 }
+
+####################################
+# VPC Endpoint for EC2 Image Builder
+####################################
+data "aws_vpc_endpoint_service" "imagebuilder" {
+  count = var.create_vpc && var.enable_imagebuilder_endpoint ? 1 : 0
+
+  service = "imagebuilder"
+}
+
+resource "aws_vpc_endpoint" "imagebuilder" {
+  count = var.create_vpc && var.enable_imagebuilder_endpoint ? 1 : 0
+
+  vpc_id            = local.vpc_id
+  service_name      = data.aws_vpc_endpoint_service.imagebuilder[0].service_name
+  vpc_endpoint_type = "Interface"
+
+  security_group_ids  = var.imagebuilder_endpoint_security_group_ids
+  subnet_ids          = coalescelist(var.imagebuilder_endpoint_subnet_ids, aws_subnet.private.*.id)
+  policy              = var.imagebuilder_endpoint_policy
+  private_dns_enabled = var.imagebuilder_endpoint_private_dns_enabled
+  tags                = local.vpce_tags
+}
