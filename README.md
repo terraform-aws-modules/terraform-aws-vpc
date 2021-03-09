@@ -26,7 +26,7 @@ Git-Codecommit, Textract, Transfer Server, Kinesis Streams, Kinesis Firehose, Sa
 CloudFormation, CodePipeline, Storage Gateway, AppMesh, Transfer, Service Catalog, AppStream API, AppStream Streaming,
 Athena, Rekognition, Elastic File System (EFS), Cloud Directory, Elastic Beanstalk (+ Health), Elastic Map Reduce(EMR),
 DataSync, EBS, SMS, Elastic Inference Runtime, QLDB Session, Step Functions, Access Analyzer, Auto Scaling Plans,
-Application Auto Scaling, Workspaces, ACM PCA, RDS, CodeDeploy, CodeDeploy Commands Secure, DMS
+Application Auto Scaling, Workspaces, ACM PCA, RDS, CodeDeploy, CodeDeploy Commands Secure, DMS, EC2 Image Builder
 
 * [RDS DB Subnet Group](https://www.terraform.io/docs/providers/aws/r/db_subnet_group.html)
 * [ElastiCache Subnet Group](https://www.terraform.io/docs/providers/aws/r/elasticache_subnet_group.html)
