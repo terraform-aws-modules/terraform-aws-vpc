@@ -1609,5 +1609,10 @@ resource "aws_vpc_endpoint" "imagebuilder" {
   subnet_ids          = coalescelist(var.imagebuilder_endpoint_subnet_ids, aws_subnet.private.*.id)
   policy              = var.imagebuilder_endpoint_policy
   private_dns_enabled = var.imagebuilder_endpoint_private_dns_enabled
-  tags                = local.vpce_tags
+  tags = merge(
+    {
+      "Name" = format("%s-%s", var.name, data.aws_vpc_endpoint_service.imagebuilder[0].service)
+    },
+    local.vpce_tags
+  )
 }
