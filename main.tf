@@ -38,7 +38,7 @@ resource "aws_vpc" "this" {
     var.vpc_tags,
   )
 
-lifecycle {
+  lifecycle {
     ignore_changes = [
       tags
     ]
@@ -77,7 +77,7 @@ resource "aws_vpc_dhcp_options" "this" {
     ignore_changes = [
       tags["Owner"],
       tags["Type"],
-   ]
+    ]
   }
 }
 
@@ -107,7 +107,7 @@ resource "aws_internet_gateway" "this" {
     var.igw_tags,
   )
 
-   lifecycle {
+  lifecycle {
     ignore_changes = [
       tags
     ]
@@ -134,7 +134,7 @@ resource "aws_route_table" "public" {
     ignore_changes = [
       tags["Owner"],
       tags["Type"],
-   ]
+    ]
   }
 }
 
@@ -239,7 +239,7 @@ resource "aws_route_table" "redshift" {
     ignore_changes = [
       tags["Owner"],
       tags["Type"],
-   ]
+    ]
   }
 }
 
@@ -264,7 +264,7 @@ resource "aws_route_table" "elasticache" {
       tags["Owner"],
       tags["DataClassification"],
       tags["Type"],
-   ]
+    ]
   }
 }
 
@@ -288,7 +288,7 @@ resource "aws_route_table" "intra" {
     ignore_changes = [
       tags["Owner"],
       tags["Type"],
-   ]
+    ]
   }
 }
 
@@ -319,7 +319,7 @@ resource "aws_subnet" "public" {
     ignore_changes = [
       tags["Owner"],
       tags["Type"],
-   ]
+    ]
   }
 }
 
@@ -349,7 +349,7 @@ resource "aws_subnet" "private" {
     ignore_changes = [
       tags["Owner"],
       tags["Type"],
-   ]
+    ]
   }
 }
 
@@ -379,7 +379,7 @@ resource "aws_subnet" "database" {
     ignore_changes = [
       tags["Owner"],
       tags["Type"],
-   ]
+    ]
   }
 }
 
@@ -402,7 +402,7 @@ resource "aws_db_subnet_group" "database" {
     ignore_changes = [
       tags["Owner"],
       tags["Type"],
-   ]
+    ]
   }
 }
 
@@ -432,7 +432,7 @@ resource "aws_subnet" "redshift" {
     ignore_changes = [
       tags["Owner"],
       tags["Type"],
-   ]
+    ]
   }
 }
 
@@ -455,7 +455,7 @@ resource "aws_redshift_subnet_group" "redshift" {
     ignore_changes = [
       tags["Owner"],
       tags["Type"],
-   ]
+    ]
   }
 }
 
@@ -485,7 +485,7 @@ resource "aws_subnet" "elasticache" {
     ignore_changes = [
       tags["Owner"],
       tags["Type"],
-   ]
+    ]
   }
 }
 
@@ -523,7 +523,7 @@ resource "aws_subnet" "intra" {
     ignore_changes = [
       tags["Owner"],
       tags["Type"],
-   ]
+    ]
   }
 }
 
@@ -598,7 +598,7 @@ resource "aws_network_acl" "public" {
     ignore_changes = [
       tags["Owner"],
       tags["Type"],
-   ]
+    ]
   }
 }
 
@@ -651,7 +651,7 @@ resource "aws_network_acl" "private" {
     ignore_changes = [
       tags["Owner"],
       tags["Type"],
-   ]
+    ]
   }
 }
 
@@ -704,7 +704,7 @@ resource "aws_network_acl" "intra" {
     ignore_changes = [
       tags["Owner"],
       tags["Type"],
-   ]
+    ]
   }
 }
 
@@ -757,7 +757,7 @@ resource "aws_network_acl" "database" {
     ignore_changes = [
       tags["Owner"],
       tags["Type"],
-   ]
+    ]
   }
 }
 
@@ -810,7 +810,7 @@ resource "aws_network_acl" "redshift" {
     ignore_changes = [
       tags["Owner"],
       tags["Type"],
-   ]
+    ]
   }
 }
 
@@ -863,7 +863,7 @@ resource "aws_network_acl" "elasticache" {
     ignore_changes = [
       tags["Owner"],
       tags["Type"],
-   ]
+    ]
   }
 }
 
@@ -959,7 +959,7 @@ resource "aws_nat_gateway" "this" {
     ignore_changes = [
       tags["Owner"],
       tags["Type"],
-   ]
+    ]
   }
 
   depends_on = [aws_internet_gateway.this]
@@ -984,7 +984,7 @@ data "aws_vpc_endpoint_service" "s3" {
   count = var.create_vpc && var.enable_s3_endpoint ? 1 : 0
 
   service_type = "Gateway"
-  service = "s3"
+  service      = "s3"
 }
 
 resource "aws_vpc_endpoint" "s3" {
@@ -1531,7 +1531,7 @@ resource "aws_vpn_gateway" "this" {
     ignore_changes = [
       tags["Owner"],
       tags["Type"],
-   ]
+    ]
   }
 }
 
@@ -1590,7 +1590,7 @@ resource "aws_default_vpc" "this" {
     ignore_changes = [
       tags["Owner"],
       tags["Type"],
-   ]
+    ]
   }
 }
 
