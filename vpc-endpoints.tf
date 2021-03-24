@@ -35,6 +35,13 @@ resource "aws_vpc_endpoint_route_table_association" "private_s3" {
   route_table_id  = element(aws_route_table.private.*.id, count.index)
 }
 
+resource "aws_vpc_endpoint_route_table_association" "database_s3" {
+  count = var.create_vpc && var.enable_s3_endpoint && var.create_database_subnet_route_table && length(var.database_subnets) > 0 && var.s3_endpoint_type == "Gateway" ? var.single_nat_gateway || var.create_database_internet_gateway_route ? 1 : length(var.database_subnets) : 0
+
+  vpc_endpoint_id = aws_vpc_endpoint.s3[0].id
+  route_table_id  = element(aws_route_table.database.*.id, 0)
+}
+
 resource "aws_vpc_endpoint_route_table_association" "intra_s3" {
   count = var.create_vpc && var.enable_s3_endpoint && length(var.intra_subnets) > 0 && var.s3_endpoint_type == "Gateway" ? 1 : 0
 
@@ -84,6 +91,13 @@ resource "aws_vpc_endpoint_route_table_association" "private_dynamodb" {
 
   vpc_endpoint_id = aws_vpc_endpoint.dynamodb[0].id
   route_table_id  = element(aws_route_table.private.*.id, count.index)
+}
+
+resource "aws_vpc_endpoint_route_table_association" "database_dynamodb" {
+  count = var.create_vpc && var.enable_dynamodb_endpoint && var.create_database_subnet_route_table && length(var.database_subnets) > 0 && var.dynamodb_endpoint_type == "Gateway" ? var.single_nat_gateway || var.create_database_internet_gateway_route ? 1 : length(var.database_subnets) : 0
+
+  vpc_endpoint_id = aws_vpc_endpoint.dynamodb[0].id
+  route_table_id  = element(aws_route_table.database.*.id, 0)
 }
 
 resource "aws_vpc_endpoint_route_table_association" "intra_dynamodb" {
