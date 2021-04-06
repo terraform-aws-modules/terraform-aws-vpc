@@ -20,6 +20,12 @@ output "public_subnets" {
   description = "List of IDs of public subnets"
   value       = module.vpc.public_subnets
 }
+
+output "outpost_subnets" {
+  description = "List of IDs of private subnets"
+  value       = module.vpc.outpost_subnets
+}
+
 # NAT gateways
 output "nat_public_ips" {
   description = "List of public Elastic IPs created for AWS NAT Gateway"
@@ -30,9 +36,4 @@ output "nat_public_ips" {
 output "azs" {
   description = "A list of availability zones specified as argument to this module"
   value       = module.vpc.azs
-}
-
-output "outpost_subnets" {
-  description = "List of IDs of private subnets"
-  value       = module.vpc.outpost_subnets
 }
