@@ -34,6 +34,12 @@ variable "public_subnet_ipv6_prefixes" {
   default     = []
 }
 
+variable "outpost_subnet_ipv6_prefixes" {
+  description = "Assigns IPv6 outpost subnet id based on the Amazon provided /56 prefix base 10 integer (0-256). Must be of equal length to the corresponding IPv4 subnet list"
+  type        = list(string)
+  default     = []
+}
+
 variable "database_subnet_ipv6_prefixes" {
   description = "Assigns IPv6 database subnet id based on the Amazon provided /56 prefix base 10 integer (0-256). Must be of equal length to the corresponding IPv4 subnet list"
   type        = list(string)
@@ -72,6 +78,12 @@ variable "private_subnet_assign_ipv6_address_on_creation" {
 
 variable "public_subnet_assign_ipv6_address_on_creation" {
   description = "Assign IPv6 address on public subnet, must be disabled to change IPv6 CIDRs. This is the IPv6 equivalent of map_public_ip_on_launch"
+  type        = bool
+  default     = null
+}
+
+variable "outpost_subnet_assign_ipv6_address_on_creation" {
+  description = "Assign IPv6 address on outpost subnet, must be disabled to change IPv6 CIDRs. This is the IPv6 equivalent of map_public_ip_on_launch"
   type        = bool
   default     = null
 }
@@ -124,6 +136,12 @@ variable "private_subnet_suffix" {
   default     = "private"
 }
 
+variable "outpost_subnet_suffix" {
+  description = "Suffix to append to outpost subnets name"
+  type        = string
+  default     = "outpost"
+}
+
 variable "intra_subnet_suffix" {
   description = "Suffix to append to intra subnets name"
   type        = string
@@ -156,6 +174,12 @@ variable "public_subnets" {
 
 variable "private_subnets" {
   description = "A list of private subnets inside the VPC"
+  type        = list(string)
+  default     = []
+}
+
+variable "outpost_subnets" {
+  description = "A list of outpost subnets inside the VPC"
   type        = list(string)
   default     = []
 }
@@ -2267,6 +2291,12 @@ variable "private_subnet_tags" {
   default     = {}
 }
 
+variable "outpost_subnet_tags" {
+  description = "Additional tags for the outpost subnets"
+  type        = map(string)
+  default     = {}
+}
+
 variable "public_route_table_tags" {
   description = "Additional tags for the public route tables"
   type        = map(string)
@@ -2347,6 +2377,12 @@ variable "public_acl_tags" {
 
 variable "private_acl_tags" {
   description = "Additional tags for the private subnets network ACL"
+  type        = map(string)
+  default     = {}
+}
+
+variable "outpost_acl_tags" {
+  description = "Additional tags for the outpost subnets network ACL"
   type        = map(string)
   default     = {}
 }
@@ -2525,6 +2561,12 @@ variable "private_dedicated_network_acl" {
   default     = false
 }
 
+variable "outpost_dedicated_network_acl" {
+  description = "Whether to use dedicated network ACL (not default) and custom rules for outpost subnets"
+  type        = bool
+  default     = false
+}
+
 variable "intra_dedicated_network_acl" {
   description = "Whether to use dedicated network ACL (not default) and custom rules for intra subnets"
   type        = bool
@@ -2647,6 +2689,38 @@ variable "private_inbound_acl_rules" {
 
 variable "private_outbound_acl_rules" {
   description = "Private subnets outbound network ACLs"
+  type        = list(map(string))
+
+  default = [
+    {
+      rule_number = 100
+      rule_action = "allow"
+      from_port   = 0
+      to_port     = 0
+      protocol    = "-1"
+      cidr_block  = "0.0.0.0/0"
+    },
+  ]
+}
+
+variable "outpost_inbound_acl_rules" {
+  description = "Outpost subnets inbound network ACLs"
+  type        = list(map(string))
+
+  default = [
+    {
+      rule_number = 100
+      rule_action = "allow"
+      from_port   = 0
+      to_port     = 0
+      protocol    = "-1"
+      cidr_block  = "0.0.0.0/0"
+    },
+  ]
+}
+
+variable "outpost_outbound_acl_rules" {
+  description = "Outpost subnets outbound network ACLs"
   type        = list(map(string))
 
   default = [
@@ -2901,4 +2975,16 @@ variable "create_egress_only_igw" {
   description = "Controls if an Egress Only Internet Gateway is created and its related routes."
   type        = bool
   default     = true
+}
+
+variable "outpost_arn" {
+  description = "ARN of Outpost you want to create a subnet in."
+  type        = string
+  default     = null
+}
+
+variable "outpost_az" {
+  description = "AZ where Outpost is anchored."
+  type        = string
+  default     = null
 }
