@@ -93,11 +93,6 @@ output "public_subnets" {
   value       = aws_subnet.public.*.id
 }
 
-output "outpost_subnets" {
-  description = "List of IDs of outpost subnets"
-  value       = aws_subnet.outpost.*.id
-}
-
 output "public_subnet_arns" {
   description = "List of ARNs of public subnets"
   value       = aws_subnet.public.*.arn
@@ -111,6 +106,26 @@ output "public_subnets_cidr_blocks" {
 output "public_subnets_ipv6_cidr_blocks" {
   description = "List of IPv6 cidr_blocks of public subnets in an IPv6 enabled VPC"
   value       = aws_subnet.public.*.ipv6_cidr_block
+}
+
+output "outpost_subnets" {
+  description = "List of IDs of outpost subnets"
+  value       = aws_subnet.outpost.*.id
+}
+
+output "outpost_subnet_arns" {
+  description = "List of ARNs of outpost subnets"
+  value       = aws_subnet.outpost.*.arn
+}
+
+output "outpost_subnets_cidr_blocks" {
+  description = "List of cidr_blocks of outpost subnets"
+  value       = aws_subnet.outpost.*.cidr_block
+}
+
+output "outpost_subnets_ipv6_cidr_blocks" {
+  description = "List of IPv6 cidr_blocks of outpost subnets in an IPv6 enabled VPC"
+  value       = aws_subnet.outpost.*.ipv6_cidr_block
 }
 
 output "database_subnets" {
@@ -445,6 +460,16 @@ output "private_network_acl_id" {
 output "private_network_acl_arn" {
   description = "ARN of the private network ACL"
   value       = concat(aws_network_acl.private.*.arn, [""])[0]
+}
+
+output "outpost_network_acl_id" {
+  description = "ID of the outpost network ACL"
+  value       = concat(aws_network_acl.outpost.*.id, [""])[0]
+}
+
+output "outpost_network_acl_arn" {
+  description = "ARN of the outpost network ACL"
+  value       = concat(aws_network_acl.outpost.*.arn, [""])[0]
 }
 
 output "intra_network_acl_id" {
