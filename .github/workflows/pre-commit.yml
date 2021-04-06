@@ -7,30 +7,30 @@ on:
       - master
 
 jobs:
-# Min Terraform version(s)
+  # Min Terraform version(s)
   getDirectories:
-      name: Get root directories
-      runs-on: ubuntu-latest
-      steps:
-          - name: Checkout
-            uses: actions/checkout@v2
-          - name: Install Python
-            uses: actions/setup-python@v2
-          - name: Build matrix
-            id: matrix
-            run: |
-              DIRS=$(python -c "import json; import glob; print(json.dumps([x.replace('/versions.tf', '') for x in glob.glob('./**/versions.tf', recursive=True)]))")
-              echo "::set-output name=directories::$DIRS"
-      outputs:
-          directories: ${{ steps.matrix.outputs.directories }}
+    name: Get root directories
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Install Python
+        uses: actions/setup-python@v2
+      - name: Build matrix
+        id: matrix
+        run: |
+          DIRS=$(python -c "import json; import glob; print(json.dumps([x.replace('/versions.tf', '') for x in glob.glob('./**/versions.tf', recursive=True)]))")
+          echo "::set-output name=directories::$DIRS"
+    outputs:
+      directories: ${{ steps.matrix.outputs.directories }}
 
   preCommitMinVersions:
     name: Min TF validate
     needs: getDirectories
     runs-on: ubuntu-latest
     strategy:
-        matrix:
-            directory: ${{ fromJson(needs.getDirectories.outputs.directories) }}
+      matrix:
+        directory: ${{ fromJson(needs.getDirectories.outputs.directories) }}
     steps:
       - name: Checkout
         uses: actions/checkout@v2
@@ -59,7 +59,7 @@ jobs:
           pre-commit run terraform_validate --color=always --show-diff-on-failure --files $(ls *.tf)
 
 
-# Max Terraform version
+  # Max Terraform version
   getBaseVersion:
     name: Module max TF version
     runs-on: ubuntu-latest
@@ -94,7 +94,7 @@ jobs:
       - name: Install pre-commit dependencies
         run: |
           pip install pre-commit
-          curl -L "$(curl -s https://api.github.com/repos/terraform-docs/terraform-docs/releases/latest | grep -o -E "https://.+?-v0.12.0-linux-amd64" | head -n1)" > terraform-docs && chmod +x terraform-docs && sudo mv terraform-docs /usr/bin/
+          curl -L "$(curl -s https://api.github.com/repos/terraform-docs/terraform-docs/releases/latest | grep -o -E "https://.+?-v0.12\..+?-linux-amd64" | head -n1)" > terraform-docs && chmod +x terraform-docs && sudo mv terraform-docs /usr/bin/
           curl -L "$(curl -s https://api.github.com/repos/terraform-linters/tflint/releases/latest | grep -o -E "https://.+?_linux_amd64.zip")" > tflint.zip && unzip tflint.zip && rm tflint.zip && sudo mv tflint /usr/bin/
       - name: Execute pre-commit
         # Run all pre-commit checks on max version supported
