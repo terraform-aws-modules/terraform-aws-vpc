@@ -7,6 +7,14 @@ All notable changes to this project will be documented in this file.
 
 
 
+<a name="v2.78.0"></a>
+## [v2.78.0] - 2021-04-06
+
+- feat: Add outpost support (subnet, NACL, IPv6) ([#542](https://github.com/terraform-aws-modules/terraform-aws-vpc/issues/542))
+- chore: update documentation and pin `terraform_docs` version to avoid future changes ([#619](https://github.com/terraform-aws-modules/terraform-aws-vpc/issues/619))
+- chore: align ci-cd static checks to use individual minimum Terraform versions ([#606](https://github.com/terraform-aws-modules/terraform-aws-vpc/issues/606))
+
+
 <a name="v2.77.0"></a>
 ## [v2.77.0] - 2021-02-23
 
@@ -105,6 +113,18 @@ All notable changes to this project will be documented in this file.
 - docs: Document create_database_subnet_group requiring database_subnets ([#424](https://github.com/terraform-aws-modules/terraform-aws-vpc/issues/424))
 - feat: Add intra subnet VPN route propagation ([#421](https://github.com/terraform-aws-modules/terraform-aws-vpc/issues/421))
 - chore: Add badge for latest version number ([#384](https://github.com/terraform-aws-modules/terraform-aws-vpc/issues/384))
+- Merge pull request [#416](https://github.com/terraform-aws-modules/terraform-aws-vpc/issues/416) from terraform-aws-modules/terraform-provider-githubfile-1584633789746446000
+- [ci skip] Create ".chglog/CHANGELOG.tpl.md".
+- Merge pull request [#414](https://github.com/terraform-aws-modules/terraform-aws-vpc/issues/414) from terraform-aws-modules/terraform-provider-githubfile-1584537604994775000
+- [ci skip] Create ".editorconfig".
+- Merge pull request [#409](https://github.com/terraform-aws-modules/terraform-aws-vpc/issues/409) from terraform-aws-modules/terraform-provider-githubfile-1584537572464727000
+- Merge pull request [#411](https://github.com/terraform-aws-modules/terraform-aws-vpc/issues/411) from terraform-aws-modules/terraform-provider-githubfile-1584537572464695000
+- Merge pull request [#412](https://github.com/terraform-aws-modules/terraform-aws-vpc/issues/412) from terraform-aws-modules/terraform-provider-githubfile-1584537572464703000
+- Merge pull request [#410](https://github.com/terraform-aws-modules/terraform-aws-vpc/issues/410) from terraform-aws-modules/terraform-provider-githubfile-1584537572464705000
+- [ci skip] Create ".gitignore".
+- [ci skip] Create "Makefile".
+- [ci skip] Create ".pre-commit-config.yaml".
+- [ci skip] Create "LICENSE".
 - Added tagging for VPC Flow Logs ([#407](https://github.com/terraform-aws-modules/terraform-aws-vpc/issues/407))
 - Add support for specifying AZ in VPN Gateway ([#401](https://github.com/terraform-aws-modules/terraform-aws-vpc/issues/401))
 - Fixed output of aws_flow_log
@@ -420,6 +440,18 @@ All notable changes to this project will be documented in this file.
 <a name="v2.30.0"></a>
 ## [v2.30.0] - 2020-03-19
 
+- Merge pull request [#416](https://github.com/terraform-aws-modules/terraform-aws-vpc/issues/416) from terraform-aws-modules/terraform-provider-githubfile-1584633789746446000
+- [ci skip] Create ".chglog/CHANGELOG.tpl.md".
+- Merge pull request [#414](https://github.com/terraform-aws-modules/terraform-aws-vpc/issues/414) from terraform-aws-modules/terraform-provider-githubfile-1584537604994775000
+- [ci skip] Create ".editorconfig".
+- Merge pull request [#409](https://github.com/terraform-aws-modules/terraform-aws-vpc/issues/409) from terraform-aws-modules/terraform-provider-githubfile-1584537572464727000
+- Merge pull request [#411](https://github.com/terraform-aws-modules/terraform-aws-vpc/issues/411) from terraform-aws-modules/terraform-provider-githubfile-1584537572464695000
+- Merge pull request [#412](https://github.com/terraform-aws-modules/terraform-aws-vpc/issues/412) from terraform-aws-modules/terraform-provider-githubfile-1584537572464703000
+- Merge pull request [#410](https://github.com/terraform-aws-modules/terraform-aws-vpc/issues/410) from terraform-aws-modules/terraform-provider-githubfile-1584537572464705000
+- [ci skip] Create ".gitignore".
+- [ci skip] Create "Makefile".
+- [ci skip] Create ".pre-commit-config.yaml".
+- [ci skip] Create "LICENSE".
 
 
 <a name="v2.29.0"></a>
@@ -812,6 +844,7 @@ All notable changes to this project will be documented in this file.
 ## [v1.57.0] - 2019-02-21
 
 - Bump version
+- Added CHANGELOG.md ([#221](https://github.com/terraform-aws-modules/terraform-aws-vpc/issues/221))
 
 
 <a name="v1.56.0"></a>
@@ -824,6 +857,7 @@ All notable changes to this project will be documented in this file.
 ## [v1.55.0] - 2019-02-14
 
 - Fixed formatting after [#213](https://github.com/terraform-aws-modules/terraform-aws-vpc/issues/213)
+- Merge pull request [#213](https://github.com/terraform-aws-modules/terraform-aws-vpc/issues/213) from michieldhadamus/ecr-endpoints
 - Added subnet ids to ecr endpoints
 - Added option to create ECR api and dkr endpoints
 
@@ -832,29 +866,34 @@ All notable changes to this project will be documented in this file.
 ## [v1.54.0] - 2019-02-14
 
 - Fixed formatting after [#205](https://github.com/terraform-aws-modules/terraform-aws-vpc/issues/205)
+- Merge pull request [#205](https://github.com/terraform-aws-modules/terraform-aws-vpc/issues/205) from tbugfinder/extend_endpoints
 - switch to terraform-docs v0.6.0
 - add files updated by pre-commit
 - add additional endpoints to examples
 - fix typo
 - add endpoints ec2messages, ssmmessages as those are required by Systems Manager in addition to ec2 and ssm.
+- Merge pull request [#1](https://github.com/terraform-aws-modules/terraform-aws-vpc/issues/1) from terraform-aws-modules/master
 
 
 <a name="v1.53.0"></a>
 ## [v1.53.0] - 2019-01-18
 
 - Reordered vars in count for database_nat_gateway route
+- Merge pull request [#201](https://github.com/terraform-aws-modules/terraform-aws-vpc/issues/201) from ebarault/feat/database-route-to-natgw
 - adding option to create a route to nat gateway in database subnets
 
 
 <a name="v1.52.0"></a>
 ## [v1.52.0] - 2019-01-17
 
+- Merge pull request [#202](https://github.com/terraform-aws-modules/terraform-aws-vpc/issues/202) from terraform-aws-modules/ssm_and_ec2_vpc_endpoints
 - Added SSM and EC2 VPC endpoints (fixes [#195](https://github.com/terraform-aws-modules/terraform-aws-vpc/issues/195), [#194](https://github.com/terraform-aws-modules/terraform-aws-vpc/issues/194))
 
 
 <a name="v1.51.0"></a>
 ## [v1.51.0] - 2019-01-10
 
+- Merge pull request [#199](https://github.com/terraform-aws-modules/terraform-aws-vpc/issues/199) from terraform-aws-modules/elasticache_subnet_group
 - Added possibility to control creation of elasticache and redshift subnet groups
 
 
@@ -867,6 +906,7 @@ All notable changes to this project will be documented in this file.
 <a name="v1.49.0"></a>
 ## [v1.49.0] - 2018-12-12
 
+- Merge pull request [#191](https://github.com/terraform-aws-modules/terraform-aws-vpc/issues/191) from terraform-aws-modules/feature-db-igw-public-access
 - Reverted complete-example
 - Added IGW route for DB subnets (based on [#179](https://github.com/terraform-aws-modules/terraform-aws-vpc/issues/179))
 
@@ -880,6 +920,7 @@ All notable changes to this project will be documented in this file.
 <a name="v1.47.0"></a>
 ## [v1.47.0] - 2018-12-11
 
+- Merge pull request [#181](https://github.com/terraform-aws-modules/terraform-aws-vpc/issues/181) from Miyurz/fix/redshift-name-issue
 - Fix for the error: module.vpc.aws_redshift_subnet_group.redshift: only lowercase alphanumeric characters and hyphens allowed in name
 
 
@@ -1109,6 +1150,7 @@ All notable changes to this project will be documented in this file.
 ## [v1.14.0] - 2018-01-11
 
 - Add Redshift subnets ([#54](https://github.com/terraform-aws-modules/terraform-aws-vpc/issues/54))
+- [ci skip] Get more Open Source Helpers ([#51](https://github.com/terraform-aws-modules/terraform-aws-vpc/issues/51))
 
 
 <a name="v1.13.0"></a>
@@ -1174,13 +1216,13 @@ All notable changes to this project will be documented in this file.
 - Reverted bad merge, fixed [#33](https://github.com/terraform-aws-modules/terraform-aws-vpc/issues/33)
 
 
-<a name="v1.5.1"></a>
-## [v1.5.1] - 2017-11-23
-
-
-
 <a name="v1.5.0"></a>
 ## [v1.5.0] - 2017-11-23
+
+
+
+<a name="v1.5.1"></a>
+## [v1.5.1] - 2017-11-23
 
 - Reverted bad merge, fixed [#33](https://github.com/terraform-aws-modules/terraform-aws-vpc/issues/33)
 - Set enable_dns_support=true by default
@@ -1212,12 +1254,14 @@ All notable changes to this project will be documented in this file.
 
 - [#22](https://github.com/terraform-aws-modules/terraform-aws-vpc/issues/22) add vpn gateway feature ([#24](https://github.com/terraform-aws-modules/terraform-aws-vpc/issues/24))
 - Add cidr_block outputs to public and private subnets ([#19](https://github.com/terraform-aws-modules/terraform-aws-vpc/issues/19))
+- Merge pull request [#13](https://github.com/terraform-aws-modules/terraform-aws-vpc/issues/13) from felixb/nat-gateway-tags
 - Add AZ to natgateway name
 
 
 <a name="v1.0.4"></a>
 ## [v1.0.4] - 2017-10-20
 
+- Merge pull request [#12](https://github.com/terraform-aws-modules/terraform-aws-vpc/issues/12) from michalschott/master
 - NAT gateway should be tagged too.
 
 
@@ -1225,12 +1269,14 @@ All notable changes to this project will be documented in this file.
 ## [v1.0.3] - 2017-10-12
 
 - Make aws_vpc_endpoint_service conditional
+- Merge pull request [#7](https://github.com/terraform-aws-modules/terraform-aws-vpc/issues/7) from eheydrick/variable-descriptions
 - Improve variable descriptions
 
 
 <a name="v1.0.2"></a>
 ## [v1.0.2] - 2017-09-27
 
+- Merge pull request [#6](https://github.com/terraform-aws-modules/terraform-aws-vpc/issues/6) from mgresko/fix_govcloud
 - disable dynamodb data source when not needed
 
 
@@ -1238,6 +1284,7 @@ All notable changes to this project will be documented in this file.
 ## [v1.0.1] - 2017-09-26
 
 - Updated link in README
+- Merge pull request [#3](https://github.com/terraform-aws-modules/terraform-aws-vpc/issues/3) from gas-buddy/gasbuddy/eherot/custom_route_tags
 - Allow the user to define custom tags for route tables
 
 
@@ -1253,7 +1300,8 @@ All notable changes to this project will be documented in this file.
 - Initial commit
 
 
-[Unreleased]: https://github.com/terraform-aws-modules/terraform-aws-vpc/compare/v2.77.0...HEAD
+[Unreleased]: https://github.com/terraform-aws-modules/terraform-aws-vpc/compare/v2.78.0...HEAD
+[v2.78.0]: https://github.com/terraform-aws-modules/terraform-aws-vpc/compare/v2.77.0...v2.78.0
 [v2.77.0]: https://github.com/terraform-aws-modules/terraform-aws-vpc/compare/v2.76.0...v2.77.0
 [v2.76.0]: https://github.com/terraform-aws-modules/terraform-aws-vpc/compare/v2.75.0...v2.76.0
 [v2.75.0]: https://github.com/terraform-aws-modules/terraform-aws-vpc/compare/v2.74.0...v2.75.0
@@ -1404,9 +1452,9 @@ All notable changes to this project will be documented in this file.
 [v1.8.0]: https://github.com/terraform-aws-modules/terraform-aws-vpc/compare/v1.7.0...v1.8.0
 [v1.7.0]: https://github.com/terraform-aws-modules/terraform-aws-vpc/compare/v1.6.0...v1.7.0
 [v1.6.0]: https://github.com/terraform-aws-modules/terraform-aws-vpc/compare/v1.4.1...v1.6.0
-[v1.4.1]: https://github.com/terraform-aws-modules/terraform-aws-vpc/compare/v1.5.1...v1.4.1
-[v1.5.1]: https://github.com/terraform-aws-modules/terraform-aws-vpc/compare/v1.5.0...v1.5.1
-[v1.5.0]: https://github.com/terraform-aws-modules/terraform-aws-vpc/compare/v1.4.0...v1.5.0
+[v1.4.1]: https://github.com/terraform-aws-modules/terraform-aws-vpc/compare/v1.5.0...v1.4.1
+[v1.5.0]: https://github.com/terraform-aws-modules/terraform-aws-vpc/compare/v1.5.1...v1.5.0
+[v1.5.1]: https://github.com/terraform-aws-modules/terraform-aws-vpc/compare/v1.4.0...v1.5.1
 [v1.4.0]: https://github.com/terraform-aws-modules/terraform-aws-vpc/compare/v1.3.0...v1.4.0
 [v1.3.0]: https://github.com/terraform-aws-modules/terraform-aws-vpc/compare/v1.2.0...v1.3.0
 [v1.2.0]: https://github.com/terraform-aws-modules/terraform-aws-vpc/compare/v1.1.0...v1.2.0
