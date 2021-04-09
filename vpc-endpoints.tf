@@ -1588,3 +1588,25 @@ resource "aws_vpc_endpoint" "dms" {
   private_dns_enabled = var.dms_endpoint_private_dns_enabled
   tags                = local.vpce_tags
 }
+
+#############################################
+# VPC Endpoint for Prometheus Workspace
+#############################################
+data "aws_vpc_endpoint_service" "aps_workspaces" {
+  count = var.create_vpc && var.enable_aps_workspaces_endpoint ? 1 : 0
+
+  service = "aps-workspaces"
+}
+
+resource "aws_vpc_endpoint" "aps_workspaces" {
+  count = var.create_vpc && var.enable_aps_workspaces_endpoint ? 1 : 0
+
+  vpc_id            = local.vpc_id
+  service_name      = data.aws_vpc_endpoint_service.aps_workspaces[0].service_name
+  vpc_endpoint_type = "Interface"
+
+  security_group_ids  = var.aps_workspaces_endpoint_security_group_ids
+  subnet_ids          = coalescelist(var.aps_workspaces_endpoint_subnet_ids, aws_subnet.private.*.id)
+  private_dns_enabled = var.aps_workspaces_endpoint_private_dns_enabled
+  tags                = local.vpce_tags
+}

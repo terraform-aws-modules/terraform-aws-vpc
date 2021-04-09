@@ -321,6 +321,7 @@ No modules.
 | [aws_vpc_endpoint.appmesh_envoy_management](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/vpc_endpoint) | resource |
 | [aws_vpc_endpoint.appstream_api](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/vpc_endpoint) | resource |
 | [aws_vpc_endpoint.appstream_streaming](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/vpc_endpoint) | resource |
+| [aws_vpc_endpoint.aps_workspaces](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/vpc_endpoint) | resource |
 | [aws_vpc_endpoint.athena](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/vpc_endpoint) | resource |
 | [aws_vpc_endpoint.auto_scaling_plans](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/vpc_endpoint) | resource |
 | [aws_vpc_endpoint.cloud_directory](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/vpc_endpoint) | resource |
@@ -403,6 +404,7 @@ No modules.
 | [aws_vpc_endpoint_service.appmesh_envoy_management](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/vpc_endpoint_service) | data source |
 | [aws_vpc_endpoint_service.appstream_api](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/vpc_endpoint_service) | data source |
 | [aws_vpc_endpoint_service.appstream_streaming](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/vpc_endpoint_service) | data source |
+| [aws_vpc_endpoint_service.aps_workspaces](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/vpc_endpoint_service) | data source |
 | [aws_vpc_endpoint_service.athena](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/vpc_endpoint_service) | data source |
 | [aws_vpc_endpoint_service.auto_scaling_plans](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/vpc_endpoint_service) | data source |
 | [aws_vpc_endpoint_service.cloud_directory](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/vpc_endpoint_service) | data source |
@@ -492,6 +494,9 @@ No modules.
 | <a name="input_appstream_streaming_endpoint_private_dns_enabled"></a> [appstream\_streaming\_endpoint\_private\_dns\_enabled](#input\_appstream\_streaming\_endpoint\_private\_dns\_enabled) | Whether or not to associate a private hosted zone with the specified VPC for AppStream Streaming endpoint | `bool` | `false` | no |
 | <a name="input_appstream_streaming_endpoint_security_group_ids"></a> [appstream\_streaming\_endpoint\_security\_group\_ids](#input\_appstream\_streaming\_endpoint\_security\_group\_ids) | The ID of one or more security groups to associate with the network interface for AppStream Streaming endpoint | `list(string)` | `[]` | no |
 | <a name="input_appstream_streaming_endpoint_subnet_ids"></a> [appstream\_streaming\_endpoint\_subnet\_ids](#input\_appstream\_streaming\_endpoint\_subnet\_ids) | The ID of one or more subnets in which to create a network interface for AppStream Streaming endpoint. Only a single subnet within an AZ is supported. If omitted, private subnets will be used. | `list(string)` | `[]` | no |
+| <a name="input_aps_workspaces_endpoint_private_dns_enabled"></a> [aps\_workspaces\_endpoint\_private\_dns\_enabled](#input\_aps\_workspaces\_endpoint\_private\_dns\_enabled) | Whether or not to associate a private hosted zone with the specified VPC for aps-workspaces endpoint | `bool` | `false` | no |
+| <a name="input_aps_workspaces_endpoint_security_group_ids"></a> [aps\_workspaces\_endpoint\_security\_group\_ids](#input\_aps\_workspaces\_endpoint\_security\_group\_ids) | The ID of one or more security groups to associate with the network interface for aps-workspaces endpoint | `list(string)` | `[]` | no |
+| <a name="input_aps_workspaces_endpoint_subnet_ids"></a> [aps\_workspaces\_endpoint\_subnet\_ids](#input\_aps\_workspaces\_endpoint\_subnet\_ids) | The ID of one or more subnets in which to create a network interface for aps-workspaces endpoint. Only a single subnet within an AZ is supported. If omitted, private subnets will be used. | `list(string)` | `[]` | no |
 | <a name="input_assign_ipv6_address_on_creation"></a> [assign\_ipv6\_address\_on\_creation](#input\_assign\_ipv6\_address\_on\_creation) | Assign IPv6 address on subnet, must be disabled to change IPv6 CIDRs. This is the IPv6 equivalent of map\_public\_ip\_on\_launch | `bool` | `false` | no |
 | <a name="input_athena_endpoint_policy"></a> [athena\_endpoint\_policy](#input\_athena\_endpoint\_policy) | A policy to attach to the endpoint that controls access to the service. Defaults to full access | `string` | `null` | no |
 | <a name="input_athena_endpoint_private_dns_enabled"></a> [athena\_endpoint\_private\_dns\_enabled](#input\_athena\_endpoint\_private\_dns\_enabled) | Whether or not to associate a private hosted zone with the specified VPC for Athena endpoint | `bool` | `false` | no |
@@ -667,6 +672,7 @@ No modules.
 | <a name="input_enable_appmesh_envoy_management_endpoint"></a> [enable\_appmesh\_envoy\_management\_endpoint](#input\_enable\_appmesh\_envoy\_management\_endpoint) | Should be true if you want to provision a AppMesh endpoint to the VPC | `bool` | `false` | no |
 | <a name="input_enable_appstream_api_endpoint"></a> [enable\_appstream\_api\_endpoint](#input\_enable\_appstream\_api\_endpoint) | Should be true if you want to provision a AppStream API endpoint to the VPC | `bool` | `false` | no |
 | <a name="input_enable_appstream_streaming_endpoint"></a> [enable\_appstream\_streaming\_endpoint](#input\_enable\_appstream\_streaming\_endpoint) | Should be true if you want to provision a AppStream Streaming endpoint to the VPC | `bool` | `false` | no |
+| <a name="input_enable_aps_workspaces_endpoint"></a> [enable\_aps\_workspaces\_endpoint](#input\_enable\_aps\_workspaces\_endpoint) | Should be true if you want to provision a aps-workspaces endpoint to the VPC | `bool` | `false` | no |
 | <a name="input_enable_athena_endpoint"></a> [enable\_athena\_endpoint](#input\_enable\_athena\_endpoint) | Should be true if you want to provision a Athena endpoint to the VPC | `bool` | `false` | no |
 | <a name="input_enable_auto_scaling_plans_endpoint"></a> [enable\_auto\_scaling\_plans\_endpoint](#input\_enable\_auto\_scaling\_plans\_endpoint) | Should be true if you want to provision an Auto Scaling Plans endpoint to the VPC | `bool` | `false` | no |
 | <a name="input_enable_classiclink"></a> [enable\_classiclink](#input\_enable\_classiclink) | Should be true to enable ClassicLink for the VPC. Only valid in regions and accounts that support EC2 Classic. | `bool` | `null` | no |
