@@ -1,4 +1,4 @@
-# Issue 108 - VPC
+# Issue 628 - VPC
 
 Configuration in this directory creates set of VPC resources to cover issues reported on GitHub:
 
