@@ -68,6 +68,11 @@ output "vpc_owner_id" {
   value       = concat(aws_vpc.this.*.owner_id, [""])[0]
 }
 
+output "private_subnets_map" {
+  description = "Map of of private subnets with CIDR > subnet mapping"
+  value       = { for subnet in aws_subnet.private : subnet.cidr_block => subnet }
+}
+
 output "private_subnets" {
   description = "List of IDs of private subnets"
   value       = aws_subnet.private.*.id
@@ -86,6 +91,11 @@ output "private_subnets_cidr_blocks" {
 output "private_subnets_ipv6_cidr_blocks" {
   description = "List of IPv6 cidr_blocks of private subnets in an IPv6 enabled VPC"
   value       = aws_subnet.private.*.ipv6_cidr_block
+}
+
+output "public_subnets_map" {
+  description = "Map of of public subnets with CIDR > subnet mapping"
+  value       = { for subnet in aws_subnet.public : subnet.cidr_block => subnet }
 }
 
 output "public_subnets" {
@@ -108,6 +118,11 @@ output "public_subnets_ipv6_cidr_blocks" {
   value       = aws_subnet.public.*.ipv6_cidr_block
 }
 
+output "outpost_subnets_map" {
+  description = "Map of of outpost outpost with CIDR > subnet mapping"
+  value       = { for subnet in aws_subnet.outpost : subnet.cidr_block => subnet }
+}
+
 output "outpost_subnets" {
   description = "List of IDs of outpost subnets"
   value       = aws_subnet.outpost.*.id
@@ -126,6 +141,11 @@ output "outpost_subnets_cidr_blocks" {
 output "outpost_subnets_ipv6_cidr_blocks" {
   description = "List of IPv6 cidr_blocks of outpost subnets in an IPv6 enabled VPC"
   value       = aws_subnet.outpost.*.ipv6_cidr_block
+}
+
+output "database_subnets_map" {
+  description = "Map of of database subnets with CIDR > subnet mapping"
+  value       = { for subnet in aws_subnet.database : subnet.cidr_block => subnet }
 }
 
 output "database_subnets" {
@@ -158,6 +178,11 @@ output "database_subnet_group_name" {
   value       = concat(aws_db_subnet_group.database.*.name, [""])[0]
 }
 
+output "redshift_subnets_map" {
+  description = "Map of of redshift subnets with CIDR > subnet mapping"
+  value       = { for subnet in aws_subnet.redshift : subnet.cidr_block => subnet }
+}
+
 output "redshift_subnets" {
   description = "List of IDs of redshift subnets"
   value       = aws_subnet.redshift.*.id
@@ -183,6 +208,11 @@ output "redshift_subnet_group" {
   value       = concat(aws_redshift_subnet_group.redshift.*.id, [""])[0]
 }
 
+output "elasticache_subnets_map" {
+  description = "Map of of elasticache subnets with CIDR > subnet mapping"
+  value       = { for subnet in aws_subnet.elasticache : subnet.cidr_block => subnet }
+}
+
 output "elasticache_subnets" {
   description = "List of IDs of elasticache subnets"
   value       = aws_subnet.elasticache.*.id
@@ -201,6 +231,21 @@ output "elasticache_subnets_cidr_blocks" {
 output "elasticache_subnets_ipv6_cidr_blocks" {
   description = "List of IPv6 cidr_blocks of elasticache subnets in an IPv6 enabled VPC"
   value       = aws_subnet.elasticache.*.ipv6_cidr_block
+}
+
+output "elasticache_subnet_group" {
+  description = "ID of elasticache subnet group"
+  value       = concat(aws_elasticache_subnet_group.elasticache.*.id, [""])[0]
+}
+
+output "elasticache_subnet_group_name" {
+  description = "Name of elasticache subnet group"
+  value       = concat(aws_elasticache_subnet_group.elasticache.*.name, [""])[0]
+}
+
+output "intra_subnets_map" {
+  description = "Map of of intra subnets with CIDR > subnet mapping"
+  value       = { for subnet in aws_subnet.intra : subnet.cidr_block => subnet }
 }
 
 output "intra_subnets" {
@@ -223,14 +268,9 @@ output "intra_subnets_ipv6_cidr_blocks" {
   value       = aws_subnet.intra.*.ipv6_cidr_block
 }
 
-output "elasticache_subnet_group" {
-  description = "ID of elasticache subnet group"
-  value       = concat(aws_elasticache_subnet_group.elasticache.*.id, [""])[0]
-}
-
-output "elasticache_subnet_group_name" {
-  description = "Name of elasticache subnet group"
-  value       = concat(aws_elasticache_subnet_group.elasticache.*.name, [""])[0]
+output "public_route_tables_map" {
+  description = "Map of of public route tables with Name > route_table mapping"
+  value       = { for route_table in aws_route_table.public : route_table.tags["Name"] => route_table }
 }
 
 output "public_route_table_ids" {
@@ -238,9 +278,19 @@ output "public_route_table_ids" {
   value       = aws_route_table.public.*.id
 }
 
+output "private_route_tables_map" {
+  description = "Map of of private route tables with Name > route_table mapping"
+  value       = { for route_table in aws_route_table.private : route_table.tags["Name"] => route_table }
+}
+
 output "private_route_table_ids" {
   description = "List of IDs of private route tables"
   value       = aws_route_table.private.*.id
+}
+
+output "database_route_tables_map" {
+  description = "Map of of database route tables with Name > route_table mapping"
+  value       = { for route_table in length(aws_route_table.database.*.id) > 0 ? aws_route_table.database : aws_route_table.private : route_table.tags["Name"] => route_table }
 }
 
 output "database_route_table_ids" {
@@ -248,14 +298,29 @@ output "database_route_table_ids" {
   value       = length(aws_route_table.database.*.id) > 0 ? aws_route_table.database.*.id : aws_route_table.private.*.id
 }
 
+output "redshift_route_tables_map" {
+  description = "Map of of redshift route tables with Name > route_table mapping"
+  value       = { for route_table in length(aws_route_table.redshift.*.id) > 0 ? aws_route_table.redshift : aws_route_table.private : route_table.tags["Name"] => route_table }
+}
+
 output "redshift_route_table_ids" {
   description = "List of IDs of redshift route tables"
   value       = length(aws_route_table.redshift.*.id) > 0 ? aws_route_table.redshift.*.id : aws_route_table.private.*.id
 }
 
+output "elasticache_route_tables_map" {
+  description = "Map of of elasticache route tables with Name > route_table mapping"
+  value       = { for route_table in length(aws_route_table.elasticache.*.id) > 0 ? aws_route_table.elasticache : aws_route_table.private : route_table.tags["Name"] => route_table }
+}
+
 output "elasticache_route_table_ids" {
   description = "List of IDs of elasticache route tables"
   value       = length(aws_route_table.elasticache.*.id) > 0 ? aws_route_table.elasticache.*.id : aws_route_table.private.*.id
+}
+
+output "intra_route_tables_map" {
+  description = "Map of of intra route tables with Name > route_table mapping"
+  value       = { for route_table in aws_route_table.intra : route_table.tags["Name"] => route_table }
 }
 
 output "intra_route_table_ids" {
