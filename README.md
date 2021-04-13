@@ -363,6 +363,7 @@ No modules.
 | [aws_vpc_endpoint.monitoring](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/vpc_endpoint) | resource |
 | [aws_vpc_endpoint.qldb_session](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/vpc_endpoint) | resource |
 | [aws_vpc_endpoint.rds](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/vpc_endpoint) | resource |
+| [aws_vpc_endpoint.rds_data](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/vpc_endpoint) | resource |
 | [aws_vpc_endpoint.rekognition](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/vpc_endpoint) | resource |
 | [aws_vpc_endpoint.s3](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/vpc_endpoint) | resource |
 | [aws_vpc_endpoint.sagemaker_api](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/vpc_endpoint) | resource |
@@ -719,6 +720,7 @@ No modules.
 | <a name="input_enable_public_s3_endpoint"></a> [enable\_public\_s3\_endpoint](#input\_enable\_public\_s3\_endpoint) | Whether to enable S3 VPC Endpoint for public subnets | `bool` | `true` | no |
 | <a name="input_enable_qldb_session_endpoint"></a> [enable\_qldb\_session\_endpoint](#input\_enable\_qldb\_session\_endpoint) | Should be true if you want to provision an QLDB Session endpoint to the VPC | `bool` | `false` | no |
 | <a name="input_enable_rds_endpoint"></a> [enable\_rds\_endpoint](#input\_enable\_rds\_endpoint) | Should be true if you want to provision an RDS endpoint to the VPC | `bool` | `false` | no |
+| <a name="input_enable_rds_data_endpoint"></a> [enable\_rds\_data\_endpoint](#input\_enable\_rds\_data\_endpoint) | Should be true if you want to provision an RDS-DATA endpoint to the VPC | `bool` | `false` | no |
 | <a name="input_enable_rekognition_endpoint"></a> [enable\_rekognition\_endpoint](#input\_enable\_rekognition\_endpoint) | Should be true if you want to provision a Rekognition endpoint to the VPC | `bool` | `false` | no |
 | <a name="input_enable_s3_endpoint"></a> [enable\_s3\_endpoint](#input\_enable\_s3\_endpoint) | Should be true if you want to provision an S3 endpoint to the VPC | `bool` | `false` | no |
 | <a name="input_enable_sagemaker_api_endpoint"></a> [enable\_sagemaker\_api\_endpoint](#input\_enable\_sagemaker\_api\_endpoint) | Should be true if you want to provision a SageMaker API endpoint to the VPC | `bool` | `false` | no |
@@ -845,6 +847,9 @@ No modules.
 | <a name="input_rds_endpoint_private_dns_enabled"></a> [rds\_endpoint\_private\_dns\_enabled](#input\_rds\_endpoint\_private\_dns\_enabled) | Whether or not to associate a private hosted zone with the specified VPC for RDS endpoint | `bool` | `false` | no |
 | <a name="input_rds_endpoint_security_group_ids"></a> [rds\_endpoint\_security\_group\_ids](#input\_rds\_endpoint\_security\_group\_ids) | The ID of one or more security groups to associate with the network interface for RDS endpoint | `list(string)` | `[]` | no |
 | <a name="input_rds_endpoint_subnet_ids"></a> [rds\_endpoint\_subnet\_ids](#input\_rds\_endpoint\_subnet\_ids) | The ID of one or more subnets in which to create a network interface for RDS endpoint. Only a single subnet within an AZ is supported. If omitted, private subnets will be used. | `list(string)` | `[]` | no |
+| <a name="input_rds_data_endpoint_private_dns_enabled"></a> [rds\_data\_endpoint\_private\_dns\_enabled](#input\_rds\_data\_endpoint\_private\_dns\_enabled) | Whether or not to associate a private hosted zone with the specified VPC for RDS-DATA endpoint | `bool` | `false` | no |
+| <a name="input_rds_data_endpoint_security_group_ids"></a> [rds\_data\_endpoint\_security\_group\_ids](#input\_rds\_data\_endpoint\_security\_group\_ids) | The ID of one or more security groups to associate with the network interface for RDS-DATA endpoint | `list(string)` | `[]` | no |
+| <a name="input_rds_data_endpoint_subnet_ids"></a> [rds\_data\_endpoint\_subnet\_ids](#input\_rds\_data\_endpoint\_subnet\_ids) | The ID of one or more subnets in which to create a network interface for RDS-DATA endpoint. Only a single subnet within an AZ is supported. If omitted, private subnets will be used. | `list(string)` | `[]` | no |
 | <a name="input_redshift_acl_tags"></a> [redshift\_acl\_tags](#input\_redshift\_acl\_tags) | Additional tags for the redshift subnets network ACL | `map(string)` | `{}` | no |
 | <a name="input_redshift_dedicated_network_acl"></a> [redshift\_dedicated\_network\_acl](#input\_redshift\_dedicated\_network\_acl) | Whether to use dedicated network ACL (not default) and custom rules for redshift subnets | `bool` | `false` | no |
 | <a name="input_redshift_inbound_acl_rules"></a> [redshift\_inbound\_acl\_rules](#input\_redshift\_inbound\_acl\_rules) | Redshift subnets inbound network ACL rules | `list(map(string))` | <pre>[<br>  {<br>    "cidr_block": "0.0.0.0/0",<br>    "from_port": 0,<br>    "protocol": "-1",<br>    "rule_action": "allow",<br>    "rule_number": 100,<br>    "to_port": 0<br>  }<br>]</pre> | no |
