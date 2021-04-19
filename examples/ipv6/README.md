@@ -19,14 +19,12 @@ Note that this example may create resources which can cost money (AWS Elastic IP
 
 | Name | Version |
 |------|---------|
-| <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 0.12.21 |
-| <a name="requirement_aws"></a> [aws](#requirement\_aws) | >= 2.70 |
+| <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 0.12.26 |
+| <a name="requirement_aws"></a> [aws](#requirement\_aws) | >= 3.15 |
 
 ## Providers
 
-| Name | Version |
-|------|---------|
-| <a name="provider_aws"></a> [aws](#provider\_aws) | >= 2.70 |
+No providers.
 
 ## Modules
 
@@ -36,9 +34,7 @@ Note that this example may create resources which can cost money (AWS Elastic IP
 
 ## Resources
 
-| Name | Type |
-|------|------|
-| [aws_availability_zones.available](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/availability_zones) | data source |
+No resources.
 
 ## Inputs
 
