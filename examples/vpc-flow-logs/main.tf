@@ -10,6 +10,69 @@ locals {
 }
 
 ################################################################################
+# VPC Module
+################################################################################
+
+module "vpc_with_flow_logs_s3_bucket" {
+  source = "../../"
+
+  name = "vpc-flow-logs-s3-bucket"
+  cidr = "10.30.0.0/16"
+
+  azs            = ["${local.region}a"]
+  public_subnets = ["10.30.101.0/24"]
+
+  enable_flow_log           = true
+  flow_log_destination_type = "s3"
+  flow_log_destination_arn  = module.s3_bucket.this_s3_bucket_arn
+
+  vpc_flow_log_tags = {
+    Name = "vpc-flow-logs-s3-bucket"
+  }
+}
+
+# CloudWatch Log Group and IAM role created automatically
+module "vpc_with_flow_logs_cloudwatch_logs_default" {
+  source = "../../"
+
+  name = "vpc-flow-logs-cloudwatch-logs-default"
+  cidr = "10.10.0.0/16"
+
+  azs            = ["${local.region}a"]
+  public_subnets = ["10.10.101.0/24"]
+
+  # Cloudwatch log group and IAM role will be created
+  enable_flow_log                      = true
+  create_flow_log_cloudwatch_log_group = true
+  create_flow_log_cloudwatch_iam_role  = true
+  flow_log_max_aggregation_interval    = 60
+
+  vpc_flow_log_tags = {
+    Name = "vpc-flow-logs-cloudwatch-logs-default"
+  }
+}
+
+# CloudWatch Log Group and IAM role created separately
+module "vpc_with_flow_logs_cloudwatch_logs" {
+  source = "../../"
+
+  name = "vpc-flow-logs-cloudwatch-logs"
+  cidr = "10.20.0.0/16"
+
+  azs            = ["${local.region}a"]
+  public_subnets = ["10.20.101.0/24"]
+
+  enable_flow_log                  = true
+  flow_log_destination_type        = "cloud-watch-logs"
+  flow_log_destination_arn         = aws_cloudwatch_log_group.flow_log.arn
+  flow_log_cloudwatch_iam_role_arn = aws_iam_role.vpc_flow_log_cloudwatch.arn
+
+  vpc_flow_log_tags = {
+    Name = "vpc-flow-logs-cloudwatch-logs"
+  }
+}
+
+################################################################################
 # Supporting Resources
 ################################################################################
 
@@ -103,68 +166,5 @@ data "aws_iam_policy_document" "vpc_flow_log_cloudwatch" {
     ]
 
     resources = ["*"]
-  }
-}
-
-################################################################################
-# VPC Module
-################################################################################
-
-module "vpc_with_flow_logs_s3_bucket" {
-  source = "../../"
-
-  name = "vpc-flow-logs-s3-bucket"
-  cidr = "10.30.0.0/16"
-
-  azs            = ["${local.region}a"]
-  public_subnets = ["10.30.101.0/24"]
-
-  enable_flow_log           = true
-  flow_log_destination_type = "s3"
-  flow_log_destination_arn  = module.s3_bucket.this_s3_bucket_arn
-
-  vpc_flow_log_tags = {
-    Name = "vpc-flow-logs-s3-bucket"
-  }
-}
-
-# CloudWatch Log Group and IAM role created automatically
-module "vpc_with_flow_logs_cloudwatch_logs_default" {
-  source = "../../"
-
-  name = "vpc-flow-logs-cloudwatch-logs-default"
-  cidr = "10.10.0.0/16"
-
-  azs            = ["${local.region}a"]
-  public_subnets = ["10.10.101.0/24"]
-
-  # Cloudwatch log group and IAM role will be created
-  enable_flow_log                      = true
-  create_flow_log_cloudwatch_log_group = true
-  create_flow_log_cloudwatch_iam_role  = true
-  flow_log_max_aggregation_interval    = 60
-
-  vpc_flow_log_tags = {
-    Name = "vpc-flow-logs-cloudwatch-logs-default"
-  }
-}
-
-# CloudWatch Log Group and IAM role created separately
-module "vpc_with_flow_logs_cloudwatch_logs" {
-  source = "../../"
-
-  name = "vpc-flow-logs-cloudwatch-logs"
-  cidr = "10.20.0.0/16"
-
-  azs            = ["${local.region}a"]
-  public_subnets = ["10.20.101.0/24"]
-
-  enable_flow_log                  = true
-  flow_log_destination_type        = "cloud-watch-logs"
-  flow_log_destination_arn         = aws_cloudwatch_log_group.flow_log.arn
-  flow_log_cloudwatch_iam_role_arn = aws_iam_role.vpc_flow_log_cloudwatch.arn
-
-  vpc_flow_log_tags = {
-    Name = "vpc-flow-logs-cloudwatch-logs"
   }
 }

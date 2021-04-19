@@ -13,18 +13,18 @@ Previously, VPC endpoints were configured as standalone resources with their own
 1. Move the endpoint resource from the main module to the sub-module. The example state move below is valid for all endpoints you might have configured (reference [`complete-vpc`](https://github.com/terraform-aws-modules/terraform-aws-vpc/tree/master/examples/complete-vpc) example for reference), where `ssmmessages` should be updated for and state move performed for each endpoint configured:
 
 ```
-tf state mv 'module.vpc.aws_vpc_endpoint.ssm[0]' 'module.vpc_endpoints.aws_vpc_endpoint.this["ssm"]'
-tf state mv 'module.vpc.aws_vpc_endpoint.ssmmessages[0]' 'module.vpc_endpoints.aws_vpc_endpoint.this["ssmmessages"]'
-tf state mv 'module.vpc.aws_vpc_endpoint.ec2[0]' 'module.vpc_endpoints.aws_vpc_endpoint.this["ec2"]'
+terraform state mv 'module.vpc.aws_vpc_endpoint.ssm[0]' 'module.vpc_endpoints.aws_vpc_endpoint.this["ssm"]'
+terraform state mv 'module.vpc.aws_vpc_endpoint.ssmmessages[0]' 'module.vpc_endpoints.aws_vpc_endpoint.this["ssmmessages"]'
+terraform state mv 'module.vpc.aws_vpc_endpoint.ec2[0]' 'module.vpc_endpoints.aws_vpc_endpoint.this["ec2"]'
 ...
 ```
 
 2. Remove the gateway endpoint route table association separate resources. The route table associations are now managed in the VPC endpoint resource itself via the map of maps provided to the VPC endpoint sub-module. Perform the necessary removals for each route table association and for S3 and/or DynamoDB depending on your configuration:
 
 ```
-tf state rm 'module.vpc.aws_vpc_endpoint_route_table_association.intra_dynamodb[0]'
-tf state rm 'module.vpc.aws_vpc_endpoint_route_table_association.private_dynamodb[0]'
-tf state rm 'module.vpc.aws_vpc_endpoint_route_table_association.public_dynamodb[0]'
+terraform state rm 'module.vpc.aws_vpc_endpoint_route_table_association.intra_dynamodb[0]'
+terraform state rm 'module.vpc.aws_vpc_endpoint_route_table_association.private_dynamodb[0]'
+terraform state rm 'module.vpc.aws_vpc_endpoint_route_table_association.public_dynamodb[0]'
 ...
 ```
 
@@ -43,14 +43,10 @@ tf state rm 'module.vpc.aws_vpc_endpoint_route_table_association.public_dynamodb
 
 See the [VPC endpoint sub-module](modules/vpc-endpoints) for the more information on the variables to utilize for VPC endpoints
 
-   - None
-
 3. Removed outputs:
 
    - `vpc_endpoint_*`
 
 4. Renamed outputs:
 
-VPC endpoint outputs are now provided via the VPC endpoint sub-module and can be accessed via lookups. See [`complete-vpc`](https://github.com/terraform-aws-modules/terraform-aws-vpc/tree/master/examples/complete-vpc) for further examples of how to access VPC endpoint attributes from outputs.
-
-   - None
+VPC endpoint outputs are now provided via the VPC endpoint sub-module and can be accessed via lookups. See [`complete-vpc`](https://github.com/terraform-aws-modules/terraform-aws-vpc/tree/master/examples/complete-vpc) for further examples of how to access VPC endpoint attributes from outputs

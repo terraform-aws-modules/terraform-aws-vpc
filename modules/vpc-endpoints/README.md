@@ -2,36 +2,30 @@
 
 Terraform sub-module which creates VPC endpoint resources on AWS.
 
-The following resources are supported:
-
-- [aws_vpc_endpoint](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/vpc_endpoint)
-
 ## Usage
 
 See [`examples`](./examples) directory for working examples to reference:
 
 ```hcl
 module "endpoints" {
-  source = "terraform-aws-modules/vpc/aws//vpc-endpoints"
+  source = "terraform-aws-modules/vpc/aws//modules/vpc-endpoints"
 
   vpc_id             = "vpc-12345678"
   security_group_ids = ["sg-12345678"]
 
-  gateway_endpoints = {
+  endpoints = {
     s3 = {
+      # interface endpoint
       service             = "s3"
       private_dns_enabled = true
-      route_table_ids     = ["rt-12322456", "rt-43433343", "rt-11223344"]
       tags                = { Name = "s3-vpc-endpoint" }
     },
     dynamodb = {
+      # gateway endpoint
       service         = "dynamodb"
       route_table_ids = ["rt-12322456", "rt-43433343", "rt-11223344"]
       tags            = { Name = "dynamodb-vpc-endpoint" }
-    }
-  }
-
-  interface_endpoints = {
+    },
     sns = {
       service    = "sns"
       subnet_ids = ["subnet-12345678", "subnet-87654321"]
@@ -86,12 +80,13 @@ No modules.
 
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
+| <a name="input_create"></a> [create](#input\_create) | Determines whether resources will be created | `bool` | `true` | no |
 | <a name="input_endpoints"></a> [endpoints](#input\_endpoints) | A map of interface and/or gateway endpoints containing their properties and configurations | `any` | `{}` | no |
 | <a name="input_security_group_ids"></a> [security\_group\_ids](#input\_security\_group\_ids) | Default security group IDs to associate with the VPC endpoints | `list(string)` | `[]` | no |
 | <a name="input_subnet_ids"></a> [subnet\_ids](#input\_subnet\_ids) | Default subnets IDs to associate with the VPC endpoints | `list(string)` | `[]` | no |
 | <a name="input_tags"></a> [tags](#input\_tags) | A map of tags to use on all resources | `map(string)` | `{}` | no |
 | <a name="input_timeouts"></a> [timeouts](#input\_timeouts) | Define maximum timeout for creating, updating, and deleting VPC endpoint resources | `map(string)` | `{}` | no |
-| <a name="input_vpc_id"></a> [vpc\_id](#input\_vpc\_id) | The ID of the VPC in which the endpoint will be used | `string` | n/a | yes |
+| <a name="input_vpc_id"></a> [vpc\_id](#input\_vpc\_id) | The ID of the VPC in which the endpoint will be used | `string` | `null` | no |
 
 ## Outputs
 

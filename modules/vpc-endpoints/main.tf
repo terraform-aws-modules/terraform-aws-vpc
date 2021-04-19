@@ -1,9 +1,13 @@
+locals {
+  endpoints = var.create ? var.endpoints : {}
+}
+
 ################################################################################
 # Endpoint(s)
 ################################################################################
 
 data "aws_vpc_endpoint_service" "this" {
-  for_each = var.endpoints
+  for_each = local.endpoints
 
   service      = lookup(each.value, "service", null)
   service_name = lookup(each.value, "service_name", null)
@@ -15,7 +19,7 @@ data "aws_vpc_endpoint_service" "this" {
 }
 
 resource "aws_vpc_endpoint" "this" {
-  for_each = var.endpoints
+  for_each = local.endpoints
 
   vpc_id            = var.vpc_id
   service_name      = data.aws_vpc_endpoint_service.this[each.key].service_name
