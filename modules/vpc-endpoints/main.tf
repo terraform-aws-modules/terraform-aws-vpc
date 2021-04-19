@@ -1,5 +1,5 @@
 locals {
-  endpoints = var.create ? var.endpoints : {}
+  endpoints = var.create ? var.endpoints : tomap({})
 }
 
 ################################################################################
