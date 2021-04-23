@@ -523,6 +523,11 @@ output "vpc_endpoint_s3_pl_id" {
   value       = concat(aws_vpc_endpoint.s3.*.prefix_list_id, [""])[0]
 }
 
+output "vpc_endpoint_s3_dns_entry" {
+  description = "The DNS entries for the VPC Endpoint for S3."
+  value       = flatten(aws_vpc_endpoint.s3.*.dns_entry)
+}
+
 output "vpc_endpoint_dynamodb_id" {
   description = "The ID of VPC endpoint for DynamoDB"
   value       = concat(aws_vpc_endpoint.dynamodb.*.id, [""])[0]

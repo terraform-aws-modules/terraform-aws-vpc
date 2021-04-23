@@ -1182,6 +1182,7 @@ No modules.
 | <a name="output_vpc_endpoint_rekognition_dns_entry"></a> [vpc\_endpoint\_rekognition\_dns\_entry](#output\_vpc\_endpoint\_rekognition\_dns\_entry) | The DNS entries for the VPC Endpoint for Rekognition. |
 | <a name="output_vpc_endpoint_rekognition_id"></a> [vpc\_endpoint\_rekognition\_id](#output\_vpc\_endpoint\_rekognition\_id) | The ID of VPC endpoint for Rekognition |
 | <a name="output_vpc_endpoint_rekognition_network_interface_ids"></a> [vpc\_endpoint\_rekognition\_network\_interface\_ids](#output\_vpc\_endpoint\_rekognition\_network\_interface\_ids) | One or more network interfaces for the VPC Endpoint for Rekognition. |
+| <a name="output_vpc_endpoint_s3_dns_entry"></a> [vpc\_endpoint\_s3\_dns\_entry](#output\_vpc\_endpoint\_s3\_dns\_entry) | The DNS entries for the VPC endpoint for S3. |
 | <a name="output_vpc_endpoint_s3_id"></a> [vpc\_endpoint\_s3\_id](#output\_vpc\_endpoint\_s3\_id) | The ID of VPC endpoint for S3 |
 | <a name="output_vpc_endpoint_s3_pl_id"></a> [vpc\_endpoint\_s3\_pl\_id](#output\_vpc\_endpoint\_s3\_pl\_id) | The prefix list for the S3 VPC endpoint. |
 | <a name="output_vpc_endpoint_sagemaker_api_dns_entry"></a> [vpc\_endpoint\_sagemaker\_api\_dns\_entry](#output\_vpc\_endpoint\_sagemaker\_api\_dns\_entry) | The DNS entries for the VPC Endpoint for SageMaker API. |
