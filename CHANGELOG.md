@@ -7,6 +7,12 @@ All notable changes to this project will be documented in this file.
 
 
 
+<a name="v3.0.0"></a>
+## [v3.0.0] - 2021-04-26
+
+- refactor: remove existing vpc endpoint configurations from base module and move into sub-module ([#635](https://github.com/terraform-aws-modules/terraform-aws-vpc/issues/635))
+
+
 <a name="v2.78.0"></a>
 ## [v2.78.0] - 2021-04-06
 
@@ -1300,7 +1306,8 @@ All notable changes to this project will be documented in this file.
 - Initial commit
 
 
-[Unreleased]: https://github.com/terraform-aws-modules/terraform-aws-vpc/compare/v2.78.0...HEAD
+[Unreleased]: https://github.com/terraform-aws-modules/terraform-aws-vpc/compare/v3.0.0...HEAD
+[v3.0.0]: https://github.com/terraform-aws-modules/terraform-aws-vpc/compare/v2.78.0...v3.0.0
 [v2.78.0]: https://github.com/terraform-aws-modules/terraform-aws-vpc/compare/v2.77.0...v2.78.0
 [v2.77.0]: https://github.com/terraform-aws-modules/terraform-aws-vpc/compare/v2.76.0...v2.77.0
 [v2.76.0]: https://github.com/terraform-aws-modules/terraform-aws-vpc/compare/v2.75.0...v2.76.0
