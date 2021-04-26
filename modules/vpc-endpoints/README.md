@@ -4,7 +4,7 @@ Terraform sub-module which creates VPC endpoint resources on AWS.
 
 ## Usage
 
-See [`examples`](./examples) directory for working examples to reference:
+See [`examples`](../../examples) directory for working examples to reference:
 
 ```hcl
 module "endpoints" {
@@ -49,7 +49,7 @@ module "endpoints" {
 
 ## Examples
 
-- [Complete-VPC](../../examples/complete-vpc)
+- [Complete-VPC](../../examples/complete-vpc) with VPC Endpoints.
 
 <!-- BEGINNING OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
 ## Requirements
