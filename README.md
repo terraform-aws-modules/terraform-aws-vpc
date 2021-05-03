@@ -571,4 +571,4 @@ Module is maintained by [Anton Babenko](https://github.com/antonbabenko) with he
 
 ## License
 
-Apache 2 Licensed. See LICENSE for full details.
+Apache 2 Licensed. See [LICENSE](https://github.com/terraform-aws-modules/terraform-aws-vpc/tree/master/LICENSE) for full details.
