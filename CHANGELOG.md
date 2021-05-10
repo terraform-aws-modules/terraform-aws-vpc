@@ -381,7 +381,6 @@ All notable changes to this project will be documented in this file.
 - feat: Add support for VPC flow log max_aggregation_interval ([#431](https://github.com/terraform-aws-modules/terraform-aws-vpc/issues/431))
 - feat: Add support for tagging egress only internet gateway ([#430](https://github.com/terraform-aws-modules/terraform-aws-vpc/issues/430))
 
-
 <a name="v2.39.0"></a>
 ## [v2.39.0] - 2020-06-06
 
