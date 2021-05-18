@@ -7,6 +7,8 @@ Terraform sub-module which creates VPC endpoint resources on AWS.
 See [`examples`](../../examples) directory for working examples to reference:
 
 ```hcl
+data "aws_region" "current" {}
+
 module "endpoints" {
   source = "terraform-aws-modules/vpc/aws//modules/vpc-endpoints"
 
@@ -22,17 +24,18 @@ module "endpoints" {
     },
     dynamodb = {
       # gateway endpoint
-      service         = "dynamodb"
+      service_name    = "com.amazonaws.${data.aws_region.current.name}.dynamodb"
+      service_type    = "Gateway"
       route_table_ids = ["rt-12322456", "rt-43433343", "rt-11223344"]
       tags            = { Name = "dynamodb-vpc-endpoint" }
     },
     sns = {
-      service    = "sns"
-      subnet_ids = ["subnet-12345678", "subnet-87654321"]
-      tags       = { Name = "sns-vpc-endpoint" }
+      service_name    = "com.amazonaws.${data.aws_region.current.name}.sns"
+      subnet_ids      = ["subnet-12345678", "subnet-87654321"]
+      tags            = { Name = "sns-vpc-endpoint" }
     },
     sqs = {
-      service             = "sqs"
+      service_name        = "com.amazonaws.${data.aws_region.current.name}.sqs"
       private_dns_enabled = true
       security_group_ids  = ["sg-987654321"]
       subnet_ids          = ["subnet-12345678", "subnet-87654321"]
