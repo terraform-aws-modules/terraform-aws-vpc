@@ -17,7 +17,6 @@ module "endpoints" {
     s3 = {
       # interface endpoint
       service             = "s3"
-      private_dns_enabled = true
       tags                = { Name = "s3-vpc-endpoint" }
     },
     dynamodb = {
