@@ -5,6 +5,8 @@ All notable changes to this project will be documented in this file.
 <a name="unreleased"></a>
 ## [Unreleased]
 
+- feat: Add EKS secondary CIDR support ()[https://aws.amazon.com/about-aws/whats-new/2018/10/amazon-eks-now-supports-additional-vpc-cidr-blocks/]
+
 
 
 <a name="v3.1.0"></a>

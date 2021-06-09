@@ -78,6 +78,16 @@ output "private_subnet_arns" {
   value       = aws_subnet.private.*.arn
 }
 
+output "eks_secondary_cidr_subnets" {
+  description = "List of IDs of eks secondary cidr subnets"
+  value       = aws_subnet.eks_secondary_cidr.*.id
+}
+
+output "eks_secondary_cidr_subnet_arns" {
+  description = "List of ARNs of eks secondary cidr subnets"
+  value       = aws_subnet.eks_secondary_cidr.*.arn
+}
+
 output "private_subnets_cidr_blocks" {
   description = "List of cidr_blocks of private subnets"
   value       = aws_subnet.private.*.cidr_block
@@ -86,6 +96,11 @@ output "private_subnets_cidr_blocks" {
 output "private_subnets_ipv6_cidr_blocks" {
   description = "List of IPv6 cidr_blocks of private subnets in an IPv6 enabled VPC"
   value       = aws_subnet.private.*.ipv6_cidr_block
+}
+
+output "eks_secondary_cidr_subnets_cidr_blocks" {
+  description = "List of cidr_blocks of eks secondary cidr subnets"
+  value       = aws_subnet.eks_secondary_cidr.*.cidr_block
 }
 
 output "public_subnets" {
@@ -258,6 +273,11 @@ output "elasticache_route_table_ids" {
   value       = length(aws_route_table.elasticache.*.id) > 0 ? aws_route_table.elasticache.*.id : aws_route_table.private.*.id
 }
 
+output "eks_secondary_cidr_route_table_ids" {
+  description = "List of IDs of eks secondary cidr route tables"
+  value       = length(aws_route_table.eks_secondary_cidr.*.id) > 0 ? aws_route_table.eks_secondary_cidr.*.id : aws_route_table.private.*.id
+}
+
 output "intra_route_table_ids" {
   description = "List of IDs of intra route tables"
   value       = aws_route_table.intra.*.id
@@ -301,6 +321,11 @@ output "private_ipv6_egress_route_ids" {
 output "private_route_table_association_ids" {
   description = "List of IDs of the private route table association"
   value       = aws_route_table_association.private.*.id
+}
+
+output "eks_secondary_cidr_route_table_association_ids" {
+  description = "List of IDs of the eks secondary cidr route table association"
+  value       = aws_route_table_association.eks_secondary_cidr.*.id
 }
 
 output "database_route_table_association_ids" {
@@ -456,6 +481,16 @@ output "private_network_acl_id" {
 output "private_network_acl_arn" {
   description = "ARN of the private network ACL"
   value       = concat(aws_network_acl.private.*.arn, [""])[0]
+}
+
+output "eks_secondary_cidr_network_acl_id" {
+  description = "ID of the eks secondary cidr network ACL"
+  value       = concat(aws_network_acl.eks_secondary_cidr.*.id, [""])[0]
+}
+
+output "eks_secondary_cidr_network_acl_arn" {
+  description = "ARN of the eks secondary cidr network ACL"
+  value       = concat(aws_network_acl.eks_secondary_cidr.*.arn, [""])[0]
 }
 
 output "outpost_network_acl_id" {

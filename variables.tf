@@ -136,6 +136,12 @@ variable "private_subnet_suffix" {
   default     = "private"
 }
 
+variable "eks_secondary_cidr_subnet_suffix" {
+  description = "Suffix to append to eks secondary cidr subnets name"
+  type        = string
+  default     = "eks_secondary_cidr"
+}
+
 variable "outpost_subnet_suffix" {
   description = "Suffix to append to outpost subnets name"
   type        = string
@@ -178,6 +184,12 @@ variable "private_subnets" {
   default     = []
 }
 
+variable "eks_secondary_cidr_subnets" {
+  description = "A list of eks secondary cidr subnets inside the VPC"
+  type        = list(string)
+  default     = []
+}
+
 variable "outpost_subnets" {
   description = "A list of outpost subnets inside the VPC"
   type        = list(string)
@@ -216,6 +228,12 @@ variable "create_database_subnet_route_table" {
 
 variable "create_redshift_subnet_route_table" {
   description = "Controls if separate route table for redshift should be created"
+  type        = bool
+  default     = false
+}
+
+variable "create_eks_secondary_cidr_subnet_route_table" {
+  description = "Controls if separate route table for eks secondary cidr should be created"
   type        = bool
   default     = false
 }
@@ -436,6 +454,12 @@ variable "private_subnet_tags" {
   default     = {}
 }
 
+variable "eks_secondary_cidr_subnet_tags" {
+  description = "Additional tags for the eks secondary cidr subnets"
+  type        = map(string)
+  default     = {}
+}
+
 variable "outpost_subnet_tags" {
   description = "Additional tags for the outpost subnets"
   type        = map(string)
@@ -450,6 +474,12 @@ variable "public_route_table_tags" {
 
 variable "private_route_table_tags" {
   description = "Additional tags for the private route tables"
+  type        = map(string)
+  default     = {}
+}
+
+variable "eks_secondary_cidr_route_table_tags" {
+  description = "Additional tags for the eks secondary cidr route tables"
   type        = map(string)
   default     = {}
 }
@@ -522,6 +552,12 @@ variable "public_acl_tags" {
 
 variable "private_acl_tags" {
   description = "Additional tags for the private subnets network ACL"
+  type        = map(string)
+  default     = {}
+}
+
+variable "eks_secondary_cidr_acl_tags" {
+  description = "Additional tags for the eks secondary cidr subnets network ACL"
   type        = map(string)
   default     = {}
 }
@@ -700,6 +736,12 @@ variable "private_dedicated_network_acl" {
   default     = false
 }
 
+variable "eks_secondary_cidr_dedicated_network_acl" {
+  description = "Whether to use dedicated network ACL (not default) and custom rules for eks secondary cidr subnets"
+  type        = bool
+  default     = false
+}
+
 variable "outpost_dedicated_network_acl" {
   description = "Whether to use dedicated network ACL (not default) and custom rules for outpost subnets"
   type        = bool
@@ -828,6 +870,38 @@ variable "private_inbound_acl_rules" {
 
 variable "private_outbound_acl_rules" {
   description = "Private subnets outbound network ACLs"
+  type        = list(map(string))
+
+  default = [
+    {
+      rule_number = 100
+      rule_action = "allow"
+      from_port   = 0
+      to_port     = 0
+      protocol    = "-1"
+      cidr_block  = "0.0.0.0/0"
+    },
+  ]
+}
+
+variable "eks_secondary_cidr_inbound_acl_rules" {
+  description = "EKS secondary cidr subnets inbound network ACLs"
+  type        = list(map(string))
+
+  default = [
+    {
+      rule_number = 100
+      rule_action = "allow"
+      from_port   = 0
+      to_port     = 0
+      protocol    = "-1"
+      cidr_block  = "0.0.0.0/0"
+    },
+  ]
+}
+
+variable "eks_secondary_cidr_outbound_acl_rules" {
+  description = "EKS secondary cidr subnets outbound network ACLs"
   type        = list(map(string))
 
   default = [

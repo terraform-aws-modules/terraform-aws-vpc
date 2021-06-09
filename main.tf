@@ -4,6 +4,7 @@ locals {
     length(var.elasticache_subnets),
     length(var.database_subnets),
     length(var.redshift_subnets),
+    length(var.eks_secondary_cidr_subnets),
   )
   nat_gateway_count = var.single_nat_gateway ? 1 : var.one_nat_gateway_per_az ? length(var.azs) : local.max_subnet_length
 
@@ -253,6 +254,28 @@ resource "aws_route_table" "private" {
 }
 
 ################################################################################
+# EKS secondary CIDR routes
+################################################################################
+
+resource "aws_route_table" "eks_secondary_cidr" {
+  count = var.create_vpc && var.create_eks_secondary_cidr_subnet_route_table && length(var.eks_secondary_cidr_subnets) > 0 ? 1 : 0
+
+  vpc_id = local.vpc_id
+
+  tags = merge(
+    {
+      "Name" = var.single_nat_gateway ? "${var.name}-${var.eks_secondary_cidr_subnet_suffix}" : format(
+        "%s-${var.eks_secondary_cidr_subnet_suffix}-%s",
+        var.name,
+        element(var.azs, count.index),
+      )
+    },
+    var.tags,
+    var.eks_secondary_cidr_route_table_tags,
+  )
+}
+
+################################################################################
 # Database routes
 ################################################################################
 
@@ -418,6 +441,31 @@ resource "aws_subnet" "private" {
     },
     var.tags,
     var.private_subnet_tags,
+  )
+}
+
+################################################################################
+# EKS secondary CIDR subnet
+################################################################################
+
+resource "aws_subnet" "eks_secondary_cidr" {
+  count = var.create_vpc && length(var.eks_secondary_cidr_subnets) > 0 ? length(var.eks_secondary_cidr_subnets) : 0
+
+  vpc_id                          = local.vpc_id
+  cidr_block                      = var.eks_secondary_cidr_subnets[count.index]
+  availability_zone               = length(regexall("^[a-z]{2}-", element(var.azs, count.index))) > 0 ? element(var.azs, count.index) : null
+  availability_zone_id            = length(regexall("^[a-z]{2}-", element(var.azs, count.index))) == 0 ? element(var.azs, count.index) : null
+
+  tags = merge(
+    {
+      "Name" = format(
+        "%s-${var.eks_secondary_cidr_subnet_suffix}-%s",
+        var.name,
+        element(var.azs, count.index),
+      )
+    },
+    var.tags,
+    var.eks_secondary_cidr_subnet_tags,
   )
 }
 
@@ -622,6 +670,7 @@ resource "aws_default_network_acl" "this" {
       aws_subnet.redshift.*.id,
       aws_subnet.elasticache.*.id,
       aws_subnet.outpost.*.id,
+      aws_subnet.eks_secondary_cidr.*.id,
     ])),
     compact(flatten([
       aws_network_acl.public.*.subnet_ids,
@@ -631,6 +680,7 @@ resource "aws_default_network_acl" "this" {
       aws_network_acl.redshift.*.subnet_ids,
       aws_network_acl.elasticache.*.subnet_ids,
       aws_network_acl.outpost.*.subnet_ids,
+      aws_network_acl.eks_secondary_cidr.*.subnet_ids,
     ]))
   )
 
@@ -1044,6 +1094,57 @@ resource "aws_network_acl_rule" "elasticache_outbound" {
 }
 
 ################################################################################
+# EKS secondary cidr Network ACLs
+################################################################################
+
+resource "aws_network_acl" "eks_secondary_cidr" {
+  count = var.create_vpc && var.eks_secondary_cidr_dedicated_network_acl && length(var.eks_secondary_cidr_subnets) > 0 ? 1 : 0
+
+  vpc_id     = element(concat(aws_vpc.this.*.id, [""]), 0)
+  subnet_ids = aws_subnet.eks_secondary_cidr.*.id
+
+  tags = merge(
+    {
+      "Name" = format("%s-${var.eks_secondary_cidr_subnet_suffix}", var.name)
+    },
+    var.tags,
+    var.eks_secondary_cidr_acl_tags,
+  )
+}
+
+resource "aws_network_acl_rule" "eks_secondary_cidr_inbound" {
+  count = var.create_vpc && var.eks_secondary_cidr_dedicated_network_acl && length(var.eks_secondary_cidr_subnets) > 0 ? length(var.eks_secondary_cidr_inbound_acl_rules) : 0
+
+  network_acl_id = aws_network_acl.eks_secondary_cidr[0].id
+
+  egress          = false
+  rule_number     = var.eks_secondary_cidr_inbound_acl_rules[count.index]["rule_number"]
+  rule_action     = var.eks_secondary_cidr_inbound_acl_rules[count.index]["rule_action"]
+  from_port       = lookup(var.eks_secondary_cidr_inbound_acl_rules[count.index], "from_port", null)
+  to_port         = lookup(var.eks_secondary_cidr_inbound_acl_rules[count.index], "to_port", null)
+  icmp_code       = lookup(var.eks_secondary_cidr_inbound_acl_rules[count.index], "icmp_code", null)
+  icmp_type       = lookup(var.eks_secondary_cidr_inbound_acl_rules[count.index], "icmp_type", null)
+  protocol        = var.eks_secondary_cidr_inbound_acl_rules[count.index]["protocol"]
+  cidr_block      = lookup(var.eks_secondary_cidr_inbound_acl_rules[count.index], "cidr_block", null)
+}
+
+resource "aws_network_acl_rule" "eks_secondary_cidr_outbound" {
+  count = var.create_vpc && var.eks_secondary_cidr_dedicated_network_acl && length(var.eks_secondary_cidr_subnets) > 0 ? length(var.eks_secondary_cidr_outbound_acl_rules) : 0
+
+  network_acl_id = aws_network_acl.eks_secondary_cidr[0].id
+
+  egress          = true
+  rule_number     = var.eks_secondary_cidr_outbound_acl_rules[count.index]["rule_number"]
+  rule_action     = var.eks_secondary_cidr_outbound_acl_rules[count.index]["rule_action"]
+  from_port       = lookup(var.eks_secondary_cidr_outbound_acl_rules[count.index], "from_port", null)
+  to_port         = lookup(var.eks_secondary_cidr_outbound_acl_rules[count.index], "to_port", null)
+  icmp_code       = lookup(var.eks_secondary_cidr_outbound_acl_rules[count.index], "icmp_code", null)
+  icmp_type       = lookup(var.eks_secondary_cidr_outbound_acl_rules[count.index], "icmp_type", null)
+  protocol        = var.eks_secondary_cidr_outbound_acl_rules[count.index]["protocol"]
+  cidr_block      = lookup(var.eks_secondary_cidr_outbound_acl_rules[count.index], "cidr_block", null)
+}
+
+################################################################################
 # NAT Gateway
 ################################################################################
 
@@ -1206,6 +1307,16 @@ resource "aws_route_table_association" "public" {
 
   subnet_id      = element(aws_subnet.public.*.id, count.index)
   route_table_id = aws_route_table.public[0].id
+}
+
+resource "aws_route_table_association" "eks_secondary_cidr" {
+  count = var.create_vpc && length(var.eks_secondary_cidr_subnets) > 0 ? length(var.eks_secondary_cidr_subnets) : 0
+
+  subnet_id = element(aws_subnet.eks_secondary_cidr.*.id, count.index)
+  route_table_id = element(
+    coalescelist(aws_route_table.eks_secondary_cidr.*.id, aws_route_table.private.*.id),
+    var.single_nat_gateway || var.create_eks_secondary_cidr_subnet_route_table ? 0 : count.index,
+  )
 }
 
 ################################################################################
