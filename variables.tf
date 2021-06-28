@@ -478,6 +478,12 @@ variable "intra_route_table_tags" {
   default     = {}
 }
 
+variable "database_subnet_group_name" {
+  description = "Name of database subnet group"
+  type        = string
+  default     = null
+}
+
 variable "database_subnet_tags" {
   description = "Additional tags for the database subnets"
   type        = map(string)

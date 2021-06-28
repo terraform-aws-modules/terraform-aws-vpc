@@ -481,13 +481,13 @@ resource "aws_subnet" "database" {
 resource "aws_db_subnet_group" "database" {
   count = var.create_vpc && length(var.database_subnets) > 0 && var.create_database_subnet_group ? 1 : 0
 
-  name        = lower(var.name)
+  name        = lower(coalesce(var.database_subnet_group_name, var.name))
   description = "Database subnet group for ${var.name}"
   subnet_ids  = aws_subnet.database.*.id
 
   tags = merge(
     {
-      "Name" = format("%s", var.name)
+      "Name" = format("%s", lower(coalesce(var.database_subnet_group_name, var.name)))
     },
     var.tags,
     var.database_subnet_group_tags,
