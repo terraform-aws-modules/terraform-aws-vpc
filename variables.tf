@@ -169,7 +169,7 @@ variable "database_subnet_suffix" {
 variable "neptune_subnet_suffix" {
   description = "Suffix to append to neptune subnets name"
   type        = string
-  default     = "db"
+  default     = "neptune"
 }
 
 variable "redshift_subnet_suffix" {

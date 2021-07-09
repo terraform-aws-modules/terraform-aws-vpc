@@ -428,7 +428,7 @@ No modules.
 | <a name="input_neptune_subnet_group_name"></a> [neptune\_subnet\_group\_name](#input\_neptune\_subnet\_group\_name) | Name of neptune subnet group | `string` | `null` | no |
 | <a name="input_neptune_subnet_group_tags"></a> [neptune\_subnet\_group\_tags](#input\_neptune\_subnet\_group\_tags) | Additional tags for the neptune subnet group | `map(string)` | `{}` | no |
 | <a name="input_neptune_subnet_ipv6_prefixes"></a> [neptune\_subnet\_ipv6\_prefixes](#input\_neptune\_subnet\_ipv6\_prefixes) | Assigns IPv6 neptune subnet id based on the Amazon provided /56 prefix base 10 integer (0-256). Must be of equal length to the corresponding IPv4 subnet list | `list(string)` | `[]` | no |
-| <a name="input_neptune_subnet_suffix"></a> [neptune\_subnet\_suffix](#input\_neptune\_subnet\_suffix) | Suffix to append to neptune subnets name | `string` | `"db"` | no |
+| <a name="input_neptune_subnet_suffix"></a> [neptune\_subnet\_suffix](#input\_neptune\_subnet\_suffix) | Suffix to append to neptune subnets name | `string` | `"neptune"` | no |
 | <a name="input_neptune_subnet_tags"></a> [neptune\_subnet\_tags](#input\_neptune\_subnet\_tags) | Additional tags for the neptune subnets | `map(string)` | `{}` | no |
 | <a name="input_neptune_subnets"></a> [neptune\_subnets](#input\_neptune\_subnets) | A list of neptune subnets | `list(string)` | `[]` | no |
 | <a name="input_one_nat_gateway_per_az"></a> [one\_nat\_gateway\_per\_az](#input\_one\_nat\_gateway\_per\_az) | Should be true if you want only one NAT Gateway per availability zone. Requires `var.azs` to be set, and the number of `public_subnets` created to be greater than or equal to the number of availability zones specified in `var.azs`. | `bool` | `false` | no |
