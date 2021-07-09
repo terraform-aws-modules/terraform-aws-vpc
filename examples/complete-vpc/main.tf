@@ -29,6 +29,7 @@ module "vpc" {
   elasticache_subnets = ["20.10.31.0/24", "20.10.32.0/24", "20.10.33.0/24"]
   redshift_subnets    = ["20.10.41.0/24", "20.10.42.0/24", "20.10.43.0/24"]
   intra_subnets       = ["20.10.51.0/24", "20.10.52.0/24", "20.10.53.0/24"]
+  neptune_subnets     = ["20.10.61.0/24", "20.10.62.0/24", "20.10.63.0/24"]
 
   create_database_subnet_group = false
 

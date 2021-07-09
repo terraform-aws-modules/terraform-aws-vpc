@@ -209,7 +209,7 @@ It is possible to integrate this VPC module with [terraform-aws-transit-gateway 
 
 | Name | Version |
 |------|---------|
-| <a name="provider_aws"></a> [aws](#provider\_aws) | >= 3.28 |
+| <a name="provider_aws"></a> [aws](#provider\_aws) | 3.49.0 |
 
 ## Modules
 
@@ -235,9 +235,11 @@ No modules.
 | [aws_iam_role_policy_attachment.vpc_flow_log_cloudwatch](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_role_policy_attachment) | resource |
 | [aws_internet_gateway.this](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/internet_gateway) | resource |
 | [aws_nat_gateway.this](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/nat_gateway) | resource |
+| [aws_neptune_subnet_group.neptune](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/neptune_subnet_group) | resource |
 | [aws_network_acl.database](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/network_acl) | resource |
 | [aws_network_acl.elasticache](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/network_acl) | resource |
 | [aws_network_acl.intra](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/network_acl) | resource |
+| [aws_network_acl.neptune](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/network_acl) | resource |
 | [aws_network_acl.outpost](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/network_acl) | resource |
 | [aws_network_acl.private](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/network_acl) | resource |
 | [aws_network_acl.public](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/network_acl) | resource |
@@ -248,6 +250,8 @@ No modules.
 | [aws_network_acl_rule.elasticache_outbound](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/network_acl_rule) | resource |
 | [aws_network_acl_rule.intra_inbound](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/network_acl_rule) | resource |
 | [aws_network_acl_rule.intra_outbound](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/network_acl_rule) | resource |
+| [aws_network_acl_rule.neptune_inbound](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/network_acl_rule) | resource |
+| [aws_network_acl_rule.neptune_outbound](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/network_acl_rule) | resource |
 | [aws_network_acl_rule.outpost_inbound](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/network_acl_rule) | resource |
 | [aws_network_acl_rule.outpost_outbound](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/network_acl_rule) | resource |
 | [aws_network_acl_rule.private_inbound](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/network_acl_rule) | resource |
@@ -260,6 +264,9 @@ No modules.
 | [aws_route.database_internet_gateway](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/route) | resource |
 | [aws_route.database_ipv6_egress](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/route) | resource |
 | [aws_route.database_nat_gateway](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/route) | resource |
+| [aws_route.neptune_internet_gateway](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/route) | resource |
+| [aws_route.neptune_ipv6_egress](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/route) | resource |
+| [aws_route.neptune_nat_gateway](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/route) | resource |
 | [aws_route.private_ipv6_egress](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/route) | resource |
 | [aws_route.private_nat_gateway](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/route) | resource |
 | [aws_route.public_internet_gateway](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/route) | resource |
@@ -267,12 +274,14 @@ No modules.
 | [aws_route_table.database](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/route_table) | resource |
 | [aws_route_table.elasticache](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/route_table) | resource |
 | [aws_route_table.intra](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/route_table) | resource |
+| [aws_route_table.neptune](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/route_table) | resource |
 | [aws_route_table.private](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/route_table) | resource |
 | [aws_route_table.public](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/route_table) | resource |
 | [aws_route_table.redshift](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/route_table) | resource |
 | [aws_route_table_association.database](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/route_table_association) | resource |
 | [aws_route_table_association.elasticache](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/route_table_association) | resource |
 | [aws_route_table_association.intra](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/route_table_association) | resource |
+| [aws_route_table_association.neptune](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/route_table_association) | resource |
 | [aws_route_table_association.outpost](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/route_table_association) | resource |
 | [aws_route_table_association.private](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/route_table_association) | resource |
 | [aws_route_table_association.public](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/route_table_association) | resource |
@@ -281,6 +290,7 @@ No modules.
 | [aws_subnet.database](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/subnet) | resource |
 | [aws_subnet.elasticache](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/subnet) | resource |
 | [aws_subnet.intra](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/subnet) | resource |
+| [aws_subnet.neptune](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/subnet) | resource |
 | [aws_subnet.outpost](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/subnet) | resource |
 | [aws_subnet.private](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/subnet) | resource |
 | [aws_subnet.public](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/subnet) | resource |
@@ -315,6 +325,10 @@ No modules.
 | <a name="input_create_flow_log_cloudwatch_iam_role"></a> [create\_flow\_log\_cloudwatch\_iam\_role](#input\_create\_flow\_log\_cloudwatch\_iam\_role) | Whether to create IAM role for VPC Flow Logs | `bool` | `false` | no |
 | <a name="input_create_flow_log_cloudwatch_log_group"></a> [create\_flow\_log\_cloudwatch\_log\_group](#input\_create\_flow\_log\_cloudwatch\_log\_group) | Whether to create CloudWatch log group for VPC Flow Logs | `bool` | `false` | no |
 | <a name="input_create_igw"></a> [create\_igw](#input\_create\_igw) | Controls if an Internet Gateway is created for public subnets and the related routes that connect them. | `bool` | `true` | no |
+| <a name="input_create_neptune_internet_gateway_route"></a> [create\_neptune\_internet\_gateway\_route](#input\_create\_neptune\_internet\_gateway\_route) | Controls if an internet gateway route for public neptune access should be created | `bool` | `false` | no |
+| <a name="input_create_neptune_nat_gateway_route"></a> [create\_neptune\_nat\_gateway\_route](#input\_create\_neptune\_nat\_gateway\_route) | Controls if a nat gateway route should be created to give internet access to the neptune subnets | `bool` | `false` | no |
+| <a name="input_create_neptune_subnet_group"></a> [create\_neptune\_subnet\_group](#input\_create\_neptune\_subnet\_group) | Controls if neptune subnet group should be created (n.b. neptune\_subnets must also be set) | `bool` | `true` | no |
+| <a name="input_create_neptune_subnet_route_table"></a> [create\_neptune\_subnet\_route\_table](#input\_create\_neptune\_subnet\_route\_table) | Controls if separate route table for neptune should be created | `bool` | `false` | no |
 | <a name="input_create_redshift_subnet_group"></a> [create\_redshift\_subnet\_group](#input\_create\_redshift\_subnet\_group) | Controls if redshift subnet group should be created | `bool` | `true` | no |
 | <a name="input_create_redshift_subnet_route_table"></a> [create\_redshift\_subnet\_route\_table](#input\_create\_redshift\_subnet\_route\_table) | Controls if separate route table for redshift should be created | `bool` | `false` | no |
 | <a name="input_create_vpc"></a> [create\_vpc](#input\_create\_vpc) | Controls if VPC should be created (it affects almost all resources) | `bool` | `true` | no |
@@ -405,6 +419,18 @@ No modules.
 | <a name="input_name"></a> [name](#input\_name) | Name to be used on all the resources as identifier | `string` | `""` | no |
 | <a name="input_nat_eip_tags"></a> [nat\_eip\_tags](#input\_nat\_eip\_tags) | Additional tags for the NAT EIP | `map(string)` | `{}` | no |
 | <a name="input_nat_gateway_tags"></a> [nat\_gateway\_tags](#input\_nat\_gateway\_tags) | Additional tags for the NAT gateways | `map(string)` | `{}` | no |
+| <a name="input_neptune_acl_tags"></a> [neptune\_acl\_tags](#input\_neptune\_acl\_tags) | Additional tags for the neptune subnets network ACL | `map(string)` | `{}` | no |
+| <a name="input_neptune_dedicated_network_acl"></a> [neptune\_dedicated\_network\_acl](#input\_neptune\_dedicated\_network\_acl) | Whether to use dedicated network ACL (not default) and custom rules for neptune subnets | `bool` | `false` | no |
+| <a name="input_neptune_inbound_acl_rules"></a> [neptune\_inbound\_acl\_rules](#input\_neptune\_inbound\_acl\_rules) | Database subnets inbound network ACL rules | `list(map(string))` | <pre>[<br>  {<br>    "cidr_block": "0.0.0.0/0",<br>    "from_port": 0,<br>    "protocol": "-1",<br>    "rule_action": "allow",<br>    "rule_number": 100,<br>    "to_port": 0<br>  }<br>]</pre> | no |
+| <a name="input_neptune_outbound_acl_rules"></a> [neptune\_outbound\_acl\_rules](#input\_neptune\_outbound\_acl\_rules) | Database subnets outbound network ACL rules | `list(map(string))` | <pre>[<br>  {<br>    "cidr_block": "0.0.0.0/0",<br>    "from_port": 0,<br>    "protocol": "-1",<br>    "rule_action": "allow",<br>    "rule_number": 100,<br>    "to_port": 0<br>  }<br>]</pre> | no |
+| <a name="input_neptune_route_table_tags"></a> [neptune\_route\_table\_tags](#input\_neptune\_route\_table\_tags) | Additional tags for the neptune route tables | `map(string)` | `{}` | no |
+| <a name="input_neptune_subnet_assign_ipv6_address_on_creation"></a> [neptune\_subnet\_assign\_ipv6\_address\_on\_creation](#input\_neptune\_subnet\_assign\_ipv6\_address\_on\_creation) | Assign IPv6 address on neptune subnet, must be disabled to change IPv6 CIDRs. This is the IPv6 equivalent of map\_public\_ip\_on\_launch | `bool` | `null` | no |
+| <a name="input_neptune_subnet_group_name"></a> [neptune\_subnet\_group\_name](#input\_neptune\_subnet\_group\_name) | Name of neptune subnet group | `string` | `null` | no |
+| <a name="input_neptune_subnet_group_tags"></a> [neptune\_subnet\_group\_tags](#input\_neptune\_subnet\_group\_tags) | Additional tags for the neptune subnet group | `map(string)` | `{}` | no |
+| <a name="input_neptune_subnet_ipv6_prefixes"></a> [neptune\_subnet\_ipv6\_prefixes](#input\_neptune\_subnet\_ipv6\_prefixes) | Assigns IPv6 neptune subnet id based on the Amazon provided /56 prefix base 10 integer (0-256). Must be of equal length to the corresponding IPv4 subnet list | `list(string)` | `[]` | no |
+| <a name="input_neptune_subnet_suffix"></a> [neptune\_subnet\_suffix](#input\_neptune\_subnet\_suffix) | Suffix to append to neptune subnets name | `string` | `"db"` | no |
+| <a name="input_neptune_subnet_tags"></a> [neptune\_subnet\_tags](#input\_neptune\_subnet\_tags) | Additional tags for the neptune subnets | `map(string)` | `{}` | no |
+| <a name="input_neptune_subnets"></a> [neptune\_subnets](#input\_neptune\_subnets) | A list of neptune subnets | `list(string)` | `[]` | no |
 | <a name="input_one_nat_gateway_per_az"></a> [one\_nat\_gateway\_per\_az](#input\_one\_nat\_gateway\_per\_az) | Should be true if you want only one NAT Gateway per availability zone. Requires `var.azs` to be set, and the number of `public_subnets` created to be greater than or equal to the number of availability zones specified in `var.azs`. | `bool` | `false` | no |
 | <a name="input_outpost_acl_tags"></a> [outpost\_acl\_tags](#input\_outpost\_acl\_tags) | Additional tags for the outpost subnets network ACL | `map(string)` | `{}` | no |
 | <a name="input_outpost_arn"></a> [outpost\_arn](#input\_outpost\_arn) | ARN of Outpost you want to create a subnet in. | `string` | `null` | no |
@@ -521,6 +547,19 @@ No modules.
 | <a name="output_nat_ids"></a> [nat\_ids](#output\_nat\_ids) | List of allocation ID of Elastic IPs created for AWS NAT Gateway |
 | <a name="output_nat_public_ips"></a> [nat\_public\_ips](#output\_nat\_public\_ips) | List of public Elastic IPs created for AWS NAT Gateway |
 | <a name="output_natgw_ids"></a> [natgw\_ids](#output\_natgw\_ids) | List of NAT Gateway IDs |
+| <a name="output_neptune_internet_gateway_route_id"></a> [neptune\_internet\_gateway\_route\_id](#output\_neptune\_internet\_gateway\_route\_id) | ID of the neptune internet gateway route. |
+| <a name="output_neptune_ipv6_egress_route_id"></a> [neptune\_ipv6\_egress\_route\_id](#output\_neptune\_ipv6\_egress\_route\_id) | ID of the neptune IPv6 egress route. |
+| <a name="output_neptune_nat_gateway_route_ids"></a> [neptune\_nat\_gateway\_route\_ids](#output\_neptune\_nat\_gateway\_route\_ids) | List of IDs of the neptune nat gateway route. |
+| <a name="output_neptune_network_acl_arn"></a> [neptune\_network\_acl\_arn](#output\_neptune\_network\_acl\_arn) | ARN of the neptune network ACL |
+| <a name="output_neptune_network_acl_id"></a> [neptune\_network\_acl\_id](#output\_neptune\_network\_acl\_id) | ID of the neptune network ACL |
+| <a name="output_neptune_route_table_association_ids"></a> [neptune\_route\_table\_association\_ids](#output\_neptune\_route\_table\_association\_ids) | List of IDs of the neptune route table association |
+| <a name="output_neptune_route_table_ids"></a> [neptune\_route\_table\_ids](#output\_neptune\_route\_table\_ids) | List of IDs of neptune route tables |
+| <a name="output_neptune_subnet_arns"></a> [neptune\_subnet\_arns](#output\_neptune\_subnet\_arns) | List of ARNs of neptune subnets |
+| <a name="output_neptune_subnet_group"></a> [neptune\_subnet\_group](#output\_neptune\_subnet\_group) | ID of neptune subnet group |
+| <a name="output_neptune_subnet_group_name"></a> [neptune\_subnet\_group\_name](#output\_neptune\_subnet\_group\_name) | Name of neptune subnet group |
+| <a name="output_neptune_subnets"></a> [neptune\_subnets](#output\_neptune\_subnets) | List of IDs of neptune subnets |
+| <a name="output_neptune_subnets_cidr_blocks"></a> [neptune\_subnets\_cidr\_blocks](#output\_neptune\_subnets\_cidr\_blocks) | List of cidr\_blocks of neptune subnets |
+| <a name="output_neptune_subnets_ipv6_cidr_blocks"></a> [neptune\_subnets\_ipv6\_cidr\_blocks](#output\_neptune\_subnets\_ipv6\_cidr\_blocks) | List of IPv6 cidr\_blocks of neptune subnets in an IPv6 enabled VPC |
 | <a name="output_outpost_network_acl_arn"></a> [outpost\_network\_acl\_arn](#output\_outpost\_network\_acl\_arn) | ARN of the outpost network ACL |
 | <a name="output_outpost_network_acl_id"></a> [outpost\_network\_acl\_id](#output\_outpost\_network\_acl\_id) | ID of the outpost network ACL |
 | <a name="output_outpost_subnet_arns"></a> [outpost\_subnet\_arns](#output\_outpost\_subnet\_arns) | List of ARNs of outpost subnets |
