@@ -321,15 +321,15 @@ resource "aws_route_table" "neptune" {
   vpc_id = local.vpc_id
 
   tags = merge(
-  {
-    "Name" = var.single_nat_gateway || var.create_neptune_internet_gateway_route ? "${var.name}-${var.neptune_subnet_suffix}" : format(
-    "%s-${var.neptune_subnet_suffix}-%s",
-    var.name,
-    element(var.azs, count.index),
-    )
-  },
-  var.tags,
-  var.neptune_route_table_tags,
+    {
+      "Name" = var.single_nat_gateway || var.create_neptune_internet_gateway_route ? "${var.name}-${var.neptune_subnet_suffix}" : format(
+        "%s-${var.neptune_subnet_suffix}-%s",
+        var.name,
+        element(var.azs, count.index),
+      )
+    },
+    var.tags,
+    var.neptune_route_table_tags,
   )
 }
 
@@ -569,15 +569,15 @@ resource "aws_subnet" "neptune" {
   ipv6_cidr_block = var.enable_ipv6 && length(var.neptune_subnet_ipv6_prefixes) > 0 ? cidrsubnet(aws_vpc.this[0].ipv6_cidr_block, 8, var.neptune_subnet_ipv6_prefixes[count.index]) : null
 
   tags = merge(
-  {
-    "Name" = format(
-    "%s-${var.neptune_subnet_suffix}-%s",
-    var.name,
-    element(var.azs, count.index),
-    )
-  },
-  var.tags,
-  var.neptune_subnet_tags,
+    {
+      "Name" = format(
+        "%s-${var.neptune_subnet_suffix}-%s",
+        var.name,
+        element(var.azs, count.index),
+      )
+    },
+    var.tags,
+    var.neptune_subnet_tags,
   )
 }
 
@@ -589,11 +589,11 @@ resource "aws_neptune_subnet_group" "neptune" {
   subnet_ids  = aws_subnet.neptune.*.id
 
   tags = merge(
-  {
-    "Name" = format("%s", lower(coalesce(var.neptune_subnet_group_name, var.name)))
-  },
-  var.tags,
-  var.neptune_subnet_group_tags,
+    {
+      "Name" = format("%s", lower(coalesce(var.neptune_subnet_group_name, var.name)))
+    },
+    var.tags,
+    var.neptune_subnet_group_tags,
   )
 }
 
@@ -1053,11 +1053,11 @@ resource "aws_network_acl" "neptune" {
   subnet_ids = aws_subnet.neptune.*.id
 
   tags = merge(
-  {
-    "Name" = format("%s-${var.neptune_subnet_suffix}", var.name)
-  },
-  var.tags,
-  var.neptune_acl_tags,
+    {
+      "Name" = format("%s-${var.neptune_subnet_suffix}", var.name)
+    },
+    var.tags,
+    var.neptune_acl_tags,
   )
 }
 
@@ -1324,8 +1324,8 @@ resource "aws_route_table_association" "neptune" {
 
   subnet_id = element(aws_subnet.neptune.*.id, count.index)
   route_table_id = element(
-  coalescelist(aws_route_table.neptune.*.id, aws_route_table.private.*.id),
-  var.create_neptune_subnet_route_table ? var.single_nat_gateway || var.create_neptune_internet_gateway_route ? 0 : count.index : count.index,
+    coalescelist(aws_route_table.neptune.*.id, aws_route_table.private.*.id),
+    var.create_neptune_subnet_route_table ? var.single_nat_gateway || var.create_neptune_internet_gateway_route ? 0 : count.index : count.index,
   )
 }
 

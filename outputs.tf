@@ -180,12 +180,12 @@ output "neptune_subnets_ipv6_cidr_blocks" {
 
 output "neptune_subnet_group" {
   description = "ID of neptune subnet group"
-  value       = concat(aws_db_subnet_group.neptune.*.id, [""])[0]
+  value       = concat(aws_neptune_subnet_group.neptune.*.id, [""])[0]
 }
 
 output "neptune_subnet_group_name" {
   description = "Name of neptune subnet group"
-  value       = concat(aws_db_subnet_group.neptune.*.name, [""])[0]
+  value       = concat(aws_neptune_subnet_group.neptune.*.name, [""])[0]
 }
 
 output "redshift_subnets" {
