@@ -3,6 +3,7 @@ locals {
     length(var.private_subnets),
     length(var.elasticache_subnets),
     length(var.database_subnets),
+    length(var.neptune_subnets),
     length(var.redshift_subnets),
   )
   nat_gateway_count = var.single_nat_gateway ? 1 : var.one_nat_gateway_per_az ? length(var.azs) : local.max_subnet_length
@@ -311,6 +312,64 @@ resource "aws_route" "database_ipv6_egress" {
 }
 
 ################################################################################
+# Neptune routes
+################################################################################
+
+resource "aws_route_table" "neptune" {
+  count = var.create_vpc && var.create_neptune_subnet_route_table && length(var.neptune_subnets) > 0 ? var.single_nat_gateway || var.create_neptune_internet_gateway_route ? 1 : length(var.neptune_subnets) : 0
+
+  vpc_id = local.vpc_id
+
+  tags = merge(
+  {
+    "Name" = var.single_nat_gateway || var.create_neptune_internet_gateway_route ? "${var.name}-${var.neptune_subnet_suffix}" : format(
+    "%s-${var.neptune_subnet_suffix}-%s",
+    var.name,
+    element(var.azs, count.index),
+    )
+  },
+  var.tags,
+  var.neptune_route_table_tags,
+  )
+}
+
+resource "aws_route" "neptune_internet_gateway" {
+  count = var.create_vpc && var.create_igw && var.create_neptune_subnet_route_table && length(var.neptune_subnets) > 0 && var.create_neptune_internet_gateway_route && false == var.create_neptune_nat_gateway_route ? 1 : 0
+
+  route_table_id         = aws_route_table.neptune[0].id
+  destination_cidr_block = "0.0.0.0/0"
+  gateway_id             = aws_internet_gateway.this[0].id
+
+  timeouts {
+    create = "5m"
+  }
+}
+
+resource "aws_route" "neptune_nat_gateway" {
+  count = var.create_vpc && var.create_neptune_subnet_route_table && length(var.neptune_subnets) > 0 && false == var.create_neptune_internet_gateway_route && var.create_neptune_nat_gateway_route && var.enable_nat_gateway ? var.single_nat_gateway ? 1 : length(var.neptune_subnets) : 0
+
+  route_table_id         = element(aws_route_table.neptune.*.id, count.index)
+  destination_cidr_block = "0.0.0.0/0"
+  nat_gateway_id         = element(aws_nat_gateway.this.*.id, count.index)
+
+  timeouts {
+    create = "5m"
+  }
+}
+
+resource "aws_route" "neptune_ipv6_egress" {
+  count = var.create_vpc && var.create_egress_only_igw && var.enable_ipv6 && var.create_neptune_subnet_route_table && length(var.neptune_subnets) > 0 && var.create_neptune_internet_gateway_route ? 1 : 0
+
+  route_table_id              = aws_route_table.neptune[0].id
+  destination_ipv6_cidr_block = "::/0"
+  egress_only_gateway_id      = aws_egress_only_internet_gateway.this[0].id
+
+  timeouts {
+    create = "5m"
+  }
+}
+
+################################################################################
 # Redshift routes
 ################################################################################
 
@@ -495,6 +554,50 @@ resource "aws_db_subnet_group" "database" {
 }
 
 ################################################################################
+# Neptune subnet
+################################################################################
+
+resource "aws_subnet" "neptune" {
+  count = var.create_vpc && length(var.neptune_subnets) > 0 ? length(var.neptune_subnets) : 0
+
+  vpc_id                          = local.vpc_id
+  cidr_block                      = var.neptune_subnets[count.index]
+  availability_zone               = length(regexall("^[a-z]{2}-", element(var.azs, count.index))) > 0 ? element(var.azs, count.index) : null
+  availability_zone_id            = length(regexall("^[a-z]{2}-", element(var.azs, count.index))) == 0 ? element(var.azs, count.index) : null
+  assign_ipv6_address_on_creation = var.neptune_subnet_assign_ipv6_address_on_creation == null ? var.assign_ipv6_address_on_creation : var.neptune_subnet_assign_ipv6_address_on_creation
+
+  ipv6_cidr_block = var.enable_ipv6 && length(var.neptune_subnet_ipv6_prefixes) > 0 ? cidrsubnet(aws_vpc.this[0].ipv6_cidr_block, 8, var.neptune_subnet_ipv6_prefixes[count.index]) : null
+
+  tags = merge(
+  {
+    "Name" = format(
+    "%s-${var.neptune_subnet_suffix}-%s",
+    var.name,
+    element(var.azs, count.index),
+    )
+  },
+  var.tags,
+  var.neptune_subnet_tags,
+  )
+}
+
+resource "aws_neptune_subnet_group" "neptune" {
+  count = var.create_vpc && length(var.neptune_subnets) > 0 && var.create_neptune_subnet_group ? 1 : 0
+
+  name        = lower(coalesce(var.neptune_subnet_group_name, var.name))
+  description = "Neptune subnet group for ${var.name}"
+  subnet_ids  = aws_subnet.neptune.*.id
+
+  tags = merge(
+  {
+    "Name" = format("%s", lower(coalesce(var.neptune_subnet_group_name, var.name)))
+  },
+  var.tags,
+  var.neptune_subnet_group_tags,
+  )
+}
+
+################################################################################
 # Redshift subnet
 ################################################################################
 
@@ -619,6 +722,7 @@ resource "aws_default_network_acl" "this" {
       aws_subnet.private.*.id,
       aws_subnet.intra.*.id,
       aws_subnet.database.*.id,
+      aws_subnet.neptune.*.id,
       aws_subnet.redshift.*.id,
       aws_subnet.elasticache.*.id,
       aws_subnet.outpost.*.id,
@@ -628,6 +732,7 @@ resource "aws_default_network_acl" "this" {
       aws_network_acl.private.*.subnet_ids,
       aws_network_acl.intra.*.subnet_ids,
       aws_network_acl.database.*.subnet_ids,
+      aws_network_acl.neptune.*.subnet_ids,
       aws_network_acl.redshift.*.subnet_ids,
       aws_network_acl.elasticache.*.subnet_ids,
       aws_network_acl.outpost.*.subnet_ids,
@@ -938,6 +1043,59 @@ resource "aws_network_acl_rule" "database_outbound" {
 }
 
 ################################################################################
+# Neptune Network ACLs
+################################################################################
+
+resource "aws_network_acl" "neptune" {
+  count = var.create_vpc && var.neptune_dedicated_network_acl && length(var.neptune_subnets) > 0 ? 1 : 0
+
+  vpc_id     = element(concat(aws_vpc.this.*.id, [""]), 0)
+  subnet_ids = aws_subnet.neptune.*.id
+
+  tags = merge(
+  {
+    "Name" = format("%s-${var.neptune_subnet_suffix}", var.name)
+  },
+  var.tags,
+  var.neptune_acl_tags,
+  )
+}
+
+resource "aws_network_acl_rule" "neptune_inbound" {
+  count = var.create_vpc && var.neptune_dedicated_network_acl && length(var.neptune_subnets) > 0 ? length(var.neptune_inbound_acl_rules) : 0
+
+  network_acl_id = aws_network_acl.neptune[0].id
+
+  egress          = false
+  rule_number     = var.neptune_inbound_acl_rules[count.index]["rule_number"]
+  rule_action     = var.neptune_inbound_acl_rules[count.index]["rule_action"]
+  from_port       = lookup(var.neptune_inbound_acl_rules[count.index], "from_port", null)
+  to_port         = lookup(var.neptune_inbound_acl_rules[count.index], "to_port", null)
+  icmp_code       = lookup(var.neptune_inbound_acl_rules[count.index], "icmp_code", null)
+  icmp_type       = lookup(var.neptune_inbound_acl_rules[count.index], "icmp_type", null)
+  protocol        = var.neptune_inbound_acl_rules[count.index]["protocol"]
+  cidr_block      = lookup(var.neptune_inbound_acl_rules[count.index], "cidr_block", null)
+  ipv6_cidr_block = lookup(var.neptune_inbound_acl_rules[count.index], "ipv6_cidr_block", null)
+}
+
+resource "aws_network_acl_rule" "neptune_outbound" {
+  count = var.create_vpc && var.neptune_dedicated_network_acl && length(var.neptune_subnets) > 0 ? length(var.neptune_outbound_acl_rules) : 0
+
+  network_acl_id = aws_network_acl.neptune[0].id
+
+  egress          = true
+  rule_number     = var.neptune_outbound_acl_rules[count.index]["rule_number"]
+  rule_action     = var.neptune_outbound_acl_rules[count.index]["rule_action"]
+  from_port       = lookup(var.neptune_outbound_acl_rules[count.index], "from_port", null)
+  to_port         = lookup(var.neptune_outbound_acl_rules[count.index], "to_port", null)
+  icmp_code       = lookup(var.neptune_outbound_acl_rules[count.index], "icmp_code", null)
+  icmp_type       = lookup(var.neptune_outbound_acl_rules[count.index], "icmp_type", null)
+  protocol        = var.neptune_outbound_acl_rules[count.index]["protocol"]
+  cidr_block      = lookup(var.neptune_outbound_acl_rules[count.index], "cidr_block", null)
+  ipv6_cidr_block = lookup(var.neptune_outbound_acl_rules[count.index], "ipv6_cidr_block", null)
+}
+
+################################################################################
 # Redshift Network ACLs
 ################################################################################
 
@@ -1158,6 +1316,16 @@ resource "aws_route_table_association" "database" {
   route_table_id = element(
     coalescelist(aws_route_table.database.*.id, aws_route_table.private.*.id),
     var.create_database_subnet_route_table ? var.single_nat_gateway || var.create_database_internet_gateway_route ? 0 : count.index : count.index,
+  )
+}
+
+resource "aws_route_table_association" "neptune" {
+  count = var.create_vpc && length(var.neptune_subnets) > 0 ? length(var.neptune_subnets) : 0
+
+  subnet_id = element(aws_subnet.neptune.*.id, count.index)
+  route_table_id = element(
+  coalescelist(aws_route_table.neptune.*.id, aws_route_table.private.*.id),
+  var.create_neptune_subnet_route_table ? var.single_nat_gateway || var.create_neptune_internet_gateway_route ? 0 : count.index : count.index,
   )
 }
 

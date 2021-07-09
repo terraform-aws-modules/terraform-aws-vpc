@@ -158,6 +158,36 @@ output "database_subnet_group_name" {
   value       = concat(aws_db_subnet_group.database.*.name, [""])[0]
 }
 
+output "neptune_subnets" {
+  description = "List of IDs of neptune subnets"
+  value       = aws_subnet.neptune.*.id
+}
+
+output "neptune_subnet_arns" {
+  description = "List of ARNs of neptune subnets"
+  value       = aws_subnet.neptune.*.arn
+}
+
+output "neptune_subnets_cidr_blocks" {
+  description = "List of cidr_blocks of neptune subnets"
+  value       = aws_subnet.neptune.*.cidr_block
+}
+
+output "neptune_subnets_ipv6_cidr_blocks" {
+  description = "List of IPv6 cidr_blocks of neptune subnets in an IPv6 enabled VPC"
+  value       = aws_subnet.neptune.*.ipv6_cidr_block
+}
+
+output "neptune_subnet_group" {
+  description = "ID of neptune subnet group"
+  value       = concat(aws_db_subnet_group.neptune.*.id, [""])[0]
+}
+
+output "neptune_subnet_group_name" {
+  description = "Name of neptune subnet group"
+  value       = concat(aws_db_subnet_group.neptune.*.name, [""])[0]
+}
+
 output "redshift_subnets" {
   description = "List of IDs of redshift subnets"
   value       = aws_subnet.redshift.*.id
@@ -248,6 +278,11 @@ output "database_route_table_ids" {
   value       = length(aws_route_table.database.*.id) > 0 ? aws_route_table.database.*.id : aws_route_table.private.*.id
 }
 
+output "neptune_route_table_ids" {
+  description = "List of IDs of neptune route tables"
+  value       = length(aws_route_table.neptune.*.id) > 0 ? aws_route_table.neptune.*.id : aws_route_table.private.*.id
+}
+
 output "redshift_route_table_ids" {
   description = "List of IDs of redshift route tables"
   value       = length(aws_route_table.redshift.*.id) > 0 ? aws_route_table.redshift.*.id : (var.enable_public_redshift ? aws_route_table.public.*.id : aws_route_table.private.*.id)
@@ -288,6 +323,21 @@ output "database_ipv6_egress_route_id" {
   value       = concat(aws_route.database_ipv6_egress.*.id, [""])[0]
 }
 
+output "neptune_internet_gateway_route_id" {
+  description = "ID of the neptune internet gateway route."
+  value       = concat(aws_route.neptune_internet_gateway.*.id, [""])[0]
+}
+
+output "neptune_nat_gateway_route_ids" {
+  description = "List of IDs of the neptune nat gateway route."
+  value       = aws_route.neptune_nat_gateway.*.id
+}
+
+output "neptune_ipv6_egress_route_id" {
+  description = "ID of the neptune IPv6 egress route."
+  value       = concat(aws_route.neptune_ipv6_egress.*.id, [""])[0]
+}
+
 output "private_nat_gateway_route_ids" {
   description = "List of IDs of the private nat gateway route."
   value       = aws_route.private_nat_gateway.*.id
@@ -306,6 +356,11 @@ output "private_route_table_association_ids" {
 output "database_route_table_association_ids" {
   description = "List of IDs of the database route table association"
   value       = aws_route_table_association.database.*.id
+}
+
+output "neptune_route_table_association_ids" {
+  description = "List of IDs of the neptune route table association"
+  value       = aws_route_table_association.neptune.*.id
 }
 
 output "redshift_route_table_association_ids" {
@@ -491,6 +546,16 @@ output "database_network_acl_id" {
 output "database_network_acl_arn" {
   description = "ARN of the database network ACL"
   value       = concat(aws_network_acl.database.*.arn, [""])[0]
+}
+
+output "neptune_network_acl_id" {
+  description = "ID of the neptune network ACL"
+  value       = concat(aws_network_acl.neptune.*.id, [""])[0]
+}
+
+output "neptune_network_acl_arn" {
+  description = "ARN of the neptune network ACL"
+  value       = concat(aws_network_acl.neptune.*.arn, [""])[0]
 }
 
 output "redshift_network_acl_id" {

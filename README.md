@@ -83,10 +83,11 @@ If both `single_nat_gateway` and `one_nat_gateway_per_az` are set to `true`, the
 
 ### One NAT Gateway per subnet (default)
 
-By default, the module will determine the number of NAT Gateways to create based on the the `max()` of the private subnet lists (`database_subnets`, `elasticache_subnets`, `private_subnets`, and `redshift_subnets`). The module **does not** take into account the number of `intra_subnets`, since the latter are designed to have no Internet access via NAT Gateway. For example, if your configuration looks like the following:
+By default, the module will determine the number of NAT Gateways to create based on the the `max()` of the private subnet lists (`database_subnets`, `neptune_subnets`, `elasticache_subnets`, `private_subnets`, and `redshift_subnets`). The module **does not** take into account the number of `intra_subnets`, since the latter are designed to have no Internet access via NAT Gateway. For example, if your configuration looks like the following:
 
 ```hcl
 database_subnets    = ["10.0.21.0/24", "10.0.22.0/24"]
+neptune_subnets     = ["10.0.61.0/24", "10.0.62.0/24"]
 elasticache_subnets = ["10.0.31.0/24", "10.0.32.0/24"]
 private_subnets     = ["10.0.1.0/24", "10.0.2.0/24", "10.0.3.0/24", "10.0.4.0/24", "10.0.5.0/24"]
 redshift_subnets    = ["10.0.41.0/24", "10.0.42.0/24"]
@@ -138,6 +139,14 @@ module "vpc" {
 }
 ```
 
+## Network Access Control Lists (ACL or NACL)
+
+This module can manage network ACL and rules. Once VPC is created, AWS creates the default network ACL, which can be controlled using this module (`manage_default_network_acl = true`).
+
+Also, each type of subnet may have its own network ACL with custom rules per subnet. Eg, set `public_dedicated_network_acl = true` to use dedicated network ACL for the public subnets; set values of `public_inbound_acl_rules` and `public_outbound_acl_rules` to specify all the NACL rules you need to have on public subnets (see `variables.tf` for default values and structures).
+
+By default, all subnets are associated with the default network ACL.
+
 ## Public access to RDS instances
 
 Sometimes it is handy to have public access to RDS instances (it is not recommended for production) by specifying these arguments:
@@ -151,13 +160,18 @@ Sometimes it is handy to have public access to RDS instances (it is not recommen
   enable_dns_support   = true
 ```
 
-## Network Access Control Lists (ACL or NACL)
+## Public access to Neptune cluster
 
-This module can manage network ACL and rules. Once VPC is created, AWS creates the default network ACL, which can be controlled using this module (`manage_default_network_acl = true`).
+Sometimes it is handy to have public access to Neptune clusters (it is not recommended for production) by specifying these arguments:
 
-Also, each type of subnet may have its own network ACL with custom rules per subnet. Eg, set `public_dedicated_network_acl = true` to use dedicated network ACL for the public subnets; set values of `public_inbound_acl_rules` and `public_outbound_acl_rules` to specify all the NACL rules you need to have on public subnets (see `variables.tf` for default values and structures).
+```hcl
+  create_neptune_subnet_group           = true
+  create_neptune_subnet_route_table     = true
+  create_neptune_internet_gateway_route = true
 
-By default, all subnets are associated with the default network ACL.
+  enable_dns_hostnames = true
+  enable_dns_support   = true
+```
 
 ## Public access to Redshift cluster
 
