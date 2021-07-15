@@ -17,11 +17,35 @@ $ terraform apply
 Run `terraform destroy` when you don't need these resources.
 
 <!-- BEGINNING OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
+## Requirements
+
+| Name | Version |
+|------|---------|
+| <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 0.12.26 |
+| <a name="requirement_aws"></a> [aws](#requirement\_aws) | >= 3.15 |
+
+## Providers
+
+No providers.
+
+## Modules
+
+| Name | Source | Version |
+|------|--------|---------|
+| <a name="module_vpc"></a> [vpc](#module\_vpc) | ../../ |  |
+
+## Resources
+
+No resources.
+
+## Inputs
+
+No inputs.
+
 ## Outputs
 
 | Name | Description |
 |------|-------------|
-| default\_vpc\_cidr\_block | The CIDR block of the VPC |
-| default\_vpc\_id | The ID of the Default VPC |
-
+| <a name="output_default_vpc_cidr_block"></a> [default\_vpc\_cidr\_block](#output\_default\_vpc\_cidr\_block) | The CIDR block of the VPC |
+| <a name="output_default_vpc_id"></a> [default\_vpc\_id](#output\_default\_vpc\_id) | The ID of the Default VPC |
 <!-- END OF PRE-COMMIT-TERRAFORM DOCS HOOK -->

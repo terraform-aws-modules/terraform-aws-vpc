@@ -1,6 +1,14 @@
 provider "aws" {
+  region = local.region
+}
+
+locals {
   region = "eu-west-1"
 }
+
+################################################################################
+# VPC Module
+################################################################################
 
 module "vpc" {
   source = "../../"
@@ -9,7 +17,7 @@ module "vpc" {
 
   cidr = "10.10.0.0/16"
 
-  azs                 = ["eu-west-1a", "eu-west-1b", "eu-west-1c"]
+  azs                 = ["${local.region}a", "${local.region}b", "${local.region}c"]
   private_subnets     = ["10.10.1.0/24", "10.10.2.0/24", "10.10.3.0/24"]
   public_subnets      = ["10.10.11.0/24", "10.10.12.0/24", "10.10.13.0/24"]
   database_subnets    = ["10.10.21.0/24", "10.10.22.0/24", "10.10.23.0/24"]
@@ -29,4 +37,3 @@ module "vpc" {
     Name        = "separate-private-route-tables"
   }
 }
-
