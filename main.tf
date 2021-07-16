@@ -459,6 +459,36 @@ resource "aws_db_subnet_group" "database" {
   }
 }
 
+################
+# Firewall subnet
+################
+resource "aws_subnet" "firewall" {
+  count = var.create_vpc && length(var.firewall_subnets) > 0 && (false == var.one_nat_gateway_per_az || length(var.firewall_subnets) >= length(var.azs)) ? length(var.firewall_subnets) : 0
+
+  vpc_id                  = local.vpc_id
+  cidr_block              = element(concat(var.firewall_subnets, [""]), count.index)
+  availability_zone       = element(var.azs, count.index)
+
+  tags = merge(
+    {
+      "Name" = format(
+        "%s-${var.firewall_subnet_suffix}-%s",
+        var.name,
+        element(var.azs, count.index),
+      )
+    },
+    var.tags,
+    var.firewall_subnet_tags,
+  )
+
+  lifecycle {
+    ignore_changes = [
+      tags["Owner"],
+      tags["Type"],
+    ]
+  }
+}
+
 ##################
 # Redshift subnet
 ##################
