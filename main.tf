@@ -4,7 +4,9 @@ locals {
     length(var.elasticache_subnets),
     length(var.database_subnets),
     length(var.redshift_subnets),
+    length(var.firewall_subnets),
   )
+
   nat_gateway_count = var.single_nat_gateway ? 1 : var.one_nat_gateway_per_az ? length(var.azs) : local.max_subnet_length
 
   # Use `local.vpc_id` to give a hint to Terraform that subnets should be deleted before secondary CIDR blocks can be free!
@@ -118,7 +120,7 @@ resource "aws_internet_gateway" "this" {
 # Publiс routes
 ################
 resource "aws_route_table" "public" {
-  count = var.create_vpc && length(var.public_subnets) > 0 ? 1 : 0
+  count = var.create_vpc && length(var.public_subnets) > 0 && length(var.firewall_sync_states) == 0 ? 1 : length(var.firewall_sync_states) > 0 ? local.nat_gateway_count : 0
 
   vpc_id = local.vpc_id
 
@@ -139,11 +141,24 @@ resource "aws_route_table" "public" {
 }
 
 resource "aws_route" "public_internet_gateway" {
-  count = var.create_vpc && length(var.public_subnets) > 0 ? 1 : 0
+  count = var.create_vpc && length(var.public_subnets) > 0 && length(var.firewall_sync_states) == 0 ? 1 : 0
 
-  route_table_id         = aws_route_table.public[0].id
+  route_table_id         = aws_route_table.public[count.index].id
   destination_cidr_block = "0.0.0.0/0"
   gateway_id             = aws_internet_gateway.this[0].id
+
+  timeouts {
+    create = "5m"
+  }
+}
+
+resource "aws_route" "public_firewall" {
+  count = var.create_vpc && var.enable_nat_gateway && length(var.firewall_sync_states) > 0 ? local.nat_gateway_count : 0
+
+  route_table_id         = element(aws_route_table.public.*.id, count.index)
+  destination_cidr_block = "0.0.0.0/0"
+  vpc_endpoint_id = element([for ss in tolist(var.firewall_sync_states) :
+  ss.attachment[0].endpoint_id if ss.attachment[0].subnet_id == aws_subnet.firewall[count.index].id], 0)
 
   timeouts {
     create = "5m"
@@ -291,6 +306,44 @@ resource "aws_route_table" "intra" {
     ]
   }
 }
+
+
+#################
+# Firewall routes
+#################
+resource "aws_route_table" "firewall" {
+  count = var.create_vpc && length(var.firewall_subnets) > 0 ? 1 : 0
+
+  vpc_id = local.vpc_id
+
+  tags = merge(
+    {
+      "Name" = "${var.name}-${var.firewall_subnet_suffix}"
+    },
+    var.tags,
+    var.firewall_route_table_tags,
+  )
+
+  lifecycle {
+    ignore_changes = [
+      tags["Owner"],
+      tags["Type"],
+    ]
+  }
+}
+
+resource "aws_route" "firewall_internet_gateway" {
+  count = var.create_vpc && length(var.firewall_subnets) > 0 ? 1 : 0
+
+  route_table_id         = aws_route_table.firewall[count.index].id
+  destination_cidr_block = "0.0.0.0/0"
+  gateway_id             = aws_internet_gateway.this[0].id
+
+  timeouts {
+    create = "5m"
+  }
+}
+
 
 ################
 # Public subnet
@@ -895,6 +948,59 @@ resource "aws_network_acl_rule" "elasticache_outbound" {
   cidr_block  = var.elasticache_outbound_acl_rules[count.index]["cidr_block"]
 }
 
+#######################
+# Firewall Network ACLs
+#######################
+resource "aws_network_acl" "firewall" {
+  count = var.create_vpc && var.firewall_dedicated_network_acl && length(var.firewall_subnets) > 0 ? 1 : 0
+
+  vpc_id     = element(concat(aws_vpc.this.*.id, [""]), 0)
+  subnet_ids = aws_subnet.firewall.*.id
+
+  tags = merge(
+    {
+      "Name" = format("%s-${var.firewall_subnet_suffix}", var.name)
+    },
+    var.tags,
+    var.firewall_acl_tags,
+  )
+
+  lifecycle {
+    ignore_changes = [
+      tags["Owner"],
+      tags["Type"],
+    ]
+  }
+}
+
+resource "aws_network_acl_rule" "firewall_inbound" {
+  count = var.create_vpc && var.firewall_dedicated_network_acl && length(var.firewall_subnets) > 0 ? length(var.firewall_inbound_acl_rules) : 0
+
+  network_acl_id = aws_network_acl.firewall[0].id
+
+  egress      = false
+  rule_number = var.firewall_inbound_acl_rules[count.index]["rule_number"]
+  rule_action = var.firewall_inbound_acl_rules[count.index]["rule_action"]
+  from_port   = var.firewall_inbound_acl_rules[count.index]["from_port"]
+  to_port     = var.firewall_inbound_acl_rules[count.index]["to_port"]
+  protocol    = var.firewall_inbound_acl_rules[count.index]["protocol"]
+  cidr_block  = var.firewall_inbound_acl_rules[count.index]["cidr_block"]
+}
+
+resource "aws_network_acl_rule" "firewall_outbound" {
+  count = var.create_vpc && var.firewall_dedicated_network_acl && length(var.firewall_subnets) > 0 ? length(var.firewall_outbound_acl_rules) : 0
+
+  network_acl_id = aws_network_acl.firewall[0].id
+
+  egress      = true
+  rule_number = var.firewall_outbound_acl_rules[count.index]["rule_number"]
+  rule_action = var.firewall_outbound_acl_rules[count.index]["rule_action"]
+  from_port   = var.firewall_outbound_acl_rules[count.index]["from_port"]
+  to_port     = var.firewall_outbound_acl_rules[count.index]["to_port"]
+  protocol    = var.firewall_outbound_acl_rules[count.index]["protocol"]
+  cidr_block  = var.firewall_outbound_acl_rules[count.index]["cidr_block"]
+}
+
 ##############
 # NAT Gateway
 ##############
@@ -966,11 +1072,24 @@ resource "aws_nat_gateway" "this" {
 }
 
 resource "aws_route" "private_nat_gateway" {
-  count = var.create_vpc && var.enable_nat_gateway ? local.nat_gateway_count : 0
+  count = var.create_vpc && var.enable_nat_gateway && length(var.firewall_sync_states) == 0 ? local.nat_gateway_count : 0
 
   route_table_id         = element(aws_route_table.private.*.id, count.index)
   destination_cidr_block = "0.0.0.0/0"
   nat_gateway_id         = element(aws_nat_gateway.this.*.id, count.index)
+
+  timeouts {
+    create = "5m"
+  }
+}
+
+resource "aws_route" "private_firewall" {
+  count = var.create_vpc && var.enable_nat_gateway && length(var.firewall_sync_states) > 0 ? local.nat_gateway_count : 0
+
+  route_table_id         = element(aws_route_table.private.*.id, count.index)
+  destination_cidr_block = "0.0.0.0/0"
+  vpc_endpoint_id = element([for ss in tolist(var.firewall_sync_states) :
+  ss.attachment[0].endpoint_id if ss.attachment[0].subnet_id == aws_subnet.firewall[count.index].id], 0)
 
   timeouts {
     create = "5m"
@@ -1009,10 +1128,10 @@ resource "aws_vpc_endpoint_route_table_association" "intra_s3" {
 }
 
 resource "aws_vpc_endpoint_route_table_association" "public_s3" {
-  count = var.create_vpc && var.enable_s3_endpoint && length(var.public_subnets) > 0 ? 1 : 0
+  count = var.create_vpc && var.enable_s3_endpoint && length(var.public_subnets) > 0 ? length(var.firewall_sync_states) > 0 ? local.nat_gateway_count : 1 : 0
 
   vpc_endpoint_id = aws_vpc_endpoint.s3[0].id
-  route_table_id  = aws_route_table.public[0].id
+  route_table_id  = element(aws_route_table.public.*.id, count.index)
 }
 
 ############################
@@ -1046,10 +1165,10 @@ resource "aws_vpc_endpoint_route_table_association" "intra_dynamodb" {
 }
 
 resource "aws_vpc_endpoint_route_table_association" "public_dynamodb" {
-  count = var.create_vpc && var.enable_dynamodb_endpoint && length(var.public_subnets) > 0 ? 1 : 0
+  count = var.create_vpc && var.enable_dynamodb_endpoint && length(var.public_subnets) > 0 ? length(var.firewall_sync_states) > 0 ? local.nat_gateway_count : 1 : 0
 
   vpc_endpoint_id = aws_vpc_endpoint.dynamodb[0].id
-  route_table_id  = aws_route_table.public[0].id
+  route_table_id  = element(aws_route_table.public.*.id, count.index)
 }
 
 
@@ -1504,10 +1623,24 @@ resource "aws_route_table_association" "intra" {
 }
 
 resource "aws_route_table_association" "public" {
-  count = var.create_vpc && length(var.public_subnets) > 0 ? length(var.public_subnets) : 0
+  count = var.create_vpc && length(var.public_subnets) > 0 && length(var.firewall_sync_states) == 0 ? length(var.public_subnets) : 0
 
   subnet_id      = element(aws_subnet.public.*.id, count.index)
   route_table_id = aws_route_table.public[0].id
+}
+
+resource "aws_route_table_association" "public_firewall" {
+  count = var.create_vpc && length(var.public_subnets) > 0 && length(var.firewall_sync_states) > 0 ? length(var.public_subnets) : 0
+
+  subnet_id      = element(aws_subnet.public.*.id, count.index)
+  route_table_id = aws_route_table.public[count.index].id
+}
+
+resource "aws_route_table_association" "firewall" {
+  count = var.create_vpc && length(var.firewall_subnets) > 0 ? length(var.firewall_subnets) : 0
+
+  subnet_id      = element(aws_subnet.firewall.*.id, count.index)
+  route_table_id = aws_route_table.firewall[0].id
 }
 
 ##############

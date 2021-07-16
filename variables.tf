@@ -43,6 +43,12 @@ variable "public_subnet_suffix" {
   default     = "public"
 }
 
+variable "firewall_subnet_suffix" {
+  description = "Suffix to append to firewall subnets name"
+  type        = string
+  default     = "firewall"
+}
+
 variable "private_subnet_suffix" {
   description = "Suffix to append to private subnets name"
   type        = string
@@ -79,6 +85,12 @@ variable "public_subnets" {
   default     = []
 }
 
+variable "firewall_subnets" {
+  description = "A list of firewall subnets inside the VPC"
+  type        = list(string)
+  default     = []
+}
+
 variable "private_subnets" {
   description = "A list of private subnets inside the VPC"
   type        = list(string)
@@ -107,6 +119,12 @@ variable "intra_subnets" {
   description = "A list of intra subnets"
   type        = list(string)
   default     = []
+}
+
+variable "create_firewall_subnet_route_table" {
+  description = "Controls if route table for firewall should be created"
+  type        = bool
+  default     = false
 }
 
 variable "create_database_subnet_route_table" {
@@ -163,6 +181,12 @@ variable "create_database_nat_gateway_route" {
   default     = false
 }
 
+variable "create_firewall_nat_gateway_route" {
+  description = "Controls if a nat gateway route should be created to give internet access to the firewall subnets"
+  type        = bool
+  default     = false
+}
+
 variable "azs" {
   description = "A list of availability zones in the region"
   type        = list(string)
@@ -209,6 +233,18 @@ variable "external_nat_ip_ids" {
   description = "List of EIP IDs to be assigned to the NAT Gateways (used in combination with reuse_nat_ips)"
   type        = list(string)
   default     = []
+}
+
+variable "firewall_sync_states" {
+  description = "VPC endpoint ID of firewall endpoint for route table to point to"
+  type = list(object({
+    attachment = list(object({
+      endpoint_id = string
+      subnet_id   = string
+    }))
+    availability_zone = string
+  }))
+  default = []
 }
 
 variable "enable_dynamodb_endpoint" {
@@ -751,6 +787,13 @@ variable "intra_route_table_tags" {
   default     = {}
 }
 
+variable "firewall_route_table_tags" {
+  description = "Additional tags for the firewall route tables"
+  type        = map(string)
+  default     = {}
+}
+
+
 variable "database_subnet_tags" {
   description = "Additional tags for the database subnets"
   type        = map(string)
@@ -783,6 +826,12 @@ variable "elasticache_subnet_tags" {
 
 variable "intra_subnet_tags" {
   description = "Additional tags for the intra subnets"
+  type        = map(string)
+  default     = {}
+}
+
+variable "firewall_subnet_tags" {
+  description = "Additional tags for the firewall subnets"
   type        = map(string)
   default     = {}
 }
@@ -822,6 +871,13 @@ variable "elasticache_acl_tags" {
   type        = map(string)
   default     = {}
 }
+
+variable "firewall_acl_tags" {
+  description = "Additional tags for the firewall subnets network ACL"
+  type        = map(string)
+  default     = {}
+}
+
 
 variable "dhcp_options_tags" {
   description = "Additional tags for the DHCP option set (requires enable_dhcp_options set to true)"
@@ -969,6 +1025,12 @@ variable "redshift_dedicated_network_acl" {
 
 variable "elasticache_dedicated_network_acl" {
   description = "Whether to use dedicated network ACL (not default) and custom rules for elasticache subnets"
+  type        = bool
+  default     = false
+}
+
+variable "firewall_dedicated_network_acl" {
+  description = "Whether to use dedicated network ACL (not default) and custom rules for firewall subnets"
   type        = bool
   default     = false
 }
@@ -1199,6 +1261,39 @@ variable "elasticache_inbound_acl_rules" {
 
 variable "elasticache_outbound_acl_rules" {
   description = "Elasticache subnets outbound network ACL rules"
+  type        = list(map(string))
+
+  default = [
+    {
+      rule_number = 100
+      rule_action = "allow"
+      from_port   = 0
+      to_port     = 0
+      protocol    = "-1"
+      cidr_block  = "0.0.0.0/0"
+    },
+  ]
+}
+
+
+variable "firewall_inbound_acl_rules" {
+  description = "firewall subnets inbound network ACL rules"
+  type        = list(map(string))
+
+  default = [
+    {
+      rule_number = 100
+      rule_action = "allow"
+      from_port   = 0
+      to_port     = 0
+      protocol    = "-1"
+      cidr_block  = "0.0.0.0/0"
+    },
+  ]
+}
+
+variable "firewall_outbound_acl_rules" {
+  description = "Firewall subnets outbound network ACL rules"
   type        = list(map(string))
 
   default = [
