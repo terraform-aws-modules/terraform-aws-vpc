@@ -126,7 +126,11 @@ resource "aws_route_table" "public" {
 
   tags = merge(
     {
-      "Name" = format("%s-${var.public_subnet_suffix}", var.name)
+      "Name" = var.single_nat_gateway ? "${var.name}-${var.public_subnet_suffix}" : format(
+        "%s-${var.public_subnet_suffix}-%s",
+        var.name,
+        element(var.azs, count.index),
+      )
     },
     var.tags,
     var.public_route_table_tags,
@@ -344,6 +348,38 @@ resource "aws_route" "firewall_internet_gateway" {
   }
 }
 
+resource "aws_route_table" "internet_gateway" {
+  count  = var.create_vpc && length(var.firewall_sync_states) > 0 ? 1 : 0
+  vpc_id = local.vpc_id
+
+  tags = merge(
+    {
+      "Name" = format("%s-internet-gateway-${var.firewall_subnet_suffix}", var.name)
+    },
+    var.tags,
+    var.public_route_table_tags,
+  )
+
+  lifecycle {
+    ignore_changes = [
+      tags["Owner"],
+      tags["Type"],
+    ]
+  }
+}
+
+resource "aws_route" "internet_gateway_firewall" {
+  count = var.create_vpc && var.enable_nat_gateway && length(var.firewall_sync_states) > 0 ? local.nat_gateway_count : 0
+
+  route_table_id         = aws_route_table.internet_gateway[0].id
+  destination_cidr_block = var.public_subnets[count.index]
+  vpc_endpoint_id = element([for ss in tolist(var.firewall_sync_states) :
+  ss.attachment[0].endpoint_id if ss.attachment[0].subnet_id == aws_subnet.firewall[count.index].id], 0)
+
+  timeouts {
+    create = "5m"
+  }
+}
 
 ################
 # Public subnet
@@ -465,9 +501,9 @@ resource "aws_db_subnet_group" "database" {
 resource "aws_subnet" "firewall" {
   count = var.create_vpc && length(var.firewall_subnets) > 0 && (false == var.one_nat_gateway_per_az || length(var.firewall_subnets) >= length(var.azs)) ? length(var.firewall_subnets) : 0
 
-  vpc_id                  = local.vpc_id
-  cidr_block              = element(concat(var.firewall_subnets, [""]), count.index)
-  availability_zone       = element(var.azs, count.index)
+  vpc_id            = local.vpc_id
+  cidr_block        = element(concat(var.firewall_subnets, [""]), count.index)
+  availability_zone = element(var.azs, count.index)
 
   tags = merge(
     {
@@ -1102,24 +1138,11 @@ resource "aws_nat_gateway" "this" {
 }
 
 resource "aws_route" "private_nat_gateway" {
-  count = var.create_vpc && var.enable_nat_gateway && length(var.firewall_sync_states) == 0 ? local.nat_gateway_count : 0
+  count = var.create_vpc && var.enable_nat_gateway ? local.nat_gateway_count : 0
 
   route_table_id         = element(aws_route_table.private.*.id, count.index)
   destination_cidr_block = "0.0.0.0/0"
   nat_gateway_id         = element(aws_nat_gateway.this.*.id, count.index)
-
-  timeouts {
-    create = "5m"
-  }
-}
-
-resource "aws_route" "private_firewall" {
-  count = var.create_vpc && var.enable_nat_gateway && length(var.firewall_sync_states) > 0 ? local.nat_gateway_count : 0
-
-  route_table_id         = element(aws_route_table.private.*.id, count.index)
-  destination_cidr_block = "0.0.0.0/0"
-  vpc_endpoint_id = element([for ss in tolist(var.firewall_sync_states) :
-  ss.attachment[0].endpoint_id if ss.attachment[0].subnet_id == aws_subnet.firewall[count.index].id], 0)
 
   timeouts {
     create = "5m"
@@ -1664,6 +1687,13 @@ resource "aws_route_table_association" "public_firewall" {
 
   subnet_id      = element(aws_subnet.public.*.id, count.index)
   route_table_id = aws_route_table.public[count.index].id
+}
+
+resource "aws_route_table_association" "public_internet_gateway" {
+  count = var.create_vpc && length(var.public_subnets) > 0 && length(var.firewall_sync_states) > 0 ? 1 : 0
+
+  gateway_id     = aws_internet_gateway.this[0].id
+  route_table_id = aws_route_table.internet_gateway[0].id
 }
 
 resource "aws_route_table_association" "firewall" {
