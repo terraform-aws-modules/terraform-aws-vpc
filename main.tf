@@ -126,7 +126,7 @@ resource "aws_route_table" "public" {
 
   tags = merge(
     {
-      "Name" = var.single_nat_gateway ? "${var.name}-${var.public_subnet_suffix}" : format(
+      "Name" = var.single_nat_gateway || length(var.firewall_sync_states) == 0 ? "${var.name}-${var.public_subnet_suffix}" : format(
         "%s-${var.public_subnet_suffix}-%s",
         var.name,
         element(var.azs, count.index),
@@ -1686,7 +1686,7 @@ resource "aws_route_table_association" "public_firewall" {
   count = var.create_vpc && length(var.public_subnets) > 0 && length(var.firewall_sync_states) > 0 ? length(var.public_subnets) : 0
 
   subnet_id      = element(aws_subnet.public.*.id, count.index)
-  route_table_id = aws_route_table.public[count.index].id
+  route_table_id = element(aws_route_table.public.*.id, count.index)
 }
 
 resource "aws_route_table_association" "public_internet_gateway" {
