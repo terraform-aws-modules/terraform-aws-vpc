@@ -208,6 +208,11 @@ output "database_route_table_ids" {
   value       = length(aws_route_table.database.*.id) > 0 ? aws_route_table.database.*.id : aws_route_table.private.*.id
 }
 
+output "firewall_route_table_ids" {
+  description = "List of IDs of firewall route tables"
+  value       = aws_route_table.firewall.*.id
+}
+
 output "redshift_route_table_ids" {
   description = "List of IDs of redshift route tables"
   value       = length(aws_route_table.redshift.*.id) > 0 ? aws_route_table.redshift.*.id : aws_route_table.private.*.id
@@ -330,6 +335,11 @@ output "intra_network_acl_id" {
 output "database_network_acl_id" {
   description = "ID of the database network ACL"
   value       = concat(aws_network_acl.database.*.id, [""])[0]
+}
+
+output "firewall_network_acl_id" {
+  description = "ID of the firewall network ACL"
+  value       = concat(aws_network_acl.firewall.*.id, [""])[0]
 }
 
 output "redshift_network_acl_id" {
