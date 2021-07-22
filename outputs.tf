@@ -223,6 +223,26 @@ output "intra_subnets_ipv6_cidr_blocks" {
   value       = aws_subnet.intra.*.ipv6_cidr_block
 }
 
+output "transit_gateway_subnets" {
+  description = "List of IDs of transit gateway subnets"
+  value       = aws_subnet.transit_gateway.*.id
+}
+
+output "transit_gateway_subnet_arns" {
+  description = "List of ARNs of transit gateway subnets"
+  value       = aws_subnet.transit_gateway.*.arn
+}
+
+output "transit_gateway_subnets_cidr_blocks" {
+  description = "List of cidr_blocks of transit gateway subnets"
+  value       = aws_subnet.transit_gateway.*.cidr_block
+}
+
+output "transit_gateway_subnets_ipv6_cidr_blocks" {
+  description = "List of IPv6 cidr_blocks of transit gateway subnets in an IPv6 enabled VPC"
+  value       = aws_subnet.transit_gateway.*.ipv6_cidr_block
+}
+
 output "elasticache_subnet_group" {
   description = "ID of elasticache subnet group"
   value       = concat(aws_elasticache_subnet_group.elasticache.*.id, [""])[0]
