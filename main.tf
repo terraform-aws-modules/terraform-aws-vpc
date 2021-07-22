@@ -4,6 +4,7 @@ locals {
     length(var.elasticache_subnets),
     length(var.database_subnets),
     length(var.redshift_subnets),
+    length(var.transit_gateway_subnets)
   )
   nat_gateway_count = var.single_nat_gateway ? 1 : var.one_nat_gateway_per_az ? length(var.azs) : local.max_subnet_length
 
@@ -365,6 +366,40 @@ resource "aws_route_table" "intra" {
 }
 
 ################################################################################
+# Transit Gateway routes
+################################################################################
+
+resource "aws_route_table" "transit_gateway" {
+  count = var.create_vpc && var.create_transit_gateway_subnet_route_table && length(var.transit_gateway_subnets) > 0 ? (var.single_nat_gateway && var.create_transit_gateway_nat_gateway_route) || (var.create_single_transit_gateway_route_table && var.create_transit_gateway_nat_gateway_route == false) ? 1 : length(var.transit_gateway_subnets) : 0
+
+  vpc_id = local.vpc_id
+
+  tags = merge(
+    {
+      "Name" = (var.single_nat_gateway && var.create_transit_gateway_nat_gateway_route) || (var.create_single_transit_gateway_route_table && var.create_transit_gateway_nat_gateway_route == false) ? "${var.name}-${var.transit_gateway_subnet_suffix}" : format(
+        "%s-${var.transit_gateway_subnet_suffix}-%s",
+        var.name,
+        element(var.azs, count.index),
+      )
+    },
+    var.tags,
+    var.transit_gateway_route_table_tags,
+  )
+}
+
+resource "aws_route" "transit_gateway_nat_gateway" {
+  count = var.create_vpc && var.create_transit_gateway_subnet_route_table && length(var.transit_gateway_subnets) > 0 && var.create_transit_gateway_nat_gateway_route && var.enable_nat_gateway ? (var.single_nat_gateway ? 1 : length(var.transit_gateway_subnets)) : 0  
+
+  route_table_id         = element(aws_route_table.transit_gateway.*.id, count.index)
+  destination_cidr_block = "0.0.0.0/0"
+  nat_gateway_id         = element(aws_nat_gateway.this.*.id, count.index)
+
+  timeouts {
+    create = "5m"
+  }
+}
+
+################################################################################
 # Public subnet
 ################################################################################
 
@@ -603,6 +638,34 @@ resource "aws_subnet" "intra" {
 }
 
 ################################################################################
+# Transit gateway subnet
+################################################################################
+
+resource "aws_subnet" "transit_gateway" {
+  count = var.create_vpc && length(var.transit_gateway_subnets) > 0 ? length(var.transit_gateway_subnets) : 0
+
+  vpc_id                          = local.vpc_id
+  cidr_block                      = var.transit_gateway_subnets[count.index]
+  availability_zone               = length(regexall("^[a-z]{2}-", element(var.azs, count.index))) > 0 ? element(var.azs, count.index) : null
+  availability_zone_id            = length(regexall("^[a-z]{2}-", element(var.azs, count.index))) == 0 ? element(var.azs, count.index) : null
+  assign_ipv6_address_on_creation = var.transit_gateway_subnet_assign_ipv6_address_on_creation == null ? var.assign_ipv6_address_on_creation : var.transit_gateway_subnet_assign_ipv6_address_on_creation
+
+  ipv6_cidr_block = var.enable_ipv6 && length(var.transit_gateway_subnet_ipv6_prefixes) > 0 ? cidrsubnet(aws_vpc.this[0].ipv6_cidr_block, 8, var.transit_gateway_subnet_ipv6_prefixes[count.index]) : null
+
+  tags = merge(
+    {
+      "Name" = format(
+        "%s-${var.transit_gateway_subnet_suffix}-%s",
+        var.name,
+        element(var.azs, count.index),
+      )
+    },
+    var.tags,
+    var.transit_gateway_subnet_tags,
+  )
+}
+
+################################################################################
 # Default Network ACLs
 ################################################################################
 
@@ -622,6 +685,7 @@ resource "aws_default_network_acl" "this" {
       aws_subnet.redshift.*.id,
       aws_subnet.elasticache.*.id,
       aws_subnet.outpost.*.id,
+      aws_subnet.transit_gateway.*.id,
     ])),
     compact(flatten([
       aws_network_acl.public.*.subnet_ids,
@@ -631,6 +695,7 @@ resource "aws_default_network_acl" "this" {
       aws_network_acl.redshift.*.subnet_ids,
       aws_network_acl.elasticache.*.subnet_ids,
       aws_network_acl.outpost.*.subnet_ids,
+      aws_network_acl.transit_gateway.*.subnet_ids,
     ]))
   )
 
@@ -1044,6 +1109,59 @@ resource "aws_network_acl_rule" "elasticache_outbound" {
 }
 
 ################################################################################
+# Transit gateway Network ACLs
+################################################################################
+
+resource "aws_network_acl" "transit_gateway" {
+  count = var.create_vpc && var.transit_gateway_dedicated_network_acl && length(var.transit_gateway_subnets) > 0 ? 1 : 0
+
+  vpc_id     = element(concat(aws_vpc.this.*.id, [""]), 0)
+  subnet_ids = aws_subnet.transit_gateway.*.id
+
+  tags = merge(
+    {
+      "Name" = format("%s-${var.transit_gateway_subnet_suffix}", var.name)
+    },
+    var.tags,
+    var.transit_gateway_acl_tags,
+  )
+}
+
+resource "aws_network_acl_rule" "transit_gateway_inbound" {
+  count = var.create_vpc && var.transit_gateway_dedicated_network_acl && length(var.transit_gateway_subnets) > 0 ? length(var.transit_gateway_inbound_acl_rules) : 0
+
+  network_acl_id = aws_network_acl.transit_gateway[0].id
+
+  egress          = false
+  rule_number     = var.transit_gateway_inbound_acl_rules[count.index]["rule_number"]
+  rule_action     = var.transit_gateway_inbound_acl_rules[count.index]["rule_action"]
+  from_port       = lookup(var.transit_gateway_inbound_acl_rules[count.index], "from_port", null)
+  to_port         = lookup(var.transit_gateway_inbound_acl_rules[count.index], "to_port", null)
+  icmp_code       = lookup(var.transit_gateway_inbound_acl_rules[count.index], "icmp_code", null)
+  icmp_type       = lookup(var.transit_gateway_inbound_acl_rules[count.index], "icmp_type", null)
+  protocol        = var.transit_gateway_inbound_acl_rules[count.index]["protocol"]
+  cidr_block      = lookup(var.transit_gateway_inbound_acl_rules[count.index], "cidr_block", null)
+  ipv6_cidr_block = lookup(var.transit_gateway_inbound_acl_rules[count.index], "ipv6_cidr_block", null)
+}
+
+resource "aws_network_acl_rule" "transit_gateway_outbound" {
+  count = var.create_vpc && var.transit_gateway_dedicated_network_acl && length(var.transit_gateway_subnets) > 0 ? length(var.transit_gateway_outbound_acl_rules) : 0
+
+  network_acl_id = aws_network_acl.transit_gateway[0].id
+
+  egress          = true
+  rule_number     = var.transit_gateway_outbound_acl_rules[count.index]["rule_number"]
+  rule_action     = var.transit_gateway_outbound_acl_rules[count.index]["rule_action"]
+  from_port       = lookup(var.transit_gateway_outbound_acl_rules[count.index], "from_port", null)
+  to_port         = lookup(var.transit_gateway_outbound_acl_rules[count.index], "to_port", null)
+  icmp_code       = lookup(var.transit_gateway_outbound_acl_rules[count.index], "icmp_code", null)
+  icmp_type       = lookup(var.transit_gateway_outbound_acl_rules[count.index], "icmp_type", null)
+  protocol        = var.transit_gateway_outbound_acl_rules[count.index]["protocol"]
+  cidr_block      = lookup(var.transit_gateway_outbound_acl_rules[count.index], "cidr_block", null)
+  ipv6_cidr_block = lookup(var.transit_gateway_outbound_acl_rules[count.index], "ipv6_cidr_block", null)
+}
+
+################################################################################
 # NAT Gateway
 ################################################################################
 
@@ -1108,7 +1226,7 @@ resource "aws_nat_gateway" "this" {
 }
 
 resource "aws_route" "private_nat_gateway" {
-  count = var.create_vpc && var.enable_nat_gateway ? local.nat_gateway_count : 0
+  count = var.create_vpc && var.enable_nat_gateway && length(var.private_subnets) > 0 ? local.nat_gateway_count : 0
 
   route_table_id         = element(aws_route_table.private.*.id, count.index)
   destination_cidr_block = "0.0.0.0/0"
@@ -1206,6 +1324,16 @@ resource "aws_route_table_association" "public" {
 
   subnet_id      = element(aws_subnet.public.*.id, count.index)
   route_table_id = aws_route_table.public[0].id
+}
+
+resource "aws_route_table_association" "transit_gateway" {
+  count = var.create_vpc && var.create_transit_gateway_subnet_route_table && length(var.transit_gateway_subnets) > 0 ? length(var.transit_gateway_subnets) : 0
+  
+  subnet_id = element(aws_subnet.transit_gateway.*.id, count.index)
+  route_table_id = element(
+    aws_route_table.transit_gateway.*.id,
+    (var.single_nat_gateway && var.create_transit_gateway_nat_gateway_route) || (var.create_single_transit_gateway_route_table && var.create_transit_gateway_nat_gateway_route == false) ? 0 : count.index,
+  )
 }
 
 ################################################################################

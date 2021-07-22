@@ -223,6 +223,26 @@ output "intra_subnets_ipv6_cidr_blocks" {
   value       = aws_subnet.intra.*.ipv6_cidr_block
 }
 
+output "transit_gateway_subnets" {
+  description = "List of IDs of transit gateway subnets"
+  value       = aws_subnet.transit_gateway.*.id
+}
+
+output "transit_gateway_subnet_arns" {
+  description = "List of ARNs of transit gateway subnets"
+  value       = aws_subnet.transit_gateway.*.arn
+}
+
+output "transit_gateway_subnets_cidr_blocks" {
+  description = "List of cidr_blocks of transit gateway subnets"
+  value       = aws_subnet.transit_gateway.*.cidr_block
+}
+
+output "transit_gateway_subnets_ipv6_cidr_blocks" {
+  description = "List of IPv6 cidr_blocks of transit gateway subnets in an IPv6 enabled VPC"
+  value       = aws_subnet.transit_gateway.*.ipv6_cidr_block
+}
+
 output "elasticache_subnet_group" {
   description = "ID of elasticache subnet group"
   value       = concat(aws_elasticache_subnet_group.elasticache.*.id, [""])[0]
@@ -263,6 +283,11 @@ output "intra_route_table_ids" {
   value       = aws_route_table.intra.*.id
 }
 
+output "transit_gateway_route_table_ids" {
+  description = "List of IDs of transit gateway route tables"
+  value       = aws_route_table.transit_gateway.*.id
+}
+
 output "public_internet_gateway_route_id" {
   description = "ID of the internet gateway route."
   value       = concat(aws_route.public_internet_gateway.*.id, [""])[0]
@@ -291,6 +316,11 @@ output "database_ipv6_egress_route_id" {
 output "private_nat_gateway_route_ids" {
   description = "List of IDs of the private nat gateway route."
   value       = aws_route.private_nat_gateway.*.id
+}
+
+output "transit_gateway_nat_gateway_route_ids" {
+  description = "List of IDs of the transit gateway nat gateway route."
+  value       = aws_route.transit_gateway_nat_gateway.*.id
 }
 
 output "private_ipv6_egress_route_ids" {
@@ -331,6 +361,11 @@ output "intra_route_table_association_ids" {
 output "public_route_table_association_ids" {
   description = "List of IDs of the public route table association"
   value       = aws_route_table_association.public.*.id
+}
+
+output "transit_gateway_route_table_association_ids" {
+  description = "List of IDs of the transit gateway route table association"
+  value       = aws_route_table_association.transit_gateway.*.id
 }
 
 output "nat_ids" {
@@ -506,6 +541,16 @@ output "elasticache_network_acl_id" {
 output "elasticache_network_acl_arn" {
   description = "ARN of the elasticache network ACL"
   value       = concat(aws_network_acl.elasticache.*.arn, [""])[0]
+}
+
+output "transit_gateway_network_acl_id" {
+  description = "ID of the transit gateway network ACL"
+  value       = concat(aws_network_acl.transit_gateway.*.id, [""])[0]
+}
+
+output "transit_gateway_network_acl_arn" {
+  description = "ARN of the transit gateway network ACL"
+  value       = concat(aws_network_acl.transit_gateway.*.arn, [""])[0]
 }
 
 # VPC flow log

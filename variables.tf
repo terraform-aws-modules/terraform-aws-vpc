@@ -58,6 +58,12 @@ variable "elasticache_subnet_ipv6_prefixes" {
   default     = []
 }
 
+variable "transit_gateway_subnet_ipv6_prefixes" {
+  description = "Assigns IPv6 transit gateway subnet id based on the Amazon provided /56 prefix base 10 integer (0-256). Must be of equal length to the corresponding IPv4 subnet list"
+  type        = list(string)
+  default     = []
+}
+
 variable "intra_subnet_ipv6_prefixes" {
   description = "Assigns IPv6 intra subnet id based on the Amazon provided /56 prefix base 10 integer (0-256). Must be of equal length to the corresponding IPv4 subnet list"
   type        = list(string)
@@ -108,6 +114,12 @@ variable "elasticache_subnet_assign_ipv6_address_on_creation" {
 
 variable "intra_subnet_assign_ipv6_address_on_creation" {
   description = "Assign IPv6 address on intra subnet, must be disabled to change IPv6 CIDRs. This is the IPv6 equivalent of map_public_ip_on_launch"
+  type        = bool
+  default     = null
+}
+
+variable "transit_gateway_subnet_assign_ipv6_address_on_creation" {
+  description = "Assign IPv6 address on transit gateway subnet, must be disabled to change IPv6 CIDRs. This is the IPv6 equivalent of map_public_ip_on_launch"
   type        = bool
   default     = null
 }
@@ -166,6 +178,12 @@ variable "elasticache_subnet_suffix" {
   default     = "elasticache"
 }
 
+variable "transit_gateway_subnet_suffix" {
+  description = "Suffix to append to transit gateway subnets name"
+  type        = string
+  default     = "transitgateway"
+}
+
 variable "public_subnets" {
   description = "A list of public subnets inside the VPC"
   type        = list(string)
@@ -208,6 +226,12 @@ variable "intra_subnets" {
   default     = []
 }
 
+variable "transit_gateway_subnets" {
+  description = "A list of transit gateway subnets"
+  type        = list(string)
+  default     = []
+}
+
 variable "create_database_subnet_route_table" {
   description = "Controls if separate route table for database should be created"
   type        = bool
@@ -230,6 +254,12 @@ variable "create_elasticache_subnet_route_table" {
   description = "Controls if separate route table for elasticache should be created"
   type        = bool
   default     = false
+}
+
+variable "create_transit_gateway_subnet_route_table" {
+  description = "Controls if separate route table for transit gateway should be created"
+  type        = bool
+  default     = true
 }
 
 variable "create_database_subnet_group" {
@@ -258,6 +288,18 @@ variable "create_database_internet_gateway_route" {
 
 variable "create_database_nat_gateway_route" {
   description = "Controls if a nat gateway route should be created to give internet access to the database subnets"
+  type        = bool
+  default     = false
+}
+
+variable "create_single_transit_gateway_route_table" {
+  description = "Controls if one or multiple route tables for transit gateway should be created. If `create_transit_gateway_nat_gateway_route` is set to `true`, this option will be ignored"
+  type        = bool
+  default     = true
+}
+
+variable "create_transit_gateway_nat_gateway_route" {
+  description = "Controls if a nat gateway route should be created to give internet access to the transit gateway subnets"
   type        = bool
   default     = false
 }
@@ -478,6 +520,12 @@ variable "intra_route_table_tags" {
   default     = {}
 }
 
+variable "transit_gateway_route_table_tags" {
+  description = "Additional tags for the transit gateway route tables"
+  type        = map(string)
+  default     = {}
+}
+
 variable "database_subnet_group_name" {
   description = "Name of database subnet group"
   type        = string
@@ -520,6 +568,12 @@ variable "intra_subnet_tags" {
   default     = {}
 }
 
+variable "transit_gateway_subnet_tags" {
+  description = "Additional tags for the transit gateway subnets"
+  type        = map(string)
+  default     = {}
+}
+
 variable "public_acl_tags" {
   description = "Additional tags for the public subnets network ACL"
   type        = map(string)
@@ -558,6 +612,12 @@ variable "redshift_acl_tags" {
 
 variable "elasticache_acl_tags" {
   description = "Additional tags for the elasticache subnets network ACL"
+  type        = map(string)
+  default     = {}
+}
+
+variable "transit_gateway_acl_tags" {
+  description = "Additional tags for the transit gateway subnets network ACL"
   type        = map(string)
   default     = {}
 }
@@ -732,6 +792,12 @@ variable "redshift_dedicated_network_acl" {
 
 variable "elasticache_dedicated_network_acl" {
   description = "Whether to use dedicated network ACL (not default) and custom rules for elasticache subnets"
+  type        = bool
+  default     = false
+}
+
+variable "transit_gateway_dedicated_network_acl" {
+  description = "Whether to use dedicated network ACL (not default) and custom rules for transit gateway subnets"
   type        = bool
   default     = false
 }
@@ -994,6 +1060,38 @@ variable "elasticache_inbound_acl_rules" {
 
 variable "elasticache_outbound_acl_rules" {
   description = "Elasticache subnets outbound network ACL rules"
+  type        = list(map(string))
+
+  default = [
+    {
+      rule_number = 100
+      rule_action = "allow"
+      from_port   = 0
+      to_port     = 0
+      protocol    = "-1"
+      cidr_block  = "0.0.0.0/0"
+    },
+  ]
+}
+
+variable "transit_gateway_inbound_acl_rules" {
+  description = "Transit gateway subnets inbound network ACLs"
+  type        = list(map(string))
+
+  default = [
+    {
+      rule_number = 100
+      rule_action = "allow"
+      from_port   = 0
+      to_port     = 0
+      protocol    = "-1"
+      cidr_block  = "0.0.0.0/0"
+    },
+  ]
+}
+
+variable "transit_gateway_outbound_acl_rules" {
+  description = "Transit gateway subnets outbound network ACLs"
   type        = list(map(string))
 
   default = [
