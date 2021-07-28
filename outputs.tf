@@ -375,7 +375,7 @@ output "vpc_endpoint_dynamodb_pl_id" {
 
 output "vpc_endpoint_sqs_id" {
   description = "The ID of VPC endpoint for SQS"
-  value       = element(concat(aws_vpc_endpoint.sqs.*.id, list("")), 0)
+  value       = element(concat(aws_vpc_endpoint.sqs.*.id, tolist("")), 0)
 }
 
 output "vpc_endpoint_sqs_network_interface_ids" {
@@ -510,7 +510,7 @@ output "vpc_endpoint_apigw_dns_entry" {
 
 output "vpc_endpoint_ecs_id" {
   description = "The ID of VPC endpoint for ECS"
-  value       = element(concat(aws_vpc_endpoint.ecs.*.id, list("")), 0)
+  value       = element(concat(aws_vpc_endpoint.ecs.*.id, tolist("")), 0)
 }
 
 output "vpc_endpoint_ecs_network_interface_ids" {
@@ -525,7 +525,7 @@ output "vpc_endpoint_ecs_dns_entry" {
 
 output "vpc_endpoint_ecs_agent_id" {
   description = "The ID of VPC endpoint for ECS Agent"
-  value       = element(concat(aws_vpc_endpoint.ecs_agent.*.id, list("")), 0)
+  value       = element(concat(aws_vpc_endpoint.ecs_agent.*.id, tolist("")), 0)
 }
 
 output "vpc_endpoint_ecs_agent_network_interface_ids" {
@@ -540,7 +540,7 @@ output "vpc_endpoint_ecs_agent_dns_entry" {
 
 output "vpc_endpoint_ecs_telemetry_id" {
   description = "The ID of VPC endpoint for ECS Telemetry"
-  value       = element(concat(aws_vpc_endpoint.ecs_telemetry.*.id, list("")), 0)
+  value       = element(concat(aws_vpc_endpoint.ecs_telemetry.*.id, tolist("")), 0)
 }
 
 output "vpc_endpoint_ecs_telemetry_network_interface_ids" {
