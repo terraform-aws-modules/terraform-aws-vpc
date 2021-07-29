@@ -182,16 +182,8 @@ data "aws_security_group" "default" {
   vpc_id = module.vpc.vpc_id
 }
 
-# Data source used to avoid race condition
-data "aws_vpc_endpoint_service" "dynamodb" {
-  service = "dynamodb"
-
-  filter {
-    name   = "service-type"
-    values = ["Gateway"]
-  }
-}
-
+data "aws_caller_identity" "current" {}
+  
 data "aws_iam_policy_document" "dynamodb_endpoint_policy" {
   statement {
     effect    = "Deny"
@@ -205,9 +197,9 @@ data "aws_iam_policy_document" "dynamodb_endpoint_policy" {
 
     condition {
       test     = "StringNotEquals"
-      variable = "aws:sourceVpce"
+      variable = "aws:PrincipalAccount"
 
-      values = [data.aws_vpc_endpoint_service.dynamodb.id]
+      values = [data.aws_caller_identity.current.account_id]
     }
   }
 }
@@ -225,9 +217,9 @@ data "aws_iam_policy_document" "generic_endpoint_policy" {
 
     condition {
       test     = "StringNotEquals"
-      variable = "aws:sourceVpce"
+      variable = "aws:PrincipalAccount"
 
-      values = [data.aws_vpc_endpoint_service.dynamodb.id]
+      values = [data.aws_caller_identity.current.account_id]
     }
   }
 }
