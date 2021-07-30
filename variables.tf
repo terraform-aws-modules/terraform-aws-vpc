@@ -64,6 +64,12 @@ variable "intra_subnet_ipv6_prefixes" {
   default     = []
 }
 
+variable "firewall_subnet_ipv6_prefixes" {
+  description = "Assigns IPv6 firewall subnet id based on the Amazon provided /56 prefix base 10 integer (0-256). Must be of equal length to the corresponding IPv4 subnet list"
+  type        = list(string)
+  default     = []
+}
+
 variable "assign_ipv6_address_on_creation" {
   description = "Assign IPv6 address on subnet, must be disabled to change IPv6 CIDRs. This is the IPv6 equivalent of map_public_ip_on_launch"
   type        = bool
@@ -108,6 +114,12 @@ variable "elasticache_subnet_assign_ipv6_address_on_creation" {
 
 variable "intra_subnet_assign_ipv6_address_on_creation" {
   description = "Assign IPv6 address on intra subnet, must be disabled to change IPv6 CIDRs. This is the IPv6 equivalent of map_public_ip_on_launch"
+  type        = bool
+  default     = null
+}
+
+variable "firewall_subnet_assign_ipv6_address_on_creation" {
+  description = "Assign IPv6 address on firewall subnet, must be disabled to change IPv6 CIDRs. This is the IPv6 equivalent of map_public_ip_on_launch"
   type        = bool
   default     = null
 }
@@ -166,6 +178,12 @@ variable "elasticache_subnet_suffix" {
   default     = "elasticache"
 }
 
+variable "firewall_subnet_suffix" {
+  description = "Suffix to append to firewall subnets name"
+  type        = string
+  default     = "firewall"
+}
+
 variable "public_subnets" {
   description = "A list of public subnets inside the VPC"
   type        = list(string)
@@ -208,6 +226,12 @@ variable "intra_subnets" {
   default     = []
 }
 
+variable "firewall_subnets" {
+  description = "A list of firewall subnets inside the VPC"
+  type        = list(string)
+  default     = []
+}
+
 variable "create_database_subnet_route_table" {
   description = "Controls if separate route table for database should be created"
   type        = bool
@@ -218,6 +242,12 @@ variable "create_redshift_subnet_route_table" {
   description = "Controls if separate route table for redshift should be created"
   type        = bool
   default     = false
+}
+
+variable "create_firewall_subnet_route_table" {
+  description = "Controls if route table for firewall should be created"
+  type        = bool
+  default     = true
 }
 
 variable "enable_public_redshift" {
@@ -260,6 +290,18 @@ variable "create_database_nat_gateway_route" {
   description = "Controls if a nat gateway route should be created to give internet access to the database subnets"
   type        = bool
   default     = false
+}
+
+variable "firewall_sync_states" {
+  description = "VPC endpoint ID of firewall endpoint for route table to point to"
+  type = list(object({
+    attachment = list(object({
+      endpoint_id = string
+      subnet_id   = string
+    }))
+    availability_zone = string
+  }))
+  default = []
 }
 
 variable "azs" {
@@ -478,6 +520,12 @@ variable "intra_route_table_tags" {
   default     = {}
 }
 
+variable "firewall_route_table_tags" {
+  description = "Additional tags for the firewall route tables"
+  type        = map(string)
+  default     = {}
+}
+
 variable "database_subnet_group_name" {
   description = "Name of database subnet group"
   type        = string
@@ -520,6 +568,12 @@ variable "intra_subnet_tags" {
   default     = {}
 }
 
+variable "firewall_subnet_tags" {
+  description = "Additional tags for the firewall subnets"
+  type        = map(string)
+  default     = {}
+}
+
 variable "public_acl_tags" {
   description = "Additional tags for the public subnets network ACL"
   type        = map(string)
@@ -558,6 +612,12 @@ variable "redshift_acl_tags" {
 
 variable "elasticache_acl_tags" {
   description = "Additional tags for the elasticache subnets network ACL"
+  type        = map(string)
+  default     = {}
+}
+
+variable "firewall_acl_tags" {
+  description = "Additional tags for the firewall subnets network ACL"
   type        = map(string)
   default     = {}
 }
@@ -732,6 +792,12 @@ variable "redshift_dedicated_network_acl" {
 
 variable "elasticache_dedicated_network_acl" {
   description = "Whether to use dedicated network ACL (not default) and custom rules for elasticache subnets"
+  type        = bool
+  default     = false
+}
+
+variable "firewall_dedicated_network_acl" {
+  description = "Whether to use dedicated network ACL (not default) and custom rules for firewall subnets"
   type        = bool
   default     = false
 }
@@ -994,6 +1060,38 @@ variable "elasticache_inbound_acl_rules" {
 
 variable "elasticache_outbound_acl_rules" {
   description = "Elasticache subnets outbound network ACL rules"
+  type        = list(map(string))
+
+  default = [
+    {
+      rule_number = 100
+      rule_action = "allow"
+      from_port   = 0
+      to_port     = 0
+      protocol    = "-1"
+      cidr_block  = "0.0.0.0/0"
+    },
+  ]
+}
+
+variable "firewall_inbound_acl_rules" {
+  description = "firewall subnets inbound network ACL rules"
+  type        = list(map(string))
+
+  default = [
+    {
+      rule_number = 100
+      rule_action = "allow"
+      from_port   = 0
+      to_port     = 0
+      protocol    = "-1"
+      cidr_block  = "0.0.0.0/0"
+    },
+  ]
+}
+
+variable "firewall_outbound_acl_rules" {
+  description = "Firewall subnets outbound network ACL rules"
   type        = list(map(string))
 
   default = [

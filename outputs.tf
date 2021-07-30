@@ -223,6 +223,22 @@ output "intra_subnets_ipv6_cidr_blocks" {
   value       = aws_subnet.intra.*.ipv6_cidr_block
 }
 
+output "firewall_subnets" {
+  description = "List of IDs of firewall subnets"
+  value       = aws_subnet.firewall.*.id
+}
+
+output "firewall_subnet_arns" {
+  description = "List of ARNs of firewall subnets"
+  value       = aws_subnet.firewall.*.arn
+}
+
+
+output "firewall_subnets_cidr_blocks" {
+  description = "List of cidr_blocks of firewall subnets"
+  value       = aws_subnet.firewall.*.cidr_block
+}
+
 output "elasticache_subnet_group" {
   description = "ID of elasticache subnet group"
   value       = concat(aws_elasticache_subnet_group.elasticache.*.id, [""])[0]
@@ -261,6 +277,11 @@ output "elasticache_route_table_ids" {
 output "intra_route_table_ids" {
   description = "List of IDs of intra route tables"
   value       = aws_route_table.intra.*.id
+}
+
+output "firewall_route_table_ids" {
+  description = "List of IDs of firewall route tables"
+  value       = aws_route_table.firewall.*.id
 }
 
 output "public_internet_gateway_route_id" {
@@ -507,6 +528,17 @@ output "elasticache_network_acl_arn" {
   description = "ARN of the elasticache network ACL"
   value       = concat(aws_network_acl.elasticache.*.arn, [""])[0]
 }
+
+output "firewall_network_acl_id" {
+  description = "ID of the firewall network ACL"
+  value       = concat(aws_network_acl.firewall.*.id, [""])[0]
+}
+
+output "firewall_network_acl_arn" {
+  description = "ARN of the firewall network ACL"
+  value       = concat(aws_network_acl.firewall.*.arn, [""])[0]
+}
+
 
 # VPC flow log
 output "vpc_flow_log_id" {
