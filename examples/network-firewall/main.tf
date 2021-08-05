@@ -19,6 +19,11 @@ module "vpc" {
   enable_nat_gateway     = true
   one_nat_gateway_per_az = true
 
+  enable_firewall      = true
+  enable_firewall_logs = true
+  firewall_log_types   = ["FLOW", "ALERT"]
+  firewall_policy_arn  = aws_networkfirewall_firewall_policy.example.arn
+
   firewall_subnets = [
     "10.0.3.0/28",
     "10.0.3.16/28",
@@ -36,28 +41,11 @@ module "vpc" {
     "10.0.5.0/24",
     "10.0.6.0/24",
   ]
-
-  # Only uncomment the following line after aws_networkfirewall_firewall has been created on the first run
-  # otherwise it will be a cyclic dependency.
-  # firewall_sync_states = aws_networkfirewall_firewall.example.firewall_status[0].sync_states
 }
 
 ################################################################################
-# Network firewall
+# Network firewall Policy
 ################################################################################
-
-resource "aws_networkfirewall_firewall" "example" {
-  name                = "my-network-firewall"
-  firewall_policy_arn = aws_networkfirewall_firewall_policy.example.arn
-  vpc_id              = module.vpc.vpc_id
-
-  dynamic "subnet_mapping" {
-    for_each = module.vpc.firewall_subnets
-    content {
-      subnet_id = subnet_mapping.value
-    }
-  }
-}
 
 resource "aws_networkfirewall_firewall_policy" "example" {
   name = "example"

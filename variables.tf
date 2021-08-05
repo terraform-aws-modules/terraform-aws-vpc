@@ -292,6 +292,8 @@ variable "create_database_nat_gateway_route" {
   default     = false
 }
 
+
+
 variable "firewall_sync_states" {
   description = "VPC endpoint ID of firewall endpoint for route table to point to"
   type = list(object({
@@ -332,6 +334,24 @@ variable "enable_classiclink_dns_support" {
   description = "Should be true to enable ClassicLink DNS Support for the VPC. Only valid in regions and accounts that support EC2 Classic."
   type        = bool
   default     = null
+}
+
+variable "enable_firewall" {
+  description = "Should be true if you want to provision a network firewall in front of your public networks"
+  type        = bool
+  default     = false
+}
+
+variable "firewall_policy_arn" {
+  description = "The network firewall policy arn to associate with the network firewall. Needed if you are setting enable_firewall to true"
+  type        = string
+  default     = null
+}
+
+variable "firewall_suffix" {
+  description = "The suffix that should be appended to the firewall name"
+  type        = string
+  default     = "firewall"
 }
 
 variable "enable_nat_gateway" {
@@ -618,6 +638,12 @@ variable "elasticache_acl_tags" {
 
 variable "firewall_acl_tags" {
   description = "Additional tags for the firewall subnets network ACL"
+  type        = map(string)
+  default     = {}
+}
+
+variable "firewall_log_tags" {
+  description = "Additional tags for the Firewall Logs"
   type        = map(string)
   default     = {}
 }
@@ -1128,6 +1154,36 @@ variable "enable_flow_log" {
   description = "Whether or not to enable VPC Flow Logs"
   type        = bool
   default     = false
+}
+
+variable "enable_firewall_logs" {
+  description = "Whether or not to enable Network Firewall Logs"
+  type        = bool
+  default     = false
+}
+
+variable "firewall_log_cloudwatch_log_group_name_prefix" {
+  description = "Specifies the name prefix of Network Firewall Log Group for Network Firewall logs."
+  type        = string
+  default     = "/aws/network-firewall-log/"
+}
+
+variable "firewall_log_cloudwatch_log_group_retention_in_days" {
+  description = "Specifies the number of days you want to retain log events in the specified log group for Network Firewall logs."
+  type        = number
+  default     = null
+}
+
+variable "firewall_log_cloudwatch_log_group_kms_key_id" {
+  description = "The ARN of the KMS Key to use when encrypting log data for Network Firewall logs."
+  type        = string
+  default     = null
+}
+
+variable "firewall_log_types" {
+  description = "The Types of Network Firewall Logs to send"
+  type        = list(string)
+  default     = ["FLOW", "ALERT"]
 }
 
 variable "default_security_group_egress" {
