@@ -1148,13 +1148,6 @@ resource "aws_network_acl" "firewall" {
     var.tags,
     var.firewall_acl_tags,
   )
-
-  lifecycle {
-    ignore_changes = [
-      tags["Owner"],
-      tags["Type"],
-    ]
-  }
 }
 
 resource "aws_network_acl_rule" "firewall_inbound" {
