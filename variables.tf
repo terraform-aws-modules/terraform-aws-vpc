@@ -292,20 +292,6 @@ variable "create_database_nat_gateway_route" {
   default     = false
 }
 
-
-
-variable "firewall_sync_states" {
-  description = "VPC endpoint ID of firewall endpoint for route table to point to"
-  type = list(object({
-    attachment = list(object({
-      endpoint_id = string
-      subnet_id   = string
-    }))
-    availability_zone = string
-  }))
-  default = []
-}
-
 variable "azs" {
   description = "A list of availability zones names or ids in the region"
   type        = list(string)
