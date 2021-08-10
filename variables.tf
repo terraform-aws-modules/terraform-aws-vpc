@@ -2002,6 +2002,17 @@ variable "elasticbeanstalk_health_endpoint_private_dns_enabled" {
   type        = bool
   default     = false
 }
+variable "private_eks_subnets" {
+  description = "A list of private eks subnets inside the VPC"
+  type        = list(string)
+  default     = []
+}
+
+variable "outpost_subnets" {
+  description = "A list of outpost subnets inside the VPC"
+  type        = list(string)
+  default     = []
+}
 
 variable "enable_states_endpoint" {
   description = "Should be true if you want to provision a Step Function endpoint to the VPC"
@@ -2263,6 +2274,18 @@ variable "public_subnet_tags" {
 
 variable "private_subnet_tags" {
   description = "Additional tags for the private subnets"
+  type        = map(string)
+  default     = {}
+}
+
+variable "private_eks_subnet_tags" {
+  description = "Additional tags for the private eks subnets"
+  type        = map(string)
+  default     = {}
+}
+
+variable "outpost_subnet_tags" {
+  description = "Additional tags for the outpost subnets"
   type        = map(string)
   default     = {}
 }
