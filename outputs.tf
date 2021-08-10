@@ -333,6 +333,11 @@ output "public_route_table_association_ids" {
   value       = aws_route_table_association.public.*.id
 }
 
+output "dhcp_options_id" {
+  description = "The ID of the DHCP options"
+  value       = concat(aws_vpc_dhcp_options.this.*.id, [""])[0]
+}
+
 output "nat_ids" {
   description = "List of allocation ID of Elastic IPs created for AWS NAT Gateway"
   value       = aws_eip.nat.*.id
