@@ -222,11 +222,11 @@ resource "aws_route_table" "public" {
 
   tags = merge(
     {
-      "Name" = var.single_nat_gateway || length(var.firewall_sync_states) == 0 ? "${var.name}-${var.public_subnet_suffix}" : format(
-        "%s-${var.public_subnet_suffix}-%s",
-        var.name,
-        element(var.azs, count.index),
-      )
+      "Name" = var.enable_firewall ? format(
+      "%s-${var.public_subnet_suffix}-%s",
+      var.name,
+      element(var.azs, count.index),
+      ) : "${var.name}-${var.public_subnet_suffix}"
     },
     var.tags,
     var.public_route_table_tags,
@@ -250,7 +250,7 @@ resource "aws_route" "public_firewall" {
 
   route_table_id         = element(aws_route_table.public.*.id, count.index)
   destination_cidr_block = "0.0.0.0/0"
-  vpc_endpoint_id        = tolist(aws_networkfirewall_firewall.this[0].firewall_status[0].sync_states)[count.index].attachment[0].endpoint_id
+  vpc_endpoint_id        = element([for ss in tolist(aws_networkfirewall_firewall.this[0].firewall_status[0].sync_states) : ss.attachment[0].endpoint_id if ss.attachment[0].subnet_id == aws_subnet.firewall[count.index].id], 0)
 
   timeouts {
     create = "5m"
@@ -393,7 +393,7 @@ resource "aws_route" "internet_gateway_firewall" {
 
   route_table_id         = aws_route_table.internet_gateway[0].id
   destination_cidr_block = aws_subnet.public[count.index].cidr_block
-  vpc_endpoint_id        = tolist(aws_networkfirewall_firewall.this[0].firewall_status[0].sync_states)[count.index].attachment[0].endpoint_id
+  vpc_endpoint_id        = element([for ss in tolist(aws_networkfirewall_firewall.this[0].firewall_status[0].sync_states) : ss.attachment[0].endpoint_id if ss.attachment[0].subnet_id == aws_subnet.firewall[count.index].id], 0)
 }
 
 ################################################################################

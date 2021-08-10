@@ -27,5 +27,5 @@ output "nat_public_ips" {
 }
 
 output "firewall" {
-  value = aws_networkfirewall_firewall.example
+  value = module.vpc.network_firewall_arn
 }
