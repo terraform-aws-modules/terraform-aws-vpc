@@ -135,7 +135,7 @@ resource "aws_networkfirewall_firewall" "this" {
   vpc_id              = element(concat(aws_vpc.this.*.id, [""]), 0)
 
   dynamic "subnet_mapping" {
-    for_each = {for i, subnet in aws_subnet.firewall.* : i => subnet.id}
+    for_each = { for i, subnet in aws_subnet.firewall.* : i => subnet.id }
 
     content {
       subnet_id = subnet_mapping.value
@@ -223,9 +223,9 @@ resource "aws_route_table" "public" {
   tags = merge(
     {
       "Name" = var.enable_firewall ? format(
-      "%s-${var.public_subnet_suffix}-%s",
-      var.name,
-      element(var.azs, count.index),
+        "%s-${var.public_subnet_suffix}-%s",
+        var.name,
+        element(var.azs, count.index),
       ) : "${var.name}-${var.public_subnet_suffix}"
     },
     var.tags,
@@ -234,7 +234,7 @@ resource "aws_route_table" "public" {
 }
 
 resource "aws_route" "public_internet_gateway" {
-  count = var.create_vpc && var.create_igw && length(var.public_subnets) > 0 && !( var.enable_firewall && length(var.firewall_subnets) > 0) ? 1 : 0
+  count = var.create_vpc && var.create_igw && length(var.public_subnets) > 0 && !(var.enable_firewall && length(var.firewall_subnets) > 0) ? 1 : 0
 
   route_table_id         = aws_route_table.public[count.index].id
   destination_cidr_block = "0.0.0.0/0"
@@ -389,7 +389,7 @@ resource "aws_route_table" "internet_gateway" {
 }
 
 resource "aws_route" "internet_gateway_firewall" {
-  count = var.create_vpc && var.enable_firewall &&length(var.firewall_subnets) > 0 ? length(var.public_subnets) : 0
+  count = var.create_vpc && var.enable_firewall && length(var.firewall_subnets) > 0 ? length(var.public_subnets) : 0
 
   route_table_id         = aws_route_table.internet_gateway[0].id
   destination_cidr_block = aws_subnet.public[count.index].cidr_block
