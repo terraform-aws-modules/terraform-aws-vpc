@@ -1147,16 +1147,6 @@ resource "aws_route_table_association" "private_eks" {
   )
 }
 
-resource "aws_route_table_association" "outpost" {
-  count = var.create_vpc && length(var.outpost_subnets) > 0 ? length(var.outpost_subnets) : 0
-
-  subnet_id = element(aws_subnet.outpost.*.id, count.index)
-  route_table_id = element(
-    aws_route_table.private.*.id,
-    var.single_nat_gateway ? 0 : count.index,
-  )
-}
-
 resource "aws_route_table_association" "database" {
   count = var.create_vpc && length(var.database_subnets) > 0 ? length(var.database_subnets) : 0
 
