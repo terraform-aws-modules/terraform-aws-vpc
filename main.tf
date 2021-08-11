@@ -1028,6 +1028,17 @@ resource "aws_route" "private_ipv6_egress" {
   destination_ipv6_cidr_block = "::/0"
   egress_only_gateway_id      = element(aws_egress_only_internet_gateway.this.*.id, 0)
 }
+##################################################################################
+#EKS ipv6_egress
+##################################################################################
+
+resource "aws_route" "private_eks_ipv6_egress" {
+  count = var.create_vpc && var.create_egress_only_igw && var.enable_ipv6 ? length(var.private_eks_subnets) : 0
+
+  route_table_id              = element(aws_route_table.private.*.id, count.index)
+  destination_ipv6_cidr_block = "::/0"
+  egress_only_gateway_id      = element(aws_egress_only_internet_gateway.this.*.id, 0)
+}
 
 ##########################
 # Route table association
