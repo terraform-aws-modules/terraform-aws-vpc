@@ -83,6 +83,15 @@ output "private_subnets_cidr_blocks" {
   value       = aws_subnet.private.*.cidr_block
 }
 
+output "public_eks_subnets_cidr_blocks" {
+  description = "List of cidr_blocks of eks public subnets"
+  value       = aws_subnet.public_eks.*.cidr_block
+}
+
+output "public_eks_subnets" {
+  description = "List of IDs of eks public subnets"
+  value = aws_subnet.public_eks.*.id
+}
 output "private_eks_subnets_cidr_blocks" {
   description = "List of cidr_blocks of eks private subnets"
   value       = aws_subnet.private_eks.*.cidr_block
