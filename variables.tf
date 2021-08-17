@@ -623,9 +623,9 @@ variable "dhcp_options_domain_name_servers" {
 }
 
 variable "dhcp_options_ntp_servers" {
-  description = "Specify a list of NTP servers for DHCP options set (requires enable_dhcp_options set to true)"
+  description = "Specify a list of NTP servers for DHCP options set, default to AWS provided (requires enable_dhcp_options set to true)"
   type        = list(string)
-  default     = []
+  default     = ["169.254.169.123"]
 }
 
 variable "dhcp_options_netbios_name_servers" {
