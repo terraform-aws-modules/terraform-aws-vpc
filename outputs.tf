@@ -539,6 +539,11 @@ output "firewall_network_acl_arn" {
   value       = concat(aws_network_acl.firewall.*.arn, [""])[0]
 }
 
+output "network_firewall_arn" {
+  description = "ARN of the Network Firewall"
+  value       = concat(aws_networkfirewall_firewall.this.*.arn, [""])[0]
+}
+
 
 # VPC flow log
 output "vpc_flow_log_id" {
