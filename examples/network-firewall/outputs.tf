@@ -26,6 +26,7 @@ output "nat_public_ips" {
   value       = module.vpc.nat_public_ips
 }
 
-output "firewall" {
-  value = module.vpc.network_firewall_arn
+output "network_firewall_arn" {
+  description = "ARN of the Network Firewall"
+  value       = module.vpc.network_firewall_arn
 }
