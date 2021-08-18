@@ -266,7 +266,7 @@ output "database_route_table_ids" {
 
 output "redshift_route_table_ids" {
   description = "List of IDs of redshift route tables"
-  value       = length(aws_route_table.redshift.*.id) > 0 ? aws_route_table.redshift.*.id : aws_route_table.private.*.id
+  value       = length(aws_route_table.redshift.*.id) > 0 ? aws_route_table.redshift.*.id : (var.enable_public_redshift ? aws_route_table.public.*.id : aws_route_table.private.*.id)
 }
 
 output "elasticache_route_table_ids" {
@@ -352,6 +352,11 @@ output "intra_route_table_association_ids" {
 output "public_route_table_association_ids" {
   description = "List of IDs of the public route table association"
   value       = aws_route_table_association.public.*.id
+}
+
+output "dhcp_options_id" {
+  description = "The ID of the DHCP options"
+  value       = concat(aws_vpc_dhcp_options.this.*.id, [""])[0]
 }
 
 output "nat_ids" {
