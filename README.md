@@ -171,6 +171,16 @@ Sometimes it is handy to have public access to Redshift clusters (for example if
 
 It is possible to integrate this VPC module with [terraform-aws-transit-gateway module](https://github.com/terraform-aws-modules/terraform-aws-transit-gateway) which handles the creation of TGW resources and VPC attachments. See [complete example there](https://github.com/terraform-aws-modules/terraform-aws-transit-gateway/tree/master/examples/complete).
 
+## Network Firewall Configuration
+If you need to use the AWS Network Firewall to provide ingress or egress restrictions that can't be accommodated easily
+by security groups, you can enable it using the following arguments:
+```hcl
+enable_networkfirewall     = true
+networkfirewall_subnets    = ["10.0.11.0/24", "10.0.12.0/24", "10.0.13.0/24"]
+networkfirewall_policy_arn = "arn:aws:network-firewall:<region>:<account_id>:firewall-policy/<policy_name>"
+```
+**Note**: Network Firewall does not support IPv6 networking, because you cannot create a route IPv6 route to a VPC endpoint.
+
 ## Examples
 
 - [Simple VPC](https://github.com/terraform-aws-modules/terraform-aws-vpc/tree/master/examples/simple-vpc)
@@ -206,6 +216,7 @@ No modules.
 | Name | Type |
 |------|------|
 | [aws_cloudwatch_log_group.flow_log](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/cloudwatch_log_group) | resource |
+| [aws_cloudwatch_log_group.firewall_log](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/cloudwatch_log_group) | resource |
 | [aws_customer_gateway.this](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/customer_gateway) | resource |
 | [aws_db_subnet_group.database](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/db_subnet_group) | resource |
 | [aws_default_network_acl.this](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/default_network_acl) | resource |
@@ -245,11 +256,14 @@ No modules.
 | [aws_network_acl_rule.public_outbound](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/network_acl_rule) | resource |
 | [aws_network_acl_rule.redshift_inbound](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/network_acl_rule) | resource |
 | [aws_network_acl_rule.redshift_outbound](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/network_acl_rule) | resource |
+| [aws_networkfirewall_firewall.this](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/networkfirewall_firewall) | resource |
+| [aws_networkfirewall_logging_configuration.this](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/networkfirewall_logging_configuration) | resource |
 | [aws_redshift_subnet_group.redshift](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/redshift_subnet_group) | resource |
 | [aws_route.database_internet_gateway](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/route) | resource |
 | [aws_route.database_ipv6_egress](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/route) | resource |
 | [aws_route.database_nat_gateway](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/route) | resource |
 | [aws_route.firewall_internet_gateway](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/route) | resource |
+| [aws_route.internet_gateway_firewall](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/route) | resource |
 | [aws_route.private_ipv6_egress](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/route) | resource |
 | [aws_route.private_nat_gateway](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/route) | resource |
 | [aws_route.public_firewall](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/route) | resource |
@@ -370,6 +384,8 @@ No modules.
 | <a name="input_enable_flow_log"></a> [enable\_flow\_log](#input\_enable\_flow\_log) | Whether or not to enable VPC Flow Logs | `bool` | `false` | no |
 | <a name="input_enable_ipv6"></a> [enable\_ipv6](#input\_enable\_ipv6) | Requests an Amazon-provided IPv6 CIDR block with a /56 prefix length for the VPC. You cannot specify the range of IP addresses, or the size of the CIDR block. | `bool` | `false` | no |
 | <a name="input_enable_nat_gateway"></a> [enable\_nat\_gateway](#input\_enable\_nat\_gateway) | Should be true if you want to provision NAT Gateways for each of your private networks | `bool` | `false` | no |
+| <a name="input_enable_firewall"></a> [enable\_firewall](#input\_enable\_firewall) | Should be true if you want to provision a network firewall in front of your public networks | `bool` | `false` | no |
+| <a name="input_enable_firewall_logs"></a> [enable\_firewall\_logs](#input\_enable\_firewall\_logs) | Whether or not to enable Network Firewall Logs | `bool` | `false` | no |
 | <a name="input_enable_public_redshift"></a> [enable\_public\_redshift](#input\_enable\_public\_redshift) | Controls if redshift should have public routing table | `bool` | `false` | no |
 | <a name="input_enable_vpn_gateway"></a> [enable\_vpn\_gateway](#input\_enable\_vpn\_gateway) | Should be true if you want to create a new VPN Gateway resource and attach it to the VPC | `bool` | `false` | no |
 | <a name="input_external_nat_ip_ids"></a> [external\_nat\_ip\_ids](#input\_external\_nat\_ip\_ids) | List of EIP IDs to be assigned to the NAT Gateways (used in combination with reuse\_nat\_ips) | `list(string)` | `[]` | no |
@@ -377,13 +393,20 @@ No modules.
 | <a name="input_firewall_acl_tags"></a> [firewall\_acl\_tags](#input\_firewall\_acl\_tags) | Additional tags for the firewall subnets network ACL | `map(string)` | `{}` | no |
 | <a name="input_firewall_dedicated_network_acl"></a> [firewall\_dedicated\_network\_acl](#input\_firewall\_dedicated\_network\_acl) | Whether to use dedicated network ACL (not default) and custom rules for firewall subnets | `bool` | `false` | no |
 | <a name="input_firewall_inbound_acl_rules"></a> [firewall\_inbound\_acl\_rules](#input\_firewall\_inbound\_acl\_rules) | firewall subnets inbound network ACL rules | `list(map(string))` | <pre>[<br>  {<br>    "cidr_block": "0.0.0.0/0",<br>    "from_port": 0,<br>    "protocol": "-1",<br>    "rule_action": "allow",<br>    "rule_number": 100,<br>    "to_port": 0<br>  }<br>]</pre> | no |
+| <a name="input_firewall_log_cloudwatch_log_group_kms_key_id"></a> [firewall\_log\_cloudwatch\_log\_group\_kms\_key\_id](#input\_firewall\_log\_cloudwatch\_log\_group\_kms\_key\_id) | The ARN of the KMS Key to use when encrypting log data for Network Firewall logs | `string` | `null` | no |
+| <a name="input_firewall_log_cloudwatch_log_group_name_prefix"></a> [firewall\_log\_cloudwatch\_log\_group\_name\_prefix](#input\_firewall\_log\_cloudwatch\_log\_group\_name\_prefix) | Specifies the name prefix of Network Firewall Log Group for Network Firewall logs | `string` | `"/aws/network-firewall-log/"` | no |
+| <a name="input_firewall_log_cloudwatch_log_group_retention_in_days"></a> [firewall\_log\_cloudwatch\_log\_group\_retention\_in\_days](#input\_firewall\_log\_cloudwatch\_log\_group\_retention\_in\_days) | Specifies the number of days you want to retain log events in the specified log group for Network Firewall logs | `number` | `null` | no |
+| <a name="input_firewall_log_tags"></a> [firewall\_log\_tags](#input\_firewall\_log\_tags) | Additional tags for the Firewall Logs | `map(string)` | `{}` | no |
+| <a name="input_firewall_log_types"></a> [firewall\_log\_types](#input\_firewall\_log\_types) | The Types of Network Firewall Logs to send | `list(string)` | `["FLOW", "ALERT"]` | no |
 | <a name="input_firewall_outbound_acl_rules"></a> [firewall\_outbound\_acl\_rules](#input\_firewall\_outbound\_acl\_rules) | Firewall subnets outbound network ACL rules | `list(map(string))` | <pre>[<br>  {<br>    "cidr_block": "0.0.0.0/0",<br>    "from_port": 0,<br>    "protocol": "-1",<br>    "rule_action": "allow",<br>    "rule_number": 100,<br>    "to_port": 0<br>  }<br>]</pre> | no |
+| <a name="input_firewall_policy_arn"></a> [firewall\_policy\_arn](#input\_firewall\_policy\_arn) | The network firewall policy arn to associate with the network firewall. Needed if you are setting enable_firewall to true | `string` | `null` | no |
 | <a name="input_firewall_route_table_tags"></a> [firewall\_route\_table\_tags](#input\_firewall\_route\_table\_tags) | Additional tags for the firewall route tables | `map(string)` | `{}` | no |
 | <a name="input_firewall_subnet_assign_ipv6_address_on_creation"></a> [firewall\_subnet\_assign\_ipv6\_address\_on\_creation](#input\_firewall\_subnet\_assign\_ipv6\_address\_on\_creation) | Assign IPv6 address on firewall subnet, must be disabled to change IPv6 CIDRs. This is the IPv6 equivalent of map\_public\_ip\_on\_launch | `bool` | `null` | no |
 | <a name="input_firewall_subnet_ipv6_prefixes"></a> [firewall\_subnet\_ipv6\_prefixes](#input\_firewall\_subnet\_ipv6\_prefixes) | Assigns IPv6 firewall subnet id based on the Amazon provided /56 prefix base 10 integer (0-256). Must be of equal length to the corresponding IPv4 subnet list | `list(string)` | `[]` | no |
 | <a name="input_firewall_subnet_suffix"></a> [firewall\_subnet\_suffix](#input\_firewall\_subnet\_suffix) | Suffix to append to firewall subnets name | `string` | `"firewall"` | no |
 | <a name="input_firewall_subnet_tags"></a> [firewall\_subnet\_tags](#input\_firewall\_subnet\_tags) | Additional tags for the firewall subnets | `map(string)` | `{}` | no |
 | <a name="input_firewall_subnets"></a> [firewall\_subnets](#input\_firewall\_subnets) | A list of firewall subnets inside the VPC | `list(string)` | `[]` | no |
+| <a name="input_firewall_suffix"></a> [firewall\_suffix](#input\_firewall\_suffix) | The suffix that should be appended to the firewall name | `string` | `"firewall"` | no |
 | <a name="input_firewall_sync_states"></a> [firewall\_sync\_states](#input\_firewall\_sync\_states) | VPC endpoint ID of firewall endpoint for route table to point to | <pre>list(object({<br>    attachment = list(object({<br>      endpoint_id = string<br>      subnet_id   = string<br>    }))<br>    availability_zone = string<br>  }))</pre> | `[]` | no |
 | <a name="input_flow_log_cloudwatch_iam_role_arn"></a> [flow\_log\_cloudwatch\_iam\_role\_arn](#input\_flow\_log\_cloudwatch\_iam\_role\_arn) | The ARN for the IAM role that's used to post flow logs to a CloudWatch Logs log group. When flow\_log\_destination\_arn is set to ARN of Cloudwatch Logs, this argument needs to be provided. | `string` | `""` | no |
 | <a name="input_flow_log_cloudwatch_log_group_kms_key_id"></a> [flow\_log\_cloudwatch\_log\_group\_kms\_key\_id](#input\_flow\_log\_cloudwatch\_log\_group\_kms\_key\_id) | The ARN of the KMS Key to use when encrypting log data for VPC flow logs. | `string` | `null` | no |
