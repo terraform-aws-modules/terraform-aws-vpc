@@ -1394,9 +1394,10 @@ resource "aws_route_table_association" "firewall" {
 resource "aws_customer_gateway" "this" {
   for_each = var.customer_gateways
 
-  bgp_asn    = each.value["bgp_asn"]
-  ip_address = each.value["ip_address"]
-  type       = "ipsec.1"
+  bgp_asn     = each.value["bgp_asn"]
+  ip_address  = each.value["ip_address"]
+  device_name = lookup(each.value, "device_name", null)
+  type        = "ipsec.1"
 
   tags = merge(
     {

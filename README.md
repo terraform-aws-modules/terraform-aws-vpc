@@ -199,13 +199,13 @@ networkfirewall_policy_arn = "arn:aws:network-firewall:<region>:<account_id>:fir
 | Name | Version |
 |------|---------|
 | <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 0.12.31 |
-| <a name="requirement_aws"></a> [aws](#requirement\_aws) | >= 3.15 |
+| <a name="requirement_aws"></a> [aws](#requirement\_aws) | >= 3.28 |
 
 ## Providers
 
 | Name | Version |
 |------|---------|
-| <a name="provider_aws"></a> [aws](#provider\_aws) | >= 3.15 |
+| <a name="provider_aws"></a> [aws](#provider\_aws) | >= 3.28 |
 
 ## Modules
 
