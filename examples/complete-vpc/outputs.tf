@@ -20,6 +20,11 @@ output "database_subnets" {
   value       = module.vpc.database_subnets
 }
 
+output "neptune_subnets" {
+  description = "List of IDs of neptune subnets"
+  value       = module.vpc.neptune_subnets
+}
+
 output "elasticache_subnets" {
   description = "List of IDs of elasticache subnets"
   value       = module.vpc.elasticache_subnets

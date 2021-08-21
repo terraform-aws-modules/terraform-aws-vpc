@@ -1029,7 +1029,7 @@ variable "database_outbound_acl_rules" {
 }
 
 variable "neptune_inbound_acl_rules" {
-  description = "Database subnets inbound network ACL rules"
+  description = "Neptune subnets inbound network ACL rules"
   type        = list(map(string))
 
   default = [
@@ -1045,7 +1045,7 @@ variable "neptune_inbound_acl_rules" {
 }
 
 variable "neptune_outbound_acl_rules" {
-  description = "Database subnets outbound network ACL rules"
+  description = "Neptune subnets outbound network ACL rules"
   type        = list(map(string))
 
   default = [
