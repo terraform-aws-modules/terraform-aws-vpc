@@ -209,7 +209,7 @@ It is possible to integrate this VPC module with [terraform-aws-transit-gateway 
 
 | Name | Version |
 |------|---------|
-| <a name="provider_aws"></a> [aws](#provider\_aws) | 3.49.0 |
+| <a name="provider_aws"></a> [aws](#provider\_aws) | 3.55.0 |
 
 ## Modules
 
@@ -421,8 +421,8 @@ No modules.
 | <a name="input_nat_gateway_tags"></a> [nat\_gateway\_tags](#input\_nat\_gateway\_tags) | Additional tags for the NAT gateways | `map(string)` | `{}` | no |
 | <a name="input_neptune_acl_tags"></a> [neptune\_acl\_tags](#input\_neptune\_acl\_tags) | Additional tags for the neptune subnets network ACL | `map(string)` | `{}` | no |
 | <a name="input_neptune_dedicated_network_acl"></a> [neptune\_dedicated\_network\_acl](#input\_neptune\_dedicated\_network\_acl) | Whether to use dedicated network ACL (not default) and custom rules for neptune subnets | `bool` | `false` | no |
-| <a name="input_neptune_inbound_acl_rules"></a> [neptune\_inbound\_acl\_rules](#input\_neptune\_inbound\_acl\_rules) | Database subnets inbound network ACL rules | `list(map(string))` | <pre>[<br>  {<br>    "cidr_block": "0.0.0.0/0",<br>    "from_port": 0,<br>    "protocol": "-1",<br>    "rule_action": "allow",<br>    "rule_number": 100,<br>    "to_port": 0<br>  }<br>]</pre> | no |
-| <a name="input_neptune_outbound_acl_rules"></a> [neptune\_outbound\_acl\_rules](#input\_neptune\_outbound\_acl\_rules) | Database subnets outbound network ACL rules | `list(map(string))` | <pre>[<br>  {<br>    "cidr_block": "0.0.0.0/0",<br>    "from_port": 0,<br>    "protocol": "-1",<br>    "rule_action": "allow",<br>    "rule_number": 100,<br>    "to_port": 0<br>  }<br>]</pre> | no |
+| <a name="input_neptune_inbound_acl_rules"></a> [neptune\_inbound\_acl\_rules](#input\_neptune\_inbound\_acl\_rules) | Neptune subnets inbound network ACL rules | `list(map(string))` | <pre>[<br>  {<br>    "cidr_block": "0.0.0.0/0",<br>    "from_port": 0,<br>    "protocol": "-1",<br>    "rule_action": "allow",<br>    "rule_number": 100,<br>    "to_port": 0<br>  }<br>]</pre> | no |
+| <a name="input_neptune_outbound_acl_rules"></a> [neptune\_outbound\_acl\_rules](#input\_neptune\_outbound\_acl\_rules) | Neptune subnets outbound network ACL rules | `list(map(string))` | <pre>[<br>  {<br>    "cidr_block": "0.0.0.0/0",<br>    "from_port": 0,<br>    "protocol": "-1",<br>    "rule_action": "allow",<br>    "rule_number": 100,<br>    "to_port": 0<br>  }<br>]</pre> | no |
 | <a name="input_neptune_route_table_tags"></a> [neptune\_route\_table\_tags](#input\_neptune\_route\_table\_tags) | Additional tags for the neptune route tables | `map(string)` | `{}` | no |
 | <a name="input_neptune_subnet_assign_ipv6_address_on_creation"></a> [neptune\_subnet\_assign\_ipv6\_address\_on\_creation](#input\_neptune\_subnet\_assign\_ipv6\_address\_on\_creation) | Assign IPv6 address on neptune subnet, must be disabled to change IPv6 CIDRs. This is the IPv6 equivalent of map\_public\_ip\_on\_launch | `bool` | `null` | no |
 | <a name="input_neptune_subnet_group_name"></a> [neptune\_subnet\_group\_name](#input\_neptune\_subnet\_group\_name) | Name of neptune subnet group | `string` | `null` | no |

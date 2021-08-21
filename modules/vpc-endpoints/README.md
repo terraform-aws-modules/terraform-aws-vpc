@@ -62,7 +62,7 @@ module "endpoints" {
 
 | Name | Version |
 |------|---------|
-| <a name="provider_aws"></a> [aws](#provider\_aws) | >= 3.28 |
+| <a name="provider_aws"></a> [aws](#provider\_aws) | 3.55.0 |
 
 ## Modules
 

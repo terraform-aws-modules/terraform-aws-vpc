@@ -28,7 +28,7 @@ Note that this example may create resources which can cost money (AWS Elastic IP
 
 | Name | Version |
 |------|---------|
-| <a name="provider_aws"></a> [aws](#provider\_aws) | 3.49.0 |
+| <a name="provider_aws"></a> [aws](#provider\_aws) | 3.55.0 |
 
 ## Modules
 
@@ -60,6 +60,7 @@ No inputs.
 | <a name="output_elasticache_subnets"></a> [elasticache\_subnets](#output\_elasticache\_subnets) | List of IDs of elasticache subnets |
 | <a name="output_intra_subnets"></a> [intra\_subnets](#output\_intra\_subnets) | List of IDs of intra subnets |
 | <a name="output_nat_public_ips"></a> [nat\_public\_ips](#output\_nat\_public\_ips) | List of public Elastic IPs created for AWS NAT Gateway |
+| <a name="output_neptune_subnets"></a> [neptune\_subnets](#output\_neptune\_subnets) | List of IDs of neptune subnets |
 | <a name="output_private_subnets"></a> [private\_subnets](#output\_private\_subnets) | List of IDs of private subnets |
 | <a name="output_public_subnets"></a> [public\_subnets](#output\_public\_subnets) | List of IDs of public subnets |
 | <a name="output_redshift_subnets"></a> [redshift\_subnets](#output\_redshift\_subnets) | List of IDs of redshift subnets |
