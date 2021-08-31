@@ -508,6 +508,18 @@ variable "redshift_subnet_group_tags" {
   default     = {}
 }
 
+variable "elasticache_subnet_group_name" {
+  description = "Name of elasticache subnet group"
+  type        = string
+  default     = null
+}
+
+variable "elasticache_subnet_group_tags" {
+  description = "Additional tags for the elasticache subnet group"
+  type        = map(string)
+  default     = {}
+}
+
 variable "elasticache_subnet_tags" {
   description = "Additional tags for the elasticache subnets"
   type        = map(string)
