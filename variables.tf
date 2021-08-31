@@ -502,6 +502,12 @@ variable "redshift_subnet_tags" {
   default     = {}
 }
 
+variable "redshift_subnet_group_name" {
+  description = "Name of redshift subnet group"
+  type        = string
+  default     = null
+}
+
 variable "redshift_subnet_group_tags" {
   description = "Additional tags for the redshift subnet group"
   type        = map(string)

@@ -525,13 +525,13 @@ resource "aws_subnet" "redshift" {
 resource "aws_redshift_subnet_group" "redshift" {
   count = var.create_vpc && length(var.redshift_subnets) > 0 && var.create_redshift_subnet_group ? 1 : 0
 
-  name        = lower(var.name)
+  name        = lower(coalesce(var.redshift_subnet_group_name, var.name))
   description = "Redshift subnet group for ${var.name}"
   subnet_ids  = aws_subnet.redshift.*.id
 
   tags = merge(
     {
-      "Name" = format("%s", var.name)
+      "Name" = format("%s", coalesce(var.redshift_subnet_group_name, var.name))
     },
     var.tags,
     var.redshift_subnet_group_tags,
