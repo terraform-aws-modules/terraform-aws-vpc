@@ -227,7 +227,7 @@ variable "intra_subnets" {
 }
 
 variable "firewall_subnets" {
-  description = "A list of firewall subnets inside the VPC"
+  description = "A list of firewall subnets inside the VPC, note that the number of firewall subnets must be less than or equal to the number of availability zones"
   type        = list(string)
   default     = []
 }
@@ -1157,7 +1157,7 @@ variable "firewall_log_cloudwatch_log_group_name_prefix" {
 variable "firewall_log_cloudwatch_log_group_retention_in_days" {
   description = "Specifies the number of days you want to retain log events in the specified log group for Network Firewall logs."
   type        = number
-  default     = null
+  default     = 120
 }
 
 variable "firewall_log_cloudwatch_log_group_kms_key_id" {

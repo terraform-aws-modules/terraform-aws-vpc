@@ -1373,7 +1373,7 @@ resource "aws_route_table_association" "public" {
 }
 
 resource "aws_route_table_association" "public_internet_gateway" {
-  count = var.create_vpc && var.create_igw && length(var.firewall_subnets) > 0 ? 1 : 0
+  count = var.create_vpc && var.create_igw && var.enable_firewall && length(var.firewall_subnets) > 0 ? 1 : 0
 
   gateway_id     = aws_internet_gateway.this[0].id
   route_table_id = aws_route_table.internet_gateway[0].id

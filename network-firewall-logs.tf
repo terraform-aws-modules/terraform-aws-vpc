@@ -6,8 +6,8 @@ locals {
 # Network Firewall Logs
 ########################
 resource "aws_networkfirewall_logging_configuration" "this" {
-  count = local.enable_firewall_logs && length(var.firewall_log_types) > 0 ? 1 : 0
-
+  count        = local.enable_firewall_logs && length(var.firewall_log_types) > 0 ? 1 : 0
+  depends_on   = [aws_cloudwatch_log_group.firewall_log]
   firewall_arn = aws_networkfirewall_firewall.this[0].arn
 
   logging_configuration {
