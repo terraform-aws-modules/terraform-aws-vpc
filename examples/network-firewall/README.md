@@ -23,9 +23,8 @@ Note that this example may create resources which can cost money (AWS Elastic IP
 
 ## Architecture
 
-Because of a cyclic dependency between firewall endpoints and firewall subnets created in this module, it will require setting up of vpc without the firewall routes, and only after creation of [AWS Network firewall](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/networkfirewall_firewall) resource, can the final state of the vpc be achieved. This can be done easily just by providing the configuration variable `firewall_sync_states`, and the respective route tables and changes in routing for the public subnet as well as the internet gateway be updated.
-
 ![pic](./vpc-firewall.png)
+
 ## Requirements
 
 | Name | Version |
