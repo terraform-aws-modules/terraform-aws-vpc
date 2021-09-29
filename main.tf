@@ -503,13 +503,13 @@ resource "aws_subnet" "database" {
 resource "aws_db_subnet_group" "database" {
   count = var.create_vpc && length(var.database_subnets) > 0 && var.create_database_subnet_group ? 1 : 0
 
-  name        = lower(var.name)
+  name        = lower(coalesce(var.database_subnet_group_name, var.name))
   description = "Database subnet group for ${var.name}"
   subnet_ids  = aws_subnet.database.*.id
 
   tags = merge(
     {
-      "Name" = format("%s", var.name)
+      "Name" = format("%s", lower(coalesce(var.database_subnet_group_name, var.name)))
     },
     var.tags,
     var.database_subnet_group_tags,
@@ -557,13 +557,13 @@ resource "aws_subnet" "redshift" {
 resource "aws_redshift_subnet_group" "redshift" {
   count = var.create_vpc && length(var.redshift_subnets) > 0 && var.create_redshift_subnet_group ? 1 : 0
 
-  name        = lower(var.name)
+  name        = lower(coalesce(var.redshift_subnet_group_name, var.name))
   description = "Redshift subnet group for ${var.name}"
   subnet_ids  = aws_subnet.redshift.*.id
 
   tags = merge(
     {
-      "Name" = format("%s", var.name)
+      "Name" = format("%s", coalesce(var.redshift_subnet_group_name, var.name))
     },
     var.tags,
     var.redshift_subnet_group_tags,
@@ -606,9 +606,17 @@ resource "aws_subnet" "elasticache" {
 resource "aws_elasticache_subnet_group" "elasticache" {
   count = var.create_vpc && length(var.elasticache_subnets) > 0 && var.create_elasticache_subnet_group ? 1 : 0
 
-  name        = var.name
+  name        = coalesce(var.elasticache_subnet_group_name, var.name)
   description = "ElastiCache subnet group for ${var.name}"
   subnet_ids  = aws_subnet.elasticache.*.id
+
+  tags = merge(
+    {
+      "Name" = format("%s", coalesce(var.elasticache_subnet_group_name, var.name))
+    },
+    var.tags,
+    var.elasticache_subnet_group_tags,
+  )
 }
 
 ################################################################################
@@ -1257,9 +1265,10 @@ resource "aws_route_table_association" "public" {
 resource "aws_customer_gateway" "this" {
   for_each = var.customer_gateways
 
-  bgp_asn    = each.value["bgp_asn"]
-  ip_address = each.value["ip_address"]
-  type       = "ipsec.1"
+  bgp_asn     = each.value["bgp_asn"]
+  ip_address  = each.value["ip_address"]
+  device_name = lookup(each.value, "device_name", null)
+  type        = "ipsec.1"
 
   tags = merge(
     {

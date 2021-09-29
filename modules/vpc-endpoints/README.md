@@ -17,7 +17,6 @@ module "endpoints" {
     s3 = {
       # interface endpoint
       service             = "s3"
-      private_dns_enabled = true
       tags                = { Name = "s3-vpc-endpoint" }
     },
     dynamodb = {
@@ -56,14 +55,14 @@ module "endpoints" {
 
 | Name | Version |
 |------|---------|
-| <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 0.12.26 |
-| <a name="requirement_aws"></a> [aws](#requirement\_aws) | >= 3.15 |
+| <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 0.12.31 |
+| <a name="requirement_aws"></a> [aws](#requirement\_aws) | >= 3.28 |
 
 ## Providers
 
 | Name | Version |
 |------|---------|
-| <a name="provider_aws"></a> [aws](#provider\_aws) | >= 3.15 |
+| <a name="provider_aws"></a> [aws](#provider\_aws) | >= 3.28 |
 
 ## Modules
 

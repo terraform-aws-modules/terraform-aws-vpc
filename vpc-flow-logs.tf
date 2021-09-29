@@ -55,6 +55,8 @@ data "aws_iam_policy_document" "flow_log_cloudwatch_assume_role" {
   count = local.create_flow_log_cloudwatch_iam_role ? 1 : 0
 
   statement {
+    sid = "AWSVPCFlowLogsAssumeRole"
+
     principals {
       type        = "Service"
       identifiers = ["vpc-flow-logs.amazonaws.com"]

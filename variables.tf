@@ -478,6 +478,12 @@ variable "intra_route_table_tags" {
   default     = {}
 }
 
+variable "database_subnet_group_name" {
+  description = "Name of database subnet group"
+  type        = string
+  default     = null
+}
+
 variable "database_subnet_tags" {
   description = "Additional tags for the database subnets"
   type        = map(string)
@@ -496,8 +502,26 @@ variable "redshift_subnet_tags" {
   default     = {}
 }
 
+variable "redshift_subnet_group_name" {
+  description = "Name of redshift subnet group"
+  type        = string
+  default     = null
+}
+
 variable "redshift_subnet_group_tags" {
   description = "Additional tags for the redshift subnet group"
+  type        = map(string)
+  default     = {}
+}
+
+variable "elasticache_subnet_group_name" {
+  description = "Name of elasticache subnet group"
+  type        = string
+  default     = null
+}
+
+variable "elasticache_subnet_group_tags" {
+  description = "Additional tags for the elasticache subnet group"
   type        = map(string)
   default     = {}
 }

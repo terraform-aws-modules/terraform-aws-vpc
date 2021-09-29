@@ -26,7 +26,7 @@ output "elasticache_subnets" {
 }
 
 output "redshift_subnets" {
-  description = "List of IDs of elasticache subnets"
+  description = "List of IDs of redshift subnets"
   value       = module.vpc.redshift_subnets
 }
 
