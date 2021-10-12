@@ -23,6 +23,11 @@ resource "aws_flow_log" "this" {
   traffic_type             = var.flow_log_traffic_type
   vpc_id                   = local.vpc_id
   max_aggregation_interval = var.flow_log_max_aggregation_interval
+  destination_options {
+    file_format                = var.log_file_format
+    hive_compatible_partitions = var.hive_compatible_partitions
+    per_hour_partition         = var.per_hour_partition
+}
 
   tags = merge(var.tags, var.vpc_flow_log_tags)
 }

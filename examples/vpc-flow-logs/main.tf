@@ -31,6 +31,25 @@ module "vpc_with_flow_logs_s3_bucket" {
   }
 }
 
+module "vpc_with_flow_logs_s3_bucket_parquet" {
+  source = "../../"
+
+  name = "vpc-flow-logs-s3-bucket"
+  cidr = "10.30.0.0/16"
+
+  azs            = ["${local.region}a"]
+  public_subnets = ["10.30.101.0/24"]
+
+  enable_flow_log           = true
+  flow_log_destination_type = "s3"
+  flow_log_destination_arn  = module.s3_bucket.this_s3_bucket_arn
+  log_file_format           = "parquet"
+
+  vpc_flow_log_tags = {
+    Name = "vpc-flow-logs-s3-bucket"
+  }
+}
+
 # CloudWatch Log Group and IAM role created automatically
 module "vpc_with_flow_logs_cloudwatch_logs_default" {
   source = "../../"

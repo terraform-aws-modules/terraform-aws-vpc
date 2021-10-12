@@ -120,6 +120,14 @@ You can add additional tags with `intra_subnet_tags` as with other subnet types.
 
 VPC Flow Log allows to capture IP traffic for a specific network interface (ENI), subnet, or entire VPC. This module supports enabling or disabling VPC Flow Logs for entire VPC. If you need to have VPC Flow Logs for subnet or ENI, you have to manage it outside of this module with [aws_flow_log resource](https://www.terraform.io/docs/providers/aws/r/flow_log.html).
 
+### VPC Flow Log Examples
+
+By default `file_format` is `plain-text`. You can also specify `parquet` to have logs written in Apache Parquet format.
+
+```
+log_file_format = "parquet"
+```
+
 ### Permissions Boundary
 
 If your organization requires a permissions boundary to be attached to the VPC Flow Log role, make sure that you specify an ARN of the permissions boundary policy as `vpc_flow_log_permissions_boundary` argument. Read more about required [IAM policy for publishing flow logs](https://docs.aws.amazon.com/vpc/latest/userguide/flow-logs-cwl.html#flow-logs-iam).
