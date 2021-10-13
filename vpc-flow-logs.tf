@@ -27,7 +27,7 @@ resource "aws_flow_log" "this" {
     file_format                = var.log_file_format
     hive_compatible_partitions = var.hive_compatible_partitions
     per_hour_partition         = var.per_hour_partition
-}
+  }
 
   tags = merge(var.tags, var.vpc_flow_log_tags)
 }
