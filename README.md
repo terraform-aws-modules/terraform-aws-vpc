@@ -191,6 +191,12 @@ It is possible to integrate this VPC module with [terraform-aws-transit-gateway 
 - [Manage Default VPC](https://github.com/terraform-aws-modules/terraform-aws-vpc/tree/master/examples/manage-default-vpc)
 - [Few tests and edge case examples](https://github.com/terraform-aws-modules/terraform-aws-vpc/tree/master/examples/issues)
 
+## Contributing
+
+Report issues/questions/feature requests on in the [issues](https://github.com/terraform-aws-modules/terraform-aws-vpc/issues/new) section.
+
+Full contributing [guidelines are covered here](.github/contributing.md).
+
 <!-- BEGINNING OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
 ## Requirements
 

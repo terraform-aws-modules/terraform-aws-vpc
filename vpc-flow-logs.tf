@@ -23,8 +23,9 @@ resource "aws_flow_log" "this" {
   traffic_type             = var.flow_log_traffic_type
   vpc_id                   = local.vpc_id
   max_aggregation_interval = var.flow_log_max_aggregation_interval
+
   destination_options {
-    file_format                = var.flow_log_file_format
+    file_format                         = var.flow_log_file_format
     flow_log_hive_compatible_partitions = var.flow_log_hive_compatible_partitions
     flow_log_per_hour_partition         = var.flow_log_per_hour_partition
   }
