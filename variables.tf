@@ -24,8 +24,8 @@ variable "cidr_name" {
 variable "enable_ipv6" {
   description = "Requests an Amazon-provided IPv6 CIDR block with a /56 prefix length for the VPC. You cannot specify the range of IP addresses, or the size of the CIDR block."
 
-  type        = bool
-  default     = false
+  type    = bool
+  default = false
 }
 
 variable "private_subnet_ipv6_prefixes" {
@@ -1250,4 +1250,27 @@ variable "firewall_outbound_acl_rules" {
       cidr_block  = "0.0.0.0/0"
     },
   ]
+}
+
+variable "flow_log_file_format" {
+  description = "(Optional) The format for the flow log. Valid values: `plain-text`, `parquet`."
+  type        = string
+  default     = "plain-text"
+  validation {
+    condition = can(regex("^(plain-text|parquet)$",
+    var.flow_log_file_format))
+    error_message = "ERROR valid values: plain-text, parquet."
+  }
+}
+
+variable "flow_log_hive_compatible_partitions" {
+  description = "(Optional) Indicates whether to use Hive-compatible prefixes for flow logs stored in Amazon S3."
+  type        = bool
+  default     = false
+}
+
+variable "flow_log_per_hour_partition" {
+  description = "(Optional) Indicates whether to partition the flow log per hour. This reduces the cost and response time for queries."
+  type        = bool
+  default     = false
 }
