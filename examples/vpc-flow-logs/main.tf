@@ -43,7 +43,7 @@ module "vpc_with_flow_logs_s3_bucket_parquet" {
   enable_flow_log           = true
   flow_log_destination_type = "s3"
   flow_log_destination_arn  = module.s3_bucket.this_s3_bucket_arn
-  log_file_format           = "parquet"
+  flow_log_file_format           = "parquet"
 
   vpc_flow_log_tags = {
     Name = "vpc-flow-logs-s3-bucket"

@@ -1152,24 +1152,24 @@ variable "outpost_az" {
   default     = null
 }
 
-variable "log_file_format" {
+variable "flow_log_file_format" {
   description = "(Optional) The format for the flow log. Valid values: `plain-text`, `parquet`."
   type        = string
   default     = "plain-text"
   validation {
     condition = can(regex("^(plain-text|parquet)$",
-    var.log_file_format))
+    var.flow_log_file_format))
     error_message = "ERROR valid values: plain-text, parquet."
   }
 }
 
-variable "hive_compatible_partitions" {
+variable "flow_log_hive_compatible_partitions" {
   description = "(Optional) Indicates whether to use Hive-compatible prefixes for flow logs stored in Amazon S3."
   type        = bool
   default     = false
 }
 
-variable "per_hour_partition" {
+variable "flow_log_per_hour_partition" {
   description = "(Optional) Indicates whether to partition the flow log per hour. This reduces the cost and response time for queries."
   type        = bool
   default     = false

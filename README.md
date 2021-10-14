@@ -125,7 +125,7 @@ VPC Flow Log allows to capture IP traffic for a specific network interface (ENI)
 By default `file_format` is `plain-text`. You can also specify `parquet` to have logs written in Apache Parquet format.
 
 ```
-log_file_format = "parquet"
+flow_log_file_format = "parquet"
 ```
 
 ### Permissions Boundary
