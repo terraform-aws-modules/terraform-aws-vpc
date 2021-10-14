@@ -8,8 +8,9 @@ All notable changes to this project will be documented in this file.
 
 
 <a name="v3.8.0"></a>
-## [v3.8.0] - 2021-09-20
+## [v3.8.0] - 2021-10-14
 
+- feat: Added support for VPC Flow Logs in Parquet format ([#700](https://github.com/terraform-aws-modules/terraform-aws-vpc/issues/700))
 - docs: Fixed docs in simple-vpc
 - chore: Updated outputs in example ([#690](https://github.com/terraform-aws-modules/terraform-aws-vpc/issues/690))
 - Updated pre-commit
