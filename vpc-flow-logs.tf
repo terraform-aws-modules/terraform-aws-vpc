@@ -25,9 +25,9 @@ resource "aws_flow_log" "this" {
   max_aggregation_interval = var.flow_log_max_aggregation_interval
 
   destination_options {
-    file_format                         = var.flow_log_file_format
-    flow_log_hive_compatible_partitions = var.flow_log_hive_compatible_partitions
-    flow_log_per_hour_partition         = var.flow_log_per_hour_partition
+    file_format                = var.flow_log_file_format
+    hive_compatible_partitions = var.flow_log_hive_compatible_partitions
+    per_hour_partition         = var.flow_log_per_hour_partition
   }
 
   tags = merge(var.tags, var.vpc_flow_log_tags)
