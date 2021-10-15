@@ -184,6 +184,11 @@ resource "aws_default_route_table" "default" {
     }
   }
 
+  timeouts {
+    create = "5m"
+    update = "5m"
+  }
+
   tags = merge(
     { "Name" = var.name },
     var.tags,
