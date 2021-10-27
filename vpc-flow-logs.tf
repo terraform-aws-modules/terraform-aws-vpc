@@ -24,6 +24,16 @@ resource "aws_flow_log" "this" {
   vpc_id                   = local.vpc_id
   max_aggregation_interval = var.flow_log_max_aggregation_interval
 
+  dynamic "destination_options" {
+    for_each = var.flow_log_destination_type == "s3" ? [true] : []
+
+    content {
+      file_format                = var.flow_log_file_format
+      hive_compatible_partitions = var.flow_log_hive_compatible_partitions
+      per_hour_partition         = var.flow_log_per_hour_partition
+    }
+  }
+
   tags = merge(var.tags, var.vpc_flow_log_tags)
 }
 

@@ -7,6 +7,27 @@ All notable changes to this project will be documented in this file.
 
 
 
+<a name="v3.10.0"></a>
+## [v3.10.0] - 2021-10-15
+
+- fix: Enabled destination_options only for VPC Flow Logs on S3 ([#703](https://github.com/terraform-aws-modules/terraform-aws-vpc/issues/703))
+
+
+<a name="v3.9.0"></a>
+## [v3.9.0] - 2021-10-15
+
+- feat: Added timeout block to aws_default_route_table resource ([#701](https://github.com/terraform-aws-modules/terraform-aws-vpc/issues/701))
+
+
+<a name="v3.8.0"></a>
+## [v3.8.0] - 2021-10-14
+
+- feat: Added support for VPC Flow Logs in Parquet format ([#700](https://github.com/terraform-aws-modules/terraform-aws-vpc/issues/700))
+- docs: Fixed docs in simple-vpc
+- chore: Updated outputs in example ([#690](https://github.com/terraform-aws-modules/terraform-aws-vpc/issues/690))
+- Updated pre-commit
+
+
 <a name="v3.7.0"></a>
 ## [v3.7.0] - 2021-08-31
 
@@ -1313,7 +1334,10 @@ All notable changes to this project will be documented in this file.
 - Initial commit
 
 
-[Unreleased]: https://github.com/terraform-aws-modules/terraform-aws-vpc/compare/v3.7.0...HEAD
+[Unreleased]: https://github.com/terraform-aws-modules/terraform-aws-vpc/compare/v3.10.0...HEAD
+[v3.10.0]: https://github.com/terraform-aws-modules/terraform-aws-vpc/compare/v3.9.0...v3.10.0
+[v3.9.0]: https://github.com/terraform-aws-modules/terraform-aws-vpc/compare/v3.8.0...v3.9.0
+[v3.8.0]: https://github.com/terraform-aws-modules/terraform-aws-vpc/compare/v3.7.0...v3.8.0
 [v3.7.0]: https://github.com/terraform-aws-modules/terraform-aws-vpc/compare/v3.6.0...v3.7.0
 [v3.6.0]: https://github.com/terraform-aws-modules/terraform-aws-vpc/compare/v3.5.0...v3.6.0
 [v3.5.0]: https://github.com/terraform-aws-modules/terraform-aws-vpc/compare/v3.4.0...v3.5.0
