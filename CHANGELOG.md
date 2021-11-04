@@ -7,6 +7,12 @@ All notable changes to this project will be documented in this file.
 
 
 
+<a name="v3.11.0"></a>
+## [v3.11.0] - 2021-11-04
+
+- feat: Add tags to VPC flow logs IAM policy ([#706](https://github.com/terraform-aws-modules/terraform-aws-vpc/issues/706))
+
+
 <a name="v3.10.0"></a>
 ## [v3.10.0] - 2021-10-15
 
@@ -1334,7 +1340,8 @@ All notable changes to this project will be documented in this file.
 - Initial commit
 
 
-[Unreleased]: https://github.com/terraform-aws-modules/terraform-aws-vpc/compare/v3.10.0...HEAD
+[Unreleased]: https://github.com/terraform-aws-modules/terraform-aws-vpc/compare/v3.11.0...HEAD
+[v3.11.0]: https://github.com/terraform-aws-modules/terraform-aws-vpc/compare/v3.10.0...v3.11.0
 [v3.10.0]: https://github.com/terraform-aws-modules/terraform-aws-vpc/compare/v3.9.0...v3.10.0
 [v3.9.0]: https://github.com/terraform-aws-modules/terraform-aws-vpc/compare/v3.8.0...v3.9.0
 [v3.8.0]: https://github.com/terraform-aws-modules/terraform-aws-vpc/compare/v3.7.0...v3.8.0
