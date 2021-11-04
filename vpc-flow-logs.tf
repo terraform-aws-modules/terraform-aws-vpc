@@ -90,6 +90,7 @@ resource "aws_iam_policy" "vpc_flow_log_cloudwatch" {
 
   name_prefix = "vpc-flow-log-to-cloudwatch-"
   policy      = data.aws_iam_policy_document.vpc_flow_log_cloudwatch[0].json
+  tags        = merge(var.tags, var.vpc_flow_log_tags)
 }
 
 data "aws_iam_policy_document" "vpc_flow_log_cloudwatch" {
