@@ -4,7 +4,8 @@ locals {
     length(var.elasticache_subnets),
     length(var.database_subnets),
     length(var.redshift_subnets),
-    length(var.private_eks_subnets)
+    length(var.private_eks_subnets_blue),
+    length(var.private_eks_subnets_green)
   )
   nat_gateway_count = var.single_nat_gateway ? 1 : var.one_nat_gateway_per_az ? length(var.azs) : local.max_subnet_length
 
@@ -134,7 +135,7 @@ resource "aws_vpc_dhcp_options_association" "this" {
 # Internet Gateway
 ###################
 resource "aws_internet_gateway" "this" {
-  count = var.create_vpc && var.create_igw && length(var.public_subnets) > 0 || length(var.public_eks_subnets) > 0 ? 1 : 0
+  count = var.create_vpc && var.create_igw && length(var.public_subnets) > 0 || length(var.public_eks_subnets_blue) > 0 || length(var.public_eks_subnets_green) > 0 ? 1 : 0
 
   vpc_id = local.vpc_id
 
@@ -202,7 +203,7 @@ resource "aws_default_route_table" "default" {
 # Publiс routes
 ################
 resource "aws_route_table" "public" {
-  count = var.create_vpc && length(var.public_subnets) > 0 || length(var.public_eks_subnets) > 0 ? 1 : 0
+  count = var.create_vpc && length(var.public_subnets) > 0 || length(var.public_eks_subnets_blue) > 0 || length(var.public_eks_subnets_green) > 0 ? 1 : 0
 
   vpc_id = local.vpc_id
 
@@ -216,7 +217,7 @@ resource "aws_route_table" "public" {
 }
 
 resource "aws_route" "public_internet_gateway" {
-  count = var.create_vpc && var.create_igw && length(var.public_subnets) > 0 || length(var.public_eks_subnets) > 0 ? 1 : 0
+  count = var.create_vpc && var.create_igw && length(var.public_subnets) > 0 || length(var.public_eks_subnets_blue) > 0 || length(var.public_eks_subnets_green) > 0 ? 1 : 0
 
   route_table_id         = aws_route_table.public[0].id
   destination_cidr_block = "0.0.0.0/0"
@@ -228,7 +229,7 @@ resource "aws_route" "public_internet_gateway" {
 }
 
 resource "aws_route" "public_internet_gateway_ipv6" {
-  count = var.create_vpc && var.create_igw && var.enable_ipv6 && length(var.public_subnets) > 0 || length(var.public_eks_subnets) > 0 ? 1 : 0
+  count = var.create_vpc && var.create_igw && var.enable_ipv6 && length(var.public_subnets) > 0 || length(var.public_eks_subnets_blue) > 0 || length(var.public_eks_subnets_green) > 0 ? 1 : 0
 
   route_table_id              = aws_route_table.public[0].id
   destination_ipv6_cidr_block = "::/0"
@@ -398,11 +399,11 @@ resource "aws_subnet" "public" {
 #####################
 
 
-resource "aws_subnet" "public_eks" {
-  count = var.create_vpc && length(var.public_eks_subnets) > 0 && (false == var.one_nat_gateway_per_az || length(var.public_eks_subnets) >= length(var.azs)) ? length(var.public_eks_subnets) : 0
+resource "aws_subnet" "public_eks_blue" {
+  count = var.create_vpc && length(var.public_eks_subnets_blue) > 0 && (false == var.one_nat_gateway_per_az || length(var.public_eks_subnets_blue) >= length(var.azs)) ? length(var.public_eks_subnets_blue) : 0
 
   vpc_id                          = local.vpc_id
-  cidr_block                      = element(concat(var.public_eks_subnets, [""]), count.index)
+  cidr_block                      = element(concat(var.public_eks_subnets_blue, [""]), count.index)
   availability_zone               = length(regexall("^[a-z]{2}-", element(var.azs, count.index))) > 0 ? element(var.azs, count.index) : null
   availability_zone_id            = length(regexall("^[a-z]{2}-", element(var.azs, count.index))) == 0 ? element(var.azs, count.index) : null
   map_public_ip_on_launch         = var.map_public_ip_on_launch
@@ -419,7 +420,32 @@ resource "aws_subnet" "public_eks" {
       )
     },
     var.tags,
-    var.public_eks_subnet_tags,
+    var.public_eks_subnet_tags_blue,
+  )
+}
+
+resource "aws_subnet" "public_eks_green" {
+  count = var.create_vpc && length(var.public_eks_subnets_green) > 0 && (false == var.one_nat_gateway_per_az || length(var.public_eks_subnets_green) >= length(var.azs)) ? length(var.public_eks_subnets_green) : 0
+
+  vpc_id                          = local.vpc_id
+  cidr_block                      = element(concat(var.public_eks_subnets_green, [""]), count.index)
+  availability_zone               = length(regexall("^[a-z]{2}-", element(var.azs, count.index))) > 0 ? element(var.azs, count.index) : null
+  availability_zone_id            = length(regexall("^[a-z]{2}-", element(var.azs, count.index))) == 0 ? element(var.azs, count.index) : null
+  map_public_ip_on_launch         = var.map_public_ip_on_launch
+  assign_ipv6_address_on_creation = var.public_subnet_assign_ipv6_address_on_creation == null ? var.assign_ipv6_address_on_creation : var.public_subnet_assign_ipv6_address_on_creation
+
+  ipv6_cidr_block = var.enable_ipv6 && length(var.public_subnet_ipv6_prefixes) > 0 ? cidrsubnet(aws_vpc.this[0].ipv6_cidr_block, 8, var.public_subnet_ipv6_prefixes[count.index]) : null
+
+  tags = merge(
+    {
+      "Name" = format(
+        "%s-${var.public_subnet_suffix}-%s",
+        var.name,
+        element(var.azs, count.index),
+      )
+    },
+    var.tags,
+    var.public_eks_subnet_tags_green,
   )
 }
 
@@ -456,11 +482,11 @@ resource "aws_subnet" "private" {
 # Private EKS subnet
 ###############################################################################
 
-resource "aws_subnet" "private_eks" {
-  count = var.create_vpc && length(var.private_eks_subnets) > 0 ? length(var.private_eks_subnets) : 0
+resource "aws_subnet" "private_eks_blue" {
+  count = var.create_vpc && length(var.private_eks_subnets_blue) > 0 ? length(var.private_eks_subnets_blue) : 0
 
   vpc_id                          = local.vpc_id
-  cidr_block                      = var.private_eks_subnets[count.index]
+  cidr_block                      = var.private_eks_subnets_blue[count.index]
   availability_zone               = length(regexall("^[a-z]{2}-", element(var.azs, count.index))) > 0 ? element(var.azs, count.index) : null
   availability_zone_id            = length(regexall("^[a-z]{2}-", element(var.azs, count.index))) == 0 ? element(var.azs, count.index) : null
   assign_ipv6_address_on_creation = var.private_subnet_assign_ipv6_address_on_creation == null ? var.assign_ipv6_address_on_creation : var.private_subnet_assign_ipv6_address_on_creation
@@ -476,7 +502,31 @@ resource "aws_subnet" "private_eks" {
       )
     },
     var.tags,
-    var.private_eks_subnet_tags,
+    var.private_eks_subnet_tags_blue,
+  )
+}
+
+resource "aws_subnet" "private_eks_green" {
+  count = var.create_vpc && length(var.private_eks_subnets_green) > 0 ? length(var.private_eks_subnets_green) : 0
+
+  vpc_id                          = local.vpc_id
+  cidr_block                      = var.private_eks_subnets_green[count.index]
+  availability_zone               = length(regexall("^[a-z]{2}-", element(var.azs, count.index))) > 0 ? element(var.azs, count.index) : null
+  availability_zone_id            = length(regexall("^[a-z]{2}-", element(var.azs, count.index))) == 0 ? element(var.azs, count.index) : null
+  assign_ipv6_address_on_creation = var.private_subnet_assign_ipv6_address_on_creation == null ? var.assign_ipv6_address_on_creation : var.private_subnet_assign_ipv6_address_on_creation
+
+  ipv6_cidr_block = var.enable_ipv6 && length(var.private_subnet_ipv6_prefixes) > 0 ? cidrsubnet(aws_vpc.this[0].ipv6_cidr_block, 8, var.private_subnet_ipv6_prefixes[count.index]) : null
+
+  tags = merge(
+    {
+      "Name" = format(
+        "%s-${var.private_subnet_suffix}-%s",
+        var.name,
+        element(var.azs, count.index),
+      )
+    },
+    var.tags,
+    var.private_eks_subnet_tags_green,
   )
 }
 
@@ -751,11 +801,11 @@ resource "aws_network_acl_rule" "public_outbound" {
 # Public eks Network ACLS 
 #########################
 
-resource "aws_network_acl" "public_eks" {
-  count = var.create_vpc && var.public_dedicated_network_acl && length(var.public_eks_subnets) > 0 ? 1 : 0
+resource "aws_network_acl" "public_eks_blue" {
+  count = var.create_vpc && var.public_dedicated_network_acl && length(var.public_eks_subnets_blue) > 0 ? 1 : 0
 
   vpc_id     = element(concat(aws_vpc.this.*.id, [""]), 0)
-  subnet_ids = aws_subnet.public_eks.*.id
+  subnet_ids = aws_subnet.public_eks_blue.*.id
 
   tags = merge(
     {
@@ -766,10 +816,25 @@ resource "aws_network_acl" "public_eks" {
   )
 }
 
-resource "aws_network_acl_rule" "public_eks_inbound" {
-  count = var.create_vpc && var.public_dedicated_network_acl && length(var.public_eks_subnets) > 0 ? length(var.public_inbound_acl_rules) : 0
+resource "aws_network_acl" "public_eks_green" {
+  count = var.create_vpc && var.public_dedicated_network_acl && length(var.public_eks_subnets_green) > 0 ? 1 : 0
 
-  network_acl_id = aws_network_acl.public_eks[0].id
+  vpc_id     = element(concat(aws_vpc.this.*.id, [""]), 0)
+  subnet_ids = aws_subnet.public_eks_green.*.id
+
+  tags = merge(
+    {
+      "Name" = format("%s-${var.public_subnet_suffix}", var.name)
+    },
+    var.tags,
+    var.public_acl_tags,
+  )
+}
+
+resource "aws_network_acl_rule" "public_eks_inbound_blue" {
+  count = var.create_vpc && var.public_dedicated_network_acl && length(var.public_eks_subnets_blue) > 0 ? length(var.public_inbound_acl_rules) : 0
+
+  network_acl_id = aws_network_acl.public_eks_blue[0].id
 
   egress          = false
   rule_number     = var.public_inbound_acl_rules[count.index]["rule_number"]
@@ -783,10 +848,27 @@ resource "aws_network_acl_rule" "public_eks_inbound" {
   ipv6_cidr_block = lookup(var.public_inbound_acl_rules[count.index], "ipv6_cidr_block", null)
 }
 
-resource "aws_network_acl_rule" "public_eks_outbound" {
-  count = var.create_vpc && var.public_dedicated_network_acl && length(var.public_eks_subnets) > 0 ? length(var.public_outbound_acl_rules) : 0
+resource "aws_network_acl_rule" "public_eks_inbound_green" {
+  count = var.create_vpc && var.public_dedicated_network_acl && length(var.public_eks_subnets_green) > 0 ? length(var.public_inbound_acl_rules) : 0
 
-  network_acl_id = aws_network_acl.public_eks[0].id
+  network_acl_id = aws_network_acl.public_eks_green[0].id
+
+  egress          = false
+  rule_number     = var.public_inbound_acl_rules[count.index]["rule_number"]
+  rule_action     = var.public_inbound_acl_rules[count.index]["rule_action"]
+  from_port       = lookup(var.public_inbound_acl_rules[count.index], "from_port", null)
+  to_port         = lookup(var.public_inbound_acl_rules[count.index], "to_port", null)
+  icmp_code       = lookup(var.public_inbound_acl_rules[count.index], "icmp_code", null)
+  icmp_type       = lookup(var.public_inbound_acl_rules[count.index], "icmp_type", null)
+  protocol        = var.public_inbound_acl_rules[count.index]["protocol"]
+  cidr_block      = lookup(var.public_inbound_acl_rules[count.index], "cidr_block", null)
+  ipv6_cidr_block = lookup(var.public_inbound_acl_rules[count.index], "ipv6_cidr_block", null)
+}
+
+resource "aws_network_acl_rule" "public_eks_outbound_blue" {
+  count = var.create_vpc && var.public_dedicated_network_acl && length(var.public_eks_subnets_blue) > 0 ? length(var.public_outbound_acl_rules) : 0
+
+  network_acl_id = aws_network_acl.public_eks_blue[0].id
 
   egress          = true
   rule_number     = var.public_outbound_acl_rules[count.index]["rule_number"]
@@ -799,6 +881,24 @@ resource "aws_network_acl_rule" "public_eks_outbound" {
   cidr_block      = lookup(var.public_outbound_acl_rules[count.index], "cidr_block", null)
   ipv6_cidr_block = lookup(var.public_outbound_acl_rules[count.index], "ipv6_cidr_block", null)
 }
+
+resource "aws_network_acl_rule" "public_eks_outbound_green" {
+  count = var.create_vpc && var.public_dedicated_network_acl && length(var.public_eks_subnets_green) > 0 ? length(var.public_outbound_acl_rules) : 0
+
+  network_acl_id = aws_network_acl.public_eks_green[0].id
+
+  egress          = true
+  rule_number     = var.public_outbound_acl_rules[count.index]["rule_number"]
+  rule_action     = var.public_outbound_acl_rules[count.index]["rule_action"]
+  from_port       = lookup(var.public_outbound_acl_rules[count.index], "from_port", null)
+  to_port         = lookup(var.public_outbound_acl_rules[count.index], "to_port", null)
+  icmp_code       = lookup(var.public_outbound_acl_rules[count.index], "icmp_code", null)
+  icmp_type       = lookup(var.public_outbound_acl_rules[count.index], "icmp_type", null)
+  protocol        = var.public_outbound_acl_rules[count.index]["protocol"]
+  cidr_block      = lookup(var.public_outbound_acl_rules[count.index], "cidr_block", null)
+  ipv6_cidr_block = lookup(var.public_outbound_acl_rules[count.index], "ipv6_cidr_block", null)
+}
+
 ######################
 # Private Network ACLs
 #######################
@@ -856,11 +956,11 @@ resource "aws_network_acl_rule" "private_outbound" {
 # Private Networks ACLS for the eks 
 ################################################################################
 
-resource "aws_network_acl" "private_eks" {
-  count = var.create_vpc && var.private_dedicated_network_acl && length(var.private_eks_subnets) > 0 ? 1 : 0
+resource "aws_network_acl" "private_eks_blue" {
+  count = var.create_vpc && var.private_dedicated_network_acl && length(var.private_eks_subnets_blue) > 0 ? 1 : 0
 
   vpc_id     = element(concat(aws_vpc.this.*.id, [""]), 0)
-  subnet_ids = aws_subnet.private_eks.*.id
+  subnet_ids = aws_subnet.private_eks_blue.*.id
 
   tags = merge(
     {
@@ -871,8 +971,23 @@ resource "aws_network_acl" "private_eks" {
   )
 }
 
-resource "aws_network_acl_rule" "private_eks_inbound" {
-  count = var.create_vpc && var.private_dedicated_network_acl && length(var.private_eks_subnets) > 0 ? length(var.private_inbound_acl_rules) : 0
+resource "aws_network_acl" "private_eks_green" {
+  count = var.create_vpc && var.private_dedicated_network_acl && length(var.private_eks_subnets_green) > 0 ? 1 : 0
+
+  vpc_id     = element(concat(aws_vpc.this.*.id, [""]), 0)
+  subnet_ids = aws_subnet.private_eks_green.*.id
+
+  tags = merge(
+    {
+      "Name" = format("%s-${var.private_subnet_suffix}", var.name)
+    },
+    var.tags,
+    var.private_acl_tags,
+  )
+}
+
+resource "aws_network_acl_rule" "private_eks_inbound_blue" {
+  count = var.create_vpc && var.private_dedicated_network_acl && length(var.private_eks_subnets_blue) > 0 ? length(var.private_inbound_acl_rules) : 0
 
   network_acl_id = aws_network_acl.private[0].id
 
@@ -888,8 +1003,42 @@ resource "aws_network_acl_rule" "private_eks_inbound" {
   ipv6_cidr_block = lookup(var.private_inbound_acl_rules[count.index], "ipv6_cidr_block", null)
 }
 
-resource "aws_network_acl_rule" "private_eks_outbound" {
-  count = var.create_vpc && var.private_dedicated_network_acl && length(var.private_eks_subnets) > 0 ? length(var.private_outbound_acl_rules) : 0
+resource "aws_network_acl_rule" "private_eks_inbound_green" {
+  count = var.create_vpc && var.private_dedicated_network_acl && length(var.private_eks_subnets_green) > 0 ? length(var.private_inbound_acl_rules) : 0
+
+  network_acl_id = aws_network_acl.private[0].id
+
+  egress          = false
+  rule_number     = var.private_inbound_acl_rules[count.index]["rule_number"]
+  rule_action     = var.private_inbound_acl_rules[count.index]["rule_action"]
+  from_port       = lookup(var.private_inbound_acl_rules[count.index], "from_port", null)
+  to_port         = lookup(var.private_inbound_acl_rules[count.index], "to_port", null)
+  icmp_code       = lookup(var.private_inbound_acl_rules[count.index], "icmp_code", null)
+  icmp_type       = lookup(var.private_inbound_acl_rules[count.index], "icmp_type", null)
+  protocol        = var.private_inbound_acl_rules[count.index]["protocol"]
+  cidr_block      = lookup(var.private_inbound_acl_rules[count.index], "cidr_block", null)
+  ipv6_cidr_block = lookup(var.private_inbound_acl_rules[count.index], "ipv6_cidr_block", null)
+}
+
+resource "aws_network_acl_rule" "private_eks_outbound_blue" {
+  count = var.create_vpc && var.private_dedicated_network_acl && length(var.private_eks_subnets_blue) > 0 ? length(var.private_outbound_acl_rules) : 0
+
+  network_acl_id = aws_network_acl.private[0].id
+
+  egress          = true
+  rule_number     = var.private_outbound_acl_rules[count.index]["rule_number"]
+  rule_action     = var.private_outbound_acl_rules[count.index]["rule_action"]
+  from_port       = lookup(var.private_outbound_acl_rules[count.index], "from_port", null)
+  to_port         = lookup(var.private_outbound_acl_rules[count.index], "to_port", null)
+  icmp_code       = lookup(var.private_outbound_acl_rules[count.index], "icmp_code", null)
+  icmp_type       = lookup(var.private_outbound_acl_rules[count.index], "icmp_type", null)
+  protocol        = var.private_outbound_acl_rules[count.index]["protocol"]
+  cidr_block      = lookup(var.private_outbound_acl_rules[count.index], "cidr_block", null)
+  ipv6_cidr_block = lookup(var.private_outbound_acl_rules[count.index], "ipv6_cidr_block", null)
+}
+
+resource "aws_network_acl_rule" "private_eks_outbound_green" {
+  count = var.create_vpc && var.private_dedicated_network_acl && length(var.private_eks_subnets_green) > 0 ? length(var.private_outbound_acl_rules) : 0
 
   network_acl_id = aws_network_acl.private[0].id
 
@@ -1199,8 +1348,16 @@ resource "aws_route" "private_ipv6_egress" {
 #EKS ipv6_egress
 ##################################################################################
 
-resource "aws_route" "private_eks_ipv6_egress" {
-  count = var.create_vpc && var.create_egress_only_igw && var.enable_ipv6 ? length(var.private_eks_subnets) : 0
+resource "aws_route" "private_eks_ipv6_egress_blue" {
+  count = var.create_vpc && var.create_egress_only_igw && var.enable_ipv6 ? length(var.private_eks_subnets_blue) : 0
+
+  route_table_id              = element(aws_route_table.private.*.id, count.index)
+  destination_ipv6_cidr_block = "::/0"
+  egress_only_gateway_id      = element(aws_egress_only_internet_gateway.this.*.id, 0)
+}
+
+resource "aws_route" "private_eks_ipv6_egress_green" {
+  count = var.create_vpc && var.create_egress_only_igw && var.enable_ipv6 ? length(var.private_eks_subnets_green) : 0
 
   route_table_id              = element(aws_route_table.private.*.id, count.index)
   destination_ipv6_cidr_block = "::/0"
@@ -1220,10 +1377,20 @@ resource "aws_route_table_association" "private" {
   )
 }
 
-resource "aws_route_table_association" "private_eks" {
-  count = var.create_vpc && length(var.private_eks_subnets) > 0 ? length(var.private_eks_subnets) : 0
+resource "aws_route_table_association" "private_eks_blue" {
+  count = var.create_vpc && length(var.private_eks_subnets_blue) > 0 ? length(var.private_eks_subnets_blue) : 0
 
-  subnet_id = element(aws_subnet.private_eks.*.id, count.index)
+  subnet_id = element(aws_subnet.private_eks_blue.*.id, count.index)
+  route_table_id = element(
+    aws_route_table.private.*.id,
+    var.single_nat_gateway ? 0 : count.index,
+  )
+}
+
+resource "aws_route_table_association" "private_eks_green" {
+  count = var.create_vpc && length(var.private_eks_subnets_green) > 0 ? length(var.private_eks_subnets_green) : 0
+
+  subnet_id = element(aws_subnet.private_eks_green.*.id, count.index)
   route_table_id = element(
     aws_route_table.private.*.id,
     var.single_nat_gateway ? 0 : count.index,
@@ -1287,10 +1454,17 @@ resource "aws_route_table_association" "public" {
   route_table_id = aws_route_table.public[0].id
 }
 
-resource "aws_route_table_association" "public_eks" {
-  count = var.create_vpc && length(var.public_eks_subnets) > 0 ? length(var.public_eks_subnets) : 0
+resource "aws_route_table_association" "public_eks_blue" {
+  count = var.create_vpc && length(var.public_eks_subnets_blue) > 0 ? length(var.public_eks_subnets_blue) : 0
 
-  subnet_id      = element(aws_subnet.public_eks.*.id, count.index)
+  subnet_id      = element(aws_subnet.public_eks_blue.*.id, count.index)
+  route_table_id = aws_route_table.public[0].id
+}
+
+resource "aws_route_table_association" "public_eks_green" {
+  count = var.create_vpc && length(var.public_eks_subnets_green) > 0 ? length(var.public_eks_subnets_green) : 0
+
+  subnet_id      = element(aws_subnet.public_eks_green.*.id, count.index)
   route_table_id = aws_route_table.public[0].id
 }
 

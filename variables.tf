@@ -154,7 +154,13 @@ variable "public_subnets" {
   default     = []
 }
 
-variable "public_eks_subnets" {
+variable "public_eks_subnets_blue" {
+  description = "A list of public subnets inside the VPC"
+  type        = list(string)
+  default     = []
+}
+
+variable "public_eks_subnets_green" {
   description = "A list of public subnets inside the VPC"
   type        = list(string)
   default     = []
@@ -2008,7 +2014,14 @@ variable "elasticbeanstalk_health_endpoint_private_dns_enabled" {
   type        = bool
   default     = false
 }
-variable "private_eks_subnets" {
+
+variable "private_eks_subnets_blue" {
+  description = "A list of private eks subnets inside the VPC"
+  type        = list(string)
+  default     = []
+}
+
+variable "private_eks_subnets_green" {
   description = "A list of private eks subnets inside the VPC"
   type        = list(string)
   default     = []
@@ -2278,13 +2291,25 @@ variable "private_subnet_tags" {
   default     = {}
 }
 
-variable "private_eks_subnet_tags" {
+variable "private_eks_subnet_tags_blue" {
   description = "Additional tags for the private eks subnets"
   type        = map(string)
   default     = {}
 }
 
-variable "public_eks_subnet_tags" {
+variable "private_eks_subnet_tags_green" {
+  description = "Additional tags for the private eks subnets"
+  type        = map(string)
+  default     = {}
+}
+
+variable "public_eks_subnet_tags_blue" {
+  description = "Additional tags for the private eks subnets"
+  type        = map(string)
+  default     = {}
+}
+
+variable "public_eks_subnet_tags_green" {
   description = "Additional tags for the private eks subnets"
   type        = map(string)
   default     = {}
