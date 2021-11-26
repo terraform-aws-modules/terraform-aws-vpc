@@ -1,49 +1,6 @@
 # AWS VPC Terraform module
 
-[![Help Contribute to Open Source](https://www.codetriage.com/terraform-aws-modules/terraform-aws-vpc/badges/users.svg)](https://www.codetriage.com/terraform-aws-modules/terraform-aws-vpc)
-![GitHub tag (latest by date)](https://img.shields.io/github/v/tag/terraform-aws-modules/terraform-aws-vpc)
-
-
 Terraform module which creates VPC resources on AWS.
-
-These types of resources are supported:
-
-* [VPC](https://www.terraform.io/docs/providers/aws/r/vpc.html)
-* [Subnet](https://www.terraform.io/docs/providers/aws/r/subnet.html)
-* [Route](https://www.terraform.io/docs/providers/aws/r/route.html)
-* [Route table](https://www.terraform.io/docs/providers/aws/r/route_table.html)
-* [Internet Gateway](https://www.terraform.io/docs/providers/aws/r/internet_gateway.html)
-* [Network ACL](https://www.terraform.io/docs/providers/aws/r/network_acl.html)
-* [NAT Gateway](https://www.terraform.io/docs/providers/aws/r/nat_gateway.html)
-* [VPN Gateway](https://www.terraform.io/docs/providers/aws/r/vpn_gateway.html)
-* [VPC Flow Log](https://www.terraform.io/docs/providers/aws/r/flow_log.html)
-* [VPC Endpoint](https://www.terraform.io/docs/providers/aws/r/vpc_endpoint.html):
-  * Gateway: S3, DynamoDB
-  * Interface: S3, EC2, SSM, EC2 Messages, SSM Messages, SQS, ECR API, ECR DKR, API Gateway, KMS,
-ECS, ECS Agent, ECS Telemetry, SES, SNS, STS, Glue, CloudWatch(Monitoring, Logs, Events),
-Elastic Load Balancing, CloudTrail, Secrets Manager, Config, Codeartifact(API, Repositories), CodeBuild, CodeCommit,
-Git-Codecommit, Textract, Transfer Server, Kinesis Streams, Kinesis Firehose, SageMaker(Notebook, Runtime, API),
-CloudFormation, CodePipeline, Storage Gateway, AppMesh, Transfer, Service Catalog, AppStream API, AppStream Streaming,
-Athena, Rekognition, Elastic File System (EFS), Cloud Directory, Elastic Beanstalk (+ Health), Elastic Map Reduce(EMR),
-DataSync, EBS, SMS, Elastic Inference Runtime, QLDB Session, Step Functions, Access Analyzer, Auto Scaling Plans,
-Application Auto Scaling, Workspaces, ACM PCA, RDS, CodeDeploy, CodeDeploy Commands Secure, DMS
-
-* [RDS DB Subnet Group](https://www.terraform.io/docs/providers/aws/r/db_subnet_group.html)
-* [ElastiCache Subnet Group](https://www.terraform.io/docs/providers/aws/r/elasticache_subnet_group.html)
-* [Redshift Subnet Group](https://www.terraform.io/docs/providers/aws/r/redshift_subnet_group.html)
-* [DHCP Options Set](https://www.terraform.io/docs/providers/aws/r/vpc_dhcp_options.html)
-* [Default VPC](https://www.terraform.io/docs/providers/aws/r/default_vpc.html)
-* [Default Network ACL](https://www.terraform.io/docs/providers/aws/r/default_network_acl.html)
-
-Sponsored by [Cloudcraft - the best way to draw AWS diagrams](https://www.cloudcraft.co/?utm_source=terraform-aws-vpc)
-
-<a href="https://www.cloudcraft.co/?utm_source=terraform-aws-vpc" target="_blank"><img src="https://raw.githubusercontent.com/antonbabenko/modules.tf-lambda/master/misc/cloudcraft-logo.png" alt="Cloudcraft - the best way to draw AWS diagrams" width="211" height="56" /></a>
-
-## Terraform versions
-
-Terraform 0.12 and newer. Pin module version to `~> v2.0`. Submit pull-requests to `master` branch.
-
-Terraform 0.11. Pin module version to `~> v1.0`. Submit pull-requests to `terraform011` branch.
 
 ## Usage
 
@@ -77,6 +34,7 @@ To that end, it is possible to assign existing IPs to the NAT Gateways.
 This prevents the destruction of the VPC from releasing those IPs, while making it possible that a re-created VPC uses the same IPs.
 
 To achieve this, allocate the IPs outside the VPC module declaration.
+
 ```hcl
 resource "aws_eip" "nat" {
   count = 3
@@ -86,6 +44,7 @@ resource "aws_eip" "nat" {
 ```
 
 Then, pass the allocated IPs as a parameter to this module.
+
 ```hcl
 module "vpc" {
   source = "terraform-aws-modules/vpc/aws"
@@ -107,24 +66,24 @@ Passing the IPs into the module is done by setting two variables `reuse_nat_ips 
 
 This module supports three scenarios for creating NAT gateways. Each will be explained in further detail in the corresponding sections.
 
-* One NAT Gateway per subnet (default behavior)
-    * `enable_nat_gateway = true`
-    * `single_nat_gateway = false`
-    * `one_nat_gateway_per_az = false`
-* Single NAT Gateway
-    * `enable_nat_gateway = true`
-    * `single_nat_gateway = true`
-    * `one_nat_gateway_per_az = false`
-* One NAT Gateway per availability zone
-    * `enable_nat_gateway = true`
-    * `single_nat_gateway = false`
-    * `one_nat_gateway_per_az = true`
+- One NAT Gateway per subnet (default behavior)
+  - `enable_nat_gateway = true`
+  - `single_nat_gateway = false`
+  - `one_nat_gateway_per_az = false`
+- Single NAT Gateway
+  - `enable_nat_gateway = true`
+  - `single_nat_gateway = true`
+  - `one_nat_gateway_per_az = false`
+- One NAT Gateway per availability zone
+  - `enable_nat_gateway = true`
+  - `single_nat_gateway = false`
+  - `one_nat_gateway_per_az = true`
 
 If both `single_nat_gateway` and `one_nat_gateway_per_az` are set to `true`, then `single_nat_gateway` takes precedence.
 
 ### One NAT Gateway per subnet (default)
 
-By default, the module will determine the number of NAT Gateways to create based on the the `max()` of the private subnet lists (`database_subnets`, `elasticache_subnets`, `private_subnets`, and `redshift_subnets`). The module **does not** take into account the number of `intra_subnets`, since the latter are designed to have no Internet access via NAT Gateway.  For example, if your configuration looks like the following:
+By default, the module will determine the number of NAT Gateways to create based on the the `max()` of the private subnet lists (`database_subnets`, `elasticache_subnets`, `private_subnets`, and `redshift_subnets`). The module **does not** take into account the number of `intra_subnets`, since the latter are designed to have no Internet access via NAT Gateway. For example, if your configuration looks like the following:
 
 ```hcl
 database_subnets    = ["10.0.21.0/24", "10.0.22.0/24"]
@@ -144,8 +103,8 @@ If `single_nat_gateway = true`, then all private subnets will route their Intern
 
 If `one_nat_gateway_per_az = true` and `single_nat_gateway = false`, then the module will place one NAT gateway in each availability zone you specify in `var.azs`. There are some requirements around using this feature flag:
 
-* The variable `var.azs` **must** be specified.
-* The number of public subnet CIDR blocks specified in `public_subnets` **must** be greater than or equal to the number of availability zones specified in `var.azs`. This is to ensure that each NAT Gateway has a dedicated public subnet to deploy to.
+- The variable `var.azs` **must** be specified.
+- The number of public subnet CIDR blocks specified in `public_subnets` **must** be greater than or equal to the number of availability zones specified in `var.azs`. This is to ensure that each NAT Gateway has a dedicated public subnet to deploy to.
 
 ## "private" versus "intra" subnets
 
@@ -214,14 +173,15 @@ It is possible to integrate this VPC module with [terraform-aws-transit-gateway 
 
 ## Examples
 
-* [Simple VPC](https://github.com/terraform-aws-modules/terraform-aws-vpc/tree/master/examples/simple-vpc)
-* [Simple VPC with secondary CIDR blocks](https://github.com/terraform-aws-modules/terraform-aws-vpc/tree/master/examples/secondary-cidr-blocks)
-* [Complete VPC](https://github.com/terraform-aws-modules/terraform-aws-vpc/tree/master/examples/complete-vpc)
-* [VPC with IPv6 enabled](https://github.com/terraform-aws-modules/terraform-aws-vpc/tree/master/examples/ipv6)
-* [Network ACL](https://github.com/terraform-aws-modules/terraform-aws-vpc/tree/master/examples/network-acls)
-* [VPC Flow Logs](https://github.com/terraform-aws-modules/terraform-aws-vpc/tree/master/examples/vpc-flow-logs)
-* [Manage Default VPC](https://github.com/terraform-aws-modules/terraform-aws-vpc/tree/master/examples/manage-default-vpc)
-* Few tests and edge cases examples: [#46](https://github.com/terraform-aws-modules/terraform-aws-vpc/tree/master/examples/issue-46-no-private-subnets), [#44](https://github.com/terraform-aws-modules/terraform-aws-vpc/tree/master/examples/issue-44-asymmetric-private-subnets), [#108](https://github.com/terraform-aws-modules/terraform-aws-vpc/tree/master/examples/issue-108-route-already-exists)
+- [Simple VPC](https://github.com/terraform-aws-modules/terraform-aws-vpc/tree/master/examples/simple-vpc)
+- [Simple VPC with secondary CIDR blocks](https://github.com/terraform-aws-modules/terraform-aws-vpc/tree/master/examples/secondary-cidr-blocks)
+- [Complete VPC](https://github.com/terraform-aws-modules/terraform-aws-vpc/tree/master/examples/complete-vpc) with VPC Endpoints.
+- [VPC with IPv6 enabled](https://github.com/terraform-aws-modules/terraform-aws-vpc/tree/master/examples/ipv6)
+- [Network ACL](https://github.com/terraform-aws-modules/terraform-aws-vpc/tree/master/examples/network-acls)
+- [VPC Flow Logs](https://github.com/terraform-aws-modules/terraform-aws-vpc/tree/master/examples/vpc-flow-logs)
+- [VPC with Outpost](https://github.com/terraform-aws-modules/terraform-aws-vpc/tree/master/examples/outpost)
+- [Manage Default VPC](https://github.com/terraform-aws-modules/terraform-aws-vpc/tree/master/examples/manage-default-vpc)
+- [Few tests and edge case examples](https://github.com/terraform-aws-modules/terraform-aws-vpc/tree/master/examples/issues)
 
 <!-- BEGINNING OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
 ## Requirements
@@ -1269,4 +1229,4 @@ Module is maintained by [Anton Babenko](https://github.com/antonbabenko) with he
 
 ## License
 
-Apache 2 Licensed. See LICENSE for full details.
+Apache 2 Licensed. See [LICENSE](https://github.com/terraform-aws-modules/terraform-aws-vpc/tree/master/LICENSE) for full details.

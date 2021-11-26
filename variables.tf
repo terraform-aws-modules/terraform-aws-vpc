@@ -1482,537 +1482,148 @@ variable "sagemaker_api_endpoint_security_group_ids" {
   default     = []
 }
 
-variable "sagemaker_api_endpoint_subnet_ids" {
-  description = "The ID of one or more subnets in which to create a network interface for SageMaker API endpoint. Only a single subnet within an AZ is supported. If omitted, private subnets will be used."
+variable "database_subnet_ipv6_prefixes" {
+  description = "Assigns IPv6 database subnet id based on the Amazon provided /56 prefix base 10 integer (0-256). Must be of equal length to the corresponding IPv4 subnet list"
   type        = list(string)
   default     = []
 }
 
-variable "sagemaker_api_endpoint_policy" {
-  description = "A policy to attach to the endpoint that controls access to the service. Defaults to full access"
-  type        = string
+variable "redshift_subnet_ipv6_prefixes" {
+  description = "Assigns IPv6 redshift subnet id based on the Amazon provided /56 prefix base 10 integer (0-256). Must be of equal length to the corresponding IPv4 subnet list"
+  type        = list(string)
+  default     = []
+}
+
+variable "elasticache_subnet_ipv6_prefixes" {
+  description = "Assigns IPv6 elasticache subnet id based on the Amazon provided /56 prefix base 10 integer (0-256). Must be of equal length to the corresponding IPv4 subnet list"
+  type        = list(string)
+  default     = []
+}
+
+variable "intra_subnet_ipv6_prefixes" {
+  description = "Assigns IPv6 intra subnet id based on the Amazon provided /56 prefix base 10 integer (0-256). Must be of equal length to the corresponding IPv4 subnet list"
+  type        = list(string)
+  default     = []
+}
+
+variable "assign_ipv6_address_on_creation" {
+  description = "Assign IPv6 address on subnet, must be disabled to change IPv6 CIDRs. This is the IPv6 equivalent of map_public_ip_on_launch"
+  type        = bool
+  default     = false
+}
+
+variable "private_subnet_assign_ipv6_address_on_creation" {
+  description = "Assign IPv6 address on private subnet, must be disabled to change IPv6 CIDRs. This is the IPv6 equivalent of map_public_ip_on_launch"
+  type        = bool
   default     = null
 }
 
-variable "sagemaker_api_endpoint_private_dns_enabled" {
-  description = "Whether or not to associate a private hosted zone with the specified VPC for SageMaker API endpoint"
+variable "public_subnet_assign_ipv6_address_on_creation" {
+  description = "Assign IPv6 address on public subnet, must be disabled to change IPv6 CIDRs. This is the IPv6 equivalent of map_public_ip_on_launch"
   type        = bool
-  default     = false
-}
-variable "enable_sagemaker_runtime_endpoint" {
-  description = "Should be true if you want to provision a SageMaker Runtime endpoint to the VPC"
-  type        = bool
-  default     = false
-}
-
-variable "sagemaker_runtime_endpoint_security_group_ids" {
-  description = "The ID of one or more security groups to associate with the network interface for SageMaker Runtime endpoint"
-  type        = list(string)
-  default     = []
-}
-
-variable "sagemaker_runtime_endpoint_subnet_ids" {
-  description = "The ID of one or more subnets in which to create a network interface for SageMaker Runtime endpoint. Only a single subnet within an AZ is supported. If omitted, private subnets will be used."
-  type        = list(string)
-  default     = []
-}
-
-variable "sagemaker_runtime_endpoint_policy" {
-  description = "A policy to attach to the endpoint that controls access to the service. Defaults to full access"
-  type        = string
   default     = null
 }
 
-variable "sagemaker_runtime_endpoint_private_dns_enabled" {
-  description = "Whether or not to associate a private hosted zone with the specified VPC for SageMaker Runtime endpoint"
+variable "outpost_subnet_assign_ipv6_address_on_creation" {
+  description = "Assign IPv6 address on outpost subnet, must be disabled to change IPv6 CIDRs. This is the IPv6 equivalent of map_public_ip_on_launch"
   type        = bool
-  default     = false
-}
-
-variable "enable_appstream_api_endpoint" {
-  description = "Should be true if you want to provision a AppStream API endpoint to the VPC"
-  type        = bool
-  default     = false
-}
-
-variable "appstream_api_endpoint_security_group_ids" {
-  description = "The ID of one or more security groups to associate with the network interface for AppStream API endpoint"
-  type        = list(string)
-  default     = []
-}
-
-variable "appstream_api_endpoint_subnet_ids" {
-  description = "The ID of one or more subnets in which to create a network interface for AppStream API endpoint. Only a single subnet within an AZ is supported. If omitted, private subnets will be used."
-  type        = list(string)
-  default     = []
-}
-
-variable "appstream_api_endpoint_private_dns_enabled" {
-  description = "Whether or not to associate a private hosted zone with the specified VPC for AppStream API endpoint"
-  type        = bool
-  default     = false
-}
-
-variable "enable_appstream_streaming_endpoint" {
-  description = "Should be true if you want to provision a AppStream Streaming endpoint to the VPC"
-  type        = bool
-  default     = false
-}
-
-variable "appstream_streaming_endpoint_security_group_ids" {
-  description = "The ID of one or more security groups to associate with the network interface for AppStream Streaming endpoint"
-  type        = list(string)
-  default     = []
-}
-
-variable "appstream_streaming_endpoint_subnet_ids" {
-  description = "The ID of one or more subnets in which to create a network interface for AppStream Streaming endpoint. Only a single subnet within an AZ is supported. If omitted, private subnets will be used."
-  type        = list(string)
-  default     = []
-}
-
-variable "appstream_streaming_endpoint_private_dns_enabled" {
-  description = "Whether or not to associate a private hosted zone with the specified VPC for AppStream Streaming endpoint"
-  type        = bool
-  default     = false
-}
-
-variable "enable_athena_endpoint" {
-  description = "Should be true if you want to provision a Athena endpoint to the VPC"
-  type        = bool
-  default     = false
-}
-
-variable "athena_endpoint_security_group_ids" {
-  description = "The ID of one or more security groups to associate with the network interface for Athena endpoint"
-  type        = list(string)
-  default     = []
-}
-
-variable "athena_endpoint_subnet_ids" {
-  description = "The ID of one or more subnets in which to create a network interface for Athena endpoint. Only a single subnet within an AZ is supported. If omitted, private subnets will be used."
-  type        = list(string)
-  default     = []
-}
-
-variable "athena_endpoint_policy" {
-  description = "A policy to attach to the endpoint that controls access to the service. Defaults to full access"
-  type        = string
   default     = null
 }
 
-variable "athena_endpoint_private_dns_enabled" {
-  description = "Whether or not to associate a private hosted zone with the specified VPC for Athena endpoint"
+variable "database_subnet_assign_ipv6_address_on_creation" {
+  description = "Assign IPv6 address on database subnet, must be disabled to change IPv6 CIDRs. This is the IPv6 equivalent of map_public_ip_on_launch"
   type        = bool
-  default     = false
-}
-
-variable "enable_rekognition_endpoint" {
-  description = "Should be true if you want to provision a Rekognition endpoint to the VPC"
-  type        = bool
-  default     = false
-}
-
-variable "rekognition_endpoint_security_group_ids" {
-  description = "The ID of one or more security groups to associate with the network interface for Rekognition endpoint"
-  type        = list(string)
-  default     = []
-}
-
-variable "rekognition_endpoint_subnet_ids" {
-  description = "The ID of one or more subnets in which to create a network interface for Rekognition endpoint. Only a single subnet within an AZ is supported. If omitted, private subnets will be used."
-  type        = list(string)
-  default     = []
-}
-
-variable "rekognition_endpoint_policy" {
-  description = "A policy to attach to the endpoint that controls access to the service. Defaults to full access"
-  type        = string
   default     = null
 }
 
-variable "rekognition_endpoint_private_dns_enabled" {
-  description = "Whether or not to associate a private hosted zone with the specified VPC for Rekognition endpoint"
+variable "redshift_subnet_assign_ipv6_address_on_creation" {
+  description = "Assign IPv6 address on redshift subnet, must be disabled to change IPv6 CIDRs. This is the IPv6 equivalent of map_public_ip_on_launch"
   type        = bool
-  default     = false
-}
-
-variable "enable_efs_endpoint" {
-  description = "Should be true if you want to provision an EFS endpoint to the VPC"
-  type        = bool
-  default     = false
-}
-
-variable "efs_endpoint_security_group_ids" {
-  description = "The ID of one or more security groups to associate with the network interface for EFS endpoint"
-  type        = list(string)
-  default     = []
-}
-
-variable "efs_endpoint_subnet_ids" {
-  description = "The ID of one or more subnets in which to create a network interface for EFS endpoint. Only a single subnet within an AZ is supported. Ifomitted, private subnets will be used."
-  type        = list(string)
-  default     = []
-}
-
-variable "efs_endpoint_policy" {
-  description = "A policy to attach to the endpoint that controls access to the service. Defaults to full access"
-  type        = string
   default     = null
 }
 
-variable "efs_endpoint_private_dns_enabled" {
-  description = "Whether or not to associate a private hosted zone with the specified VPC for EFS endpoint"
+variable "elasticache_subnet_assign_ipv6_address_on_creation" {
+  description = "Assign IPv6 address on elasticache subnet, must be disabled to change IPv6 CIDRs. This is the IPv6 equivalent of map_public_ip_on_launch"
   type        = bool
-  default     = false
-}
-
-variable "enable_cloud_directory_endpoint" {
-  description = "Should be true if you want to provision an Cloud Directory endpoint to the VPC"
-  type        = bool
-  default     = false
-}
-
-variable "cloud_directory_endpoint_security_group_ids" {
-  description = "The ID of one or more security groups to associate with the network interface for Cloud Directory endpoint"
-  type        = list(string)
-  default     = []
-}
-
-variable "cloud_directory_endpoint_subnet_ids" {
-  description = "The ID of one or more subnets in which to create a network interface for Cloud Directory endpoint. Only a single subnet within an AZ is supported. Ifomitted, private subnets will be used."
-  type        = list(string)
-  default     = []
-}
-
-variable "cloud_directory_endpoint_policy" {
-  description = "A policy to attach to the endpoint that controls access to the service. Defaults to full access"
-  type        = string
   default     = null
 }
 
-variable "cloud_directory_endpoint_private_dns_enabled" {
-  description = "Whether or not to associate a private hosted zone with the specified VPC for Cloud Directory endpoint"
+variable "intra_subnet_assign_ipv6_address_on_creation" {
+  description = "Assign IPv6 address on intra subnet, must be disabled to change IPv6 CIDRs. This is the IPv6 equivalent of map_public_ip_on_launch"
   type        = bool
-  default     = false
-}
-
-variable "enable_ses_endpoint" {
-  description = "Should be true if you want to provision an SES endpoint to the VPC"
-  type        = bool
-  default     = false
-}
-
-variable "ses_endpoint_security_group_ids" {
-  description = "The ID of one or more security groups to associate with the network interface for SES endpoint"
-  type        = list(string)
-  default     = []
-}
-
-variable "ses_endpoint_subnet_ids" {
-  description = "The ID of one or more subnets in which to create a network interface for SES endpoint. Only a single subnet within an AZ is supported. If omitted, private subnets will be used."
-  type        = list(string)
-  default     = []
-}
-
-variable "enable_auto_scaling_plans_endpoint" {
-  description = "Should be true if you want to provision an Auto Scaling Plans endpoint to the VPC"
-  type        = bool
-  default     = false
-}
-
-variable "auto_scaling_plans_endpoint_security_group_ids" {
-  description = "The ID of one or more security groups to associate with the network interface for Auto Scaling Plans endpoint"
-  type        = list(string)
-  default     = []
-}
-
-variable "auto_scaling_plans_endpoint_subnet_ids" {
-  description = "The ID of one or more subnets in which to create a network interface for Auto Scaling Plans endpoint. Only a single subnet within an AZ is supported. Ifomitted, private subnets will be used."
-  type        = list(string)
-  default     = []
-}
-
-variable "auto_scaling_plans_endpoint_policy" {
-  description = "A policy to attach to the endpoint that controls access to the service. Defaults to full access"
-  type        = string
   default     = null
 }
 
-variable "auto_scaling_plans_endpoint_private_dns_enabled" {
-  description = "Whether or not to associate a private hosted zone with the specified VPC for Auto Scaling Plans endpoint"
-  type        = bool
-  default     = false
-}
-
-variable "ses_endpoint_private_dns_enabled" {
-  description = "Whether or not to associate a private hosted zone with the specified VPC for SES endpoint"
-  type        = bool
-  default     = false
-}
-
-variable "enable_workspaces_endpoint" {
-  description = "Should be true if you want to provision an Workspaces endpoint to the VPC"
-  type        = bool
-  default     = false
-}
-
-variable "workspaces_endpoint_security_group_ids" {
-  description = "The ID of one or more security groups to associate with the network interface for Workspaces endpoint"
+variable "secondary_cidr_blocks" {
+  description = "List of secondary CIDR blocks to associate with the VPC to extend the IP Address pool"
   type        = list(string)
   default     = []
 }
 
-variable "workspaces_endpoint_subnet_ids" {
-  description = "The ID of one or more subnets in which to create a network interface for Workspaces endpoint. Only a single subnet within an AZ is supported. Ifomitted, private subnets will be used."
-  type        = list(string)
-  default     = []
-}
-
-variable "workspaces_endpoint_policy" {
-  description = "A policy to attach to the endpoint that controls access to the service. Defaults to full access"
+variable "instance_tenancy" {
+  description = "A tenancy option for instances launched into the VPC"
   type        = string
-  default     = null
+  default     = "default"
 }
 
-variable "workspaces_endpoint_private_dns_enabled" {
-  description = "Whether or not to associate a private hosted zone with the specified VPC for Workspaces endpoint"
-  type        = bool
-  default     = false
-}
-
-variable "enable_access_analyzer_endpoint" {
-  description = "Should be true if you want to provision an Access Analyzer endpoint to the VPC"
-  type        = bool
-  default     = false
-}
-
-variable "access_analyzer_endpoint_security_group_ids" {
-  description = "The ID of one or more security groups to associate with the network interface for Access Analyzer endpoint"
-  type        = list(string)
-  default     = []
-}
-
-variable "access_analyzer_endpoint_subnet_ids" {
-  description = "The ID of one or more subnets in which to create a network interface for Access Analyzer endpoint. Only a single subnet within an AZ is supported. Ifomitted, private subnets will be used."
-  type        = list(string)
-  default     = []
-}
-
-variable "access_analyzer_endpoint_policy" {
-  description = "A policy to attach to the endpoint that controls access to the service. Defaults to full access"
+variable "public_subnet_suffix" {
+  description = "Suffix to append to public subnets name"
   type        = string
-  default     = null
+  default     = "public"
 }
 
-variable "access_analyzer_endpoint_private_dns_enabled" {
-  description = "Whether or not to associate a private hosted zone with the specified VPC for Access Analyzer endpoint"
-  type        = bool
-  default     = false
-}
-
-variable "enable_ebs_endpoint" {
-  description = "Should be true if you want to provision an EBS endpoint to the VPC"
-  type        = bool
-  default     = false
-}
-
-variable "ebs_endpoint_security_group_ids" {
-  description = "The ID of one or more security groups to associate with the network interface for EBS endpoint"
-  type        = list(string)
-  default     = []
-}
-
-variable "ebs_endpoint_subnet_ids" {
-  description = "The ID of one or more subnets in which to create a network interface for EBS endpoint. Only a single subnet within an AZ is supported. Ifomitted, private subnets will be used."
-  type        = list(string)
-  default     = []
-}
-
-variable "ebs_endpoint_private_dns_enabled" {
-  description = "Whether or not to associate a private hosted zone with the specified VPC for EBS endpoint"
-  type        = bool
-  default     = false
-}
-
-variable "enable_datasync_endpoint" {
-  description = "Should be true if you want to provision an Data Sync endpoint to the VPC"
-  type        = bool
-  default     = false
-}
-
-variable "datasync_endpoint_security_group_ids" {
-  description = "The ID of one or more security groups to associate with the network interface for Data Sync endpoint"
-  type        = list(string)
-  default     = []
-}
-
-variable "datasync_endpoint_subnet_ids" {
-  description = "The ID of one or more subnets in which to create a network interface for Data Sync endpoint. Only a single subnet within an AZ is supported. Ifomitted, private subnets will be used."
-  type        = list(string)
-  default     = []
-}
-
-variable "datasync_endpoint_private_dns_enabled" {
-  description = "Whether or not to associate a private hosted zone with the specified VPC for Data Sync endpoint"
-  type        = bool
-  default     = false
-}
-
-variable "enable_elastic_inference_runtime_endpoint" {
-  description = "Should be true if you want to provision an Elastic Inference Runtime endpoint to the VPC"
-  type        = bool
-  default     = false
-}
-
-variable "elastic_inference_runtime_endpoint_security_group_ids" {
-  description = "The ID of one or more security groups to associate with the network interface for Elastic Inference Runtime endpoint"
-  type        = list(string)
-  default     = []
-}
-
-variable "elastic_inference_runtime_endpoint_subnet_ids" {
-  description = "The ID of one or more subnets in which to create a network interface for Elastic Inference Runtime endpoint. Only a single subnet within an AZ is supported. Ifomitted, private subnets will be used."
-  type        = list(string)
-  default     = []
-}
-
-variable "elastic_inference_runtime_endpoint_private_dns_enabled" {
-  description = "Whether or not to associate a private hosted zone with the specified VPC for Elastic Inference Runtime endpoint"
-  type        = bool
-  default     = false
-}
-
-variable "enable_sms_endpoint" {
-  description = "Should be true if you want to provision an SMS endpoint to the VPC"
-  type        = bool
-  default     = false
-}
-
-variable "sms_endpoint_security_group_ids" {
-  description = "The ID of one or more security groups to associate with the network interface for SMS endpoint"
-  type        = list(string)
-  default     = []
-}
-
-variable "sms_endpoint_subnet_ids" {
-  description = "The ID of one or more subnets in which to create a network interface for SMS endpoint. Only a single subnet within an AZ is supported. Ifomitted, private subnets will be used."
-  type        = list(string)
-  default     = []
-}
-
-variable "sms_endpoint_private_dns_enabled" {
-  description = "Whether or not to associate a private hosted zone with the specified VPC for SMS endpoint"
-  type        = bool
-  default     = false
-}
-
-variable "enable_emr_endpoint" {
-  description = "Should be true if you want to provision an EMR endpoint to the VPC"
-  type        = bool
-  default     = false
-}
-
-variable "emr_endpoint_security_group_ids" {
-  description = "The ID of one or more security groups to associate with the network interface for EMR endpoint"
-  type        = list(string)
-  default     = []
-}
-
-variable "emr_endpoint_subnet_ids" {
-  description = "The ID of one or more subnets in which to create a network interface for EMR endpoint. Only a single subnet within an AZ is supported. Ifomitted, private subnets will be used."
-  type        = list(string)
-  default     = []
-}
-
-variable "emr_endpoint_policy" {
-  description = "A policy to attach to the endpoint that controls access to the service. Defaults to full access"
+variable "private_subnet_suffix" {
+  description = "Suffix to append to private subnets name"
   type        = string
-  default     = null
+  default     = "private"
 }
 
-variable "emr_endpoint_private_dns_enabled" {
-  description = "Whether or not to associate a private hosted zone with the specified VPC for EMR endpoint"
-  type        = bool
-  default     = false
-}
-
-variable "enable_qldb_session_endpoint" {
-  description = "Should be true if you want to provision an QLDB Session endpoint to the VPC"
-  type        = bool
-  default     = false
-}
-
-variable "qldb_session_endpoint_security_group_ids" {
-  description = "The ID of one or more security groups to associate with the network interface for QLDB Session endpoint"
-  type        = list(string)
-  default     = []
-}
-
-variable "qldb_session_endpoint_subnet_ids" {
-  description = "The ID of one or more subnets in which to create a network interface for QLDB Session endpoint. Only a single subnet within an AZ is supported. Ifomitted, private subnets will be used."
-  type        = list(string)
-  default     = []
-}
-
-variable "qldb_session_endpoint_private_dns_enabled" {
-  description = "Whether or not to associate a private hosted zone with the specified VPC for QLDB Session endpoint"
-  type        = bool
-  default     = false
-}
-
-variable "enable_elasticbeanstalk_endpoint" {
-  description = "Should be true if you want to provision a Elastic Beanstalk endpoint to the VPC"
-  type        = bool
-  default     = false
-}
-
-variable "elasticbeanstalk_endpoint_security_group_ids" {
-  description = "The ID of one or more security groups to associate with the network interface for Elastic Beanstalk endpoint"
-  type        = list(string)
-  default     = []
-}
-
-variable "elasticbeanstalk_endpoint_subnet_ids" {
-  description = "The ID of one or more subnets in which to create a network interface for Elastic Beanstalk endpoint. Only a single subnet within an AZ is supported. If omitted, private subnets will be used."
-  type        = list(string)
-  default     = []
-}
-
-variable "elasticbeanstalk_endpoint_policy" {
-  description = "A policy to attach to the endpoint that controls access to the service. Defaults to full access"
+variable "outpost_subnet_suffix" {
+  description = "Suffix to append to outpost subnets name"
   type        = string
-  default     = null
+  default     = "outpost"
 }
 
-variable "elasticbeanstalk_endpoint_private_dns_enabled" {
-  description = "Whether or not to associate a private hosted zone with the specified VPC for Elastic Beanstalk endpoint"
-  type        = bool
-  default     = false
+variable "intra_subnet_suffix" {
+  description = "Suffix to append to intra subnets name"
+  type        = string
+  default     = "intra"
 }
 
-variable "enable_elasticbeanstalk_health_endpoint" {
-  description = "Should be true if you want to provision a Elastic Beanstalk Health endpoint to the VPC"
-  type        = bool
-  default     = false
+variable "database_subnet_suffix" {
+  description = "Suffix to append to database subnets name"
+  type        = string
+  default     = "db"
 }
 
-variable "elasticbeanstalk_health_endpoint_security_group_ids" {
-  description = "The ID of one or more security groups to associate with the network interface for Elastic Beanstalk Health endpoint"
+variable "redshift_subnet_suffix" {
+  description = "Suffix to append to redshift subnets name"
+  type        = string
+  default     = "redshift"
+}
+
+variable "elasticache_subnet_suffix" {
+  description = "Suffix to append to elasticache subnets name"
+  type        = string
+  default     = "elasticache"
+}
+
+variable "public_subnets" {
+  description = "A list of public subnets inside the VPC"
   type        = list(string)
   default     = []
 }
 
-variable "elasticbeanstalk_health_endpoint_subnet_ids" {
-  description = "The ID of one or more subnets in which to create a network interface for Elastic Beanstalk Health endpoint. Only a single subnet within an AZ is supported. If omitted, private subnets will be used."
+variable "private_subnets" {
+  description = "A list of private subnets inside the VPC"
   type        = list(string)
   default     = []
 }
 
-variable "elasticbeanstalk_health_endpoint_private_dns_enabled" {
-  description = "Whether or not to associate a private hosted zone with the specified VPC for Elastic Beanstalk Health endpoint"
-  type        = bool
-  default     = false
+variable "outpost_subnets" {
+  description = "A list of outpost subnets inside the VPC"
+  type        = list(string)
+  default     = []
 }
 
 variable "private_eks_subnets_blue" {
@@ -2033,154 +1644,142 @@ variable "enable_states_endpoint" {
   default     = false
 }
 
-variable "states_endpoint_security_group_ids" {
-  description = "The ID of one or more security groups to associate with the network interface for Step Function endpoint"
+variable "redshift_subnets" {
+  description = "A list of redshift subnets"
   type        = list(string)
   default     = []
 }
 
-variable "states_endpoint_subnet_ids" {
-  description = "The ID of one or more subnets in which to create a network interface for Step Function endpoint. Only a single subnet within an AZ is supported. If omitted, private subnets will be used."
+variable "elasticache_subnets" {
+  description = "A list of elasticache subnets"
   type        = list(string)
   default     = []
 }
 
-variable "states_endpoint_policy" {
-  description = "A policy to attach to the endpoint that controls access to the service. Defaults to full access"
-  type        = string
+variable "intra_subnets" {
+  description = "A list of intra subnets"
+  type        = list(string)
+  default     = []
+}
+
+variable "create_database_subnet_route_table" {
+  description = "Controls if separate route table for database should be created"
+  type        = bool
+  default     = false
+}
+
+variable "create_redshift_subnet_route_table" {
+  description = "Controls if separate route table for redshift should be created"
+  type        = bool
+  default     = false
+}
+
+variable "enable_public_redshift" {
+  description = "Controls if redshift should have public routing table"
+  type        = bool
+  default     = false
+}
+
+variable "create_elasticache_subnet_route_table" {
+  description = "Controls if separate route table for elasticache should be created"
+  type        = bool
+  default     = false
+}
+
+variable "create_database_subnet_group" {
+  description = "Controls if database subnet group should be created (n.b. database_subnets must also be set)"
+  type        = bool
+  default     = true
+}
+
+variable "create_elasticache_subnet_group" {
+  description = "Controls if elasticache subnet group should be created"
+  type        = bool
+  default     = true
+}
+
+variable "create_redshift_subnet_group" {
+  description = "Controls if redshift subnet group should be created"
+  type        = bool
+  default     = true
+}
+
+variable "create_database_internet_gateway_route" {
+  description = "Controls if an internet gateway route for public database access should be created"
+  type        = bool
+  default     = false
+}
+
+variable "create_database_nat_gateway_route" {
+  description = "Controls if a nat gateway route should be created to give internet access to the database subnets"
+  type        = bool
+  default     = false
+}
+
+variable "azs" {
+  description = "A list of availability zones names or ids in the region"
+  type        = list(string)
+  default     = []
+}
+
+variable "enable_dns_hostnames" {
+  description = "Should be true to enable DNS hostnames in the VPC"
+  type        = bool
+  default     = false
+}
+
+variable "enable_dns_support" {
+  description = "Should be true to enable DNS support in the VPC"
+  type        = bool
+  default     = true
+}
+
+variable "enable_classiclink" {
+  description = "Should be true to enable ClassicLink for the VPC. Only valid in regions and accounts that support EC2 Classic."
+  type        = bool
   default     = null
 }
 
-variable "states_endpoint_private_dns_enabled" {
-  description = "Whether or not to associate a private hosted zone with the specified VPC for Step Function endpoint"
+variable "enable_classiclink_dns_support" {
+  description = "Should be true to enable ClassicLink DNS Support for the VPC. Only valid in regions and accounts that support EC2 Classic."
   type        = bool
-  default     = false
-}
-
-variable "enable_rds_endpoint" {
-  description = "Should be true if you want to provision an RDS endpoint to the VPC"
-  type        = bool
-  default     = false
-}
-
-variable "rds_endpoint_security_group_ids" {
-  description = "The ID of one or more security groups to associate with the network interface for RDS endpoint"
-  type        = list(string)
-  default     = []
-}
-
-variable "rds_endpoint_subnet_ids" {
-  description = "The ID of one or more subnets in which to create a network interface for RDS endpoint. Only a single subnet within an AZ is supported. If omitted, private subnets will be used."
-  type        = list(string)
-  default     = []
-}
-
-variable "rds_endpoint_private_dns_enabled" {
-  description = "Whether or not to associate a private hosted zone with the specified VPC for RDS endpoint"
-  type        = bool
-  default     = false
-}
-
-variable "enable_codedeploy_endpoint" {
-  description = "Should be true if you want to provision an CodeDeploy endpoint to the VPC"
-  type        = bool
-  default     = false
-}
-
-variable "codedeploy_endpoint_security_group_ids" {
-  description = "The ID of one or more security groups to associate with the network interface for CodeDeploy endpoint"
-  type        = list(string)
-  default     = []
-}
-
-variable "codedeploy_endpoint_subnet_ids" {
-  description = "The ID of one or more subnets in which to create a network interface for CodeDeploy endpoint. Only a single subnet within an AZ is supported. If omitted, private subnets will be used."
-  type        = list(string)
-  default     = []
-}
-
-variable "codedeploy_endpoint_private_dns_enabled" {
-  description = "Whether or not to associate a private hosted zone with the specified VPC for CodeDeploy endpoint"
-  type        = bool
-  default     = false
-}
-
-variable "enable_codedeploy_commands_secure_endpoint" {
-  description = "Should be true if you want to provision an CodeDeploy Commands Secure endpoint to the VPC"
-  type        = bool
-  default     = false
-}
-
-variable "codedeploy_commands_secure_endpoint_security_group_ids" {
-  description = "The ID of one or more security groups to associate with the network interface for CodeDeploy Commands Secure endpoint"
-  type        = list(string)
-  default     = []
-}
-
-variable "codedeploy_commands_secure_endpoint_subnet_ids" {
-  description = "The ID of one or more subnets in which to create a network interface for CodeDeploy Commands Secure endpoint. Only a single subnet within an AZ is supported. If omitted, private subnets will be used."
-  type        = list(string)
-  default     = []
-}
-
-variable "codedeploy_commands_secure_endpoint_private_dns_enabled" {
-  description = "Whether or not to associate a private hosted zone with the specified VPC for CodeDeploy Commands Secure endpoint"
-  type        = bool
-  default     = false
-}
-
-variable "enable_acm_pca_endpoint" {
-  description = "Should be true if you want to provision an ACM PCA endpoint to the VPC"
-  type        = bool
-  default     = false
-}
-
-variable "acm_pca_endpoint_security_group_ids" {
-  description = "The ID of one or more security groups to associate with the network interface for ACM PCA endpoint"
-  type        = list(string)
-  default     = []
-}
-
-variable "acm_pca_endpoint_subnet_ids" {
-  description = "The ID of one or more subnets in which to create a network interface for ACM PCA endpoint. Only a single subnet within an AZ is supported. If omitted, private subnets will be used."
-  type        = list(string)
-  default     = []
-}
-
-variable "acm_pca_endpoint_policy" {
-  description = "A policy to attach to the endpoint that controls access to the service. Defaults to full access"
-  type        = string
   default     = null
 }
 
-variable "acm_pca_endpoint_private_dns_enabled" {
-  description = "Whether or not to associate a private hosted zone with the specified VPC for ACM PCA endpoint"
+variable "enable_nat_gateway" {
+  description = "Should be true if you want to provision NAT Gateways for each of your private networks"
   type        = bool
   default     = false
 }
 
-variable "enable_dms_endpoint" {
-  description = "Should be true if you want to provision a DMS endpoint to the VPC"
+variable "single_nat_gateway" {
+  description = "Should be true if you want to provision a single shared NAT Gateway across all of your private networks"
   type        = bool
   default     = false
 }
 
-variable "dms_endpoint_security_group_ids" {
-  description = "The ID of one or more security groups to associate with the network interface for DMS endpoint"
+variable "one_nat_gateway_per_az" {
+  description = "Should be true if you want only one NAT Gateway per availability zone. Requires `var.azs` to be set, and the number of `public_subnets` created to be greater than or equal to the number of availability zones specified in `var.azs`."
+  type        = bool
+  default     = false
+}
+
+variable "reuse_nat_ips" {
+  description = "Should be true if you don't want EIPs to be created for your NAT Gateways and will instead pass them in via the 'external_nat_ip_ids' variable"
+  type        = bool
+  default     = false
+}
+
+variable "external_nat_ip_ids" {
+  description = "List of EIP IDs to be assigned to the NAT Gateways (used in combination with reuse_nat_ips)"
   type        = list(string)
   default     = []
 }
 
-variable "dms_endpoint_subnet_ids" {
-  description = "The ID of one or more subnets in which to create a network interface for DMS endpoint. Only a single subnet within an AZ is supported. If omitted, private subnets will be used."
+variable "external_nat_ips" {
+  description = "List of EIPs to be used for `nat_public_ips` output (used in combination with reuse_nat_ips and external_nat_ip_ids)"
   type        = list(string)
   default     = []
-}
-
-variable "dms_endpoint_private_dns_enabled" {
-  description = "Whether or not to associate a private hosted zone with the specified VPC for DMS endpoint"
-  type        = bool
-  default     = false
 }
 
 variable "map_public_ip_on_launch" {
@@ -2351,6 +1950,12 @@ variable "intra_route_table_tags" {
   default     = {}
 }
 
+variable "database_subnet_group_name" {
+  description = "Name of database subnet group"
+  type        = string
+  default     = null
+}
+
 variable "database_subnet_tags" {
   description = "Additional tags for the database subnets"
   type        = map(string)
@@ -2395,6 +2000,12 @@ variable "public_acl_tags" {
 
 variable "private_acl_tags" {
   description = "Additional tags for the private subnets network ACL"
+  type        = map(string)
+  default     = {}
+}
+
+variable "outpost_acl_tags" {
+  description = "Additional tags for the outpost subnets network ACL"
   type        = map(string)
   default     = {}
 }
@@ -2449,12 +2060,6 @@ variable "customer_gateway_tags" {
 
 variable "vpn_gateway_tags" {
   description = "Additional tags for the VPN gateway"
-  type        = map(string)
-  default     = {}
-}
-
-variable "vpc_endpoint_tags" {
-  description = "Additional tags for the VPC Endpoints"
   type        = map(string)
   default     = {}
 }
@@ -2569,6 +2174,12 @@ variable "public_dedicated_network_acl" {
 
 variable "private_dedicated_network_acl" {
   description = "Whether to use dedicated network ACL (not default) and custom rules for private subnets"
+  type        = bool
+  default     = false
+}
+
+variable "outpost_dedicated_network_acl" {
+  description = "Whether to use dedicated network ACL (not default) and custom rules for outpost subnets"
   type        = bool
   default     = false
 }
@@ -2695,6 +2306,38 @@ variable "private_inbound_acl_rules" {
 
 variable "private_outbound_acl_rules" {
   description = "Private subnets outbound network ACLs"
+  type        = list(map(string))
+
+  default = [
+    {
+      rule_number = 100
+      rule_action = "allow"
+      from_port   = 0
+      to_port     = 0
+      protocol    = "-1"
+      cidr_block  = "0.0.0.0/0"
+    },
+  ]
+}
+
+variable "outpost_inbound_acl_rules" {
+  description = "Outpost subnets inbound network ACLs"
+  type        = list(map(string))
+
+  default = [
+    {
+      rule_number = 100
+      rule_action = "allow"
+      from_port   = 0
+      to_port     = 0
+      protocol    = "-1"
+      cidr_block  = "0.0.0.0/0"
+    },
+  ]
+}
+
+variable "outpost_outbound_acl_rules" {
+  description = "Outpost subnets outbound network ACLs"
   type        = list(map(string))
 
   default = [
@@ -2949,4 +2592,16 @@ variable "create_egress_only_igw" {
   description = "Controls if an Egress Only Internet Gateway is created and its related routes."
   type        = bool
   default     = true
+}
+
+variable "outpost_arn" {
+  description = "ARN of Outpost you want to create a subnet in."
+  type        = string
+  default     = null
+}
+
+variable "outpost_az" {
+  description = "AZ where Outpost is anchored."
+  type        = string
+  default     = null
 }
