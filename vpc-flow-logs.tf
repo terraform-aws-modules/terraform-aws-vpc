@@ -9,10 +9,9 @@ locals {
   flow_log_iam_role_arn    = var.flow_log_destination_type != "s3" && local.create_flow_log_cloudwatch_iam_role ? aws_iam_role.vpc_flow_log_cloudwatch[0].arn : var.flow_log_cloudwatch_iam_role_arn
 }
 
-################################################################################
+###################
 # Flow Log
-################################################################################
-
+###################
 resource "aws_flow_log" "this" {
   count = local.enable_flow_log ? 1 : 0
 
@@ -24,13 +23,22 @@ resource "aws_flow_log" "this" {
   vpc_id                   = local.vpc_id
   max_aggregation_interval = var.flow_log_max_aggregation_interval
 
+  dynamic "destination_options" {
+    for_each = var.flow_log_destination_type == "s3" ? [true] : []
+
+    content {
+      file_format                = var.flow_log_file_format
+      hive_compatible_partitions = var.flow_log_hive_compatible_partitions
+      per_hour_partition         = var.flow_log_per_hour_partition
+    }
+  }
+
   tags = merge(var.tags, var.vpc_flow_log_tags)
 }
 
-################################################################################
+#####################
 # Flow Log CloudWatch
-################################################################################
-
+#####################
 resource "aws_cloudwatch_log_group" "flow_log" {
   count = local.create_flow_log_cloudwatch_log_group ? 1 : 0
 
@@ -41,6 +49,9 @@ resource "aws_cloudwatch_log_group" "flow_log" {
   tags = merge(var.tags, var.vpc_flow_log_tags)
 }
 
+#########################
+# Flow Log CloudWatch IAM
+#########################
 resource "aws_iam_role" "vpc_flow_log_cloudwatch" {
   count = local.create_flow_log_cloudwatch_iam_role ? 1 : 0
 
@@ -55,8 +66,6 @@ data "aws_iam_policy_document" "flow_log_cloudwatch_assume_role" {
   count = local.create_flow_log_cloudwatch_iam_role ? 1 : 0
 
   statement {
-    sid = "AWSVPCFlowLogsAssumeRole"
-
     principals {
       type        = "Service"
       identifiers = ["vpc-flow-logs.amazonaws.com"]
@@ -80,6 +89,7 @@ resource "aws_iam_policy" "vpc_flow_log_cloudwatch" {
 
   name_prefix = "vpc-flow-log-to-cloudwatch-"
   policy      = data.aws_iam_policy_document.vpc_flow_log_cloudwatch[0].json
+  tags        = merge(var.tags, var.vpc_flow_log_tags)
 }
 
 data "aws_iam_policy_document" "vpc_flow_log_cloudwatch" {

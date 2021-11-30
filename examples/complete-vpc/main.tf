@@ -46,8 +46,9 @@ module "vpc" {
 
   customer_gateways = {
     IP1 = {
-      bgp_asn    = 65112
-      ip_address = "1.2.3.4"
+      bgp_asn     = 65112
+      ip_address  = "1.2.3.4"
+      device_name = "some_name"
     },
     IP2 = {
       bgp_asn    = 65112

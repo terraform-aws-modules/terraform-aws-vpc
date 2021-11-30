@@ -18,12 +18,16 @@ locals {
     ),
     0,
   )
+
+  vpce_tags = merge(
+    var.tags,
+    var.vpc_endpoint_tags,
+  )
 }
 
-################################################################################
+######
 # VPC
-################################################################################
-
+######
 resource "aws_vpc" "this" {
   count = var.create_vpc ? 1 : 0
 
@@ -96,10 +100,9 @@ resource "aws_default_security_group" "this" {
   )
 }
 
-################################################################################
+###################
 # DHCP Options Set
-################################################################################
-
+###################
 resource "aws_vpc_dhcp_options" "this" {
   count = var.create_vpc && var.enable_dhcp_options ? 1 : 0
 
@@ -118,6 +121,9 @@ resource "aws_vpc_dhcp_options" "this" {
   )
 }
 
+###############################
+# DHCP Options Set Association
+###############################
 resource "aws_vpc_dhcp_options_association" "this" {
   count = var.create_vpc && var.enable_dhcp_options ? 1 : 0
 
@@ -125,10 +131,9 @@ resource "aws_vpc_dhcp_options_association" "this" {
   dhcp_options_id = aws_vpc_dhcp_options.this[0].id
 }
 
-################################################################################
+###################
 # Internet Gateway
-################################################################################
-
+###################
 resource "aws_internet_gateway" "this" {
   count = var.create_vpc && var.create_igw && length(var.public_subnets) > 0 || length(var.public_eks_subnets_blue) > 0 || length(var.public_eks_subnets_green) > 0 ? 1 : 0
 
@@ -157,9 +162,9 @@ resource "aws_egress_only_internet_gateway" "this" {
   )
 }
 
-################################################################################
+###############
 # Default route
-################################################################################
+###############
 
 resource "aws_default_route_table" "default" {
   count = var.create_vpc && var.manage_default_route_table ? 1 : 0
@@ -175,15 +180,21 @@ resource "aws_default_route_table" "default" {
       ipv6_cidr_block = lookup(route.value, "ipv6_cidr_block", null)
 
       # One of the following targets must be provided
-      egress_only_gateway_id    = lookup(route.value, "egress_only_gateway_id", null)
-      gateway_id                = lookup(route.value, "gateway_id", null)
-      instance_id               = lookup(route.value, "instance_id", null)
-      nat_gateway_id            = lookup(route.value, "nat_gateway_id", null)
-      network_interface_id      = lookup(route.value, "network_interface_id", null)
-      transit_gateway_id        = lookup(route.value, "transit_gateway_id", null)
-      vpc_endpoint_id           = lookup(route.value, "vpc_endpoint_id", null)
+      egress_only_gateway_id = lookup(route.value, "egress_only_gateway_id", null)
+      gateway_id             = lookup(route.value, "gateway_id", null)
+      instance_id            = lookup(route.value, "instance_id", null)
+      nat_gateway_id         = lookup(route.value, "nat_gateway_id", null)
+      network_interface_id   = lookup(route.value, "network_interface_id", null)
+      transit_gateway_id     = lookup(route.value, "transit_gateway_id", null)
+      # `vpc_endpoint_id` was recently added in v3.15.0
+      # vpc_endpoint_id           = lookup(route.value, "vpc_endpoint_id", null)
       vpc_peering_connection_id = lookup(route.value, "vpc_peering_connection_id", null)
     }
+  }
+
+  timeouts {
+    create = "5m"
+    update = "5m"
   }
 
   tags = merge(
@@ -193,10 +204,9 @@ resource "aws_default_route_table" "default" {
   )
 }
 
-################################################################################
+################
 # Publiс routes
-################################################################################
-
+################
 resource "aws_route_table" "public" {
   count = var.create_vpc && length(var.public_subnets) > 0 || length(var.public_eks_subnets_blue) > 0 || length(var.public_eks_subnets_green) > 0 ? 1 : 0
 
@@ -231,11 +241,10 @@ resource "aws_route" "public_internet_gateway_ipv6" {
   gateway_id                  = aws_internet_gateway.this[0].id
 }
 
-################################################################################
+#################
 # Private routes
 # There are as many routing tables as the number of NAT gateways
-################################################################################
-
+#################
 resource "aws_route_table" "private" {
   count = var.create_vpc && local.max_subnet_length > 0 ? local.nat_gateway_count : 0
 
@@ -254,10 +263,9 @@ resource "aws_route_table" "private" {
   )
 }
 
-################################################################################
+#################
 # Database routes
-################################################################################
-
+#################
 resource "aws_route_table" "database" {
   count = var.create_vpc && var.create_database_subnet_route_table && length(var.database_subnets) > 0 ? var.single_nat_gateway || var.create_database_internet_gateway_route ? 1 : length(var.database_subnets) : 0
 
@@ -312,10 +320,9 @@ resource "aws_route" "database_ipv6_egress" {
   }
 }
 
-################################################################################
+#################
 # Redshift routes
-################################################################################
-
+#################
 resource "aws_route_table" "redshift" {
   count = var.create_vpc && var.create_redshift_subnet_route_table && length(var.redshift_subnets) > 0 ? 1 : 0
 
@@ -330,10 +337,9 @@ resource "aws_route_table" "redshift" {
   )
 }
 
-################################################################################
+#################
 # Elasticache routes
-################################################################################
-
+#################
 resource "aws_route_table" "elasticache" {
   count = var.create_vpc && var.create_elasticache_subnet_route_table && length(var.elasticache_subnets) > 0 ? 1 : 0
 
@@ -348,10 +354,9 @@ resource "aws_route_table" "elasticache" {
   )
 }
 
-################################################################################
+#################
 # Intra routes
-################################################################################
-
+#################
 resource "aws_route_table" "intra" {
   count = var.create_vpc && length(var.intra_subnets) > 0 ? 1 : 0
 
@@ -366,10 +371,9 @@ resource "aws_route_table" "intra" {
   )
 }
 
-################################################################################
+################
 # Public subnet
-################################################################################
-
+################
 resource "aws_subnet" "public" {
   count = var.create_vpc && length(var.public_subnets) > 0 && (false == var.one_nat_gateway_per_az || length(var.public_subnets) >= length(var.azs)) ? length(var.public_subnets) : 0
 
@@ -453,8 +457,7 @@ resource "aws_subnet" "public_eks_green" {
 
 #################
 # Private subnet
-################################################################################
-
+#################
 resource "aws_subnet" "private" {
   count = var.create_vpc && length(var.private_subnets) > 0 ? length(var.private_subnets) : 0
 
@@ -534,8 +537,7 @@ resource "aws_subnet" "private_eks_green" {
 
 ################################################################################
 # Database subnet
-################################################################################
-
+##################
 resource "aws_subnet" "database" {
   count = var.create_vpc && length(var.database_subnets) > 0 ? length(var.database_subnets) : 0
 
@@ -563,23 +565,22 @@ resource "aws_subnet" "database" {
 resource "aws_db_subnet_group" "database" {
   count = var.create_vpc && length(var.database_subnets) > 0 && var.create_database_subnet_group ? 1 : 0
 
-  name        = lower(coalesce(var.database_subnet_group_name, var.name))
+  name        = lower(var.name)
   description = "Database subnet group for ${var.name}"
   subnet_ids  = aws_subnet.database.*.id
 
   tags = merge(
     {
-      "Name" = format("%s", lower(coalesce(var.database_subnet_group_name, var.name)))
+      "Name" = format("%s", var.name)
     },
     var.tags,
     var.database_subnet_group_tags,
   )
 }
 
-################################################################################
+##################
 # Redshift subnet
-################################################################################
-
+##################
 resource "aws_subnet" "redshift" {
   count = var.create_vpc && length(var.redshift_subnets) > 0 ? length(var.redshift_subnets) : 0
 
@@ -607,23 +608,22 @@ resource "aws_subnet" "redshift" {
 resource "aws_redshift_subnet_group" "redshift" {
   count = var.create_vpc && length(var.redshift_subnets) > 0 && var.create_redshift_subnet_group ? 1 : 0
 
-  name        = lower(var.name)
+  name        = lower(coalesce(var.redshift_subnet_group_name, var.name))
   description = "Redshift subnet group for ${var.name}"
   subnet_ids  = aws_subnet.redshift.*.id
 
   tags = merge(
     {
-      "Name" = format("%s", var.name)
+      "Name" = format("%s", coalesce(var.redshift_subnet_group_name, var.name))
     },
     var.tags,
     var.redshift_subnet_group_tags,
   )
 }
 
-################################################################################
+#####################
 # ElastiCache subnet
-################################################################################
-
+#####################
 resource "aws_subnet" "elasticache" {
   count = var.create_vpc && length(var.elasticache_subnets) > 0 ? length(var.elasticache_subnets) : 0
 
@@ -651,15 +651,22 @@ resource "aws_subnet" "elasticache" {
 resource "aws_elasticache_subnet_group" "elasticache" {
   count = var.create_vpc && length(var.elasticache_subnets) > 0 && var.create_elasticache_subnet_group ? 1 : 0
 
-  name        = var.name
+  name        = coalesce(var.elasticache_subnet_group_name, var.name)
   description = "ElastiCache subnet group for ${var.name}"
   subnet_ids  = aws_subnet.elasticache.*.id
+
+  tags = merge(
+    {
+      "Name" = format("%s", coalesce(var.elasticache_subnet_group_name, var.name))
+    },
+    var.tags,
+    var.elasticache_subnet_group_tags,
+  )
 }
 
-################################################################################
-# Intra subnets - private subnet without NAT gateway
-################################################################################
-
+#####################################################
+# intra subnets - private subnet without NAT gateway
+#####################################################
 resource "aws_subnet" "intra" {
   count = var.create_vpc && length(var.intra_subnets) > 0 ? length(var.intra_subnets) : 0
 
@@ -684,10 +691,9 @@ resource "aws_subnet" "intra" {
   )
 }
 
-################################################################################
+#######################
 # Default Network ACLs
-################################################################################
-
+#######################
 resource "aws_default_network_acl" "this" {
   count = var.create_vpc && var.manage_default_network_acl ? 1 : 0
 
@@ -703,7 +709,6 @@ resource "aws_default_network_acl" "this" {
       aws_subnet.database.*.id,
       aws_subnet.redshift.*.id,
       aws_subnet.elasticache.*.id,
-      aws_subnet.outpost.*.id,
     ])),
     compact(flatten([
       aws_network_acl.public.*.subnet_ids,
@@ -712,7 +717,6 @@ resource "aws_default_network_acl" "this" {
       aws_network_acl.database.*.subnet_ids,
       aws_network_acl.redshift.*.subnet_ids,
       aws_network_acl.elasticache.*.subnet_ids,
-      aws_network_acl.outpost.*.subnet_ids,
     ]))
   )
 
@@ -754,10 +758,9 @@ resource "aws_default_network_acl" "this" {
   )
 }
 
-################################################################################
+########################
 # Public Network ACLs
-################################################################################
-
+########################
 resource "aws_network_acl" "public" {
   count = var.create_vpc && var.public_dedicated_network_acl && length(var.public_subnets) > 0 ? 1 : 0
 
@@ -911,8 +914,7 @@ resource "aws_network_acl_rule" "public_eks_outbound_green" {
 
 ######################
 # Private Network ACLs
-################################################################################
-
+#######################
 resource "aws_network_acl" "private" {
   count = var.create_vpc && var.private_dedicated_network_acl && length(var.private_subnets) > 0 ? 1 : 0
 
@@ -1067,8 +1069,7 @@ resource "aws_network_acl_rule" "private_eks_outbound_green" {
 
 ################################################################################
 # Intra Network ACLs
-################################################################################
-
+########################
 resource "aws_network_acl" "intra" {
   count = var.create_vpc && var.intra_dedicated_network_acl && length(var.intra_subnets) > 0 ? 1 : 0
 
@@ -1118,10 +1119,9 @@ resource "aws_network_acl_rule" "intra_outbound" {
   ipv6_cidr_block = lookup(var.intra_outbound_acl_rules[count.index], "ipv6_cidr_block", null)
 }
 
-################################################################################
+########################
 # Database Network ACLs
-################################################################################
-
+########################
 resource "aws_network_acl" "database" {
   count = var.create_vpc && var.database_dedicated_network_acl && length(var.database_subnets) > 0 ? 1 : 0
 
@@ -1171,10 +1171,9 @@ resource "aws_network_acl_rule" "database_outbound" {
   ipv6_cidr_block = lookup(var.database_outbound_acl_rules[count.index], "ipv6_cidr_block", null)
 }
 
-################################################################################
+########################
 # Redshift Network ACLs
-################################################################################
-
+########################
 resource "aws_network_acl" "redshift" {
   count = var.create_vpc && var.redshift_dedicated_network_acl && length(var.redshift_subnets) > 0 ? 1 : 0
 
@@ -1224,10 +1223,9 @@ resource "aws_network_acl_rule" "redshift_outbound" {
   ipv6_cidr_block = lookup(var.redshift_outbound_acl_rules[count.index], "ipv6_cidr_block", null)
 }
 
-################################################################################
+###########################
 # Elasticache Network ACLs
-################################################################################
-
+###########################
 resource "aws_network_acl" "elasticache" {
   count = var.create_vpc && var.elasticache_dedicated_network_acl && length(var.elasticache_subnets) > 0 ? 1 : 0
 
@@ -1277,10 +1275,9 @@ resource "aws_network_acl_rule" "elasticache_outbound" {
   ipv6_cidr_block = lookup(var.elasticache_outbound_acl_rules[count.index], "ipv6_cidr_block", null)
 }
 
-################################################################################
+##############
 # NAT Gateway
-################################################################################
-
+##############
 # Workaround for interpolation not being able to "short-circuit" the evaluation of the conditional branch that doesn't end up being used
 # Source: https://github.com/hashicorp/terraform/issues/11566#issuecomment-289417805
 #
@@ -1380,10 +1377,9 @@ resource "aws_route" "private_eks_ipv6_egress_green" {
   egress_only_gateway_id      = element(aws_egress_only_internet_gateway.this.*.id, 0)
 }
 
-################################################################################
+##########################
 # Route table association
-################################################################################
-
+##########################
 resource "aws_route_table_association" "private" {
   count = var.create_vpc && length(var.private_subnets) > 0 ? length(var.private_subnets) : 0
 
@@ -1408,7 +1404,6 @@ resource "aws_route_table_association" "private_eks_green" {
   count = var.create_vpc && length(var.private_eks_subnets_green) > 0 ? length(var.private_eks_subnets_green) : 0
 
   subnet_id = element(aws_subnet.private_eks_green.*.id, count.index)
-
   route_table_id = element(
     aws_route_table.private.*.id,
     var.single_nat_gateway ? 0 : count.index,
@@ -1488,14 +1483,14 @@ resource "aws_route_table_association" "public_eks_green" {
 
 ####################
 # Customer Gateways
-################################################################################
-
+####################
 resource "aws_customer_gateway" "this" {
   for_each = var.customer_gateways
 
-  bgp_asn    = each.value["bgp_asn"]
-  ip_address = each.value["ip_address"]
-  type       = "ipsec.1"
+  bgp_asn     = each.value["bgp_asn"]
+  ip_address  = each.value["ip_address"]
+  device_name = lookup(each.value, "device_name", null)
+  type        = "ipsec.1"
 
   tags = merge(
     {
@@ -1506,10 +1501,9 @@ resource "aws_customer_gateway" "this" {
   )
 }
 
-################################################################################
+##############
 # VPN Gateway
-################################################################################
-
+##############
 resource "aws_vpn_gateway" "this" {
   count = var.create_vpc && var.enable_vpn_gateway ? 1 : 0
 
@@ -1572,10 +1566,9 @@ resource "aws_vpn_gateway_route_propagation" "intra" {
   )
 }
 
-################################################################################
+###########
 # Defaults
-################################################################################
-
+###########
 resource "aws_default_vpc" "this" {
   count = var.manage_default_vpc ? 1 : 0
 
