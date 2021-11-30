@@ -23,15 +23,15 @@ Note that this example may create resources which can cost money (AWS Elastic IP
 
 | Name | Version |
 |------|---------|
-| <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 0.12.26 |
-| <a name="requirement_aws"></a> [aws](#requirement\_aws) | >= 3.15 |
+| <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 0.13.1 |
+| <a name="requirement_aws"></a> [aws](#requirement\_aws) | >= 3.63 |
 | <a name="requirement_random"></a> [random](#requirement\_random) | >= 2 |
 
 ## Providers
 
 | Name | Version |
 |------|---------|
-| <a name="provider_aws"></a> [aws](#provider\_aws) | >= 3.15 |
+| <a name="provider_aws"></a> [aws](#provider\_aws) | >= 3.63 |
 | <a name="provider_random"></a> [random](#provider\_random) | >= 2 |
 
 ## Modules
@@ -39,9 +39,10 @@ Note that this example may create resources which can cost money (AWS Elastic IP
 | Name | Source | Version |
 |------|--------|---------|
 | <a name="module_s3_bucket"></a> [s3\_bucket](#module\_s3\_bucket) | terraform-aws-modules/s3-bucket/aws | ~> 1.0 |
-| <a name="module_vpc_with_flow_logs_cloudwatch_logs"></a> [vpc\_with\_flow\_logs\_cloudwatch\_logs](#module\_vpc\_with\_flow\_logs\_cloudwatch\_logs) | ../../ |  |
-| <a name="module_vpc_with_flow_logs_cloudwatch_logs_default"></a> [vpc\_with\_flow\_logs\_cloudwatch\_logs\_default](#module\_vpc\_with\_flow\_logs\_cloudwatch\_logs\_default) | ../../ |  |
-| <a name="module_vpc_with_flow_logs_s3_bucket"></a> [vpc\_with\_flow\_logs\_s3\_bucket](#module\_vpc\_with\_flow\_logs\_s3\_bucket) | ../../ |  |
+| <a name="module_vpc_with_flow_logs_cloudwatch_logs"></a> [vpc\_with\_flow\_logs\_cloudwatch\_logs](#module\_vpc\_with\_flow\_logs\_cloudwatch\_logs) | ../../ | n/a |
+| <a name="module_vpc_with_flow_logs_cloudwatch_logs_default"></a> [vpc\_with\_flow\_logs\_cloudwatch\_logs\_default](#module\_vpc\_with\_flow\_logs\_cloudwatch\_logs\_default) | ../../ | n/a |
+| <a name="module_vpc_with_flow_logs_s3_bucket"></a> [vpc\_with\_flow\_logs\_s3\_bucket](#module\_vpc\_with\_flow\_logs\_s3\_bucket) | ../../ | n/a |
+| <a name="module_vpc_with_flow_logs_s3_bucket_parquet"></a> [vpc\_with\_flow\_logs\_s3\_bucket\_parquet](#module\_vpc\_with\_flow\_logs\_s3\_bucket\_parquet) | ../../ | n/a |
 
 ## Resources
 
