@@ -11,7 +11,7 @@ variable "name" {
 }
 
 variable "cidr" {
-  description = "(Optional) The IPv4 CIDR block for the VPC."
+  description = "(Optional) The IPv4 CIDR block for the VPC. CIDR can be explicitly set or it can be derived from IPAM using `ipv4_netmask_length` & `ipv4_ipam_pool_id`"
   type        = string
   default     = "0.0.0.0/0"
 }
@@ -1193,6 +1193,12 @@ variable "flow_log_per_hour_partition" {
 variable "ipv4_ipam_pool_id" {
   description = "(Optional) The ID of an IPv4 IPAM pool you want to use for allocating this VPC's CIDR."
   type        = string
+  default     = null
+}
+
+variable "ipv4_netmask_length" {
+  description = "(Optional) The netmask length of the IPv4 CIDR you want to allocate to this VPC. Requires specifying a ipv4_ipam_pool_id."
+  type        = number
   default     = null
 }
 

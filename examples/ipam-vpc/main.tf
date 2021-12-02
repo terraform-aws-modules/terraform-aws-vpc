@@ -6,7 +6,8 @@ locals {
   name   = "ex-${replace(basename(path.cwd), "_", "-")}"
   region = "eu-west-1"
 
-  partition = cidrsubnets(aws_vpc_ipam_preview_next_cidr.this.cidr, 2, 2)
+  azs               = ["${local.region}a", "${local.region}b", "${local.region}c"]
+  preview_partition = cidrsubnets(aws_vpc_ipam_preview_next_cidr.this.cidr, 2, 2)
 
   tags = {
     Example    = local.name
@@ -19,19 +20,55 @@ locals {
 # VPC Module
 ################################################################################
 
-module "vpc" {
+module "vpc_without_ipam" {
   source = "../.."
 
-  name = local.name
+  name = "${local.name}-without-ipam"
+  cidr = "10.0.0.0/16"
 
-  private_subnets = cidrsubnets(local.partition[0], 2, 2)
-  public_subnets  = cidrsubnets(local.partition[1], 2, 2)
-
-  ipv4_ipam_pool_id = aws_vpc_ipam_pool.this.id
-  azs               = ["${local.region}a", "${local.region}b"]
-  cidr              = aws_vpc_ipam_preview_next_cidr.this.cidr
+  private_subnets = ["10.0.1.0/24", "10.0.2.0/24", "10.0.3.0/24"]
+  public_subnets  = ["10.0.11.0/24", "10.0.12.0/24", "10.0.13.0/24"]
 
   tags = local.tags
+}
+
+module "vpc_ipam_set_cidr" {
+  source = "../.."
+
+  name = "${local.name}-set-cidr"
+
+  ipv4_ipam_pool_id = aws_vpc_ipam_pool.this.id
+  cidr              = "10.0.0.0/16"
+  azs               = local.azs
+
+  private_subnets = ["10.0.1.0/24", "10.0.2.0/24", "10.0.3.0/24"]
+  public_subnets  = ["10.0.11.0/24", "10.0.12.0/24", "10.0.13.0/24"]
+
+  tags = local.tags
+
+  depends_on = [
+    aws_vpc_ipam_pool_cidr.this
+  ]
+}
+
+module "vpc_ipam_set_netmask" {
+  source = "../.."
+
+  name = "${local.name}-set-netmask"
+
+  ipv4_ipam_pool_id   = aws_vpc_ipam_pool.this.id
+  ipv4_netmask_length = 28
+  azs                 = local.azs
+
+
+  private_subnets = cidrsubnets(local.preview_partition[0], 2, 2, 2)
+  public_subnets  = cidrsubnets(local.preview_partition[1], 2, 2, 2)
+
+  tags = local.tags
+
+  depends_on = [
+    aws_vpc_ipam_pool_cidr.this
+  ]
 }
 
 ################################################################################

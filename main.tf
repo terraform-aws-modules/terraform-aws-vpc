@@ -20,8 +20,9 @@ locals {
 resource "aws_vpc" "this" {
   count = local.create_vpc ? 1 : 0
 
-  cidr_block        = var.cidr
-  ipv4_ipam_pool_id = var.ipv4_ipam_pool_id
+  cidr_block          = var.ipv4_ipam_pool_id != null ? null : var.cidr
+  ipv4_ipam_pool_id   = var.ipv4_ipam_pool_id
+  ipv4_netmask_length = var.ipv4_netmask_length
 
   instance_tenancy                 = var.instance_tenancy
   enable_dns_hostnames             = var.enable_dns_hostnames
