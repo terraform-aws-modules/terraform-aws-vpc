@@ -238,6 +238,12 @@ variable "create_database_subnet_group" {
   default     = true
 }
 
+variable "create_database_public_subnet_group" {
+  description = "Controls if database public subnet group should be created (n.b. public_subnets must also be set). This will allow databases to be created for public access."
+  type        = bool
+  default     = false
+}
+
 variable "create_elasticache_subnet_group" {
   description = "Controls if elasticache subnet group should be created"
   type        = bool
@@ -484,6 +490,12 @@ variable "database_subnet_group_name" {
   default     = null
 }
 
+variable "database_public_subnet_group_name" {
+  description = "Name of database public subnet group"
+  type        = string
+  default     = null
+}
+
 variable "database_subnet_tags" {
   description = "Additional tags for the database subnets"
   type        = map(string)
@@ -492,6 +504,12 @@ variable "database_subnet_tags" {
 
 variable "database_subnet_group_tags" {
   description = "Additional tags for the database subnet group"
+  type        = map(string)
+  default     = {}
+}
+
+variable "database_public_subnet_group_tags" {
+  description = "Additional tags for the database public subnet group"
   type        = map(string)
   default     = {}
 }

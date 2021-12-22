@@ -159,6 +159,15 @@ Sometimes it is handy to have public access to RDS instances (it is not recommen
   enable_dns_support   = true
 ```
 
+Alternatively, rather than creating an internet gateway to the entire database subnets, the following can be set:
+
+```hcl
+create_database_public_subnet_group = true
+```
+
+Setting this value to `true` will create a database subnet group within the public subnets. Any database created in this subnet group will have public access  (in most cases, this is not recommended).
+
+
 ## Network Access Control Lists (ACL or NACL)
 
 This module can manage network ACL and rules. Once VPC is created, AWS creates the default network ACL, which can be controlled using this module (`manage_default_network_acl = true`).

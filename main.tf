@@ -499,6 +499,22 @@ resource "aws_db_subnet_group" "database" {
   )
 }
 
+resource "aws_db_subnet_group" "database_public" {
+  count = var.create_vpc && length(var.public_subnets) > 0 && var.create_database_public_subnet_group ? 1 : 0
+
+  name        = lower(coalesce(var.database_public_subnet_group_name, "${var.name}-public"))
+  description = "Database public subnet group for ${var.name}"
+  subnet_ids  = aws_subnet.public.*.id
+
+  tags = merge(
+    {
+      "Name" = format("%s", lower(coalesce(var.database_public_subnet_group_name, "${var.name}-public")))
+    },
+    var.tags,
+    var.database_public_subnet_group_tags,
+  )
+}
+
 ################################################################################
 # Redshift subnet
 ################################################################################
