@@ -87,9 +87,22 @@ module "vpc_endpoints" {
   security_group_ids = [data.aws_security_group.default.id]
 
   endpoints = {
+    # S3 Interface Endpoint
+    # s3 = {
+    #  service = "s3"
+    #  tags    = { Name = "s3-vpc-endpoint" }
+    # },
+    # S3 Gateway Endpoint, which is free
     s3 = {
-      service = "s3"
-      tags    = { Name = "s3-vpc-endpoint" }
+      service      = "s3"
+      service_type = "Gateway"
+      route_table_ids = flatten([
+        module.vpc.default_route_table_id,
+        module.vpc.private_route_table_ids,
+        module.vpc.public_route_table_ids,
+      ])
+      policy = data.aws_iam_policy_document.s3_endpoint_policy.json
+      tags   = { Name = "s3-vpc-endpoint" }
     },
     dynamodb = {
       service         = "dynamodb"
@@ -229,6 +242,34 @@ data "aws_iam_policy_document" "generic_endpoint_policy" {
       variable = "aws:sourceVpce"
 
       values = [data.aws_vpc_endpoint_service.dynamodb.id]
+    }
+  }
+}
+
+# Example VPC Endpoint Policy for the S3 VPC Endpoint that only allows 1 action on 1 bucket.
+# The S3 bucket policy can then be modified to only allow requests coming from the VPC Endpoint:
+#   condition {
+#    test     = "StringEquals"
+#    variable = "aws:sourceVpce"
+#    values = [
+#      module.vpc_endpoints.endpoints["s3"].id,
+#    ]
+#   }
+data "aws_iam_policy_document" "s3_endpoint_policy" {
+  statement {
+    effect = "Allow"
+
+    actions = [
+      "s3:GetObject",
+    ]
+
+    resources = [
+      "arn:aws:s3:::example-bucket/*",
+    ]
+
+    principals {
+      type        = "*"
+      identifiers = ["*"]
     }
   }
 }
