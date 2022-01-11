@@ -1,13 +1,9 @@
-locals {
-  endpoints = var.create ? var.endpoints : tomap({})
-}
-
 ################################################################################
 # Endpoint(s)
 ################################################################################
 
 data "aws_vpc_endpoint_service" "this" {
-  for_each = local.endpoints
+  for_each = { for k, v in var.endpoints : k => v if var.create }
 
   service      = lookup(each.value, "service", null)
   service_name = lookup(each.value, "service_name", null)
@@ -19,7 +15,7 @@ data "aws_vpc_endpoint_service" "this" {
 }
 
 resource "aws_vpc_endpoint" "this" {
-  for_each = local.endpoints
+  for_each = { for k, v in var.endpoints : k => v if var.create }
 
   vpc_id            = var.vpc_id
   service_name      = data.aws_vpc_endpoint_service.this[each.key].service_name
