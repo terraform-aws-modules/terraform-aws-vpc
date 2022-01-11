@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+### [3.11.2](https://github.com/terraform-aws-modules/terraform-aws-vpc/compare/v3.11.1...v3.11.2) (2022-01-11)
+
+
+### Bug Fixes
+
+* Correct `for_each` map on VPC endpoints to propagate endpoint maps correctly ([#729](https://github.com/terraform-aws-modules/terraform-aws-vpc/issues/729)) ([19fcf0d](https://github.com/terraform-aws-modules/terraform-aws-vpc/commit/19fcf0d68027dea10ecaa456ccea1cb50567e388))
+
 ### [3.11.1](https://github.com/terraform-aws-modules/terraform-aws-vpc/compare/v3.11.0...v3.11.1) (2022-01-10)
 
 
