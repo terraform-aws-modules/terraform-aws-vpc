@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+### [3.11.3](https://github.com/terraform-aws-modules/terraform-aws-vpc/compare/v3.11.2...v3.11.3) (2022-01-13)
+
+
+### Bug Fixes
+
+* Update tags for default resources to correct spurious plan diffs ([#730](https://github.com/terraform-aws-modules/terraform-aws-vpc/issues/730)) ([d1adf74](https://github.com/terraform-aws-modules/terraform-aws-vpc/commit/d1adf743b27ef131b559ec15c7aadc37466a74b9))
+
 ### [3.11.2](https://github.com/terraform-aws-modules/terraform-aws-vpc/compare/v3.11.1...v3.11.2) (2022-01-11)
 
 
