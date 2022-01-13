@@ -284,37 +284,37 @@ output "intra_route_table_ids" {
 }
 
 output "public_internet_gateway_route_id" {
-  description = "ID of the internet gateway route."
+  description = "ID of the internet gateway route"
   value       = try(aws_route.public_internet_gateway[0].id, "")
 }
 
 output "public_internet_gateway_ipv6_route_id" {
-  description = "ID of the IPv6 internet gateway route."
+  description = "ID of the IPv6 internet gateway route"
   value       = try(aws_route.public_internet_gateway_ipv6[0].id, "")
 }
 
 output "database_internet_gateway_route_id" {
-  description = "ID of the database internet gateway route."
+  description = "ID of the database internet gateway route"
   value       = try(aws_route.database_internet_gateway[0].id, "")
 }
 
 output "database_nat_gateway_route_ids" {
-  description = "List of IDs of the database nat gateway route."
+  description = "List of IDs of the database nat gateway route"
   value       = aws_route.database_nat_gateway[*].id
 }
 
 output "database_ipv6_egress_route_id" {
-  description = "ID of the database IPv6 egress route."
+  description = "ID of the database IPv6 egress route"
   value       = try(aws_route.database_ipv6_egress[0].id, "")
 }
 
 output "private_nat_gateway_route_ids" {
-  description = "List of IDs of the private nat gateway route."
+  description = "List of IDs of the private nat gateway route"
   value       = aws_route.private_nat_gateway[*].id
 }
 
 output "private_ipv6_egress_route_ids" {
-  description = "List of IDs of the ipv6 egress route."
+  description = "List of IDs of the ipv6 egress route"
   value       = aws_route.private_ipv6_egress[*].id
 }
 

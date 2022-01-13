@@ -32,8 +32,14 @@ module "vpc" {
 
   create_database_subnet_group = false
 
+  manage_default_network_acl = true
+  default_network_acl_tags   = { Name = "${local.name}-default" }
+
   manage_default_route_table = true
-  default_route_table_tags   = { DefaultRouteTable = true }
+  default_route_table_tags   = { Name = "${local.name}-default" }
+
+  manage_default_security_group = true
+  default_security_group_tags   = { Name = "${local.name}-default" }
 
   enable_dns_hostnames = true
   enable_dns_support   = true
@@ -61,11 +67,6 @@ module "vpc" {
   enable_dhcp_options              = true
   dhcp_options_domain_name         = "service.consul"
   dhcp_options_domain_name_servers = ["127.0.0.1", "10.10.0.2"]
-
-  # Default security group - ingress/egress rules cleared to deny all
-  manage_default_security_group  = true
-  default_security_group_ingress = []
-  default_security_group_egress  = []
 
   # VPC Flow Logs (Cloudwatch log group and IAM role will be created)
   enable_flow_log                      = true
@@ -187,13 +188,9 @@ data "aws_security_group" "default" {
 }
 
 # Data source used to avoid race condition
-data "aws_vpc_endpoint_service" "dynamodb" {
-  service = "dynamodb"
-
-  filter {
-    name   = "service-type"
-    values = ["Gateway"]
-  }
+data "aws_vpc_endpoint" "dynamodb" {
+  vpc_id       = module.vpc.vpc_id
+  service_name = "com.amazonaws.${local.region}.dynamodb"
 }
 
 data "aws_iam_policy_document" "dynamodb_endpoint_policy" {
@@ -211,7 +208,7 @@ data "aws_iam_policy_document" "dynamodb_endpoint_policy" {
       test     = "StringNotEquals"
       variable = "aws:sourceVpce"
 
-      values = [data.aws_vpc_endpoint_service.dynamodb.id]
+      values = [data.aws_vpc_endpoint.dynamodb.id]
     }
   }
 }
@@ -229,9 +226,9 @@ data "aws_iam_policy_document" "generic_endpoint_policy" {
 
     condition {
       test     = "StringNotEquals"
-      variable = "aws:sourceVpce"
+      variable = "aws:SourceVpc"
 
-      values = [data.aws_vpc_endpoint_service.dynamodb.id]
+      values = [module.vpc.vpc_id]
     }
   }
 }
