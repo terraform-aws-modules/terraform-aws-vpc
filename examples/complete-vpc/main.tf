@@ -38,6 +38,9 @@ module "vpc" {
   manage_default_route_table = true
   default_route_table_tags   = { Name = "${local.name}-default" }
 
+  manage_default_security_group = true
+  default_security_group_tags   = { Name = "${local.name}-default" }
+
   enable_dns_hostnames = true
   enable_dns_support   = true
 
@@ -64,12 +67,6 @@ module "vpc" {
   enable_dhcp_options              = true
   dhcp_options_domain_name         = "service.consul"
   dhcp_options_domain_name_servers = ["127.0.0.1", "10.10.0.2"]
-
-  # Default security group - ingress/egress rules cleared to deny all
-  manage_default_security_group  = true
-  default_security_group_tags    = { Name = "${local.name}-default" }
-  default_security_group_ingress = []
-  default_security_group_egress  = []
 
   # VPC Flow Logs (Cloudwatch log group and IAM role will be created)
   enable_flow_log                      = true
