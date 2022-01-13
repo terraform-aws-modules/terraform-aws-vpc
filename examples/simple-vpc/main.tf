@@ -22,10 +22,6 @@ module "vpc" {
 
   enable_ipv6 = true
 
-  manage_default_network_acl    = true
-  manage_default_route_table    = true
-  manage_default_security_group = true
-
   enable_nat_gateway = false
   single_nat_gateway = true
 

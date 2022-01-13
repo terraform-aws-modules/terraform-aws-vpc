@@ -45,7 +45,7 @@ resource "aws_vpc_ipv4_cidr_block_association" "this" {
 resource "aws_default_security_group" "this" {
   count = var.create_vpc && var.manage_default_security_group ? 1 : 0
 
-  vpc_id = local.vpc_id
+  vpc_id = aws_vpc.this[0].id
 
   dynamic "ingress" {
     for_each = var.default_security_group_ingress
@@ -78,7 +78,7 @@ resource "aws_default_security_group" "this" {
   }
 
   tags = merge(
-    { "Name" = coalesce(var.default_security_group_name, "${var.name}-default") },
+    { "Name" = coalesce(var.default_security_group_name, var.name) },
     var.tags,
     var.default_security_group_tags,
   )
@@ -174,7 +174,7 @@ resource "aws_default_route_table" "default" {
   }
 
   tags = merge(
-    { "Name" = coalesce(var.default_route_table_name, "${var.name}-default") },
+    { "Name" = coalesce(var.default_route_table_name, var.name) },
     var.tags,
     var.default_route_table_tags,
   )
@@ -640,7 +640,7 @@ resource "aws_default_network_acl" "this" {
   }
 
   tags = merge(
-    { "Name" = coalesce(var.default_network_acl_name, "${var.name}-default") },
+    { "Name" = coalesce(var.default_network_acl_name, var.name) },
     var.tags,
     var.default_network_acl_tags,
   )
