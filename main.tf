@@ -1077,18 +1077,18 @@ resource "aws_route" "private_ipv6_egress" {
 resource "aws_route" "private_route_table_routes" {
   count = length(var.private_subnets) * length(var.private_route_table_routes)
 
-  route_table_id         = element(aws_route_table.private[*].id, floor(count.index/length(var.private_route_table_routes)))
-  destination_cidr_block = element(var.private_route_table_routes, floor(count.index/length(var.private_subnets))).cidr_block
+  route_table_id         = element(aws_route_table.private[*].id, floor(count.index / length(var.private_route_table_routes)))
+  destination_cidr_block = element(var.private_route_table_routes, floor(count.index / length(var.private_subnets))).cidr_block
 
   # One of the following targets must be provided
-  egress_only_gateway_id = lookup(element(var.private_route_table_routes, floor(count.index/length(var.private_subnets))), "egress_only_gateway_id", null)
-  gateway_id             = lookup(element(var.private_route_table_routes, floor(count.index/length(var.private_subnets))), "gateway_id", null)
-  instance_id            = lookup(element(var.private_route_table_routes, floor(count.index/length(var.private_subnets))), "instance_id", null)
-  nat_gateway_id         = lookup(element(var.private_route_table_routes, floor(count.index/length(var.private_subnets))), "nat_gateway_id", null)
-  network_interface_id   = lookup(element(var.private_route_table_routes, floor(count.index/length(var.private_subnets))), "network_interface_id", null)
-  transit_gateway_id     = lookup(element(var.private_route_table_routes, floor(count.index/length(var.private_subnets))), "transit_gateway_id", null)
-  vpc_endpoint_id        = lookup(element(var.private_route_table_routes, floor(count.index/length(var.private_subnets))), "vpc_endpoint_id", null)
-  vpc_peering_connection_id = lookup(element(var.private_route_table_routes, floor(count.index/length(var.private_subnets))), "vpc_peering_connection_id", null)
+  egress_only_gateway_id    = lookup(element(var.private_route_table_routes, floor(count.index / length(var.private_subnets))), "egress_only_gateway_id", null)
+  gateway_id                = lookup(element(var.private_route_table_routes, floor(count.index / length(var.private_subnets))), "gateway_id", null)
+  instance_id               = lookup(element(var.private_route_table_routes, floor(count.index / length(var.private_subnets))), "instance_id", null)
+  nat_gateway_id            = lookup(element(var.private_route_table_routes, floor(count.index / length(var.private_subnets))), "nat_gateway_id", null)
+  network_interface_id      = lookup(element(var.private_route_table_routes, floor(count.index / length(var.private_subnets))), "network_interface_id", null)
+  transit_gateway_id        = lookup(element(var.private_route_table_routes, floor(count.index / length(var.private_subnets))), "transit_gateway_id", null)
+  vpc_endpoint_id           = lookup(element(var.private_route_table_routes, floor(count.index / length(var.private_subnets))), "vpc_endpoint_id", null)
+  vpc_peering_connection_id = lookup(element(var.private_route_table_routes, floor(count.index / length(var.private_subnets))), "vpc_peering_connection_id", null)
 
   timeouts {
     create = "5m"
