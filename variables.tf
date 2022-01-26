@@ -388,6 +388,12 @@ variable "manage_default_route_table" {
   default     = false
 }
 
+variable "default_route_table_name" {
+  description = "Name to be used on the default route table"
+  type        = string
+  default     = null
+}
+
 variable "default_route_table_propagating_vgws" {
   description = "List of virtual gateways for propagation"
   type        = list(string)
@@ -667,7 +673,7 @@ variable "manage_default_vpc" {
 variable "default_vpc_name" {
   description = "Name to be used on the Default VPC"
   type        = string
-  default     = ""
+  default     = null
 }
 
 variable "default_vpc_enable_dns_support" {
@@ -703,7 +709,7 @@ variable "manage_default_network_acl" {
 variable "default_network_acl_name" {
   description = "Name to be used on the Default Network ACL"
   type        = string
-  default     = ""
+  default     = null
 }
 
 variable "default_network_acl_tags" {
@@ -1035,13 +1041,13 @@ variable "manage_default_security_group" {
 variable "default_security_group_name" {
   description = "Name to be used on the default security group"
   type        = string
-  default     = "default"
+  default     = null
 }
 
 variable "default_security_group_ingress" {
   description = "List of maps of ingress rules to set on the default security group"
   type        = list(map(string))
-  default     = null
+  default     = []
 }
 
 variable "enable_flow_log" {
@@ -1053,7 +1059,7 @@ variable "enable_flow_log" {
 variable "default_security_group_egress" {
   description = "List of maps of egress rules to set on the default security group"
   type        = list(map(string))
-  default     = null
+  default     = []
 }
 
 variable "default_security_group_tags" {
