@@ -406,6 +406,12 @@ variable "default_route_table_routes" {
   default     = []
 }
 
+variable "private_route_table_routes" {
+  description = "Configuration block of private routes."
+  type        = list(map(string))
+  default     = []
+}
+
 variable "default_route_table_tags" {
   description = "Additional tags for the default route table"
   type        = map(string)
