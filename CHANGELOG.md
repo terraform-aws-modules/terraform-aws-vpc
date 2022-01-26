@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+### [3.11.4](https://github.com/terraform-aws-modules/terraform-aws-vpc/compare/v3.11.3...v3.11.4) (2022-01-26)
+
+
+### Bug Fixes
+
+* Fixed redshift_route_table_ids outputs ([#739](https://github.com/terraform-aws-modules/terraform-aws-vpc/issues/739)) ([7c8df92](https://github.com/terraform-aws-modules/terraform-aws-vpc/commit/7c8df92f471af5f40ac126f2bb194722d92228f3))
+
 ### [3.11.3](https://github.com/terraform-aws-modules/terraform-aws-vpc/compare/v3.11.2...v3.11.3) (2022-01-13)
 
 
