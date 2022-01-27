@@ -223,6 +223,26 @@ output "intra_subnets_ipv6_cidr_blocks" {
   value       = aws_subnet.intra[*].ipv6_cidr_block
 }
 
+output "tgwattach_subnets" {
+  description = "List of IDs of TGW Attachement subnets"
+  value       = aws_subnet.tgwattach[*].id
+}
+
+output "tgwattach_subnet_arns" {
+  description = "List of ARNs of TGW Attachement subnets"
+  value       = aws_subnet.tgwattach[*].arn
+}
+
+output "tgwattach_subnets_cidr_blocks" {
+  description = "List of cidr_blocks of TGW Attachement subnets"
+  value       = aws_subnet.tgwattach[*].cidr_block
+}
+
+output "tgwattach_subnets_ipv6_cidr_blocks" {
+  description = "List of IPv6 cidr_blocks of TGW Attachement subnets in an IPv6 enabled VPC"
+  value       = aws_subnet.tgwattach[*].ipv6_cidr_block
+}
+
 output "elasticache_subnet_group" {
   description = "ID of elasticache subnet group"
   value       = try(aws_elasticache_subnet_group.elasticache[0].id, "")
@@ -261,6 +281,11 @@ output "elasticache_route_table_ids" {
 output "intra_route_table_ids" {
   description = "List of IDs of intra route tables"
   value       = aws_route_table.intra[*].id
+}
+
+output "tgwattach_route_table_ids" {
+  description = "List of IDs of TGW Attachement route tables"
+  value       = aws_route_table.tgwattach[*].id
 }
 
 output "public_internet_gateway_route_id" {
@@ -326,6 +351,11 @@ output "elasticache_route_table_association_ids" {
 output "intra_route_table_association_ids" {
   description = "List of IDs of the intra route table association"
   value       = aws_route_table_association.intra[*].id
+}
+
+output "tgwattach_route_table_association_ids" {
+  description = "List of IDs of the TGW Attachement route table association"
+  value       = aws_route_table_association.tgwattach[*].id
 }
 
 output "public_route_table_association_ids" {
@@ -481,6 +511,16 @@ output "intra_network_acl_id" {
 output "intra_network_acl_arn" {
   description = "ARN of the intra network ACL"
   value       = try(aws_network_acl.intra[0].arn, "")
+}
+
+output "tgwattach_network_acl_id" {
+  description = "ID of the TGW Attachement network ACL"
+  value       = try(aws_network_acl.tgwattach[0].id, "")
+}
+
+output "tgwattach_network_acl_arn" {
+  description = "ARN of the TGW Attachement network ACL"
+  value       = try(aws_network_acl.tgwattach[0].arn, "")
 }
 
 output "database_network_acl_id" {

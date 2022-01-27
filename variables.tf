@@ -64,6 +64,12 @@ variable "intra_subnet_ipv6_prefixes" {
   default     = []
 }
 
+variable "tgwattach_subnet_ipv6_prefixes" {
+  description = "Assigns IPv6 TGW Attachement subnet id based on the Amazon provided /56 prefix base 10 integer (0-256). Must be of equal length to the corresponding IPv4 subnet list"
+  type        = list(string)
+  default     = []
+}
+
 variable "assign_ipv6_address_on_creation" {
   description = "Assign IPv6 address on subnet, must be disabled to change IPv6 CIDRs. This is the IPv6 equivalent of map_public_ip_on_launch"
   type        = bool
@@ -112,6 +118,12 @@ variable "intra_subnet_assign_ipv6_address_on_creation" {
   default     = null
 }
 
+variable "tgwattach_subnet_assign_ipv6_address_on_creation" {
+  description = "Assign IPv6 address on TGW Attachement subnet, must be disabled to change IPv6 CIDRs. This is the IPv6 equivalent of map_public_ip_on_launch"
+  type        = bool
+  default     = null
+}
+
 variable "secondary_cidr_blocks" {
   description = "List of secondary CIDR blocks to associate with the VPC to extend the IP Address pool"
   type        = list(string)
@@ -146,6 +158,12 @@ variable "intra_subnet_suffix" {
   description = "Suffix to append to intra subnets name"
   type        = string
   default     = "intra"
+}
+
+variable "tgwattach_subnet_suffix" {
+  description = "Suffix to append to TGW Attachement subnets name"
+  type        = string
+  default     = "tgwattach"
 }
 
 variable "database_subnet_suffix" {
@@ -208,6 +226,12 @@ variable "intra_subnets" {
   default     = []
 }
 
+variable "tgwattach_subnets" {
+  description = "A list of TGW Attachement subnets"
+  type        = list(string)
+  default     = []
+}
+
 variable "create_database_subnet_route_table" {
   description = "Controls if separate route table for database should be created"
   type        = bool
@@ -228,6 +252,12 @@ variable "enable_public_redshift" {
 
 variable "create_elasticache_subnet_route_table" {
   description = "Controls if separate route table for elasticache should be created"
+  type        = bool
+  default     = false
+}
+
+variable "create_tgwattach_subnet_route_table" {
+  description = "Controls if separate route table for TGW Attachement should be created"
   type        = bool
   default     = false
 }
@@ -258,6 +288,18 @@ variable "create_database_internet_gateway_route" {
 
 variable "create_database_nat_gateway_route" {
   description = "Controls if a nat gateway route should be created to give internet access to the database subnets"
+  type        = bool
+  default     = false
+}
+
+variable "create_tgwattach_internet_gateway_route" {
+  description = "Controls if an internet gateway route for public TGW Attachement access should be created"
+  type        = bool
+  default     = false
+}
+
+variable "create_tgwattach_nat_gateway_route" {
+  description = "Controls if a nat gateway route should be created to give internet access to the TGW Attachement subnets"
   type        = bool
   default     = false
 }
@@ -460,6 +502,12 @@ variable "private_route_table_tags" {
   default     = {}
 }
 
+variable "tgwattach_route_table_tags" {
+  description = "Additional tags for the TGW Attachement route tables"
+  type        = map(string)
+  default     = {}
+}
+
 variable "database_route_table_tags" {
   description = "Additional tags for the database route tables"
   type        = map(string)
@@ -544,6 +592,12 @@ variable "intra_subnet_tags" {
   default     = {}
 }
 
+variable "tgwattach_subnet_tags" {
+  description = "Additional tags for the TGW Attachement subnets"
+  type        = map(string)
+  default     = {}
+}
+
 variable "public_acl_tags" {
   description = "Additional tags for the public subnets network ACL"
   type        = map(string)
@@ -564,6 +618,12 @@ variable "outpost_acl_tags" {
 
 variable "intra_acl_tags" {
   description = "Additional tags for the intra subnets network ACL"
+  type        = map(string)
+  default     = {}
+}
+
+variable "tgwattach_acl_tags" {
+  description = "Additional tags for the TGW Attachement subnets network ACL"
   type        = map(string)
   default     = {}
 }
@@ -738,6 +798,12 @@ variable "outpost_dedicated_network_acl" {
 
 variable "intra_dedicated_network_acl" {
   description = "Whether to use dedicated network ACL (not default) and custom rules for intra subnets"
+  type        = bool
+  default     = false
+}
+
+variable "tgwattach_dedicated_network_acl" {
+  description = "Whether to use dedicated network ACL (not default) and custom rules for TGW Attachement subnets"
   type        = bool
   default     = false
 }
@@ -922,6 +988,38 @@ variable "intra_inbound_acl_rules" {
 
 variable "intra_outbound_acl_rules" {
   description = "Intra subnets outbound network ACLs"
+  type        = list(map(string))
+
+  default = [
+    {
+      rule_number = 100
+      rule_action = "allow"
+      from_port   = 0
+      to_port     = 0
+      protocol    = "-1"
+      cidr_block  = "0.0.0.0/0"
+    },
+  ]
+}
+
+variable "tgwattach_inbound_acl_rules" {
+  description = "TGW Attachement subnets inbound network ACLs"
+  type        = list(map(string))
+
+  default = [
+    {
+      rule_number = 100
+      rule_action = "allow"
+      from_port   = 0
+      to_port     = 0
+      protocol    = "-1"
+      cidr_block  = "0.0.0.0/0"
+    },
+  ]
+}
+
+variable "tgwattach_outbound_acl_rules" {
+  description = "TGW Attachement subnets outbound network ACLs"
   type        = list(map(string))
 
   default = [
