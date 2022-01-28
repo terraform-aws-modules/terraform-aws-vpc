@@ -208,7 +208,7 @@ data "aws_iam_policy_document" "dynamodb_endpoint_policy" {
       test     = "StringNotEquals"
       variable = "aws:sourceVpce"
 
-      values = [data.vpc.vpc_id]
+      values = [module.vpc.vpc_id]
     }
   }
 }
