@@ -256,12 +256,6 @@ variable "create_elasticache_subnet_route_table" {
   default     = false
 }
 
-variable "create_tgwattach_subnet_route_table" {
-  description = "Controls if separate route table for TGW Attachement should be created"
-  type        = bool
-  default     = false
-}
-
 variable "create_database_subnet_group" {
   description = "Controls if database subnet group should be created (n.b. database_subnets must also be set)"
   type        = bool
@@ -292,14 +286,8 @@ variable "create_database_nat_gateway_route" {
   default     = false
 }
 
-variable "create_tgwattach_internet_gateway_route" {
-  description = "Controls if an internet gateway route for public TGW Attachement access should be created"
-  type        = bool
-  default     = false
-}
-
-variable "create_tgwattach_nat_gateway_route" {
-  description = "Controls if a nat gateway route should be created to give internet access to the TGW Attachement subnets"
+variable "tgwattach_associate_private_route_table" {
+  description = "Controls if the private route talbe should be attached to give internet access to the TGW Attachement subnets"
   type        = bool
   default     = false
 }
@@ -502,12 +490,6 @@ variable "private_route_table_tags" {
   default     = {}
 }
 
-variable "tgwattach_route_table_tags" {
-  description = "Additional tags for the TGW Attachement route tables"
-  type        = map(string)
-  default     = {}
-}
-
 variable "database_route_table_tags" {
   description = "Additional tags for the database route tables"
   type        = map(string)
@@ -618,12 +600,6 @@ variable "outpost_acl_tags" {
 
 variable "intra_acl_tags" {
   description = "Additional tags for the intra subnets network ACL"
-  type        = map(string)
-  default     = {}
-}
-
-variable "tgwattach_acl_tags" {
-  description = "Additional tags for the TGW Attachement subnets network ACL"
   type        = map(string)
   default     = {}
 }
@@ -798,12 +774,6 @@ variable "outpost_dedicated_network_acl" {
 
 variable "intra_dedicated_network_acl" {
   description = "Whether to use dedicated network ACL (not default) and custom rules for intra subnets"
-  type        = bool
-  default     = false
-}
-
-variable "tgwattach_dedicated_network_acl" {
-  description = "Whether to use dedicated network ACL (not default) and custom rules for TGW Attachement subnets"
   type        = bool
   default     = false
 }
@@ -988,38 +958,6 @@ variable "intra_inbound_acl_rules" {
 
 variable "intra_outbound_acl_rules" {
   description = "Intra subnets outbound network ACLs"
-  type        = list(map(string))
-
-  default = [
-    {
-      rule_number = 100
-      rule_action = "allow"
-      from_port   = 0
-      to_port     = 0
-      protocol    = "-1"
-      cidr_block  = "0.0.0.0/0"
-    },
-  ]
-}
-
-variable "tgwattach_inbound_acl_rules" {
-  description = "TGW Attachement subnets inbound network ACLs"
-  type        = list(map(string))
-
-  default = [
-    {
-      rule_number = 100
-      rule_action = "allow"
-      from_port   = 0
-      to_port     = 0
-      protocol    = "-1"
-      cidr_block  = "0.0.0.0/0"
-    },
-  ]
-}
-
-variable "tgwattach_outbound_acl_rules" {
-  description = "TGW Attachement subnets outbound network ACLs"
   type        = list(map(string))
 
   default = [

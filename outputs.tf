@@ -283,11 +283,6 @@ output "intra_route_table_ids" {
   value       = aws_route_table.intra[*].id
 }
 
-output "tgwattach_route_table_ids" {
-  description = "List of IDs of TGW Attachement route tables"
-  value       = aws_route_table.tgwattach[*].id
-}
-
 output "public_internet_gateway_route_id" {
   description = "ID of the internet gateway route"
   value       = try(aws_route.public_internet_gateway[0].id, "")
@@ -511,16 +506,6 @@ output "intra_network_acl_id" {
 output "intra_network_acl_arn" {
   description = "ARN of the intra network ACL"
   value       = try(aws_network_acl.intra[0].arn, "")
-}
-
-output "tgwattach_network_acl_id" {
-  description = "ID of the TGW Attachement network ACL"
-  value       = try(aws_network_acl.tgwattach[0].id, "")
-}
-
-output "tgwattach_network_acl_arn" {
-  description = "ARN of the TGW Attachement network ACL"
-  value       = try(aws_network_acl.tgwattach[0].arn, "")
 }
 
 output "database_network_acl_id" {
