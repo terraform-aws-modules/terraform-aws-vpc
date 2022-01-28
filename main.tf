@@ -814,28 +814,9 @@ resource "aws_default_network_acl" "this" {
 
   default_network_acl_id = aws_vpc.this[0].default_network_acl_id
 
-  # The value of subnet_ids should be any subnet IDs that are not set as subnet_ids
-  #   for any of the non-default network ACLs
-  subnet_ids = setsubtract(
-    compact(flatten([
-      aws_subnet.public[*].id,
-      aws_subnet.private[*].id,
-      aws_subnet.intra[*].id,
-      aws_subnet.database[*].id,
-      aws_subnet.redshift[*].id,
-      aws_subnet.elasticache[*].id,
-      aws_subnet.outpost[*].id,
-    ])),
-    compact(flatten([
-      aws_network_acl.public[*].subnet_ids,
-      aws_network_acl.private[*].subnet_ids,
-      aws_network_acl.intra[*].subnet_ids,
-      aws_network_acl.database[*].subnet_ids,
-      aws_network_acl.redshift[*].subnet_ids,
-      aws_network_acl.elasticache[*].subnet_ids,
-      aws_network_acl.outpost[*].subnet_ids,
-    ]))
-  )
+  # subnet_ids is using lifecycle ignore_changes, so it is not necessary to list
+  # any explicitly. See https://github.com/terraform-aws-modules/terraform-aws-vpc/issues/736.
+  subnet_ids = null
 
   dynamic "ingress" {
     for_each = var.default_network_acl_ingress
@@ -871,6 +852,10 @@ resource "aws_default_network_acl" "this" {
     var.tags,
     var.default_network_acl_tags,
   )
+
+  lifecycle {
+    ignore_changes = [subnet_ids]
+  }
 }
 
 ################################################################################
