@@ -68,6 +68,11 @@ output "vpc_owner_id" {
   value       = try(aws_vpc.this[0].owner_id, "")
 }
 
+output "private_subnet_resources" {
+  description = "List of private subnet resources"
+  value       = aws_subnet.private
+}
+
 output "private_subnets" {
   description = "List of IDs of private subnets"
   value       = aws_subnet.private[*].id
@@ -76,11 +81,6 @@ output "private_subnets" {
 output "private_subnet_arns" {
   description = "List of ARNs of private subnets"
   value       = aws_subnet.private[*].arn
-}
-
-output "private_subnet_azs" {
-  description = "Map of AZs to private subnet IDs"
-  value       = { for subnet in aws_subnet.private[*] : subnet.availability_zone => subnet.id... }
 }
 
 output "private_subnets_cidr_blocks" {
@@ -93,6 +93,11 @@ output "private_subnets_ipv6_cidr_blocks" {
   value       = aws_subnet.private[*].ipv6_cidr_block
 }
 
+output "public_subnet_resources" {
+  description = "List of public subnet resources"
+  value       = aws_subnet.public
+}
+
 output "public_subnets" {
   description = "List of IDs of public subnets"
   value       = aws_subnet.public[*].id
@@ -101,11 +106,6 @@ output "public_subnets" {
 output "public_subnet_arns" {
   description = "List of ARNs of public subnets"
   value       = aws_subnet.public[*].arn
-}
-
-output "public_subnet_azs" {
-  description = "Map of AZs to public subnet IDs"
-  value       = { for subnet in aws_subnet.public[*] : subnet.availability_zone => subnet.id... }
 }
 
 output "public_subnets_cidr_blocks" {
@@ -118,6 +118,11 @@ output "public_subnets_ipv6_cidr_blocks" {
   value       = aws_subnet.public[*].ipv6_cidr_block
 }
 
+output "outpost_subnet_resources" {
+  description = "List of outpost subnet resources"
+  value       = aws_subnet.outpost
+}
+
 output "outpost_subnets" {
   description = "List of IDs of outpost subnets"
   value       = aws_subnet.outpost[*].id
@@ -126,11 +131,6 @@ output "outpost_subnets" {
 output "outpost_subnet_arns" {
   description = "List of ARNs of outpost subnets"
   value       = aws_subnet.outpost[*].arn
-}
-
-output "outpost_subnet_azs" {
-  description = "Map of AZs to outpost subnet IDs"
-  value       = { for subnet in aws_subnet.outpost[*] : subnet.availability_zone => subnet.id... }
 }
 
 output "outpost_subnets_cidr_blocks" {
@@ -143,6 +143,11 @@ output "outpost_subnets_ipv6_cidr_blocks" {
   value       = aws_subnet.outpost[*].ipv6_cidr_block
 }
 
+output "database_subnet_resources" {
+  description = "List of database subnet resources"
+  value       = aws_subnet.database
+}
+
 output "database_subnets" {
   description = "List of IDs of database subnets"
   value       = aws_subnet.database[*].id
@@ -151,11 +156,6 @@ output "database_subnets" {
 output "database_subnet_arns" {
   description = "List of ARNs of database subnets"
   value       = aws_subnet.database[*].arn
-}
-
-output "database_subnet_azs" {
-  description = "Map of AZs to database subnet IDs"
-  value       = { for subnet in aws_subnet.database[*] : subnet.availability_zone => subnet.id... }
 }
 
 output "database_subnets_cidr_blocks" {
@@ -178,6 +178,11 @@ output "database_subnet_group_name" {
   value       = try(aws_db_subnet_group.database[0].name, "")
 }
 
+output "redshift_subnet_resources" {
+  description = "List of redshift subnet resources"
+  value       = aws_subnet.redshift
+}
+
 output "redshift_subnets" {
   description = "List of IDs of redshift subnets"
   value       = aws_subnet.redshift[*].id
@@ -186,11 +191,6 @@ output "redshift_subnets" {
 output "redshift_subnet_arns" {
   description = "List of ARNs of redshift subnets"
   value       = aws_subnet.redshift[*].arn
-}
-
-output "redshift_subnet_azs" {
-  description = "Map of AZs to redshift subnet IDs"
-  value       = { for subnet in aws_subnet.redshift[*] : subnet.availability_zone => subnet.id... }
 }
 
 output "redshift_subnets_cidr_blocks" {
@@ -208,6 +208,11 @@ output "redshift_subnet_group" {
   value       = try(aws_redshift_subnet_group.redshift[0].id, "")
 }
 
+output "elasticache_subnet_resources" {
+  description = "List of elasticache subnet resources"
+  value       = aws_subnet.elasticache
+}
+
 output "elasticache_subnets" {
   description = "List of IDs of elasticache subnets"
   value       = aws_subnet.elasticache[*].id
@@ -216,11 +221,6 @@ output "elasticache_subnets" {
 output "elasticache_subnet_arns" {
   description = "List of ARNs of elasticache subnets"
   value       = aws_subnet.elasticache[*].arn
-}
-
-output "elasticache_subnet_azs" {
-  description = "Map of AZs to elasticache subnet IDs"
-  value       = { for subnet in aws_subnet.elasticache[*] : subnet.availability_zone => subnet.id... }
 }
 
 output "elasticache_subnets_cidr_blocks" {
@@ -233,6 +233,11 @@ output "elasticache_subnets_ipv6_cidr_blocks" {
   value       = aws_subnet.elasticache[*].ipv6_cidr_block
 }
 
+output "intra_subnet_resources" {
+  description = "List of intra subnet resources"
+  value       = aws_subnet.intra
+}
+
 output "intra_subnets" {
   description = "List of IDs of intra subnets"
   value       = aws_subnet.intra[*].id
@@ -241,11 +246,6 @@ output "intra_subnets" {
 output "intra_subnet_arns" {
   description = "List of ARNs of intra subnets"
   value       = aws_subnet.intra[*].arn
-}
-
-output "intra_subnet_azs" {
-  description = "Map of AZs to intra subnet IDs"
-  value       = { for subnet in aws_subnet.intra[*] : subnet.availability_zone => subnet.id... }
 }
 
 output "intra_subnets_cidr_blocks" {
