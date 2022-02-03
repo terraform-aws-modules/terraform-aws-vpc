@@ -78,6 +78,11 @@ output "private_subnet_arns" {
   value       = aws_subnet.private[*].arn
 }
 
+output "private_subnet_azs" {
+  description = "Map of AZs to private subnet IDs"
+  value       = { for subnet in aws_subnet.private[*] : subnet.availability_zone => subnet.id... }
+}
+
 output "private_subnets_cidr_blocks" {
   description = "List of cidr_blocks of private subnets"
   value       = aws_subnet.private[*].cidr_block
@@ -96,6 +101,11 @@ output "public_subnets" {
 output "public_subnet_arns" {
   description = "List of ARNs of public subnets"
   value       = aws_subnet.public[*].arn
+}
+
+output "public_subnet_azs" {
+  description = "Map of AZs to public subnet IDs"
+  value       = { for subnet in aws_subnet.public[*] : subnet.availability_zone => subnet.id... }
 }
 
 output "public_subnets_cidr_blocks" {
@@ -118,6 +128,11 @@ output "outpost_subnet_arns" {
   value       = aws_subnet.outpost[*].arn
 }
 
+output "outpost_subnet_azs" {
+  description = "Map of AZs to outpost subnet IDs"
+  value       = { for subnet in aws_subnet.outpost[*] : subnet.availability_zone => subnet.id... }
+}
+
 output "outpost_subnets_cidr_blocks" {
   description = "List of cidr_blocks of outpost subnets"
   value       = aws_subnet.outpost[*].cidr_block
@@ -136,6 +151,11 @@ output "database_subnets" {
 output "database_subnet_arns" {
   description = "List of ARNs of database subnets"
   value       = aws_subnet.database[*].arn
+}
+
+output "database_subnet_azs" {
+  description = "Map of AZs to database subnet IDs"
+  value       = { for subnet in aws_subnet.database[*] : subnet.availability_zone => subnet.id... }
 }
 
 output "database_subnets_cidr_blocks" {
@@ -168,6 +188,11 @@ output "redshift_subnet_arns" {
   value       = aws_subnet.redshift[*].arn
 }
 
+output "redshift_subnet_azs" {
+  description = "Map of AZs to redshift subnet IDs"
+  value       = { for subnet in aws_subnet.redshift[*] : subnet.availability_zone => subnet.id... }
+}
+
 output "redshift_subnets_cidr_blocks" {
   description = "List of cidr_blocks of redshift subnets"
   value       = aws_subnet.redshift[*].cidr_block
@@ -193,6 +218,11 @@ output "elasticache_subnet_arns" {
   value       = aws_subnet.elasticache[*].arn
 }
 
+output "elasticache_subnet_azs" {
+  description = "Map of AZs to elasticache subnet IDs"
+  value       = { for subnet in aws_subnet.elasticache[*] : subnet.availability_zone => subnet.id... }
+}
+
 output "elasticache_subnets_cidr_blocks" {
   description = "List of cidr_blocks of elasticache subnets"
   value       = aws_subnet.elasticache[*].cidr_block
@@ -211,6 +241,11 @@ output "intra_subnets" {
 output "intra_subnet_arns" {
   description = "List of ARNs of intra subnets"
   value       = aws_subnet.intra[*].arn
+}
+
+output "intra_subnet_azs" {
+  description = "Map of AZs to intra subnet IDs"
+  value       = { for subnet in aws_subnet.intra[*] : subnet.availability_zone => subnet.id... }
 }
 
 output "intra_subnets_cidr_blocks" {
