@@ -214,7 +214,7 @@ resource "aws_route_table" "public" {
       "Name" = var.enable_firewall ? format(
         "%s-%s-%s",
         var.name,
-        var.public_subnet_suffix
+        var.public_subnet_suffix,
         element(var.azs, count.index),
       ) : "${var.name}-${var.public_subnet_suffix}"
     },
