@@ -549,7 +549,6 @@ output "network_firewall_arn" {
   value       = concat(aws_networkfirewall_firewall.this.*.arn, [""])[0]
 }
 
-
 # VPC flow log
 output "vpc_flow_log_id" {
   description = "The ID of the Flow Log resource"

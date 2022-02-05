@@ -8,6 +8,15 @@ locals {
   )
   nat_gateway_count = var.single_nat_gateway ? 1 : var.one_nat_gateway_per_az ? length(var.azs) : local.max_subnet_length
 
+  # create a set of endpoint ids order by availability zone based on the order of var.azs
+  # even when var.azs is not lexicographically ordered
+  firewall_sync_states = aws_networkfirewall_firewall.this[0].firewall_status[0].sync_states
+  firewall_endpoint_ids_ordered_by_azs = flatten([for az in var.azs :
+    [for sszone, ssid in {
+      for ss in tolist(local.firewall_sync_states) :
+      ss.availability_zone => ss.attachment[0].endpoint_id
+  } : ssid if sszone == az]])
+
   # Use `local.vpc_id` to give a hint to Terraform that subnets should be deleted before secondary CIDR blocks can be free!
   vpc_id = try(aws_vpc_ipv4_cidr_block_association.this[0].vpc_id, aws_vpc.this[0].id, "")
 }
@@ -240,8 +249,7 @@ resource "aws_route" "public_firewall" {
 
   route_table_id         = element(aws_route_table.public.*.id, count.index)
   destination_cidr_block = "0.0.0.0/0"
-  vpc_endpoint_id        = element([for ss in tolist(aws_networkfirewall_firewall.this[0].firewall_status[0].sync_states) : ss.attachment[0].endpoint_id if ss.attachment[0].subnet_id == aws_subnet.firewall[count.index].id], 0)
-
+  vpc_endpoint_id        = element(local.firewall_endpoint_ids_ordered_by_azs, count.index)
   timeouts {
     create = "5m"
   }
@@ -381,7 +389,7 @@ resource "aws_route" "internet_gateway_firewall" {
 
   route_table_id         = aws_route_table.internet_gateway[0].id
   destination_cidr_block = aws_subnet.public[count.index].cidr_block
-  vpc_endpoint_id        = element([for ss in tolist(aws_networkfirewall_firewall.this[0].firewall_status[0].sync_states) : ss.attachment[0].endpoint_id if ss.attachment[0].subnet_id == aws_subnet.firewall[count.index].id], 0)
+  vpc_endpoint_id        = element(local.firewall_endpoint_ids_ordered_by_azs, count.index)
 }
 
 ################################################################################
