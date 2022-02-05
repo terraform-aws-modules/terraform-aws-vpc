@@ -116,6 +116,53 @@ Since AWS Lambda functions allocate Elastic Network Interfaces in proportion to 
 
 You can add additional tags with `intra_subnet_tags` as with other subnet types.
 
+## Tagging individual subnets
+
+You can tag subnets individually using `private_subnet_tags_per_subnets`, `public_subnet_tags_per_subnets`, `intra_subnet_tags_per_subnets` respectively for each subnet type, for example:
+
+```hcl
+  cidr                  = "10.0.0.0/16"   # EKS Nodes & co
+  secondary_cidr_blocks = ["10.1.0.0/16"] # EKS Pods
+
+  azs             = ["eu-west-1a", "eu-west-1b", "eu-west-1c"]
+  private_subnets = [
+    "10.0.0.0/19",  "10.0.32.0/19",  "10.0.64.0/19",  # EKS Nodes and load balancers
+    "10.1.0.0/18",  "10.1.64.0/18",  "10.1.128.0/18", # EKS Pods
+    "10.0.96.0/20", "10.0.112.0/20", "10.0.128.0/20", # Some other services e.g. EMR
+  ]
+  public_subnets  = ["10.0.144.0/21", "10.0.152.0/21", "10.0.160.0/21"]
+
+  # Tag individual private subnets by index
+  private_subnet_tags_per_subnet = {
+    0 = {
+      component                                   = "eks-nodes"
+      "kubernetes.io/cluster/my-eks-cluster-name" = "shared"
+      "kubernetes.io/role/internal-elb"           = "1"
+    }
+    1 = {
+      component                                   = "eks-nodes"
+      "kubernetes.io/cluster/my-eks-cluster-name" = "shared"
+      "kubernetes.io/role/internal-elb"           = "1"
+    }
+    2 = {
+      component                                   = "eks-nodes"
+      "kubernetes.io/cluster/my-eks-cluster-name" = "shared"
+      "kubernetes.io/role/internal-elb"           = "1"
+    }
+    3 = { component = "eks-pods" }
+    4 = { component = "eks-pods" }
+    5 = { component = "eks-pods" }
+    6 = { component = "emr" }
+    7 = { component = "emr" }
+    8 = { component = "emr" }
+  }
+
+  # Tag all public subnets
+  public_subnet_tags = {
+    "kubernetes.io/cluster/my-eks-cluster-name" = "shared"
+  }
+```
+
 ## VPC Flow Log
 
 VPC Flow Log allows to capture IP traffic for a specific network interface (ENI), subnet, or entire VPC. This module supports enabling or disabling VPC Flow Logs for entire VPC. If you need to have VPC Flow Logs for subnet or ENI, you have to manage it outside of this module with [aws_flow_log resource](https://www.terraform.io/docs/providers/aws/r/flow_log.html).
@@ -402,6 +449,7 @@ No modules.
 | <a name="input_intra_subnet_ipv6_prefixes"></a> [intra\_subnet\_ipv6\_prefixes](#input\_intra\_subnet\_ipv6\_prefixes) | Assigns IPv6 intra subnet id based on the Amazon provided /56 prefix base 10 integer (0-256). Must be of equal length to the corresponding IPv4 subnet list | `list(string)` | `[]` | no |
 | <a name="input_intra_subnet_suffix"></a> [intra\_subnet\_suffix](#input\_intra\_subnet\_suffix) | Suffix to append to intra subnets name | `string` | `"intra"` | no |
 | <a name="input_intra_subnet_tags"></a> [intra\_subnet\_tags](#input\_intra\_subnet\_tags) | Additional tags for the intra subnets | `map(string)` | `{}` | no |
+| <a name="input_intra_subnet_tags_per_subnet"></a> [intra\_subnet\_tags\_per\_subnet](#input\_intra\_subnet\_tags\_per\_subnet) | Additional tags for each individual intra subnet by index | `map(map(string))` | `{}` | no |
 | <a name="input_intra_subnets"></a> [intra\_subnets](#input\_intra\_subnets) | A list of intra subnets | `list(string)` | `[]` | no |
 | <a name="input_manage_default_network_acl"></a> [manage\_default\_network\_acl](#input\_manage\_default\_network\_acl) | Should be true to adopt and manage Default Network ACL | `bool` | `false` | no |
 | <a name="input_manage_default_route_table"></a> [manage\_default\_route\_table](#input\_manage\_default\_route\_table) | Should be true to manage default route table | `bool` | `false` | no |
@@ -432,6 +480,7 @@ No modules.
 | <a name="input_private_subnet_ipv6_prefixes"></a> [private\_subnet\_ipv6\_prefixes](#input\_private\_subnet\_ipv6\_prefixes) | Assigns IPv6 private subnet id based on the Amazon provided /56 prefix base 10 integer (0-256). Must be of equal length to the corresponding IPv4 subnet list | `list(string)` | `[]` | no |
 | <a name="input_private_subnet_suffix"></a> [private\_subnet\_suffix](#input\_private\_subnet\_suffix) | Suffix to append to private subnets name | `string` | `"private"` | no |
 | <a name="input_private_subnet_tags"></a> [private\_subnet\_tags](#input\_private\_subnet\_tags) | Additional tags for the private subnets | `map(string)` | `{}` | no |
+| <a name="input_private_subnet_tags_per_subnet"></a> [private\_subnet\_tags\_per\_subnet](#input\_private\_subnet\_tags\_per\_subnet) | Additional tags for each individual private subnet by index | `map(map(string))` | `{}` | no |
 | <a name="input_private_subnets"></a> [private\_subnets](#input\_private\_subnets) | A list of private subnets inside the VPC | `list(string)` | `[]` | no |
 | <a name="input_propagate_intra_route_tables_vgw"></a> [propagate\_intra\_route\_tables\_vgw](#input\_propagate\_intra\_route\_tables\_vgw) | Should be true if you want route table propagation | `bool` | `false` | no |
 | <a name="input_propagate_private_route_tables_vgw"></a> [propagate\_private\_route\_tables\_vgw](#input\_propagate\_private\_route\_tables\_vgw) | Should be true if you want route table propagation | `bool` | `false` | no |
@@ -445,6 +494,7 @@ No modules.
 | <a name="input_public_subnet_ipv6_prefixes"></a> [public\_subnet\_ipv6\_prefixes](#input\_public\_subnet\_ipv6\_prefixes) | Assigns IPv6 public subnet id based on the Amazon provided /56 prefix base 10 integer (0-256). Must be of equal length to the corresponding IPv4 subnet list | `list(string)` | `[]` | no |
 | <a name="input_public_subnet_suffix"></a> [public\_subnet\_suffix](#input\_public\_subnet\_suffix) | Suffix to append to public subnets name | `string` | `"public"` | no |
 | <a name="input_public_subnet_tags"></a> [public\_subnet\_tags](#input\_public\_subnet\_tags) | Additional tags for the public subnets | `map(string)` | `{}` | no |
+| <a name="input_public_subnet_tags_per_subnet"></a> [public\_subnet\_tags\_per\_subnet](#input\_public\_subnet\_tags\_per\_subnet) | Additional tags for each individual public subnet by index | `map(map(string))` | `{}` | no |
 | <a name="input_public_subnets"></a> [public\_subnets](#input\_public\_subnets) | A list of public subnets inside the VPC | `list(string)` | `[]` | no |
 | <a name="input_redshift_acl_tags"></a> [redshift\_acl\_tags](#input\_redshift\_acl\_tags) | Additional tags for the redshift subnets network ACL | `map(string)` | `{}` | no |
 | <a name="input_redshift_dedicated_network_acl"></a> [redshift\_dedicated\_network\_acl](#input\_redshift\_dedicated\_network\_acl) | Whether to use dedicated network ACL (not default) and custom rules for redshift subnets | `bool` | `false` | no |

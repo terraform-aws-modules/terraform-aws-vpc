@@ -436,9 +436,21 @@ variable "public_subnet_tags" {
   default     = {}
 }
 
+variable "public_subnet_tags_per_subnet" {
+  description = "Additional tags for each individual public subnet by index"
+  type        = map(map(string))
+  default     = {}
+}
+
 variable "private_subnet_tags" {
   description = "Additional tags for the private subnets"
   type        = map(string)
+  default     = {}
+}
+
+variable "private_subnet_tags_per_subnet" {
+  description = "Additional tags for each individual private subnet by index"
+  type        = map(map(string))
   default     = {}
 }
 
@@ -541,6 +553,12 @@ variable "elasticache_subnet_tags" {
 variable "intra_subnet_tags" {
   description = "Additional tags for the intra subnets"
   type        = map(string)
+  default     = {}
+}
+
+variable "intra_subnet_tags_per_subnet" {
+  description = "Additional tags for each individual intra subnet by index"
+  type        = map(map(string))
   default     = {}
 }
 
