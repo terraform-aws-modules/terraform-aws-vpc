@@ -6,13 +6,15 @@ locals {
     length(var.redshift_subnets),
     length(var.firewall_subnets),
   )
+
   nat_gateway_count = var.single_nat_gateway ? 1 : var.one_nat_gateway_per_az ? length(var.azs) : local.max_subnet_length
 
-  # create a set of endpoint ids order by availability zone based on the order of var.azs
-  # even when var.azs is not lexicographically ordered
-  firewall_sync_states = aws_networkfirewall_firewall.this[0].firewall_status[0].sync_states
+  # Creates a set of endpoint ids ordered by availability zone based on the order of var.azs
+  # even when var.azs is not lexicographically ordered, e.g azs = ["us-east-1b", "us-east-1a"]
+  firewall_sync_states = var.enable_firewall ? aws_networkfirewall_firewall.this[0].firewall_status[0].sync_states : []
   firewall_endpoint_ids_ordered_by_azs = flatten([for az in var.azs :
     [for sszone, ssid in {
+      # Creates a map of az to firewall vpces e.g {"us-east-1a" = "vpce-xxxx", "us-east-1b"= "vpce-yyyy"}
       for ss in tolist(local.firewall_sync_states) :
       ss.availability_zone => ss.attachment[0].endpoint_id
   } : ssid if sszone == az]])
@@ -214,7 +216,7 @@ resource "aws_default_route_table" "default" {
 ################################################################################
 
 resource "aws_route_table" "public" {
-  count = var.create_vpc && length(var.public_subnets) > 0 ? var.enable_firewall ? length(var.public_subnets) : 1 : 0
+  count = var.create_vpc && length(var.public_subnets) > 0 ? var.enable_firewall ? length(var.firewall_subnets) : 1 : 0
 
   vpc_id = local.vpc_id
 
@@ -1326,8 +1328,11 @@ resource "aws_route_table_association" "intra" {
 resource "aws_route_table_association" "public" {
   count = var.create_vpc && length(var.public_subnets) > 0 ? length(var.public_subnets) : 0
 
-  subnet_id      = element(aws_subnet.public.*.id, count.index)
-  route_table_id = aws_route_table.public[var.enable_firewall ? count.index : 0].id
+  subnet_id = element(aws_subnet.public[*].id, count.index)
+  route_table_id = element(
+    aws_route_table.public[*].id,
+    var.enable_firewall ? count.index : 0,
+  )
 }
 
 resource "aws_route_table_association" "public_internet_gateway" {
