@@ -1040,7 +1040,7 @@ resource "aws_nat_gateway" "this" {
 }
 
 resource "aws_route" "private_nat_gateway" {
-  count = var.create_vpc && var.enable_nat_gateway ? local.nat_gateway_count : 0
+  count = var.create_vpc && var.enable_nat_gateway && length(var.private_subnets) > 0 ? local.nat_gateway_count : 0
 
   route_table_id         = element(aws_route_table.private[*].id, count.index)
   destination_cidr_block = var.nat_gateway_destination_cidr_block
