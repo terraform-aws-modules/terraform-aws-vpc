@@ -118,18 +118,6 @@ variable "ipv6_ipam_pool_id" {
   default     = null
 }
 
-variable "ipv6_cidr_block" {
-  description = "The IPv6 CIDR block for the VPC. CIDR can be explicitly set or it can be derived from IPAM using ipv6_netmask_length. This parameter is required if ipv6_netmask_length is not set and he IPAM pool does not have allocation_default_netmask set."
-  type        = string
-  default     = null
-}
-
-variable "ipv6_netmask_length" {
-  description = "The netmask length of the IPv6 CIDR you want to allocate to this VPC. Requires specifying a ipv6_ipam_pool_id. This parameter is optional if the IPAM pool has allocation_default_netmask set, otherwise it or cidr_block are required"
-  type        = number
-  default     = null
-}
-
 variable "secondary_cidr_blocks" {
   description = "List of secondary CIDR blocks to associate with the VPC to extend the IP Address pool"
   type        = list(string)
