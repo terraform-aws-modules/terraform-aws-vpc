@@ -214,6 +214,12 @@ variable "create_database_subnet_route_table" {
   default     = false
 }
 
+variable "create_outpost_subnet_route_table" {
+  description = "Controls if separate route table for outpost should be created"
+  type        = bool
+  default     = false
+}
+
 variable "create_redshift_subnet_route_table" {
   description = "Controls if separate route table for redshift should be created"
   type        = bool
@@ -474,6 +480,12 @@ variable "database_route_table_tags" {
 
 variable "redshift_route_table_tags" {
   description = "Additional tags for the redshift route tables"
+  type        = map(string)
+  default     = {}
+}
+
+variable "outpost_route_table_tags" {
+  description = "Additional tags for the outpost route tables"
   type        = map(string)
   default     = {}
 }

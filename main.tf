@@ -4,6 +4,7 @@ locals {
     length(var.elasticache_subnets),
     length(var.database_subnets),
     length(var.redshift_subnets),
+    length(var.outpost_subnets),
   )
   nat_gateway_count = var.single_nat_gateway ? 1 : var.one_nat_gateway_per_az ? length(var.azs) : local.max_subnet_length
 
@@ -308,6 +309,22 @@ resource "aws_route_table" "redshift" {
     { "Name" = "${var.name}-${var.redshift_subnet_suffix}" },
     var.tags,
     var.redshift_route_table_tags,
+  )
+}
+
+################################################################################
+# Outposts routes
+################################################################################
+
+resource "aws_route_table" "outpost" {
+  count = var.create_vpc && var.create_outpost_subnet_route_table && length(var.outpost_subnets) > 0 ? 1 : 0
+
+  vpc_id = local.vpc_id
+
+  tags = merge(
+    { "Name" = "${var.name}-${var.outpost_subnet_suffix}" },
+    var.tags,
+    var.outpost_route_table_tags,
   )
 }
 
@@ -1076,11 +1093,8 @@ resource "aws_route_table_association" "private" {
 resource "aws_route_table_association" "outpost" {
   count = var.create_vpc && length(var.outpost_subnets) > 0 ? length(var.outpost_subnets) : 0
 
-  subnet_id = element(aws_subnet.outpost[*].id, count.index)
-  route_table_id = element(
-    aws_route_table.private[*].id,
-    var.single_nat_gateway ? 0 : count.index,
-  )
+  subnet_id      = element(aws_subnet.outpost[*].id, count.index)
+  route_table_id = element(aws_route_table.outpost[*].id, 0)
 }
 
 resource "aws_route_table_association" "database" {
