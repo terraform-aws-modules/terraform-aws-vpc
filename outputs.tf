@@ -238,6 +238,11 @@ output "public_route_table_ids" {
   value       = aws_route_table.public[*].id
 }
 
+output "outpost_route_table_ids" {
+  description = "List of IDs of outpost route tables"
+  value       = aws_route_table.outpost[*].id
+}
+
 output "private_route_table_ids" {
   description = "List of IDs of private route tables"
   value       = aws_route_table.private[*].id
