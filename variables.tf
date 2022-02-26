@@ -1180,9 +1180,3 @@ variable "ipv4_ipam_pool_id" {
   type        = string
   default     = null
 }
-
-variable "ipv4_netmask_length" {
-  description = "(Optional) The netmask length of the IPv4 CIDR you want to allocate to this VPC. Requires specifying a ipv4_ipam_pool_id."
-  type        = number
-  default     = null
-}
