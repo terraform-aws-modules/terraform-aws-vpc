@@ -2,6 +2,20 @@
 
 All notable changes to this project will be documented in this file.
 
+## [3.12.0](https://github.com/terraform-aws-modules/terraform-aws-vpc/compare/v3.11.5...v3.12.0) (2022-02-07)
+
+
+### Features
+
+* Added custom route for NAT gateway ([#748](https://github.com/terraform-aws-modules/terraform-aws-vpc/issues/748)) ([728a4d1](https://github.com/terraform-aws-modules/terraform-aws-vpc/commit/728a4d114000f256a24d8d4bc9895184df533d0c))
+
+### [3.11.5](https://github.com/terraform-aws-modules/terraform-aws-vpc/compare/v3.11.4...v3.11.5) (2022-01-28)
+
+
+### Bug Fixes
+
+* Addresses persistent diff with manage_default_network_acl ([#737](https://github.com/terraform-aws-modules/terraform-aws-vpc/issues/737)) ([d247d8e](https://github.com/terraform-aws-modules/terraform-aws-vpc/commit/d247d8e44728a86d0024a2da9b0cd34ad218c33a))
+
 ### [3.11.4](https://github.com/terraform-aws-modules/terraform-aws-vpc/compare/v3.11.3...v3.11.4) (2022-01-26)
 
 

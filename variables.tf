@@ -298,6 +298,12 @@ variable "enable_nat_gateway" {
   default     = false
 }
 
+variable "nat_gateway_destination_cidr_block" {
+  description = "Used to pass a custom destination route for private NAT Gateway. If not specified, the default 0.0.0.0/0 is used as a destination route."
+  type        = string
+  default     = "0.0.0.0/0"
+}
+
 variable "single_nat_gateway" {
   description = "Should be true if you want to provision a single shared NAT Gateway across all of your private networks"
   type        = bool
