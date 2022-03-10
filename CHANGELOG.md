@@ -3,9 +3,23 @@
 
 
 
+<a name="v2.8.0"></a>
+## [v2.8.0] - 2019-07-21
+
+- Fixed README after merge
+- Additional VPC Endpoints ([#302](https://github.com/terraform-aws-modules/terraform-aws-vpc/issues/302))
+- Added Kinesis streams and firehose VPC endpoints ([#301](https://github.com/terraform-aws-modules/terraform-aws-vpc/issues/301))
+- adding transfer server vpc end point support
+- adding codebuild, codecommit and git-codecommit vpc end point support
+- adding config vpc end point support
+- adding secrets manager vpc end point support
+- Updated version of pre-commit-terraform
+
+
 <a name="v2.7.0"></a>
 ## [v2.7.0] - 2019-06-17
 
+- Updated CHANGELOG
 - Updated pre-commit-terraform to support terraform-docs and Terraform 0.12 ([#288](https://github.com/terraform-aws-modules/terraform-aws-vpc/issues/288))
 
 
@@ -609,7 +623,8 @@
 - Initial commit
 
 
-[Unreleased]: https://github.com/terraform-aws-modules/terraform-aws-vpc/compare/v2.7.0...HEAD
+[Unreleased]: https://github.com/terraform-aws-modules/terraform-aws-vpc/compare/v2.8.0...HEAD
+[v2.8.0]: https://github.com/terraform-aws-modules/terraform-aws-vpc/compare/v2.7.0...v2.8.0
 [v2.7.0]: https://github.com/terraform-aws-modules/terraform-aws-vpc/compare/v2.6.0...v2.7.0
 [v2.6.0]: https://github.com/terraform-aws-modules/terraform-aws-vpc/compare/v1.67.0...v2.6.0
 [v1.67.0]: https://github.com/terraform-aws-modules/terraform-aws-vpc/compare/v2.5.0...v1.67.0
