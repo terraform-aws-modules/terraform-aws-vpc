@@ -108,6 +108,21 @@ output "public_subnets_ipv6_cidr_blocks" {
   value       = aws_subnet.public.*.ipv6_cidr_block
 }
 
+output "firewall_subnets" {
+  description = "List of IDs of firewall subnets"
+  value       = aws_subnet.firewall.*.id
+}
+
+output "firewall_subnet_arns" {
+  description = "List of ARNs of firewall subnets"
+  value       = aws_subnet.firewall.*.arn
+}
+
+output "firewall_subnets_cidr_blocks" {
+  description = "List of cidr_blocks of firewall subnets"
+  value       = aws_subnet.firewall.*.cidr_block
+}
+
 output "database_subnets" {
   description = "List of IDs of database subnets"
   value       = aws_subnet.database.*.id
@@ -221,6 +236,11 @@ output "private_route_table_ids" {
 output "database_route_table_ids" {
   description = "List of IDs of database route tables"
   value       = length(aws_route_table.database.*.id) > 0 ? aws_route_table.database.*.id : aws_route_table.private.*.id
+}
+
+output "firewall_route_table_ids" {
+  description = "List of IDs of firewall route tables"
+  value       = aws_route_table.firewall.*.id
 }
 
 output "redshift_route_table_ids" {
@@ -350,6 +370,11 @@ output "intra_network_acl_id" {
 output "database_network_acl_id" {
   description = "ID of the database network ACL"
   value       = concat(aws_network_acl.database.*.id, [""])[0]
+}
+
+output "firewall_network_acl_id" {
+  description = "ID of the firewall network ACL"
+  value       = concat(aws_network_acl.firewall.*.id, [""])[0]
 }
 
 output "redshift_network_acl_id" {
