@@ -28,8 +28,10 @@ module "vpc" {
     local.network_acls["elasticache_outbound"],
   )
 
-  private_dedicated_network_acl     = true
+  private_dedicated_network_acl     = false
   elasticache_dedicated_network_acl = true
+
+  manage_default_network_acl = true
 
   enable_ipv6 = true
 
@@ -200,4 +202,3 @@ locals {
     ]
   }
 }
-
