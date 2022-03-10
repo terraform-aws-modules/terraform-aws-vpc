@@ -371,6 +371,12 @@ variable "firewall_sync_states" {
   default = []
 }
 
+variable "firewall_route_table_tags" {
+  description = "Additional tags for the firewall route tables"
+  type        = map(string)
+  default     = {}
+}
+
 variable "map_public_ip_on_launch" {
   description = "Should be false if you do not want to auto-assign public IP on launch"
   type        = bool
@@ -1213,7 +1219,7 @@ variable "outpost_az" {
   type        = string
   default     = null
 }
- 
+
 variable "firewall_inbound_acl_rules" {
   description = "firewall subnets inbound network ACL rules"
   type        = list(map(string))
