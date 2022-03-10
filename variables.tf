@@ -359,6 +359,18 @@ variable "external_nat_ips" {
   default     = []
 }
 
+variable "firewall_sync_states" {
+  description = "VPC endpoint ID of firewall endpoint for route table to point to"
+  type = list(object({
+    attachment = list(object({
+      endpoint_id = string
+      subnet_id   = string
+    }))
+    availability_zone = string
+  }))
+  default = []
+}
+
 variable "map_public_ip_on_launch" {
   description = "Should be false if you do not want to auto-assign public IP on launch"
   type        = bool
