@@ -4,7 +4,9 @@ locals {
     length(var.elasticache_subnets),
     length(var.database_subnets),
     length(var.redshift_subnets),
+    length(var.firewall_subnets),
   )
+
   nat_gateway_count = var.single_nat_gateway ? 1 : var.one_nat_gateway_per_az ? length(var.azs) : local.max_subnet_length
 
   # Use `local.vpc_id` to give a hint to Terraform that subnets should be deleted before secondary CIDR blocks can be free!
@@ -40,6 +42,12 @@ resource "aws_vpc" "this" {
     var.tags,
     var.vpc_tags,
   )
+
+  lifecycle {
+    ignore_changes = [
+      tags
+    ]
+  }
 }
 
 resource "aws_vpc_ipv4_cidr_block_association" "this" {
@@ -114,6 +122,13 @@ resource "aws_vpc_dhcp_options" "this" {
     var.tags,
     var.dhcp_options_tags,
   )
+
+  lifecycle {
+    ignore_changes = [
+      tags["Owner"],
+      tags["Type"],
+    ]
+  }
 }
 
 resource "aws_vpc_dhcp_options_association" "this" {
@@ -139,6 +154,12 @@ resource "aws_internet_gateway" "this" {
     var.tags,
     var.igw_tags,
   )
+
+  lifecycle {
+    ignore_changes = [
+      tags
+    ]
+  }
 }
 
 resource "aws_egress_only_internet_gateway" "this" {
@@ -196,23 +217,34 @@ resource "aws_default_route_table" "default" {
 ################################################################################
 
 resource "aws_route_table" "public" {
-  count = var.create_vpc && length(var.public_subnets) > 0 ? 1 : 0
+  count = var.create_vpc && length(var.public_subnets) > 0 && length(var.firewall_sync_states) == 0 ? 1 : length(var.firewall_sync_states) > 0 ? local.nat_gateway_count : 0
 
   vpc_id = local.vpc_id
 
   tags = merge(
     {
-      "Name" = format("%s-${var.public_subnet_suffix}", var.name)
+      "Name" = var.single_nat_gateway || length(var.firewall_sync_states) == 0 ? "${var.name}-${var.public_subnet_suffix}" : format(
+        "%s-${var.public_subnet_suffix}-%s",
+        var.name,
+        element(var.azs, count.index),
+      )
     },
     var.tags,
     var.public_route_table_tags,
   )
+
+  lifecycle {
+    ignore_changes = [
+      tags["Owner"],
+      tags["Type"],
+    ]
+  }
 }
 
 resource "aws_route" "public_internet_gateway" {
-  count = var.create_vpc && var.create_igw && length(var.public_subnets) > 0 ? 1 : 0
+  count = var.create_vpc &&  var.create_igw && length(var.public_subnets) > 0 && length(var.firewall_sync_states) == 0 ? 1 : 0
 
-  route_table_id         = aws_route_table.public[0].id
+  route_table_id         = aws_route_table.public[count.index].id
   destination_cidr_block = "0.0.0.0/0"
   gateway_id             = aws_internet_gateway.this[0].id
 
@@ -220,6 +252,7 @@ resource "aws_route" "public_internet_gateway" {
     create = "5m"
   }
 }
+
 
 resource "aws_route" "public_internet_gateway_ipv6" {
   count = var.create_vpc && var.create_igw && var.enable_ipv6 && length(var.public_subnets) > 0 ? 1 : 0
@@ -229,7 +262,20 @@ resource "aws_route" "public_internet_gateway_ipv6" {
   gateway_id                  = aws_internet_gateway.this[0].id
 }
 
-################################################################################
+resource "aws_route" "public_firewall" {
+  count = var.create_vpc && var.enable_nat_gateway && length(var.firewall_sync_states) > 0 ? local.nat_gateway_count : 0
+
+  route_table_id         = element(aws_route_table.public.*.id, count.index)
+  destination_cidr_block = "0.0.0.0/0"
+  vpc_endpoint_id = element([for ss in tolist(var.firewall_sync_states) :
+  ss.attachment[0].endpoint_id if ss.attachment[0].subnet_id == aws_subnet.firewall[count.index].id], 0)
+
+  timeouts {
+    create = "5m"
+  }
+}
+
+#################
 # Private routes
 # There are as many routing tables as the number of NAT gateways
 ################################################################################
@@ -326,6 +372,13 @@ resource "aws_route_table" "redshift" {
     var.tags,
     var.redshift_route_table_tags,
   )
+
+  lifecycle {
+    ignore_changes = [
+      tags["Owner"],
+      tags["Type"],
+    ]
+  }
 }
 
 ################################################################################
@@ -344,6 +397,14 @@ resource "aws_route_table" "elasticache" {
     var.tags,
     var.elasticache_route_table_tags,
   )
+
+  lifecycle {
+    ignore_changes = [
+      tags["Owner"],
+      tags["DataClassification"],
+      tags["Type"],
+    ]
+  }
 }
 
 ################################################################################
@@ -362,6 +423,83 @@ resource "aws_route_table" "intra" {
     var.tags,
     var.intra_route_table_tags,
   )
+
+  lifecycle {
+    ignore_changes = [
+      tags["Owner"],
+      tags["Type"],
+    ]
+  }
+}
+
+
+#################
+# Firewall routes
+#################
+resource "aws_route_table" "firewall" {
+  count = var.create_vpc && length(var.firewall_subnets) > 0 ? 1 : 0
+
+  vpc_id = local.vpc_id
+
+  tags = merge(
+    {
+      "Name" = "${var.name}-${var.firewall_subnet_suffix}"
+    },
+    var.tags,
+    var.firewall_route_table_tags,
+  )
+
+  lifecycle {
+    ignore_changes = [
+      tags["Owner"],
+      tags["Type"],
+    ]
+  }
+}
+
+resource "aws_route" "firewall_internet_gateway" {
+  count = var.create_vpc && length(var.firewall_subnets) > 0 ? 1 : 0
+
+  route_table_id         = aws_route_table.firewall[count.index].id
+  destination_cidr_block = "0.0.0.0/0"
+  gateway_id             = aws_internet_gateway.this[0].id
+
+  timeouts {
+    create = "5m"
+  }
+}
+
+resource "aws_route_table" "internet_gateway" {
+  count  = var.create_vpc && length(var.firewall_sync_states) > 0 ? 1 : 0
+  vpc_id = local.vpc_id
+
+  tags = merge(
+    {
+      "Name" = format("%s-internet-gateway-${var.firewall_subnet_suffix}", var.name)
+    },
+    var.tags,
+    var.public_route_table_tags,
+  )
+
+  lifecycle {
+    ignore_changes = [
+      tags["Owner"],
+      tags["Type"],
+    ]
+  }
+}
+
+resource "aws_route" "internet_gateway_firewall" {
+  count = var.create_vpc && var.enable_nat_gateway && length(var.firewall_sync_states) > 0 ? local.nat_gateway_count : 0
+
+  route_table_id         = aws_route_table.internet_gateway[0].id
+  destination_cidr_block = var.public_subnets[count.index]
+  vpc_endpoint_id = element([for ss in tolist(var.firewall_sync_states) :
+  ss.attachment[0].endpoint_id if ss.attachment[0].subnet_id == aws_subnet.firewall[count.index].id], 0)
+
+  timeouts {
+    create = "5m"
+  }
 }
 
 ################################################################################
@@ -391,6 +529,13 @@ resource "aws_subnet" "public" {
     var.tags,
     var.public_subnet_tags,
   )
+
+  lifecycle {
+    ignore_changes = [
+      tags["Owner"],
+      tags["Type"],
+    ]
+  }
 }
 
 ################################################################################
@@ -419,6 +564,13 @@ resource "aws_subnet" "private" {
     var.tags,
     var.private_subnet_tags,
   )
+
+  lifecycle {
+    ignore_changes = [
+      tags["Owner"],
+      tags["Type"],
+    ]
+  }
 }
 
 ################################################################################
@@ -476,22 +628,67 @@ resource "aws_subnet" "database" {
     var.tags,
     var.database_subnet_tags,
   )
+
+  lifecycle {
+    ignore_changes = [
+      tags["Owner"],
+      tags["Type"],
+    ]
+  }
 }
 
 resource "aws_db_subnet_group" "database" {
   count = var.create_vpc && length(var.database_subnets) > 0 && var.create_database_subnet_group ? 1 : 0
 
-  name        = lower(coalesce(var.database_subnet_group_name, var.name))
+
+  name        = lower("${var.name}-${var.cidr_name}")
   description = "Database subnet group for ${var.name}"
   subnet_ids  = aws_subnet.database.*.id
 
   tags = merge(
     {
-      "Name" = format("%s", lower(coalesce(var.database_subnet_group_name, var.name)))
+      "Name" = format("%s", lower("${var.name}-${var.cidr_name}"))
     },
     var.tags,
     var.database_subnet_group_tags,
   )
+
+  lifecycle {
+    ignore_changes = [
+      tags["Owner"],
+      tags["Type"],
+    ]
+  }
+}
+
+################
+# Firewall subnet
+################
+resource "aws_subnet" "firewall" {
+  count = var.create_vpc && length(var.firewall_subnets) > 0 && (false == var.one_nat_gateway_per_az || length(var.firewall_subnets) >= length(var.azs)) ? length(var.firewall_subnets) : 0
+
+  vpc_id            = local.vpc_id
+  cidr_block        = element(concat(var.firewall_subnets, [""]), count.index)
+  availability_zone = element(var.azs, count.index)
+
+  tags = merge(
+    {
+      "Name" = format(
+        "%s-${var.firewall_subnet_suffix}-%s",
+        var.name,
+        element(var.azs, count.index),
+      )
+    },
+    var.tags,
+    var.firewall_subnet_tags,
+  )
+
+  lifecycle {
+    ignore_changes = [
+      tags["Owner"],
+      tags["Type"],
+    ]
+  }
 }
 
 ################################################################################
@@ -520,6 +717,13 @@ resource "aws_subnet" "redshift" {
     var.tags,
     var.redshift_subnet_tags,
   )
+
+  lifecycle {
+    ignore_changes = [
+      tags["Owner"],
+      tags["Type"],
+    ]
+  }
 }
 
 resource "aws_redshift_subnet_group" "redshift" {
@@ -536,6 +740,13 @@ resource "aws_redshift_subnet_group" "redshift" {
     var.tags,
     var.redshift_subnet_group_tags,
   )
+
+  lifecycle {
+    ignore_changes = [
+      tags["Owner"],
+      tags["Type"],
+    ]
+  }
 }
 
 ################################################################################
@@ -564,6 +775,13 @@ resource "aws_subnet" "elasticache" {
     var.tags,
     var.elasticache_subnet_tags,
   )
+
+  lifecycle {
+    ignore_changes = [
+      tags["Owner"],
+      tags["Type"],
+    ]
+  }
 }
 
 resource "aws_elasticache_subnet_group" "elasticache" {
@@ -608,6 +826,13 @@ resource "aws_subnet" "intra" {
     var.tags,
     var.intra_subnet_tags,
   )
+
+  lifecycle {
+    ignore_changes = [
+      tags["Owner"],
+      tags["Type"],
+    ]
+  }
 }
 
 ################################################################################
@@ -697,6 +922,13 @@ resource "aws_network_acl" "public" {
     var.tags,
     var.public_acl_tags,
   )
+
+  lifecycle {
+    ignore_changes = [
+      tags["Owner"],
+      tags["Type"],
+    ]
+  }
 }
 
 resource "aws_network_acl_rule" "public_inbound" {
@@ -750,6 +982,13 @@ resource "aws_network_acl" "private" {
     var.tags,
     var.private_acl_tags,
   )
+
+  lifecycle {
+    ignore_changes = [
+      tags["Owner"],
+      tags["Type"],
+    ]
+  }
 }
 
 resource "aws_network_acl_rule" "private_inbound" {
@@ -856,6 +1095,13 @@ resource "aws_network_acl" "intra" {
     var.tags,
     var.intra_acl_tags,
   )
+
+  lifecycle {
+    ignore_changes = [
+      tags["Owner"],
+      tags["Type"],
+    ]
+  }
 }
 
 resource "aws_network_acl_rule" "intra_inbound" {
@@ -909,6 +1155,13 @@ resource "aws_network_acl" "database" {
     var.tags,
     var.database_acl_tags,
   )
+
+  lifecycle {
+    ignore_changes = [
+      tags["Owner"],
+      tags["Type"],
+    ]
+  }
 }
 
 resource "aws_network_acl_rule" "database_inbound" {
@@ -962,6 +1215,13 @@ resource "aws_network_acl" "redshift" {
     var.tags,
     var.redshift_acl_tags,
   )
+
+  lifecycle {
+    ignore_changes = [
+      tags["Owner"],
+      tags["Type"],
+    ]
+  }
 }
 
 resource "aws_network_acl_rule" "redshift_inbound" {
@@ -1015,6 +1275,13 @@ resource "aws_network_acl" "elasticache" {
     var.tags,
     var.elasticache_acl_tags,
   )
+
+  lifecycle {
+    ignore_changes = [
+      tags["Owner"],
+      tags["Type"],
+    ]
+  }
 }
 
 resource "aws_network_acl_rule" "elasticache_inbound" {
@@ -1051,7 +1318,60 @@ resource "aws_network_acl_rule" "elasticache_outbound" {
   ipv6_cidr_block = lookup(var.elasticache_outbound_acl_rules[count.index], "ipv6_cidr_block", null)
 }
 
-################################################################################
+#######################
+# Firewall Network ACLs
+#######################
+resource "aws_network_acl" "firewall" {
+  count = var.create_vpc && var.firewall_dedicated_network_acl && length(var.firewall_subnets) > 0 ? 1 : 0
+
+  vpc_id     = element(concat(aws_vpc.this.*.id, [""]), 0)
+  subnet_ids = aws_subnet.firewall.*.id
+
+  tags = merge(
+    {
+      "Name" = format("%s-${var.firewall_subnet_suffix}", var.name)
+    },
+    var.tags,
+    var.firewall_acl_tags,
+  )
+
+  lifecycle {
+    ignore_changes = [
+      tags["Owner"],
+      tags["Type"],
+    ]
+  }
+}
+
+resource "aws_network_acl_rule" "firewall_inbound" {
+  count = var.create_vpc && var.firewall_dedicated_network_acl && length(var.firewall_subnets) > 0 ? length(var.firewall_inbound_acl_rules) : 0
+
+  network_acl_id = aws_network_acl.firewall[0].id
+
+  egress      = false
+  rule_number = var.firewall_inbound_acl_rules[count.index]["rule_number"]
+  rule_action = var.firewall_inbound_acl_rules[count.index]["rule_action"]
+  from_port   = var.firewall_inbound_acl_rules[count.index]["from_port"]
+  to_port     = var.firewall_inbound_acl_rules[count.index]["to_port"]
+  protocol    = var.firewall_inbound_acl_rules[count.index]["protocol"]
+  cidr_block  = var.firewall_inbound_acl_rules[count.index]["cidr_block"]
+}
+
+resource "aws_network_acl_rule" "firewall_outbound" {
+  count = var.create_vpc && var.firewall_dedicated_network_acl && length(var.firewall_subnets) > 0 ? length(var.firewall_outbound_acl_rules) : 0
+
+  network_acl_id = aws_network_acl.firewall[0].id
+
+  egress      = true
+  rule_number = var.firewall_outbound_acl_rules[count.index]["rule_number"]
+  rule_action = var.firewall_outbound_acl_rules[count.index]["rule_action"]
+  from_port   = var.firewall_outbound_acl_rules[count.index]["from_port"]
+  to_port     = var.firewall_outbound_acl_rules[count.index]["to_port"]
+  protocol    = var.firewall_outbound_acl_rules[count.index]["protocol"]
+  cidr_block  = var.firewall_outbound_acl_rules[count.index]["cidr_block"]
+}
+
+##############
 # NAT Gateway
 ################################################################################
 
@@ -1111,6 +1431,13 @@ resource "aws_nat_gateway" "this" {
     var.tags,
     var.nat_gateway_tags,
   )
+
+  lifecycle {
+    ignore_changes = [
+      tags["Owner"],
+      tags["Type"],
+    ]
+  }
 
   depends_on = [aws_internet_gateway.this]
 }
@@ -1210,7 +1537,7 @@ resource "aws_route_table_association" "intra" {
 }
 
 resource "aws_route_table_association" "public" {
-  count = var.create_vpc && length(var.public_subnets) > 0 ? length(var.public_subnets) : 0
+  count = var.create_vpc && length(var.public_subnets) > 0 && length(var.firewall_sync_states) == 0 ? length(var.public_subnets) : 0
 
   subnet_id      = element(aws_subnet.public.*.id, count.index)
   route_table_id = aws_route_table.public[0].id
@@ -1236,6 +1563,27 @@ resource "aws_customer_gateway" "this" {
     var.customer_gateway_tags,
   )
 }
+  
+resource "aws_route_table_association" "public_firewall" {
+  count = var.create_vpc && length(var.public_subnets) > 0 && length(var.firewall_sync_states) > 0 ? length(var.public_subnets) : 0
+
+  subnet_id      = element(aws_subnet.public.*.id, count.index)
+  route_table_id = element(aws_route_table.public.*.id, count.index)
+}
+
+resource "aws_route_table_association" "public_internet_gateway" {
+  count = var.create_vpc && length(var.public_subnets) > 0 && length(var.firewall_sync_states) > 0 ? 1 : 0
+
+  gateway_id     = aws_internet_gateway.this[0].id
+  route_table_id = aws_route_table.internet_gateway[0].id
+}
+
+resource "aws_route_table_association" "firewall" {
+  count = var.create_vpc && length(var.firewall_subnets) > 0 ? length(var.firewall_subnets) : 0
+
+  subnet_id      = element(aws_subnet.firewall.*.id, count.index)
+  route_table_id = aws_route_table.firewall[0].id
+}
 
 ################################################################################
 # VPN Gateway
@@ -1255,6 +1603,13 @@ resource "aws_vpn_gateway" "this" {
     var.tags,
     var.vpn_gateway_tags,
   )
+
+  lifecycle {
+    ignore_changes = [
+      tags["Owner"],
+      tags["Type"],
+    ]
+  }
 }
 
 resource "aws_vpn_gateway_attachment" "this" {
@@ -1321,4 +1676,11 @@ resource "aws_default_vpc" "this" {
     var.tags,
     var.default_vpc_tags,
   )
+
+  lifecycle {
+    ignore_changes = [
+      tags["Owner"],
+      tags["Type"],
+    ]
+  }
 }
