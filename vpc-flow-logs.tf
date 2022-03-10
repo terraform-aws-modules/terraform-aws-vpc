@@ -9,9 +9,10 @@ locals {
   flow_log_iam_role_arn    = var.flow_log_destination_type != "s3" && local.create_flow_log_cloudwatch_iam_role ? aws_iam_role.vpc_flow_log_cloudwatch[0].arn : var.flow_log_cloudwatch_iam_role_arn
 }
 
-###################
+################################################################################
 # Flow Log
-###################
+################################################################################
+
 resource "aws_flow_log" "this" {
   count = local.enable_flow_log ? 1 : 0
 
@@ -26,9 +27,10 @@ resource "aws_flow_log" "this" {
   tags = merge(var.tags, var.vpc_flow_log_tags)
 }
 
-#####################
+################################################################################
 # Flow Log CloudWatch
-#####################
+################################################################################
+
 resource "aws_cloudwatch_log_group" "flow_log" {
   count = local.create_flow_log_cloudwatch_log_group ? 1 : 0
 
@@ -39,9 +41,6 @@ resource "aws_cloudwatch_log_group" "flow_log" {
   tags = merge(var.tags, var.vpc_flow_log_tags)
 }
 
-#########################
-# Flow Log CloudWatch IAM
-#########################
 resource "aws_iam_role" "vpc_flow_log_cloudwatch" {
   count = local.create_flow_log_cloudwatch_iam_role ? 1 : 0
 
@@ -56,6 +55,8 @@ data "aws_iam_policy_document" "flow_log_cloudwatch_assume_role" {
   count = local.create_flow_log_cloudwatch_iam_role ? 1 : 0
 
   statement {
+    sid = "AWSVPCFlowLogsAssumeRole"
+
     principals {
       type        = "Service"
       identifiers = ["vpc-flow-logs.amazonaws.com"]
