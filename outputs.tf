@@ -45,7 +45,7 @@ output "vpc_enable_dns_hostnames" {
 
 //output "vpc_enable_classiclink" {
 //  description = "Whether or not the VPC has Classiclink enabled"
-//  value       = "${element(concat(aws_vpc.this.*.enable_classiclink, list("")), 0)}"
+//  value       = concat(aws_vpc.this.*.enable_classiclink, [""])[0]
 //}
 
 output "vpc_main_route_table_id" {
@@ -53,15 +53,15 @@ output "vpc_main_route_table_id" {
   value       = concat(aws_vpc.this.*.main_route_table_id, [""])[0]
 }
 
-//output "vpc_ipv6_association_id" {
-//  description = "The association ID for the IPv6 CIDR block"
-//  value       = "${element(concat(aws_vpc.this.*.ipv6_association_id, list("")), 0)}"
-//}
-//
-//output "vpc_ipv6_cidr_block" {
-//  description = "The IPv6 CIDR block"
-//  value       = "${element(concat(aws_vpc.this.*.ipv6_cidr_block, list("")), 0)}"
-//}
+output "vpc_ipv6_association_id" {
+  description = "The association ID for the IPv6 CIDR block"
+  value       = concat(aws_vpc.this.*.ipv6_association_id, [""])[0]
+}
+
+output "vpc_ipv6_cidr_block" {
+  description = "The IPv6 CIDR block"
+  value       = concat(aws_vpc.this.*.ipv6_cidr_block, [""])[0]
+}
 
 output "vpc_secondary_cidr_blocks" {
   description = "List of secondary CIDR blocks of the VPC"
@@ -83,6 +83,11 @@ output "private_subnets_cidr_blocks" {
   value       = aws_subnet.private.*.cidr_block
 }
 
+output "private_subnets_ipv6_cidr_blocks" {
+  description = "List of IPv6 cidr_blocks of private subnets in an IPv6 enabled VPC"
+  value       = aws_subnet.private.*.ipv6_cidr_block
+}
+
 output "public_subnets" {
   description = "List of IDs of public subnets"
   value       = aws_subnet.public.*.id
@@ -96,6 +101,11 @@ output "public_subnet_arns" {
 output "public_subnets_cidr_blocks" {
   description = "List of cidr_blocks of public subnets"
   value       = aws_subnet.public.*.cidr_block
+}
+
+output "public_subnets_ipv6_cidr_blocks" {
+  description = "List of IPv6 cidr_blocks of public subnets in an IPv6 enabled VPC"
+  value       = aws_subnet.public.*.ipv6_cidr_block
 }
 
 output "firewall_subnets" {
@@ -128,6 +138,11 @@ output "database_subnets_cidr_blocks" {
   value       = aws_subnet.database.*.cidr_block
 }
 
+output "database_subnets_ipv6_cidr_blocks" {
+  description = "List of IPv6 cidr_blocks of database subnets in an IPv6 enabled VPC"
+  value       = aws_subnet.database.*.ipv6_cidr_block
+}
+
 output "database_subnet_group" {
   description = "ID of database subnet group"
   value       = concat(aws_db_subnet_group.database.*.id, [""])[0]
@@ -146,6 +161,11 @@ output "redshift_subnet_arns" {
 output "redshift_subnets_cidr_blocks" {
   description = "List of cidr_blocks of redshift subnets"
   value       = aws_subnet.redshift.*.cidr_block
+}
+
+output "redshift_subnets_ipv6_cidr_blocks" {
+  description = "List of IPv6 cidr_blocks of redshift subnets in an IPv6 enabled VPC"
+  value       = aws_subnet.redshift.*.ipv6_cidr_block
 }
 
 output "redshift_subnet_group" {
@@ -168,6 +188,11 @@ output "elasticache_subnets_cidr_blocks" {
   value       = aws_subnet.elasticache.*.cidr_block
 }
 
+output "elasticache_subnets_ipv6_cidr_blocks" {
+  description = "List of IPv6 cidr_blocks of elasticache subnets in an IPv6 enabled VPC"
+  value       = aws_subnet.elasticache.*.ipv6_cidr_block
+}
+
 output "intra_subnets" {
   description = "List of IDs of intra subnets"
   value       = aws_subnet.intra.*.id
@@ -181,6 +206,11 @@ output "intra_subnet_arns" {
 output "intra_subnets_cidr_blocks" {
   description = "List of cidr_blocks of intra subnets"
   value       = aws_subnet.intra.*.cidr_block
+}
+
+output "intra_subnets_ipv6_cidr_blocks" {
+  description = "List of IPv6 cidr_blocks of intra subnets in an IPv6 enabled VPC"
+  value       = aws_subnet.intra.*.ipv6_cidr_block
 }
 
 output "elasticache_subnet_group" {
@@ -248,6 +278,11 @@ output "igw_id" {
   value       = concat(aws_internet_gateway.this.*.id, [""])[0]
 }
 
+output "egress_only_internet_gateway_id" {
+  description = "The ID of the egress only Internet Gateway"
+  value       = concat(aws_egress_only_internet_gateway.this.*.id, [""])[0]
+}
+
 output "vgw_id" {
   description = "The ID of the VPN Gateway"
   value = concat(
@@ -299,7 +334,7 @@ output "default_vpc_enable_dns_hostnames" {
 
 //output "default_vpc_enable_classiclink" {
 //  description = "Whether or not the VPC has Classiclink enabled"
-//  value       = "${element(concat(aws_default_vpc.this.*.enable_classiclink, list("")), 0)}"
+//  value       = concat(aws_default_vpc.this.*.enable_classiclink, [""])[0]
 //}
 
 output "default_vpc_main_route_table_id" {
@@ -309,12 +344,12 @@ output "default_vpc_main_route_table_id" {
 
 //output "default_vpc_ipv6_association_id" {
 //  description = "The association ID for the IPv6 CIDR block"
-//  value       = "${element(concat(aws_default_vpc.this.*.ipv6_association_id, list("")), 0)}"
+//  value       = concat(aws_default_vpc.this.*.ipv6_association_id, [""])[0]
 //}
 //
 //output "default_vpc_ipv6_cidr_block" {
 //  description = "The IPv6 CIDR block"
-//  value       = "${element(concat(aws_default_vpc.this.*.ipv6_cidr_block, list("")), 0)}"
+//  value       = concat(aws_default_vpc.this.*.ipv6_cidr_block, [""])[0]
 //}
 
 output "public_network_acl_id" {
@@ -375,7 +410,7 @@ output "vpc_endpoint_dynamodb_pl_id" {
 
 output "vpc_endpoint_sqs_id" {
   description = "The ID of VPC endpoint for SQS"
-  value       = element(concat(aws_vpc_endpoint.sqs.*.id, tolist([""])), 0)
+  value       = concat(aws_vpc_endpoint.sqs.*.id, [""])[0]
 }
 
 output "vpc_endpoint_sqs_network_interface_ids" {
@@ -386,6 +421,81 @@ output "vpc_endpoint_sqs_network_interface_ids" {
 output "vpc_endpoint_sqs_dns_entry" {
   description = "The DNS entries for the VPC Endpoint for SQS."
   value       = flatten(aws_vpc_endpoint.sqs.*.dns_entry)
+}
+
+output "vpc_endpoint_codebuild_id" {
+  description = "The ID of VPC endpoint for codebuild"
+  value       = concat(aws_vpc_endpoint.codebuild.*.id, [""])[0]
+}
+
+output "vpc_endpoint_codebuild_network_interface_ids" {
+  description = "One or more network interfaces for the VPC Endpoint for codebuild."
+  value       = flatten(aws_vpc_endpoint.codebuild.*.network_interface_ids)
+}
+
+output "vpc_endpoint_codebuild_dns_entry" {
+  description = "The DNS entries for the VPC Endpoint for codebuild."
+  value       = flatten(aws_vpc_endpoint.codebuild.*.dns_entry)
+}
+
+output "vpc_endpoint_codecommit_id" {
+  description = "The ID of VPC endpoint for codecommit"
+  value       = concat(aws_vpc_endpoint.codecommit.*.id, [""])[0]
+}
+
+output "vpc_endpoint_codecommit_network_interface_ids" {
+  description = "One or more network interfaces for the VPC Endpoint for codecommit."
+  value       = flatten(aws_vpc_endpoint.codecommit.*.network_interface_ids)
+}
+
+output "vpc_endpoint_codecommit_dns_entry" {
+  description = "The DNS entries for the VPC Endpoint for codecommit."
+  value       = flatten(aws_vpc_endpoint.codecommit.*.dns_entry)
+}
+
+output "vpc_endpoint_git_codecommit_id" {
+  description = "The ID of VPC endpoint for git_codecommit"
+  value       = concat(aws_vpc_endpoint.git_codecommit.*.id, [""])[0]
+}
+
+output "vpc_endpoint_git_codecommit_network_interface_ids" {
+  description = "One or more network interfaces for the VPC Endpoint for git_codecommit."
+  value       = flatten(aws_vpc_endpoint.git_codecommit.*.network_interface_ids)
+}
+
+output "vpc_endpoint_git_codecommit_dns_entry" {
+  description = "The DNS entries for the VPC Endpoint for git_codecommit."
+  value       = flatten(aws_vpc_endpoint.git_codecommit.*.dns_entry)
+}
+
+output "vpc_endpoint_config_id" {
+  description = "The ID of VPC endpoint for config"
+  value       = concat(aws_vpc_endpoint.config.*.id, [""])[0]
+}
+
+output "vpc_endpoint_config_network_interface_ids" {
+  description = "One or more network interfaces for the VPC Endpoint for config."
+  value       = flatten(aws_vpc_endpoint.config.*.network_interface_ids)
+}
+
+output "vpc_endpoint_config_dns_entry" {
+  description = "The DNS entries for the VPC Endpoint for config."
+  value       = flatten(aws_vpc_endpoint.config.*.dns_entry)
+}
+
+output "vpc_endpoint_secretsmanager_id" {
+  description = "The ID of VPC endpoint for secretsmanager"
+  value       = concat(aws_vpc_endpoint.secretsmanager.*.id, [""])[0]
+}
+
+output "vpc_endpoint_secretsmanager_network_interface_ids" {
+  description = "One or more network interfaces for the VPC Endpoint for secretsmanager."
+  value       = flatten(aws_vpc_endpoint.secretsmanager.*.network_interface_ids)
+}
+
+output "vpc_endpoint_secretsmanager_dns_entry" {
+  description = "The DNS entries for the VPC Endpoint for secretsmanager."
+  value       = flatten(aws_vpc_endpoint.secretsmanager.*.dns_entry)
 }
 
 output "vpc_endpoint_ssm_id" {
@@ -448,6 +558,36 @@ output "vpc_endpoint_ec2messages_dns_entry" {
   value       = flatten(aws_vpc_endpoint.ec2messages.*.dns_entry)
 }
 
+output "vpc_endpoint_transferserver_id" {
+  description = "The ID of VPC endpoint for transferserver"
+  value       = concat(aws_vpc_endpoint.transferserver.*.id, [""])[0]
+}
+
+output "vpc_endpoint_transferserver_network_interface_ids" {
+  description = "One or more network interfaces for the VPC Endpoint for transferserver"
+  value       = flatten(aws_vpc_endpoint.transferserver.*.network_interface_ids)
+}
+
+output "vpc_endpoint_transferserver_dns_entry" {
+  description = "The DNS entries for the VPC Endpoint for transferserver."
+  value       = flatten(aws_vpc_endpoint.transferserver.*.dns_entry)
+}
+
+output "vpc_endpoint_glue_id" {
+  description = "The ID of VPC endpoint for Glue"
+  value       = concat(aws_vpc_endpoint.glue.*.id, [""])[0]
+}
+
+output "vpc_endpoint_glue_network_interface_ids" {
+  description = "One or more network interfaces for the VPC Endpoint for Glue."
+  value       = flatten(aws_vpc_endpoint.glue.*.network_interface_ids)
+}
+
+output "vpc_endpoint_glue_dns_entry" {
+  description = "The DNS entries for the VPC Endpoint for Glue."
+  value       = flatten(aws_vpc_endpoint.glue.*.dns_entry)
+}
+
 output "vpc_endpoint_kms_id" {
   description = "The ID of VPC endpoint for KMS"
   value       = concat(aws_vpc_endpoint.kms.*.id, [""])[0]
@@ -461,6 +601,36 @@ output "vpc_endpoint_kms_network_interface_ids" {
 output "vpc_endpoint_kms_dns_entry" {
   description = "The DNS entries for the VPC Endpoint for KMS."
   value       = flatten(aws_vpc_endpoint.kms.*.dns_entry)
+}
+
+output "vpc_endpoint_kinesis_firehose_id" {
+  description = "The ID of VPC endpoint for Kinesis Firehose"
+  value       = concat(aws_vpc_endpoint.kinesis_firehose.*.id, [""])[0]
+}
+
+output "vpc_endpoint_kinesis_firehose_network_interface_ids" {
+  description = "One or more network interfaces for the VPC Endpoint for Kinesis Firehose."
+  value       = flatten(aws_vpc_endpoint.kinesis_firehose.*.network_interface_ids)
+}
+
+output "vpc_endpoint_kinesis_firehose_dns_entry" {
+  description = "The DNS entries for the VPC Endpoint for Kinesis Firehose."
+  value       = flatten(aws_vpc_endpoint.kinesis_firehose.*.dns_entry)
+}
+
+output "vpc_endpoint_kinesis_streams_id" {
+  description = "The ID of VPC endpoint for Kinesis Streams"
+  value       = concat(aws_vpc_endpoint.kinesis_streams.*.id, [""])[0]
+}
+
+output "vpc_endpoint_kinesis_streams_network_interface_ids" {
+  description = "One or more network interfaces for the VPC Endpoint for Kinesis Streams."
+  value       = flatten(aws_vpc_endpoint.kinesis_streams.*.network_interface_ids)
+}
+
+output "vpc_endpoint_kinesis_streams_dns_entry" {
+  description = "The DNS entries for the VPC Endpoint for Kinesis Streams."
+  value       = flatten(aws_vpc_endpoint.kinesis_streams.*.dns_entry)
 }
 
 output "vpc_endpoint_ecr_api_id" {
@@ -510,7 +680,7 @@ output "vpc_endpoint_apigw_dns_entry" {
 
 output "vpc_endpoint_ecs_id" {
   description = "The ID of VPC endpoint for ECS"
-  value       = element(concat(aws_vpc_endpoint.ecs.*.id, tolist([""])), 0)
+  value       = concat(aws_vpc_endpoint.ecs.*.id, [""])[0]
 }
 
 output "vpc_endpoint_ecs_network_interface_ids" {
@@ -525,7 +695,7 @@ output "vpc_endpoint_ecs_dns_entry" {
 
 output "vpc_endpoint_ecs_agent_id" {
   description = "The ID of VPC endpoint for ECS Agent"
-  value       = element(concat(aws_vpc_endpoint.ecs_agent.*.id, tolist([""])), 0)
+  value       = concat(aws_vpc_endpoint.ecs_agent.*.id, [""])[0]
 }
 
 output "vpc_endpoint_ecs_agent_network_interface_ids" {
@@ -540,7 +710,7 @@ output "vpc_endpoint_ecs_agent_dns_entry" {
 
 output "vpc_endpoint_ecs_telemetry_id" {
   description = "The ID of VPC endpoint for ECS Telemetry"
-  value       = element(concat(aws_vpc_endpoint.ecs_telemetry.*.id, tolist([""])), 0)
+  value       = concat(aws_vpc_endpoint.ecs_telemetry.*.id, [""])[0]
 }
 
 output "vpc_endpoint_ecs_telemetry_network_interface_ids" {
@@ -643,9 +813,187 @@ output "vpc_endpoint_cloudtrail_dns_entry" {
   value       = flatten(aws_vpc_endpoint.cloudtrail.*.dns_entry)
 }
 
+output "vpc_endpoint_sts_id" {
+  description = "The ID of VPC endpoint for STS"
+  value       = concat(aws_vpc_endpoint.sts.*.id, [""])[0]
+}
+
+output "vpc_endpoint_sts_network_interface_ids" {
+  description = "One or more network interfaces for the VPC Endpoint for STS."
+  value       = flatten(aws_vpc_endpoint.sts.*.network_interface_ids)
+}
+
+output "vpc_endpoint_sts_dns_entry" {
+  description = "The DNS entries for the VPC Endpoint for STS."
+  value       = flatten(aws_vpc_endpoint.sts.*.dns_entry)
+}
+
+output "vpc_endpoint_cloudformation_id" {
+  description = "The ID of VPC endpoint for Cloudformation"
+  value       = concat(aws_vpc_endpoint.cloudformation.*.id, [""])[0]
+}
+
+output "vpc_endpoint_cloudformation_network_interface_ids" {
+  description = "One or more network interfaces for the VPC Endpoint for Cloudformation."
+  value       = flatten(aws_vpc_endpoint.cloudformation.*.network_interface_ids)
+}
+
+output "vpc_endpoint_cloudformation_dns_entry" {
+  description = "The DNS entries for the VPC Endpoint for Cloudformation."
+  value       = flatten(aws_vpc_endpoint.cloudformation.*.dns_entry)
+}
+output "vpc_endpoint_codepipeline_id" {
+  description = "The ID of VPC endpoint for CodePipeline"
+  value       = concat(aws_vpc_endpoint.codepipeline.*.id, [""])[0]
+}
+
+output "vpc_endpoint_codepipeline_network_interface_ids" {
+  description = "One or more network interfaces for the VPC Endpoint for CodePipeline."
+  value       = flatten(aws_vpc_endpoint.codepipeline.*.network_interface_ids)
+}
+
+output "vpc_endpoint_codepipeline_dns_entry" {
+  description = "The DNS entries for the VPC Endpoint for CodePipeline."
+  value       = flatten(aws_vpc_endpoint.codepipeline.*.dns_entry)
+}
+output "vpc_endpoint_appmesh_envoy_management_id" {
+  description = "The ID of VPC endpoint for AppMesh"
+  value       = concat(aws_vpc_endpoint.appmesh_envoy_management.*.id, [""])[0]
+}
+
+output "vpc_endpoint_appmesh_envoy_management_network_interface_ids" {
+  description = "One or more network interfaces for the VPC Endpoint for AppMesh."
+  value       = flatten(aws_vpc_endpoint.appmesh_envoy_management.*.network_interface_ids)
+}
+
+output "vpc_endpoint_appmesh_envoy_management_dns_entry" {
+  description = "The DNS entries for the VPC Endpoint for AppMesh."
+  value       = flatten(aws_vpc_endpoint.appmesh_envoy_management.*.dns_entry)
+}
+output "vpc_endpoint_servicecatalog_id" {
+  description = "The ID of VPC endpoint for Service Catalog"
+  value       = concat(aws_vpc_endpoint.servicecatalog.*.id, [""])[0]
+}
+
+output "vpc_endpoint_servicecatalog_network_interface_ids" {
+  description = "One or more network interfaces for the VPC Endpoint for Service Catalog."
+  value       = flatten(aws_vpc_endpoint.servicecatalog.*.network_interface_ids)
+}
+
+output "vpc_endpoint_servicecatalog_dns_entry" {
+  description = "The DNS entries for the VPC Endpoint for Service Catalog."
+  value       = flatten(aws_vpc_endpoint.servicecatalog.*.dns_entry)
+}
+output "vpc_endpoint_storagegateway_id" {
+  description = "The ID of VPC endpoint for Storage Gateway"
+  value       = concat(aws_vpc_endpoint.storagegateway.*.id, [""])[0]
+}
+
+output "vpc_endpoint_storagegateway_network_interface_ids" {
+  description = "One or more network interfaces for the VPC Endpoint for Storage Gateway."
+  value       = flatten(aws_vpc_endpoint.storagegateway.*.network_interface_ids)
+}
+
+output "vpc_endpoint_storagegateway_dns_entry" {
+  description = "The DNS entries for the VPC Endpoint for Storage Gateway."
+  value       = flatten(aws_vpc_endpoint.storagegateway.*.dns_entry)
+}
+output "vpc_endpoint_transfer_id" {
+  description = "The ID of VPC endpoint for Transfer"
+  value       = concat(aws_vpc_endpoint.transfer.*.id, [""])[0]
+}
+
+output "vpc_endpoint_transfer_network_interface_ids" {
+  description = "One or more network interfaces for the VPC Endpoint for Transfer."
+  value       = flatten(aws_vpc_endpoint.transfer.*.network_interface_ids)
+}
+
+output "vpc_endpoint_transfer_dns_entry" {
+  description = "The DNS entries for the VPC Endpoint for Transfer."
+  value       = flatten(aws_vpc_endpoint.transfer.*.dns_entry)
+}
+output "vpc_endpoint_sagemaker_api_id" {
+  description = "The ID of VPC endpoint for SageMaker API"
+  value       = concat(aws_vpc_endpoint.sagemaker_api.*.id, [""])[0]
+}
+
+output "vpc_endpoint_sagemaker_api_network_interface_ids" {
+  description = "One or more network interfaces for the VPC Endpoint for SageMaker API."
+  value       = flatten(aws_vpc_endpoint.sagemaker_api.*.network_interface_ids)
+}
+
+output "vpc_endpoint_sagemaker_api_dns_entry" {
+  description = "The DNS entries for the VPC Endpoint for SageMaker API."
+  value       = flatten(aws_vpc_endpoint.sagemaker_api.*.dns_entry)
+}
+
+output "vpc_endpoint_sagemaker_runtime_id" {
+  description = "The ID of VPC endpoint for SageMaker Runtime"
+  value       = concat(aws_vpc_endpoint.sagemaker_runtime.*.id, [""])[0]
+}
+
+output "vpc_endpoint_sagemaker_runtime_network_interface_ids" {
+  description = "One or more network interfaces for the VPC Endpoint for SageMaker Runtime."
+  value       = flatten(aws_vpc_endpoint.sagemaker_runtime.*.network_interface_ids)
+}
+
+output "vpc_endpoint_sagemaker_runtime_dns_entry" {
+  description = "The DNS entries for the VPC Endpoint for SageMaker Runtime."
+  value       = flatten(aws_vpc_endpoint.sagemaker_runtime.*.dns_entry)
+}
+
+output "vpc_endpoint_appstream_id" {
+  description = "The ID of VPC endpoint for AppStream"
+  value       = concat(aws_vpc_endpoint.appstream.*.id, [""])[0]
+}
+
+output "vpc_endpoint_appstream_network_interface_ids" {
+  description = "One or more network interfaces for the VPC Endpoint for AppStream."
+  value       = flatten(aws_vpc_endpoint.appstream.*.network_interface_ids)
+}
+
+output "vpc_endpoint_appstream_dns_entry" {
+  description = "The DNS entries for the VPC Endpoint for AppStream."
+  value       = flatten(aws_vpc_endpoint.appstream.*.dns_entry)
+}
+
+output "vpc_endpoint_athena_id" {
+  description = "The ID of VPC endpoint for Athena"
+  value       = concat(aws_vpc_endpoint.athena.*.id, [""])[0]
+}
+
+output "vpc_endpoint_athena_network_interface_ids" {
+  description = "One or more network interfaces for the VPC Endpoint for Athena."
+  value       = flatten(aws_vpc_endpoint.athena.*.network_interface_ids)
+}
+
+output "vpc_endpoint_athena_dns_entry" {
+  description = "The DNS entries for the VPC Endpoint for Athena."
+  value       = flatten(aws_vpc_endpoint.athena.*.dns_entry)
+}
+
+output "vpc_endpoint_rekognition_id" {
+  description = "The ID of VPC endpoint for Rekognition"
+  value       = concat(aws_vpc_endpoint.rekognition.*.id, [""])[0]
+}
+
+output "vpc_endpoint_rekognition_network_interface_ids" {
+  description = "One or more network interfaces for the VPC Endpoint for Rekognition."
+  value       = flatten(aws_vpc_endpoint.rekognition.*.network_interface_ids)
+}
+
+output "vpc_endpoint_rekognition_dns_entry" {
+  description = "The DNS entries for the VPC Endpoint for Rekognition."
+  value       = flatten(aws_vpc_endpoint.rekognition.*.dns_entry)
+}
+
 # Static values (arguments)
 output "azs" {
   description = "A list of availability zones specified as argument to this module"
   value       = var.azs
 }
 
+output "name" {
+  description = "The name of the VPC specified as argument to this module"
+  value       = var.name
+}
