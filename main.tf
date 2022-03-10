@@ -181,6 +181,43 @@ resource "aws_egress_only_internet_gateway" "this" {
   )
 }
 
+###############
+# Default route
+###############
+
+resource "aws_default_route_table" "default" {
+  count = var.create_vpc && var.manage_default_route_table ? 1 : 0
+
+  default_route_table_id = aws_vpc.this[0].default_route_table_id
+  propagating_vgws       = var.default_route_table_propagating_vgws
+
+  dynamic "route" {
+    for_each = var.default_route_table_routes
+    content {
+      # One of the following destinations must be provided
+      cidr_block      = route.value.cidr_block
+      ipv6_cidr_block = lookup(route.value, "ipv6_cidr_block", null)
+
+      # One of the following targets must be provided
+      egress_only_gateway_id = lookup(route.value, "egress_only_gateway_id", null)
+      gateway_id             = lookup(route.value, "gateway_id", null)
+      instance_id            = lookup(route.value, "instance_id", null)
+      nat_gateway_id         = lookup(route.value, "nat_gateway_id", null)
+      network_interface_id   = lookup(route.value, "network_interface_id", null)
+      transit_gateway_id     = lookup(route.value, "transit_gateway_id", null)
+      # `vpc_endpoint_id` was recently added in v3.15.0
+      # vpc_endpoint_id           = lookup(route.value, "vpc_endpoint_id", null)
+      vpc_peering_connection_id = lookup(route.value, "vpc_peering_connection_id", null)
+    }
+  }
+
+  tags = merge(
+    { "Name" = var.name },
+    var.tags,
+    var.default_route_table_tags,
+  )
+}
+
 ################
 # Publiс routes
 ################
@@ -269,13 +306,17 @@ resource "aws_route_table" "private" {
 # Database routes
 #################
 resource "aws_route_table" "database" {
-  count = var.create_vpc && var.create_database_subnet_route_table && length(var.database_subnets) > 0 ? 1 : 0
+  count = var.create_vpc && var.create_database_subnet_route_table && length(var.database_subnets) > 0 ? var.single_nat_gateway || var.create_database_internet_gateway_route ? 1 : length(var.database_subnets) : 0
 
   vpc_id = local.vpc_id
 
   tags = merge(
     {
-      "Name" = "${var.name}-${var.database_subnet_suffix}"
+      "Name" = var.single_nat_gateway || var.create_database_internet_gateway_route ? "${var.name}-${var.database_subnet_suffix}" : format(
+        "%s-${var.database_subnet_suffix}-%s",
+        var.name,
+        element(var.azs, count.index),
+      )
     },
     var.tags,
     var.database_route_table_tags,
@@ -295,7 +336,7 @@ resource "aws_route" "database_internet_gateway" {
 }
 
 resource "aws_route" "database_nat_gateway" {
-  count = var.create_vpc && var.create_database_subnet_route_table && length(var.database_subnets) > 0 && false == var.create_database_internet_gateway_route && var.create_database_nat_gateway_route && var.enable_nat_gateway ? local.nat_gateway_count : 0
+  count = var.create_vpc && var.create_database_subnet_route_table && length(var.database_subnets) > 0 && false == var.create_database_internet_gateway_route && var.create_database_nat_gateway_route && var.enable_nat_gateway ? var.single_nat_gateway ? 1 : length(var.database_subnets) : 0
 
   route_table_id         = element(aws_route_table.database.*.id, count.index)
   destination_cidr_block = "0.0.0.0/0"
@@ -528,6 +569,34 @@ resource "aws_subnet" "private" {
       tags["Type"],
     ]
   }
+}
+
+#################
+# Outpost subnet
+#################
+resource "aws_subnet" "outpost" {
+  count = var.create_vpc && length(var.outpost_subnets) > 0 ? length(var.outpost_subnets) : 0
+
+  vpc_id                          = local.vpc_id
+  cidr_block                      = var.outpost_subnets[count.index]
+  availability_zone               = var.outpost_az
+  assign_ipv6_address_on_creation = var.outpost_subnet_assign_ipv6_address_on_creation == null ? var.assign_ipv6_address_on_creation : var.outpost_subnet_assign_ipv6_address_on_creation
+
+  ipv6_cidr_block = var.enable_ipv6 && length(var.outpost_subnet_ipv6_prefixes) > 0 ? cidrsubnet(aws_vpc.this[0].ipv6_cidr_block, 8, var.outpost_subnet_ipv6_prefixes[count.index]) : null
+
+  outpost_arn = var.outpost_arn
+
+  tags = merge(
+    {
+      "Name" = format(
+        "%s-${var.outpost_subnet_suffix}-%s",
+        var.name,
+        var.outpost_az,
+      )
+    },
+    var.tags,
+    var.outpost_subnet_tags,
+  )
 }
 
 ##################
@@ -768,6 +837,7 @@ resource "aws_default_network_acl" "this" {
       aws_subnet.database.*.id,
       aws_subnet.redshift.*.id,
       aws_subnet.elasticache.*.id,
+      aws_subnet.outpost.*.id,
     ])),
     compact(flatten([
       aws_network_acl.public.*.subnet_ids,
@@ -776,6 +846,7 @@ resource "aws_default_network_acl" "this" {
       aws_network_acl.database.*.subnet_ids,
       aws_network_acl.redshift.*.subnet_ids,
       aws_network_acl.elasticache.*.subnet_ids,
+      aws_network_acl.outpost.*.subnet_ids,
     ]))
   )
 
@@ -933,6 +1004,58 @@ resource "aws_network_acl_rule" "private_outbound" {
   protocol        = var.private_outbound_acl_rules[count.index]["protocol"]
   cidr_block      = lookup(var.private_outbound_acl_rules[count.index], "cidr_block", null)
   ipv6_cidr_block = lookup(var.private_outbound_acl_rules[count.index], "ipv6_cidr_block", null)
+}
+
+#######################
+# Outpost Network ACLs
+#######################
+resource "aws_network_acl" "outpost" {
+  count = var.create_vpc && var.outpost_dedicated_network_acl && length(var.outpost_subnets) > 0 ? 1 : 0
+
+  vpc_id     = element(concat(aws_vpc.this.*.id, [""]), 0)
+  subnet_ids = aws_subnet.outpost.*.id
+
+  tags = merge(
+    {
+      "Name" = format("%s-${var.outpost_subnet_suffix}", var.name)
+    },
+    var.tags,
+    var.outpost_acl_tags,
+  )
+}
+
+resource "aws_network_acl_rule" "outpost_inbound" {
+  count = var.create_vpc && var.outpost_dedicated_network_acl && length(var.outpost_subnets) > 0 ? length(var.outpost_inbound_acl_rules) : 0
+
+  network_acl_id = aws_network_acl.outpost[0].id
+
+  egress          = false
+  rule_number     = var.outpost_inbound_acl_rules[count.index]["rule_number"]
+  rule_action     = var.outpost_inbound_acl_rules[count.index]["rule_action"]
+  from_port       = lookup(var.outpost_inbound_acl_rules[count.index], "from_port", null)
+  to_port         = lookup(var.outpost_inbound_acl_rules[count.index], "to_port", null)
+  icmp_code       = lookup(var.outpost_inbound_acl_rules[count.index], "icmp_code", null)
+  icmp_type       = lookup(var.outpost_inbound_acl_rules[count.index], "icmp_type", null)
+  protocol        = var.outpost_inbound_acl_rules[count.index]["protocol"]
+  cidr_block      = lookup(var.outpost_inbound_acl_rules[count.index], "cidr_block", null)
+  ipv6_cidr_block = lookup(var.outpost_inbound_acl_rules[count.index], "ipv6_cidr_block", null)
+}
+
+resource "aws_network_acl_rule" "outpost_outbound" {
+  count = var.create_vpc && var.outpost_dedicated_network_acl && length(var.outpost_subnets) > 0 ? length(var.outpost_outbound_acl_rules) : 0
+
+  network_acl_id = aws_network_acl.outpost[0].id
+
+  egress          = true
+  rule_number     = var.outpost_outbound_acl_rules[count.index]["rule_number"]
+  rule_action     = var.outpost_outbound_acl_rules[count.index]["rule_action"]
+  from_port       = lookup(var.outpost_outbound_acl_rules[count.index], "from_port", null)
+  to_port         = lookup(var.outpost_outbound_acl_rules[count.index], "to_port", null)
+  icmp_code       = lookup(var.outpost_outbound_acl_rules[count.index], "icmp_code", null)
+  icmp_type       = lookup(var.outpost_outbound_acl_rules[count.index], "icmp_type", null)
+  protocol        = var.outpost_outbound_acl_rules[count.index]["protocol"]
+  cidr_block      = lookup(var.outpost_outbound_acl_rules[count.index], "cidr_block", null)
+  ipv6_cidr_block = lookup(var.outpost_outbound_acl_rules[count.index], "ipv6_cidr_block", null)
 }
 
 ########################
@@ -1327,13 +1450,23 @@ resource "aws_route_table_association" "private" {
   )
 }
 
+resource "aws_route_table_association" "outpost" {
+  count = var.create_vpc && length(var.outpost_subnets) > 0 ? length(var.outpost_subnets) : 0
+
+  subnet_id = element(aws_subnet.outpost.*.id, count.index)
+  route_table_id = element(
+    aws_route_table.private.*.id,
+    var.single_nat_gateway ? 0 : count.index,
+  )
+}
+
 resource "aws_route_table_association" "database" {
   count = var.create_vpc && length(var.database_subnets) > 0 ? length(var.database_subnets) : 0
 
   subnet_id = element(aws_subnet.database.*.id, count.index)
   route_table_id = element(
     coalescelist(aws_route_table.database.*.id, aws_route_table.private.*.id),
-    var.single_nat_gateway || var.create_database_subnet_route_table ? 0 : count.index,
+    var.create_database_subnet_route_table ? var.single_nat_gateway || var.create_database_internet_gateway_route ? 0 : count.index : count.index,
   )
 }
 
@@ -1521,3 +1654,4 @@ resource "aws_default_vpc" "this" {
     ]
   }
 }
+

@@ -19,25 +19,36 @@ Note that this example may create resources which can cost money (AWS Elastic IP
 
 | Name | Version |
 |------|---------|
-| terraform | >= 0.12.21 |
-| aws | >= 3.10 |
+| <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 0.12.21 |
+| <a name="requirement_aws"></a> [aws](#requirement\_aws) | >= 2.70 |
 
 ## Providers
 
 | Name | Version |
 |------|---------|
-| aws | >= 3.10 |
+| <a name="provider_aws"></a> [aws](#provider\_aws) | >= 2.70 |
+
+## Modules
+
+| Name | Source | Version |
+|------|--------|---------|
+| <a name="module_vpc"></a> [vpc](#module\_vpc) | ../.. |  |
+
+## Resources
+
+| Name | Type |
+|------|------|
+| [aws_availability_zones.available](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/availability_zones) | data source |
 
 ## Inputs
 
-No input.
+No inputs.
 
 ## Outputs
 
 | Name | Description |
 |------|-------------|
-| ipv6\_association\_id | The association ID for the IPv6 CIDR block |
-| ipv6\_cidr\_block | The IPv6 CIDR block |
-| vpc\_id | The ID of the VPC |
-
+| <a name="output_ipv6_association_id"></a> [ipv6\_association\_id](#output\_ipv6\_association\_id) | The association ID for the IPv6 CIDR block |
+| <a name="output_ipv6_cidr_block"></a> [ipv6\_cidr\_block](#output\_ipv6\_cidr\_block) | The IPv6 CIDR block |
+| <a name="output_vpc_id"></a> [vpc\_id](#output\_vpc\_id) | The ID of the VPC |
 <!-- END OF PRE-COMMIT-TERRAFORM DOCS HOOK -->

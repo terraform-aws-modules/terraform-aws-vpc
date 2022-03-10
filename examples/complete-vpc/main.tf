@@ -24,6 +24,9 @@ module "vpc" {
 
   create_database_subnet_group = false
 
+  manage_default_route_table = true
+  default_route_table_tags   = { DefaultRouteTable = true }
+
   enable_dns_hostnames = true
   enable_dns_support   = true
 
@@ -51,10 +54,15 @@ module "vpc" {
   dhcp_options_domain_name_servers = ["127.0.0.1", "10.10.0.2"]
 
   # VPC endpoint for S3
-  enable_s3_endpoint = true
+  # Note - S3 Interface type support is only available on AWS provider 3.10 and later
+  enable_s3_endpoint              = true
+  s3_endpoint_type                = "Interface"
+  s3_endpoint_private_dns_enabled = false
+  s3_endpoint_security_group_ids  = [data.aws_security_group.default.id]
 
   # VPC endpoint for DynamoDB
   enable_dynamodb_endpoint = true
+  dynamodb_endpoint_policy = data.aws_iam_policy_document.dynamodb_endpoint_policy.json
 
   # VPC endpoint for SSM
   enable_ssm_endpoint              = true
@@ -73,6 +81,7 @@ module "vpc" {
 
   # VPC Endpoint for EC2
   enable_ec2_endpoint              = true
+  ec2_endpoint_policy              = data.aws_iam_policy_document.generic_endpoint_policy.json
   ec2_endpoint_private_dns_enabled = true
   ec2_endpoint_security_group_ids  = [data.aws_security_group.default.id]
 
@@ -83,11 +92,13 @@ module "vpc" {
 
   # VPC Endpoint for ECR API
   enable_ecr_api_endpoint              = true
+  ecr_api_endpoint_policy              = data.aws_iam_policy_document.generic_endpoint_policy.json
   ecr_api_endpoint_private_dns_enabled = true
   ecr_api_endpoint_security_group_ids  = [data.aws_security_group.default.id]
 
   # VPC Endpoint for ECR DKR
   enable_ecr_dkr_endpoint              = true
+  ecr_dkr_endpoint_policy              = data.aws_iam_policy_document.generic_endpoint_policy.json
   ecr_dkr_endpoint_private_dns_enabled = true
   ecr_dkr_endpoint_security_group_ids  = [data.aws_security_group.default.id]
 
@@ -118,8 +129,8 @@ module "vpc" {
 
   # Default security group - ingress/egress rules cleared to deny all
   manage_default_security_group  = true
-  default_security_group_ingress = [{}]
-  default_security_group_egress  = [{}]
+  default_security_group_ingress = []
+  default_security_group_egress  = []
 
   # VPC Flow Logs (Cloudwatch log group and IAM role will be created)
   enable_flow_log                      = true
@@ -136,5 +147,51 @@ module "vpc" {
   vpc_endpoint_tags = {
     Project  = "Secret"
     Endpoint = "true"
+  }
+}
+
+# Data source used to avoid race condition
+data "aws_vpc_endpoint" "dynamodb" {
+  vpc_id       = module.vpc.vpc_id
+  service_name = "com.amazonaws.eu-west-1.dynamodb"
+}
+
+data "aws_iam_policy_document" "dynamodb_endpoint_policy" {
+  statement {
+    effect    = "Deny"
+    actions   = ["dynamodb:*"]
+    resources = ["*"]
+
+    principals {
+      type        = "*"
+      identifiers = ["*"]
+    }
+
+    condition {
+      test     = "StringNotEquals"
+      variable = "aws:sourceVpce"
+
+      values = [data.aws_vpc_endpoint.dynamodb.id]
+    }
+  }
+}
+
+data "aws_iam_policy_document" "generic_endpoint_policy" {
+  statement {
+    effect    = "Deny"
+    actions   = ["*"]
+    resources = ["*"]
+
+    principals {
+      type        = "*"
+      identifiers = ["*"]
+    }
+
+    condition {
+      test     = "StringNotEquals"
+      variable = "aws:sourceVpce"
+
+      values = [data.aws_vpc_endpoint.dynamodb.id]
+    }
   }
 }
