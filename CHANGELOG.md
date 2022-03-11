@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [3.13.0](https://github.com/terraform-aws-modules/terraform-aws-vpc/compare/v3.12.0...v3.13.0) (2022-03-11)
+
+
+### Features
+
+* Made it clear that we stand with Ukraine ([acb0ae5](https://github.com/terraform-aws-modules/terraform-aws-vpc/commit/acb0ae548d7c6dd0594565c7a6087f65b4c45f93))
+
 ## [3.12.0](https://github.com/terraform-aws-modules/terraform-aws-vpc/compare/v3.11.5...v3.12.0) (2022-02-07)
 
 
