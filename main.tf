@@ -9,6 +9,8 @@ locals {
 
   # Use `local.vpc_id` to give a hint to Terraform that subnets should be deleted before secondary CIDR blocks can be free!
   vpc_id = try(aws_vpc_ipv4_cidr_block_association.this[0].vpc_id, aws_vpc.this[0].id, "")
+
+  create_vpc = var.create_vpc && var.putin_khuylo
 }
 
 ################################################################################
@@ -16,7 +18,7 @@ locals {
 ################################################################################
 
 resource "aws_vpc" "this" {
-  count = var.create_vpc ? 1 : 0
+  count = local.create_vpc ? 1 : 0
 
   cidr_block                       = var.cidr
   instance_tenancy                 = var.instance_tenancy
@@ -34,7 +36,7 @@ resource "aws_vpc" "this" {
 }
 
 resource "aws_vpc_ipv4_cidr_block_association" "this" {
-  count = var.create_vpc && length(var.secondary_cidr_blocks) > 0 ? length(var.secondary_cidr_blocks) : 0
+  count = local.create_vpc && length(var.secondary_cidr_blocks) > 0 ? length(var.secondary_cidr_blocks) : 0
 
   # Do not turn this into `local.vpc_id`
   vpc_id = aws_vpc.this[0].id
@@ -43,7 +45,7 @@ resource "aws_vpc_ipv4_cidr_block_association" "this" {
 }
 
 resource "aws_default_security_group" "this" {
-  count = var.create_vpc && var.manage_default_security_group ? 1 : 0
+  count = local.create_vpc && var.manage_default_security_group ? 1 : 0
 
   vpc_id = aws_vpc.this[0].id
 
@@ -89,7 +91,7 @@ resource "aws_default_security_group" "this" {
 ################################################################################
 
 resource "aws_vpc_dhcp_options" "this" {
-  count = var.create_vpc && var.enable_dhcp_options ? 1 : 0
+  count = local.create_vpc && var.enable_dhcp_options ? 1 : 0
 
   domain_name          = var.dhcp_options_domain_name
   domain_name_servers  = var.dhcp_options_domain_name_servers
@@ -105,7 +107,7 @@ resource "aws_vpc_dhcp_options" "this" {
 }
 
 resource "aws_vpc_dhcp_options_association" "this" {
-  count = var.create_vpc && var.enable_dhcp_options ? 1 : 0
+  count = local.create_vpc && var.enable_dhcp_options ? 1 : 0
 
   vpc_id          = local.vpc_id
   dhcp_options_id = aws_vpc_dhcp_options.this[0].id
@@ -116,7 +118,7 @@ resource "aws_vpc_dhcp_options_association" "this" {
 ################################################################################
 
 resource "aws_internet_gateway" "this" {
-  count = var.create_vpc && var.create_igw && length(var.public_subnets) > 0 ? 1 : 0
+  count = local.create_vpc && var.create_igw && length(var.public_subnets) > 0 ? 1 : 0
 
   vpc_id = local.vpc_id
 
@@ -128,7 +130,7 @@ resource "aws_internet_gateway" "this" {
 }
 
 resource "aws_egress_only_internet_gateway" "this" {
-  count = var.create_vpc && var.create_egress_only_igw && var.enable_ipv6 && local.max_subnet_length > 0 ? 1 : 0
+  count = local.create_vpc && var.create_egress_only_igw && var.enable_ipv6 && local.max_subnet_length > 0 ? 1 : 0
 
   vpc_id = local.vpc_id
 
@@ -144,7 +146,7 @@ resource "aws_egress_only_internet_gateway" "this" {
 ################################################################################
 
 resource "aws_default_route_table" "default" {
-  count = var.create_vpc && var.manage_default_route_table ? 1 : 0
+  count = local.create_vpc && var.manage_default_route_table ? 1 : 0
 
   default_route_table_id = aws_vpc.this[0].default_route_table_id
   propagating_vgws       = var.default_route_table_propagating_vgws
@@ -185,7 +187,7 @@ resource "aws_default_route_table" "default" {
 ################################################################################
 
 resource "aws_route_table" "public" {
-  count = var.create_vpc && length(var.public_subnets) > 0 ? 1 : 0
+  count = local.create_vpc && length(var.public_subnets) > 0 ? 1 : 0
 
   vpc_id = local.vpc_id
 
@@ -197,7 +199,7 @@ resource "aws_route_table" "public" {
 }
 
 resource "aws_route" "public_internet_gateway" {
-  count = var.create_vpc && var.create_igw && length(var.public_subnets) > 0 ? 1 : 0
+  count = local.create_vpc && var.create_igw && length(var.public_subnets) > 0 ? 1 : 0
 
   route_table_id         = aws_route_table.public[0].id
   destination_cidr_block = "0.0.0.0/0"
@@ -209,7 +211,7 @@ resource "aws_route" "public_internet_gateway" {
 }
 
 resource "aws_route" "public_internet_gateway_ipv6" {
-  count = var.create_vpc && var.create_igw && var.enable_ipv6 && length(var.public_subnets) > 0 ? 1 : 0
+  count = local.create_vpc && var.create_igw && var.enable_ipv6 && length(var.public_subnets) > 0 ? 1 : 0
 
   route_table_id              = aws_route_table.public[0].id
   destination_ipv6_cidr_block = "::/0"
@@ -222,7 +224,7 @@ resource "aws_route" "public_internet_gateway_ipv6" {
 ################################################################################
 
 resource "aws_route_table" "private" {
-  count = var.create_vpc && local.max_subnet_length > 0 ? local.nat_gateway_count : 0
+  count = local.create_vpc && local.max_subnet_length > 0 ? local.nat_gateway_count : 0
 
   vpc_id = local.vpc_id
 
@@ -243,7 +245,7 @@ resource "aws_route_table" "private" {
 ################################################################################
 
 resource "aws_route_table" "database" {
-  count = var.create_vpc && var.create_database_subnet_route_table && length(var.database_subnets) > 0 ? var.single_nat_gateway || var.create_database_internet_gateway_route ? 1 : length(var.database_subnets) : 0
+  count = local.create_vpc && var.create_database_subnet_route_table && length(var.database_subnets) > 0 ? var.single_nat_gateway || var.create_database_internet_gateway_route ? 1 : length(var.database_subnets) : 0
 
   vpc_id = local.vpc_id
 
@@ -260,7 +262,7 @@ resource "aws_route_table" "database" {
 }
 
 resource "aws_route" "database_internet_gateway" {
-  count = var.create_vpc && var.create_igw && var.create_database_subnet_route_table && length(var.database_subnets) > 0 && var.create_database_internet_gateway_route && false == var.create_database_nat_gateway_route ? 1 : 0
+  count = local.create_vpc && var.create_igw && var.create_database_subnet_route_table && length(var.database_subnets) > 0 && var.create_database_internet_gateway_route && false == var.create_database_nat_gateway_route ? 1 : 0
 
   route_table_id         = aws_route_table.database[0].id
   destination_cidr_block = "0.0.0.0/0"
@@ -272,7 +274,7 @@ resource "aws_route" "database_internet_gateway" {
 }
 
 resource "aws_route" "database_nat_gateway" {
-  count = var.create_vpc && var.create_database_subnet_route_table && length(var.database_subnets) > 0 && false == var.create_database_internet_gateway_route && var.create_database_nat_gateway_route && var.enable_nat_gateway ? var.single_nat_gateway ? 1 : length(var.database_subnets) : 0
+  count = local.create_vpc && var.create_database_subnet_route_table && length(var.database_subnets) > 0 && false == var.create_database_internet_gateway_route && var.create_database_nat_gateway_route && var.enable_nat_gateway ? var.single_nat_gateway ? 1 : length(var.database_subnets) : 0
 
   route_table_id         = element(aws_route_table.database[*].id, count.index)
   destination_cidr_block = "0.0.0.0/0"
@@ -284,7 +286,7 @@ resource "aws_route" "database_nat_gateway" {
 }
 
 resource "aws_route" "database_ipv6_egress" {
-  count = var.create_vpc && var.create_egress_only_igw && var.enable_ipv6 && var.create_database_subnet_route_table && length(var.database_subnets) > 0 && var.create_database_internet_gateway_route ? 1 : 0
+  count = local.create_vpc && var.create_egress_only_igw && var.enable_ipv6 && var.create_database_subnet_route_table && length(var.database_subnets) > 0 && var.create_database_internet_gateway_route ? 1 : 0
 
   route_table_id              = aws_route_table.database[0].id
   destination_ipv6_cidr_block = "::/0"
@@ -300,7 +302,7 @@ resource "aws_route" "database_ipv6_egress" {
 ################################################################################
 
 resource "aws_route_table" "redshift" {
-  count = var.create_vpc && var.create_redshift_subnet_route_table && length(var.redshift_subnets) > 0 ? 1 : 0
+  count = local.create_vpc && var.create_redshift_subnet_route_table && length(var.redshift_subnets) > 0 ? 1 : 0
 
   vpc_id = local.vpc_id
 
@@ -316,7 +318,7 @@ resource "aws_route_table" "redshift" {
 ################################################################################
 
 resource "aws_route_table" "elasticache" {
-  count = var.create_vpc && var.create_elasticache_subnet_route_table && length(var.elasticache_subnets) > 0 ? 1 : 0
+  count = local.create_vpc && var.create_elasticache_subnet_route_table && length(var.elasticache_subnets) > 0 ? 1 : 0
 
   vpc_id = local.vpc_id
 
@@ -332,7 +334,7 @@ resource "aws_route_table" "elasticache" {
 ################################################################################
 
 resource "aws_route_table" "intra" {
-  count = var.create_vpc && length(var.intra_subnets) > 0 ? 1 : 0
+  count = local.create_vpc && length(var.intra_subnets) > 0 ? 1 : 0
 
   vpc_id = local.vpc_id
 
@@ -348,7 +350,7 @@ resource "aws_route_table" "intra" {
 ################################################################################
 
 resource "aws_subnet" "public" {
-  count = var.create_vpc && length(var.public_subnets) > 0 && (false == var.one_nat_gateway_per_az || length(var.public_subnets) >= length(var.azs)) ? length(var.public_subnets) : 0
+  count = local.create_vpc && length(var.public_subnets) > 0 && (false == var.one_nat_gateway_per_az || length(var.public_subnets) >= length(var.azs)) ? length(var.public_subnets) : 0
 
   vpc_id                          = local.vpc_id
   cidr_block                      = element(concat(var.public_subnets, [""]), count.index)
@@ -376,7 +378,7 @@ resource "aws_subnet" "public" {
 ################################################################################
 
 resource "aws_subnet" "private" {
-  count = var.create_vpc && length(var.private_subnets) > 0 ? length(var.private_subnets) : 0
+  count = local.create_vpc && length(var.private_subnets) > 0 ? length(var.private_subnets) : 0
 
   vpc_id                          = local.vpc_id
   cidr_block                      = var.private_subnets[count.index]
@@ -403,7 +405,7 @@ resource "aws_subnet" "private" {
 ################################################################################
 
 resource "aws_subnet" "outpost" {
-  count = var.create_vpc && length(var.outpost_subnets) > 0 ? length(var.outpost_subnets) : 0
+  count = local.create_vpc && length(var.outpost_subnets) > 0 ? length(var.outpost_subnets) : 0
 
   vpc_id                          = local.vpc_id
   cidr_block                      = var.outpost_subnets[count.index]
@@ -431,7 +433,7 @@ resource "aws_subnet" "outpost" {
 ################################################################################
 
 resource "aws_subnet" "database" {
-  count = var.create_vpc && length(var.database_subnets) > 0 ? length(var.database_subnets) : 0
+  count = local.create_vpc && length(var.database_subnets) > 0 ? length(var.database_subnets) : 0
 
   vpc_id                          = local.vpc_id
   cidr_block                      = var.database_subnets[count.index]
@@ -454,7 +456,7 @@ resource "aws_subnet" "database" {
 }
 
 resource "aws_db_subnet_group" "database" {
-  count = var.create_vpc && length(var.database_subnets) > 0 && var.create_database_subnet_group ? 1 : 0
+  count = local.create_vpc && length(var.database_subnets) > 0 && var.create_database_subnet_group ? 1 : 0
 
   name        = lower(coalesce(var.database_subnet_group_name, var.name))
   description = "Database subnet group for ${var.name}"
@@ -474,7 +476,7 @@ resource "aws_db_subnet_group" "database" {
 ################################################################################
 
 resource "aws_subnet" "redshift" {
-  count = var.create_vpc && length(var.redshift_subnets) > 0 ? length(var.redshift_subnets) : 0
+  count = local.create_vpc && length(var.redshift_subnets) > 0 ? length(var.redshift_subnets) : 0
 
   vpc_id                          = local.vpc_id
   cidr_block                      = var.redshift_subnets[count.index]
@@ -497,7 +499,7 @@ resource "aws_subnet" "redshift" {
 }
 
 resource "aws_redshift_subnet_group" "redshift" {
-  count = var.create_vpc && length(var.redshift_subnets) > 0 && var.create_redshift_subnet_group ? 1 : 0
+  count = local.create_vpc && length(var.redshift_subnets) > 0 && var.create_redshift_subnet_group ? 1 : 0
 
   name        = lower(coalesce(var.redshift_subnet_group_name, var.name))
   description = "Redshift subnet group for ${var.name}"
@@ -515,7 +517,7 @@ resource "aws_redshift_subnet_group" "redshift" {
 ################################################################################
 
 resource "aws_subnet" "elasticache" {
-  count = var.create_vpc && length(var.elasticache_subnets) > 0 ? length(var.elasticache_subnets) : 0
+  count = local.create_vpc && length(var.elasticache_subnets) > 0 ? length(var.elasticache_subnets) : 0
 
   vpc_id                          = local.vpc_id
   cidr_block                      = var.elasticache_subnets[count.index]
@@ -538,7 +540,7 @@ resource "aws_subnet" "elasticache" {
 }
 
 resource "aws_elasticache_subnet_group" "elasticache" {
-  count = var.create_vpc && length(var.elasticache_subnets) > 0 && var.create_elasticache_subnet_group ? 1 : 0
+  count = local.create_vpc && length(var.elasticache_subnets) > 0 && var.create_elasticache_subnet_group ? 1 : 0
 
   name        = coalesce(var.elasticache_subnet_group_name, var.name)
   description = "ElastiCache subnet group for ${var.name}"
@@ -556,7 +558,7 @@ resource "aws_elasticache_subnet_group" "elasticache" {
 ################################################################################
 
 resource "aws_subnet" "intra" {
-  count = var.create_vpc && length(var.intra_subnets) > 0 ? length(var.intra_subnets) : 0
+  count = local.create_vpc && length(var.intra_subnets) > 0 ? length(var.intra_subnets) : 0
 
   vpc_id                          = local.vpc_id
   cidr_block                      = var.intra_subnets[count.index]
@@ -583,7 +585,7 @@ resource "aws_subnet" "intra" {
 ################################################################################
 
 resource "aws_default_network_acl" "this" {
-  count = var.create_vpc && var.manage_default_network_acl ? 1 : 0
+  count = local.create_vpc && var.manage_default_network_acl ? 1 : 0
 
   default_network_acl_id = aws_vpc.this[0].default_network_acl_id
 
@@ -636,7 +638,7 @@ resource "aws_default_network_acl" "this" {
 ################################################################################
 
 resource "aws_network_acl" "public" {
-  count = var.create_vpc && var.public_dedicated_network_acl && length(var.public_subnets) > 0 ? 1 : 0
+  count = local.create_vpc && var.public_dedicated_network_acl && length(var.public_subnets) > 0 ? 1 : 0
 
   vpc_id     = local.vpc_id
   subnet_ids = aws_subnet.public[*].id
@@ -649,7 +651,7 @@ resource "aws_network_acl" "public" {
 }
 
 resource "aws_network_acl_rule" "public_inbound" {
-  count = var.create_vpc && var.public_dedicated_network_acl && length(var.public_subnets) > 0 ? length(var.public_inbound_acl_rules) : 0
+  count = local.create_vpc && var.public_dedicated_network_acl && length(var.public_subnets) > 0 ? length(var.public_inbound_acl_rules) : 0
 
   network_acl_id = aws_network_acl.public[0].id
 
@@ -666,7 +668,7 @@ resource "aws_network_acl_rule" "public_inbound" {
 }
 
 resource "aws_network_acl_rule" "public_outbound" {
-  count = var.create_vpc && var.public_dedicated_network_acl && length(var.public_subnets) > 0 ? length(var.public_outbound_acl_rules) : 0
+  count = local.create_vpc && var.public_dedicated_network_acl && length(var.public_subnets) > 0 ? length(var.public_outbound_acl_rules) : 0
 
   network_acl_id = aws_network_acl.public[0].id
 
@@ -687,7 +689,7 @@ resource "aws_network_acl_rule" "public_outbound" {
 ################################################################################
 
 resource "aws_network_acl" "private" {
-  count = var.create_vpc && var.private_dedicated_network_acl && length(var.private_subnets) > 0 ? 1 : 0
+  count = local.create_vpc && var.private_dedicated_network_acl && length(var.private_subnets) > 0 ? 1 : 0
 
   vpc_id     = local.vpc_id
   subnet_ids = aws_subnet.private[*].id
@@ -700,7 +702,7 @@ resource "aws_network_acl" "private" {
 }
 
 resource "aws_network_acl_rule" "private_inbound" {
-  count = var.create_vpc && var.private_dedicated_network_acl && length(var.private_subnets) > 0 ? length(var.private_inbound_acl_rules) : 0
+  count = local.create_vpc && var.private_dedicated_network_acl && length(var.private_subnets) > 0 ? length(var.private_inbound_acl_rules) : 0
 
   network_acl_id = aws_network_acl.private[0].id
 
@@ -717,7 +719,7 @@ resource "aws_network_acl_rule" "private_inbound" {
 }
 
 resource "aws_network_acl_rule" "private_outbound" {
-  count = var.create_vpc && var.private_dedicated_network_acl && length(var.private_subnets) > 0 ? length(var.private_outbound_acl_rules) : 0
+  count = local.create_vpc && var.private_dedicated_network_acl && length(var.private_subnets) > 0 ? length(var.private_outbound_acl_rules) : 0
 
   network_acl_id = aws_network_acl.private[0].id
 
@@ -738,7 +740,7 @@ resource "aws_network_acl_rule" "private_outbound" {
 ################################################################################
 
 resource "aws_network_acl" "outpost" {
-  count = var.create_vpc && var.outpost_dedicated_network_acl && length(var.outpost_subnets) > 0 ? 1 : 0
+  count = local.create_vpc && var.outpost_dedicated_network_acl && length(var.outpost_subnets) > 0 ? 1 : 0
 
   vpc_id     = local.vpc_id
   subnet_ids = aws_subnet.outpost[*].id
@@ -751,7 +753,7 @@ resource "aws_network_acl" "outpost" {
 }
 
 resource "aws_network_acl_rule" "outpost_inbound" {
-  count = var.create_vpc && var.outpost_dedicated_network_acl && length(var.outpost_subnets) > 0 ? length(var.outpost_inbound_acl_rules) : 0
+  count = local.create_vpc && var.outpost_dedicated_network_acl && length(var.outpost_subnets) > 0 ? length(var.outpost_inbound_acl_rules) : 0
 
   network_acl_id = aws_network_acl.outpost[0].id
 
@@ -768,7 +770,7 @@ resource "aws_network_acl_rule" "outpost_inbound" {
 }
 
 resource "aws_network_acl_rule" "outpost_outbound" {
-  count = var.create_vpc && var.outpost_dedicated_network_acl && length(var.outpost_subnets) > 0 ? length(var.outpost_outbound_acl_rules) : 0
+  count = local.create_vpc && var.outpost_dedicated_network_acl && length(var.outpost_subnets) > 0 ? length(var.outpost_outbound_acl_rules) : 0
 
   network_acl_id = aws_network_acl.outpost[0].id
 
@@ -789,7 +791,7 @@ resource "aws_network_acl_rule" "outpost_outbound" {
 ################################################################################
 
 resource "aws_network_acl" "intra" {
-  count = var.create_vpc && var.intra_dedicated_network_acl && length(var.intra_subnets) > 0 ? 1 : 0
+  count = local.create_vpc && var.intra_dedicated_network_acl && length(var.intra_subnets) > 0 ? 1 : 0
 
   vpc_id     = local.vpc_id
   subnet_ids = aws_subnet.intra[*].id
@@ -802,7 +804,7 @@ resource "aws_network_acl" "intra" {
 }
 
 resource "aws_network_acl_rule" "intra_inbound" {
-  count = var.create_vpc && var.intra_dedicated_network_acl && length(var.intra_subnets) > 0 ? length(var.intra_inbound_acl_rules) : 0
+  count = local.create_vpc && var.intra_dedicated_network_acl && length(var.intra_subnets) > 0 ? length(var.intra_inbound_acl_rules) : 0
 
   network_acl_id = aws_network_acl.intra[0].id
 
@@ -819,7 +821,7 @@ resource "aws_network_acl_rule" "intra_inbound" {
 }
 
 resource "aws_network_acl_rule" "intra_outbound" {
-  count = var.create_vpc && var.intra_dedicated_network_acl && length(var.intra_subnets) > 0 ? length(var.intra_outbound_acl_rules) : 0
+  count = local.create_vpc && var.intra_dedicated_network_acl && length(var.intra_subnets) > 0 ? length(var.intra_outbound_acl_rules) : 0
 
   network_acl_id = aws_network_acl.intra[0].id
 
@@ -840,7 +842,7 @@ resource "aws_network_acl_rule" "intra_outbound" {
 ################################################################################
 
 resource "aws_network_acl" "database" {
-  count = var.create_vpc && var.database_dedicated_network_acl && length(var.database_subnets) > 0 ? 1 : 0
+  count = local.create_vpc && var.database_dedicated_network_acl && length(var.database_subnets) > 0 ? 1 : 0
 
   vpc_id     = local.vpc_id
   subnet_ids = aws_subnet.database[*].id
@@ -853,7 +855,7 @@ resource "aws_network_acl" "database" {
 }
 
 resource "aws_network_acl_rule" "database_inbound" {
-  count = var.create_vpc && var.database_dedicated_network_acl && length(var.database_subnets) > 0 ? length(var.database_inbound_acl_rules) : 0
+  count = local.create_vpc && var.database_dedicated_network_acl && length(var.database_subnets) > 0 ? length(var.database_inbound_acl_rules) : 0
 
   network_acl_id = aws_network_acl.database[0].id
 
@@ -870,7 +872,7 @@ resource "aws_network_acl_rule" "database_inbound" {
 }
 
 resource "aws_network_acl_rule" "database_outbound" {
-  count = var.create_vpc && var.database_dedicated_network_acl && length(var.database_subnets) > 0 ? length(var.database_outbound_acl_rules) : 0
+  count = local.create_vpc && var.database_dedicated_network_acl && length(var.database_subnets) > 0 ? length(var.database_outbound_acl_rules) : 0
 
   network_acl_id = aws_network_acl.database[0].id
 
@@ -891,7 +893,7 @@ resource "aws_network_acl_rule" "database_outbound" {
 ################################################################################
 
 resource "aws_network_acl" "redshift" {
-  count = var.create_vpc && var.redshift_dedicated_network_acl && length(var.redshift_subnets) > 0 ? 1 : 0
+  count = local.create_vpc && var.redshift_dedicated_network_acl && length(var.redshift_subnets) > 0 ? 1 : 0
 
   vpc_id     = local.vpc_id
   subnet_ids = aws_subnet.redshift[*].id
@@ -904,7 +906,7 @@ resource "aws_network_acl" "redshift" {
 }
 
 resource "aws_network_acl_rule" "redshift_inbound" {
-  count = var.create_vpc && var.redshift_dedicated_network_acl && length(var.redshift_subnets) > 0 ? length(var.redshift_inbound_acl_rules) : 0
+  count = local.create_vpc && var.redshift_dedicated_network_acl && length(var.redshift_subnets) > 0 ? length(var.redshift_inbound_acl_rules) : 0
 
   network_acl_id = aws_network_acl.redshift[0].id
 
@@ -921,7 +923,7 @@ resource "aws_network_acl_rule" "redshift_inbound" {
 }
 
 resource "aws_network_acl_rule" "redshift_outbound" {
-  count = var.create_vpc && var.redshift_dedicated_network_acl && length(var.redshift_subnets) > 0 ? length(var.redshift_outbound_acl_rules) : 0
+  count = local.create_vpc && var.redshift_dedicated_network_acl && length(var.redshift_subnets) > 0 ? length(var.redshift_outbound_acl_rules) : 0
 
   network_acl_id = aws_network_acl.redshift[0].id
 
@@ -942,7 +944,7 @@ resource "aws_network_acl_rule" "redshift_outbound" {
 ################################################################################
 
 resource "aws_network_acl" "elasticache" {
-  count = var.create_vpc && var.elasticache_dedicated_network_acl && length(var.elasticache_subnets) > 0 ? 1 : 0
+  count = local.create_vpc && var.elasticache_dedicated_network_acl && length(var.elasticache_subnets) > 0 ? 1 : 0
 
   vpc_id     = local.vpc_id
   subnet_ids = aws_subnet.elasticache[*].id
@@ -955,7 +957,7 @@ resource "aws_network_acl" "elasticache" {
 }
 
 resource "aws_network_acl_rule" "elasticache_inbound" {
-  count = var.create_vpc && var.elasticache_dedicated_network_acl && length(var.elasticache_subnets) > 0 ? length(var.elasticache_inbound_acl_rules) : 0
+  count = local.create_vpc && var.elasticache_dedicated_network_acl && length(var.elasticache_subnets) > 0 ? length(var.elasticache_inbound_acl_rules) : 0
 
   network_acl_id = aws_network_acl.elasticache[0].id
 
@@ -972,7 +974,7 @@ resource "aws_network_acl_rule" "elasticache_inbound" {
 }
 
 resource "aws_network_acl_rule" "elasticache_outbound" {
-  count = var.create_vpc && var.elasticache_dedicated_network_acl && length(var.elasticache_subnets) > 0 ? length(var.elasticache_outbound_acl_rules) : 0
+  count = local.create_vpc && var.elasticache_dedicated_network_acl && length(var.elasticache_subnets) > 0 ? length(var.elasticache_outbound_acl_rules) : 0
 
   network_acl_id = aws_network_acl.elasticache[0].id
 
@@ -997,7 +999,7 @@ locals {
 }
 
 resource "aws_eip" "nat" {
-  count = var.create_vpc && var.enable_nat_gateway && false == var.reuse_nat_ips ? local.nat_gateway_count : 0
+  count = local.create_vpc && var.enable_nat_gateway && false == var.reuse_nat_ips ? local.nat_gateway_count : 0
 
   vpc = true
 
@@ -1014,7 +1016,7 @@ resource "aws_eip" "nat" {
 }
 
 resource "aws_nat_gateway" "this" {
-  count = var.create_vpc && var.enable_nat_gateway ? local.nat_gateway_count : 0
+  count = local.create_vpc && var.enable_nat_gateway ? local.nat_gateway_count : 0
 
   allocation_id = element(
     local.nat_gateway_ips,
@@ -1040,7 +1042,7 @@ resource "aws_nat_gateway" "this" {
 }
 
 resource "aws_route" "private_nat_gateway" {
-  count = var.create_vpc && var.enable_nat_gateway ? local.nat_gateway_count : 0
+  count = local.create_vpc && var.enable_nat_gateway ? local.nat_gateway_count : 0
 
   route_table_id         = element(aws_route_table.private[*].id, count.index)
   destination_cidr_block = var.nat_gateway_destination_cidr_block
@@ -1052,7 +1054,7 @@ resource "aws_route" "private_nat_gateway" {
 }
 
 resource "aws_route" "private_ipv6_egress" {
-  count = var.create_vpc && var.create_egress_only_igw && var.enable_ipv6 ? length(var.private_subnets) : 0
+  count = local.create_vpc && var.create_egress_only_igw && var.enable_ipv6 ? length(var.private_subnets) : 0
 
   route_table_id              = element(aws_route_table.private[*].id, count.index)
   destination_ipv6_cidr_block = "::/0"
@@ -1064,7 +1066,7 @@ resource "aws_route" "private_ipv6_egress" {
 ################################################################################
 
 resource "aws_route_table_association" "private" {
-  count = var.create_vpc && length(var.private_subnets) > 0 ? length(var.private_subnets) : 0
+  count = local.create_vpc && length(var.private_subnets) > 0 ? length(var.private_subnets) : 0
 
   subnet_id = element(aws_subnet.private[*].id, count.index)
   route_table_id = element(
@@ -1074,7 +1076,7 @@ resource "aws_route_table_association" "private" {
 }
 
 resource "aws_route_table_association" "outpost" {
-  count = var.create_vpc && length(var.outpost_subnets) > 0 ? length(var.outpost_subnets) : 0
+  count = local.create_vpc && length(var.outpost_subnets) > 0 ? length(var.outpost_subnets) : 0
 
   subnet_id = element(aws_subnet.outpost[*].id, count.index)
   route_table_id = element(
@@ -1084,7 +1086,7 @@ resource "aws_route_table_association" "outpost" {
 }
 
 resource "aws_route_table_association" "database" {
-  count = var.create_vpc && length(var.database_subnets) > 0 ? length(var.database_subnets) : 0
+  count = local.create_vpc && length(var.database_subnets) > 0 ? length(var.database_subnets) : 0
 
   subnet_id = element(aws_subnet.database[*].id, count.index)
   route_table_id = element(
@@ -1094,7 +1096,7 @@ resource "aws_route_table_association" "database" {
 }
 
 resource "aws_route_table_association" "redshift" {
-  count = var.create_vpc && length(var.redshift_subnets) > 0 && false == var.enable_public_redshift ? length(var.redshift_subnets) : 0
+  count = local.create_vpc && length(var.redshift_subnets) > 0 && false == var.enable_public_redshift ? length(var.redshift_subnets) : 0
 
   subnet_id = element(aws_subnet.redshift[*].id, count.index)
   route_table_id = element(
@@ -1104,7 +1106,7 @@ resource "aws_route_table_association" "redshift" {
 }
 
 resource "aws_route_table_association" "redshift_public" {
-  count = var.create_vpc && length(var.redshift_subnets) > 0 && var.enable_public_redshift ? length(var.redshift_subnets) : 0
+  count = local.create_vpc && length(var.redshift_subnets) > 0 && var.enable_public_redshift ? length(var.redshift_subnets) : 0
 
   subnet_id = element(aws_subnet.redshift[*].id, count.index)
   route_table_id = element(
@@ -1114,7 +1116,7 @@ resource "aws_route_table_association" "redshift_public" {
 }
 
 resource "aws_route_table_association" "elasticache" {
-  count = var.create_vpc && length(var.elasticache_subnets) > 0 ? length(var.elasticache_subnets) : 0
+  count = local.create_vpc && length(var.elasticache_subnets) > 0 ? length(var.elasticache_subnets) : 0
 
   subnet_id = element(aws_subnet.elasticache[*].id, count.index)
   route_table_id = element(
@@ -1127,14 +1129,14 @@ resource "aws_route_table_association" "elasticache" {
 }
 
 resource "aws_route_table_association" "intra" {
-  count = var.create_vpc && length(var.intra_subnets) > 0 ? length(var.intra_subnets) : 0
+  count = local.create_vpc && length(var.intra_subnets) > 0 ? length(var.intra_subnets) : 0
 
   subnet_id      = element(aws_subnet.intra[*].id, count.index)
   route_table_id = element(aws_route_table.intra[*].id, 0)
 }
 
 resource "aws_route_table_association" "public" {
-  count = var.create_vpc && length(var.public_subnets) > 0 ? length(var.public_subnets) : 0
+  count = local.create_vpc && length(var.public_subnets) > 0 ? length(var.public_subnets) : 0
 
   subnet_id      = element(aws_subnet.public[*].id, count.index)
   route_table_id = aws_route_table.public[0].id
@@ -1164,7 +1166,7 @@ resource "aws_customer_gateway" "this" {
 ################################################################################
 
 resource "aws_vpn_gateway" "this" {
-  count = var.create_vpc && var.enable_vpn_gateway ? 1 : 0
+  count = local.create_vpc && var.enable_vpn_gateway ? 1 : 0
 
   vpc_id            = local.vpc_id
   amazon_side_asn   = var.amazon_side_asn
@@ -1185,7 +1187,7 @@ resource "aws_vpn_gateway_attachment" "this" {
 }
 
 resource "aws_vpn_gateway_route_propagation" "public" {
-  count = var.create_vpc && var.propagate_public_route_tables_vgw && (var.enable_vpn_gateway || var.vpn_gateway_id != "") ? 1 : 0
+  count = local.create_vpc && var.propagate_public_route_tables_vgw && (var.enable_vpn_gateway || var.vpn_gateway_id != "") ? 1 : 0
 
   route_table_id = element(aws_route_table.public[*].id, count.index)
   vpn_gateway_id = element(
@@ -1198,7 +1200,7 @@ resource "aws_vpn_gateway_route_propagation" "public" {
 }
 
 resource "aws_vpn_gateway_route_propagation" "private" {
-  count = var.create_vpc && var.propagate_private_route_tables_vgw && (var.enable_vpn_gateway || var.vpn_gateway_id != "") ? length(var.private_subnets) : 0
+  count = local.create_vpc && var.propagate_private_route_tables_vgw && (var.enable_vpn_gateway || var.vpn_gateway_id != "") ? length(var.private_subnets) : 0
 
   route_table_id = element(aws_route_table.private[*].id, count.index)
   vpn_gateway_id = element(
@@ -1211,7 +1213,7 @@ resource "aws_vpn_gateway_route_propagation" "private" {
 }
 
 resource "aws_vpn_gateway_route_propagation" "intra" {
-  count = var.create_vpc && var.propagate_intra_route_tables_vgw && (var.enable_vpn_gateway || var.vpn_gateway_id != "") ? length(var.intra_subnets) : 0
+  count = local.create_vpc && var.propagate_intra_route_tables_vgw && (var.enable_vpn_gateway || var.vpn_gateway_id != "") ? length(var.intra_subnets) : 0
 
   route_table_id = element(aws_route_table.intra[*].id, count.index)
   vpn_gateway_id = element(
