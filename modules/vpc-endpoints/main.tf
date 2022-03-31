@@ -15,7 +15,7 @@ data "aws_vpc_endpoint_service" "this" {
 }
 
 resource "aws_vpc_endpoint" "this" {
-  for_each = { for k, v in var.endpoints : k => v if var.create }
+  for_each = { for k, v in var.endpoints : k => v if var.create && try(v.create, true) }
 
   vpc_id            = var.vpc_id
   service_name      = data.aws_vpc_endpoint_service.this[each.key].service_name

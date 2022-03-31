@@ -24,7 +24,7 @@ module "vpc_with_flow_logs_s3_bucket" {
 
   enable_flow_log           = true
   flow_log_destination_type = "s3"
-  flow_log_destination_arn  = module.s3_bucket.this_s3_bucket_arn
+  flow_log_destination_arn  = module.s3_bucket.s3_bucket_arn
 
   vpc_flow_log_tags = {
     Name = "vpc-flow-logs-s3-bucket"
@@ -42,7 +42,7 @@ module "vpc_with_flow_logs_s3_bucket_parquet" {
 
   enable_flow_log           = true
   flow_log_destination_type = "s3"
-  flow_log_destination_arn  = module.s3_bucket.this_s3_bucket_arn
+  flow_log_destination_arn  = module.s3_bucket.s3_bucket_arn
   flow_log_file_format      = "parquet"
 
   vpc_flow_log_tags = {
@@ -102,7 +102,7 @@ resource "random_pet" "this" {
 # S3 Bucket
 module "s3_bucket" {
   source  = "terraform-aws-modules/s3-bucket/aws"
-  version = "~> 1.0"
+  version = "~> 3.0"
 
   bucket        = local.s3_bucket_name
   policy        = data.aws_iam_policy_document.flow_log_s3.json
