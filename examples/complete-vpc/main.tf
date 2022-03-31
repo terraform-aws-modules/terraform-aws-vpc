@@ -89,7 +89,6 @@ module "vpc_endpoints" {
 
   endpoints = {
     s3 = {
-      create = false
       service = "s3"
       tags    = { Name = "s3-vpc-endpoint" }
     },
@@ -122,6 +121,7 @@ module "vpc_endpoints" {
       subnet_ids          = module.vpc.private_subnets
     },
     ecs_telemetry = {
+      create = false
       service             = "ecs-telemetry"
       private_dns_enabled = true
       subnet_ids          = module.vpc.private_subnets
