@@ -89,6 +89,7 @@ module "vpc_endpoints" {
 
   endpoints = {
     s3 = {
+      create = false
       service = "s3"
       tags    = { Name = "s3-vpc-endpoint" }
     },
