@@ -33,6 +33,9 @@ resource "aws_vpc" "this" {
     var.tags,
     var.vpc_tags,
   )
+  lifecycle {
+    create_before_destroy = true
+  }
 }
 
 resource "aws_vpc_ipv4_cidr_block_association" "this" {
@@ -42,6 +45,10 @@ resource "aws_vpc_ipv4_cidr_block_association" "this" {
   vpc_id = aws_vpc.this[0].id
 
   cidr_block = element(var.secondary_cidr_blocks, count.index)
+
+  lifecycle {
+    create_before_destroy = true
+  }
 }
 
 resource "aws_default_security_group" "this" {
@@ -84,6 +91,10 @@ resource "aws_default_security_group" "this" {
     var.tags,
     var.default_security_group_tags,
   )
+
+  lifecycle {
+    create_before_destroy = true
+  }
 }
 
 ################################################################################
@@ -104,6 +115,10 @@ resource "aws_vpc_dhcp_options" "this" {
     var.tags,
     var.dhcp_options_tags,
   )
+
+  lifecycle {
+    create_before_destroy = true
+  }
 }
 
 resource "aws_vpc_dhcp_options_association" "this" {
@@ -127,6 +142,10 @@ resource "aws_internet_gateway" "this" {
     var.tags,
     var.igw_tags,
   )
+
+  lifecycle {
+    create_before_destroy = true
+  }
 }
 
 resource "aws_egress_only_internet_gateway" "this" {
@@ -139,6 +158,10 @@ resource "aws_egress_only_internet_gateway" "this" {
     var.tags,
     var.igw_tags,
   )
+
+  lifecycle {
+    create_before_destroy = true
+  }
 }
 
 ################################################################################
@@ -180,6 +203,10 @@ resource "aws_default_route_table" "default" {
     var.tags,
     var.default_route_table_tags,
   )
+
+  lifecycle {
+    create_before_destroy = true
+  }
 }
 
 ################################################################################
@@ -196,6 +223,10 @@ resource "aws_route_table" "public" {
     var.tags,
     var.public_route_table_tags,
   )
+
+  lifecycle {
+    create_before_destroy = true
+  }
 }
 
 resource "aws_route" "public_internet_gateway" {
@@ -208,6 +239,10 @@ resource "aws_route" "public_internet_gateway" {
   timeouts {
     create = "5m"
   }
+
+  lifecycle {
+    create_before_destroy = true
+  }
 }
 
 resource "aws_route" "public_internet_gateway_ipv6" {
@@ -216,6 +251,10 @@ resource "aws_route" "public_internet_gateway_ipv6" {
   route_table_id              = aws_route_table.public[0].id
   destination_ipv6_cidr_block = "::/0"
   gateway_id                  = aws_internet_gateway.this[0].id
+
+  lifecycle {
+    create_before_destroy = true
+  }
 }
 
 ################################################################################
@@ -238,6 +277,9 @@ resource "aws_route_table" "private" {
     var.tags,
     var.private_route_table_tags,
   )
+ lifecycle {
+    create_before_destroy = true
+  }
 }
 
 ################################################################################
@@ -259,6 +301,10 @@ resource "aws_route_table" "database" {
     var.tags,
     var.database_route_table_tags,
   )
+
+  lifecycle {
+    create_before_destroy = true
+  }
 }
 
 resource "aws_route" "database_internet_gateway" {
@@ -270,6 +316,10 @@ resource "aws_route" "database_internet_gateway" {
 
   timeouts {
     create = "5m"
+  }
+
+  lifecycle {
+    create_before_destroy = true
   }
 }
 
@@ -283,6 +333,10 @@ resource "aws_route" "database_nat_gateway" {
   timeouts {
     create = "5m"
   }
+
+  lifecycle {
+    create_before_destroy = true
+  }
 }
 
 resource "aws_route" "database_ipv6_egress" {
@@ -294,6 +348,10 @@ resource "aws_route" "database_ipv6_egress" {
 
   timeouts {
     create = "5m"
+  }
+
+  lifecycle {
+    create_before_destroy = true
   }
 }
 
@@ -311,6 +369,10 @@ resource "aws_route_table" "redshift" {
     var.tags,
     var.redshift_route_table_tags,
   )
+
+  lifecycle {
+    create_before_destroy = true
+  }
 }
 
 ################################################################################
@@ -327,6 +389,10 @@ resource "aws_route_table" "elasticache" {
     var.tags,
     var.elasticache_route_table_tags,
   )
+
+  lifecycle {
+    create_before_destroy = true
+  }
 }
 
 ################################################################################
@@ -343,6 +409,9 @@ resource "aws_route_table" "intra" {
     var.tags,
     var.intra_route_table_tags,
   )
+  lifecycle {
+    create_before_destroy = true
+  }
 }
 
 ################################################################################
@@ -371,6 +440,10 @@ resource "aws_subnet" "public" {
     var.tags,
     var.public_subnet_tags,
   )
+
+  lifecycle {
+    create_before_destroy = true
+  }
 }
 
 ################################################################################
@@ -398,6 +471,10 @@ resource "aws_subnet" "private" {
     var.tags,
     var.private_subnet_tags,
   )
+
+  lifecycle {
+    create_before_destroy = true
+  }
 }
 
 ################################################################################
@@ -426,6 +503,10 @@ resource "aws_subnet" "outpost" {
     var.tags,
     var.outpost_subnet_tags,
   )
+
+  lifecycle {
+    create_before_destroy = true
+  }
 }
 
 ################################################################################
@@ -453,6 +534,10 @@ resource "aws_subnet" "database" {
     var.tags,
     var.database_subnet_tags,
   )
+
+  lifecycle {
+    create_before_destroy = true
+  }
 }
 
 resource "aws_db_subnet_group" "database" {
@@ -496,6 +581,10 @@ resource "aws_subnet" "redshift" {
     var.tags,
     var.redshift_subnet_tags,
   )
+
+  lifecycle {
+    create_before_destroy = true
+  }
 }
 
 resource "aws_redshift_subnet_group" "redshift" {
@@ -510,6 +599,10 @@ resource "aws_redshift_subnet_group" "redshift" {
     var.tags,
     var.redshift_subnet_group_tags,
   )
+
+  lifecycle {
+    create_before_destroy = true
+  }
 }
 
 ################################################################################
@@ -537,6 +630,10 @@ resource "aws_subnet" "elasticache" {
     var.tags,
     var.elasticache_subnet_tags,
   )
+
+  lifecycle {
+    create_before_destroy = true
+  }
 }
 
 resource "aws_elasticache_subnet_group" "elasticache" {
@@ -551,6 +648,10 @@ resource "aws_elasticache_subnet_group" "elasticache" {
     var.tags,
     var.elasticache_subnet_group_tags,
   )
+
+  lifecycle {
+    create_before_destroy = true
+  }
 }
 
 ################################################################################
@@ -648,6 +749,10 @@ resource "aws_network_acl" "public" {
     var.tags,
     var.public_acl_tags,
   )
+
+  lifecycle {
+    create_before_destroy = true
+  }
 }
 
 resource "aws_network_acl_rule" "public_inbound" {
@@ -665,6 +770,10 @@ resource "aws_network_acl_rule" "public_inbound" {
   protocol        = var.public_inbound_acl_rules[count.index]["protocol"]
   cidr_block      = lookup(var.public_inbound_acl_rules[count.index], "cidr_block", null)
   ipv6_cidr_block = lookup(var.public_inbound_acl_rules[count.index], "ipv6_cidr_block", null)
+
+  lifecycle {
+    create_before_destroy = true
+  }
 }
 
 resource "aws_network_acl_rule" "public_outbound" {
@@ -682,6 +791,10 @@ resource "aws_network_acl_rule" "public_outbound" {
   protocol        = var.public_outbound_acl_rules[count.index]["protocol"]
   cidr_block      = lookup(var.public_outbound_acl_rules[count.index], "cidr_block", null)
   ipv6_cidr_block = lookup(var.public_outbound_acl_rules[count.index], "ipv6_cidr_block", null)
+
+  lifecycle {
+    create_before_destroy = true
+  }
 }
 
 ################################################################################
@@ -699,6 +812,10 @@ resource "aws_network_acl" "private" {
     var.tags,
     var.private_acl_tags,
   )
+
+  lifecycle {
+    create_before_destroy = true
+  }
 }
 
 resource "aws_network_acl_rule" "private_inbound" {
@@ -716,6 +833,10 @@ resource "aws_network_acl_rule" "private_inbound" {
   protocol        = var.private_inbound_acl_rules[count.index]["protocol"]
   cidr_block      = lookup(var.private_inbound_acl_rules[count.index], "cidr_block", null)
   ipv6_cidr_block = lookup(var.private_inbound_acl_rules[count.index], "ipv6_cidr_block", null)
+
+  lifecycle {
+    create_before_destroy = true
+  }
 }
 
 resource "aws_network_acl_rule" "private_outbound" {
@@ -733,6 +854,10 @@ resource "aws_network_acl_rule" "private_outbound" {
   protocol        = var.private_outbound_acl_rules[count.index]["protocol"]
   cidr_block      = lookup(var.private_outbound_acl_rules[count.index], "cidr_block", null)
   ipv6_cidr_block = lookup(var.private_outbound_acl_rules[count.index], "ipv6_cidr_block", null)
+
+  lifecycle {
+    create_before_destroy = true
+  }
 }
 
 ################################################################################
@@ -750,6 +875,10 @@ resource "aws_network_acl" "outpost" {
     var.tags,
     var.outpost_acl_tags,
   )
+
+  lifecycle {
+    create_before_destroy = true
+  }
 }
 
 resource "aws_network_acl_rule" "outpost_inbound" {
@@ -767,6 +896,10 @@ resource "aws_network_acl_rule" "outpost_inbound" {
   protocol        = var.outpost_inbound_acl_rules[count.index]["protocol"]
   cidr_block      = lookup(var.outpost_inbound_acl_rules[count.index], "cidr_block", null)
   ipv6_cidr_block = lookup(var.outpost_inbound_acl_rules[count.index], "ipv6_cidr_block", null)
+
+  lifecycle {
+    create_before_destroy = true
+  }
 }
 
 resource "aws_network_acl_rule" "outpost_outbound" {
@@ -784,6 +917,10 @@ resource "aws_network_acl_rule" "outpost_outbound" {
   protocol        = var.outpost_outbound_acl_rules[count.index]["protocol"]
   cidr_block      = lookup(var.outpost_outbound_acl_rules[count.index], "cidr_block", null)
   ipv6_cidr_block = lookup(var.outpost_outbound_acl_rules[count.index], "ipv6_cidr_block", null)
+
+  lifecycle {
+    create_before_destroy = true
+  }
 }
 
 ################################################################################
@@ -801,6 +938,10 @@ resource "aws_network_acl" "intra" {
     var.tags,
     var.intra_acl_tags,
   )
+
+  lifecycle {
+    create_before_destroy = true
+  }
 }
 
 resource "aws_network_acl_rule" "intra_inbound" {
@@ -818,6 +959,10 @@ resource "aws_network_acl_rule" "intra_inbound" {
   protocol        = var.intra_inbound_acl_rules[count.index]["protocol"]
   cidr_block      = lookup(var.intra_inbound_acl_rules[count.index], "cidr_block", null)
   ipv6_cidr_block = lookup(var.intra_inbound_acl_rules[count.index], "ipv6_cidr_block", null)
+
+  lifecycle {
+    create_before_destroy = true
+  }
 }
 
 resource "aws_network_acl_rule" "intra_outbound" {
@@ -835,6 +980,10 @@ resource "aws_network_acl_rule" "intra_outbound" {
   protocol        = var.intra_outbound_acl_rules[count.index]["protocol"]
   cidr_block      = lookup(var.intra_outbound_acl_rules[count.index], "cidr_block", null)
   ipv6_cidr_block = lookup(var.intra_outbound_acl_rules[count.index], "ipv6_cidr_block", null)
+
+  lifecycle {
+    create_before_destroy = true
+  }
 }
 
 ################################################################################
@@ -852,6 +1001,10 @@ resource "aws_network_acl" "database" {
     var.tags,
     var.database_acl_tags,
   )
+
+  lifecycle {
+    create_before_destroy = true
+  }
 }
 
 resource "aws_network_acl_rule" "database_inbound" {
@@ -869,6 +1022,10 @@ resource "aws_network_acl_rule" "database_inbound" {
   protocol        = var.database_inbound_acl_rules[count.index]["protocol"]
   cidr_block      = lookup(var.database_inbound_acl_rules[count.index], "cidr_block", null)
   ipv6_cidr_block = lookup(var.database_inbound_acl_rules[count.index], "ipv6_cidr_block", null)
+
+  lifecycle {
+    create_before_destroy = true
+  }
 }
 
 resource "aws_network_acl_rule" "database_outbound" {
@@ -886,6 +1043,10 @@ resource "aws_network_acl_rule" "database_outbound" {
   protocol        = var.database_outbound_acl_rules[count.index]["protocol"]
   cidr_block      = lookup(var.database_outbound_acl_rules[count.index], "cidr_block", null)
   ipv6_cidr_block = lookup(var.database_outbound_acl_rules[count.index], "ipv6_cidr_block", null)
+
+  lifecycle {
+    create_before_destroy = true
+  }
 }
 
 ################################################################################
@@ -903,6 +1064,10 @@ resource "aws_network_acl" "redshift" {
     var.tags,
     var.redshift_acl_tags,
   )
+
+  lifecycle {
+    create_before_destroy = true
+  }
 }
 
 resource "aws_network_acl_rule" "redshift_inbound" {
@@ -937,6 +1102,10 @@ resource "aws_network_acl_rule" "redshift_outbound" {
   protocol        = var.redshift_outbound_acl_rules[count.index]["protocol"]
   cidr_block      = lookup(var.redshift_outbound_acl_rules[count.index], "cidr_block", null)
   ipv6_cidr_block = lookup(var.redshift_outbound_acl_rules[count.index], "ipv6_cidr_block", null)
+
+  lifecycle {
+    create_before_destroy = true
+  }
 }
 
 ################################################################################
@@ -954,6 +1123,10 @@ resource "aws_network_acl" "elasticache" {
     var.tags,
     var.elasticache_acl_tags,
   )
+
+  lifecycle {
+    create_before_destroy = true
+  }
 }
 
 resource "aws_network_acl_rule" "elasticache_inbound" {
@@ -971,6 +1144,10 @@ resource "aws_network_acl_rule" "elasticache_inbound" {
   protocol        = var.elasticache_inbound_acl_rules[count.index]["protocol"]
   cidr_block      = lookup(var.elasticache_inbound_acl_rules[count.index], "cidr_block", null)
   ipv6_cidr_block = lookup(var.elasticache_inbound_acl_rules[count.index], "ipv6_cidr_block", null)
+
+  lifecycle {
+    create_before_destroy = true
+  }
 }
 
 resource "aws_network_acl_rule" "elasticache_outbound" {
@@ -988,6 +1165,10 @@ resource "aws_network_acl_rule" "elasticache_outbound" {
   protocol        = var.elasticache_outbound_acl_rules[count.index]["protocol"]
   cidr_block      = lookup(var.elasticache_outbound_acl_rules[count.index], "cidr_block", null)
   ipv6_cidr_block = lookup(var.elasticache_outbound_acl_rules[count.index], "ipv6_cidr_block", null)
+
+  lifecycle {
+    create_before_destroy = true
+  }
 }
 
 ################################################################################
@@ -1013,6 +1194,10 @@ resource "aws_eip" "nat" {
     var.tags,
     var.nat_eip_tags,
   )
+
+  lifecycle {
+    create_before_destroy = true
+  }
 }
 
 resource "aws_nat_gateway" "this" {
@@ -1039,6 +1224,10 @@ resource "aws_nat_gateway" "this" {
   )
 
   depends_on = [aws_internet_gateway.this]
+
+  lifecycle {
+    create_before_destroy = true
+  }
 }
 
 resource "aws_route" "private_nat_gateway" {
@@ -1051,6 +1240,10 @@ resource "aws_route" "private_nat_gateway" {
   timeouts {
     create = "5m"
   }
+
+  lifecycle {
+    create_before_destroy = true
+  }
 }
 
 resource "aws_route" "private_ipv6_egress" {
@@ -1059,6 +1252,10 @@ resource "aws_route" "private_ipv6_egress" {
   route_table_id              = element(aws_route_table.private[*].id, count.index)
   destination_ipv6_cidr_block = "::/0"
   egress_only_gateway_id      = element(aws_egress_only_internet_gateway.this[*].id, 0)
+
+  lifecycle {
+    create_before_destroy = true
+  }
 }
 
 ################################################################################
@@ -1073,6 +1270,10 @@ resource "aws_route_table_association" "private" {
     aws_route_table.private[*].id,
     var.single_nat_gateway ? 0 : count.index,
   )
+
+  lifecycle {
+    create_before_destroy = true
+  }
 }
 
 resource "aws_route_table_association" "outpost" {
@@ -1083,6 +1284,10 @@ resource "aws_route_table_association" "outpost" {
     aws_route_table.private[*].id,
     var.single_nat_gateway ? 0 : count.index,
   )
+
+  lifecycle {
+    create_before_destroy = true
+  }
 }
 
 resource "aws_route_table_association" "database" {
@@ -1093,6 +1298,10 @@ resource "aws_route_table_association" "database" {
     coalescelist(aws_route_table.database[*].id, aws_route_table.private[*].id),
     var.create_database_subnet_route_table ? var.single_nat_gateway || var.create_database_internet_gateway_route ? 0 : count.index : count.index,
   )
+
+  lifecycle {
+    create_before_destroy = true
+  }
 }
 
 resource "aws_route_table_association" "redshift" {
@@ -1103,6 +1312,10 @@ resource "aws_route_table_association" "redshift" {
     coalescelist(aws_route_table.redshift[*].id, aws_route_table.private[*].id),
     var.single_nat_gateway || var.create_redshift_subnet_route_table ? 0 : count.index,
   )
+
+  lifecycle {
+    create_before_destroy = true
+  }
 }
 
 resource "aws_route_table_association" "redshift_public" {
@@ -1113,6 +1326,10 @@ resource "aws_route_table_association" "redshift_public" {
     coalescelist(aws_route_table.redshift[*].id, aws_route_table.public[*].id),
     var.single_nat_gateway || var.create_redshift_subnet_route_table ? 0 : count.index,
   )
+
+  lifecycle {
+    create_before_destroy = true
+  }
 }
 
 resource "aws_route_table_association" "elasticache" {
@@ -1126,6 +1343,10 @@ resource "aws_route_table_association" "elasticache" {
     ),
     var.single_nat_gateway || var.create_elasticache_subnet_route_table ? 0 : count.index,
   )
+
+  lifecycle {
+    create_before_destroy = true
+  }
 }
 
 resource "aws_route_table_association" "intra" {
@@ -1133,6 +1354,10 @@ resource "aws_route_table_association" "intra" {
 
   subnet_id      = element(aws_subnet.intra[*].id, count.index)
   route_table_id = element(aws_route_table.intra[*].id, 0)
+
+  lifecycle {
+    create_before_destroy = true
+  }
 }
 
 resource "aws_route_table_association" "public" {
@@ -1140,6 +1365,10 @@ resource "aws_route_table_association" "public" {
 
   subnet_id      = element(aws_subnet.public[*].id, count.index)
   route_table_id = aws_route_table.public[0].id
+
+  lifecycle {
+    create_before_destroy = true
+  }
 }
 
 ################################################################################
@@ -1159,6 +1388,10 @@ resource "aws_customer_gateway" "this" {
     var.tags,
     var.customer_gateway_tags,
   )
+
+  lifecycle {
+    create_before_destroy = true
+  }
 }
 
 ################################################################################
@@ -1177,6 +1410,10 @@ resource "aws_vpn_gateway" "this" {
     var.tags,
     var.vpn_gateway_tags,
   )
+
+  lifecycle {
+    create_before_destroy = true
+  }
 }
 
 resource "aws_vpn_gateway_attachment" "this" {
@@ -1184,6 +1421,10 @@ resource "aws_vpn_gateway_attachment" "this" {
 
   vpc_id         = local.vpc_id
   vpn_gateway_id = var.vpn_gateway_id
+
+  lifecycle {
+    create_before_destroy = true
+  }
 }
 
 resource "aws_vpn_gateway_route_propagation" "public" {
@@ -1197,6 +1438,10 @@ resource "aws_vpn_gateway_route_propagation" "public" {
     ),
     count.index,
   )
+
+  lifecycle {
+    create_before_destroy = true
+  }
 }
 
 resource "aws_vpn_gateway_route_propagation" "private" {
@@ -1210,6 +1455,10 @@ resource "aws_vpn_gateway_route_propagation" "private" {
     ),
     count.index,
   )
+
+  lifecycle {
+    create_before_destroy = true
+  }
 }
 
 resource "aws_vpn_gateway_route_propagation" "intra" {
@@ -1223,6 +1472,10 @@ resource "aws_vpn_gateway_route_propagation" "intra" {
     ),
     count.index,
   )
+
+  lifecycle {
+    create_before_destroy = true
+  }
 }
 
 ################################################################################
@@ -1241,4 +1494,8 @@ resource "aws_default_vpc" "this" {
     var.tags,
     var.default_vpc_tags,
   )
+
+  lifecycle {
+    create_before_destroy = true
+  }
 }
