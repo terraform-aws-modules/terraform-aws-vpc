@@ -1155,9 +1155,9 @@ resource "aws_customer_gateway" "this" {
   type        = "ipsec.1"
 
   tags = merge(
-    { Name = "${var.name}-${each.key}" },
     var.tags,
     var.customer_gateway_tags,
+  { Name = "${var.name}-${each.key}" },
   )
 }
 
