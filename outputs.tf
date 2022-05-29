@@ -534,6 +534,11 @@ output "vpc_flow_log_cloudwatch_iam_role_arn" {
   value       = local.flow_log_iam_role_arn
 }
 
+output "flow_log_log_group_name_prefix" {
+  description = "The name prefix of the CloudWatch Log Group created for the VPC flow logs."
+  value       = var.flow_log_cloudwatch_log_group_name_prefix
+}
+
 # Static values (arguments)
 output "azs" {
   description = "A list of availability zones specified as argument to this module"
