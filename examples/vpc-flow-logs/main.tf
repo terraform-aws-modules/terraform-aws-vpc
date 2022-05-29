@@ -7,7 +7,7 @@ locals {
 
   s3_bucket_name            = "vpc-flow-logs-to-s3-${random_pet.this.id}"
   cloudwatch_log_group_name = "vpc-flow-logs-to-cloudwatch-${random_pet.this.id}"
-  cloudwatch_flow_log_group_name = "${module.vpc_with_flow_logs_cloudwatch_logs.flow_log_log_group_name_prefix}/${module.vpc_with_flow_logs_cloudwatch_logs.name}"
+  cloudwatch_flow_log_group_name = "${module.vpc_with_flow_logs_cloudwatch_logs_default.flow_log_log_group_name_prefix}${module.vpc_with_flow_logs_cloudwatch_logs_default.vpc_id}"
 }
 
 ################################################################################
@@ -112,7 +112,7 @@ resource "aws_cloudwatch_log_metric_filter" "flow_log_reject" {
   }
 
    depends_on = [
-    module.vpc_with_flow_logs_cloudwatch_logs
+    module.vpc_with_flow_logs_cloudwatch_logs_default
   ]
 }
 
