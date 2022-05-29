@@ -7,6 +7,7 @@ locals {
 
   s3_bucket_name            = "vpc-flow-logs-to-s3-${random_pet.this.id}"
   cloudwatch_log_group_name = "vpc-flow-logs-to-cloudwatch-${random_pet.this.id}"
+  cloudwatch_flow_log_group_name = "${module.vpc_with_flow_logs_cloudwatch_logs.flow_log_log_group_name_prefix}/${module.vpc_with_flow_logs_cloudwatch_logs.name}"
 }
 
 ################################################################################
@@ -97,6 +98,18 @@ module "vpc_with_flow_logs_cloudwatch_logs" {
 
 resource "random_pet" "this" {
   length = 2
+}
+
+resource "aws_cloudwatch_log_metric_filter" "flow_log_reject" {
+  name           = "Flow-Log-Reject"
+  pattern        = "REJECT"
+  log_group_name = locals.cloudwatch_flow_log_group_name
+
+  metric_transformation {
+    name      = "REJECT"
+    namespace = "FLOW_LOG"
+    value     = "1"
+  }
 }
 
 # S3 Bucket
