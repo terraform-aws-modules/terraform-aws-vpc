@@ -103,7 +103,7 @@ resource "random_pet" "this" {
 resource "aws_cloudwatch_log_metric_filter" "flow_log_reject" {
   name           = "Flow-Log-Reject"
   pattern        = "REJECT"
-  log_group_name = locals.cloudwatch_flow_log_group_name
+  log_group_name = local.cloudwatch_flow_log_group_name
 
   metric_transformation {
     name      = "REJECT"
