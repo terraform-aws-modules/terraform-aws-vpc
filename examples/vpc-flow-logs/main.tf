@@ -110,6 +110,10 @@ resource "aws_cloudwatch_log_metric_filter" "flow_log_reject" {
     namespace = "FLOW_LOG"
     value     = "1"
   }
+
+   depends_on = [
+    module.vpc_with_flow_logs_cloudwatch_logs
+  ]
 }
 
 # S3 Bucket
