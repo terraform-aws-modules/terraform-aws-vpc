@@ -17,7 +17,7 @@ locals {
   # `assign_generated_ipv6_cidr_block` to be `null`. Otherwise, if
   # `var.assign_generated_ipv6_cidr_block` has a value, use it; if it is `null`,
   # then use the value of `var.create_vpc`.
-  assign_generated_ipv6_cidr_block = var.ipv6_ipam_pool_id != null ? null : (
+  assign_generated_ipv6_cidr_block = var.ipv6_ipam_pool_id != "" ? null : (
     var.assign_generated_ipv6_cidr_block != null
     && var.assign_generated_ipv6_cidr_block
     || var.create_vpc
