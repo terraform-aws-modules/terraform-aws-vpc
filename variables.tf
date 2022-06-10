@@ -25,11 +25,11 @@ variable "enable_ipv6" {
 variable "assign_generated_ipv6_cidr_block" {
   description = "Requests an Amazon-provided IPv6 CIDR block with a /56 prefix length for the VPC."
   type        = bool
-  default     = null
+  default     = true
 }
 
 variable "ipv6_ipam_pool_id" {
-  description = "IPAM Pool ID for a IPv6 pool. Overrides `assign_generated_ipv6_cidr_block`."
+  description = "IPAM Pool ID for an IPv6 pool."
   type        = string
   default     = null
 }
