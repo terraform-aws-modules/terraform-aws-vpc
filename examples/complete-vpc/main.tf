@@ -6,7 +6,7 @@ locals {
   name   = "complete-example"
   region = "eu-west-1"
   tags = {
-    Owner       = "user"
+    Owner       = "testuser"
     Environment = "staging"
     Name        = "complete"
   }
