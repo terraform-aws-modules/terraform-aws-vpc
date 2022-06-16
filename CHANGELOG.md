@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+### [3.14.1](https://github.com/terraform-aws-modules/terraform-aws-vpc/compare/v3.14.0...v3.14.1) (2022-06-16)
+
+
+### Bug Fixes
+
+* Declare data resource only for requested VPC endpoints ([#800](https://github.com/terraform-aws-modules/terraform-aws-vpc/issues/800)) ([024fbc0](https://github.com/terraform-aws-modules/terraform-aws-vpc/commit/024fbc01bf468240213666dfd4428f5b425794d1))
+
 ## [3.14.0](https://github.com/terraform-aws-modules/terraform-aws-vpc/compare/v3.13.0...v3.14.0) (2022-03-31)
 
 
