@@ -4,13 +4,89 @@ locals {
     length(var.elasticache_subnets),
     length(var.database_subnets),
     length(var.redshift_subnets),
+    length(local.private_custom_subnets),
+    length(local.elasticache_custom_subnets),
+    length(local.database_custom_subnets),
+    length(local.redshift_custom_subnets),
   )
-  nat_gateway_count = var.single_nat_gateway ? 1 : var.one_nat_gateway_per_az ? length(var.azs) : local.max_subnet_length
+  nat_gateway_count = var.single_nat_gateway ? 1 : var.one_nat_gateway_per_az ? length(toset(flatten([
+    var.azs,
+    local.private_custom_subnets[*].azs,
+    local.elasticache_custom_subnets[*].azs,
+    local.database_custom_subnets[*].azs,
+    local.redshift_custom_subnets[*].azs,
+  ]))) : local.max_subnet_length
 
   # Use `local.vpc_id` to give a hint to Terraform that subnets should be deleted before secondary CIDR blocks can be free!
   vpc_id = try(aws_vpc_ipv4_cidr_block_association.this[0].vpc_id, aws_vpc.this[0].id, "")
 
   create_vpc = var.create_vpc && var.putin_khuylo
+
+  private_custom_subnets = flatten([
+    for block in var.private_custom_blocks : [
+      for subnet in block.subnets : {
+        subnet        = subnet
+        azs           = block.azs
+        subnet_suffix = block.subnet_suffix
+        tags          = block.tags
+      }
+    ]
+  ])
+
+  public_custom_subnets = flatten([
+    for block in var.public_custom_blocks : [
+      for subnet in block.subnets : {
+        subnet        = subnet
+        azs           = block.azs
+        subnet_suffix = block.subnet_suffix
+        tags          = block.tags
+      }
+    ]
+  ])
+
+  database_custom_subnets = flatten([
+    for block in var.database_custom_blocks : [
+      for subnet in block.subnets : {
+        subnet        = subnet
+        azs           = block.azs
+        subnet_suffix = block.subnet_suffix
+        tags          = block.tags
+      }
+    ]
+  ])
+
+  intra_custom_subnets = flatten([
+    for block in var.intra_custom_blocks : [
+      for subnet in block.subnets : {
+        subnet        = subnet
+        azs           = block.azs
+        subnet_suffix = block.subnet_suffix
+        tags          = block.tags
+      }
+    ]
+  ])
+
+  elasticache_custom_subnets = flatten([
+    for block in var.elasticache_custom_blocks : [
+      for subnet in block.subnets : {
+        subnet        = subnet
+        azs           = block.azs
+        subnet_suffix = block.subnet_suffix
+        tags          = block.tags
+      }
+    ]
+  ])
+
+  redshift_custom_subnets = flatten([
+    for block in var.redshift_custom_blocks : [
+      for subnet in block.subnets : {
+        subnet        = subnet
+        azs           = block.azs
+        subnet_suffix = block.subnet_suffix
+        tags          = block.tags
+      }
+    ]
+  ])
 }
 
 ################################################################################
@@ -397,6 +473,31 @@ resource "aws_subnet" "private" {
     },
     var.tags,
     var.private_subnet_tags,
+  )
+}
+
+################################################################################
+# Custom private subnet
+################################################################################
+
+resource "aws_subnet" "custom" {
+  count = var.create_vpc && length(local.private_custom_subnets) > 0 ? length(local.private_custom_subnets) : 0
+
+  vpc_id     = local.vpc_id
+  cidr_block = local.private_custom_subnets[count.index].subnet
+
+  availability_zone    = length(regexall("^[a-z]{2}-", element(local.private_custom_subnets[count.index].azs, count.index))) > 0 ? element(local.private_custom_subnets[count.index].azs, count.index) : null
+  availability_zone_id = length(regexall("^[a-z]{2}-", element(local.private_custom_subnets[count.index].azs, count.index))) == 0 ? element(local.private_custom_subnets[count.index].azs, count.index) : null
+
+  tags = merge(
+    {
+      "Name" = format(
+        "${var.name}-${local.private_custom_subnets[count.index].subnet_suffix}-%s",
+        element(local.private_custom_subnets[count.index].azs, count.index),
+      )
+    },
+    var.tags,
+    local.private_custom_subnets[count.index].tags,
   )
 }
 
@@ -1069,6 +1170,16 @@ resource "aws_route_table_association" "private" {
   count = local.create_vpc && length(var.private_subnets) > 0 ? length(var.private_subnets) : 0
 
   subnet_id = element(aws_subnet.private[*].id, count.index)
+  route_table_id = element(
+    aws_route_table.private[*].id,
+    var.single_nat_gateway ? 0 : count.index,
+  )
+}
+
+resource "aws_route_table_association" "custom_private" {
+  count = var.create_vpc && length(local.private_custom_subnets) > 0 ? length(local.private_custom_subnets) : 0
+
+  subnet_id = element(aws_subnet.custom[*].id, count.index)
   route_table_id = element(
     aws_route_table.private[*].id,
     var.single_nat_gateway ? 0 : count.index,
