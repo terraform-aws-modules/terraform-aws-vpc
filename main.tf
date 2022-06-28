@@ -5,16 +5,10 @@ locals {
     length(var.database_subnets),
     length(var.redshift_subnets),
     length(local.private_custom_subnets),
-    length(local.elasticache_custom_subnets),
-    length(local.database_custom_subnets),
-    length(local.redshift_custom_subnets),
   )
   nat_gateway_count = var.single_nat_gateway ? 1 : var.one_nat_gateway_per_az ? length(toset(flatten([
     var.azs,
     local.private_custom_subnets[*].azs,
-    local.elasticache_custom_subnets[*].azs,
-    local.database_custom_subnets[*].azs,
-    local.redshift_custom_subnets[*].azs,
   ]))) : local.max_subnet_length
 
   # Use `local.vpc_id` to give a hint to Terraform that subnets should be deleted before secondary CIDR blocks can be free!
@@ -24,61 +18,6 @@ locals {
 
   private_custom_subnets = flatten([
     for block in var.private_custom_blocks : [
-      for subnet in block.subnets : {
-        subnet        = subnet
-        azs           = block.azs
-        subnet_suffix = block.subnet_suffix
-        tags          = block.tags
-      }
-    ]
-  ])
-
-  public_custom_subnets = flatten([
-    for block in var.public_custom_blocks : [
-      for subnet in block.subnets : {
-        subnet        = subnet
-        azs           = block.azs
-        subnet_suffix = block.subnet_suffix
-        tags          = block.tags
-      }
-    ]
-  ])
-
-  database_custom_subnets = flatten([
-    for block in var.database_custom_blocks : [
-      for subnet in block.subnets : {
-        subnet        = subnet
-        azs           = block.azs
-        subnet_suffix = block.subnet_suffix
-        tags          = block.tags
-      }
-    ]
-  ])
-
-  intra_custom_subnets = flatten([
-    for block in var.intra_custom_blocks : [
-      for subnet in block.subnets : {
-        subnet        = subnet
-        azs           = block.azs
-        subnet_suffix = block.subnet_suffix
-        tags          = block.tags
-      }
-    ]
-  ])
-
-  elasticache_custom_subnets = flatten([
-    for block in var.elasticache_custom_blocks : [
-      for subnet in block.subnets : {
-        subnet        = subnet
-        azs           = block.azs
-        subnet_suffix = block.subnet_suffix
-        tags          = block.tags
-      }
-    ]
-  ])
-
-  redshift_custom_subnets = flatten([
-    for block in var.redshift_custom_blocks : [
       for subnet in block.subnets : {
         subnet        = subnet
         azs           = block.azs
