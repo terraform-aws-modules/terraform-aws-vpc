@@ -1198,33 +1198,3 @@ variable "private_custom_blocks" {
   description = "List of maps of customized private subnets"
   default     = {}
 }
-
-variable "public_custom_blocks" {
-  type        = list(map(string))
-  description = "List of maps of customized public subnets"
-  default     = []
-}
-
-variable "database_custom_blocks" {
-  type        = list(map(string))
-  description = "List of maps of customized database subnets"
-  default     = []
-}
-
-variable "intra_custom_blocks" {
-  type        = list(map(string))
-  description = "List of maps of customized intra subnets"
-  default     = []
-}
-
-variable "elasticache_custom_blocks" {
-  type        = list(map(string))
-  description = "List of maps of customized elasticache subnets"
-  default     = []
-}
-
-variable "redshift_custom_blocks" {
-  type        = list(map(string))
-  description = "List of maps of customized redshift subnets"
-  default     = []
-}
