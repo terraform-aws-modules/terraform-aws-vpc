@@ -3,7 +3,15 @@
 ################################################################################
 
 locals {
-  endpoints = { for k, v in var.endpoints : k => v if var.create && try(v.create, true) }
+  default_sg = length(var.security_group_ids) == 0 ? [try(data.aws_security_group.this[0].id, null)] : []
+  endpoints  = { for k, v in var.endpoints : k => v if var.create && try(v.create, true) }
+}
+
+data "aws_security_group" "this" {
+  count = var.create ? 1 : 0
+
+  name   = "default"
+  vpc_id = var.vpc_id
 }
 
 data "aws_vpc_endpoint_service" "this" {
@@ -26,7 +34,7 @@ resource "aws_vpc_endpoint" "this" {
   vpc_endpoint_type = lookup(each.value, "service_type", "Interface")
   auto_accept       = lookup(each.value, "auto_accept", null)
 
-  security_group_ids  = lookup(each.value, "service_type", "Interface") == "Interface" ? distinct(concat(var.security_group_ids, lookup(each.value, "security_group_ids", []))) : null
+  security_group_ids  = lookup(each.value, "service_type", "Interface") == "Interface" ? distinct(concat(var.security_group_ids, lookup(each.value, "security_group_ids", local.default_sg))) : null
   subnet_ids          = lookup(each.value, "service_type", "Interface") == "Interface" ? distinct(concat(var.subnet_ids, lookup(each.value, "subnet_ids", []))) : null
   route_table_ids     = lookup(each.value, "service_type", "Interface") == "Gateway" ? lookup(each.value, "route_table_ids", null) : null
   policy              = lookup(each.value, "policy", null)
