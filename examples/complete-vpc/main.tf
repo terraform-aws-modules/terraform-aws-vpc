@@ -37,6 +37,15 @@ module "vpc" {
 
   manage_default_route_table = true
   default_route_table_tags   = { Name = "${local.name}-default" }
+  # Peered VPC to become routed with the one being created
+  default_route_table_routes = [{
+    "vpc_peering_connection_id" = "pcx-00000000000000000",
+    "cidr_block"                = "20.20.20.0/24"
+  }]
+  intra_route_table_routes_extra = [{
+    "vpc_peering_connection_id" = "pcx-00000000000000000",
+    "cidr_block"                = "20.20.20.0/24"
+  }]
 
   manage_default_security_group = true
   default_security_group_tags   = { Name = "${local.name}-default" }
