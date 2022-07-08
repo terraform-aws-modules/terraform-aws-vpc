@@ -418,6 +418,18 @@ variable "default_route_table_tags" {
   default     = {}
 }
 
+variable "private_route_table_routes_extra" {
+  description = "Configuration block of additional routes for private subnets route tables. See https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/default_route_table#route"
+  type        = list(map(string))
+  default     = []
+}
+
+variable "intra_route_table_routes_extra" {
+  description = "Configuration block of additional routes for intra subnets route tables. See https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/default_route_table#route"
+  type        = list(map(string))
+  default     = []
+}
+
 variable "tags" {
   description = "A map of tags to add to all resources"
   type        = map(string)
