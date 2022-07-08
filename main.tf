@@ -224,9 +224,30 @@ resource "aws_route" "public_internet_gateway_ipv6" {
 ################################################################################
 
 resource "aws_route_table" "private" {
-  count = local.create_vpc && local.max_subnet_length > 0 ? local.nat_gateway_count : 0
+  #depends_on = [aws_ec2_transit_gateway_vpc_attachment.private]
+  count = local.create_vpc && local.max_subnet_length > 0 && var.transit_gateway_attach ? local.nat_gateway_count : 0
 
   vpc_id = local.vpc_id
+
+  dynamic "route" {
+    for_each = var.private_route_table_routes
+    content {
+      # One of the following destinations must be provided
+      cidr_block      = route.value.cidr_block
+      ipv6_cidr_block = lookup(route.value, "ipv6_cidr_block", null)
+
+      # One of the following targets must be provided
+      egress_only_gateway_id    = lookup(route.value, "egress_only_gateway_id", null)
+      gateway_id                = lookup(route.value, "gateway_id", null)
+      instance_id               = lookup(route.value, "instance_id", null)
+      nat_gateway_id            = lookup(route.value, "nat_gateway_id", null)
+      network_interface_id      = lookup(route.value, "network_interface_id", null)
+      transit_gateway_id        = lookup(route.value, "transit_gateway_id", null)
+      vpc_endpoint_id           = lookup(route.value, "vpc_endpoint_id", null)
+      vpc_peering_connection_id = lookup(route.value, "vpc_peering_connection_id", null)
+    }
+  }
+
 
   tags = merge(
     {
@@ -237,6 +258,23 @@ resource "aws_route_table" "private" {
     },
     var.tags,
     var.private_route_table_tags,
+  )
+}
+
+################################################################################
+# Transit Gateway Attach
+################################################################################
+resource "aws_ec2_transit_gateway_vpc_attachment" "private" {
+  count = var.create_vpc && length(var.private_subnets) > 0 && var.transit_gateway_attach ? 1 : 0
+  subnet_ids = aws_subnet.private.*.id
+  transit_gateway_id = var.transit_gateway_id
+  vpc_id = local.vpc_id
+
+    tags = merge(
+    {
+      "Name" = "${var.name}-transit_gateway"
+    },
+    var.tags
   )
 }
 

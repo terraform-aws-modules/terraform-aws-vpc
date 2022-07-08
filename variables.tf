@@ -1192,3 +1192,21 @@ variable "putin_khuylo" {
   type        = bool
   default     = true
 }
+
+variable "transit_gateway_attach" {
+  type = bool
+  default = false
+  description = "Boolean for decision on attaching transit gateway"
+}
+
+variable "transit_gateway_id" {
+  type = string
+  default = ""
+  description = "Transit Gateway ID to attach to VPC"
+}
+
+variable "private_route_table_routes" {
+  type = list
+  default = []
+  description = "Routes to be applied for private route tables"
+}
