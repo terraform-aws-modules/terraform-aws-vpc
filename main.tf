@@ -155,8 +155,8 @@ resource "aws_default_route_table" "default" {
     for_each = var.default_route_table_routes
     content {
       # One of the following destinations must be provided
-      cidr_block      = route.value.cidr_block
-      ipv6_cidr_block = lookup(route.value, "ipv6_cidr_block", null)
+      cidr_block      = try(route.value.cidr_block, route.value.destination_cidr_block, null)
+      ipv6_cidr_block = try(route.value.ipv6_cidr_block, route.value.destination_ipv6_cidr_block, null)
 
       # One of the following targets must be provided
       egress_only_gateway_id    = lookup(route.value, "egress_only_gateway_id", null)
@@ -1039,6 +1039,77 @@ resource "aws_nat_gateway" "this" {
   )
 
   depends_on = [aws_internet_gateway.this]
+}
+
+resource "aws_route" "private_route_custom" {
+  # NOTE(bogdando): serialize rules as JSON for setproduct() to match
+  # its string data type of route tables IDs, then deserialize from json to
+  # consume it as end values. Iterate over a map with keys names matching
+  # router IDs (key unquieness is ensured by a hash of each rule)
+  # as for_each cannot take these from a list.
+  for_each = {
+    for elements in chunklist(flatten([
+      for pair in setproduct(
+        aws_route_table.private[*].id,
+        [var.private_routes_extra]
+      ) : setproduct([pair[0]], [for p in pair[1] : [jsonencode(p)]])
+    ]), 2) : "${elements[0]}:${sha256(elements[1])}" => jsondecode(elements[1])
+  }
+
+  route_table_id = split(":", each.key)[0]
+
+  # One of the following destinations must be provided
+  destination_cidr_block = try(
+  each.value.cidr_block, each.value.destination_cidr_block, null)
+  destination_ipv6_cidr_block = try(
+  each.value.ipv6_cidr_block, each.value.destination_ipv6_cidr_block, null)
+  destination_prefix_list_id = lookup(each.value, "destination_prefix_list_id", null)
+
+  # One of the following targets must be provided
+  carrier_gateway_id        = lookup(each.value, "carrier_gateway_id", null)
+  core_network_arn          = lookup(each.value, "core_network_arn", null)
+  egress_only_gateway_id    = lookup(each.value, "egress_only_gateway_id", null)
+  gateway_id                = lookup(each.value, "gateway_id", null)
+  instance_id               = lookup(each.value, "instance_id", null)
+  nat_gateway_id            = lookup(each.value, "nat_gateway_id", null)
+  local_gateway_id          = lookup(each.value, "local_gateway_id", null)
+  network_interface_id      = lookup(each.value, "network_interface_id", null)
+  transit_gateway_id        = lookup(each.value, "transit_gateway_id", null)
+  vpc_endpoint_id           = lookup(each.value, "vpc_endpoint_id", null)
+  vpc_peering_connection_id = lookup(each.value, "vpc_peering_connection_id", null)
+}
+
+resource "aws_route" "intra_route_custom" {
+  for_each = {
+    for elements in chunklist(flatten([
+      for pair in setproduct(
+        aws_route_table.intra[*].id,
+        [var.intra_routes_extra]
+      ) : setproduct([pair[0]], [for p in pair[1] : [jsonencode(p)]])
+    ]), 2) : "${elements[0]}:${sha256(elements[1])}" => jsondecode(elements[1])
+  }
+
+  route_table_id = split(":", each.key)[0]
+
+  # One of the following destinations must be provided
+  destination_cidr_block = try(
+  each.value.cidr_block, each.value.destination_cidr_block, null)
+  destination_ipv6_cidr_block = try(
+  each.value.ipv6_cidr_block, each.value.destination_ipv6_cidr_block, null)
+  destination_prefix_list_id = lookup(each.value, "destination_prefix_list_id", null)
+
+  # One of the following targets must be provided
+  carrier_gateway_id        = lookup(each.value, "carrier_gateway_id", null)
+  core_network_arn          = lookup(each.value, "core_network_arn", null)
+  egress_only_gateway_id    = lookup(each.value, "egress_only_gateway_id", null)
+  gateway_id                = lookup(each.value, "gateway_id", null)
+  instance_id               = lookup(each.value, "instance_id", null)
+  local_gateway_id          = lookup(each.value, "local_gateway_id", null)
+  nat_gateway_id            = lookup(each.value, "nat_gateway_id", null)
+  network_interface_id      = lookup(each.value, "network_interface_id", null)
+  transit_gateway_id        = lookup(each.value, "transit_gateway_id", null)
+  vpc_endpoint_id           = lookup(each.value, "vpc_endpoint_id", null)
+  vpc_peering_connection_id = lookup(each.value, "vpc_peering_connection_id", null)
 }
 
 resource "aws_route" "private_nat_gateway" {

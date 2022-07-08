@@ -299,7 +299,7 @@ variable "enable_nat_gateway" {
 }
 
 variable "nat_gateway_destination_cidr_block" {
-  description = "Used to pass a custom destination route for private NAT Gateway. If not specified, the default 0.0.0.0/0 is used as a destination route."
+  description = "Used to pass a custom destination route for the managed private NAT Gateway. If not specified, the default 0.0.0.0/0 is used as a destination route."
   type        = string
   default     = "0.0.0.0/0"
 }
@@ -416,6 +416,18 @@ variable "default_route_table_tags" {
   description = "Additional tags for the default route table"
   type        = map(string)
   default     = {}
+}
+
+variable "private_routes_extra" {
+  description = "Configuration block of additional routes for private subnets. See https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/route"
+  type        = list(map(string))
+  default     = []
+}
+
+variable "intra_routes_extra" {
+  description = "Configuration block of additional routes for intra subnets. https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/route"
+  type        = list(map(string))
+  default     = []
 }
 
 variable "tags" {
