@@ -364,22 +364,22 @@ output "igw_arn" {
 }
 
 output "egress_only_internet_gateway_id" {
-  description = "The ID of the egress only Internet Gateway"
+  description = "List of IDs of Customer Gateway"
   value       = try(aws_egress_only_internet_gateway.this[0].id, "")
 }
 
 output "cgw_ids" {
-  description = "List of IDs of Customer Gateway"
+  description = "List of ARNs of Customer Gateway"
   value       = [for k, v in aws_customer_gateway.this : v.id]
 }
 
 output "cgw_arns" {
-  description = "List of ARNs of Customer Gateway"
+  description = "Map of ARNs of Customer Gateway"
   value       = [for k, v in aws_customer_gateway.this : v.arn]
 }
 
 output "this_customer_gateway" {
-  description = "Map of Customer Gateway attributes"
+  description = "Map of attribute maps for all customer gateways created"
   value       = aws_customer_gateway.this
 }
 
