@@ -353,6 +353,10 @@ output "natgw_ids" {
   value       = aws_nat_gateway.this[*].id
 }
 
+output "natgw_public_ips" {
+  description = "List of NAT Gateway Public IPs"
+  value       = aws_nat_gateway.this[*].public_ip
+}
 output "igw_id" {
   description = "The ID of the Internet Gateway"
   value       = try(aws_internet_gateway.this[0].id, "")
