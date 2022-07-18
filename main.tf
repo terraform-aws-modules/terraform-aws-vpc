@@ -362,6 +362,10 @@ resource "aws_subnet" "public" {
   ipv6_cidr_block = var.enable_ipv6 && length(var.public_subnet_ipv6_prefixes) > 0 ? cidrsubnet(aws_vpc.this[0].ipv6_cidr_block, 8, var.public_subnet_ipv6_prefixes[count.index]) : null
 
   tags = merge(
+    length(var.public_subnet_names) > 0 ?
+    {
+      "Name" = element(var.public_subnet_names, count.index)
+    } :
     {
       "Name" = format(
         "${var.name}-${var.public_subnet_suffix}-%s",
@@ -389,6 +393,10 @@ resource "aws_subnet" "private" {
   ipv6_cidr_block = var.enable_ipv6 && length(var.private_subnet_ipv6_prefixes) > 0 ? cidrsubnet(aws_vpc.this[0].ipv6_cidr_block, 8, var.private_subnet_ipv6_prefixes[count.index]) : null
 
   tags = merge(
+    length(var.private_subnet_names) > 0 ?
+    {
+      "Name" = element(var.private_subnet_names, count.index)
+    } :
     {
       "Name" = format(
         "${var.name}-${var.private_subnet_suffix}-%s",

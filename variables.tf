@@ -136,6 +136,18 @@ variable "private_subnet_suffix" {
   default     = "private"
 }
 
+variable "public_subnet_names" {
+  description = "Explicit values to use in the Name tag on public subnets. If empty, Name tags are generated."
+  type        = list(string)
+  default     = []
+}
+
+variable "private_subnet_names" {
+  description = "Explicit values to use in the Name tag on private subnets. If empty, Name tags are generated."
+  type        = list(string)
+  default     = []
+}
+
 variable "outpost_subnet_suffix" {
   description = "Suffix to append to outpost subnets name"
   type        = string

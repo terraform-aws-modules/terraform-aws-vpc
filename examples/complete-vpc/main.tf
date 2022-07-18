@@ -30,6 +30,9 @@ module "vpc" {
   redshift_subnets    = ["10.0.41.0/24", "10.0.42.0/24", "10.0.43.0/24"]
   intra_subnets       = ["10.0.51.0/24", "10.0.52.0/24", "10.0.53.0/24"]
 
+  private_subnet_names = ["Private Subnet One", "Private Subnet Two", "Private Subnet Three"]
+  # public_subnet_names omitted to show default name generation
+
   create_database_subnet_group = false
 
   manage_default_network_acl = true
