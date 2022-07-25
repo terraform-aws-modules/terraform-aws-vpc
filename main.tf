@@ -11,16 +11,6 @@ locals {
   vpc_id = try(aws_vpc_ipv4_cidr_block_association.this[0].vpc_id, aws_vpc.this[0].id, "")
 
   create_vpc = var.create_vpc && var.putin_khuylo
-
-  # The arguments `assign_generated_ipv6_cidr_block` and `ipv6_ipam_pool_id`
-  # conflict.  If `var.ipv6_ipam_pool_id` has a value, force
-  # `assign_generated_ipv6_cidr_block` to be `null`. Otherwise, if
-  # `var.assign_generated_ipv6_cidr_block` has a value, use it; if it is `null`,
-  # then use the value of `var.create_vpc`.
-  assign_generated_ipv6_cidr_block = var.ipv6_ipam_pool_id != null ? null : coalesce(
-    var.assign_generated_ipv6_cidr_block,
-    var.create_vpc,
-  )
 }
 
 ################################################################################
@@ -36,7 +26,7 @@ resource "aws_vpc" "this" {
   enable_dns_support               = var.enable_dns_support
   enable_classiclink               = var.enable_classiclink
   enable_classiclink_dns_support   = var.enable_classiclink_dns_support
-  assign_generated_ipv6_cidr_block = local.assign_generated_ipv6_cidr_block
+  assign_generated_ipv6_cidr_block = var.enable_ipv6 && var.assign_generated_ipv6_cidr_block ? true : null
   ipv6_ipam_pool_id                = var.ipv6_ipam_pool_id
 
   tags = merge(
