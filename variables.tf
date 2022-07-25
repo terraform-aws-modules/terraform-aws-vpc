@@ -29,7 +29,7 @@ variable "assign_generated_ipv6_cidr_block" {
 }
 
 variable "ipv6_ipam_pool_id" {
-  description = "IPAM Pool ID for a IPv6 pool. Overrides `assign_generated_ipv6_cidr_block`."
+  description = "IPAM Pool ID for an IPv6 pool."
   type        = string
   default     = null
 }
