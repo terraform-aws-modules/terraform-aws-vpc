@@ -183,7 +183,7 @@ resource "aws_default_route_table" "default" {
 }
 
 ################################################################################
-# Publiс routes
+# Public routes
 ################################################################################
 
 resource "aws_route_table" "public" {
@@ -429,10 +429,10 @@ resource "aws_subnet" "outpost" {
 }
 
 ################################################################################
-# Database subnet
+# Reference
 ################################################################################
 
-resource "aws_subnet" "database" {
+resource "aws_subnet" "database priya" {
   count = local.create_vpc && length(var.database_subnets) > 0 ? length(var.database_subnets) : 0
 
   vpc_id                          = local.vpc_id
