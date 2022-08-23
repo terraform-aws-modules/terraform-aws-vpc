@@ -1192,3 +1192,21 @@ variable "putin_khuylo" {
   type        = bool
   default     = true
 }
+
+variable "attach_tgw" {
+  description = "(Optional) Indicates whether we need to attach the VPC with Transit Gateway"
+  type        = bool
+  default     = false
+}
+
+variable "tgw_id" {
+  description = "(Optional) Transit Gateway ID where VPC will be attached"
+  type        = string
+  default     = null
+}
+
+variable "tgw_destination_cidrs" {
+  description = "(Optional) Destination CIDR blocks to connect via Transit Gateway"
+  type        = list(string)
+  default     = []
+}

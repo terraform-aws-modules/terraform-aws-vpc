@@ -1242,3 +1242,28 @@ resource "aws_default_vpc" "this" {
     var.default_vpc_tags,
   )
 }
+
+################################################################################
+# Transit Gateway Attachment
+################################################################################
+
+resource "aws_ec2_transit_gateway_vpc_attachment" "this" {
+  count = local.create_vpc && var.attach_tgw && length(var.private_subnets) > 0 ? 1 : 0
+
+  subnet_ids         = aws_subnet.private[*].id
+  transit_gateway_id = var.tgw_id
+  vpc_id             = aws_vpc.this[0].id
+}
+
+resource "aws_route" "private_routes" {
+  for_each = {
+    for pair in setproduct(aws_route_table.private[*].id, var.tgw_destination_cidrs) : "${pair[0]} ${pair[1]}" => {
+      route_table_id         = pair[0]
+      destination_cidr_block = pair[1]
+    }
+  }
+
+  route_table_id         = each.value.route_table_id
+  destination_cidr_block = each.value.destination_cidr_block
+  transit_gateway_id     = var.tgw_id
+}

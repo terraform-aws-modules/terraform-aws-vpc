@@ -177,6 +177,16 @@ Sometimes it is handy to have public access to Redshift clusters (for example if
   enable_public_redshift = true  # <= By default Redshift subnets will be associated with the private route table
 ```
 
+## Transit Gateway (TGW) Attachment
+
+It is possible to [attach](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/ec2_transit_gateway_vpc_attachment) the VPC with provided Transit Gateway by specifying these arguments:
+
+```hcl
+attach_tgw = true
+tgw_id = "tgw-0ert3456s7d7"
+tgw_destination_cidrs = ["10.70.0.0/16", "10.71.0.0/16"]
+```
+
 ## Transit Gateway (TGW) integration
 
 It is possible to integrate this VPC module with [terraform-aws-transit-gateway module](https://github.com/terraform-aws-modules/terraform-aws-transit-gateway) which handles the creation of TGW resources and VPC attachments. See [complete example there](https://github.com/terraform-aws-modules/terraform-aws-transit-gateway/tree/master/examples/complete).
@@ -466,6 +476,9 @@ No modules.
 | <a name="input_secondary_cidr_blocks"></a> [secondary\_cidr\_blocks](#input\_secondary\_cidr\_blocks) | List of secondary CIDR blocks to associate with the VPC to extend the IP Address pool | `list(string)` | `[]` | no |
 | <a name="input_single_nat_gateway"></a> [single\_nat\_gateway](#input\_single\_nat\_gateway) | Should be true if you want to provision a single shared NAT Gateway across all of your private networks | `bool` | `false` | no |
 | <a name="input_tags"></a> [tags](#input\_tags) | A map of tags to add to all resources | `map(string)` | `{}` | no |
+| <a name="input_attach_tgw"></a> [attach\_tgw](#input\_attach\_tgw) | Indicates whether we need to attach the VPC to Transit Gateway. It requires the fields tgw\_id and tgw\_destination\_cidrs | `bool` | `false` | no |
+| <a name="input_tgw\_id"></a> [tgw\_id](#input\_tgw\_id) | Transit Gateway ID where VPC will be attached | `string` | `null` | no |
+| <a name="input_tgw\_destination\_cidrs"></a> [tgw\_destination\_cidrs](#input\_tgw\_destination\_cidrs) | Destination CIDR blocks to connect via Transit Gateway | `list(string)` | `[]` | no |
 | <a name="input_vpc_flow_log_permissions_boundary"></a> [vpc\_flow\_log\_permissions\_boundary](#input\_vpc\_flow\_log\_permissions\_boundary) | The ARN of the Permissions Boundary for the VPC Flow Log IAM Role | `string` | `null` | no |
 | <a name="input_vpc_flow_log_tags"></a> [vpc\_flow\_log\_tags](#input\_vpc\_flow\_log\_tags) | Additional tags for the VPC Flow Logs | `map(string)` | `{}` | no |
 | <a name="input_vpc_tags"></a> [vpc\_tags](#input\_vpc\_tags) | Additional tags for the VPC | `map(string)` | `{}` | no |
