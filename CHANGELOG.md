@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+### [3.14.4](https://github.com/terraform-aws-modules/terraform-aws-vpc/compare/v3.14.3...v3.14.4) (2022-09-05)
+
+
+### Bug Fixes
+
+* Remove EC2-classic deprecation warnings by hardcoding classiclink values to `null` ([#826](https://github.com/terraform-aws-modules/terraform-aws-vpc/issues/826)) ([736931b](https://github.com/terraform-aws-modules/terraform-aws-vpc/commit/736931b0a707115a1fbeb45e0d6f784199cba95e))
+
 ### [3.14.3](https://github.com/terraform-aws-modules/terraform-aws-vpc/compare/v3.14.2...v3.14.3) (2022-09-02)
 
 
