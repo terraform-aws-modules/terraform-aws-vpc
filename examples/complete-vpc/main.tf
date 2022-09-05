@@ -20,15 +20,15 @@ module "vpc" {
   source = "../../"
 
   name = local.name
-  cidr = "20.10.0.0/16" # 10.0.0.0/8 is reserved for EC2-Classic
+  cidr = "10.0.0.0/16"
 
   azs                 = ["${local.region}a", "${local.region}b", "${local.region}c"]
-  private_subnets     = ["20.10.1.0/24", "20.10.2.0/24", "20.10.3.0/24"]
-  public_subnets      = ["20.10.11.0/24", "20.10.12.0/24", "20.10.13.0/24"]
-  database_subnets    = ["20.10.21.0/24", "20.10.22.0/24", "20.10.23.0/24"]
-  elasticache_subnets = ["20.10.31.0/24", "20.10.32.0/24", "20.10.33.0/24"]
-  redshift_subnets    = ["20.10.41.0/24", "20.10.42.0/24", "20.10.43.0/24"]
-  intra_subnets       = ["20.10.51.0/24", "20.10.52.0/24", "20.10.53.0/24"]
+  private_subnets     = ["10.0.1.0/24", "10.0.2.0/24", "10.0.3.0/24"]
+  public_subnets      = ["10.0.11.0/24", "10.0.12.0/24", "10.0.13.0/24"]
+  database_subnets    = ["10.0.21.0/24", "10.0.22.0/24", "10.0.23.0/24"]
+  elasticache_subnets = ["10.0.31.0/24", "10.0.32.0/24", "10.0.33.0/24"]
+  redshift_subnets    = ["10.0.41.0/24", "10.0.42.0/24", "10.0.43.0/24"]
+  intra_subnets       = ["10.0.51.0/24", "10.0.52.0/24", "10.0.53.0/24"]
 
   create_database_subnet_group = false
 
@@ -43,9 +43,6 @@ module "vpc" {
 
   enable_dns_hostnames = true
   enable_dns_support   = true
-
-  enable_classiclink             = true
-  enable_classiclink_dns_support = true
 
   enable_nat_gateway = true
   single_nat_gateway = true
