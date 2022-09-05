@@ -310,14 +310,16 @@ variable "enable_dns_support" {
   default     = true
 }
 
+# tflint-ignore: terraform_unused_declarations
 variable "enable_classiclink" {
-  description = "Should be true to enable ClassicLink for the VPC. Only valid in regions and accounts that support EC2 Classic."
+  description = "[DEPRECATED](https://github.com/hashicorp/terraform/issues/31730) Should be true to enable ClassicLink for the VPC. Only valid in regions and accounts that support EC2 Classic."
   type        = bool
   default     = null
 }
 
+# tflint-ignore: terraform_unused_declarations
 variable "enable_classiclink_dns_support" {
-  description = "Should be true to enable ClassicLink DNS Support for the VPC. Only valid in regions and accounts that support EC2 Classic."
+  description = "[DEPRECATED](https://github.com/hashicorp/terraform/issues/31730) Should be true to enable ClassicLink DNS Support for the VPC. Only valid in regions and accounts that support EC2 Classic."
   type        = bool
   default     = null
 }
@@ -756,8 +758,9 @@ variable "default_vpc_enable_dns_hostnames" {
   default     = false
 }
 
+# tflint-ignore: terraform_unused_declarations
 variable "default_vpc_enable_classiclink" {
-  description = "Should be true to enable ClassicLink in the Default VPC"
+  description = "[DEPRECATED](https://github.com/hashicorp/terraform/issues/31730) Should be true to enable ClassicLink in the Default VPC"
   type        = bool
   default     = false
 }
