@@ -1,10 +1,10 @@
-locals {
-  endpoints = var.create ? var.endpoints : tomap({})
-}
-
 ################################################################################
 # Endpoint(s)
 ################################################################################
+
+locals {
+  endpoints = { for k, v in var.endpoints : k => v if var.create && try(v.create, true) }
+}
 
 data "aws_vpc_endpoint_service" "this" {
   for_each = local.endpoints
@@ -26,7 +26,7 @@ resource "aws_vpc_endpoint" "this" {
   vpc_endpoint_type = lookup(each.value, "service_type", "Interface")
   auto_accept       = lookup(each.value, "auto_accept", null)
 
-  security_group_ids  = lookup(each.value, "service_type", "Interface") == "Interface" ? distinct(concat(var.security_group_ids, lookup(each.value, "security_group_ids", []))) : null
+  security_group_ids  = lookup(each.value, "service_type", "Interface") == "Interface" ? length(distinct(concat(var.security_group_ids, lookup(each.value, "security_group_ids", [])))) > 0 ? distinct(concat(var.security_group_ids, lookup(each.value, "security_group_ids", []))) : null : null
   subnet_ids          = lookup(each.value, "service_type", "Interface") == "Interface" ? distinct(concat(var.subnet_ids, lookup(each.value, "subnet_ids", []))) : null
   route_table_ids     = lookup(each.value, "service_type", "Interface") == "Gateway" ? lookup(each.value, "route_table_ids", null) : null
   policy              = lookup(each.value, "policy", null)

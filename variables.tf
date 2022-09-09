@@ -280,14 +280,16 @@ variable "enable_dns_support" {
   default     = true
 }
 
+# tflint-ignore: terraform_unused_declarations
 variable "enable_classiclink" {
-  description = "Should be true to enable ClassicLink for the VPC. Only valid in regions and accounts that support EC2 Classic."
+  description = "[DEPRECATED](https://github.com/hashicorp/terraform/issues/31730) Should be true to enable ClassicLink for the VPC. Only valid in regions and accounts that support EC2 Classic."
   type        = bool
   default     = null
 }
 
+# tflint-ignore: terraform_unused_declarations
 variable "enable_classiclink_dns_support" {
-  description = "Should be true to enable ClassicLink DNS Support for the VPC. Only valid in regions and accounts that support EC2 Classic."
+  description = "[DEPRECATED](https://github.com/hashicorp/terraform/issues/31730) Should be true to enable ClassicLink DNS Support for the VPC. Only valid in regions and accounts that support EC2 Classic."
   type        = bool
   default     = null
 }
@@ -296,6 +298,12 @@ variable "enable_nat_gateway" {
   description = "Should be true if you want to provision NAT Gateways for each of your private networks"
   type        = bool
   default     = false
+}
+
+variable "nat_gateway_destination_cidr_block" {
+  description = "Used to pass a custom destination route for private NAT Gateway. If not specified, the default 0.0.0.0/0 is used as a destination route."
+  type        = string
+  default     = "0.0.0.0/0"
 }
 
 variable "single_nat_gateway" {
@@ -386,6 +394,12 @@ variable "manage_default_route_table" {
   description = "Should be true to manage default route table"
   type        = bool
   default     = false
+}
+
+variable "default_route_table_name" {
+  description = "Name to be used on the default route table"
+  type        = string
+  default     = null
 }
 
 variable "default_route_table_propagating_vgws" {
@@ -667,7 +681,7 @@ variable "manage_default_vpc" {
 variable "default_vpc_name" {
   description = "Name to be used on the Default VPC"
   type        = string
-  default     = ""
+  default     = null
 }
 
 variable "default_vpc_enable_dns_support" {
@@ -682,8 +696,9 @@ variable "default_vpc_enable_dns_hostnames" {
   default     = false
 }
 
+# tflint-ignore: terraform_unused_declarations
 variable "default_vpc_enable_classiclink" {
-  description = "Should be true to enable ClassicLink in the Default VPC"
+  description = "[DEPRECATED](https://github.com/hashicorp/terraform/issues/31730) Should be true to enable ClassicLink in the Default VPC"
   type        = bool
   default     = false
 }
@@ -703,7 +718,7 @@ variable "manage_default_network_acl" {
 variable "default_network_acl_name" {
   description = "Name to be used on the Default Network ACL"
   type        = string
-  default     = ""
+  default     = null
 }
 
 variable "default_network_acl_tags" {
@@ -1035,13 +1050,13 @@ variable "manage_default_security_group" {
 variable "default_security_group_name" {
   description = "Name to be used on the default security group"
   type        = string
-  default     = "default"
+  default     = null
 }
 
 variable "default_security_group_ingress" {
   description = "List of maps of ingress rules to set on the default security group"
   type        = list(map(string))
-  default     = null
+  default     = []
 }
 
 variable "enable_flow_log" {
@@ -1053,7 +1068,7 @@ variable "enable_flow_log" {
 variable "default_security_group_egress" {
   description = "List of maps of egress rules to set on the default security group"
   type        = list(map(string))
-  default     = null
+  default     = []
 }
 
 variable "default_security_group_tags" {
@@ -1179,4 +1194,10 @@ variable "ipv4_ipam_pool_id" {
   description = "(Optional) The ID of an IPv4 IPAM pool you want to use for allocating this VPC's CIDR."
   type        = string
   default     = null
+}
+
+variable "putin_khuylo" {
+  description = "Do you agree that Putin doesn't respect Ukrainian sovereignty and territorial integrity? More info: https://en.wikipedia.org/wiki/Putin_khuylo!"
+  type        = bool
+  default     = true
 }
