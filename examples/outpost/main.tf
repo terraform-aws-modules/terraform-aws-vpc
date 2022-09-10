@@ -7,7 +7,14 @@ provider "aws" {
 }
 
 locals {
+  name   = "ex-${replace(basename(path.cwd), "_", "-")}"
   region = "eu-west-1"
+
+  tags = {
+    Example    = local.name
+    GithubRepo = "terraform-aws-vpc"
+    GithubOrg  = "terraform-aws-modules"
+  }
 
   network_acls = {
     outpost_inbound = [
@@ -122,7 +129,7 @@ data "aws_availability_zones" "available" {}
 module "vpc" {
   source = "../../"
 
-  name = "outpost-example"
+  name = local.name
   cidr = "10.0.0.0/16"
 
   azs = [
@@ -152,8 +159,5 @@ module "vpc" {
   outpost_inbound_acl_rules     = local.network_acls["outpost_inbound"]
   outpost_outbound_acl_rules    = local.network_acls["outpost_outbound"]
 
-  tags = {
-    Owner       = "user"
-    Environment = "dev"
-  }
+  tags = local.tags
 }

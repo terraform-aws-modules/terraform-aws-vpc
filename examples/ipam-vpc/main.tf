@@ -1,13 +1,23 @@
 provider "aws" {
-  region = "eu-west-1"
+  region = local.region
 }
 
 locals {
-  name = "ipam-vpc-example"
-  azs  = formatlist("${data.aws_region.current.name}%s", ["a", "b"])
+  name   = "ex-${replace(basename(path.cwd), "_", "-")}"
+  region = "eu-west-1"
+
+  partition = cidrsubnets(data.aws_vpc_ipam_preview_next_cidr.this.cidr, 2, 2)
+
+  tags = {
+    Example    = local.name
+    GithubRepo = "terraform-aws-vpc"
+    GithubOrg  = "terraform-aws-modules"
+  }
 }
 
-data "aws_region" "current" {}
+################################################################################
+# VPC Module
+################################################################################
 
 /*
 NOTES ON IPAM USAGE:
@@ -27,54 +37,45 @@ For an explanation on prolonged delete times on IPAM pools see 2nd
 *note* in terraform docs: https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/vpc_ipam_pool_cidr
 */
 
-data "aws_vpc_ipam_preview_next_cidr" "previewed_cidr" {
-  ipam_pool_id   = aws_vpc_ipam_pool.ipv4_example.id
-  netmask_length = 24
 
-  depends_on = [
-    aws_vpc_ipam_pool_cidr.ipv4_example
-  ]
-}
+module "vpc" {
+  source = "../.."
 
-locals {
-  partition       = cidrsubnets(data.aws_vpc_ipam_preview_next_cidr.previewed_cidr.cidr, 2, 2)
+  name = local.name
+
   private_subnets = cidrsubnets(local.partition[0], 2, 2)
   public_subnets  = cidrsubnets(local.partition[1], 2, 2)
+
+  ipv4_ipam_pool_id = aws_vpc_ipam_pool.this.id
+  azs               = ["${local.region}a", "${local.region}b"]
+  cidr              = data.aws_vpc_ipam_preview_next_cidr.this.cidr
+
+  tags = local.tags
 }
 
-module "ipv4_ipam_explicit_cidrs_calculate_subnets" {
-  source            = "../.."
-  name              = "ipv4-calculated-subnets-${local.name}"
-  ipv4_ipam_pool_id = aws_vpc_ipam_pool.ipv4_example.id
-  azs               = local.azs
-  cidr              = data.aws_vpc_ipam_preview_next_cidr.previewed_cidr.cidr
-  private_subnets   = local.private_subnets
-  public_subnets    = local.public_subnets
+################################################################################
+# Supporting Resources
+################################################################################
 
-  depends_on = [
-    aws_vpc_ipam_pool_cidr.ipv4_example
-  ]
-}
-
-################################
-# IPAM Setup
-# Included for testing & example purposes only
-################################
-
-resource "aws_vpc_ipam" "example" {
+resource "aws_vpc_ipam" "this" {
   operating_regions {
-    region_name = data.aws_region.current.name
+    region_name = local.region
   }
 }
 
-resource "aws_vpc_ipam_pool" "ipv4_example" {
+resource "aws_vpc_ipam_pool" "this" {
   address_family                    = "ipv4"
-  ipam_scope_id                     = aws_vpc_ipam.example.private_default_scope_id
-  locale                            = data.aws_region.current.name
+  ipam_scope_id                     = aws_vpc_ipam.this.private_default_scope_id
+  locale                            = local.region
   allocation_default_netmask_length = 28
 }
 
-resource "aws_vpc_ipam_pool_cidr" "ipv4_example" {
-  ipam_pool_id = aws_vpc_ipam_pool.ipv4_example.id
+resource "aws_vpc_ipam_pool_cidr" "this" {
+  ipam_pool_id = aws_vpc_ipam_pool.this.id
   cidr         = "172.2.0.0/16"
+}
+
+data "aws_vpc_ipam_preview_next_cidr" "this" {
+  ipam_pool_id   = aws_vpc_ipam_pool.this.id
+  netmask_length = 24
 }
