@@ -208,6 +208,48 @@ variable "intra_subnets" {
   default     = []
 }
 
+variable "public_subnets_indexes" {
+  description = "A list of indexes for the public subnets. Only used when IPAM is enabled."
+  type        = list(number)
+  default     = []
+}
+
+variable "private_subnets_indexes" {
+  description = "A list of indexes for the private subnets. Only used when IPAM is enabled."
+  type        = list(number)
+  default     = []
+}
+
+variable "outpost_subnets_indexes" {
+  description = "A list of indexes for the outpost subnets. Only used when IPAM is enabled."
+  type        = list(number)
+  default     = []
+}
+
+variable "database_subnets_indexes" {
+  description = "A list of indexes for the database subnets. Only used when IPAM is enabled."
+  type        = list(number)
+  default     = []
+}
+
+variable "redshift_subnets_indexes" {
+  description = "A list of indexes for the redshift subnets. Only used when IPAM is enabled."
+  type        = list(number)
+  default     = []
+}
+
+variable "elasticache_subnets_indexes" {
+  description = "A list of indexes for the elasticache subnets. Only used when IPAM is enabled."
+  type        = list(number)
+  default     = []
+}
+
+variable "intra_subnets_indexes" {
+  description = "A list of indexes for the intra subnets. Only used when IPAM is enabled."
+  type        = list(number)
+  default     = []
+}
+
 variable "create_database_subnet_route_table" {
   description = "Controls if separate route table for database should be created"
   type        = bool
@@ -1188,6 +1230,18 @@ variable "flow_log_per_hour_partition" {
   description = "(Optional) Indicates whether to partition the flow log per hour. This reduces the cost and response time for queries."
   type        = bool
   default     = false
+}
+
+variable "ipv4_ipam_pool_id" {
+  description = "The ID of an IPv4 IPAM pool you want to use for allocating this VPC's CIDR."
+  type        = string
+  default     = ""
+}
+
+variable "ipv4_netmask_length" {
+  description = "The netmask length of the IPv4 CIDR you want to allocate to this VPC. Only used when IPAM is enabled."
+  type        = number
+  default     = null
 }
 
 variable "putin_khuylo" {

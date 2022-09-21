@@ -21,6 +21,8 @@ resource "aws_vpc" "this" {
   count = local.create_vpc ? 1 : 0
 
   cidr_block                       = var.cidr
+  ipv4_ipam_pool_id                = var.ipv4_ipam_pool_id
+  ipv4_netmask_length              = var.ipv4_netmask_length
   instance_tenancy                 = var.instance_tenancy
   enable_dns_hostnames             = var.enable_dns_hostnames
   enable_dns_support               = var.enable_dns_support
@@ -41,7 +43,10 @@ resource "aws_vpc_ipv4_cidr_block_association" "this" {
   # Do not turn this into `local.vpc_id`
   vpc_id = aws_vpc.this[0].id
 
-  cidr_block = element(var.secondary_cidr_blocks, count.index)
+  cidr_block          = element(var.secondary_cidr_blocks, count.index)
+  ipv4_ipam_pool_id   = var.ipv4_ipam_pool_id
+  ipv4_netmask_length = var.ipv4_ipam_pool_id ? element(var.secondary_cidr_blocks, count.index) : null
+
 }
 
 resource "aws_default_security_group" "this" {
@@ -353,7 +358,7 @@ resource "aws_subnet" "public" {
   count = local.create_vpc && length(var.public_subnets) > 0 && (false == var.one_nat_gateway_per_az || length(var.public_subnets) >= length(var.azs)) ? length(var.public_subnets) : 0
 
   vpc_id                          = local.vpc_id
-  cidr_block                      = element(concat(var.public_subnets, [""]), count.index)
+  cidr_block                      = var.ipv4_ipam_pool_id != "" ? cidrsubnet(aws_vpc.this[0].cidr_block, var.public_subnets[count.index] - var.ipv4_netmask_length, var.public_subnets_indexes[count.index]) : element(concat(var.public_subnets, [""]), count.index)
   availability_zone               = length(regexall("^[a-z]{2}-", element(var.azs, count.index))) > 0 ? element(var.azs, count.index) : null
   availability_zone_id            = length(regexall("^[a-z]{2}-", element(var.azs, count.index))) == 0 ? element(var.azs, count.index) : null
   map_public_ip_on_launch         = var.map_public_ip_on_launch
@@ -381,7 +386,7 @@ resource "aws_subnet" "private" {
   count = local.create_vpc && length(var.private_subnets) > 0 ? length(var.private_subnets) : 0
 
   vpc_id                          = local.vpc_id
-  cidr_block                      = var.private_subnets[count.index]
+  cidr_block                      = var.ipv4_ipam_pool_id != "" ? cidrsubnet(aws_vpc.this[0].cidr_block, var.private_subnets[count.index] - var.ipv4_netmask_length, var.private_subnets_indexes[count.index]) : var.private_subnets[count.index]
   availability_zone               = length(regexall("^[a-z]{2}-", element(var.azs, count.index))) > 0 ? element(var.azs, count.index) : null
   availability_zone_id            = length(regexall("^[a-z]{2}-", element(var.azs, count.index))) == 0 ? element(var.azs, count.index) : null
   assign_ipv6_address_on_creation = var.private_subnet_assign_ipv6_address_on_creation == null ? var.assign_ipv6_address_on_creation : var.private_subnet_assign_ipv6_address_on_creation
@@ -408,7 +413,7 @@ resource "aws_subnet" "outpost" {
   count = local.create_vpc && length(var.outpost_subnets) > 0 ? length(var.outpost_subnets) : 0
 
   vpc_id                          = local.vpc_id
-  cidr_block                      = var.outpost_subnets[count.index]
+  cidr_block                      = var.ipv4_ipam_pool_id != "" ? cidrsubnet(aws_vpc.this[0].cidr_block, var.outpost_subnets[count.index] - var.ipv4_netmask_length, var.outpost_subnets_indexes[count.index]) : var.outpost_subnets[count.index]
   availability_zone               = var.outpost_az
   assign_ipv6_address_on_creation = var.outpost_subnet_assign_ipv6_address_on_creation == null ? var.assign_ipv6_address_on_creation : var.outpost_subnet_assign_ipv6_address_on_creation
 
@@ -436,7 +441,7 @@ resource "aws_subnet" "database" {
   count = local.create_vpc && length(var.database_subnets) > 0 ? length(var.database_subnets) : 0
 
   vpc_id                          = local.vpc_id
-  cidr_block                      = var.database_subnets[count.index]
+  cidr_block                      = var.ipv4_ipam_pool_id != "" ? cidrsubnet(aws_vpc.this[0].cidr_block, var.database_subnets[count.index] - var.ipv4_netmask_length, var.database_subnets_indexes[count.index]) : var.database_subnets[count.index]
   availability_zone               = length(regexall("^[a-z]{2}-", element(var.azs, count.index))) > 0 ? element(var.azs, count.index) : null
   availability_zone_id            = length(regexall("^[a-z]{2}-", element(var.azs, count.index))) == 0 ? element(var.azs, count.index) : null
   assign_ipv6_address_on_creation = var.database_subnet_assign_ipv6_address_on_creation == null ? var.assign_ipv6_address_on_creation : var.database_subnet_assign_ipv6_address_on_creation
@@ -479,7 +484,7 @@ resource "aws_subnet" "redshift" {
   count = local.create_vpc && length(var.redshift_subnets) > 0 ? length(var.redshift_subnets) : 0
 
   vpc_id                          = local.vpc_id
-  cidr_block                      = var.redshift_subnets[count.index]
+  cidr_block                      = var.ipv4_ipam_pool_id != "" ? cidrsubnet(aws_vpc.this[0].cidr_block, var.redshift_subnets[count.index] - var.ipv4_netmask_length, var.redshift_subnets_indexes[count.index]) : var.redshift_subnets[count.index]
   availability_zone               = length(regexall("^[a-z]{2}-", element(var.azs, count.index))) > 0 ? element(var.azs, count.index) : null
   availability_zone_id            = length(regexall("^[a-z]{2}-", element(var.azs, count.index))) == 0 ? element(var.azs, count.index) : null
   assign_ipv6_address_on_creation = var.redshift_subnet_assign_ipv6_address_on_creation == null ? var.assign_ipv6_address_on_creation : var.redshift_subnet_assign_ipv6_address_on_creation
@@ -520,7 +525,7 @@ resource "aws_subnet" "elasticache" {
   count = local.create_vpc && length(var.elasticache_subnets) > 0 ? length(var.elasticache_subnets) : 0
 
   vpc_id                          = local.vpc_id
-  cidr_block                      = var.elasticache_subnets[count.index]
+  cidr_block                      = var.ipv4_ipam_pool_id != "" ? cidrsubnet(aws_vpc.this[0].cidr_block, var.elasticache_subnets[count.index] - var.ipv4_netmask_length, var.elasticache_subnets_indexes[count.index]) : var.elasticache_subnets[count.index]
   availability_zone               = length(regexall("^[a-z]{2}-", element(var.azs, count.index))) > 0 ? element(var.azs, count.index) : null
   availability_zone_id            = length(regexall("^[a-z]{2}-", element(var.azs, count.index))) == 0 ? element(var.azs, count.index) : null
   assign_ipv6_address_on_creation = var.elasticache_subnet_assign_ipv6_address_on_creation == null ? var.assign_ipv6_address_on_creation : var.elasticache_subnet_assign_ipv6_address_on_creation
@@ -561,7 +566,7 @@ resource "aws_subnet" "intra" {
   count = local.create_vpc && length(var.intra_subnets) > 0 ? length(var.intra_subnets) : 0
 
   vpc_id                          = local.vpc_id
-  cidr_block                      = var.intra_subnets[count.index]
+  cidr_block                      = var.ipv4_ipam_pool_id != "" ? cidrsubnet(aws_vpc.this[0].cidr_block, var.intra_subnets[count.index] - var.ipv4_netmask_length, var.intra_subnets_indexes[count.index]) : var.intra_subnets[count.index]
   availability_zone               = length(regexall("^[a-z]{2}-", element(var.azs, count.index))) > 0 ? element(var.azs, count.index) : null
   availability_zone_id            = length(regexall("^[a-z]{2}-", element(var.azs, count.index))) == 0 ? element(var.azs, count.index) : null
   assign_ipv6_address_on_creation = var.intra_subnet_assign_ipv6_address_on_creation == null ? var.assign_ipv6_address_on_creation : var.intra_subnet_assign_ipv6_address_on_creation
