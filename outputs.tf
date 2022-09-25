@@ -334,7 +334,7 @@ output "redshift_route_table_association_ids" {
 }
 
 output "redshift_public_route_table_association_ids" {
-  description = "List of IDs of the public redshidt route table association"
+  description = "List of IDs of the public redshift route table association"
   value       = aws_route_table_association.redshift_public[*].id
 }
 

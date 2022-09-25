@@ -3,7 +3,14 @@ provider "aws" {
 }
 
 locals {
+  name   = "ex-${replace(basename(path.cwd), "_", "-")}"
   region = "eu-west-1"
+
+  tags = {
+    Example    = local.name
+    GithubRepo = "terraform-aws-vpc"
+    GithubOrg  = "terraform-aws-modules"
+  }
 
   s3_bucket_name            = "vpc-flow-logs-to-s3-${random_pet.this.id}"
   cloudwatch_log_group_name = "vpc-flow-logs-to-cloudwatch-${random_pet.this.id}"
@@ -16,7 +23,7 @@ locals {
 module "vpc_with_flow_logs_s3_bucket" {
   source = "../../"
 
-  name = "vpc-flow-logs-s3-bucket"
+  name = local.name
   cidr = "10.30.0.0/16"
 
   azs            = ["${local.region}a"]
@@ -26,15 +33,13 @@ module "vpc_with_flow_logs_s3_bucket" {
   flow_log_destination_type = "s3"
   flow_log_destination_arn  = module.s3_bucket.s3_bucket_arn
 
-  vpc_flow_log_tags = {
-    Name = "vpc-flow-logs-s3-bucket"
-  }
+  vpc_flow_log_tags = local.tags
 }
 
 module "vpc_with_flow_logs_s3_bucket_parquet" {
   source = "../../"
 
-  name = "vpc-flow-logs-s3-bucket"
+  name = "${local.name}-parquet"
   cidr = "10.30.0.0/16"
 
   azs            = ["${local.region}a"]
@@ -45,16 +50,14 @@ module "vpc_with_flow_logs_s3_bucket_parquet" {
   flow_log_destination_arn  = module.s3_bucket.s3_bucket_arn
   flow_log_file_format      = "parquet"
 
-  vpc_flow_log_tags = {
-    Name = "vpc-flow-logs-s3-bucket"
-  }
+  vpc_flow_log_tags = local.tags
 }
 
 # CloudWatch Log Group and IAM role created automatically
 module "vpc_with_flow_logs_cloudwatch_logs_default" {
   source = "../../"
 
-  name = "vpc-flow-logs-cloudwatch-logs-default"
+  name = "${local.name}-cloudwatch-logs-default"
   cidr = "10.10.0.0/16"
 
   azs            = ["${local.region}a"]
@@ -66,16 +69,14 @@ module "vpc_with_flow_logs_cloudwatch_logs_default" {
   create_flow_log_cloudwatch_iam_role  = true
   flow_log_max_aggregation_interval    = 60
 
-  vpc_flow_log_tags = {
-    Name = "vpc-flow-logs-cloudwatch-logs-default"
-  }
+  vpc_flow_log_tags = local.tags
 }
 
 # CloudWatch Log Group and IAM role created separately
 module "vpc_with_flow_logs_cloudwatch_logs" {
   source = "../../"
 
-  name = "vpc-flow-logs-cloudwatch-logs"
+  name = "${local.name}-cloudwatch-logs"
   cidr = "10.20.0.0/16"
 
   azs            = ["${local.region}a"]
@@ -86,9 +87,7 @@ module "vpc_with_flow_logs_cloudwatch_logs" {
   flow_log_destination_arn         = aws_cloudwatch_log_group.flow_log.arn
   flow_log_cloudwatch_iam_role_arn = aws_iam_role.vpc_flow_log_cloudwatch.arn
 
-  vpc_flow_log_tags = {
-    Name = "vpc-flow-logs-cloudwatch-logs"
-  }
+  vpc_flow_log_tags = local.tags
 }
 
 ################################################################################
@@ -108,9 +107,7 @@ module "s3_bucket" {
   policy        = data.aws_iam_policy_document.flow_log_s3.json
   force_destroy = true
 
-  tags = {
-    Name = "vpc-flow-logs-s3-bucket"
-  }
+  tags = local.tags
 }
 
 data "aws_iam_policy_document" "flow_log_s3" {
