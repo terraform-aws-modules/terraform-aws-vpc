@@ -219,7 +219,7 @@ locals {
 }
 
 module "vpc_cidr_from_ipam" {
-  source            = "../.."
+  source            = "terraform-aws-modules/vpc/aws"
   name              = "vpc-cidr-from-ipam"
   ipv4_ipam_pool_id = data.aws_vpc_ipam_pool.ipv4_example.id
   azs               = local.azs
