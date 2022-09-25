@@ -45,7 +45,7 @@ In order to build subnets with your VPC Terraform must know subnet CIDRs to prop
 Since CIDR is derived by IPAM by calling CreateVpc this is not possible within a module unless cidr is known ahead of time.
 We can get around this by "previewing" the CIDR and then using that as the subnet values.
 
-In the example below we use `cidrsubnets()` to calculate a public and private "partitions" (group of cidrs) then calculate the specific
+In the example above we use `cidrsubnets()` to calculate a public and private "partitions" (group of cidrs) then calculate the specific
 CIDRs for each subnet type.
 
 For an explanation on prolonged delete times on IPAM pools see 2nd
