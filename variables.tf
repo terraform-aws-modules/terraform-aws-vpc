@@ -1190,6 +1190,12 @@ variable "flow_log_per_hour_partition" {
   default     = false
 }
 
+variable "use_ipam_pool" {
+  description = "Determines whether IPAM pool is used for CIDR allocation"
+  type        = bool
+  default     = false
+}
+
 variable "ipv4_ipam_pool_id" {
   description = "(Optional) The ID of an IPv4 IPAM pool you want to use for allocating this VPC's CIDR."
   type        = string

@@ -11,7 +11,7 @@ To run this example you need to execute:
 ```bash
 $ terraform init
 $ terraform plan
-$ terraform apply -target=aws_vpc_ipam_preview_next_cidr.this -target=aws_vpc_ipam_preview_next_cidr.ipv6 # CIDR pool must exist before assigning CIDR from pool
+$ terraform apply -target=aws_vpc_ipam_preview_next_cidr.this -target=aws_vpc_ipam_pool.ipv6 # CIDR pool must exist before assigning CIDR from pool
 $ terraform apply
 ```
 
@@ -54,9 +54,7 @@ Note that this example may create resources which can cost money (AWS Elastic IP
 | [aws_vpc_ipam.this](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/vpc_ipam) | resource |
 | [aws_vpc_ipam_pool.ipv6](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/vpc_ipam_pool) | resource |
 | [aws_vpc_ipam_pool.this](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/vpc_ipam_pool) | resource |
-| [aws_vpc_ipam_pool_cidr.ipv6](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/vpc_ipam_pool_cidr) | resource |
 | [aws_vpc_ipam_pool_cidr.this](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/vpc_ipam_pool_cidr) | resource |
-| [aws_vpc_ipam_preview_next_cidr.ipv6](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/vpc_ipam_preview_next_cidr) | resource |
 | [aws_vpc_ipam_preview_next_cidr.this](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/vpc_ipam_preview_next_cidr) | resource |
 
 ## Inputs

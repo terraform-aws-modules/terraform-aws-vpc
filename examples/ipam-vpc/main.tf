@@ -6,9 +6,8 @@ locals {
   name   = "ex-${replace(basename(path.cwd), "_", "-")}"
   region = "eu-west-1"
 
-  azs                    = ["${local.region}a", "${local.region}b", "${local.region}c"]
-  preview_partition      = cidrsubnets(aws_vpc_ipam_preview_next_cidr.this.cidr, 2, 2, 2)
-  ipv6_preview_partition = cidrsubnets(aws_vpc_ipam_preview_next_cidr.ipv6.cidr, 2, 2, 2)
+  azs               = ["${local.region}a", "${local.region}b", "${local.region}c"]
+  preview_partition = cidrsubnets(aws_vpc_ipam_preview_next_cidr.this.cidr, 2, 2, 2)
 
   tags = {
     Example    = local.name
@@ -27,6 +26,7 @@ module "vpc_without_ipam" {
 
   name = "${local.name}-without-ipam"
   cidr = "10.0.0.0/16"
+  azs  = local.azs
 
   private_subnets = ["10.0.1.0/24", "10.0.2.0/24", "10.0.3.0/24"]
   public_subnets  = ["10.0.11.0/24", "10.0.12.0/24", "10.0.13.0/24"]
@@ -39,6 +39,7 @@ module "vpc_ipam_set_cidr" {
 
   name = "${local.name}-set-cidr"
 
+  use_ipam_pool     = true
   ipv4_ipam_pool_id = aws_vpc_ipam_pool.this.id
   cidr              = "10.0.0.0/16"
   azs               = local.azs
@@ -58,6 +59,7 @@ module "vpc_ipam_set_netmask" {
 
   name = "${local.name}-set-netmask"
 
+  use_ipam_pool       = true
   ipv4_ipam_pool_id   = aws_vpc_ipam_pool.this.id
   ipv4_netmask_length = 28
   azs                 = local.azs
@@ -78,18 +80,15 @@ module "vpc_ipv6_ipam_set_netmask" {
 
   name = "${local.name}-ipv6-set-netmask"
 
+  use_ipam_pool       = true
   ipv6_ipam_pool_id   = aws_vpc_ipam_pool.ipv6.id
-  ipv6_netmask_length = 60
+  ipv6_netmask_length = 56
   azs                 = local.azs
 
-  private_subnets = cidrsubnets(local.ipv6_preview_partition[0], 2, 2, 2)
-  public_subnets  = cidrsubnets(local.ipv6_preview_partition[1], 2, 2, 2)
+  # private_subnets = ???
+  # public_subnets  = ???
 
   tags = local.tags
-
-  depends_on = [
-    aws_vpc_ipam_pool_cidr.ipv6
-  ]
 }
 
 ################################################################################
@@ -116,7 +115,9 @@ resource "aws_vpc_ipam" "this" {
   }
 }
 
+# IPv4
 resource "aws_vpc_ipam_pool" "this" {
+  description                       = "IPv4 pool"
   address_family                    = "ipv4"
   ipam_scope_id                     = aws_vpc_ipam.this.private_default_scope_id
   locale                            = local.region
@@ -125,7 +126,7 @@ resource "aws_vpc_ipam_pool" "this" {
 
 resource "aws_vpc_ipam_pool_cidr" "this" {
   ipam_pool_id = aws_vpc_ipam_pool.this.id
-  cidr         = "10.0.0.0/16"
+  cidr         = "10.0.0.0/8"
 }
 
 resource "aws_vpc_ipam_preview_next_cidr" "this" {
@@ -137,21 +138,13 @@ resource "aws_vpc_ipam_preview_next_cidr" "this" {
   ]
 }
 
+# IPv6
 resource "aws_vpc_ipam_pool" "ipv6" {
+  description                       = "IPv6 pool"
   address_family                    = "ipv6"
-  ipam_scope_id                     = aws_vpc_ipam.this.private_default_scope_id
+  ipam_scope_id                     = aws_vpc_ipam.this.public_default_scope_id
   locale                            = local.region
+  publicly_advertisable             = false
+  aws_service                       = "ec2"
   allocation_default_netmask_length = 56
-}
-
-resource "aws_vpc_ipam_pool_cidr" "ipv6" {
-  ipam_pool_id = aws_vpc_ipam_pool.ipv6.id
-}
-
-resource "aws_vpc_ipam_preview_next_cidr" "ipv6" {
-  ipam_pool_id = aws_vpc_ipam_pool.ipv6.id
-
-  depends_on = [
-    aws_vpc_ipam_pool_cidr.ipv6
-  ]
 }
