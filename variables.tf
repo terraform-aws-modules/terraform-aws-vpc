@@ -11,7 +11,7 @@ variable "name" {
 }
 
 variable "cidr" {
-  description = "The CIDR block for the VPC. Default value is a valid CIDR, but not acceptable by AWS and should be overridden"
+  description = "(Optional) The IPv4 CIDR block for the VPC."
   type        = string
   default     = "0.0.0.0/0"
 }
@@ -1188,6 +1188,12 @@ variable "flow_log_per_hour_partition" {
   description = "(Optional) Indicates whether to partition the flow log per hour. This reduces the cost and response time for queries."
   type        = bool
   default     = false
+}
+
+variable "ipv4_ipam_pool_id" {
+  description = "(Optional) The ID of an IPv4 IPAM pool you want to use for allocating this VPC's CIDR."
+  type        = string
+  default     = null
 }
 
 variable "putin_khuylo" {

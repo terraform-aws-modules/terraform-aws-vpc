@@ -3,7 +3,14 @@ provider "aws" {
 }
 
 locals {
+  name   = "ex-${replace(basename(path.cwd), "_", "-")}"
   region = "eu-west-1"
+
+  tags = {
+    Example    = local.name
+    GithubRepo = "terraform-aws-vpc"
+    GithubOrg  = "terraform-aws-modules"
+  }
 
   network_acls = {
     default_inbound = [
@@ -162,7 +169,7 @@ locals {
 module "vpc" {
   source = "../../"
 
-  name = "network-acls-example"
+  name = local.name
   cidr = "10.0.0.0/16"
 
   azs                 = ["${local.region}a", "${local.region}b", "${local.region}c"]
@@ -189,10 +196,7 @@ module "vpc" {
     Name = "overridden-name-public"
   }
 
-  tags = {
-    Owner       = "user"
-    Environment = "dev"
-  }
+  tags = local.tags
 
   vpc_tags = {
     Name = "vpc-name"

@@ -3,7 +3,14 @@ provider "aws" {
 }
 
 locals {
+  name   = "ex-${replace(basename(path.cwd), "_", "-")}"
   region = "eu-west-1"
+
+  tags = {
+    Example    = local.name
+    GithubRepo = "terraform-aws-vpc"
+    GithubOrg  = "terraform-aws-modules"
+  }
 }
 
 ################################################################################
@@ -13,7 +20,7 @@ locals {
 module "vpc" {
   source = "../../"
 
-  name = "secondary-cidr-blocks-example"
+  name = local.name
 
   cidr                  = "10.0.0.0/16"
   secondary_cidr_blocks = ["10.1.0.0/16", "10.2.0.0/16"]
@@ -31,10 +38,7 @@ module "vpc" {
     Name = "overridden-name-public"
   }
 
-  tags = {
-    Owner       = "user"
-    Environment = "dev"
-  }
+  tags = local.tags
 
   vpc_tags = {
     Name = "vpc-name"

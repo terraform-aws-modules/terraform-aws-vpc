@@ -3,7 +3,14 @@ provider "aws" {
 }
 
 locals {
+  name   = "ex-${replace(basename(path.cwd), "_", "-")}"
   region = "eu-west-1"
+
+  tags = {
+    Example    = local.name
+    GithubRepo = "terraform-aws-vpc"
+    GithubOrg  = "terraform-aws-modules"
+  }
 }
 
 ################################################################################
@@ -24,10 +31,10 @@ module "vpc_issue_44" {
   create_database_subnet_group = true
   enable_nat_gateway           = true
 
-  tags = {
+  tags = merge({
     Issue = "44"
     Name  = "asymmetrical"
-  }
+  }, local.tags)
 }
 
 ################################################################################
@@ -50,10 +57,10 @@ module "vpc_issue_46" {
   enable_dns_hostnames = true
   enable_nat_gateway   = false
 
-  tags = {
+  tags = merge({
     Issue = "46"
     Name  = "no-private-subnets"
-  }
+  }, local.tags)
 }
 
 ################################################################################
@@ -73,8 +80,8 @@ module "vpc_issue_108" {
   single_nat_gateway = true
   enable_nat_gateway = true
 
-  tags = {
+  tags = merge({
     Issue = "108"
     Name  = "route-already-exists"
-  }
+  }, local.tags)
 }
