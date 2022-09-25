@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [3.15.0](https://github.com/terraform-aws-modules/terraform-aws-vpc/compare/v3.14.4...v3.15.0) (2022-09-25)
+
+
+### Features
+
+* Add IPAM IPv4 support ([#716](https://github.com/terraform-aws-modules/terraform-aws-vpc/issues/716)) ([6eddcad](https://github.com/terraform-aws-modules/terraform-aws-vpc/commit/6eddcad72867cd9df536d13ea8fdac15e0eebbd4))
+
 ### [3.14.4](https://github.com/terraform-aws-modules/terraform-aws-vpc/compare/v3.14.3...v3.14.4) (2022-09-05)
 
 
