@@ -30,13 +30,13 @@ Note that this example may create resources which can cost money (AWS Elastic IP
 | Name | Version |
 |------|---------|
 | <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 0.13.1 |
-| <a name="requirement_aws"></a> [aws](#requirement\_aws) | 3.73 |
+| <a name="requirement_aws"></a> [aws](#requirement\_aws) | >= 3.73 |
 
 ## Providers
 
 | Name | Version |
 |------|---------|
-| <a name="provider_aws"></a> [aws](#provider\_aws) | 3.73 |
+| <a name="provider_aws"></a> [aws](#provider\_aws) | >= 3.73 |
 
 ## Modules
 
@@ -48,10 +48,10 @@ Note that this example may create resources which can cost money (AWS Elastic IP
 
 | Name | Type |
 |------|------|
-| [aws_vpc_ipam.this](https://registry.terraform.io/providers/hashicorp/aws/3.73/docs/resources/vpc_ipam) | resource |
-| [aws_vpc_ipam_pool.this](https://registry.terraform.io/providers/hashicorp/aws/3.73/docs/resources/vpc_ipam_pool) | resource |
-| [aws_vpc_ipam_pool_cidr.this](https://registry.terraform.io/providers/hashicorp/aws/3.73/docs/resources/vpc_ipam_pool_cidr) | resource |
-| [aws_vpc_ipam_preview_next_cidr.this](https://registry.terraform.io/providers/hashicorp/aws/3.73/docs/resources/vpc_ipam_preview_next_cidr) | resource |
+| [aws_vpc_ipam.this](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/vpc_ipam) | resource |
+| [aws_vpc_ipam_pool.this](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/vpc_ipam_pool) | resource |
+| [aws_vpc_ipam_pool_cidr.this](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/vpc_ipam_pool_cidr) | resource |
+| [aws_vpc_ipam_preview_next_cidr.this](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/vpc_ipam_preview_next_cidr) | resource |
 
 ## Inputs
 
