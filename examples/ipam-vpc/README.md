@@ -45,7 +45,6 @@ Note that this example may create resources which can cost money (AWS Elastic IP
 | <a name="module_vpc_ipam_set_cidr"></a> [vpc\_ipam\_set\_cidr](#module\_vpc\_ipam\_set\_cidr) | ../.. | n/a |
 | <a name="module_vpc_ipam_set_netmask"></a> [vpc\_ipam\_set\_netmask](#module\_vpc\_ipam\_set\_netmask) | ../.. | n/a |
 | <a name="module_vpc_ipv6_ipam_set_netmask"></a> [vpc\_ipv6\_ipam\_set\_netmask](#module\_vpc\_ipv6\_ipam\_set\_netmask) | ../.. | n/a |
-| <a name="module_vpc_without_ipam"></a> [vpc\_without\_ipam](#module\_vpc\_without\_ipam) | ../.. | n/a |
 
 ## Resources
 
