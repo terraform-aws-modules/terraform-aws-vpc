@@ -57,23 +57,20 @@ module "vpc_ipam_set_cidr" {
   tags = local.tags
 }
 
-# IPv6
-module "vpc_ipv6_ipam_set_netmask" {
-  source = "../.."
+# # IPv6 - Requires having a CIDR plus its message and signature (see below)
+# module "vpc_ipv6_ipam_set_netmask" {
+#   source = "../.."
 
-  name = "${local.name}-ipv6-set-netmask"
+#   name = "${local.name}-ipv6-set-netmask"
 
-  use_ipam_pool       = true
-  ipv4_ipam_pool_id   = aws_vpc_ipam_pool.this.id
-  ipv6_ipam_pool_id   = aws_vpc_ipam_pool.ipv6.id
-  ipv6_netmask_length = 56
-  azs                 = local.azs
+#   use_ipam_pool       = true
+#   ipv4_ipam_pool_id   = aws_vpc_ipam_pool.this.id
+#   ipv6_ipam_pool_id   = aws_vpc_ipam_pool.ipv6.id
+#   ipv6_netmask_length = 56
+#   azs                 = local.azs
 
-  # private_subnets = ???
-  # public_subnets  = ???
-
-  tags = local.tags
-}
+#   tags = local.tags
+# }
 
 ################################################################################
 # Supporting Resources
@@ -127,12 +124,24 @@ resource "aws_vpc_ipam_preview_next_cidr" "this" {
 
 # IPv6
 resource "aws_vpc_ipam_pool" "ipv6" {
-  description           = "IPv6 pool"
-  address_family        = "ipv6"
-  ipam_scope_id         = aws_vpc_ipam.this.public_default_scope_id
-  locale                = local.region
-  publicly_advertisable = false
-  aws_service           = "ec2"
+  description                       = "IPv6 pool"
+  address_family                    = "ipv6"
+  ipam_scope_id                     = aws_vpc_ipam.this.public_default_scope_id
+  locale                            = local.region
+  allocation_default_netmask_length = 56
+  publicly_advertisable             = false
+  aws_service                       = "ec2"
 
   tags = local.tags
 }
+
+# # Requires having a CIDR plus its message and signature
+# resource "aws_vpc_ipam_pool_cidr" "ipv6" {
+#   ipam_pool_id = aws_vpc_ipam_pool.ipv6.id
+#   cidr         = var.ipv6_cidr
+
+#   cidr_authorization_context {
+#     message   = var.message
+#     signature = var.signature
+#   }
+# }
