@@ -3,7 +3,14 @@ provider "aws" {
 }
 
 locals {
+  name   = "ex-${replace(basename(path.cwd), "_", "-")}"
   region = "eu-west-1"
+
+  tags = {
+    Example    = local.name
+    GithubRepo = "terraform-aws-vpc"
+    GithubOrg  = "terraform-aws-modules"
+  }
 }
 
 ################################################################################
@@ -35,8 +42,5 @@ module "vpc" {
   private_subnet_ipv6_prefixes  = [2, 3]
   database_subnet_ipv6_prefixes = [4, 5]
 
-  tags = {
-    Owner       = "user"
-    Environment = "dev"
-  }
+  tags = local.tags
 }

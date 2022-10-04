@@ -1,14 +1,15 @@
 provider "aws" {
-  region = "eu-west-1"
+  region = local.region
 }
 
 locals {
-  name   = "complete-example"
+  name   = "ex-${replace(basename(path.cwd), "_", "-")}"
   region = "eu-west-1"
+
   tags = {
-    Owner       = "user"
-    Environment = "staging"
-    Name        = "complete"
+    Example    = local.name
+    GithubRepo = "terraform-aws-vpc"
+    GithubOrg  = "terraform-aws-modules"
   }
 }
 

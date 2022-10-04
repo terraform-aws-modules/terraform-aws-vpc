@@ -11,7 +11,7 @@ variable "name" {
 }
 
 variable "cidr" {
-  description = "The CIDR block for the VPC. Default value is a valid CIDR, but not acceptable by AWS and should be overridden"
+  description = "(Optional) The IPv4 CIDR block for the VPC. CIDR can be explicitly set or it can be derived from IPAM using `ipv4_netmask_length` & `ipv4_ipam_pool_id`"
   type        = string
   default     = "0.0.0.0/0"
 }
@@ -1200,6 +1200,42 @@ variable "flow_log_per_hour_partition" {
   description = "(Optional) Indicates whether to partition the flow log per hour. This reduces the cost and response time for queries."
   type        = bool
   default     = false
+}
+
+variable "use_ipam_pool" {
+  description = "Determines whether IPAM pool is used for CIDR allocation"
+  type        = bool
+  default     = false
+}
+
+variable "ipv4_ipam_pool_id" {
+  description = "(Optional) The ID of an IPv4 IPAM pool you want to use for allocating this VPC's CIDR."
+  type        = string
+  default     = null
+}
+
+variable "ipv4_netmask_length" {
+  description = "(Optional) The netmask length of the IPv4 CIDR you want to allocate to this VPC. Requires specifying a ipv4_ipam_pool_id."
+  type        = number
+  default     = null
+}
+
+variable "ipv6_cidr" {
+  description = "(Optional) IPv6 CIDR block to request from an IPAM Pool. Can be set explicitly or derived from IPAM using `ipv6_netmask_length`."
+  type        = string
+  default     = null
+}
+
+variable "ipv6_ipam_pool_id" {
+  description = "(Optional) IPAM Pool ID for a IPv6 pool. Conflicts with `assign_generated_ipv6_cidr_block`."
+  type        = string
+  default     = null
+}
+
+variable "ipv6_netmask_length" {
+  description = "(Optional) Netmask length to request from IPAM Pool. Conflicts with `ipv6_cidr_block`. This can be omitted if IPAM pool as a `allocation_default_netmask_length` set. Valid values: `56`."
+  type        = number
+  default     = null
 }
 
 variable "putin_khuylo" {

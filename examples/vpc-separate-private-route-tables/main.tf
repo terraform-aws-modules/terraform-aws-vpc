@@ -3,7 +3,14 @@ provider "aws" {
 }
 
 locals {
+  name   = "ex-${replace(basename(path.cwd), "_", "-")}"
   region = "eu-west-1"
+
+  tags = {
+    Example    = local.name
+    GithubRepo = "terraform-aws-vpc"
+    GithubOrg  = "terraform-aws-modules"
+  }
 }
 
 ################################################################################
@@ -13,7 +20,7 @@ locals {
 module "vpc" {
   source = "../../"
 
-  name = "vpc-separate-private-route-tables"
+  name = local.name
 
   cidr = "10.10.0.0/16"
 
@@ -31,9 +38,5 @@ module "vpc" {
   single_nat_gateway = true
   enable_nat_gateway = true
 
-  tags = {
-    Owner       = "user"
-    Environment = "staging"
-    Name        = "separate-private-route-tables"
-  }
+  tags = local.tags
 }
