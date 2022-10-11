@@ -295,7 +295,7 @@ variable "enable_classiclink_dns_support" {
 }
 
 variable "enable_network_address_usage_metrics" {
-  description = "Should be true to enable Network Adress Usage for the VPC."
+  description = "Should be true to enable Network Adress Usage for the VPC"
   type        = bool
   default     = null
 }
