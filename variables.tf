@@ -1125,6 +1125,12 @@ variable "flow_log_cloudwatch_log_group_name_prefix" {
   default     = "/aws/vpc-flow-log/"
 }
 
+variable "flow_log_cloudwatch_log_group_name_suffix" {
+  description = "Specifies the name suffix of CloudWatch Log Group for VPC flow logs."
+  type        = string
+  default     = null
+}
+
 variable "flow_log_cloudwatch_log_group_retention_in_days" {
   description = "Specifies the number of days you want to retain log events in the specified log group for VPC flow logs."
   type        = number
