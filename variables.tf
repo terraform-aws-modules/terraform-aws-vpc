@@ -1128,7 +1128,7 @@ variable "flow_log_cloudwatch_log_group_name_prefix" {
 variable "flow_log_cloudwatch_log_group_name_suffix" {
   description = "Specifies the name suffix of CloudWatch Log Group for VPC flow logs."
   type        = string
-  default     = null
+  default     = ""
 }
 
 variable "flow_log_cloudwatch_log_group_retention_in_days" {
