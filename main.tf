@@ -369,14 +369,10 @@ resource "aws_subnet" "public" {
   ipv6_cidr_block = var.enable_ipv6 && length(var.public_subnet_ipv6_prefixes) > 0 ? cidrsubnet(aws_vpc.this[0].ipv6_cidr_block, 8, var.public_subnet_ipv6_prefixes[count.index]) : null
 
   tags = merge(
-    length(var.public_subnet_names) > 0 ?
     {
-      "Name" = element(var.public_subnet_names, count.index)
-    } :
-    {
-      "Name" = format(
-        "${var.name}-${var.public_subnet_suffix}-%s",
-        element(var.azs, count.index),
+      Name = try(
+        var.public_subnet_names[count.index],
+        format("${var.name}-${var.public_subnet_suffix}-%s", element(var.azs, count.index))
       )
     },
     var.tags,
@@ -400,14 +396,10 @@ resource "aws_subnet" "private" {
   ipv6_cidr_block = var.enable_ipv6 && length(var.private_subnet_ipv6_prefixes) > 0 ? cidrsubnet(aws_vpc.this[0].ipv6_cidr_block, 8, var.private_subnet_ipv6_prefixes[count.index]) : null
 
   tags = merge(
-    length(var.private_subnet_names) > 0 ?
     {
-      "Name" = element(var.private_subnet_names, count.index)
-    } :
-    {
-      "Name" = format(
-        "${var.name}-${var.private_subnet_suffix}-%s",
-        element(var.azs, count.index),
+      Name = try(
+        var.private_subnet_names[count.index],
+        format("${var.name}-${var.private_subnet_suffix}-%s", element(var.azs, count.index))
       )
     },
     var.tags,
@@ -433,9 +425,9 @@ resource "aws_subnet" "outpost" {
 
   tags = merge(
     {
-      "Name" = format(
-        "${var.name}-${var.outpost_subnet_suffix}-%s",
-        var.outpost_az,
+      Name = try(
+        var.outpost_subnet_names[count.index],
+        format("${var.name}-${var.outpost_subnet_suffix}-%s", var.outpost_az)
       )
     },
     var.tags,
@@ -460,9 +452,9 @@ resource "aws_subnet" "database" {
 
   tags = merge(
     {
-      "Name" = format(
-        "${var.name}-${var.database_subnet_suffix}-%s",
-        element(var.azs, count.index),
+      Name = try(
+        var.database_subnet_names[count.index],
+        format("${var.name}-${var.database_subnet_suffix}-%s", element(var.azs, count.index), )
       )
     },
     var.tags,
@@ -503,9 +495,9 @@ resource "aws_subnet" "redshift" {
 
   tags = merge(
     {
-      "Name" = format(
-        "${var.name}-${var.redshift_subnet_suffix}-%s",
-        element(var.azs, count.index),
+      Name = try(
+        var.redshift_subnet_names[count.index],
+        format("${var.name}-${var.redshift_subnet_suffix}-%s", element(var.azs, count.index))
       )
     },
     var.tags,
@@ -544,9 +536,9 @@ resource "aws_subnet" "elasticache" {
 
   tags = merge(
     {
-      "Name" = format(
-        "${var.name}-${var.elasticache_subnet_suffix}-%s",
-        element(var.azs, count.index),
+      Name = try(
+        var.elasticache_subnet_names[count.index],
+        format("${var.name}-${var.elasticache_subnet_suffix}-%s", element(var.azs, count.index))
       )
     },
     var.tags,
@@ -585,9 +577,9 @@ resource "aws_subnet" "intra" {
 
   tags = merge(
     {
-      "Name" = format(
-        "${var.name}-${var.intra_subnet_suffix}-%s",
-        element(var.azs, count.index),
+      Name = try(
+        var.intra_subnet_names[count.index],
+        format("${var.name}-${var.intra_subnet_suffix}-%s", element(var.azs, count.index))
       )
     },
     var.tags,

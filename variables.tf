@@ -148,6 +148,36 @@ variable "private_subnet_names" {
   default     = []
 }
 
+variable "outpost_subnet_names" {
+  description = "Explicit values to use in the Name tag on outpost subnets. If empty, Name tags are generated."
+  type        = list(string)
+  default     = []
+}
+
+variable "intra_subnet_names" {
+  description = "Explicit values to use in the Name tag on intra subnets. If empty, Name tags are generated."
+  type        = list(string)
+  default     = []
+}
+
+variable "database_subnet_names" {
+  description = "Explicit values to use in the Name tag on database subnets. If empty, Name tags are generated."
+  type        = list(string)
+  default     = []
+}
+
+variable "redshift_subnet_names" {
+  description = "Explicit values to use in the Name tag on redshift subnets. If empty, Name tags are generated."
+  type        = list(string)
+  default     = []
+}
+
+variable "elasticache_subnet_names" {
+  description = "Explicit values to use in the Name tag on elasticache subnets. If empty, Name tags are generated."
+  type        = list(string)
+  default     = []
+}
+
 variable "outpost_subnet_suffix" {
   description = "Suffix to append to outpost subnets name"
   type        = string
