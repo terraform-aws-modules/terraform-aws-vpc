@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [3.18.0](https://github.com/terraform-aws-modules/terraform-aws-vpc/compare/v3.17.0...v3.18.0) (2022-10-21)
+
+
+### Features
+
+* Added ability to specify CloudWatch Log group name for VPC Flow logs ([#847](https://github.com/terraform-aws-modules/terraform-aws-vpc/issues/847)) ([80d6318](https://github.com/terraform-aws-modules/terraform-aws-vpc/commit/80d631884126075e1adbe2d410f46ef6b9ea8a19))
+
 ## [3.17.0](https://github.com/terraform-aws-modules/terraform-aws-vpc/compare/v3.16.1...v3.17.0) (2022-10-21)
 
 
