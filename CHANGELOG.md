@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [3.17.0](https://github.com/terraform-aws-modules/terraform-aws-vpc/compare/v3.16.1...v3.17.0) (2022-10-21)
+
+
+### Features
+
+* Add custom subnet names ([#816](https://github.com/terraform-aws-modules/terraform-aws-vpc/issues/816)) ([4416e37](https://github.com/terraform-aws-modules/terraform-aws-vpc/commit/4416e379ed9a9b650a12a629441410f326b44c0c))
+
 ### [3.16.1](https://github.com/terraform-aws-modules/terraform-aws-vpc/compare/v3.16.0...v3.16.1) (2022-10-14)
 
 
