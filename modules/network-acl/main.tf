@@ -23,7 +23,7 @@ resource "aws_network_acl_rule" "inbound" {
 }
 
 resource "aws_network_acl_rule" "outbound" {
-  count = local.create && length(var.outbound_acl_rules) > 0 ? length(var.outbound_acl_rules) : 0
+  count = var.create && length(var.outbound_acl_rules) > 0 ? length(var.outbound_acl_rules) : 0
 
   network_acl_id = aws_network_acl.this[0].id
 
@@ -40,7 +40,7 @@ resource "aws_network_acl_rule" "outbound" {
 }
 
 resource "aws_network_acl_association" "this" {
-  count = local.create && length(var.subnet_ids) > 0 ? length(var.subnet_ids) : 0
+  count = var.create && length(var.subnet_ids) > 0 ? length(var.subnet_ids) : 0
 
   network_acl_id = aws_network_acl.this.id
   subnet_id      = var.subnet_ids[count.index]
