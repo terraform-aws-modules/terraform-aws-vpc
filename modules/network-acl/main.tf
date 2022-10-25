@@ -42,6 +42,6 @@ resource "aws_network_acl_rule" "outbound" {
 resource "aws_network_acl_association" "this" {
   count = var.create && length(var.subnet_ids) > 0 ? length(var.subnet_ids) : 0
 
-  network_acl_id = aws_network_acl.this.id
+  network_acl_id = aws_network_acl.this[0].id
   subnet_id      = var.subnet_ids[count.index]
 }
