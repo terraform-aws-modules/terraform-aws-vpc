@@ -28,17 +28,22 @@ Note that this example may create resources which can cost money (AWS Elastic IP
 
 ## Providers
 
-No providers.
+| Name | Version |
+|------|---------|
+| <a name="provider_aws"></a> [aws](#provider\_aws) | >= 3.73 |
 
 ## Modules
 
 | Name | Source | Version |
 |------|--------|---------|
+| <a name="module_nacl"></a> [nacl](#module\_nacl) | ../../modules/network-acl | n/a |
 | <a name="module_vpc"></a> [vpc](#module\_vpc) | ../../ | n/a |
 
 ## Resources
 
-No resources.
+| Name | Type |
+|------|------|
+| [aws_subnet.subnet](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/subnet) | resource |
 
 ## Inputs
 

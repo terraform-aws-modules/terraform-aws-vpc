@@ -202,3 +202,59 @@ module "vpc" {
     Name = "vpc-name"
   }
 }
+
+################################################################################
+# Dedicated Network ACL Module
+################################################################################
+
+module "nacl" {
+  source = "../../modules/network-acl"
+
+  vpc_id     = module.vpc.vpc_id
+  subnet_ids = [aws_subnet.subnet.id]
+
+  tags = merge(
+    local.tags,
+    {
+      Name = "NACL-name"
+    }
+  )
+
+  inbound_acl_rules = [
+    {
+      rule_number = 900
+      rule_action = "allow"
+      from_port   = 1024
+      to_port     = 65535
+      protocol    = "tcp"
+      cidr_block  = "0.0.0.0/0"
+    },
+  ]
+
+  outbound_acl_rules = [
+    {
+      rule_number = 900
+      rule_action = "allow"
+      from_port   = 32768
+      to_port     = 65535
+      protocol    = "tcp"
+      cidr_block  = "0.0.0.0/0"
+    },
+  ]
+}
+
+################################################################################
+# Supporting Resources
+################################################################################
+
+resource "aws_subnet" "subnet" {
+  vpc_id     = module.vpc.vpc_id
+  cidr_block = "10.0.221.0/24"
+
+  tags = merge(
+    local.tags,
+    {
+      Name = "Subnet-name"
+    }
+  )
+}
