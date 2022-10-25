@@ -2,6 +2,34 @@
 
 All notable changes to this project will be documented in this file.
 
+## [3.18.0](https://github.com/terraform-aws-modules/terraform-aws-vpc/compare/v3.17.0...v3.18.0) (2022-10-21)
+
+
+### Features
+
+* Added ability to specify CloudWatch Log group name for VPC Flow logs ([#847](https://github.com/terraform-aws-modules/terraform-aws-vpc/issues/847)) ([80d6318](https://github.com/terraform-aws-modules/terraform-aws-vpc/commit/80d631884126075e1adbe2d410f46ef6b9ea8a19))
+
+## [3.17.0](https://github.com/terraform-aws-modules/terraform-aws-vpc/compare/v3.16.1...v3.17.0) (2022-10-21)
+
+
+### Features
+
+* Add custom subnet names ([#816](https://github.com/terraform-aws-modules/terraform-aws-vpc/issues/816)) ([4416e37](https://github.com/terraform-aws-modules/terraform-aws-vpc/commit/4416e379ed9a9b650a12a629441410f326b44c0c))
+
+### [3.16.1](https://github.com/terraform-aws-modules/terraform-aws-vpc/compare/v3.16.0...v3.16.1) (2022-10-14)
+
+
+### Bug Fixes
+
+* Prevent an error when VPC Flow log log_group and role is not created ([#844](https://github.com/terraform-aws-modules/terraform-aws-vpc/issues/844)) ([b0c81ad](https://github.com/terraform-aws-modules/terraform-aws-vpc/commit/b0c81ad61214069f8fa6d35492716c9d4cac9096))
+
+## [3.16.0](https://github.com/terraform-aws-modules/terraform-aws-vpc/compare/v3.15.0...v3.16.0) (2022-09-26)
+
+
+### Features
+
+* Add IPAM IPv6 support ([#718](https://github.com/terraform-aws-modules/terraform-aws-vpc/issues/718)) ([4fe7745](https://github.com/terraform-aws-modules/terraform-aws-vpc/commit/4fe7745ddb675af3bd50daf335ad3ffa16d08a98))
+
 ## [3.15.0](https://github.com/terraform-aws-modules/terraform-aws-vpc/compare/v3.14.4...v3.15.0) (2022-09-25)
 
 
