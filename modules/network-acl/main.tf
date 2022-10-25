@@ -8,7 +8,7 @@ resource "aws_network_acl" "this" {
 resource "aws_network_acl_rule" "inbound" {
   count = var.create && length(var.inbound_acl_rules) > 0 ? length(var.inbound_acl_rules) : 0
 
-  network_acl_id = aws_network_acl.this.id
+  network_acl_id = aws_network_acl.this[0].id
 
   egress          = false
   rule_number     = var.inbound_acl_rules[count.index]["rule_number"]
@@ -25,7 +25,7 @@ resource "aws_network_acl_rule" "inbound" {
 resource "aws_network_acl_rule" "outbound" {
   count = local.create && length(var.outbound_acl_rules) > 0 ? length(var.outbound_acl_rules) : 0
 
-  network_acl_id = aws_network_acl.this.id
+  network_acl_id = aws_network_acl.this[0].id
 
   egress          = true
   rule_number     = var.outbound_acl_rules[count.index]["rule_number"]
