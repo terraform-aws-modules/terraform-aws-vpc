@@ -6,7 +6,7 @@ resource "aws_network_acl" "this" {
 }
 
 resource "aws_network_acl_rule" "inbound" {
-  count = local.create && length(var.inbound_acl_rules) > 0 ? length(var.inbound_acl_rules) : 0
+  count = var.create && length(var.inbound_acl_rules) > 0 ? length(var.inbound_acl_rules) : 0
 
   network_acl_id = aws_network_acl.this.id
 
