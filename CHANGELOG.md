@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+### [3.18.1](https://github.com/terraform-aws-modules/terraform-aws-vpc/compare/v3.18.0...v3.18.1) (2022-10-27)
+
+
+### Bug Fixes
+
+* Update CI configuration files to use latest version ([#850](https://github.com/terraform-aws-modules/terraform-aws-vpc/issues/850)) ([b94561d](https://github.com/terraform-aws-modules/terraform-aws-vpc/commit/b94561dc61b8bbedb5e36e0334e030edf03a1c7b))
+
 ## [3.18.0](https://github.com/terraform-aws-modules/terraform-aws-vpc/compare/v3.17.0...v3.18.0) (2022-10-21)
 
 
