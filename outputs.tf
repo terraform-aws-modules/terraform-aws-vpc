@@ -158,6 +158,26 @@ output "database_subnet_group_name" {
   value       = try(aws_db_subnet_group.database[0].name, "")
 }
 
+output "eks_subnets" {
+  description = "List of IDs of eks subnets"
+  value       = aws_subnet.eks[*].id
+}
+
+output "eks_subnet_arns" {
+  description = "List of ARNs of eks subnets"
+  value       = aws_subnet.eks[*].arn
+}
+
+output "eks_subnets_cidr_blocks" {
+  description = "List of cidr_blocks of eks subnets"
+  value       = compact(aws_subnet.eks[*].cidr_block)
+}
+
+output "eks_subnets_ipv6_cidr_blocks" {
+  description = "List of IPv6 cidr_blocks of eks subnets in an IPv6 enabled VPC"
+  value       = compact(aws_subnet.eks[*].ipv6_cidr_block)
+}
+
 output "redshift_subnets" {
   description = "List of IDs of redshift subnets"
   value       = aws_subnet.redshift[*].id
@@ -248,6 +268,10 @@ output "database_route_table_ids" {
   value       = try(coalescelist(aws_route_table.database[*].id, aws_route_table.private[*].id), [])
 }
 
+output "eks_route_table_ids" {
+  description = "List of IDs of eks route tables"
+  value       = try(coalescelist(aws_route_table.eks[*].id, aws_route_table.private[*].id), [])
+}
 output "redshift_route_table_ids" {
   description = "List of IDs of redshift route tables"
   value       = length(aws_route_table.redshift[*].id) > 0 ? aws_route_table.redshift[*].id : (var.enable_public_redshift ? aws_route_table.public[*].id : aws_route_table.private[*].id)
