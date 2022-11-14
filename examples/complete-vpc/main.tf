@@ -100,6 +100,7 @@ module "vpc_endpoints" {
     dynamodb = {
       service         = "dynamodb"
       service_type    = "Gateway"
+      service_name    = "com.amazonaws.${local.region}.dynamodb"
       route_table_ids = flatten([module.vpc.intra_route_table_ids, module.vpc.private_route_table_ids, module.vpc.public_route_table_ids])
       policy          = data.aws_iam_policy_document.dynamodb_endpoint_policy.json
       tags            = { Name = "dynamodb-vpc-endpoint" }

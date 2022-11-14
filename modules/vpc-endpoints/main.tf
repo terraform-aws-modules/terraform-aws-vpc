@@ -7,7 +7,7 @@ locals {
 }
 
 data "aws_vpc_endpoint_service" "this" {
-  for_each = local.endpoints
+  for_each = { for k, v in local.endpoints : k => v if lookup(v, "service_name", null) == null }
 
   service      = lookup(each.value, "service", null)
   service_name = lookup(each.value, "service_name", null)
@@ -22,7 +22,7 @@ resource "aws_vpc_endpoint" "this" {
   for_each = local.endpoints
 
   vpc_id            = var.vpc_id
-  service_name      = data.aws_vpc_endpoint_service.this[each.key].service_name
+  service_name      = lookup(each.value, "service_name", null) != null ? lookup(each.value, "service_name", null) : data.aws_vpc_endpoint_service.this[each.key].service_name
   vpc_endpoint_type = lookup(each.value, "service_type", "Interface")
   auto_accept       = lookup(each.value, "auto_accept", null)
 
