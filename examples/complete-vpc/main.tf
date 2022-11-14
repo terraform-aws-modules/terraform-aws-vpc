@@ -98,7 +98,6 @@ module "vpc_endpoints" {
       tags    = { Name = "s3-vpc-endpoint" }
     },
     dynamodb = {
-      service         = "dynamodb"
       service_type    = "Gateway"
       service_name    = "com.amazonaws.${local.region}.dynamodb"
       route_table_ids = flatten([module.vpc.intra_route_table_ids, module.vpc.private_route_table_ids, module.vpc.public_route_table_ids])
