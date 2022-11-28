@@ -29,8 +29,8 @@ locals {
 ######
 # VPC
 ######
+#tfsec:ignore:aws-ec2-require-vpc-flow-logs-for-all-vpcs
 resource "aws_vpc" "this" {
-  #tfsec:ignore:aws-ec2-require-vpc-flow-logs-for-all-vpcs
   count = var.create_vpc ? 1 : 0
 
   cidr_block                       = var.cidr
@@ -41,12 +41,6 @@ resource "aws_vpc" "this" {
   enable_classiclink_dns_support   = var.enable_classiclink_dns_support
   assign_generated_ipv6_cidr_block = var.enable_ipv6
   
-  log_config {
-    aggregation_interval = "INTERVAL_10_MIN"
-    flow_sampling        = 0.5
-    metadata             = "INCLUDE_ALL_METADATA"
-  }
-
   tags = merge(
     {
       "Name" = format("%s", var.name)
