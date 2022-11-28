@@ -1,3 +1,4 @@
+#tfsec:ignore:aws-ec2-require-vpc-flow-logs-for-all-vpcs
 locals {
   max_subnet_length = max(
     length(var.private_subnets),
@@ -29,7 +30,6 @@ locals {
 # VPC
 ######
 resource "aws_vpc" "this" {
-  #tfsec:ignore:aws-ec2-require-vpc-flow-logs-for-all-vpcs
   count = var.create_vpc ? 1 : 0
 
   cidr_block                       = var.cidr
