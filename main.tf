@@ -377,6 +377,7 @@ resource "aws_subnet" "public" {
     },
     var.tags,
     var.public_subnet_tags,
+    length(var.public_subnet_specific_tags) > 0 ? var.public_subnet_specific_tags[count.index] : {},
   )
 }
 
@@ -404,6 +405,7 @@ resource "aws_subnet" "private" {
     },
     var.tags,
     var.private_subnet_tags,
+    length(var.private_subnet_specific_tags) > 0 ? var.private_subnet_specific_tags[count.index] : {},
   )
 }
 
@@ -432,6 +434,7 @@ resource "aws_subnet" "outpost" {
     },
     var.tags,
     var.outpost_subnet_tags,
+    length(var.outpost_subnet_specific_tags) > 0 ? var.outpost_subnet_specific_tags[count.index] : {},
   )
 }
 
@@ -459,6 +462,7 @@ resource "aws_subnet" "database" {
     },
     var.tags,
     var.database_subnet_tags,
+    length(var.database_subnet_specific_tags) > 0 ? var.database_subnet_specific_tags[count.index] : {},
   )
 }
 
@@ -502,6 +506,7 @@ resource "aws_subnet" "redshift" {
     },
     var.tags,
     var.redshift_subnet_tags,
+    length(var.redshift_subnet_specific_tags) > 0 ? var.redshift_subnet_specific_tags[count.index] : {},
   )
 }
 
@@ -543,6 +548,7 @@ resource "aws_subnet" "elasticache" {
     },
     var.tags,
     var.elasticache_subnet_tags,
+    length(var.elasticache_subnet_specific_tags) > 0 ? var.elasticache_subnet_specific_tags[count.index] : {},
   )
 }
 
@@ -584,6 +590,7 @@ resource "aws_subnet" "intra" {
     },
     var.tags,
     var.intra_subnet_tags,
+    length(var.intra_subnet_specific_tags) > 0 ? var.intra_subnet_specific_tags[count.index] : {},
   )
 }
 

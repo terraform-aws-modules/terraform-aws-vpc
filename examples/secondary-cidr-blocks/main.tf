@@ -34,6 +34,12 @@ module "vpc" {
   enable_nat_gateway = true
   single_nat_gateway = true
 
+  private_subnet_specific_tags = [
+    {},
+    {"karpenter.sh/discovery/my-cluster-1": "owned"},
+    {"karpenter.sh/discovery/my-cluster-2": "owned"},
+  ]
+
   public_subnet_tags = {
     Name = "overridden-name-public"
   }

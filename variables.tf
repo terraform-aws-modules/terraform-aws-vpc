@@ -208,6 +208,48 @@ variable "elasticache_subnet_suffix" {
   default     = "elasticache"
 }
 
+variable "public_subnet_specific_tags" {
+  description = "Additional tags for each public subnet"
+  type        = list(map(string))
+  default     = []
+}
+
+variable "private_subnet_specific_tags" {
+  description = "Additional tags for each private subnet"
+  type        = list(map(string))
+  default     = []
+}
+
+variable "outpost_subnet_specific_tags" {
+  description = "Additional tags for each outpost subnet"
+  type        = list(map(string))
+  default     = []
+}
+
+variable "database_subnet_specific_tags" {
+  description = "Additional tags for each database subnet"
+  type        = list(map(string))
+  default     = []
+}
+
+variable "redshift_subnet_specific_tags" {
+  description = "Additional tags for each redshift subnet"
+  type        = list(map(string))
+  default     = []
+}
+
+variable "elasticache_subnet_specific_tags" {
+  description = "Additional tags for each elasticache subnet"
+  type        = list(map(string))
+  default     = []
+}
+
+variable "intra_subnet_specific_tags" {
+  description = "Additional tags for each intra subnet"
+  type        = list(map(string))
+  default     = []
+}
+
 variable "public_subnets" {
   description = "A list of public subnets inside the VPC"
   type        = list(string)
