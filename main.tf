@@ -371,9 +371,9 @@ resource "aws_subnet" "public" {
 
   tags = merge(
     {
-      "Name" = format(
-        "${var.name}-${var.public_subnet_suffix}-%s",
-        element(var.azs, count.index),
+      Name = try(
+        var.public_subnet_names[count.index],
+        format("${var.name}-${var.public_subnet_suffix}-%s", element(var.azs, count.index))
       )
     },
     var.tags,
@@ -398,9 +398,9 @@ resource "aws_subnet" "private" {
 
   tags = merge(
     {
-      "Name" = format(
-        "${var.name}-${var.private_subnet_suffix}-%s",
-        element(var.azs, count.index),
+      Name = try(
+        var.private_subnet_names[count.index],
+        format("${var.name}-${var.private_subnet_suffix}-%s", element(var.azs, count.index))
       )
     },
     var.tags,
@@ -426,9 +426,9 @@ resource "aws_subnet" "outpost" {
 
   tags = merge(
     {
-      "Name" = format(
-        "${var.name}-${var.outpost_subnet_suffix}-%s",
-        var.outpost_az,
+      Name = try(
+        var.outpost_subnet_names[count.index],
+        format("${var.name}-${var.outpost_subnet_suffix}-%s", var.outpost_az)
       )
     },
     var.tags,
@@ -453,9 +453,9 @@ resource "aws_subnet" "database" {
 
   tags = merge(
     {
-      "Name" = format(
-        "${var.name}-${var.database_subnet_suffix}-%s",
-        element(var.azs, count.index),
+      Name = try(
+        var.database_subnet_names[count.index],
+        format("${var.name}-${var.database_subnet_suffix}-%s", element(var.azs, count.index), )
       )
     },
     var.tags,
@@ -496,9 +496,9 @@ resource "aws_subnet" "redshift" {
 
   tags = merge(
     {
-      "Name" = format(
-        "${var.name}-${var.redshift_subnet_suffix}-%s",
-        element(var.azs, count.index),
+      Name = try(
+        var.redshift_subnet_names[count.index],
+        format("${var.name}-${var.redshift_subnet_suffix}-%s", element(var.azs, count.index))
       )
     },
     var.tags,
@@ -537,9 +537,9 @@ resource "aws_subnet" "elasticache" {
 
   tags = merge(
     {
-      "Name" = format(
-        "${var.name}-${var.elasticache_subnet_suffix}-%s",
-        element(var.azs, count.index),
+      Name = try(
+        var.elasticache_subnet_names[count.index],
+        format("${var.name}-${var.elasticache_subnet_suffix}-%s", element(var.azs, count.index))
       )
     },
     var.tags,
@@ -578,9 +578,9 @@ resource "aws_subnet" "intra" {
 
   tags = merge(
     {
-      "Name" = format(
-        "${var.name}-${var.intra_subnet_suffix}-%s",
-        element(var.azs, count.index),
+      Name = try(
+        var.intra_subnet_names[count.index],
+        format("${var.name}-${var.intra_subnet_suffix}-%s", element(var.azs, count.index))
       )
     },
     var.tags,

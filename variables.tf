@@ -136,6 +136,48 @@ variable "private_subnet_suffix" {
   default     = "private"
 }
 
+variable "public_subnet_names" {
+  description = "Explicit values to use in the Name tag on public subnets. If empty, Name tags are generated."
+  type        = list(string)
+  default     = []
+}
+
+variable "private_subnet_names" {
+  description = "Explicit values to use in the Name tag on private subnets. If empty, Name tags are generated."
+  type        = list(string)
+  default     = []
+}
+
+variable "outpost_subnet_names" {
+  description = "Explicit values to use in the Name tag on outpost subnets. If empty, Name tags are generated."
+  type        = list(string)
+  default     = []
+}
+
+variable "intra_subnet_names" {
+  description = "Explicit values to use in the Name tag on intra subnets. If empty, Name tags are generated."
+  type        = list(string)
+  default     = []
+}
+
+variable "database_subnet_names" {
+  description = "Explicit values to use in the Name tag on database subnets. If empty, Name tags are generated."
+  type        = list(string)
+  default     = []
+}
+
+variable "redshift_subnet_names" {
+  description = "Explicit values to use in the Name tag on redshift subnets. If empty, Name tags are generated."
+  type        = list(string)
+  default     = []
+}
+
+variable "elasticache_subnet_names" {
+  description = "Explicit values to use in the Name tag on elasticache subnets. If empty, Name tags are generated."
+  type        = list(string)
+  default     = []
+}
+
 variable "outpost_subnet_suffix" {
   description = "Suffix to append to outpost subnets name"
   type        = string
@@ -1129,6 +1171,12 @@ variable "flow_log_cloudwatch_log_group_name_prefix" {
   description = "Specifies the name prefix of CloudWatch Log Group for VPC flow logs."
   type        = string
   default     = "/aws/vpc-flow-log/"
+}
+
+variable "flow_log_cloudwatch_log_group_name_suffix" {
+  description = "Specifies the name suffix of CloudWatch Log Group for VPC flow logs."
+  type        = string
+  default     = ""
 }
 
 variable "flow_log_cloudwatch_log_group_retention_in_days" {
