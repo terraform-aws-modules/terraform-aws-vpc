@@ -15,8 +15,9 @@ module "endpoints" {
 
   endpoints = {
     s3 = {
-      # interface endpoint
+      # gateway endpoint
       service             = "s3"
+      route_table_ids = ["rt-12322456", "rt-43433343", "rt-11223344"]
       tags                = { Name = "s3-vpc-endpoint" }
     },
     dynamodb = {
