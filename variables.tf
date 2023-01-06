@@ -304,6 +304,12 @@ variable "create_database_nat_gateway_route" {
   default     = false
 }
 
+variable "create_private_nat_gateway_route" {
+  description = "Controls if a nat gateway route should be created to give internet access to the private subnets"
+  type        = bool
+  default     = true
+}
+
 variable "azs" {
   description = "A list of availability zones names or ids in the region"
   type        = list(string)
