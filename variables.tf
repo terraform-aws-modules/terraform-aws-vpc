@@ -336,6 +336,12 @@ variable "enable_classiclink_dns_support" {
   default     = null
 }
 
+variable "enable_nau_metrics" {
+  description = "Should be true to enable Network Address Usage metrics for the VPC."
+  type        = bool
+  default     = null
+}
+
 variable "enable_nat_gateway" {
   description = "Should be true if you want to provision NAT Gateways for each of your private networks"
   type        = bool
