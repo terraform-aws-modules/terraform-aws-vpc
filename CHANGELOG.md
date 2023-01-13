@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file.
 
+## [3.19.0](https://github.com/terraform-aws-modules/terraform-aws-vpc/compare/v3.18.1...v3.19.0) (2023-01-13)
+
+
+### Features
+
+* Add public and private tags per az ([#860](https://github.com/terraform-aws-modules/terraform-aws-vpc/issues/860)) ([a82c9d3](https://github.com/terraform-aws-modules/terraform-aws-vpc/commit/a82c9d3272e3a83d22f70f174133dd26c24eee21))
+
+
+### Bug Fixes
+
+* Use a version for  to avoid GitHub API rate limiting on CI workflows ([#876](https://github.com/terraform-aws-modules/terraform-aws-vpc/issues/876)) ([2a0319e](https://github.com/terraform-aws-modules/terraform-aws-vpc/commit/2a0319ec3244169997c6dac0d7850897ba9b9162))
+
 ### [3.18.1](https://github.com/terraform-aws-modules/terraform-aws-vpc/compare/v3.18.0...v3.18.1) (2022-10-27)
 
 
