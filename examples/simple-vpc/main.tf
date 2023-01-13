@@ -36,6 +36,12 @@ module "vpc" {
     Name = "overridden-name-public"
   }
 
+  public_subnet_tags_per_az = {
+    "${local.region}a" = {
+      "availability-zone" = "${local.region}a"
+    }
+  }
+
   tags = local.tags
 
   vpc_tags = {
