@@ -986,7 +986,7 @@ resource "aws_network_acl_rule" "outpost_outbound" {
 ################################################################################
 
 resource "aws_internet_gateway" "this" {
-  count = local.create_public_subnets && var.create_igw ? 1 : 0
+  count = local.create_vpc && var.create_igw && local.create_public_subnets || (local.create_database_subnets && var.create_database_internet_gateway_route) ? 1 : 0
 
   vpc_id = local.vpc_id
 
