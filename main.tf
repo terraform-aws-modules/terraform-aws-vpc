@@ -32,8 +32,6 @@ resource "aws_vpc" "this" {
   instance_tenancy                     = var.instance_tenancy
   enable_dns_hostnames                 = var.enable_dns_hostnames
   enable_dns_support                   = var.enable_dns_support
-  enable_classiclink                   = null # https://github.com/hashicorp/terraform/issues/31730
-  enable_classiclink_dns_support       = null # https://github.com/hashicorp/terraform/issues/31730
   enable_network_address_usage_metrics = var.enable_network_address_usage_metrics
 
   tags = merge(
@@ -1244,7 +1242,6 @@ resource "aws_default_vpc" "this" {
 
   enable_dns_support   = var.default_vpc_enable_dns_support
   enable_dns_hostnames = var.default_vpc_enable_dns_hostnames
-  enable_classiclink   = null # https://github.com/hashicorp/terraform/issues/31730
 
   tags = merge(
     { "Name" = coalesce(var.default_vpc_name, "default") },
