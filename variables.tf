@@ -313,7 +313,7 @@ variable "azs" {
 variable "enable_dns_hostnames" {
   description = "Should be true to enable DNS hostnames in the VPC"
   type        = bool
-  default     = false
+  default     = true
 }
 
 variable "enable_dns_support" {
@@ -373,7 +373,7 @@ variable "external_nat_ips" {
 variable "map_public_ip_on_launch" {
   description = "Should be false if you do not want to auto-assign public IP on launch"
   type        = bool
-  default     = true
+  default     = false
 }
 
 variable "customer_gateways" {
@@ -739,14 +739,7 @@ variable "default_vpc_enable_dns_support" {
 variable "default_vpc_enable_dns_hostnames" {
   description = "Should be true to enable DNS hostnames in the Default VPC"
   type        = bool
-  default     = false
-}
-
-# tflint-ignore: terraform_unused_declarations
-variable "default_vpc_enable_classiclink" {
-  description = "[DEPRECATED](https://github.com/hashicorp/terraform/issues/31730) Should be true to enable ClassicLink in the Default VPC"
-  type        = bool
-  default     = false
+  default     = true
 }
 
 variable "default_vpc_tags" {
@@ -1275,6 +1268,12 @@ variable "ipv6_ipam_pool_id" {
 variable "ipv6_netmask_length" {
   description = "(Optional) Netmask length to request from IPAM Pool. Conflicts with `ipv6_cidr_block`. This can be omitted if IPAM pool as a `allocation_default_netmask_length` set. Valid values: `56`."
   type        = number
+  default     = null
+}
+
+variable "ipv6_cidr_block_network_border_group" {
+  description = "By default when an IPv6 CIDR is assigned to a VPC a default ipv6_cidr_block_network_border_group will be set to the region of the VPC. This can be changed to restrict advertisement of public addresses to specific Network Border Groups such as LocalZones"
+  type        = string
   default     = null
 }
 
