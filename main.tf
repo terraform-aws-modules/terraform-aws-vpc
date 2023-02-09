@@ -4,6 +4,7 @@ locals {
     length(var.elasticache_subnets),
     length(var.database_subnets),
     length(var.redshift_subnets),
+    length(var.sys_subnets),
   )
   nat_gateway_count = var.single_nat_gateway ? 1 : var.one_nat_gateway_per_az ? length(var.azs) : local.max_subnet_length
 
@@ -353,6 +354,28 @@ resource "aws_route_table" "intra" {
 }
 
 ################################################################################
+# Sys routes
+# There are as many routing tables as the number of NAT gateways
+################################################################################
+
+resource "aws_route_table" "sys" {
+  count = local.create_vpc && local.max_subnet_length > 0 ? local.nat_gateway_count : 0
+
+  vpc_id = local.vpc_id
+
+  tags = merge(
+    {
+      "Name" = var.single_nat_gateway ? "${var.name}-${var.sys_subnet_suffix}" : format(
+        "${var.name}-${var.sys_subnet_suffix}-%s",
+        element(var.azs, count.index),
+      )
+    },
+    var.tags,
+    var.sys_route_table_tags,
+  )
+}
+
+################################################################################
 # Public subnet
 ################################################################################
 
@@ -586,6 +609,34 @@ resource "aws_subnet" "intra" {
     },
     var.tags,
     var.intra_subnet_tags,
+  )
+}
+
+################################################################################
+# Sys subnet
+################################################################################
+
+resource "aws_subnet" "sys" {
+  count = local.create_vpc && length(var.sys_subnets) > 0 ? length(var.sys_subnets) : 0
+
+  vpc_id                          = local.vpc_id
+  cidr_block                      = var.sys_subnets[count.index]
+  availability_zone               = length(regexall("^[a-z]{2}-", element(var.azs, count.index))) > 0 ? element(var.azs, count.index) : null
+  availability_zone_id            = length(regexall("^[a-z]{2}-", element(var.azs, count.index))) == 0 ? element(var.azs, count.index) : null
+  assign_ipv6_address_on_creation = var.sys_subnet_assign_ipv6_address_on_creation == null ? var.assign_ipv6_address_on_creation : var.sys_subnet_assign_ipv6_address_on_creation
+
+  ipv6_cidr_block = var.enable_ipv6 && length(var.sys_subnet_ipv6_prefixes) > 0 ? cidrsubnet(aws_vpc.this[0].ipv6_cidr_block, 8, var.sys_subnet_ipv6_prefixes[count.index]) : null
+
+  tags = merge(
+    {
+      Name = try(
+        var.sys_subnet_names[count.index],
+        format("${var.name}-${var.sys_subnet_suffix}-%s", element(var.azs, count.index))
+      )
+    },
+    var.tags,
+    var.sys_subnet_tags,
+    lookup(var.sys_subnet_tags_per_az, element(var.azs, count.index), {})
   )
 }
 
@@ -1000,6 +1051,57 @@ resource "aws_network_acl_rule" "elasticache_outbound" {
 }
 
 ################################################################################
+# Sys Network ACLs
+################################################################################
+
+resource "aws_network_acl" "sys" {
+  count = local.create_vpc && var.sys_dedicated_network_acl && length(var.sys_subnets) > 0 ? 1 : 0
+
+  vpc_id     = local.vpc_id
+  subnet_ids = aws_subnet.sys[*].id
+
+  tags = merge(
+    { "Name" = "${var.name}-${var.sys_subnet_suffix}" },
+    var.tags,
+    var.sys_acl_tags,
+  )
+}
+
+resource "aws_network_acl_rule" "sys_inbound" {
+  count = local.create_vpc && var.sys_dedicated_network_acl && length(var.sys_subnets) > 0 ? length(var.sys_inbound_acl_rules) : 0
+
+  network_acl_id = aws_network_acl.sys[0].id
+
+  egress          = false
+  rule_number     = var.sys_inbound_acl_rules[count.index]["rule_number"]
+  rule_action     = var.sys_inbound_acl_rules[count.index]["rule_action"]
+  from_port       = lookup(var.sys_inbound_acl_rules[count.index], "from_port", null)
+  to_port         = lookup(var.sys_inbound_acl_rules[count.index], "to_port", null)
+  icmp_code       = lookup(var.sys_inbound_acl_rules[count.index], "icmp_code", null)
+  icmp_type       = lookup(var.sys_inbound_acl_rules[count.index], "icmp_type", null)
+  protocol        = var.sys_inbound_acl_rules[count.index]["protocol"]
+  cidr_block      = lookup(var.sys_inbound_acl_rules[count.index], "cidr_block", null)
+  ipv6_cidr_block = lookup(var.sys_inbound_acl_rules[count.index], "ipv6_cidr_block", null)
+}
+
+resource "aws_network_acl_rule" "sys_outbound" {
+  count = local.create_vpc && var.sys_dedicated_network_acl && length(var.sys_subnets) > 0 ? length(var.sys_outbound_acl_rules) : 0
+
+  network_acl_id = aws_network_acl.sys[0].id
+
+  egress          = true
+  rule_number     = var.sys_outbound_acl_rules[count.index]["rule_number"]
+  rule_action     = var.sys_outbound_acl_rules[count.index]["rule_action"]
+  from_port       = lookup(var.sys_outbound_acl_rules[count.index], "from_port", null)
+  to_port         = lookup(var.sys_outbound_acl_rules[count.index], "to_port", null)
+  icmp_code       = lookup(var.sys_outbound_acl_rules[count.index], "icmp_code", null)
+  icmp_type       = lookup(var.sys_outbound_acl_rules[count.index], "icmp_type", null)
+  protocol        = var.sys_outbound_acl_rules[count.index]["protocol"]
+  cidr_block      = lookup(var.sys_outbound_acl_rules[count.index], "cidr_block", null)
+  ipv6_cidr_block = lookup(var.sys_outbound_acl_rules[count.index], "ipv6_cidr_block", null)
+}
+
+################################################################################
 # NAT Gateway
 ################################################################################
 
@@ -1066,6 +1168,26 @@ resource "aws_route" "private_ipv6_egress" {
   count = local.create_vpc && var.create_egress_only_igw && var.enable_ipv6 ? length(var.private_subnets) : 0
 
   route_table_id              = element(aws_route_table.private[*].id, count.index)
+  destination_ipv6_cidr_block = "::/0"
+  egress_only_gateway_id      = element(aws_egress_only_internet_gateway.this[*].id, 0)
+}
+
+resource "aws_route" "sys_nat_gateway" {
+  count = local.create_vpc && var.enable_nat_gateway ? local.nat_gateway_count : 0
+
+  route_table_id         = element(aws_route_table.sys[*].id, count.index)
+  destination_cidr_block = var.nat_gateway_destination_cidr_block
+  nat_gateway_id         = element(aws_nat_gateway.this[*].id, count.index)
+
+  timeouts {
+    create = "5m"
+  }
+}
+
+resource "aws_route" "sys_ipv6_egress" {
+  count = local.create_vpc && var.create_egress_only_igw && var.enable_ipv6 ? length(var.sys_subnets) : 0
+
+  route_table_id              = element(aws_route_table.sys[*].id, count.index)
   destination_ipv6_cidr_block = "::/0"
   egress_only_gateway_id      = element(aws_egress_only_internet_gateway.this[*].id, 0)
 }
@@ -1151,6 +1273,16 @@ resource "aws_route_table_association" "public" {
   route_table_id = aws_route_table.public[0].id
 }
 
+resource "aws_route_table_association" "sys" {
+  count = local.create_vpc && length(var.sys_subnets) > 0 ? length(var.sys_subnets) : 0
+
+  subnet_id = element(aws_subnet.sys[*].id, count.index)
+  route_table_id = element(
+    aws_route_table.sys[*].id,
+    var.single_nat_gateway ? 0 : count.index,
+  )
+}
+
 ################################################################################
 # Customer Gateways
 ################################################################################
@@ -1225,6 +1357,19 @@ resource "aws_vpn_gateway_route_propagation" "intra" {
   count = local.create_vpc && var.propagate_intra_route_tables_vgw && (var.enable_vpn_gateway || var.vpn_gateway_id != "") ? length(var.intra_subnets) : 0
 
   route_table_id = element(aws_route_table.intra[*].id, count.index)
+  vpn_gateway_id = element(
+    concat(
+      aws_vpn_gateway.this[*].id,
+      aws_vpn_gateway_attachment.this[*].vpn_gateway_id,
+    ),
+    count.index,
+  )
+}
+
+resource "aws_vpn_gateway_route_propagation" "sys" {
+  count = local.create_vpc && var.propagate_sys_route_tables_vgw && (var.enable_vpn_gateway || var.vpn_gateway_id != "") ? length(var.sys_subnets) : 0
+
+  route_table_id = element(aws_route_table.sys[*].id, count.index)
   vpn_gateway_id = element(
     concat(
       aws_vpn_gateway.this[*].id,
