@@ -223,6 +223,27 @@ output "intra_subnets_ipv6_cidr_blocks" {
   value       = compact(aws_subnet.intra[*].ipv6_cidr_block)
 }
 
+output "sys_subnets" {
+  description = "List of IDs of sys subnets"
+  value       = aws_subnet.sys[*].id
+}
+
+output "sys_subnet_arns" {
+  description = "List of ARNs of sys subnets"
+  value       = aws_subnet.sys[*].arn
+}
+
+output "sys_subnets_cidr_blocks" {
+  description = "List of cidr_blocks of sys subnets"
+  value       = compact(aws_subnet.sys[*].cidr_block)
+}
+
+output "sys_subnets_ipv6_cidr_blocks" {
+  description = "List of IPv6 cidr_blocks of sys subnets in an IPv6 enabled VPC"
+  value       = compact(aws_subnet.sys[*].ipv6_cidr_block)
+}
+
+
 output "elasticache_subnet_group" {
   description = "ID of elasticache subnet group"
   value       = try(aws_elasticache_subnet_group.elasticache[0].id, "")
@@ -261,6 +282,11 @@ output "elasticache_route_table_ids" {
 output "intra_route_table_ids" {
   description = "List of IDs of intra route tables"
   value       = aws_route_table.intra[*].id
+}
+
+output "sys_route_table_ids" {
+  description = "List of IDs of sys route tables"
+  value       = aws_route_table.sys[*].id
 }
 
 output "public_internet_gateway_route_id" {
@@ -326,6 +352,21 @@ output "elasticache_route_table_association_ids" {
 output "intra_route_table_association_ids" {
   description = "List of IDs of the intra route table association"
   value       = aws_route_table_association.intra[*].id
+}
+
+output "sys_nat_gateway_route_ids" {
+  description = "List of IDs of the sys nat gateway route"
+  value       = aws_route.sys_nat_gateway[*].id
+}
+
+output "sys_ipv6_egress_route_ids" {
+  description = "List of IDs of the ipv6 egress route"
+  value       = aws_route.sys_ipv6_egress[*].id
+}
+
+output "sys_route_table_association_ids" {
+  description = "List of IDs of the sys route table association"
+  value       = aws_route_table_association.sys[*].id
 }
 
 output "public_route_table_association_ids" {
@@ -511,6 +552,16 @@ output "elasticache_network_acl_id" {
 output "elasticache_network_acl_arn" {
   description = "ARN of the elasticache network ACL"
   value       = try(aws_network_acl.elasticache[0].arn, "")
+}
+
+output "sys_network_acl_id" {
+  description = "ID of the sys network ACL"
+  value       = try(aws_network_acl.sys[0].id, "")
+}
+
+output "sys_network_acl_arn" {
+  description = "ARN of the sys network ACL"
+  value       = try(aws_network_acl.sys[0].arn, "")
 }
 
 # VPC flow log

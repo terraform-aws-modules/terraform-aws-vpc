@@ -64,6 +64,12 @@ variable "intra_subnet_ipv6_prefixes" {
   default     = []
 }
 
+variable "sys_subnet_ipv6_prefixes" {
+  description = "Assigns IPv6 sys subnet id based on the Amazon provided /56 prefix base 10 integer (0-256). Must be of equal length to the corresponding IPv4 subnet list"
+  type        = list(string)
+  default     = []
+}
+
 variable "assign_ipv6_address_on_creation" {
   description = "Assign IPv6 address on subnet, must be disabled to change IPv6 CIDRs. This is the IPv6 equivalent of map_public_ip_on_launch"
   type        = bool
@@ -112,6 +118,12 @@ variable "intra_subnet_assign_ipv6_address_on_creation" {
   default     = null
 }
 
+variable "sys_subnet_assign_ipv6_address_on_creation" {
+  description = "Assign IPv6 address on sys subnet, must be disabled to change IPv6 CIDRs. This is the IPv6 equivalent of map_public_ip_on_launch"
+  type        = bool
+  default     = null
+}
+
 variable "secondary_cidr_blocks" {
   description = "List of secondary CIDR blocks to associate with the VPC to extend the IP Address pool"
   type        = list(string)
@@ -134,6 +146,12 @@ variable "private_subnet_suffix" {
   description = "Suffix to append to private subnets name"
   type        = string
   default     = "private"
+}
+
+variable "sys_subnet_suffix" {
+  description = "Suffix to append to sys subnets name"
+  type        = string
+  default     = "sys"
 }
 
 variable "public_subnet_names" {
@@ -174,6 +192,12 @@ variable "redshift_subnet_names" {
 
 variable "elasticache_subnet_names" {
   description = "Explicit values to use in the Name tag on elasticache subnets. If empty, Name tags are generated."
+  type        = list(string)
+  default     = []
+}
+
+variable "sys_subnet_names" {
+  description = "Explicit values to use in the Name tag on sys subnets. If empty, Name tags are generated."
   type        = list(string)
   default     = []
 }
@@ -246,6 +270,12 @@ variable "elasticache_subnets" {
 
 variable "intra_subnets" {
   description = "A list of intra subnets"
+  type        = list(string)
+  default     = []
+}
+
+variable "sys_subnets" {
+  description = "A list of sys subnets inside the VPC"
   type        = list(string)
   default     = []
 }
@@ -432,6 +462,12 @@ variable "propagate_public_route_tables_vgw" {
   default     = false
 }
 
+variable "propagate_sys_route_tables_vgw" {
+  description = "Should be true if you want route table propagation"
+  type        = bool
+  default     = false
+}
+
 variable "manage_default_route_table" {
   description = "Should be true to manage default route table"
   type        = bool
@@ -510,6 +546,18 @@ variable "outpost_subnet_tags" {
   default     = {}
 }
 
+variable "sys_subnet_tags" {
+  description = "Additional tags for the sys subnets"
+  type        = map(string)
+  default     = {}
+}
+
+variable "sys_subnet_tags_per_az" {
+  description = "Additional tags for the sys subnets where the primary key is the AZ"
+  type        = map(map(string))
+  default     = {}
+}
+
 variable "public_route_table_tags" {
   description = "Additional tags for the public route tables"
   type        = map(string)
@@ -542,6 +590,12 @@ variable "elasticache_route_table_tags" {
 
 variable "intra_route_table_tags" {
   description = "Additional tags for the intra route tables"
+  type        = map(string)
+  default     = {}
+}
+
+variable "sys_route_table_tags" {
+  description = "Additional tags for the sys route tables"
   type        = map(string)
   default     = {}
 }
@@ -644,6 +698,12 @@ variable "redshift_acl_tags" {
 
 variable "elasticache_acl_tags" {
   description = "Additional tags for the elasticache subnets network ACL"
+  type        = map(string)
+  default     = {}
+}
+
+variable "sys_acl_tags" {
+  description = "Additional tags for the sys subnets network ACL"
   type        = map(string)
   default     = {}
 }
@@ -819,6 +879,12 @@ variable "redshift_dedicated_network_acl" {
 
 variable "elasticache_dedicated_network_acl" {
   description = "Whether to use dedicated network ACL (not default) and custom rules for elasticache subnets"
+  type        = bool
+  default     = false
+}
+
+variable "sys_dedicated_network_acl" {
+  description = "Whether to use dedicated network ACL (not default) and custom rules for sys subnets"
   type        = bool
   default     = false
 }
@@ -1081,6 +1147,38 @@ variable "elasticache_inbound_acl_rules" {
 
 variable "elasticache_outbound_acl_rules" {
   description = "Elasticache subnets outbound network ACL rules"
+  type        = list(map(string))
+
+  default = [
+    {
+      rule_number = 100
+      rule_action = "allow"
+      from_port   = 0
+      to_port     = 0
+      protocol    = "-1"
+      cidr_block  = "0.0.0.0/0"
+    },
+  ]
+}
+
+variable "sys_inbound_acl_rules" {
+  description = "Sys subnets inbound network ACLs"
+  type        = list(map(string))
+
+  default = [
+    {
+      rule_number = 100
+      rule_action = "allow"
+      from_port   = 0
+      to_port     = 0
+      protocol    = "-1"
+      cidr_block  = "0.0.0.0/0"
+    },
+  ]
+}
+
+variable "sys_outbound_acl_rules" {
+  description = "Sys subnets outbound network ACLs"
   type        = list(map(string))
 
   default = [
