@@ -169,7 +169,7 @@ variable "dhcp_options_tags" {
 variable "public_subnet_assign_ipv6_address_on_creation" {
   description = "Specify true to indicate that network interfaces created in the specified subnet should be assigned an IPv6 address. Default is `false`"
   type        = bool
-  default     = null
+  default     = false
 }
 
 variable "public_subnets" {
@@ -181,19 +181,19 @@ variable "public_subnets" {
 variable "public_subnet_enable_dns64" {
   description = "Indicates whether DNS queries made to the Amazon-provided DNS Resolver in this subnet should return synthetic IPv6 addresses for IPv4-only destinations. Default: `false`"
   type        = bool
-  default     = null
+  default     = false
 }
 
 variable "public_subnet_enable_resource_name_dns_aaaa_record_on_launch" {
   description = "Indicates whether to respond to DNS queries for instance hostnames with DNS AAAA records. Default: `false`"
   type        = bool
-  default     = null
+  default     = false
 }
 
 variable "public_subnet_enable_resource_name_dns_a_record_on_launch" {
   description = "Indicates whether to respond to DNS queries for instance hostnames with DNS A records. Default: `false`"
   type        = bool
-  default     = null
+  default     = false
 }
 
 variable "public_subnet_ipv6_prefixes" {
@@ -205,18 +205,18 @@ variable "public_subnet_ipv6_prefixes" {
 variable "public_subnet_ipv6_native" {
   description = "Indicates whether to create an IPv6-only subnet. Default: `false`"
   type        = bool
-  default     = null
+  default     = false
 }
 
 variable "map_public_ip_on_launch" {
   description = "Specify true to indicate that instances launched into the subnet should be assigned a public IP address. Default is `false`"
   type        = bool
-  default     = null
+  default     = false
 }
 
 variable "public_subnet_private_dns_hostname_type_on_launch" {
   description = "The type of hostnames to assign to instances in the subnet at launch. For IPv6-only subnets, an instance DNS name must be based on the instance ID. For dual-stack and IPv4-only subnets, you can specify whether DNS names use the instance IPv4 address or the instance ID. Valid values: `ip-name`, `resource-name`"
-  type        = bool
+  type        = string
   default     = null
 }
 
@@ -303,7 +303,7 @@ variable "public_acl_tags" {
 variable "private_subnet_assign_ipv6_address_on_creation" {
   description = "Specify true to indicate that network interfaces created in the specified subnet should be assigned an IPv6 address. Default is `false`"
   type        = bool
-  default     = null
+  default     = false
 }
 
 variable "private_subnets" {
@@ -315,19 +315,19 @@ variable "private_subnets" {
 variable "private_subnet_enable_dns64" {
   description = "Indicates whether DNS queries made to the Amazon-provided DNS Resolver in this subnet should return synthetic IPv6 addresses for IPv4-only destinations. Default: `false`"
   type        = bool
-  default     = null
+  default     = false
 }
 
 variable "private_subnet_enable_resource_name_dns_aaaa_record_on_launch" {
   description = "Indicates whether to respond to DNS queries for instance hostnames with DNS AAAA records. Default: `false`"
   type        = bool
-  default     = null
+  default     = false
 }
 
 variable "private_subnet_enable_resource_name_dns_a_record_on_launch" {
   description = "Indicates whether to respond to DNS queries for instance hostnames with DNS A records. Default: `false`"
   type        = bool
-  default     = null
+  default     = false
 }
 
 variable "private_subnet_ipv6_prefixes" {
@@ -339,12 +339,12 @@ variable "private_subnet_ipv6_prefixes" {
 variable "private_subnet_ipv6_native" {
   description = "Indicates whether to create an IPv6-only subnet. Default: `false`"
   type        = bool
-  default     = null
+  default     = false
 }
 
 variable "private_subnet_private_dns_hostname_type_on_launch" {
   description = "The type of hostnames to assign to instances in the subnet at launch. For IPv6-only subnets, an instance DNS name must be based on the instance ID. For dual-stack and IPv4-only subnets, you can specify whether DNS names use the instance IPv4 address or the instance ID. Valid values: `ip-name`, `resource-name`"
-  type        = bool
+  type        = string
   default     = null
 }
 
@@ -431,7 +431,7 @@ variable "private_acl_tags" {
 variable "database_subnet_assign_ipv6_address_on_creation" {
   description = "Specify true to indicate that network interfaces created in the specified subnet should be assigned an IPv6 address. Default is `false`"
   type        = bool
-  default     = null
+  default     = false
 }
 
 variable "database_subnets" {
@@ -443,19 +443,19 @@ variable "database_subnets" {
 variable "database_subnet_enable_dns64" {
   description = "Indicates whether DNS queries made to the Amazon-provided DNS Resolver in this subnet should return synthetic IPv6 addresses for IPv4-only destinations. Default: `false`"
   type        = bool
-  default     = null
+  default     = false
 }
 
 variable "database_subnet_enable_resource_name_dns_aaaa_record_on_launch" {
   description = "Indicates whether to respond to DNS queries for instance hostnames with DNS AAAA records. Default: `false`"
   type        = bool
-  default     = null
+  default     = false
 }
 
 variable "database_subnet_enable_resource_name_dns_a_record_on_launch" {
   description = "Indicates whether to respond to DNS queries for instance hostnames with DNS A records. Default: `false`"
   type        = bool
-  default     = null
+  default     = false
 }
 
 variable "database_subnet_ipv6_prefixes" {
@@ -467,12 +467,12 @@ variable "database_subnet_ipv6_prefixes" {
 variable "database_subnet_ipv6_native" {
   description = "Indicates whether to create an IPv6-only subnet. Default: `false`"
   type        = bool
-  default     = null
+  default     = false
 }
 
 variable "database_subnet_private_dns_hostname_type_on_launch" {
   description = "The type of hostnames to assign to instances in the subnet at launch. For IPv6-only subnets, an instance DNS name must be based on the instance ID. For dual-stack and IPv4-only subnets, you can specify whether DNS names use the instance IPv4 address or the instance ID. Valid values: `ip-name`, `resource-name`"
-  type        = bool
+  type        = string
   default     = null
 }
 
@@ -589,7 +589,7 @@ variable "database_acl_tags" {
 variable "redshift_subnet_assign_ipv6_address_on_creation" {
   description = "Specify true to indicate that network interfaces created in the specified subnet should be assigned an IPv6 address. Default is `false`"
   type        = bool
-  default     = null
+  default     = false
 }
 
 variable "redshift_subnets" {
@@ -601,19 +601,19 @@ variable "redshift_subnets" {
 variable "redshift_subnet_enable_dns64" {
   description = "Indicates whether DNS queries made to the Amazon-provided DNS Resolver in this subnet should return synthetic IPv6 addresses for IPv4-only destinations. Default: `false`"
   type        = bool
-  default     = null
+  default     = false
 }
 
 variable "redshift_subnet_enable_resource_name_dns_aaaa_record_on_launch" {
   description = "Indicates whether to respond to DNS queries for instance hostnames with DNS AAAA records. Default: `false`"
   type        = bool
-  default     = null
+  default     = false
 }
 
 variable "redshift_subnet_enable_resource_name_dns_a_record_on_launch" {
   description = "Indicates whether to respond to DNS queries for instance hostnames with DNS A records. Default: `false`"
   type        = bool
-  default     = null
+  default     = false
 }
 
 variable "redshift_subnet_ipv6_prefixes" {
@@ -625,12 +625,12 @@ variable "redshift_subnet_ipv6_prefixes" {
 variable "redshift_subnet_ipv6_native" {
   description = "Indicates whether to create an IPv6-only subnet. Default: `false`"
   type        = bool
-  default     = null
+  default     = false
 }
 
 variable "redshift_subnet_private_dns_hostname_type_on_launch" {
   description = "The type of hostnames to assign to instances in the subnet at launch. For IPv6-only subnets, an instance DNS name must be based on the instance ID. For dual-stack and IPv4-only subnets, you can specify whether DNS names use the instance IPv4 address or the instance ID. Valid values: `ip-name`, `resource-name`"
-  type        = bool
+  type        = string
   default     = null
 }
 
@@ -741,7 +741,7 @@ variable "redshift_acl_tags" {
 variable "elasticache_subnet_assign_ipv6_address_on_creation" {
   description = "Specify true to indicate that network interfaces created in the specified subnet should be assigned an IPv6 address. Default is `false`"
   type        = bool
-  default     = null
+  default     = false
 }
 
 variable "elasticache_subnets" {
@@ -753,19 +753,19 @@ variable "elasticache_subnets" {
 variable "elasticache_subnet_enable_dns64" {
   description = "Indicates whether DNS queries made to the Amazon-provided DNS Resolver in this subnet should return synthetic IPv6 addresses for IPv4-only destinations. Default: `false`"
   type        = bool
-  default     = null
+  default     = false
 }
 
 variable "elasticache_subnet_enable_resource_name_dns_aaaa_record_on_launch" {
   description = "Indicates whether to respond to DNS queries for instance hostnames with DNS AAAA records. Default: `false`"
   type        = bool
-  default     = null
+  default     = false
 }
 
 variable "elasticache_subnet_enable_resource_name_dns_a_record_on_launch" {
   description = "Indicates whether to respond to DNS queries for instance hostnames with DNS A records. Default: `false`"
   type        = bool
-  default     = null
+  default     = false
 }
 
 variable "elasticache_subnet_ipv6_prefixes" {
@@ -777,12 +777,12 @@ variable "elasticache_subnet_ipv6_prefixes" {
 variable "elasticache_subnet_ipv6_native" {
   description = "Indicates whether to create an IPv6-only subnet. Default: `false`"
   type        = bool
-  default     = null
+  default     = false
 }
 
 variable "elasticache_subnet_private_dns_hostname_type_on_launch" {
   description = "The type of hostnames to assign to instances in the subnet at launch. For IPv6-only subnets, an instance DNS name must be based on the instance ID. For dual-stack and IPv4-only subnets, you can specify whether DNS names use the instance IPv4 address or the instance ID. Valid values: `ip-name`, `resource-name`"
-  type        = bool
+  type        = string
   default     = null
 }
 
@@ -887,7 +887,7 @@ variable "elasticache_acl_tags" {
 variable "intra_subnet_assign_ipv6_address_on_creation" {
   description = "Specify true to indicate that network interfaces created in the specified subnet should be assigned an IPv6 address. Default is `false`"
   type        = bool
-  default     = null
+  default     = false
 }
 
 variable "intra_subnets" {
@@ -899,19 +899,19 @@ variable "intra_subnets" {
 variable "intra_subnet_enable_dns64" {
   description = "Indicates whether DNS queries made to the Amazon-provided DNS Resolver in this subnet should return synthetic IPv6 addresses for IPv4-only destinations. Default: `false`"
   type        = bool
-  default     = null
+  default     = false
 }
 
 variable "intra_subnet_enable_resource_name_dns_aaaa_record_on_launch" {
   description = "Indicates whether to respond to DNS queries for instance hostnames with DNS AAAA records. Default: `false`"
   type        = bool
-  default     = null
+  default     = false
 }
 
 variable "intra_subnet_enable_resource_name_dns_a_record_on_launch" {
   description = "Indicates whether to respond to DNS queries for instance hostnames with DNS A records. Default: `false`"
   type        = bool
-  default     = null
+  default     = false
 }
 
 variable "intra_subnet_ipv6_prefixes" {
@@ -923,12 +923,12 @@ variable "intra_subnet_ipv6_prefixes" {
 variable "intra_subnet_ipv6_native" {
   description = "Indicates whether to create an IPv6-only subnet. Default: `false`"
   type        = bool
-  default     = null
+  default     = false
 }
 
 variable "intra_subnet_private_dns_hostname_type_on_launch" {
   description = "The type of hostnames to assign to instances in the subnet at launch. For IPv6-only subnets, an instance DNS name must be based on the instance ID. For dual-stack and IPv4-only subnets, you can specify whether DNS names use the instance IPv4 address or the instance ID. Valid values: `ip-name`, `resource-name`"
-  type        = bool
+  type        = string
   default     = null
 }
 
@@ -1015,7 +1015,7 @@ variable "outpost_subnets" {
 variable "outpost_subnet_assign_ipv6_address_on_creation" {
   description = "Specify true to indicate that network interfaces created in the specified subnet should be assigned an IPv6 address. Default is `false`"
   type        = bool
-  default     = null
+  default     = false
 }
 
 variable "outpost_az" {
@@ -1033,19 +1033,19 @@ variable "customer_owned_ipv4_pool" {
 variable "outpost_subnet_enable_dns64" {
   description = "Indicates whether DNS queries made to the Amazon-provided DNS Resolver in this subnet should return synthetic IPv6 addresses for IPv4-only destinations. Default: `false`"
   type        = bool
-  default     = null
+  default     = false
 }
 
 variable "outpost_subnet_enable_resource_name_dns_aaaa_record_on_launch" {
   description = "Indicates whether to respond to DNS queries for instance hostnames with DNS AAAA records. Default: `false`"
   type        = bool
-  default     = null
+  default     = false
 }
 
 variable "outpost_subnet_enable_resource_name_dns_a_record_on_launch" {
   description = "Indicates whether to respond to DNS queries for instance hostnames with DNS A records. Default: `false`"
   type        = bool
-  default     = null
+  default     = false
 }
 
 variable "outpost_subnet_ipv6_prefixes" {
@@ -1057,13 +1057,13 @@ variable "outpost_subnet_ipv6_prefixes" {
 variable "outpost_subnet_ipv6_native" {
   description = "Indicates whether to create an IPv6-only subnet. Default: `false`"
   type        = bool
-  default     = null
+  default     = false
 }
 
 variable "map_customer_owned_ip_on_launch" {
   description = "Specify true to indicate that network interfaces created in the subnet should be assigned a customer owned IP address. The `customer_owned_ipv4_pool` and `outpost_arn` arguments must be specified when set to `true`. Default is `false`"
   type        = bool
-  default     = null
+  default     = false
 }
 
 variable "outpost_arn" {
@@ -1074,7 +1074,7 @@ variable "outpost_arn" {
 
 variable "outpost_subnet_private_dns_hostname_type_on_launch" {
   description = "The type of hostnames to assign to instances in the subnet at launch. For IPv6-only subnets, an instance DNS name must be based on the instance ID. For dual-stack and IPv4-only subnets, you can specify whether DNS names use the instance IPv4 address or the instance ID. Valid values: `ip-name`, `resource-name`"
-  type        = bool
+  type        = string
   default     = null
 }
 
@@ -1327,7 +1327,7 @@ variable "default_vpc_tags" {
 variable "manage_default_security_group" {
   description = "Should be true to adopt and manage default security group"
   type        = bool
-  default     = false
+  default     = true
 }
 
 variable "default_security_group_name" {
@@ -1361,7 +1361,7 @@ variable "default_security_group_tags" {
 variable "manage_default_network_acl" {
   description = "Should be true to adopt and manage Default Network ACL"
   type        = bool
-  default     = false
+  default     = true
 }
 
 variable "default_network_acl_name" {
@@ -1429,7 +1429,7 @@ variable "default_network_acl_tags" {
 variable "manage_default_route_table" {
   description = "Should be true to manage default route table"
   type        = bool
-  default     = false
+  default     = true
 }
 
 variable "default_route_table_name" {

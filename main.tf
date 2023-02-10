@@ -1207,7 +1207,7 @@ resource "aws_default_security_group" "this" {
   }
 
   tags = merge(
-    { "Name" = coalesce(var.default_security_group_name, var.name) },
+    { "Name" = coalesce(var.default_security_group_name, "${var.name}-default") },
     var.tags,
     var.default_security_group_tags,
   )
@@ -1256,7 +1256,7 @@ resource "aws_default_network_acl" "this" {
   }
 
   tags = merge(
-    { "Name" = coalesce(var.default_network_acl_name, var.name) },
+    { "Name" = coalesce(var.default_network_acl_name, "${var.name}-default") },
     var.tags,
     var.default_network_acl_tags,
   )
@@ -1301,7 +1301,7 @@ resource "aws_default_route_table" "default" {
   }
 
   tags = merge(
-    { "Name" = coalesce(var.default_route_table_name, var.name) },
+    { "Name" = coalesce(var.default_route_table_name, "${var.name}-default") },
     var.tags,
     var.default_route_table_tags,
   )
