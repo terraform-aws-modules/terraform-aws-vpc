@@ -1505,12 +1505,7 @@ variable "flow_log_destination_arn" {
 variable "flow_log_file_format" {
   description = "(Optional) The format for the flow log. Valid values: `plain-text`, `parquet`"
   type        = string
-  default     = "plain-text"
-  validation {
-    condition = can(regex("^(plain-text|parquet)$",
-    var.flow_log_file_format))
-    error_message = "ERROR valid values: plain-text, parquet"
-  }
+  default     = null
 }
 
 variable "flow_log_hive_compatible_partitions" {
