@@ -3,7 +3,7 @@ provider "aws" {
 }
 
 locals {
-  name   = "ex-${replace(basename(path.cwd), "_", "-")}"
+  name   = "ex-${basename(path.cwd)}"
   region = "eu-west-1"
 
   tags = {
