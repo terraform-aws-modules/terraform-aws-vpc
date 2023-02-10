@@ -2,9 +2,14 @@ provider "aws" {
   region = local.region
 }
 
+data "aws_availability_zones" "available" {}
+
 locals {
   name   = "ex-${basename(path.cwd)}"
   region = "eu-west-1"
+
+  vpc_cidr = "10.0.0.0/16"
+  azs      = slice(data.aws_availability_zones.available.names, 0, 3)
 
   tags = {
     Example    = local.name
@@ -12,8 +17,7 @@ locals {
     GithubOrg  = "terraform-aws-modules"
   }
 
-  s3_bucket_name            = "vpc-flow-logs-to-s3-${random_pet.this.id}"
-  cloudwatch_log_group_name = "vpc-flow-logs-to-cloudwatch-${random_pet.this.id}"
+  s3_bucket_name = "vpc-flow-logs-to-s3-${random_pet.this.id}"
 }
 
 ################################################################################
@@ -24,10 +28,11 @@ module "vpc_with_flow_logs_s3_bucket" {
   source = "../../"
 
   name = local.name
-  cidr = "10.30.0.0/16"
+  cidr = local.vpc_cidr
 
-  azs            = ["${local.region}a"]
-  public_subnets = ["10.30.101.0/24"]
+  azs             = local.azs
+  private_subnets = [for k, v in local.azs : cidrsubnet(local.vpc_cidr, 8, k)]
+  public_subnets  = [for k, v in local.azs : cidrsubnet(local.vpc_cidr, 8, k + 4)]
 
   enable_flow_log           = true
   flow_log_destination_type = "s3"
@@ -40,10 +45,11 @@ module "vpc_with_flow_logs_s3_bucket_parquet" {
   source = "../../"
 
   name = "${local.name}-parquet"
-  cidr = "10.30.0.0/16"
+  cidr = local.vpc_cidr
 
-  azs            = ["${local.region}a"]
-  public_subnets = ["10.30.101.0/24"]
+  azs             = local.azs
+  private_subnets = [for k, v in local.azs : cidrsubnet(local.vpc_cidr, 8, k)]
+  public_subnets  = [for k, v in local.azs : cidrsubnet(local.vpc_cidr, 8, k + 4)]
 
   enable_flow_log           = true
   flow_log_destination_type = "s3"
@@ -58,10 +64,11 @@ module "vpc_with_flow_logs_cloudwatch_logs_default" {
   source = "../../"
 
   name = "${local.name}-cloudwatch-logs-default"
-  cidr = "10.10.0.0/16"
+  cidr = local.vpc_cidr
 
-  azs            = ["${local.region}a"]
-  public_subnets = ["10.10.101.0/24"]
+  azs             = local.azs
+  private_subnets = [for k, v in local.azs : cidrsubnet(local.vpc_cidr, 8, k)]
+  public_subnets  = [for k, v in local.azs : cidrsubnet(local.vpc_cidr, 8, k + 4)]
 
   # Cloudwatch log group and IAM role will be created
   enable_flow_log                      = true
@@ -80,10 +87,11 @@ module "vpc_with_flow_logs_cloudwatch_logs" {
   source = "../../"
 
   name = "${local.name}-cloudwatch-logs"
-  cidr = "10.20.0.0/16"
+  cidr = local.vpc_cidr
 
-  azs            = ["${local.region}a"]
-  public_subnets = ["10.20.101.0/24"]
+  azs             = local.azs
+  private_subnets = [for k, v in local.azs : cidrsubnet(local.vpc_cidr, 8, k)]
+  public_subnets  = [for k, v in local.azs : cidrsubnet(local.vpc_cidr, 8, k + 4)]
 
   enable_flow_log                  = true
   flow_log_destination_type        = "cloud-watch-logs"
@@ -143,7 +151,7 @@ data "aws_iam_policy_document" "flow_log_s3" {
 
 # Cloudwatch logs
 resource "aws_cloudwatch_log_group" "flow_log" {
-  name = local.cloudwatch_log_group_name
+  name = "vpc-flow-logs-to-cloudwatch-${random_pet.this.id}"
 }
 
 resource "aws_iam_role" "vpc_flow_log_cloudwatch" {

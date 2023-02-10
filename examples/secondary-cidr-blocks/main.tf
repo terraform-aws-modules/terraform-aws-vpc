@@ -2,9 +2,15 @@ provider "aws" {
   region = local.region
 }
 
+data "aws_availability_zones" "available" {}
+
 locals {
   name   = "ex-${basename(path.cwd)}"
   region = "eu-west-1"
+
+  vpc_cidr           = "10.0.0.0/16"
+  secondary_vpc_cidr = "10.99.0.0/16"
+  azs                = slice(data.aws_availability_zones.available.names, 0, 3)
 
   tags = {
     Example    = local.name
@@ -21,26 +27,18 @@ module "vpc" {
   source = "../../"
 
   name = local.name
+  cidr = local.vpc_cidr
 
-  cidr                  = "10.0.0.0/16"
-  secondary_cidr_blocks = ["10.1.0.0/16", "10.2.0.0/16"]
+  secondary_cidr_blocks = [local.secondary_vpc_cidr] # can add up to 5 total CIDR blocks
 
-  azs             = ["${local.region}a", "${local.region}b", "${local.region}c"]
-  private_subnets = ["10.0.1.0/24", "10.1.2.0/24", "10.2.3.0/24"]
-  public_subnets  = ["10.0.101.0/24", "10.1.102.0/24", "10.2.103.0/24"]
+  azs = local.azs
+  private_subnets = concat(
+    [for k, v in local.azs : cidrsubnet(local.vpc_cidr, 4, k)],
+    [for k, v in local.azs : cidrsubnet(local.secondary_vpc_cidr, 2, k)]
+  )
+  public_subnets = [for k, v in local.azs : cidrsubnet(local.vpc_cidr, 8, k + 48)]
 
-  enable_ipv6 = true
-
-  enable_nat_gateway = true
-  single_nat_gateway = true
-
-  public_subnet_tags = {
-    Name = "overridden-name-public"
-  }
+  enable_nat_gateway = false
 
   tags = local.tags
-
-  vpc_tags = {
-    Name = "vpc-name"
-  }
 }

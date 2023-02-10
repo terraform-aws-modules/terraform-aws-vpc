@@ -1,8 +1,6 @@
-# VPC with separate private route tables
+# VPC with IPv6 enabled
 
-Configuration in this directory creates set of VPC resources which may be sufficient for staging or production environment (look into [simple-vpc](../simple-vpc) for more simplified setup). 
-
-There are public, private, database, ElastiCache, Redshift subnets, NAT Gateways created in each availability zone. **This example sets up separate private route for database, elasticache and redshift subnets.**.
+Configuration in this directory creates set of VPC resources with IPv6 enabled on VPC and subnets.
 
 ## Usage
 
@@ -26,17 +24,21 @@ Note that this example may create resources which can cost money (AWS Elastic IP
 
 ## Providers
 
-No providers.
+| Name | Version |
+|------|---------|
+| <a name="provider_aws"></a> [aws](#provider\_aws) | >= 4.35 |
 
 ## Modules
 
 | Name | Source | Version |
 |------|--------|---------|
-| <a name="module_vpc"></a> [vpc](#module\_vpc) | ../../ | n/a |
+| <a name="module_vpc"></a> [vpc](#module\_vpc) | ../.. | n/a |
 
 ## Resources
 
-No resources.
+| Name | Type |
+|------|------|
+| [aws_availability_zones.available](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/availability_zones) | data source |
 
 ## Inputs
 

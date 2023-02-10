@@ -231,15 +231,16 @@ module "vpc_cidr_from_ipam" {
 
 ## Examples
 
-- [Simple VPC](https://github.com/terraform-aws-modules/terraform-aws-vpc/tree/master/examples/simple-vpc)
-- [Simple VPC with secondary CIDR blocks](https://github.com/terraform-aws-modules/terraform-aws-vpc/tree/master/examples/secondary-cidr-blocks)
-- [Complete VPC](https://github.com/terraform-aws-modules/terraform-aws-vpc/tree/master/examples/complete-vpc) with VPC Endpoints.
-- [VPC with IPv6 enabled](https://github.com/terraform-aws-modules/terraform-aws-vpc/tree/master/examples/ipv6)
-- [Network ACL](https://github.com/terraform-aws-modules/terraform-aws-vpc/tree/master/examples/network-acls)
-- [VPC Flow Logs](https://github.com/terraform-aws-modules/terraform-aws-vpc/tree/master/examples/vpc-flow-logs)
-- [VPC with Outpost](https://github.com/terraform-aws-modules/terraform-aws-vpc/tree/master/examples/outpost)
-- [VPC CIDR from IPAM](https://github.com/terraform-aws-modules/terraform-aws-vpc/tree/master/examples/ipam-vpc)
+- [Complete VPC](https://github.com/terraform-aws-modules/terraform-aws-vpc/tree/master/examples/complete) with VPC Endpoints.
+- [VPC using IPAM](https://github.com/terraform-aws-modules/terraform-aws-vpc/tree/master/examples/ipam)
+- [Dualstack IPv4/IPv6 VPC](https://github.com/terraform-aws-modules/terraform-aws-vpc/tree/master/examples/ipv6-dualstack)
 - [Manage Default VPC](https://github.com/terraform-aws-modules/terraform-aws-vpc/tree/master/examples/manage-default-vpc)
+- [Network ACL](https://github.com/terraform-aws-modules/terraform-aws-vpc/tree/master/examples/network-acls)
+- [VPC with Outpost](https://github.com/terraform-aws-modules/terraform-aws-vpc/tree/master/examples/outpost)
+- [VPC with secondary CIDR blocks](https://github.com/terraform-aws-modules/terraform-aws-vpc/tree/master/examples/secondary-cidr-blocks)
+- [VPC with unique route tables](https://github.com/terraform-aws-modules/terraform-aws-vpc/tree/master/examples/separate-route-tables)
+- [Simple VPC](https://github.com/terraform-aws-modules/terraform-aws-vpc/tree/master/examples/simple-vpc)
+- [VPC Flow Logs](https://github.com/terraform-aws-modules/terraform-aws-vpc/tree/master/examples/vpc-flow-logs)
 - [Few tests and edge case examples](https://github.com/terraform-aws-modules/terraform-aws-vpc/tree/master/examples/issues)
 
 ## Contributing

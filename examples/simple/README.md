@@ -1,6 +1,12 @@
-# VPC with IPv6 enabled
+# Simple VPC
 
-Configuration in this directory creates set of VPC resources with IPv6 enabled on VPC and subnets.
+Configuration in this directory creates set of VPC resources which may be sufficient for development environment.
+
+There is a public and private subnet created per availability zone in addition to single NAT Gateway shared between all 3 availability zones.
+
+This configuration uses Availability Zone IDs and Availability Zone names for demonstration purposes. Normally, you need to specify only names or IDs.
+
+[Read more about AWS regions, availability zones and local zones](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/using-regions-availability-zones.html#concepts-regions-availability-zones).
 
 ## Usage
 
@@ -24,17 +30,21 @@ Note that this example may create resources which can cost money (AWS Elastic IP
 
 ## Providers
 
-No providers.
+| Name | Version |
+|------|---------|
+| <a name="provider_aws"></a> [aws](#provider\_aws) | >= 4.35 |
 
 ## Modules
 
 | Name | Source | Version |
 |------|--------|---------|
-| <a name="module_vpc"></a> [vpc](#module\_vpc) | ../.. | n/a |
+| <a name="module_vpc"></a> [vpc](#module\_vpc) | ../../ | n/a |
 
 ## Resources
 
-No resources.
+| Name | Type |
+|------|------|
+| [aws_availability_zones.available](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/availability_zones) | data source |
 
 ## Inputs
 

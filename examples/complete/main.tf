@@ -2,9 +2,14 @@ provider "aws" {
   region = local.region
 }
 
+data "aws_availability_zones" "available" {}
+
 locals {
   name   = "ex-${basename(path.cwd)}"
   region = "eu-west-1"
+
+  vpc_cidr = "10.0.0.0/16"
+  azs      = slice(data.aws_availability_zones.available.names, 0, 3)
 
   tags = {
     Example    = local.name
@@ -21,15 +26,15 @@ module "vpc" {
   source = "../../"
 
   name = local.name
-  cidr = "10.0.0.0/16"
+  cidr = local.vpc_cidr
 
-  azs                 = ["${local.region}a", "${local.region}b", "${local.region}c"]
-  private_subnets     = ["10.0.1.0/24", "10.0.2.0/24", "10.0.3.0/24"]
-  public_subnets      = ["10.0.11.0/24", "10.0.12.0/24", "10.0.13.0/24"]
-  database_subnets    = ["10.0.21.0/24", "10.0.22.0/24", "10.0.23.0/24"]
-  elasticache_subnets = ["10.0.31.0/24", "10.0.32.0/24", "10.0.33.0/24"]
-  redshift_subnets    = ["10.0.41.0/24", "10.0.42.0/24", "10.0.43.0/24"]
-  intra_subnets       = ["10.0.51.0/24", "10.0.52.0/24", "10.0.53.0/24"]
+  azs                 = local.azs
+  private_subnets     = [for k, v in local.azs : cidrsubnet(local.vpc_cidr, 8, k)]
+  public_subnets      = [for k, v in local.azs : cidrsubnet(local.vpc_cidr, 8, k + 4)]
+  database_subnets    = [for k, v in local.azs : cidrsubnet(local.vpc_cidr, 8, k + 8)]
+  elasticache_subnets = [for k, v in local.azs : cidrsubnet(local.vpc_cidr, 8, k + 12)]
+  redshift_subnets    = [for k, v in local.azs : cidrsubnet(local.vpc_cidr, 8, k + 16)]
+  intra_subnets       = [for k, v in local.azs : cidrsubnet(local.vpc_cidr, 8, k + 20)]
 
   private_subnet_names = ["Private Subnet One", "Private Subnet Two"]
   # public_subnet_names omitted to show default name generation for all three subnets

@@ -2,9 +2,14 @@ provider "aws" {
   region = local.region
 }
 
+data "aws_availability_zones" "available" {}
+
 locals {
   name   = "ex-${basename(path.cwd)}"
   region = "eu-west-1"
+
+  vpc_cidr = "10.0.0.0/16"
+  azs      = slice(data.aws_availability_zones.available.names, 0, 3)
 
   tags = {
     Example    = local.name
@@ -20,13 +25,13 @@ locals {
 module "vpc" {
   source = "../.."
 
-  name = "ipv6"
-  cidr = "10.0.0.0/16"
+  name = local.name
+  cidr = local.vpc_cidr
 
-  azs              = ["${local.region}a", "${local.region}b"]
-  private_subnets  = ["10.0.1.0/24", "10.0.2.0/24"]
-  public_subnets   = ["10.0.101.0/24", "10.0.102.0/24"]
-  database_subnets = ["10.0.103.0/24", "10.0.104.0/24"]
+  azs              = local.azs
+  private_subnets  = [for k, v in local.azs : cidrsubnet(local.vpc_cidr, 8, k)]
+  public_subnets   = [for k, v in local.azs : cidrsubnet(local.vpc_cidr, 8, k + 4)]
+  database_subnets = [for k, v in local.azs : cidrsubnet(local.vpc_cidr, 8, k + 8)]
 
   enable_nat_gateway = false
 
@@ -34,11 +39,11 @@ module "vpc" {
   create_database_internet_gateway_route = true
 
   enable_ipv6                                   = true
-  public_subnet_assign_ipv6_address_on_creation = false
+  public_subnet_assign_ipv6_address_on_creation = true
 
-  public_subnet_ipv6_prefixes   = [0, 1]
-  private_subnet_ipv6_prefixes  = [2, 3]
-  database_subnet_ipv6_prefixes = [4, 5]
+  public_subnet_ipv6_prefixes   = [0, 1, 2]
+  private_subnet_ipv6_prefixes  = [3, 4, 5]
+  database_subnet_ipv6_prefixes = [6, 7, 8]
 
   tags = local.tags
 }

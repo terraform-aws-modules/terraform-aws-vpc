@@ -26,7 +26,9 @@ Note that this example may create resources which can cost money (AWS Elastic IP
 
 ## Providers
 
-No providers.
+| Name | Version |
+|------|---------|
+| <a name="provider_aws"></a> [aws](#provider\_aws) | >= 4.35 |
 
 ## Modules
 
@@ -36,7 +38,9 @@ No providers.
 
 ## Resources
 
-No resources.
+| Name | Type |
+|------|------|
+| [aws_availability_zones.available](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/availability_zones) | data source |
 
 ## Inputs
 
