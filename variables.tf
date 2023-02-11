@@ -166,16 +166,16 @@ variable "dhcp_options_tags" {
 # Publiс Subnets
 ################################################################################
 
-variable "public_subnet_assign_ipv6_address_on_creation" {
-  description = "Specify true to indicate that network interfaces created in the specified subnet should be assigned an IPv6 address. Default is `true`"
-  type        = bool
-  default     = true
-}
-
 variable "public_subnets" {
   description = "A list of public subnets inside the VPC"
   type        = list(string)
   default     = []
+}
+
+variable "public_subnet_assign_ipv6_address_on_creation" {
+  description = "Specify true to indicate that network interfaces created in the specified subnet should be assigned an IPv6 address. Default is `false`"
+  type        = bool
+  default     = false
 }
 
 variable "public_subnet_enable_dns64" {
@@ -300,16 +300,16 @@ variable "public_acl_tags" {
 # Private Subnets
 ################################################################################
 
-variable "private_subnet_assign_ipv6_address_on_creation" {
-  description = "Specify true to indicate that network interfaces created in the specified subnet should be assigned an IPv6 address. Default is `true`"
-  type        = bool
-  default     = true
-}
-
 variable "private_subnets" {
   description = "A list of private subnets inside the VPC"
   type        = list(string)
   default     = []
+}
+
+variable "private_subnet_assign_ipv6_address_on_creation" {
+  description = "Specify true to indicate that network interfaces created in the specified subnet should be assigned an IPv6 address. Default is `false`"
+  type        = bool
+  default     = false
 }
 
 variable "private_subnet_enable_dns64" {
@@ -428,16 +428,16 @@ variable "private_acl_tags" {
 # Database Subnets
 ################################################################################
 
-variable "database_subnet_assign_ipv6_address_on_creation" {
-  description = "Specify true to indicate that network interfaces created in the specified subnet should be assigned an IPv6 address. Default is `true`"
-  type        = bool
-  default     = true
-}
-
 variable "database_subnets" {
   description = "A list of database subnets inside the VPC"
   type        = list(string)
   default     = []
+}
+
+variable "database_subnet_assign_ipv6_address_on_creation" {
+  description = "Specify true to indicate that network interfaces created in the specified subnet should be assigned an IPv6 address. Default is `false`"
+  type        = bool
+  default     = false
 }
 
 variable "database_subnet_enable_dns64" {
@@ -586,16 +586,16 @@ variable "database_acl_tags" {
 # Redshift Subnets
 ################################################################################
 
-variable "redshift_subnet_assign_ipv6_address_on_creation" {
-  description = "Specify true to indicate that network interfaces created in the specified subnet should be assigned an IPv6 address. Default is `true`"
-  type        = bool
-  default     = true
-}
-
 variable "redshift_subnets" {
   description = "A list of redshift subnets inside the VPC"
   type        = list(string)
   default     = []
+}
+
+variable "redshift_subnet_assign_ipv6_address_on_creation" {
+  description = "Specify true to indicate that network interfaces created in the specified subnet should be assigned an IPv6 address. Default is `false`"
+  type        = bool
+  default     = false
 }
 
 variable "redshift_subnet_enable_dns64" {
@@ -738,16 +738,16 @@ variable "redshift_acl_tags" {
 # Elasticache Subnets
 ################################################################################
 
-variable "elasticache_subnet_assign_ipv6_address_on_creation" {
-  description = "Specify true to indicate that network interfaces created in the specified subnet should be assigned an IPv6 address. Default is `true`"
-  type        = bool
-  default     = true
-}
-
 variable "elasticache_subnets" {
   description = "A list of elasticache subnets inside the VPC"
   type        = list(string)
   default     = []
+}
+
+variable "elasticache_subnet_assign_ipv6_address_on_creation" {
+  description = "Specify true to indicate that network interfaces created in the specified subnet should be assigned an IPv6 address. Default is `false`"
+  type        = bool
+  default     = false
 }
 
 variable "elasticache_subnet_enable_dns64" {
@@ -884,16 +884,16 @@ variable "elasticache_acl_tags" {
 # Intra Subnets
 ################################################################################
 
-variable "intra_subnet_assign_ipv6_address_on_creation" {
-  description = "Specify true to indicate that network interfaces created in the specified subnet should be assigned an IPv6 address. Default is `true`"
-  type        = bool
-  default     = true
-}
-
 variable "intra_subnets" {
   description = "A list of intra subnets inside the VPC"
   type        = list(string)
   default     = []
+}
+
+variable "intra_subnet_assign_ipv6_address_on_creation" {
+  description = "Specify true to indicate that network interfaces created in the specified subnet should be assigned an IPv6 address. Default is `false`"
+  type        = bool
+  default     = false
 }
 
 variable "intra_subnet_enable_dns64" {
@@ -1013,9 +1013,9 @@ variable "outpost_subnets" {
 }
 
 variable "outpost_subnet_assign_ipv6_address_on_creation" {
-  description = "Specify true to indicate that network interfaces created in the specified subnet should be assigned an IPv6 address. Default is `true`"
+  description = "Specify true to indicate that network interfaces created in the specified subnet should be assigned an IPv6 address. Default is `false`"
   type        = bool
-  default     = true
+  default     = false
 }
 
 variable "outpost_az" {
