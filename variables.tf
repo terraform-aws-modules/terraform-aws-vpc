@@ -29,7 +29,7 @@ variable "name" {
 variable "cidr" {
   description = "(Optional) The IPv4 CIDR block for the VPC. CIDR can be explicitly set or it can be derived from IPAM using `ipv4_netmask_length` & `ipv4_ipam_pool_id`"
   type        = string
-  default     = "0.0.0.0/0"
+  default     = "10.0.0.0/16"
 }
 
 variable "secondary_cidr_blocks" {
@@ -167,9 +167,9 @@ variable "dhcp_options_tags" {
 ################################################################################
 
 variable "public_subnet_assign_ipv6_address_on_creation" {
-  description = "Specify true to indicate that network interfaces created in the specified subnet should be assigned an IPv6 address. Default is `false`"
+  description = "Specify true to indicate that network interfaces created in the specified subnet should be assigned an IPv6 address. Default is `true`"
   type        = bool
-  default     = false
+  default     = true
 }
 
 variable "public_subnets" {
@@ -179,15 +179,15 @@ variable "public_subnets" {
 }
 
 variable "public_subnet_enable_dns64" {
-  description = "Indicates whether DNS queries made to the Amazon-provided DNS Resolver in this subnet should return synthetic IPv6 addresses for IPv4-only destinations. Default: `false`"
+  description = "Indicates whether DNS queries made to the Amazon-provided DNS Resolver in this subnet should return synthetic IPv6 addresses for IPv4-only destinations. Default: `true`"
   type        = bool
-  default     = false
+  default     = true
 }
 
 variable "public_subnet_enable_resource_name_dns_aaaa_record_on_launch" {
-  description = "Indicates whether to respond to DNS queries for instance hostnames with DNS AAAA records. Default: `false`"
+  description = "Indicates whether to respond to DNS queries for instance hostnames with DNS AAAA records. Default: `true`"
   type        = bool
-  default     = false
+  default     = true
 }
 
 variable "public_subnet_enable_resource_name_dns_a_record_on_launch" {
@@ -301,9 +301,9 @@ variable "public_acl_tags" {
 ################################################################################
 
 variable "private_subnet_assign_ipv6_address_on_creation" {
-  description = "Specify true to indicate that network interfaces created in the specified subnet should be assigned an IPv6 address. Default is `false`"
+  description = "Specify true to indicate that network interfaces created in the specified subnet should be assigned an IPv6 address. Default is `true`"
   type        = bool
-  default     = false
+  default     = true
 }
 
 variable "private_subnets" {
@@ -313,15 +313,15 @@ variable "private_subnets" {
 }
 
 variable "private_subnet_enable_dns64" {
-  description = "Indicates whether DNS queries made to the Amazon-provided DNS Resolver in this subnet should return synthetic IPv6 addresses for IPv4-only destinations. Default: `false`"
+  description = "Indicates whether DNS queries made to the Amazon-provided DNS Resolver in this subnet should return synthetic IPv6 addresses for IPv4-only destinations. Default: `true`"
   type        = bool
-  default     = false
+  default     = true
 }
 
 variable "private_subnet_enable_resource_name_dns_aaaa_record_on_launch" {
-  description = "Indicates whether to respond to DNS queries for instance hostnames with DNS AAAA records. Default: `false`"
+  description = "Indicates whether to respond to DNS queries for instance hostnames with DNS AAAA records. Default: `true`"
   type        = bool
-  default     = false
+  default     = true
 }
 
 variable "private_subnet_enable_resource_name_dns_a_record_on_launch" {
@@ -429,9 +429,9 @@ variable "private_acl_tags" {
 ################################################################################
 
 variable "database_subnet_assign_ipv6_address_on_creation" {
-  description = "Specify true to indicate that network interfaces created in the specified subnet should be assigned an IPv6 address. Default is `false`"
+  description = "Specify true to indicate that network interfaces created in the specified subnet should be assigned an IPv6 address. Default is `true`"
   type        = bool
-  default     = false
+  default     = true
 }
 
 variable "database_subnets" {
@@ -441,15 +441,15 @@ variable "database_subnets" {
 }
 
 variable "database_subnet_enable_dns64" {
-  description = "Indicates whether DNS queries made to the Amazon-provided DNS Resolver in this subnet should return synthetic IPv6 addresses for IPv4-only destinations. Default: `false`"
+  description = "Indicates whether DNS queries made to the Amazon-provided DNS Resolver in this subnet should return synthetic IPv6 addresses for IPv4-only destinations. Default: `true`"
   type        = bool
-  default     = false
+  default     = true
 }
 
 variable "database_subnet_enable_resource_name_dns_aaaa_record_on_launch" {
-  description = "Indicates whether to respond to DNS queries for instance hostnames with DNS AAAA records. Default: `false`"
+  description = "Indicates whether to respond to DNS queries for instance hostnames with DNS AAAA records. Default: `true`"
   type        = bool
-  default     = false
+  default     = true
 }
 
 variable "database_subnet_enable_resource_name_dns_a_record_on_launch" {
@@ -587,9 +587,9 @@ variable "database_acl_tags" {
 ################################################################################
 
 variable "redshift_subnet_assign_ipv6_address_on_creation" {
-  description = "Specify true to indicate that network interfaces created in the specified subnet should be assigned an IPv6 address. Default is `false`"
+  description = "Specify true to indicate that network interfaces created in the specified subnet should be assigned an IPv6 address. Default is `true`"
   type        = bool
-  default     = false
+  default     = true
 }
 
 variable "redshift_subnets" {
@@ -599,15 +599,15 @@ variable "redshift_subnets" {
 }
 
 variable "redshift_subnet_enable_dns64" {
-  description = "Indicates whether DNS queries made to the Amazon-provided DNS Resolver in this subnet should return synthetic IPv6 addresses for IPv4-only destinations. Default: `false`"
+  description = "Indicates whether DNS queries made to the Amazon-provided DNS Resolver in this subnet should return synthetic IPv6 addresses for IPv4-only destinations. Default: `true`"
   type        = bool
-  default     = false
+  default     = true
 }
 
 variable "redshift_subnet_enable_resource_name_dns_aaaa_record_on_launch" {
-  description = "Indicates whether to respond to DNS queries for instance hostnames with DNS AAAA records. Default: `false`"
+  description = "Indicates whether to respond to DNS queries for instance hostnames with DNS AAAA records. Default: `true`"
   type        = bool
-  default     = false
+  default     = true
 }
 
 variable "redshift_subnet_enable_resource_name_dns_a_record_on_launch" {
@@ -739,9 +739,9 @@ variable "redshift_acl_tags" {
 ################################################################################
 
 variable "elasticache_subnet_assign_ipv6_address_on_creation" {
-  description = "Specify true to indicate that network interfaces created in the specified subnet should be assigned an IPv6 address. Default is `false`"
+  description = "Specify true to indicate that network interfaces created in the specified subnet should be assigned an IPv6 address. Default is `true`"
   type        = bool
-  default     = false
+  default     = true
 }
 
 variable "elasticache_subnets" {
@@ -751,15 +751,15 @@ variable "elasticache_subnets" {
 }
 
 variable "elasticache_subnet_enable_dns64" {
-  description = "Indicates whether DNS queries made to the Amazon-provided DNS Resolver in this subnet should return synthetic IPv6 addresses for IPv4-only destinations. Default: `false`"
+  description = "Indicates whether DNS queries made to the Amazon-provided DNS Resolver in this subnet should return synthetic IPv6 addresses for IPv4-only destinations. Default: `true`"
   type        = bool
-  default     = false
+  default     = true
 }
 
 variable "elasticache_subnet_enable_resource_name_dns_aaaa_record_on_launch" {
-  description = "Indicates whether to respond to DNS queries for instance hostnames with DNS AAAA records. Default: `false`"
+  description = "Indicates whether to respond to DNS queries for instance hostnames with DNS AAAA records. Default: `true`"
   type        = bool
-  default     = false
+  default     = true
 }
 
 variable "elasticache_subnet_enable_resource_name_dns_a_record_on_launch" {
@@ -885,9 +885,9 @@ variable "elasticache_acl_tags" {
 ################################################################################
 
 variable "intra_subnet_assign_ipv6_address_on_creation" {
-  description = "Specify true to indicate that network interfaces created in the specified subnet should be assigned an IPv6 address. Default is `false`"
+  description = "Specify true to indicate that network interfaces created in the specified subnet should be assigned an IPv6 address. Default is `true`"
   type        = bool
-  default     = false
+  default     = true
 }
 
 variable "intra_subnets" {
@@ -897,15 +897,15 @@ variable "intra_subnets" {
 }
 
 variable "intra_subnet_enable_dns64" {
-  description = "Indicates whether DNS queries made to the Amazon-provided DNS Resolver in this subnet should return synthetic IPv6 addresses for IPv4-only destinations. Default: `false`"
+  description = "Indicates whether DNS queries made to the Amazon-provided DNS Resolver in this subnet should return synthetic IPv6 addresses for IPv4-only destinations. Default: `true`"
   type        = bool
-  default     = false
+  default     = true
 }
 
 variable "intra_subnet_enable_resource_name_dns_aaaa_record_on_launch" {
-  description = "Indicates whether to respond to DNS queries for instance hostnames with DNS AAAA records. Default: `false`"
+  description = "Indicates whether to respond to DNS queries for instance hostnames with DNS AAAA records. Default: `true`"
   type        = bool
-  default     = false
+  default     = true
 }
 
 variable "intra_subnet_enable_resource_name_dns_a_record_on_launch" {
@@ -1013,9 +1013,9 @@ variable "outpost_subnets" {
 }
 
 variable "outpost_subnet_assign_ipv6_address_on_creation" {
-  description = "Specify true to indicate that network interfaces created in the specified subnet should be assigned an IPv6 address. Default is `false`"
+  description = "Specify true to indicate that network interfaces created in the specified subnet should be assigned an IPv6 address. Default is `true`"
   type        = bool
-  default     = false
+  default     = true
 }
 
 variable "outpost_az" {
@@ -1031,15 +1031,15 @@ variable "customer_owned_ipv4_pool" {
 }
 
 variable "outpost_subnet_enable_dns64" {
-  description = "Indicates whether DNS queries made to the Amazon-provided DNS Resolver in this subnet should return synthetic IPv6 addresses for IPv4-only destinations. Default: `false`"
+  description = "Indicates whether DNS queries made to the Amazon-provided DNS Resolver in this subnet should return synthetic IPv6 addresses for IPv4-only destinations. Default: `true`"
   type        = bool
-  default     = false
+  default     = true
 }
 
 variable "outpost_subnet_enable_resource_name_dns_aaaa_record_on_launch" {
-  description = "Indicates whether to respond to DNS queries for instance hostnames with DNS AAAA records. Default: `false`"
+  description = "Indicates whether to respond to DNS queries for instance hostnames with DNS AAAA records. Default: `true`"
   type        = bool
-  default     = false
+  default     = true
 }
 
 variable "outpost_subnet_enable_resource_name_dns_a_record_on_launch" {
