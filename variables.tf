@@ -1,15 +1,3 @@
-variable "enable_ipv6" {
-  description = "Requests an Amazon-provided IPv6 CIDR block with a /56 prefix length for the VPC. You cannot specify the range of IP addresses, or the size of the CIDR block"
-  type        = bool
-  default     = false
-}
-
-variable "tags" {
-  description = "A map of tags to add to all resources"
-  type        = map(string)
-  default     = {}
-}
-
 ################################################################################
 # VPC
 ################################################################################
@@ -86,6 +74,12 @@ variable "ipv4_netmask_length" {
   default     = null
 }
 
+variable "enable_ipv6" {
+  description = "Requests an Amazon-provided IPv6 CIDR block with a /56 prefix length for the VPC. You cannot specify the range of IP addresses, or the size of the CIDR block"
+  type        = bool
+  default     = false
+}
+
 variable "ipv6_cidr" {
   description = "(Optional) IPv6 CIDR block to request from an IPAM Pool. Can be set explicitly or derived from IPAM using `ipv6_netmask_length`"
   type        = string
@@ -112,6 +106,12 @@ variable "ipv6_cidr_block_network_border_group" {
 
 variable "vpc_tags" {
   description = "Additional tags for the VPC"
+  type        = map(string)
+  default     = {}
+}
+
+variable "tags" {
+  description = "A map of tags to add to all resources"
   type        = map(string)
   default     = {}
 }

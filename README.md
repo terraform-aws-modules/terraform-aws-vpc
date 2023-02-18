@@ -240,7 +240,7 @@ module "vpc_cidr_from_ipam" {
 - [VPC with Outpost](https://github.com/terraform-aws-modules/terraform-aws-vpc/tree/master/examples/outpost)
 - [VPC with secondary CIDR blocks](https://github.com/terraform-aws-modules/terraform-aws-vpc/tree/master/examples/secondary-cidr-blocks)
 - [VPC with unique route tables](https://github.com/terraform-aws-modules/terraform-aws-vpc/tree/master/examples/separate-route-tables)
-- [Simple VPC](https://github.com/terraform-aws-modules/terraform-aws-vpc/tree/master/examples/simple-vpc)
+- [Simple VPC](https://github.com/terraform-aws-modules/terraform-aws-vpc/tree/master/examples/simple)
 - [VPC Flow Logs](https://github.com/terraform-aws-modules/terraform-aws-vpc/tree/master/examples/vpc-flow-logs)
 - [Few tests and edge case examples](https://github.com/terraform-aws-modules/terraform-aws-vpc/tree/master/examples/issues)
 

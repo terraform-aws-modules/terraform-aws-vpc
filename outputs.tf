@@ -1,7 +1,7 @@
 locals {
-  redshift_route_table_ids = [for tbl in aws_route_table.redshift : tbl.id]
-  public_route_table_ids   = [for tbl in aws_route_table.public : tbl.id]
-  private_route_table_ids  = [for tbl in aws_route_table.private : tbl.id]
+  redshift_route_table_ids = aws_route_table.redshift[*].id
+  public_route_table_ids   = aws_route_table.public[*].id
+  private_route_table_ids  = aws_route_table.private[*].id
 }
 
 ################################################################################
@@ -70,7 +70,7 @@ output "vpc_ipv6_cidr_block" {
 
 output "vpc_secondary_cidr_blocks" {
   description = "List of secondary CIDR blocks of the VPC"
-  value       = compact([for assoc in aws_vpc_ipv4_cidr_block_association.this : assoc.cidr_block])
+  value       = compact(aws_vpc_ipv4_cidr_block_association.this[*].cidr_block)
 }
 
 output "vpc_owner_id" {
@@ -107,22 +107,22 @@ output "igw_arn" {
 
 output "public_subnets" {
   description = "List of IDs of public subnets"
-  value       = [for net in aws_subnet.public : net.id]
+  value       = aws_subnet.public[*].id
 }
 
 output "public_subnet_arns" {
   description = "List of ARNs of public subnets"
-  value       = [for net in aws_subnet.public : net.arn]
+  value       = aws_subnet.public[*].arn
 }
 
 output "public_subnets_cidr_blocks" {
   description = "List of cidr_blocks of public subnets"
-  value       = compact([for net in aws_subnet.public : net.cidr_block])
+  value       = compact(aws_subnet.public[*].cidr_block)
 }
 
 output "public_subnets_ipv6_cidr_blocks" {
   description = "List of IPv6 cidr_blocks of public subnets in an IPv6 enabled VPC"
-  value       = compact([for net in aws_subnet.public : net.ipv6_cidr_block])
+  value       = compact(aws_subnet.public[*].ipv6_cidr_block)
 }
 
 output "public_route_table_ids" {
@@ -142,7 +142,7 @@ output "public_internet_gateway_ipv6_route_id" {
 
 output "public_route_table_association_ids" {
   description = "List of IDs of the public route table association"
-  value       = [for assoc in aws_route_table_association.public : assoc.id]
+  value       = aws_route_table_association.public[*].id
 }
 
 output "public_network_acl_id" {
@@ -161,22 +161,22 @@ output "public_network_acl_arn" {
 
 output "private_subnets" {
   description = "List of IDs of private subnets"
-  value       = [for net in aws_subnet.private : net.id]
+  value       = aws_subnet.private[*].id
 }
 
 output "private_subnet_arns" {
   description = "List of ARNs of private subnets"
-  value       = [for net in aws_subnet.private : net.arn]
+  value       = aws_subnet.private[*].arn
 }
 
 output "private_subnets_cidr_blocks" {
   description = "List of cidr_blocks of private subnets"
-  value       = compact([for net in aws_subnet.private : net.cidr_block])
+  value       = compact(aws_subnet.private[*].cidr_block)
 }
 
 output "private_subnets_ipv6_cidr_blocks" {
   description = "List of IPv6 cidr_blocks of private subnets in an IPv6 enabled VPC"
-  value       = compact([for net in aws_subnet.private : net.ipv6_cidr_block])
+  value       = compact(aws_subnet.private[*].ipv6_cidr_block)
 }
 
 output "private_route_table_ids" {
@@ -186,17 +186,17 @@ output "private_route_table_ids" {
 
 output "private_nat_gateway_route_ids" {
   description = "List of IDs of the private nat gateway route"
-  value       = [for route in aws_route.private_nat_gateway : route.id]
+  value       = aws_route.private_nat_gateway[*].id
 }
 
 output "private_ipv6_egress_route_ids" {
   description = "List of IDs of the ipv6 egress route"
-  value       = [for route in aws_route.private_ipv6_egress : route.id]
+  value       = aws_route.private_ipv6_egress[*].id
 }
 
 output "private_route_table_association_ids" {
   description = "List of IDs of the private route table association"
-  value       = [for assoc in aws_route_table_association.private : assoc.id]
+  value       = aws_route_table_association.private[*].id
 }
 
 output "private_network_acl_id" {
@@ -215,22 +215,22 @@ output "private_network_acl_arn" {
 
 output "outpost_subnets" {
   description = "List of IDs of outpost subnets"
-  value       = [for net in aws_subnet.outpost : net.id]
+  value       = aws_subnet.outpost[*].id
 }
 
 output "outpost_subnet_arns" {
   description = "List of ARNs of outpost subnets"
-  value       = [for net in aws_subnet.outpost : net.arn]
+  value       = aws_subnet.outpost[*].arn
 }
 
 output "outpost_subnets_cidr_blocks" {
   description = "List of cidr_blocks of outpost subnets"
-  value       = compact([for net in aws_subnet.outpost : net.cidr_block])
+  value       = compact(aws_subnet.outpost[*].cidr_block)
 }
 
 output "outpost_subnets_ipv6_cidr_blocks" {
   description = "List of IPv6 cidr_blocks of outpost subnets in an IPv6 enabled VPC"
-  value       = compact([for net in aws_subnet.outpost : net.ipv6_cidr_block])
+  value       = compact(aws_subnet.outpost[*].ipv6_cidr_block)
 }
 
 output "outpost_network_acl_id" {
@@ -249,22 +249,22 @@ output "outpost_network_acl_arn" {
 
 output "database_subnets" {
   description = "List of IDs of database subnets"
-  value       = [for net in aws_subnet.database : net.id]
+  value       = aws_subnet.database[*].id
 }
 
 output "database_subnet_arns" {
   description = "List of ARNs of database subnets"
-  value       = [for net in aws_subnet.database : net.arn]
+  value       = aws_subnet.database[*].arn
 }
 
 output "database_subnets_cidr_blocks" {
   description = "List of cidr_blocks of database subnets"
-  value       = compact([for net in aws_subnet.database : net.cidr_block])
+  value       = compact(aws_subnet.database[*].cidr_block)
 }
 
 output "database_subnets_ipv6_cidr_blocks" {
   description = "List of IPv6 cidr_blocks of database subnets in an IPv6 enabled VPC"
-  value       = compact([for net in aws_subnet.database : net.ipv6_cidr_block])
+  value       = compact(aws_subnet.database[*].ipv6_cidr_block)
 }
 
 output "database_subnet_group" {
@@ -279,7 +279,7 @@ output "database_subnet_group_name" {
 
 output "database_route_table_ids" {
   description = "List of IDs of database route tables"
-  value       = try(coalescelist([for tbl in aws_route_table.database : tbl.id], local.private_route_table_ids), [])
+  value       = try(coalescelist(aws_route_table.database[*].id, local.private_route_table_ids), [])
 }
 
 output "database_internet_gateway_route_id" {
@@ -289,7 +289,7 @@ output "database_internet_gateway_route_id" {
 
 output "database_nat_gateway_route_ids" {
   description = "List of IDs of the database nat gateway route"
-  value       = [for route in aws_route.database_nat_gateway : route.id]
+  value       = aws_route.database_nat_gateway[*].id
 }
 
 output "database_ipv6_egress_route_id" {
@@ -299,7 +299,7 @@ output "database_ipv6_egress_route_id" {
 
 output "database_route_table_association_ids" {
   description = "List of IDs of the database route table association"
-  value       = [for assoc in aws_route_table_association.database : assoc.id]
+  value       = aws_route_table_association.database[*].id
 }
 
 output "database_network_acl_id" {
@@ -318,22 +318,22 @@ output "database_network_acl_arn" {
 
 output "redshift_subnets" {
   description = "List of IDs of redshift subnets"
-  value       = [for net in aws_subnet.redshift : net.id]
+  value       = aws_subnet.redshift[*].id
 }
 
 output "redshift_subnet_arns" {
   description = "List of ARNs of redshift subnets"
-  value       = [for net in aws_subnet.redshift : net.arn]
+  value       = aws_subnet.redshift[*].arn
 }
 
 output "redshift_subnets_cidr_blocks" {
   description = "List of cidr_blocks of redshift subnets"
-  value       = compact([for net in aws_subnet.redshift : net.cidr_block])
+  value       = compact(aws_subnet.redshift[*].cidr_block)
 }
 
 output "redshift_subnets_ipv6_cidr_blocks" {
   description = "List of IPv6 cidr_blocks of redshift subnets in an IPv6 enabled VPC"
-  value       = compact([for net in aws_subnet.redshift : net.ipv6_cidr_block])
+  value       = compact(aws_subnet.redshift[*].ipv6_cidr_block)
 }
 
 output "redshift_subnet_group" {
@@ -348,12 +348,12 @@ output "redshift_route_table_ids" {
 
 output "redshift_route_table_association_ids" {
   description = "List of IDs of the redshift route table association"
-  value       = [for assoc in aws_route_table_association.redshift : assoc.id]
+  value       = aws_route_table_association.redshift[*].id
 }
 
 output "redshift_public_route_table_association_ids" {
   description = "List of IDs of the public redshift route table association"
-  value       = [for assoc in aws_route_table_association.redshift_public : assoc.id]
+  value       = aws_route_table_association.redshift_public[*].id
 }
 
 output "redshift_network_acl_id" {
@@ -372,22 +372,22 @@ output "redshift_network_acl_arn" {
 
 output "elasticache_subnets" {
   description = "List of IDs of elasticache subnets"
-  value       = [for net in aws_subnet.elasticache : net.id]
+  value       = aws_subnet.elasticache[*].id
 }
 
 output "elasticache_subnet_arns" {
   description = "List of ARNs of elasticache subnets"
-  value       = [for net in aws_subnet.elasticache : net.arn]
+  value       = aws_subnet.elasticache[*].arn
 }
 
 output "elasticache_subnets_cidr_blocks" {
   description = "List of cidr_blocks of elasticache subnets"
-  value       = compact([for net in aws_subnet.elasticache : net.cidr_block])
+  value       = compact(aws_subnet.elasticache[*].cidr_block)
 }
 
 output "elasticache_subnets_ipv6_cidr_blocks" {
   description = "List of IPv6 cidr_blocks of elasticache subnets in an IPv6 enabled VPC"
-  value       = compact([for net in aws_subnet.elasticache : net.ipv6_cidr_block])
+  value       = compact(aws_subnet.elasticache[*].ipv6_cidr_block)
 }
 
 output "elasticache_subnet_group" {
@@ -402,12 +402,12 @@ output "elasticache_subnet_group_name" {
 
 output "elasticache_route_table_ids" {
   description = "List of IDs of elasticache route tables"
-  value       = try(coalescelist([for tbl in aws_route_table.elasticache : tbl.id], local.private_route_table_ids), [])
+  value       = try(coalescelist(aws_route_table.elasticache[*].id, local.private_route_table_ids), [])
 }
 
 output "elasticache_route_table_association_ids" {
   description = "List of IDs of the elasticache route table association"
-  value       = [for assoc in aws_route_table_association.elasticache : assoc.id]
+  value       = aws_route_table_association.elasticache[*].id
 }
 
 output "elasticache_network_acl_id" {
@@ -426,32 +426,32 @@ output "elasticache_network_acl_arn" {
 
 output "intra_subnets" {
   description = "List of IDs of intra subnets"
-  value       = [for net in aws_subnet.intra : net.id]
+  value       = aws_subnet.intra[*].id
 }
 
 output "intra_subnet_arns" {
   description = "List of ARNs of intra subnets"
-  value       = [for net in aws_subnet.intra : net.arn]
+  value       = aws_subnet.intra[*].arn
 }
 
 output "intra_subnets_cidr_blocks" {
   description = "List of cidr_blocks of intra subnets"
-  value       = compact([for net in aws_subnet.intra : net.cidr_block])
+  value       = compact(aws_subnet.intra[*].cidr_block)
 }
 
 output "intra_subnets_ipv6_cidr_blocks" {
   description = "List of IPv6 cidr_blocks of intra subnets in an IPv6 enabled VPC"
-  value       = compact([for net in aws_subnet.intra : net.ipv6_cidr_block])
+  value       = compact(aws_subnet.intra[*].ipv6_cidr_block)
 }
 
 output "intra_route_table_ids" {
   description = "List of IDs of intra route tables"
-  value       = [for tbl in aws_route_table.intra : tbl.id]
+  value       = aws_route_table.intra[*].id
 }
 
 output "intra_route_table_association_ids" {
   description = "List of IDs of the intra route table association"
-  value       = [for assoc in aws_route_table_association.intra : assoc.id]
+  value       = aws_route_table_association.intra[*].id
 }
 
 output "intra_network_acl_id" {
@@ -470,17 +470,17 @@ output "intra_network_acl_arn" {
 
 output "nat_ids" {
   description = "List of allocation ID of Elastic IPs created for AWS NAT Gateway"
-  value       = [for eip in aws_eip.nat : eip.id]
+  value       = aws_eip.nat[*].id
 }
 
 output "nat_public_ips" {
   description = "List of public Elastic IPs created for AWS NAT Gateway"
-  value       = var.reuse_nat_ips ? var.external_nat_ips : [for eip in aws_eip.nat : eip.public_ip]
+  value       = var.reuse_nat_ips ? var.external_nat_ips : aws_eip.nat[*].public_ip
 }
 
 output "natgw_ids" {
   description = "List of NAT Gateway IDs"
-  value       = [for nat in aws_nat_gateway.this : nat.id]
+  value       = aws_nat_gateway.this[*].id
 }
 
 ################################################################################

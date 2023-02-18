@@ -96,7 +96,7 @@ locals {
 resource "aws_subnet" "public" {
   count = local.create_public_subnets && (!var.one_nat_gateway_per_az || local.len_public_subnets >= length(var.azs)) ? local.len_public_subnets : 0
 
-  assign_ipv6_address_on_creation                = var.public_subnet_ipv6_native ? true : var.public_subnet_assign_ipv6_address_on_creation
+  assign_ipv6_address_on_creation                = var.enable_ipv6 && var.public_subnet_ipv6_native ? true : var.public_subnet_assign_ipv6_address_on_creation
   availability_zone                              = length(regexall("^[a-z]{2}-", element(var.azs, count.index))) > 0 ? element(var.azs, count.index) : null
   availability_zone_id                           = length(regexall("^[a-z]{2}-", element(var.azs, count.index))) == 0 ? element(var.azs, count.index) : null
   cidr_block                                     = var.public_subnet_ipv6_native ? null : element(concat(var.public_subnets, [""]), count.index)
@@ -223,7 +223,7 @@ locals {
 resource "aws_subnet" "private" {
   count = local.create_private_subnets ? local.len_private_subnets : 0
 
-  assign_ipv6_address_on_creation                = var.private_subnet_ipv6_native ? true : var.private_subnet_assign_ipv6_address_on_creation
+  assign_ipv6_address_on_creation                = var.enable_ipv6 && var.private_subnet_ipv6_native ? true : var.private_subnet_assign_ipv6_address_on_creation
   availability_zone                              = length(regexall("^[a-z]{2}-", element(var.azs, count.index))) > 0 ? element(var.azs, count.index) : null
   availability_zone_id                           = length(regexall("^[a-z]{2}-", element(var.azs, count.index))) == 0 ? element(var.azs, count.index) : null
   cidr_block                                     = var.private_subnet_ipv6_native ? null : element(concat(var.private_subnets, [""]), count.index)
@@ -343,7 +343,7 @@ locals {
 resource "aws_subnet" "database" {
   count = local.create_database_subnets ? local.len_database_subnets : 0
 
-  assign_ipv6_address_on_creation                = var.database_subnet_ipv6_native ? true : var.database_subnet_assign_ipv6_address_on_creation
+  assign_ipv6_address_on_creation                = var.enable_ipv6 && var.database_subnet_ipv6_native ? true : var.database_subnet_assign_ipv6_address_on_creation
   availability_zone                              = length(regexall("^[a-z]{2}-", element(var.azs, count.index))) > 0 ? element(var.azs, count.index) : null
   availability_zone_id                           = length(regexall("^[a-z]{2}-", element(var.azs, count.index))) == 0 ? element(var.azs, count.index) : null
   cidr_block                                     = var.database_subnet_ipv6_native ? null : element(concat(var.database_subnets, [""]), count.index)
@@ -513,7 +513,7 @@ locals {
 resource "aws_subnet" "redshift" {
   count = local.create_redshift_subnets ? local.len_redshift_subnets : 0
 
-  assign_ipv6_address_on_creation                = var.redshift_subnet_ipv6_native ? true : var.redshift_subnet_assign_ipv6_address_on_creation
+  assign_ipv6_address_on_creation                = var.enable_ipv6 && var.redshift_subnet_ipv6_native ? true : var.redshift_subnet_assign_ipv6_address_on_creation
   availability_zone                              = length(regexall("^[a-z]{2}-", element(var.azs, count.index))) > 0 ? element(var.azs, count.index) : null
   availability_zone_id                           = length(regexall("^[a-z]{2}-", element(var.azs, count.index))) == 0 ? element(var.azs, count.index) : null
   cidr_block                                     = var.redshift_subnet_ipv6_native ? null : element(concat(var.redshift_subnets, [""]), count.index)
@@ -650,7 +650,7 @@ locals {
 resource "aws_subnet" "elasticache" {
   count = local.create_elasticache_subnets ? local.len_elasticache_subnets : 0
 
-  assign_ipv6_address_on_creation                = var.elasticache_subnet_ipv6_native ? true : var.elasticache_subnet_assign_ipv6_address_on_creation
+  assign_ipv6_address_on_creation                = var.enable_ipv6 && var.elasticache_subnet_ipv6_native ? true : var.elasticache_subnet_assign_ipv6_address_on_creation
   availability_zone                              = length(regexall("^[a-z]{2}-", element(var.azs, count.index))) > 0 ? element(var.azs, count.index) : null
   availability_zone_id                           = length(regexall("^[a-z]{2}-", element(var.azs, count.index))) == 0 ? element(var.azs, count.index) : null
   cidr_block                                     = var.elasticache_subnet_ipv6_native ? null : element(concat(var.elasticache_subnets, [""]), count.index)
@@ -779,7 +779,7 @@ locals {
 resource "aws_subnet" "intra" {
   count = local.create_intra_subnets ? local.len_intra_subnets : 0
 
-  assign_ipv6_address_on_creation                = var.intra_subnet_ipv6_native ? true : var.intra_subnet_assign_ipv6_address_on_creation
+  assign_ipv6_address_on_creation                = var.enable_ipv6 && var.intra_subnet_ipv6_native ? true : var.intra_subnet_assign_ipv6_address_on_creation
   availability_zone                              = length(regexall("^[a-z]{2}-", element(var.azs, count.index))) > 0 ? element(var.azs, count.index) : null
   availability_zone_id                           = length(regexall("^[a-z]{2}-", element(var.azs, count.index))) == 0 ? element(var.azs, count.index) : null
   cidr_block                                     = var.intra_subnet_ipv6_native ? null : element(concat(var.intra_subnets, [""]), count.index)
@@ -888,7 +888,7 @@ locals {
 resource "aws_subnet" "outpost" {
   count = local.create_outpost_subnets ? local.len_outpost_subnets : 0
 
-  assign_ipv6_address_on_creation                = var.outpost_subnet_ipv6_native ? true : var.outpost_subnet_assign_ipv6_address_on_creation
+  assign_ipv6_address_on_creation                = var.enable_ipv6 && var.outpost_subnet_ipv6_native ? true : var.outpost_subnet_assign_ipv6_address_on_creation
   availability_zone                              = var.outpost_az
   cidr_block                                     = var.outpost_subnet_ipv6_native ? null : element(concat(var.outpost_subnets, [""]), count.index)
   customer_owned_ipv4_pool                       = var.customer_owned_ipv4_pool
@@ -1231,7 +1231,7 @@ resource "aws_default_network_acl" "this" {
   default_network_acl_id = aws_vpc.this[0].default_network_acl_id
 
   # subnet_ids is using lifecycle ignore_changes, so it is not necessary to list
-  # any explicitly. See https://github.com/terraform-aws-modules/terraform-aws-vpc/issues/736.
+  # any explicitly. See https://github.com/terraform-aws-modules/terraform-aws-vpc/issues/736
   subnet_ids = null
 
   dynamic "ingress" {
