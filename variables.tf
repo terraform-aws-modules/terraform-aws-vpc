@@ -22,6 +22,12 @@ variable "enable_ipv6" {
   default     = false
 }
 
+variable "assign_generated_ipv6_cidr_block" {
+  description = "Requests an Amazon-provided IPv6 CIDR block with a /56 prefix length for the VPC."
+  type        = bool
+  default     = null
+}
+
 variable "private_subnet_ipv6_prefixes" {
   description = "Assigns IPv6 private subnet id based on the Amazon provided /56 prefix base 10 integer (0-256). Must be of equal length to the corresponding IPv4 subnet list"
   type        = list(string)
