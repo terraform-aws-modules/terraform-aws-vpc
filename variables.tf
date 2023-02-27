@@ -787,10 +787,22 @@ variable "public_dedicated_network_acl" {
   default     = false
 }
 
+variable "public_network_acl_excluded_subnets" {
+  description = "Exclude these public subnets from network ACL management (useful for testing availability zone failure)"
+  type        = list(string)
+  default     = []
+}
+
 variable "private_dedicated_network_acl" {
   description = "Whether to use dedicated network ACL (not default) and custom rules for private subnets"
   type        = bool
   default     = false
+}
+
+variable "private_network_acl_excluded_subnets" {
+  description = "Exclude these private subnets from network ACL management (useful for testing availability zone failure)"
+  type        = list(string)
+  default     = []
 }
 
 variable "outpost_dedicated_network_acl" {
@@ -799,10 +811,23 @@ variable "outpost_dedicated_network_acl" {
   default     = false
 }
 
+
+variable "outpost_network_acl_excluded_subnets" {
+  description = "Exclude these outpost subnets from network ACL management (useful for testing availability zone failure)"
+  type        = list(string)
+  default     = []
+}
+
 variable "intra_dedicated_network_acl" {
   description = "Whether to use dedicated network ACL (not default) and custom rules for intra subnets"
   type        = bool
   default     = false
+}
+
+variable "intra_network_acl_excluded_subnets" {
+  description = "Exclude these intra subnets from network ACL management (useful for testing availability zone failure)"
+  type        = list(string)
+  default     = []
 }
 
 variable "database_dedicated_network_acl" {
@@ -811,16 +836,34 @@ variable "database_dedicated_network_acl" {
   default     = false
 }
 
+variable "database_network_acl_excluded_subnets" {
+  description = "Exclude these database subnets from network ACL management (useful for testing availability zone failure)"
+  type        = list(string)
+  default     = []
+}
+
 variable "redshift_dedicated_network_acl" {
   description = "Whether to use dedicated network ACL (not default) and custom rules for redshift subnets"
   type        = bool
   default     = false
 }
 
+variable "redshift_network_acl_excluded_subnets" {
+  description = "Exclude these redshift subnets from network ACL management (useful for testing availability zone failure)"
+  type        = list(string)
+  default     = []
+}
+
 variable "elasticache_dedicated_network_acl" {
   description = "Whether to use dedicated network ACL (not default) and custom rules for elasticache subnets"
   type        = bool
   default     = false
+}
+
+variable "elasticache_network_acl_excluded_subnets" {
+  description = "Exclude these elasticache subnets from network ACL management (useful for testing availability zone failure)"
+  type        = list(string)
+  default     = []
 }
 
 variable "default_network_acl_ingress" {

@@ -650,7 +650,7 @@ resource "aws_network_acl" "public" {
   count = local.create_vpc && var.public_dedicated_network_acl && length(var.public_subnets) > 0 ? 1 : 0
 
   vpc_id     = local.vpc_id
-  subnet_ids = aws_subnet.public[*].id
+  subnet_ids = [for sid in aws_subnet.public[*].id : sid if !contains(var.public_network_acl_excluded_subnets, sid)]
 
   tags = merge(
     { "Name" = "${var.name}-${var.public_subnet_suffix}" },
@@ -701,7 +701,7 @@ resource "aws_network_acl" "private" {
   count = local.create_vpc && var.private_dedicated_network_acl && length(var.private_subnets) > 0 ? 1 : 0
 
   vpc_id     = local.vpc_id
-  subnet_ids = aws_subnet.private[*].id
+  subnet_ids = [for sid in aws_subnet.private[*].id : sid if !contains(var.private_network_acl_excluded_subnets, sid)]
 
   tags = merge(
     { "Name" = "${var.name}-${var.private_subnet_suffix}" },
@@ -752,7 +752,7 @@ resource "aws_network_acl" "outpost" {
   count = local.create_vpc && var.outpost_dedicated_network_acl && length(var.outpost_subnets) > 0 ? 1 : 0
 
   vpc_id     = local.vpc_id
-  subnet_ids = aws_subnet.outpost[*].id
+  subnet_ids = [for sid in aws_subnet.outpost[*].id : sid if !contains(var.outpost_network_acl_excluded_subnets, sid)]
 
   tags = merge(
     { "Name" = "${var.name}-${var.outpost_subnet_suffix}" },
@@ -803,7 +803,7 @@ resource "aws_network_acl" "intra" {
   count = local.create_vpc && var.intra_dedicated_network_acl && length(var.intra_subnets) > 0 ? 1 : 0
 
   vpc_id     = local.vpc_id
-  subnet_ids = aws_subnet.intra[*].id
+  subnet_ids = [for sid in aws_subnet.intra[*].id : sid if !contains(var.intra_network_acl_excluded_subnets, sid)]
 
   tags = merge(
     { "Name" = "${var.name}-${var.intra_subnet_suffix}" },
@@ -854,7 +854,7 @@ resource "aws_network_acl" "database" {
   count = local.create_vpc && var.database_dedicated_network_acl && length(var.database_subnets) > 0 ? 1 : 0
 
   vpc_id     = local.vpc_id
-  subnet_ids = aws_subnet.database[*].id
+  subnet_ids = [for sid in aws_subnet.database[*].id : sid if !contains(var.database_network_acl_excluded_subnets, sid)]
 
   tags = merge(
     { "Name" = "${var.name}-${var.database_subnet_suffix}" },
@@ -905,7 +905,7 @@ resource "aws_network_acl" "redshift" {
   count = local.create_vpc && var.redshift_dedicated_network_acl && length(var.redshift_subnets) > 0 ? 1 : 0
 
   vpc_id     = local.vpc_id
-  subnet_ids = aws_subnet.redshift[*].id
+  subnet_ids = [for sid in aws_subnet.redshift[*].id : sid if !contains(var.redshift_network_acl_excluded_subnets, sid)]
 
   tags = merge(
     { "Name" = "${var.name}-${var.redshift_subnet_suffix}" },
@@ -956,7 +956,7 @@ resource "aws_network_acl" "elasticache" {
   count = local.create_vpc && var.elasticache_dedicated_network_acl && length(var.elasticache_subnets) > 0 ? 1 : 0
 
   vpc_id     = local.vpc_id
-  subnet_ids = aws_subnet.elasticache[*].id
+  subnet_ids = [for sid in aws_subnet.elasticache[*].id : sid if !contains(var.elasticache_network_acl_excluded_subnets, sid)]
 
   tags = merge(
     { "Name" = "${var.name}-${var.elasticache_subnet_suffix}" },
