@@ -148,6 +148,12 @@ variable "private_subnet_names" {
   default     = []
 }
 
+variable "private_route_table_names" {
+  description = "Explicit values to use in the Name tag on private route tables. If empty, Name tags are generated."
+  type        = list(string)
+  default     = []
+}
+
 variable "outpost_subnet_names" {
   description = "Explicit values to use in the Name tag on outpost subnets. If empty, Name tags are generated."
   type        = list(string)
@@ -162,6 +168,12 @@ variable "intra_subnet_names" {
 
 variable "database_subnet_names" {
   description = "Explicit values to use in the Name tag on database subnets. If empty, Name tags are generated."
+  type        = list(string)
+  default     = []
+}
+
+variable "database_route_table_names" {
+  description = "Explicit values to use in the Name tag on database route tables. If empty, Name tags are generated."
   type        = list(string)
   default     = []
 }
@@ -492,6 +504,12 @@ variable "public_subnet_tags_per_az" {
   default     = {}
 }
 
+variable "public_subnet_tags_per_subnet" {
+  description = "Additional tags for the public subnets, if specified then must have a length equal to the number of public subnets"
+  type        = list(map(string))
+  default     = []
+}
+
 variable "private_subnet_tags" {
   description = "Additional tags for the private subnets"
   type        = map(string)
@@ -504,10 +522,22 @@ variable "private_subnet_tags_per_az" {
   default     = {}
 }
 
+variable "private_subnet_tags_per_subnet" {
+  description = "Additional tags for the private subnets, if specified then must have a length equal to the number of private subnets"
+  type        = list(map(string))
+  default     = []
+}
+
 variable "outpost_subnet_tags" {
   description = "Additional tags for the outpost subnets"
   type        = map(string)
   default     = {}
+}
+
+variable "outpost_subnet_tags_per_subnet" {
+  description = "Additional tags for the outpost subnets, if specified then must have a length equal to the number of outpost subnets"
+  type        = list(map(string))
+  default     = []
 }
 
 variable "public_route_table_tags" {
@@ -522,10 +552,22 @@ variable "private_route_table_tags" {
   default     = {}
 }
 
+variable "private_route_table_tags_per_subnet" {
+  description = "Additional tags for the private route tables, if specified then must have a length equal to the number of private subnets"
+  type        = list(map(string))
+  default     = []
+}
+
 variable "database_route_table_tags" {
   description = "Additional tags for the database route tables"
   type        = map(string)
   default     = {}
+}
+
+variable "database_route_table_tags_per_subnet" {
+  description = "Additional tags for the database route tables, if specified then must have a length equal to the number of database subnets"
+  type        = list(map(string))
+  default     = []
 }
 
 variable "redshift_route_table_tags" {
@@ -558,6 +600,12 @@ variable "database_subnet_tags" {
   default     = {}
 }
 
+variable "database_subnet_tags_per_subnet" {
+  description = "Additional tags for the database subnets, if specified then must have a length equal to the number of database subnets"
+  type        = list(map(string))
+  default     = []
+}
+
 variable "database_subnet_group_tags" {
   description = "Additional tags for the database subnet group"
   type        = map(string)
@@ -568,6 +616,12 @@ variable "redshift_subnet_tags" {
   description = "Additional tags for the redshift subnets"
   type        = map(string)
   default     = {}
+}
+
+variable "redshift_subnet_tags_per_subnet" {
+  description = "Additional tags for the redshift subnets, if specified then must have a length equal to the number of redshift subnets"
+  type        = list(map(string))
+  default     = []
 }
 
 variable "redshift_subnet_group_name" {
@@ -600,10 +654,22 @@ variable "elasticache_subnet_tags" {
   default     = {}
 }
 
+variable "elasticache_subnet_tags_per_subnet" {
+  description = "Additional tags for the elasticache subnets, if specified then must have a length equal to the number of elasticache subnets"
+  type        = list(map(string))
+  default     = []
+}
+
 variable "intra_subnet_tags" {
   description = "Additional tags for the intra subnets"
   type        = map(string)
   default     = {}
+}
+
+variable "intra_subnet_tags_per_subnet" {
+  description = "Additional tags for the intra subnets, if specified then must have a length equal to the number of intra subnets"
+  type        = list(map(string))
+  default     = []
 }
 
 variable "public_acl_tags" {
