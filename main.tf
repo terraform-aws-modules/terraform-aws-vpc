@@ -1,11 +1,13 @@
 locals {
   max_subnet_length = max(
     length(var.private_subnets),
+    length(var.vpc_private_subnets),
     length(var.elasticache_subnets),
     length(var.database_subnets),
     length(var.redshift_subnets),
   )
   nat_gateway_count = var.single_nat_gateway ? 1 : var.one_nat_gateway_per_az ? length(var.azs) : local.max_subnet_length
+  vpc_private_nat_gateway_count = var.single_vpc_private_nat_gateway ? 1 : var.one_vpc_private_nat_gateway_per_az ? length(var.azs) : local.max_subnet_length
 
   # Use `local.vpc_id` to give a hint to Terraform that subnets should be deleted before secondary CIDR blocks can be free!
   vpc_id = try(aws_vpc_ipv4_cidr_block_association.this[0].vpc_id, aws_vpc.this[0].id, "")
@@ -244,6 +246,28 @@ resource "aws_route_table" "private" {
     },
     var.tags,
     var.private_route_table_tags,
+  )
+}
+
+################################################################################
+# VPC Private routes
+# There are as many routing tables as the number of NAT gateways
+################################################################################
+
+resource "aws_route_table" "vpc_private" {
+  count = local.create_vpc && local.max_subnet_length > 0 ? local.vpc_private_nat_gateway_count : 0
+
+  vpc_id = local.vpc_id
+
+  tags = merge(
+    {
+      "Name" = var.single_vpc_private_nat_gateway ? "${var.name}-${var.vpc_private_subnet_suffix}" : format(
+        "${var.name}-${var.vpc_private_subnet_suffix}-%s",
+        element(var.azs, count.index),
+      )
+    },
+    var.tags,
+    var.vpc_private_route_table_tags,
   )
 }
 
@@ -590,6 +614,32 @@ resource "aws_subnet" "intra" {
 }
 
 ################################################################################
+# VPC Private subnets - Private Non-Routable subnets with private NAT gateway
+################################################################################
+
+resource "aws_subnet" "vpc_private" {
+  count = local.create_vpc && length(var.vpc_private_subnets) > 0 ? length(var.vpc_private_subnets) : 0
+
+  vpc_id                          = local.vpc_id
+  cidr_block                      = var.vpc_private_subnets[count.index]
+  availability_zone               = length(regexall("^[a-z]{2}-", element(var.azs, count.index))) > 0 ? element(var.azs, count.index) : null
+  availability_zone_id            = length(regexall("^[a-z]{2}-", element(var.azs, count.index))) == 0 ? element(var.azs, count.index) : null
+  assign_ipv6_address_on_creation = var.vpc_private_subnet_assign_ipv6_address_on_creation == null ? var.assign_ipv6_address_on_creation : var.vpc_private_subnet_assign_ipv6_address_on_creation
+
+  ipv6_cidr_block = var.enable_ipv6 && length(var.vpc_private_subnet_ipv6_prefixes) > 0 ? cidrsubnet(aws_vpc.this[0].ipv6_cidr_block, 8, var.vpc_private_subnet_ipv6_prefixes[count.index]) : null
+
+  tags = merge(
+    {
+      Name = try(
+        var.vpc_private_subnet_names[count.index],
+        format("${var.name}-${var.vpc_private_subnet_suffix}-%s", element(var.azs, count.index))
+      )
+    },
+    var.tags,
+    var.vpc_private_subnet_tags,
+  )
+}
+################################################################################
 # Default Network ACLs
 ################################################################################
 
@@ -795,6 +845,56 @@ resource "aws_network_acl_rule" "outpost_outbound" {
   ipv6_cidr_block = lookup(var.outpost_outbound_acl_rules[count.index], "ipv6_cidr_block", null)
 }
 
+################################################################################
+# VPC Private Network ACLs
+################################################################################
+
+resource "aws_network_acl" "vpc_private" {
+  count = local.create_vpc && var.vpc_private_dedicated_network_acl && length(var.vpc_private_subnets) > 0 ? 1 : 0
+
+  vpc_id     = local.vpc_id
+  subnet_ids = aws_subnet.vpc_private[*].id
+
+  tags = merge(
+    { "Name" = "${var.name}-${var.vpc_private_subnet_suffix}" },
+    var.tags,
+    var.vpc_private_acl_tags,
+  )
+}
+
+resource "aws_network_acl_rule" "vpc_private_inbound" {
+  count = local.create_vpc && var.vpc_private_dedicated_network_acl && length(var.vpc_private_subnets) > 0 ? length(var.vpc_private_inbound_acl_rules) : 0
+
+  network_acl_id = aws_network_acl.vpc_private[0].id
+
+  egress          = false
+  rule_number     = var.vpc_private_inbound_acl_rules[count.index]["rule_number"]
+  rule_action     = var.vpc_private_inbound_acl_rules[count.index]["rule_action"]
+  from_port       = lookup(var.vpc_private_inbound_acl_rules[count.index], "from_port", null)
+  to_port         = lookup(var.vpc_private_inbound_acl_rules[count.index], "to_port", null)
+  icmp_code       = lookup(var.vpc_private_inbound_acl_rules[count.index], "icmp_code", null)
+  icmp_type       = lookup(var.vpc_private_inbound_acl_rules[count.index], "icmp_type", null)
+  protocol        = var.vpc_private_inbound_acl_rules[count.index]["protocol"]
+  cidr_block      = lookup(var.vpc_private_inbound_acl_rules[count.index], "cidr_block", null)
+  ipv6_cidr_block = lookup(var.vpc_private_inbound_acl_rules[count.index], "ipv6_cidr_block", null)
+}
+
+resource "aws_network_acl_rule" "vpc_private_outbound" {
+  count = local.create_vpc && var.vpc_private_dedicated_network_acl && length(var.vpc_private_subnets) > 0 ? length(var.vpc_private_outbound_acl_rules) : 0
+
+  network_acl_id = aws_network_acl.vpc_private[0].id
+
+  egress          = true
+  rule_number     = var.vpc_private_outbound_acl_rules[count.index]["rule_number"]
+  rule_action     = var.vpc_private_outbound_acl_rules[count.index]["rule_action"]
+  from_port       = lookup(var.vpc_private_outbound_acl_rules[count.index], "from_port", null)
+  to_port         = lookup(var.vpc_private_outbound_acl_rules[count.index], "to_port", null)
+  icmp_code       = lookup(var.vpc_private_outbound_acl_rules[count.index], "icmp_code", null)
+  icmp_type       = lookup(var.vpc_private_outbound_acl_rules[count.index], "icmp_type", null)
+  protocol        = var.vpc_private_outbound_acl_rules[count.index]["protocol"]
+  cidr_block      = lookup(var.vpc_private_outbound_acl_rules[count.index], "cidr_block", null)
+  ipv6_cidr_block = lookup(var.vpc_private_outbound_acl_rules[count.index], "ipv6_cidr_block", null)
+}
 ################################################################################
 # Intra Network ACLs
 ################################################################################
@@ -1068,6 +1168,45 @@ resource "aws_route" "private_ipv6_egress" {
   route_table_id              = element(aws_route_table.private[*].id, count.index)
   destination_ipv6_cidr_block = "::/0"
   egress_only_gateway_id      = element(aws_egress_only_internet_gateway.this[*].id, 0)
+}
+
+################################################################################
+# VPC Private NAT Gateway
+################################################################################
+
+resource "aws_nat_gateway" "vpc_private" {
+  count = local.create_vpc && var.enable_vpc_private_nat_gateway ? local.vpc_private_nat_gateway_count : 0
+
+  connectivity_type = "private"
+
+  subnet_id = element(
+    aws_subnet.vpc_private[*].id,
+    var.single_vpc_private_nat_gateway ? 0 : count.index,
+  )
+
+  tags = merge(
+    {
+      "Name" = format(
+        "${var.name}-%s",
+        element(var.azs, var.vpc_private_single_nat_gateway ? 0 : count.index),
+      )
+    },
+    var.tags,
+    var.nat_gateway_tags,
+  )
+
+}
+
+resource "aws_route" "vpc_private_nat_gateway" {
+  count = local.create_vpc && var.enable_vpc_private_nat_gateway ? local.vpc_private_nat_gateway_count : 0
+
+  route_table_id         = element(aws_route_table.vpc_private[*].id, count.index)
+  destination_cidr_block = var.nat_gateway_destination_cidr_block
+  nat_gateway_id         = element(aws_nat_gateway.vpc_private[*].id, count.index)
+
+  timeouts {
+    create = "5m"
+  }
 }
 
 ################################################################################

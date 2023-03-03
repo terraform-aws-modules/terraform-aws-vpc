@@ -27,3 +27,7 @@ override.tf.json
 # Ignore CLI configuration files
 .terraformrc
 terraform.rc
+
+# Ignore .out files used for terraform plan output
+*.out
+
