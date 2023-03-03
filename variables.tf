@@ -145,7 +145,7 @@ variable "public_subnet_suffix" {
 variable "vpc_private_subnet_suffix" {
   description = "Suffix to append to VPC Private subnets name"
   type        = string
-  default     = "public"
+  default     = "vpc_private"
 }
 
 variable "private_subnet_suffix" {

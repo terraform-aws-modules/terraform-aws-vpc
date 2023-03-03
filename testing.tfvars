@@ -1,3 +1,4 @@
+name = "vpc-module-test"
 tags = {
   GithubRepo = "terraform-aws-vpc"
   GithubOrg  = "terraform-aws-modules"
@@ -18,7 +19,7 @@ vpc_private_subnets = ["100.64.0.0/24", "100.64.1.0/24", "100.64.2.0/24"]
 enable_ipv6 = false
 
 enable_nat_gateway = true
-single_nat_gateway = true
+single_nat_gateway = false
 
 enable_vpc_private_nat_gateway = true
 single_vpc_private_nat_gateway = false

@@ -1179,8 +1179,11 @@ resource "aws_nat_gateway" "vpc_private" {
 
   connectivity_type = "private"
 
+  # This is not a mistake, the NAT gateway has to live on the private subnet not the vpc_private subnet
+  # The route table for the vpc_private subnets will include the private and vpc_private IP space meaning
+  # These vpc_private subnets can already communicate with the services on the private subnet
   subnet_id = element(
-    aws_subnet.vpc_private[*].id,
+    aws_subnet.private[*].id,
     var.single_vpc_private_nat_gateway ? 0 : count.index,
   )
 
