@@ -12,13 +12,30 @@ module "vpc" {
 
   name = "my-vpc"
   cidr = "10.0.0.0/16"
+  secondary_cidr_blocks = ["100.64.0.0/16"]
 
-  azs             = ["eu-west-1a", "eu-west-1b", "eu-west-1c"]
-  private_subnets = ["10.0.1.0/24", "10.0.2.0/24", "10.0.3.0/24"]
-  public_subnets  = ["10.0.101.0/24", "10.0.102.0/24", "10.0.103.0/24"]
+  azs                 = ["us-west-1a", "us-west-1b", "us-west-1c"]
+  private_subnets     = ["10.0.1.0/24", "10.0.2.0/24", "10.0.3.0/24"]
+  public_subnets      = ["10.0.101.0/24", "10.0.102.0/24", "10.0.103.0/24"]
+  vpc_private_subnets = ["100.64.0.0/24", "100.64.1.0/24", "100.64.2.0/24"]
 
   enable_nat_gateway = true
   enable_vpn_gateway = true
+  
+  enable_vpc_private_nat_gateway = true
+  single_vpc_private_nat_gateway = false
+
+  public_subnet_tags = {
+    Name = "Public Subnets VPC Module"
+  }
+
+  private_subnet_tags = {
+    Name = "Private Subnets VPC Module"
+  }
+
+  vpc_private_subnet_tags = {
+    Name = "VPC Private VPC Module"
+  }
 
   tags = {
     Terraform = "true"
@@ -66,7 +83,7 @@ Passing the IPs into the module is done by setting two variables `reuse_nat_ips 
 
 ## NAT Gateway Scenarios
 
-This module supports three scenarios for creating NAT gateways. Each will be explained in further detail in the corresponding sections.
+This module supports three scenarios for creating NAT gateways. Each will be explained in further detail in the corresponding sections. This same behavior works for the VPC private NAT gateways
 
 - One NAT Gateway per subnet (default behavior)
   - `enable_nat_gateway = true`
@@ -82,6 +99,7 @@ This module supports three scenarios for creating NAT gateways. Each will be exp
   - `one_nat_gateway_per_az = true`
 
 If both `single_nat_gateway` and `one_nat_gateway_per_az` are set to `true`, then `single_nat_gateway` takes precedence.
+
 
 ### One NAT Gateway per subnet (default)
 
@@ -117,6 +135,12 @@ If you need private subnets that should have no Internet routing (in the sense o
 Since AWS Lambda functions allocate Elastic Network Interfaces in proportion to the traffic received ([read more](https://docs.aws.amazon.com/lambda/latest/dg/vpc.html)), it can be useful to allocate a large private subnet for such allocations, while keeping the traffic they generate entirely internal to the VPC.
 
 You can add additional tags with `intra_subnet_tags` as with other subnet types.
+
+## "vpc_private" vs "intra" or "private" subnets. 
+
+By default, if NAT Gateways are enabled, private subnets will be configured with routes for Internet traffic that point at the NAT Gateways configured by use of the above options.
+
+By design "private" networks in this module can be attached to public NAT gateways or transit gateways; however the scenario exists where enterprises are using "private" subnets as routable networks across their intranet but also need "private" subnets inside of the VPC which are truly private non-routable IP space to handle scaling services without eating up too much corporate IP space. These "vpc_private" subnets require a "[Private NAT Gateway](https://docs.aws.amazon.com/whitepapers/latest/building-scalable-secure-multi-vpc-network-infrastructure/private-nat-gateway.html)" 
 
 ## VPC Flow Log
 
@@ -497,6 +521,16 @@ No modules.
 | <a name="input_private_subnet_tags"></a> [private\_subnet\_tags](#input\_private\_subnet\_tags) | Additional tags for the private subnets | `map(string)` | `{}` | no |
 | <a name="input_private_subnet_tags_per_az"></a> [private\_subnet\_tags\_per\_az](#input\_private\_subnet\_tags\_per\_az) | Additional tags for the private subnets where the primary key is the AZ | `map(map(string))` | `{}` | no |
 | <a name="input_private_subnets"></a> [private\_subnets](#input\_private\_subnets) | A list of private subnets inside the VPC | `list(string)` | `[]` | no |
+| <a name="input_vpc_private_acl_tags"></a> [vpc_private\_acl\_tags](#input\_private\_acl\_tags) | Additional tags for the vpc_private subnets network ACL | `map(string)` | `{}` | no |
+| <a name="input_vpc_private_dedicated_network_acl"></a> [vpc_private\_dedicated\_network\_acl](#input\_private\_dedicated\_network\_acl) | Whether to use dedicated network ACL (not default) and custom rules for vpc_private subnets | `bool` | `false` | no |
+| <a name="input_vpc_private_inbound_acl_rules"></a> [vpc_private\_inbound\_acl\_rules](#input\_private\_inbound\_acl\_rules) | VPC_Private subnets inbound network ACLs | `list(map(string))` | <pre>[<br>  {<br>    "cidr_block": "0.0.0.0/0",<br>    "from_port": 0,<br>    "protocol": "-1",<br>    "rule_action": "allow",<br>    "rule_number": 100,<br>    "to_port": 0<br>  }<br>]</pre> | no |
+| <a name="input_vpc_private_outbound_acl_rules"></a> [vpc_private\_outbound\_acl\_rules](#input\_private\_outbound\_acl\_rules) | VPC_Private subnets outbound network ACLs | `list(map(string))` | <pre>[<br>  {<br>    "cidr_block": "0.0.0.0/0",<br>    "from_port": 0,<br>    "protocol": "-1",<br>    "rule_action": "allow",<br>    "rule_number": 100,<br>    "to_port": 0<br>  }<br>]</pre> | no |
+| <a name="input_vpc_private_route_table_tags"></a> [vpc_private\_route\_table\_tags](#input\_private\_route\_table\_tags) | Additional tags for the vpc_private route tables | `map(string)` | `{}` | no |
+| <a name="input_vpc_private_subnet_names"></a> [vpc_private\_subnet\_names](#input\_private\_subnet\_names) | Explicit values to use in the Name tag on vpc_private subnets. If empty, Name tags are generated. | `list(string)` | `[]` | no |
+| <a name="input_vpc_private_subnet_suffix"></a> [vpc_private\_subnet\_suffix](#input\_private\_subnet\_suffix) | Suffix to append to vpc_private subnets name | `string` | `"vpc_private"` | no |
+| <a name="input_vpc_private_subnet_tags"></a> [vpc_private\_subnet\_tags](#input\_private\_subnet\_tags) | Additional tags for the vpc_private subnets | `map(string)` | `{}` | no |
+| <a name="input_vpc_private_subnet_tags_per_az"></a> [vpc_private\_subnet\_tags\_per\_az](#input\_private\_subnet\_tags\_per\_az) | Additional tags for the vpc_private subnets where the primary key is the AZ | `map(map(string))` | `{}` | no |
+| <a name="input_vpc_private_subnets"></a> [vpc_private\_subnets](#input\_private\_subnets) | A list of vpc_private subnets inside the VPC | `list(string)` | `[]` | no |
 | <a name="input_propagate_intra_route_tables_vgw"></a> [propagate\_intra\_route\_tables\_vgw](#input\_propagate\_intra\_route\_tables\_vgw) | Should be true if you want route table propagation | `bool` | `false` | no |
 | <a name="input_propagate_private_route_tables_vgw"></a> [propagate\_private\_route\_tables\_vgw](#input\_propagate\_private\_route\_tables\_vgw) | Should be true if you want route table propagation | `bool` | `false` | no |
 | <a name="input_propagate_public_route_tables_vgw"></a> [propagate\_public\_route\_tables\_vgw](#input\_propagate\_public\_route\_tables\_vgw) | Should be true if you want route table propagation | `bool` | `false` | no |

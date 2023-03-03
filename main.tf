@@ -624,9 +624,6 @@ resource "aws_subnet" "vpc_private" {
   cidr_block                      = var.vpc_private_subnets[count.index]
   availability_zone               = length(regexall("^[a-z]{2}-", element(var.azs, count.index))) > 0 ? element(var.azs, count.index) : null
   availability_zone_id            = length(regexall("^[a-z]{2}-", element(var.azs, count.index))) == 0 ? element(var.azs, count.index) : null
-  assign_ipv6_address_on_creation = var.vpc_private_subnet_assign_ipv6_address_on_creation == null ? var.assign_ipv6_address_on_creation : var.vpc_private_subnet_assign_ipv6_address_on_creation
-
-  ipv6_cidr_block = var.enable_ipv6 && length(var.vpc_private_subnet_ipv6_prefixes) > 0 ? cidrsubnet(aws_vpc.this[0].ipv6_cidr_block, 8, var.vpc_private_subnet_ipv6_prefixes[count.index]) : null
 
   tags = merge(
     {
@@ -1223,6 +1220,16 @@ resource "aws_route_table_association" "private" {
   route_table_id = element(
     aws_route_table.private[*].id,
     var.single_nat_gateway ? 0 : count.index,
+  )
+}
+
+resource "aws_route_table_association" "vpc_private" {
+  count = local.create_vpc && length(var.vpc_private_subnets) > 0 ? length(var.vpc_private_subnets) : 0
+
+  subnet_id = element(aws_subnet.vpc_private[*].id, count.index)
+  route_table_id = element(
+    aws_route_table.vpc_private[*].id,
+    var.single_vpc_private_nat_gateway ? 0 : count.index,
   )
 }
 

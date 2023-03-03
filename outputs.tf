@@ -88,6 +88,21 @@ output "private_subnets_ipv6_cidr_blocks" {
   value       = compact(aws_subnet.private[*].ipv6_cidr_block)
 }
 
+output "vpc_private_subnets" {
+  description = "List of IDs of vpc_private subnets"
+  value       = aws_subnet.vpc_private[*].id
+}
+
+output "vpc_private_subnet_arns" {
+  description = "List of ARNs of vpc_private subnets"
+  value       = aws_subnet.vpc_private[*].arn
+}
+
+output "vpc_private_subnets_cidr_blocks" {
+  description = "List of cidr_blocks of vpc_private subnets"
+  value       = compact(aws_subnet.vpc_private[*].cidr_block)
+}
+
 output "public_subnets" {
   description = "List of IDs of public subnets"
   value       = aws_subnet.public[*].id
@@ -243,6 +258,11 @@ output "private_route_table_ids" {
   value       = aws_route_table.private[*].id
 }
 
+output "vpc_private_route_table_ids" {
+  description = "List of IDs of vpc_private route tables"
+  value       = aws_route_table.vpc_private[*].id
+}
+
 output "database_route_table_ids" {
   description = "List of IDs of database route tables"
   value       = try(coalescelist(aws_route_table.database[*].id, aws_route_table.private[*].id), [])
@@ -293,6 +313,11 @@ output "private_nat_gateway_route_ids" {
   value       = aws_route.private_nat_gateway[*].id
 }
 
+output "vpc_private_nat_gateway_route_ids" {
+  description = "List of IDs of the vpc_private nat gateway route"
+  value       = aws_route.vpc_private_nat_gateway[*].id
+}
+
 output "private_ipv6_egress_route_ids" {
   description = "List of IDs of the ipv6 egress route"
   value       = aws_route.private_ipv6_egress[*].id
@@ -301,6 +326,11 @@ output "private_ipv6_egress_route_ids" {
 output "private_route_table_association_ids" {
   description = "List of IDs of the private route table association"
   value       = aws_route_table_association.private[*].id
+}
+
+output "vpc_private_route_table_association_ids" {
+  description = "List of IDs of the vpc_private route table association"
+  value       = aws_route_table_association.vpc_private[*].id
 }
 
 output "database_route_table_association_ids" {
@@ -461,6 +491,16 @@ output "private_network_acl_id" {
 output "private_network_acl_arn" {
   description = "ARN of the private network ACL"
   value       = try(aws_network_acl.private[0].arn, "")
+}
+
+output "vpc_private_network_acl_id" {
+  description = "ID of the vpc_private network ACL"
+  value       = try(aws_network_acl.vpc_private[0].id, "")
+}
+
+output "vpc_private_network_acl_arn" {
+  description = "ARN of the vpc_private network ACL"
+  value       = try(aws_network_acl.vpc_private[0].arn, "")
 }
 
 output "outpost_network_acl_id" {

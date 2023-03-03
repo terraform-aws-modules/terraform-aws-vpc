@@ -76,12 +76,6 @@ variable "assign_ipv6_address_on_creation" {
   default     = false
 }
 
-variable "vpc_private_subnet_assign_ipv6_address_on_creation" {
-  description = "Assign IPv6 address on subnet, must be disabled to change IPv6 CIDRs. This is the IPv6 equivalent of map_public_ip_on_launch"
-  type        = bool
-  default     = false
-}
-
 variable "private_subnet_assign_ipv6_address_on_creation" {
   description = "Assign IPv6 address on private subnet, must be disabled to change IPv6 CIDRs. This is the IPv6 equivalent of map_public_ip_on_launch"
   type        = bool
