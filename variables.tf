@@ -112,6 +112,150 @@ variable "intra_subnet_assign_ipv6_address_on_creation" {
   default     = null
 }
 
+variable "private_dns_hostname_type_on_launch" {
+  description = "The type of hostnames assigned to instances at launch."
+  type        = string
+  default     = null
+}
+
+variable "private_subnet_private_dns_hostname_type_on_launch" {
+  description = "The type of hostnames assigned to instances in the private subnet at launch."
+  type        = string
+  default     = null
+}
+
+variable "public_subnet_private_dns_hostname_type_on_launch" {
+  description = "The type of hostnames assigned to instances in the public subnet at launch."
+  type        = string
+  default     = null
+}
+
+variable "outpost_subnet_private_dns_hostname_type_on_launch" {
+  description = "The type of hostnames assigned to instances in the outpost subnet at launch."
+  type        = string
+  default     = null
+}
+
+variable "database_subnet_private_dns_hostname_type_on_launch" {
+  description = "The type of hostnames assigned to instances in the database subnet at launch."
+  type        = string
+  default     = null
+}
+
+variable "redshift_subnet_private_dns_hostname_type_on_launch" {
+  description = "The type of hostnames assigned to instances in the redshift subnet at launch."
+  type        = string
+  default     = null
+}
+
+variable "elasticache_subnet_private_dns_hostname_type_on_launch" {
+  description = "The type of hostnames assigned to instances in the elasticache subnet at launch."
+  type        = string
+  default     = null
+}
+
+variable "intra_subnet_private_dns_hostname_type_on_launch" {
+  description = "The type of hostnames assigned to instances in the intra subnet at launch."
+  type        = string
+  default     = null
+}
+
+variable "enable_resource_name_dns_aaaa_record_on_launch" {
+  description = "Indicates whether to respond to DNS queries for instance hostnames with DNS AAAA records."
+  type        = bool
+  default     = null
+}
+
+variable "enable_resource_name_dns_a_record_on_launch" {
+  description = "Indicates whether to respond to DNS queries for instance hostnames with DNS A records."
+  type        = bool
+  default     = null
+}
+
+variable "private_subnet_enable_resource_name_dns_a_record_on_launch" {
+  description = "Indicates whether to respond to DNS queries for instance hostnames with DNS A records."
+  type        = bool
+  default     = null
+}
+
+variable "public_subnet_enable_resource_name_dns_a_record_on_launch" {
+  description = "Indicates whether to respond to DNS queries for instance hostnames with DNS A records."
+  type        = bool
+  default     = null
+}
+
+variable "outpost_subnet_enable_resource_name_dns_a_record_on_launch" {
+  description = "Indicates whether to respond to DNS queries for instance hostnames with DNS A records."
+  type        = bool
+  default     = null
+}
+
+variable "database_subnet_enable_resource_name_dns_a_record_on_launch" {
+  description = "Indicates whether to respond to DNS queries for instance hostnames with DNS A records."
+  type        = bool
+  default     = null
+}
+
+variable "redshift_subnet_enable_resource_name_dns_a_record_on_launch" {
+  description = "Indicates whether to respond to DNS queries for instance hostnames with DNS A records."
+  type        = bool
+  default     = null
+}
+
+variable "elasticache_subnet_enable_resource_name_dns_a_record_on_launch" {
+  description = "Indicates whether to respond to DNS queries for instance hostnames with DNS A records."
+  type        = bool
+  default     = null
+}
+
+variable "intra_subnet_enable_resource_name_dns_a_record_on_launch" {
+  description = "Indicates whether to respond to DNS queries for instance hostnames with DNS A records."
+  type        = bool
+  default     = null
+}
+
+variable "private_subnet_enable_resource_name_dns_aaaa_record_on_launch" {
+  description = "Indicates whether to respond to DNS queries for instance hostnames with DNS AAAA records."
+  type        = bool
+  default     = null
+}
+
+variable "public_subnet_enable_resource_name_dns_aaaa_record_on_launch" {
+  description = "Indicates whether to respond to DNS queries for instance hostnames with DNS AAAA records."
+  type        = bool
+  default     = null
+}
+
+variable "outpost_subnet_enable_resource_name_dns_aaaa_record_on_launch" {
+  description = "Indicates whether to respond to DNS queries for instance hostnames with DNS AAAA records."
+  type        = bool
+  default     = null
+}
+
+variable "database_subnet_enable_resource_name_dns_aaaa_record_on_launch" {
+  description = "Indicates whether to respond to DNS queries for instance hostnames with DNS AAAA records."
+  type        = bool
+  default     = null
+}
+
+variable "redshift_subnet_enable_resource_name_dns_aaaa_record_on_launch" {
+  description = "Indicates whether to respond to DNS queries for instance hostnames with DNS AAAA records."
+  type        = bool
+  default     = null
+}
+
+variable "elasticache_subnet_enable_resource_name_dns_aaaa_record_on_launch" {
+  description = "Indicates whether to respond to DNS queries for instance hostnames with DNS AAAA records."
+  type        = bool
+  default     = null
+}
+
+variable "intra_subnet_enable_resource_name_dns_aaaa_record_on_launch" {
+  description = "Indicates whether to respond to DNS queries for instance hostnames with DNS AAAA records."
+  type        = bool
+  default     = null
+}
+
 variable "secondary_cidr_blocks" {
   description = "List of secondary CIDR blocks to associate with the VPC to extend the IP Address pool"
   type        = list(string)

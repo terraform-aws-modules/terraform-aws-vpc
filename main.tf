@@ -366,6 +366,10 @@ resource "aws_subnet" "public" {
   map_public_ip_on_launch         = var.map_public_ip_on_launch
   assign_ipv6_address_on_creation = var.public_subnet_assign_ipv6_address_on_creation == null ? var.assign_ipv6_address_on_creation : var.public_subnet_assign_ipv6_address_on_creation
 
+  private_dns_hostname_type_on_launch            = var.public_subnet_private_dns_hostname_type_on_launch == null ? var.private_dns_hostname_type_on_launch : var.public_subnet_private_dns_hostname_type_on_launch
+  enable_resource_name_dns_a_record_on_launch    = var.public_subnet_enable_resource_name_dns_a_record_on_launch == null ? var.enable_resource_name_dns_a_record_on_launch : var.public_subnet_enable_resource_name_dns_a_record_on_launch
+  enable_resource_name_dns_aaaa_record_on_launch = var.public_subnet_enable_resource_name_dns_aaaa_record_on_launch == null ? var.enable_resource_name_dns_aaaa_record_on_launch : var.public_subnet_enable_resource_name_dns_aaaa_record_on_launch
+
   ipv6_cidr_block = var.enable_ipv6 && length(var.public_subnet_ipv6_prefixes) > 0 ? cidrsubnet(aws_vpc.this[0].ipv6_cidr_block, 8, var.public_subnet_ipv6_prefixes[count.index]) : null
 
   tags = merge(
@@ -394,6 +398,10 @@ resource "aws_subnet" "private" {
   availability_zone_id            = length(regexall("^[a-z]{2}-", element(var.azs, count.index))) == 0 ? element(var.azs, count.index) : null
   assign_ipv6_address_on_creation = var.private_subnet_assign_ipv6_address_on_creation == null ? var.assign_ipv6_address_on_creation : var.private_subnet_assign_ipv6_address_on_creation
 
+  private_dns_hostname_type_on_launch            = var.private_subnet_private_dns_hostname_type_on_launch == null ? var.private_dns_hostname_type_on_launch : var.private_subnet_private_dns_hostname_type_on_launch
+  enable_resource_name_dns_a_record_on_launch    = var.private_subnet_enable_resource_name_dns_a_record_on_launch == null ? var.enable_resource_name_dns_a_record_on_launch : var.private_subnet_enable_resource_name_dns_a_record_on_launch
+  enable_resource_name_dns_aaaa_record_on_launch = var.private_subnet_enable_resource_name_dns_aaaa_record_on_launch == null ? var.enable_resource_name_dns_aaaa_record_on_launch : var.private_subnet_enable_resource_name_dns_aaaa_record_on_launch
+
   ipv6_cidr_block = var.enable_ipv6 && length(var.private_subnet_ipv6_prefixes) > 0 ? cidrsubnet(aws_vpc.this[0].ipv6_cidr_block, 8, var.private_subnet_ipv6_prefixes[count.index]) : null
 
   tags = merge(
@@ -420,6 +428,10 @@ resource "aws_subnet" "outpost" {
   cidr_block                      = var.outpost_subnets[count.index]
   availability_zone               = var.outpost_az
   assign_ipv6_address_on_creation = var.outpost_subnet_assign_ipv6_address_on_creation == null ? var.assign_ipv6_address_on_creation : var.outpost_subnet_assign_ipv6_address_on_creation
+
+  private_dns_hostname_type_on_launch            = var.outpost_subnet_private_dns_hostname_type_on_launch == null ? var.private_dns_hostname_type_on_launch : var.outpost_subnet_private_dns_hostname_type_on_launch
+  enable_resource_name_dns_a_record_on_launch    = var.outpost_subnet_enable_resource_name_dns_a_record_on_launch == null ? var.enable_resource_name_dns_a_record_on_launch : var.outpost_subnet_enable_resource_name_dns_a_record_on_launch
+  enable_resource_name_dns_aaaa_record_on_launch = var.outpost_subnet_enable_resource_name_dns_aaaa_record_on_launch == null ? var.enable_resource_name_dns_aaaa_record_on_launch : var.outpost_subnet_enable_resource_name_dns_aaaa_record_on_launch
 
   ipv6_cidr_block = var.enable_ipv6 && length(var.outpost_subnet_ipv6_prefixes) > 0 ? cidrsubnet(aws_vpc.this[0].ipv6_cidr_block, 8, var.outpost_subnet_ipv6_prefixes[count.index]) : null
 
@@ -449,6 +461,10 @@ resource "aws_subnet" "database" {
   availability_zone               = length(regexall("^[a-z]{2}-", element(var.azs, count.index))) > 0 ? element(var.azs, count.index) : null
   availability_zone_id            = length(regexall("^[a-z]{2}-", element(var.azs, count.index))) == 0 ? element(var.azs, count.index) : null
   assign_ipv6_address_on_creation = var.database_subnet_assign_ipv6_address_on_creation == null ? var.assign_ipv6_address_on_creation : var.database_subnet_assign_ipv6_address_on_creation
+
+  private_dns_hostname_type_on_launch            = var.database_subnet_private_dns_hostname_type_on_launch == null ? var.private_dns_hostname_type_on_launch : var.database_subnet_private_dns_hostname_type_on_launch
+  enable_resource_name_dns_a_record_on_launch    = var.database_subnet_enable_resource_name_dns_a_record_on_launch == null ? var.enable_resource_name_dns_a_record_on_launch : var.database_subnet_enable_resource_name_dns_a_record_on_launch
+  enable_resource_name_dns_aaaa_record_on_launch = var.database_subnet_enable_resource_name_dns_aaaa_record_on_launch == null ? var.enable_resource_name_dns_aaaa_record_on_launch : var.database_subnet_enable_resource_name_dns_aaaa_record_on_launch
 
   ipv6_cidr_block = var.enable_ipv6 && length(var.database_subnet_ipv6_prefixes) > 0 ? cidrsubnet(aws_vpc.this[0].ipv6_cidr_block, 8, var.database_subnet_ipv6_prefixes[count.index]) : null
 
@@ -493,6 +509,10 @@ resource "aws_subnet" "redshift" {
   availability_zone_id            = length(regexall("^[a-z]{2}-", element(var.azs, count.index))) == 0 ? element(var.azs, count.index) : null
   assign_ipv6_address_on_creation = var.redshift_subnet_assign_ipv6_address_on_creation == null ? var.assign_ipv6_address_on_creation : var.redshift_subnet_assign_ipv6_address_on_creation
 
+  private_dns_hostname_type_on_launch            = var.redshift_subnet_private_dns_hostname_type_on_launch == null ? var.private_dns_hostname_type_on_launch : var.redshift_subnet_private_dns_hostname_type_on_launch
+  enable_resource_name_dns_a_record_on_launch    = var.redshift_subnet_enable_resource_name_dns_a_record_on_launch == null ? var.enable_resource_name_dns_a_record_on_launch : var.redshift_subnet_enable_resource_name_dns_a_record_on_launch
+  enable_resource_name_dns_aaaa_record_on_launch = var.redshift_subnet_enable_resource_name_dns_aaaa_record_on_launch == null ? var.enable_resource_name_dns_aaaa_record_on_launch : var.redshift_subnet_enable_resource_name_dns_aaaa_record_on_launch
+
   ipv6_cidr_block = var.enable_ipv6 && length(var.redshift_subnet_ipv6_prefixes) > 0 ? cidrsubnet(aws_vpc.this[0].ipv6_cidr_block, 8, var.redshift_subnet_ipv6_prefixes[count.index]) : null
 
   tags = merge(
@@ -534,6 +554,10 @@ resource "aws_subnet" "elasticache" {
   availability_zone_id            = length(regexall("^[a-z]{2}-", element(var.azs, count.index))) == 0 ? element(var.azs, count.index) : null
   assign_ipv6_address_on_creation = var.elasticache_subnet_assign_ipv6_address_on_creation == null ? var.assign_ipv6_address_on_creation : var.elasticache_subnet_assign_ipv6_address_on_creation
 
+  private_dns_hostname_type_on_launch            = var.elasticache_subnet_private_dns_hostname_type_on_launch == null ? var.private_dns_hostname_type_on_launch : var.elasticache_subnet_private_dns_hostname_type_on_launch
+  enable_resource_name_dns_a_record_on_launch    = var.elasticache_subnet_enable_resource_name_dns_a_record_on_launch == null ? var.enable_resource_name_dns_a_record_on_launch : var.elasticache_subnet_enable_resource_name_dns_a_record_on_launch
+  enable_resource_name_dns_aaaa_record_on_launch = var.elasticache_subnet_enable_resource_name_dns_aaaa_record_on_launch == null ? var.enable_resource_name_dns_aaaa_record_on_launch : var.elasticache_subnet_enable_resource_name_dns_aaaa_record_on_launch
+
   ipv6_cidr_block = var.enable_ipv6 && length(var.elasticache_subnet_ipv6_prefixes) > 0 ? cidrsubnet(aws_vpc.this[0].ipv6_cidr_block, 8, var.elasticache_subnet_ipv6_prefixes[count.index]) : null
 
   tags = merge(
@@ -574,6 +598,10 @@ resource "aws_subnet" "intra" {
   availability_zone               = length(regexall("^[a-z]{2}-", element(var.azs, count.index))) > 0 ? element(var.azs, count.index) : null
   availability_zone_id            = length(regexall("^[a-z]{2}-", element(var.azs, count.index))) == 0 ? element(var.azs, count.index) : null
   assign_ipv6_address_on_creation = var.intra_subnet_assign_ipv6_address_on_creation == null ? var.assign_ipv6_address_on_creation : var.intra_subnet_assign_ipv6_address_on_creation
+
+  private_dns_hostname_type_on_launch            = var.intra_subnet_private_dns_hostname_type_on_launch == null ? var.private_dns_hostname_type_on_launch : var.intra_subnet_private_dns_hostname_type_on_launch
+  enable_resource_name_dns_a_record_on_launch    = var.intra_subnet_enable_resource_name_dns_a_record_on_launch == null ? var.enable_resource_name_dns_a_record_on_launch : var.intra_subnet_enable_resource_name_dns_a_record_on_launch
+  enable_resource_name_dns_aaaa_record_on_launch = var.intra_subnet_enable_resource_name_dns_aaaa_record_on_launch == null ? var.enable_resource_name_dns_aaaa_record_on_launch : var.intra_subnet_enable_resource_name_dns_aaaa_record_on_launch
 
   ipv6_cidr_block = var.enable_ipv6 && length(var.intra_subnet_ipv6_prefixes) > 0 ? cidrsubnet(aws_vpc.this[0].ipv6_cidr_block, 8, var.intra_subnet_ipv6_prefixes[count.index]) : null
 
