@@ -23,9 +23,10 @@ module "vpc" {
   name = local.name
   cidr = "10.0.0.0/16"
 
-  azs             = ["${local.region}a", "${local.region}b", "${local.region}c"]
-  private_subnets = ["10.0.1.0/24", "10.0.2.0/24", "10.0.3.0/24"]
-  public_subnets  = ["10.0.101.0/24", "10.0.102.0/24", "10.0.103.0/24"]
+  azs              = ["${local.region}a", "${local.region}b", "${local.region}c"]
+  private_subnets  = ["10.0.1.0/24", "10.0.2.0/24", "10.0.3.0/24"]
+  public_subnets   = ["10.0.101.0/24", "10.0.102.0/24", "10.0.103.0/24"]
+  database_subnets = ["10.0.104.0/24", "10.0.105.0/24", "10.0.106.0/24"]
 
   enable_ipv6 = true
 
@@ -39,6 +40,24 @@ module "vpc" {
   public_subnet_tags_per_az = {
     "${local.region}a" = {
       "availability-zone" = "${local.region}a"
+    }
+  }
+
+  public_subnet_tags_per_cidr = {
+    "10.0.101.0/24" = {
+      type = "public-awesome-app"
+    }
+  }
+
+  private_subnet_tags_per_cidr = {
+    "10.0.1.0/24" = {
+      type = "private-awesome-app"
+    }
+  }
+
+  database_subnet_tags_per_cidr = {
+    "10.0.104.0/24" = {
+      type = "awesome-app-db"
     }
   }
 

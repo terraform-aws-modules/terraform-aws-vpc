@@ -377,7 +377,8 @@ resource "aws_subnet" "public" {
     },
     var.tags,
     var.public_subnet_tags,
-    lookup(var.public_subnet_tags_per_az, element(var.azs, count.index), {})
+    lookup(var.public_subnet_tags_per_az, element(var.azs, count.index), {}),
+    lookup(var.public_subnet_tags_per_cidr, element(concat(var.public_subnets, [""]), count.index), {})
   )
 }
 
@@ -405,7 +406,8 @@ resource "aws_subnet" "private" {
     },
     var.tags,
     var.private_subnet_tags,
-    lookup(var.private_subnet_tags_per_az, element(var.azs, count.index), {})
+    lookup(var.private_subnet_tags_per_az, element(var.azs, count.index), {}),
+    lookup(var.private_subnet_tags_per_cidr, var.private_subnets[count.index], {})
   )
 }
 
@@ -461,7 +463,8 @@ resource "aws_subnet" "database" {
     },
     var.tags,
     var.database_subnet_tags,
-    lookup(var.database_subnet_tags_per_az, element(var.azs, count.index), {})
+    lookup(var.database_subnet_tags_per_az, element(var.azs, count.index), {}),
+    lookup(var.database_subnet_tags_per_cidr, var.database_subnets[count.index])
   )
 }
 
