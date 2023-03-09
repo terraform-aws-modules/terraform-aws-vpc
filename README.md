@@ -647,6 +647,14 @@ No modules.
 | <a name="output_private_subnets"></a> [private\_subnets](#output\_private\_subnets) | List of IDs of private subnets |
 | <a name="output_private_subnets_cidr_blocks"></a> [private\_subnets\_cidr\_blocks](#output\_private\_subnets\_cidr\_blocks) | List of cidr\_blocks of private subnets |
 | <a name="output_private_subnets_ipv6_cidr_blocks"></a> [private\_subnets\_ipv6\_cidr\_blocks](#output\_private\_subnets\_ipv6\_cidr\_blocks) | List of IPv6 cidr\_blocks of private subnets in an IPv6 enabled VPC |
+| <a name="output_vpc_private_nat_gateway_route_ids"></a> [vpc_private\_nat\_gateway\_route\_ids](#output\_private\_nat\_gateway\_route\_ids) | List of IDs of the vpc private nat gateway route |
+| <a name="output_vpc_private_network_acl_arn"></a> [vpc_private\_network\_acl\_arn](#output\_private\_network\_acl\_arn) | ARN of the vpc private network ACL |
+| <a name="output_vpc_private_network_acl_id"></a> [vpc_private\_network\_acl\_id](#output\_private\_network\_acl\_id) | ID of the vpc_private network ACL |
+| <a name="output_vpc_private_route_table_association_ids"></a> [vpc_private\_route\_table\_association\_ids](#output\_private\_route\_table\_association\_ids) | List of IDs of the vpc private route table association |
+| <a name="output_vpc_private_route_table_ids"></a> [vpc_private\_route\_table\_ids](#output\_private\_route\_table\_ids) | List of IDs of vpc private route tables |
+| <a name="output_vpc_private_subnet_arns"></a> [vpc_private\_subnet\_arns](#output\_private\_subnet\_arns) | List of ARNs of vpc_private subnets |
+| <a name="output_vpc_private_subnets"></a> [vpc_private\_subnets](#output\_private\_subnets) | List of IDs of vpc_private subnets |
+| <a name="output_vpc_private_subnets_cidr_blocks"></a> [vpc_private\_subnets\_cidr\_blocks](#output\_private\_subnets\_cidr\_blocks) | List of cidr\_blocks of vpc private subnets |
 | <a name="output_public_internet_gateway_ipv6_route_id"></a> [public\_internet\_gateway\_ipv6\_route\_id](#output\_public\_internet\_gateway\_ipv6\_route\_id) | ID of the IPv6 internet gateway route |
 | <a name="output_public_internet_gateway_route_id"></a> [public\_internet\_gateway\_route\_id](#output\_public\_internet\_gateway\_route\_id) | ID of the internet gateway route |
 | <a name="output_public_network_acl_arn"></a> [public\_network\_acl\_arn](#output\_public\_network\_acl\_arn) | ARN of the public network ACL |
