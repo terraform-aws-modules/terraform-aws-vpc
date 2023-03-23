@@ -6,7 +6,7 @@ locals {
     length(var.database_subnets),
     length(var.redshift_subnets),
   )
-  nat_gateway_count = var.single_nat_gateway ? 1 : var.one_nat_gateway_per_az ? length(var.azs) : local.max_subnet_length
+  nat_gateway_count             = var.single_nat_gateway ? 1 : var.one_nat_gateway_per_az ? length(var.azs) : local.max_subnet_length
   vpc_private_nat_gateway_count = var.single_vpc_private_nat_gateway ? 1 : var.one_vpc_private_nat_gateway_per_az ? length(var.azs) : local.max_subnet_length
 
   # Use `local.vpc_id` to give a hint to Terraform that subnets should be deleted before secondary CIDR blocks can be free!
@@ -620,10 +620,10 @@ resource "aws_subnet" "intra" {
 resource "aws_subnet" "vpc_private" {
   count = local.create_vpc && length(var.vpc_private_subnets) > 0 ? length(var.vpc_private_subnets) : 0
 
-  vpc_id                          = local.vpc_id
-  cidr_block                      = var.vpc_private_subnets[count.index]
-  availability_zone               = length(regexall("^[a-z]{2}-", element(var.azs, count.index))) > 0 ? element(var.azs, count.index) : null
-  availability_zone_id            = length(regexall("^[a-z]{2}-", element(var.azs, count.index))) == 0 ? element(var.azs, count.index) : null
+  vpc_id               = local.vpc_id
+  cidr_block           = var.vpc_private_subnets[count.index]
+  availability_zone    = length(regexall("^[a-z]{2}-", element(var.azs, count.index))) > 0 ? element(var.azs, count.index) : null
+  availability_zone_id = length(regexall("^[a-z]{2}-", element(var.azs, count.index))) == 0 ? element(var.azs, count.index) : null
 
   tags = merge(
     {
@@ -1188,7 +1188,7 @@ resource "aws_nat_gateway" "vpc_private" {
     {
       "Name" = format(
         "${var.name}-%s",
-        element(var.azs, var.vpc_private_single_nat_gateway ? 0 : count.index),
+        element(var.azs, var.single_vpc_private_nat_gateway ? 0 : count.index),
       )
     },
     var.tags,

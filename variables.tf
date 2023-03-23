@@ -384,12 +384,6 @@ variable "single_nat_gateway" {
   default     = false
 }
 
-variable "vpc_private_single_nat_gateway" {
-  description = "Should be true if you want to provision a single shared NAT Gateway across all of your private networks"
-  type        = bool
-  default     = false
-}
-
 variable "single_vpc_private_nat_gateway" {
   description = "Should be true if you want to provision a single shared NAT Gateway across all of your VPC Private networks"
   type        = bool
