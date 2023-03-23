@@ -28,6 +28,12 @@ variable "private_subnet_ipv6_prefixes" {
   default     = []
 }
 
+variable "vpc_private_subnet_ipv6_prefixes" {
+  description = "Assigns IPv6 private subnet id based on the Amazon provided /56 prefix base 10 integer (0-256). Must be of equal length to the corresponding IPv4 subnet list"
+  type        = list(string)
+  default     = []
+}
+
 variable "public_subnet_ipv6_prefixes" {
   description = "Assigns IPv6 public subnet id based on the Amazon provided /56 prefix base 10 integer (0-256). Must be of equal length to the corresponding IPv4 subnet list"
   type        = list(string)
@@ -130,6 +136,12 @@ variable "public_subnet_suffix" {
   default     = "public"
 }
 
+variable "vpc_private_subnet_suffix" {
+  description = "Suffix to append to VPC Private subnets name"
+  type        = string
+  default     = "vpc_private"
+}
+
 variable "private_subnet_suffix" {
   description = "Suffix to append to private subnets name"
   type        = string
@@ -144,6 +156,12 @@ variable "public_subnet_names" {
 
 variable "private_subnet_names" {
   description = "Explicit values to use in the Name tag on private subnets. If empty, Name tags are generated."
+  type        = list(string)
+  default     = []
+}
+
+variable "vpc_private_subnet_names" {
+  description = "Explicit values to use in the Name tag on VPC Private subnets. If empty, Name tags are generated."
   type        = list(string)
   default     = []
 }
@@ -216,6 +234,12 @@ variable "public_subnets" {
 
 variable "private_subnets" {
   description = "A list of private subnets inside the VPC"
+  type        = list(string)
+  default     = []
+}
+
+variable "vpc_private_subnets" {
+  description = "A list of VPC Private subnets inside the VPC"
   type        = list(string)
   default     = []
 }
@@ -342,6 +366,12 @@ variable "enable_nat_gateway" {
   default     = false
 }
 
+variable "enable_vpc_private_nat_gateway" {
+  description = "Should be true if you want to provision NAT Gateways for each of your private networks"
+  type        = bool
+  default     = false
+}
+
 variable "nat_gateway_destination_cidr_block" {
   description = "Used to pass a custom destination route for private NAT Gateway. If not specified, the default 0.0.0.0/0 is used as a destination route."
   type        = string
@@ -354,7 +384,19 @@ variable "single_nat_gateway" {
   default     = false
 }
 
+variable "single_vpc_private_nat_gateway" {
+  description = "Should be true if you want to provision a single shared NAT Gateway across all of your VPC Private networks"
+  type        = bool
+  default     = false
+}
+
 variable "one_nat_gateway_per_az" {
+  description = "Should be true if you want only one NAT Gateway per availability zone. Requires `var.azs` to be set, and the number of `vpc_private_subnets` created to be greater than or equal to the number of availability zones specified in `var.azs`."
+  type        = bool
+  default     = false
+}
+
+variable "one_vpc_private_nat_gateway_per_az" {
   description = "Should be true if you want only one NAT Gateway per availability zone. Requires `var.azs` to be set, and the number of `public_subnets` created to be greater than or equal to the number of availability zones specified in `var.azs`."
   type        = bool
   default     = false
@@ -492,6 +534,12 @@ variable "public_subnet_tags_per_az" {
   default     = {}
 }
 
+variable "vpc_private_subnet_tags" {
+  description = "Additional tags for the VPC Private subnets"
+  type        = map(string)
+  default     = {}
+}
+
 variable "private_subnet_tags" {
   description = "Additional tags for the private subnets"
   type        = map(string)
@@ -518,6 +566,12 @@ variable "public_route_table_tags" {
 
 variable "private_route_table_tags" {
   description = "Additional tags for the private route tables"
+  type        = map(string)
+  default     = {}
+}
+
+variable "vpc_private_route_table_tags" {
+  description = "Additional tags for the VPC Private route tables"
   type        = map(string)
   default     = {}
 }
@@ -602,6 +656,12 @@ variable "elasticache_subnet_tags" {
 
 variable "intra_subnet_tags" {
   description = "Additional tags for the intra subnets"
+  type        = map(string)
+  default     = {}
+}
+
+variable "vpc_private_acl_tags" {
+  description = "Additional tags for the VPC Private subnets network ACL"
   type        = map(string)
   default     = {}
 }
@@ -781,6 +841,12 @@ variable "default_network_acl_tags" {
   default     = {}
 }
 
+variable "vpc_private_dedicated_network_acl" {
+  description = "Whether to use dedicated network ACL (not default) and custom rules for public subnets"
+  type        = bool
+  default     = false
+}
+
 variable "public_dedicated_network_acl" {
   description = "Whether to use dedicated network ACL (not default) and custom rules for public subnets"
   type        = bool
@@ -889,6 +955,38 @@ variable "public_inbound_acl_rules" {
 
 variable "public_outbound_acl_rules" {
   description = "Public subnets outbound network ACLs"
+  type        = list(map(string))
+
+  default = [
+    {
+      rule_number = 100
+      rule_action = "allow"
+      from_port   = 0
+      to_port     = 0
+      protocol    = "-1"
+      cidr_block  = "0.0.0.0/0"
+    },
+  ]
+}
+
+variable "vpc_private_inbound_acl_rules" {
+  description = "VPC Private subnets inbound network ACLs"
+  type        = list(map(string))
+
+  default = [
+    {
+      rule_number = 100
+      rule_action = "allow"
+      from_port   = 0
+      to_port     = 0
+      protocol    = "-1"
+      cidr_block  = "0.0.0.0/0"
+    },
+  ]
+}
+
+variable "vpc_private_outbound_acl_rules" {
+  description = "VPC Private subnets outbound network ACLs"
   type        = list(map(string))
 
   default = [
