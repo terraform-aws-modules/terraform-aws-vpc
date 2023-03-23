@@ -24,4 +24,3 @@ terraform.rc
 
 # Ignore .out files used for terraform plan output
 *.out
-
