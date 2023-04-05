@@ -119,6 +119,7 @@ module "vpc_endpoints" {
       service             = "ssmmessages"
       private_dns_enabled = true
       subnet_ids          = module.vpc.private_subnets
+      security_group_ids  = [aws_security_group.vpc_tls.id]
     },
     lambda = {
       service             = "lambda"
@@ -146,6 +147,7 @@ module "vpc_endpoints" {
       service             = "ec2messages"
       private_dns_enabled = true
       subnet_ids          = module.vpc.private_subnets
+      security_group_ids  = [aws_security_group.vpc_tls.id]
     },
     ecr_api = {
       service             = "ecr.api"
