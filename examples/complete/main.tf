@@ -43,16 +43,10 @@ module "vpc" {
   redshift_subnet_names    = ["Redshift Subnet One", "Redshift Subnet Two", "Redshift Subnet Three"]
   intra_subnet_names       = []
 
-  create_database_subnet_group = false
-
-  manage_default_network_acl = true
-  default_network_acl_tags   = { Name = "${local.name}-default" }
-
-  manage_default_route_table = true
-  default_route_table_tags   = { Name = "${local.name}-default" }
-
-  manage_default_security_group = true
-  default_security_group_tags   = { Name = "${local.name}-default" }
+  create_database_subnet_group  = false
+  manage_default_network_acl    = false
+  manage_default_route_table    = false
+  manage_default_security_group = false
 
   enable_dns_hostnames = true
   enable_dns_support   = true
