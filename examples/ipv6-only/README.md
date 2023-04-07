@@ -1,6 +1,6 @@
-# VPC with IPv6 enabled
+# IPv6 Only VPC
 
-Configuration in this directory creates set of VPC resources with IPv6 enabled on VPC and subnets.
+Configuration in this directory creates set of VPC resources with IPv6 only enabled on VPC and subnets.
 
 ## Usage
 
@@ -19,12 +19,14 @@ Note that this example may create resources which can cost money (AWS Elastic IP
 
 | Name | Version |
 |------|---------|
-| <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 0.13.1 |
-| <a name="requirement_aws"></a> [aws](#requirement\_aws) | >= 3.73 |
+| <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 1.0 |
+| <a name="requirement_aws"></a> [aws](#requirement\_aws) | >= 4.35 |
 
 ## Providers
 
-No providers.
+| Name | Version |
+|------|---------|
+| <a name="provider_aws"></a> [aws](#provider\_aws) | >= 4.35 |
 
 ## Modules
 
@@ -34,7 +36,9 @@ No providers.
 
 ## Resources
 
-No resources.
+| Name | Type |
+|------|------|
+| [aws_availability_zones.available](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/availability_zones) | data source |
 
 ## Inputs
 

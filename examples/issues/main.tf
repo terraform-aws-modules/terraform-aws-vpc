@@ -2,9 +2,13 @@ provider "aws" {
   region = local.region
 }
 
+data "aws_availability_zones" "available" {}
+
 locals {
-  name   = "ex-${replace(basename(path.cwd), "_", "-")}"
+  name   = "ex-${basename(path.cwd)}"
   region = "eu-west-1"
+
+  azs = slice(data.aws_availability_zones.available.names, 0, 3)
 
   tags = {
     Example    = local.name
@@ -23,7 +27,7 @@ module "vpc_issue_44" {
   name = "asymmetrical"
   cidr = "10.0.0.0/16"
 
-  azs              = ["${local.region}a", "${local.region}b", "${local.region}c"]
+  azs              = local.azs
   private_subnets  = ["10.0.1.0/24"]
   public_subnets   = ["10.0.101.0/24", "10.0.102.0/24"]
   database_subnets = ["10.0.21.0/24", "10.0.22.0/24", "10.0.23.0/24"]
@@ -47,7 +51,7 @@ module "vpc_issue_46" {
   name = "no-private-subnets"
   cidr = "10.0.0.0/16"
 
-  azs                 = ["${local.region}a", "${local.region}b", "${local.region}c"]
+  azs                 = local.azs
   public_subnets      = ["10.0.0.0/22", "10.0.4.0/22", "10.0.8.0/22"]
   private_subnets     = []
   database_subnets    = ["10.0.128.0/24", "10.0.129.0/24"]
@@ -73,7 +77,7 @@ module "vpc_issue_108" {
   name = "route-already-exists"
   cidr = "10.0.0.0/16"
 
-  azs             = ["${local.region}a", "${local.region}b", "${local.region}c"]
+  azs             = local.azs
   private_subnets = ["10.0.0.0/24", "10.0.1.0/24", "10.0.2.0/24"]
   public_subnets  = ["10.0.254.240/28", "10.0.254.224/28", "10.0.254.208/28"]
 
