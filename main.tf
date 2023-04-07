@@ -8,7 +8,9 @@ locals {
   len_outpost_subnets     = max(length(var.outpost_subnets), length(var.outpost_subnet_ipv6_prefixes))
 
   max_subnet_length = max(
+    local.len_private_subnets,
     local.len_public_subnets,
+    local.len_intra_subnets,
     local.len_elasticache_subnets,
     local.len_database_subnets,
     local.len_redshift_subnets,
