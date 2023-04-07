@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+### [4.0.1](https://github.com/terraform-aws-modules/terraform-aws-vpc/compare/v4.0.0...v4.0.1) (2023-04-07)
+
+
+### Bug Fixes
+
+* Add missing private subnets to max subnet length local ([#920](https://github.com/terraform-aws-modules/terraform-aws-vpc/issues/920)) ([6f51f34](https://github.com/terraform-aws-modules/terraform-aws-vpc/commit/6f51f34d9c91d62984ff985aad6b5ef03eb2a75a))
+
 ## [4.0.0](https://github.com/terraform-aws-modules/terraform-aws-vpc/compare/v3.19.0...v4.0.0) (2023-04-07)
 
 
