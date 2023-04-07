@@ -2,11 +2,13 @@ provider "aws" {
   region = local.region
 }
 
+data "aws_availability_zones" "available" {}
+
 locals {
-  name   = "ex-${replace(basename(path.cwd), "_", "-")}"
+  name   = "ex-${basename(path.cwd)}"
   region = "eu-west-1"
 
-  azs               = ["${local.region}a", "${local.region}b", "${local.region}c"]
+  azs               = slice(data.aws_availability_zones.available.names, 0, 3)
   preview_partition = cidrsubnets(aws_vpc_ipam_preview_next_cidr.this.cidr, 2, 2, 2)
 
   tags = {
