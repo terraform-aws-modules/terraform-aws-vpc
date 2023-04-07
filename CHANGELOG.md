@@ -2,6 +2,17 @@
 
 All notable changes to this project will be documented in this file.
 
+## [4.0.0](https://github.com/terraform-aws-modules/terraform-aws-vpc/compare/v3.19.0...v4.0.0) (2023-04-07)
+
+
+### ⚠ BREAKING CHANGES
+
+* Support enabling NAU metrics in "aws_vpc" resource (#838)
+
+### Features
+
+* Support enabling NAU metrics in "aws_vpc" resource ([#838](https://github.com/terraform-aws-modules/terraform-aws-vpc/issues/838)) ([44e6eaa](https://github.com/terraform-aws-modules/terraform-aws-vpc/commit/44e6eaa154a9e78c8d6e86d1c735f95825b270db))
+
 ## [3.19.0](https://github.com/terraform-aws-modules/terraform-aws-vpc/compare/v3.18.1...v3.19.0) (2023-01-13)
 
 
