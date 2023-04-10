@@ -35,7 +35,7 @@ resource "aws_vpc" "this" {
 
   assign_generated_ipv6_cidr_block     = var.enable_ipv6 && !var.use_ipam_pool ? true : null
   ipv6_cidr_block                      = var.ipv6_cidr
-  ipv6_ipam_pool_id                    = var.ipv6_ipam_pool_id
+  ipv6_ipam_pool_id                    = var.ipv6_ipam_pool_id != "" ? var.ipv6_ipam_pool_id : null
   ipv6_netmask_length                  = var.ipv6_netmask_length
   ipv6_cidr_block_network_border_group = var.ipv6_cidr_block_network_border_group
 

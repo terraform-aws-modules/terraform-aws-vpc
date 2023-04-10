@@ -89,7 +89,7 @@ variable "ipv6_cidr" {
 variable "ipv6_ipam_pool_id" {
   description = "(Optional) IPAM Pool ID for a IPv6 pool. Conflicts with `assign_generated_ipv6_cidr_block`"
   type        = string
-  default     = null
+  default     = ""
 }
 
 variable "ipv6_netmask_length" {
