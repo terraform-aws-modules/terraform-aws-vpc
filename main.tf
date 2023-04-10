@@ -359,7 +359,7 @@ resource "aws_route_table" "intra" {
 ################################################################################
 
 resource "aws_route_table" "sys" {
-  count = local.create_vpc && local.max_subnet_length > 0 ? local.nat_gateway_count : 0
+  count = local.create_vpc && length(var.sys_subnets) > 0 ? 1 : 0
 
   vpc_id = local.vpc_id
 
