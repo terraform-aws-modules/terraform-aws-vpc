@@ -355,11 +355,11 @@ resource "aws_route_table" "intra" {
 
 ################################################################################
 # Sys routes
-# There are as many routing tables as the number of NAT gateways
+# There are as many routing tables as the number of sys subnets
 ################################################################################
 
 resource "aws_route_table" "sys" {
-  count = local.create_vpc && length(var.sys_subnets) > 0 ? 1 : 0
+  count = local.create_vpc && length(var.sys_subnets) > 0 ? length(var.sys_subnets) : 0
 
   vpc_id = local.vpc_id
 
