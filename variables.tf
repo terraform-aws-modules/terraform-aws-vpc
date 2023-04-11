@@ -530,6 +530,12 @@ variable "database_subnet_group_name" {
   default     = null
 }
 
+variable "database_subnet_tags_per_az" {
+  description = "Additional tags for the database subnets where the primary key is the AZ"
+  type        = map(map(string))
+  default     = {}
+}
+
 variable "database_subnet_group_tags" {
   description = "Additional tags for the database subnet group"
   type        = map(string)

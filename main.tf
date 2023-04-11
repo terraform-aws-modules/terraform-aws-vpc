@@ -366,6 +366,7 @@ resource "aws_subnet" "database" {
     },
     var.tags,
     var.database_subnet_tags,
+    lookup(var.database_subnet_tags_per_az, element(var.azs, count.index), {})
   )
 }
 
