@@ -1,4 +1,6 @@
 locals {
+  default_cidr            = "10.0.0.0/16"
+  ipv6_netmask_length     = var.ipv6_netmask_length == 0 ? null : var.ipv6_netmask_length
   len_public_subnets      = max(length(var.public_subnets), length(var.public_subnet_ipv6_prefixes))
   len_private_subnets     = max(length(var.private_subnets), length(var.private_subnet_ipv6_prefixes))
   len_database_subnets    = max(length(var.database_subnets), length(var.database_subnet_ipv6_prefixes))
@@ -29,14 +31,17 @@ locals {
 resource "aws_vpc" "this" {
   count = local.create_vpc ? 1 : 0
 
-  cidr_block          = var.use_ipam_pool ? null : var.cidr
+  cidr_block = var.cidr != "" ? var.cidr : (
+    var.use_ipam_pool ? null : local.default_cidr
+  )
+
   ipv4_ipam_pool_id   = var.ipv4_ipam_pool_id
   ipv4_netmask_length = var.ipv4_netmask_length
 
   assign_generated_ipv6_cidr_block     = var.enable_ipv6 && !var.use_ipam_pool ? true : null
   ipv6_cidr_block                      = var.ipv6_cidr
   ipv6_ipam_pool_id                    = var.ipv6_ipam_pool_id != "" ? var.ipv6_ipam_pool_id : null
-  ipv6_netmask_length                  = var.ipv6_netmask_length
+  ipv6_netmask_length                  = local.ipv6_netmask_length
   ipv6_cidr_block_network_border_group = var.ipv6_cidr_block_network_border_group
 
   instance_tenancy                     = var.instance_tenancy

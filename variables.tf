@@ -17,7 +17,7 @@ variable "name" {
 variable "cidr" {
   description = "(Optional) The IPv4 CIDR block for the VPC. CIDR can be explicitly set or it can be derived from IPAM using `ipv4_netmask_length` & `ipv4_ipam_pool_id`"
   type        = string
-  default     = "10.0.0.0/16"
+  default     = ""
 }
 
 variable "secondary_cidr_blocks" {
@@ -95,7 +95,7 @@ variable "ipv6_ipam_pool_id" {
 variable "ipv6_netmask_length" {
   description = "(Optional) Netmask length to request from IPAM Pool. Conflicts with `ipv6_cidr_block`. This can be omitted if IPAM pool as a `allocation_default_netmask_length` set. Valid values: `56`"
   type        = number
-  default     = null
+  default     = 0
 }
 
 variable "ipv6_cidr_block_network_border_group" {
