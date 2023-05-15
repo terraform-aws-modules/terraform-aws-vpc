@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+### [4.0.2](https://github.com/terraform-aws-modules/terraform-aws-vpc/compare/v4.0.1...v4.0.2) (2023-05-15)
+
+
+### Bug Fixes
+
+* Add dns64 routes ([#924](https://github.com/terraform-aws-modules/terraform-aws-vpc/issues/924)) ([743798d](https://github.com/terraform-aws-modules/terraform-aws-vpc/commit/743798daa14b8a5b827b37053ca7e3c5b8865c06))
+
 ### [4.0.1](https://github.com/terraform-aws-modules/terraform-aws-vpc/compare/v4.0.0...v4.0.1) (2023-04-07)
 
 
