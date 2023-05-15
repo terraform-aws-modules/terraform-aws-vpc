@@ -33,7 +33,7 @@ module "vpc" {
   public_subnets   = [for k, v in local.azs : cidrsubnet(local.vpc_cidr, 8, k + 4)]
   database_subnets = [for k, v in local.azs : cidrsubnet(local.vpc_cidr, 8, k + 8)]
 
-  enable_nat_gateway = false
+  enable_nat_gateway = true
 
   create_database_subnet_route_table     = true
   create_database_internet_gateway_route = true
