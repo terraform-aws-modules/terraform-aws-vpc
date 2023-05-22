@@ -48,7 +48,7 @@ module "endpoints" {
 
 ## Examples
 
-- [Complete-VPC](../../examples/complete-vpc) with VPC Endpoints.
+- [Complete-VPC](../../examples/complete) with VPC Endpoints.
 
 <!-- BEGINNING OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
 ## Requirements
