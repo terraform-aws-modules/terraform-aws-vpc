@@ -34,8 +34,8 @@ resource "aws_vpc" "this" {
   instance_tenancy               = var.instance_tenancy
   enable_dns_hostnames           = var.enable_dns_hostnames
   enable_dns_support             = var.enable_dns_support
-  enable_classiclink             = null # https://github.com/hashicorp/terraform/issues/31730
-  enable_classiclink_dns_support = null # https://github.com/hashicorp/terraform/issues/31730
+  # enable_classiclink             = null # https://github.com/hashicorp/terraform/issues/31730
+  # enable_classiclink_dns_support = null # https://github.com/hashicorp/terraform/issues/31730
 
   tags = merge(
     { "Name" = var.name },
