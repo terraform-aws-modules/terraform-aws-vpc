@@ -818,12 +818,17 @@ resource "aws_subnet" "intra" {
 }
 
 resource "aws_route_table" "intra" {
-  count = local.create_intra_subnets && local.max_subnet_length > 0 ? local.nat_gateway_count : 0
+  count = local.create_intra_subnets ? local.len_intra_subnets : 0
 
   vpc_id = local.vpc_id
 
   tags = merge(
-    { "Name" = "${var.name}-${var.intra_subnet_suffix}" },
+    {
+      "Name" = var.single_nat_gateway ? "${var.name}-${var.intra_subnet_suffix}" : format(
+        "${var.name}-${var.intra_subnet_suffix}-%s",
+        element(var.azs, count.index),
+      )
+    },
     var.tags,
     var.intra_route_table_tags,
   )
