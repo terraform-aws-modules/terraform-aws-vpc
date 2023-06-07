@@ -818,7 +818,7 @@ resource "aws_subnet" "intra" {
 }
 
 resource "aws_route_table" "intra" {
-  count = local.create_intra_subnets ? 1 : 0
+  count = local.create_intra_subnets && local.max_subnet_length > 0 ? local.nat_gateway_count : 0
 
   vpc_id = local.vpc_id
 
@@ -832,8 +832,11 @@ resource "aws_route_table" "intra" {
 resource "aws_route_table_association" "intra" {
   count = local.create_intra_subnets ? local.len_intra_subnets : 0
 
-  subnet_id      = element(aws_subnet.intra[*].id, count.index)
-  route_table_id = element(aws_route_table.intra[*].id, 0)
+  subnet_id = element(aws_subnet.intra[*].id, count.index)
+  route_table_id = element(
+    aws_route_table.intra[*].id,
+    var.single_nat_gateway ? 0 : count.index,
+  )
 }
 
 ################################################################################
