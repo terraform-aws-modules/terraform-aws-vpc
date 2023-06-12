@@ -11,7 +11,7 @@ variable "name" {
 }
 
 variable "cidr" {
-  description = "The CIDR block for the VPC. Default value is a valid CIDR, but not acceptable by AWS and should be overridden"
+  description = "The CIDR block for the VPC. Default value is a valid CIDR, but not acceptable by AWS and should be overridden".CIDR can be explicitly set or it can be derived from IPAM using `ipv4_netmask_length` & `ipv4_ipam_pool_id`"
   type        = string
   default     = "0.0.0.0/0"
 }
@@ -266,18 +266,6 @@ variable "enable_dns_support" {
   description = "Should be true to enable DNS support in the VPC"
   type        = bool
   default     = true
-}
-
-variable "enable_classiclink" {
-  description = "Should be true to enable ClassicLink for the VPC. Only valid in regions and accounts that support EC2 Classic."
-  type        = bool
-  default     = null
-}
-
-variable "enable_classiclink_dns_support" {
-  description = "Should be true to enable ClassicLink DNS Support for the VPC. Only valid in regions and accounts that support EC2 Classic."
-  type        = bool
-  default     = null
 }
 
 variable "enable_nat_gateway" {
@@ -2967,4 +2955,193 @@ variable "create_egress_only_igw" {
   description = "Controls if an Egress Only Internet Gateway is created and its related routes."
   type        = bool
   default     = true
+}
+variable "ipv6_cidr" {
+  description = "(Optional) IPv6 CIDR block to request from an IPAM Pool. Can be set explicitly or derived from IPAM using `ipv6_netmask_length`"
+  type        = string
+  default     = null
+}
+
+variable "use_ipam_pool" {
+  description = "Determines whether IPAM pool is used for CIDR allocation"
+  type        = bool
+  default     = false
+}
+
+variable "ipv6_ipam_pool_id" {
+  description = "(Optional) IPAM Pool ID for a IPv6 pool. Conflicts with `assign_generated_ipv6_cidr_block`"
+  type        = string
+  default     = null
+}
+
+variable "ipv6_netmask_length" {
+  description = "(Optional) Netmask length to request from IPAM Pool. Conflicts with `ipv6_cidr_block`. This can be omitted if IPAM pool as a `allocation_default_netmask_length` set. Valid values: `56`"
+  type        = number
+  default     = null
+}
+
+variable "ipv6_cidr_block_network_border_group" {
+  description = "By default when an IPv6 CIDR is assigned to a VPC a default ipv6_cidr_block_network_border_group will be set to the region of the VPC. This can be changed to restrict advertisement of public addresses to specific Network Border Groups such as LocalZones"
+  type        = string
+  default     = null
+}
+variable "enable_network_address_usage_metrics" {
+  description = "Determines whether network address usage metrics are enabled for the VPC"
+  type        = bool
+  default     = null
+}
+
+variable "public_subnet_enable_dns64" {
+  description = "Indicates whether DNS queries made to the Amazon-provided DNS Resolver in this subnet should return synthetic IPv6 addresses for IPv4-only destinations. Default: `true`"
+  type        = bool
+  default     = true
+}
+
+variable "public_subnet_enable_resource_name_dns_aaaa_record_on_launch" {
+  description = "Indicates whether to respond to DNS queries for instance hostnames with DNS AAAA records. Default: `true`"
+  type        = bool
+  default     = true
+}
+
+variable "public_subnet_enable_resource_name_dns_a_record_on_launch" {
+  description = "Indicates whether to respond to DNS queries for instance hostnames with DNS A records. Default: `false`"
+  type        = bool
+  default     = false
+}
+variable "public_subnet_ipv6_native" {
+  description = "Indicates whether to create an IPv6-only subnet. Default: `false`"
+  type        = bool
+  default     = false
+}
+variable "public_subnet_private_dns_hostname_type_on_launch" {
+  description = "The type of hostnames to assign to instances in the subnet at launch. For IPv6-only subnets, an instance DNS name must be based on the instance ID. For dual-stack and IPv4-only subnets, you can specify whether DNS names use the instance IPv4 address or the instance ID. Valid values: `ip-name`, `resource-name`"
+  type        = string
+  default     = null
+}
+
+variable "public_subnet_names" {
+  description = "Explicit values to use in the Name tag on public subnets. If empty, Name tags are generated"
+  type        = list(string)
+  default     = []
+}
+variable "public_subnet_tags_per_az" {
+  description = "Additional tags for the public subnets where the primary key is the AZ"
+  type        = map(map(string))
+  default     = {}
+}
+variable "private_subnet_enable_dns64" {
+  description = "Indicates whether DNS queries made to the Amazon-provided DNS Resolver in this subnet should return synthetic IPv6 addresses for IPv4-only destinations. Default: `true`"
+  type        = bool
+  default     = true
+}
+
+variable "private_subnet_enable_resource_name_dns_aaaa_record_on_launch" {
+  description = "Indicates whether to respond to DNS queries for instance hostnames with DNS AAAA records. Default: `true`"
+  type        = bool
+  default     = true
+}
+
+variable "private_subnet_enable_resource_name_dns_a_record_on_launch" {
+  description = "Indicates whether to respond to DNS queries for instance hostnames with DNS A records. Default: `false`"
+  type        = bool
+  default     = false
+}
+
+variable "private_subnet_ipv6_native" {
+  description = "Indicates whether to create an IPv6-only subnet. Default: `false`"
+  type        = bool
+  default     = false
+}
+
+variable "private_subnet_private_dns_hostname_type_on_launch" {
+  description = "The type of hostnames to assign to instances in the subnet at launch. For IPv6-only subnets, an instance DNS name must be based on the instance ID. For dual-stack and IPv4-only subnets, you can specify whether DNS names use the instance IPv4 address or the instance ID. Valid values: `ip-name`, `resource-name`"
+  type        = string
+  default     = null
+}
+variable "private_subnet_names" {
+  description = "Explicit values to use in the Name tag on private subnets. If empty, Name tags are generated"
+  type        = list(string)
+  default     = []
+}
+variable "private_subnet_tags_per_az" {
+  description = "Additional tags for the private subnets where the primary key is the AZ"
+  type        = map(map(string))
+  default     = {}
+}
+variable "database_subnet_assign_ipv6_address_on_creation" {
+  description = "Specify true to indicate that network interfaces created in the specified subnet should be assigned an IPv6 address. Default is `false`"
+  type        = bool
+  default     = false
+}
+
+variable "database_subnet_enable_dns64" {
+  description = "Indicates whether DNS queries made to the Amazon-provided DNS Resolver in this subnet should return synthetic IPv6 addresses for IPv4-only destinations. Default: `true`"
+  type        = bool
+  default     = true
+}
+
+variable "database_subnet_enable_resource_name_dns_aaaa_record_on_launch" {
+  description = "Indicates whether to respond to DNS queries for instance hostnames with DNS AAAA records. Default: `true`"
+  type        = bool
+  default     = true
+}
+
+variable "database_subnet_enable_resource_name_dns_a_record_on_launch" {
+  description = "Indicates whether to respond to DNS queries for instance hostnames with DNS A records. Default: `false`"
+  type        = bool
+  default     = false
+}
+
+variable "database_subnet_ipv6_native" {
+  description = "Indicates whether to create an IPv6-only subnet. Default: `false`"
+  type        = bool
+  default     = false
+}
+
+variable "database_subnet_private_dns_hostname_type_on_launch" {
+  description = "The type of hostnames to assign to instances in the subnet at launch. For IPv6-only subnets, an instance DNS name must be based on the instance ID. For dual-stack and IPv4-only subnets, you can specify whether DNS names use the instance IPv4 address or the instance ID. Valid values: `ip-name`, `resource-name`"
+  type        = string
+  default     = null
+}
+
+variable "database_subnet_names" {
+  description = "Explicit values to use in the Name tag on database subnets. If empty, Name tags are generated"
+  type        = list(string)
+  default     = []
+}
+variable "redshift_subnet_enable_dns64" {
+  description = "Indicates whether DNS queries made to the Amazon-provided DNS Resolver in this subnet should return synthetic IPv6 addresses for IPv4-only destinations. Default: `true`"
+  type        = bool
+  default     = true
+}
+
+variable "redshift_subnet_enable_resource_name_dns_aaaa_record_on_launch" {
+  description = "Indicates whether to respond to DNS queries for instance hostnames with DNS AAAA records. Default: `true`"
+  type        = bool
+  default     = true
+}
+
+variable "redshift_subnet_enable_resource_name_dns_a_record_on_launch" {
+  description = "Indicates whether to respond to DNS queries for instance hostnames with DNS A records. Default: `false`"
+  type        = bool
+  default     = false
+}
+
+
+variable "redshift_subnet_ipv6_native" {
+  description = "Indicates whether to create an IPv6-only subnet. Default: `false`"
+  type        = bool
+  default     = false
+}
+
+variable "redshift_subnet_private_dns_hostname_type_on_launch" {
+  description = "The type of hostnames to assign to instances in the subnet at launch. For IPv6-only subnets, an instance DNS name must be based on the instance ID. For dual-stack and IPv4-only subnets, you can specify whether DNS names use the instance IPv4 address or the instance ID. Valid values: `ip-name`, `resource-name`"
+  type        = string
+  default     = null
+}
+
+variable "redshift_subnet_names" {
+  description = "Explicit values to use in the Name tag on redshift subnets. If empty, Name tags are generated"
+  type        = list(string)
+  default     = []
 }
