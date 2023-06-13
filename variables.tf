@@ -268,18 +268,6 @@ variable "enable_dns_support" {
   default     = true
 }
 
-variable "enable_classiclink" {
-  description = "Should be true to enable ClassicLink for the VPC. Only valid in regions and accounts that support EC2 Classic."
-  type        = bool
-  default     = null
-}
-
-variable "enable_classiclink_dns_support" {
-  description = "Should be true to enable ClassicLink DNS Support for the VPC. Only valid in regions and accounts that support EC2 Classic."
-  type        = bool
-  default     = null
-}
-
 variable "enable_nat_gateway" {
   description = "Should be true if you want to provision NAT Gateways for each of your private networks"
   type        = bool
@@ -2545,12 +2533,6 @@ variable "default_vpc_enable_dns_support" {
 
 variable "default_vpc_enable_dns_hostnames" {
   description = "Should be true to enable DNS hostnames in the Default VPC"
-  type        = bool
-  default     = false
-}
-
-variable "default_vpc_enable_classiclink" {
-  description = "Should be true to enable ClassicLink in the Default VPC"
   type        = bool
   default     = false
 }
