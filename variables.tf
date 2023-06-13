@@ -11,7 +11,7 @@ variable "name" {
 }
 
 variable "cidr" {
-  description = "The CIDR block for the VPC. Default value is a valid CIDR, but not acceptable by AWS and should be overridden".CIDR can be explicitly set or it can be derived from IPAM using `ipv4_netmask_length` & `ipv4_ipam_pool_id`"
+  description = "The CIDR block for the VPC. Default value is a valid CIDR, but not acceptable by AWS and should be overridden.CIDR can be explicitly set or it can be derived from IPAM using `ipv4_netmask_length` & `ipv4_ipam_pool_id`"
   type        = string
   default     = "0.0.0.0/0"
 }
@@ -76,11 +76,6 @@ variable "public_subnet_assign_ipv6_address_on_creation" {
   default     = null
 }
 
-variable "database_subnet_assign_ipv6_address_on_creation" {
-  description = "Assign IPv6 address on database subnet, must be disabled to change IPv6 CIDRs. This is the IPv6 equivalent of map_public_ip_on_launch"
-  type        = bool
-  default     = null
-}
 
 variable "redshift_subnet_assign_ipv6_address_on_creation" {
   description = "Assign IPv6 address on redshift subnet, must be disabled to change IPv6 CIDRs. This is the IPv6 equivalent of map_public_ip_on_launch"
@@ -3145,3 +3140,14 @@ variable "redshift_subnet_names" {
   type        = list(string)
   default     = []
 }
+variable "ipv4_ipam_pool_id" {
+  description = "(Optional) The ID of an IPv4 IPAM pool you want to use for allocating this VPC's CIDR"
+  type        = string
+  default     = null
+}
+variable "ipv4_netmask_length" {
+  description = "(Optional) The netmask length of the IPv4 CIDR you want to allocate to this VPC. Requires specifying a ipv4_ipam_pool_id"
+  type        = number
+  default     = null
+}
+
