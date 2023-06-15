@@ -409,8 +409,6 @@ resource "aws_subnet" "public" {
 #####################
 # Public eks subnet
 #####################
-
-
 resource "aws_subnet" "public_eks_blue" {
   count = var.create_vpc && length(var.public_eks_subnets_blue) > 0 && (false == var.one_nat_gateway_per_az || length(var.public_eks_subnets_blue) >= length(var.azs)) ? length(var.public_eks_subnets_blue) : 0
 
