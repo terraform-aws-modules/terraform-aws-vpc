@@ -1,8 +1,6 @@
-# VPC with IPAM pool
+# VPC with IPv6 enabled
 
-Configuration in this directory creates set of VPC resources using the CIDR provided by an IPAM pool.
-
-Note: Due to the nature of vending CIDR blocks from an IPAM pool, the IPAM pool must exist prior to creating a VPC using one of the CIDRs from the pool.
+Configuration in this directory creates set of VPC resources with IPv6 enabled on VPC and subnets.
 
 ## Usage
 
@@ -11,15 +9,7 @@ To run this example you need to execute:
 ```bash
 $ terraform init
 $ terraform plan
-$ terraform apply -target=aws_vpc_ipam_preview_next_cidr.this # CIDR pool must exist before assigning CIDR from pool
 $ terraform apply
-```
-
-To destroy this example you can execute:
-
-```bash
-$ terraform destroy -target=module.vpc # destroy VPC that uses the IPAM pool CIDR first
-$ terraform destroy
 ```
 
 Note that this example may create resources which can cost money (AWS Elastic IP, for example). Run `terraform destroy` when you don't need these resources.
@@ -29,31 +19,26 @@ Note that this example may create resources which can cost money (AWS Elastic IP
 
 | Name | Version |
 |------|---------|
-| <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 0.13.1 |
-| <a name="requirement_aws"></a> [aws](#requirement\_aws) | >= 3.73 |
+| <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 1.0 |
+| <a name="requirement_aws"></a> [aws](#requirement\_aws) | >= 5.0 |
 
 ## Providers
 
 | Name | Version |
 |------|---------|
-| <a name="provider_aws"></a> [aws](#provider\_aws) | >= 3.73 |
+| <a name="provider_aws"></a> [aws](#provider\_aws) | >= 5.0 |
 
 ## Modules
 
 | Name | Source | Version |
 |------|--------|---------|
-| <a name="module_vpc_ipam_set_cidr"></a> [vpc\_ipam\_set\_cidr](#module\_vpc\_ipam\_set\_cidr) | ../.. | n/a |
-| <a name="module_vpc_ipam_set_netmask"></a> [vpc\_ipam\_set\_netmask](#module\_vpc\_ipam\_set\_netmask) | ../.. | n/a |
+| <a name="module_vpc"></a> [vpc](#module\_vpc) | ../.. | n/a |
 
 ## Resources
 
 | Name | Type |
 |------|------|
-| [aws_vpc_ipam.this](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/vpc_ipam) | resource |
-| [aws_vpc_ipam_pool.ipv6](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/vpc_ipam_pool) | resource |
-| [aws_vpc_ipam_pool.this](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/vpc_ipam_pool) | resource |
-| [aws_vpc_ipam_pool_cidr.this](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/vpc_ipam_pool_cidr) | resource |
-| [aws_vpc_ipam_preview_next_cidr.this](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/vpc_ipam_preview_next_cidr) | resource |
+| [aws_availability_zones.available](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/availability_zones) | data source |
 
 ## Inputs
 
