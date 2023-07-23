@@ -279,7 +279,7 @@ output "database_subnet_group_name" {
 
 output "database_route_table_ids" {
   description = "List of IDs of database route tables"
-  value       = try(coalescelist(aws_route_table.database[*].id, local.private_route_table_ids), [])
+  value       = length(aws_route_table.database[*].id) > 0 ? aws_route_table.database[*].id : (length(aws_route_table.private[*].id) > 0 ? aws_route_table.private[*].id : [])
 }
 
 output "database_internet_gateway_route_id" {

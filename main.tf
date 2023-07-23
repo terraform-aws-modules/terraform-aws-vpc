@@ -403,7 +403,7 @@ resource "aws_route_table" "database" {
 }
 
 resource "aws_route_table_association" "database" {
-  count = local.create_database_subnets ? local.len_database_subnets : 0
+  count = local.create_database_subnets && (length(aws_route_table.database[*].id) > 0 || length(aws_route_table.private[*].id) > 0) ? local.len_database_subnets : 0
 
   subnet_id = element(aws_subnet.database[*].id, count.index)
   route_table_id = element(
