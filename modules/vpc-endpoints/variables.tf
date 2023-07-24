@@ -39,3 +39,43 @@ variable "timeouts" {
   type        = map(string)
   default     = {}
 }
+
+################################################################################
+# Security Group
+################################################################################
+
+variable "create_security_group" {
+  description = "Determines if a security group is created"
+  type        = bool
+  default     = false
+}
+
+variable "security_group_name" {
+  description = "Name to use on security group created. Conflicts with `security_group_name_prefix`"
+  type        = string
+  default     = null
+}
+
+variable "security_group_name_prefix" {
+  description = "Name prefix to use on security group created. Conflicts with `security_group_name`"
+  type        = string
+  default     = null
+}
+
+variable "security_group_description" {
+  description = "Description of the security group created"
+  type        = string
+  default     = null
+}
+
+variable "security_group_rules" {
+  description = "Security group rules to add to the security group created"
+  type        = any
+  default     = {}
+}
+
+variable "security_group_tags" {
+  description = "A map of additional tags to add to the security group created"
+  type        = map(string)
+  default     = {}
+}

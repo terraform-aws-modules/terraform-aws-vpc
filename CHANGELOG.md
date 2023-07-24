@@ -2,6 +2,24 @@
 
 All notable changes to this project will be documented in this file.
 
+## [5.1.0](https://github.com/terraform-aws-modules/terraform-aws-vpc/compare/v5.0.0...v5.1.0) (2023-07-15)
+
+
+### Features
+
+* Add support for creating a security group for VPC endpoint(s) ([#962](https://github.com/terraform-aws-modules/terraform-aws-vpc/issues/962)) ([802d5f1](https://github.com/terraform-aws-modules/terraform-aws-vpc/commit/802d5f14c29db4e50b3f2aaf87950845594a31bd))
+
+## [5.0.0](https://github.com/terraform-aws-modules/terraform-aws-vpc/compare/v4.0.2...v5.0.0) (2023-05-30)
+
+
+### ⚠ BREAKING CHANGES
+
+* Bump Terraform AWS Provider version to 5.0 (#941)
+
+### Features
+
+* Bump Terraform AWS Provider version to 5.0 ([#941](https://github.com/terraform-aws-modules/terraform-aws-vpc/issues/941)) ([2517eb9](https://github.com/terraform-aws-modules/terraform-aws-vpc/commit/2517eb98a39500897feecd27178994055ee2eb5e))
+
 ### [4.0.2](https://github.com/terraform-aws-modules/terraform-aws-vpc/compare/v4.0.1...v4.0.2) (2023-05-15)
 
 
