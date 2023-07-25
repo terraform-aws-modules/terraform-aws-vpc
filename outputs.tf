@@ -279,6 +279,7 @@ output "database_subnet_group_name" {
 
 output "database_route_table_ids" {
   description = "List of IDs of database route tables"
+  # Refer to https://github.com/terraform-aws-modules/terraform-aws-vpc/pull/926 before changing logic
   value       = length(aws_route_table.database[*].id) > 0 ? aws_route_table.database[*].id : aws_route_table.private[*].id
 }
 
