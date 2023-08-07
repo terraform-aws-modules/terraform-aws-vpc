@@ -617,3 +617,36 @@ output "name" {
   description = "The name of the VPC specified as argument to this module"
   value       = var.name
 }
+
+################################################################################
+# Our own outputs
+################################################################################
+output "private_subnets_az_names" {
+  description = "List of AZ names of private subnets"
+  value       = aws_subnet.private[*].availability_zone
+}
+
+output "private_subnets_az_ids" {
+  description = "List of AZ IDs of private subnets"
+  value       = aws_subnet.private[*].availability_zone_id
+}
+
+output "public_subnets_az_names" {
+  description = "List of AZ names of public subnets"
+  value       = aws_subnet.public[*].availability_zone
+}
+
+output "public_subnets_az_ids" {
+  description = "List of AZ IDs of public subnets"
+  value       = aws_subnet.public[*].availability_zone_id
+}
+
+output "database_subnets_az_names" {
+  description = "List of AZ names of database subnets"
+  value       = aws_subnet.database[*].availability_zone
+}
+
+output "database_subnets_az_ids" {
+  description = "List of AZ IDs of database subnets"
+  value       = aws_subnet.database[*].availability_zone_id
+}
