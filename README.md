@@ -262,7 +262,7 @@ Full contributing [guidelines are covered here](.github/contributing.md).
 
 | Name | Version |
 |------|---------|
-| <a name="provider_aws"></a> [aws](#provider\_aws) | 5.12.0 |
+| <a name="provider_aws"></a> [aws](#provider\_aws) | >= 4.35 |
 
 ## Modules
 
