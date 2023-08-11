@@ -461,7 +461,7 @@ output "intra_subnets_ipv6_cidr_blocks" {
 
 output "firewall_route_table_ids" {
   description = "List of IDs of firewall route tables"
-  value       = aws_route_table.firewall.*.id
+  value       = aws_route_table.firewall[*].id
 }
 
 output "intra_route_table_ids" {

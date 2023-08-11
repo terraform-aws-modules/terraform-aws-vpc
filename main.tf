@@ -1177,7 +1177,7 @@ resource "aws_network_acl" "firewall" {
   count = var.create_vpc && var.firewall_dedicated_network_acl && length(var.firewall_subnets) > 0 ? 1 : 0
 
   vpc_id     = element(concat(aws_vpc.this[*].id, [""]), 0)
-  subnet_ids = aws_subnet.firewall.*.id
+  subnet_ids = aws_subnet.firewall[*].id
 
   tags = merge(
     {
