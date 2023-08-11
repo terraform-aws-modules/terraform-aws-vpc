@@ -25,101 +25,10 @@ variable "cidr_name" {
   default     = ""
 }
 
-variable "enable_ipv6" {
-  description = "Requests an Amazon-provided IPv6 CIDR block with a /56 prefix length for the VPC. You cannot specify the range of IP addresses, or the size of the CIDR block."
-
-  type    = bool
-  default = false
-}
-
-variable "private_subnet_ipv6_prefixes" {
-  description = "Assigns IPv6 private subnet id based on the Amazon provided /56 prefix base 10 integer (0-256). Must be of equal length to the corresponding IPv4 subnet list"
-  type        = list(string)
-  default     = []
-}
-
-variable "public_subnet_ipv6_prefixes" {
-  description = "Assigns IPv6 public subnet id based on the Amazon provided /56 prefix base 10 integer (0-256). Must be of equal length to the corresponding IPv4 subnet list"
-  type        = list(string)
-  default     = []
-}
-
-variable "outpost_subnet_ipv6_prefixes" {
-  description = "Assigns IPv6 outpost subnet id based on the Amazon provided /56 prefix base 10 integer (0-256). Must be of equal length to the corresponding IPv4 subnet list"
-  type        = list(string)
-  default     = []
-}
-
-variable "database_subnet_ipv6_prefixes" {
-  description = "Assigns IPv6 database subnet id based on the Amazon provided /56 prefix base 10 integer (0-256). Must be of equal length to the corresponding IPv4 subnet list"
-  type        = list(string)
-  default     = []
-}
-
-variable "redshift_subnet_ipv6_prefixes" {
-  description = "Assigns IPv6 redshift subnet id based on the Amazon provided /56 prefix base 10 integer (0-256). Must be of equal length to the corresponding IPv4 subnet list"
-  type        = list(string)
-  default     = []
-}
-
-variable "elasticache_subnet_ipv6_prefixes" {
-  description = "Assigns IPv6 elasticache subnet id based on the Amazon provided /56 prefix base 10 integer (0-256). Must be of equal length to the corresponding IPv4 subnet list"
-  type        = list(string)
-  default     = []
-}
-
-variable "intra_subnet_ipv6_prefixes" {
-  description = "Assigns IPv6 intra subnet id based on the Amazon provided /56 prefix base 10 integer (0-256). Must be of equal length to the corresponding IPv4 subnet list"
-  type        = list(string)
-  default     = []
-}
-
 variable "assign_ipv6_address_on_creation" {
   description = "Assign IPv6 address on subnet, must be disabled to change IPv6 CIDRs. This is the IPv6 equivalent of map_public_ip_on_launch"
   type        = bool
   default     = false
-}
-
-variable "private_subnet_assign_ipv6_address_on_creation" {
-  description = "Assign IPv6 address on private subnet, must be disabled to change IPv6 CIDRs. This is the IPv6 equivalent of map_public_ip_on_launch"
-  type        = bool
-  default     = null
-}
-
-variable "public_subnet_assign_ipv6_address_on_creation" {
-  description = "Assign IPv6 address on public subnet, must be disabled to change IPv6 CIDRs. This is the IPv6 equivalent of map_public_ip_on_launch"
-  type        = bool
-  default     = null
-}
-
-variable "outpost_subnet_assign_ipv6_address_on_creation" {
-  description = "Assign IPv6 address on outpost subnet, must be disabled to change IPv6 CIDRs. This is the IPv6 equivalent of map_public_ip_on_launch"
-  type        = bool
-  default     = null
-}
-
-variable "database_subnet_assign_ipv6_address_on_creation" {
-  description = "Assign IPv6 address on database subnet, must be disabled to change IPv6 CIDRs. This is the IPv6 equivalent of map_public_ip_on_launch"
-  type        = bool
-  default     = null
-}
-
-variable "redshift_subnet_assign_ipv6_address_on_creation" {
-  description = "Assign IPv6 address on redshift subnet, must be disabled to change IPv6 CIDRs. This is the IPv6 equivalent of map_public_ip_on_launch"
-  type        = bool
-  default     = null
-}
-
-variable "elasticache_subnet_assign_ipv6_address_on_creation" {
-  description = "Assign IPv6 address on elasticache subnet, must be disabled to change IPv6 CIDRs. This is the IPv6 equivalent of map_public_ip_on_launch"
-  type        = bool
-  default     = null
-}
-
-variable "intra_subnet_assign_ipv6_address_on_creation" {
-  description = "Assign IPv6 address on intra subnet, must be disabled to change IPv6 CIDRs. This is the IPv6 equivalent of map_public_ip_on_launch"
-  type        = bool
-  default     = null
 }
 
 variable "secondary_cidr_blocks" {
@@ -134,12 +43,6 @@ variable "instance_tenancy" {
   default     = "default"
 }
 
-variable "public_subnet_suffix" {
-  description = "Suffix to append to public subnets name"
-  type        = string
-  default     = "public"
-}
-
 variable "firewall_subnet_suffix" {
   description = "Suffix to append to firewall subnets name"
   type        = string
@@ -152,128 +55,8 @@ variable "firewall_subnet_ipv6_prefixes" {
   default     = []
 }
 
-variable "private_subnet_suffix" {
-  description = "Suffix to append to private subnets name"
-  type        = string
-  default     = "private"
-}
-
-variable "public_subnet_names" {
-  description = "Explicit values to use in the Name tag on public subnets. If empty, Name tags are generated."
-  type        = list(string)
-  default     = []
-}
-
-variable "private_subnet_names" {
-  description = "Explicit values to use in the Name tag on private subnets. If empty, Name tags are generated."
-  type        = list(string)
-  default     = []
-}
-
-variable "outpost_subnet_names" {
-  description = "Explicit values to use in the Name tag on outpost subnets. If empty, Name tags are generated."
-  type        = list(string)
-  default     = []
-}
-
-variable "intra_subnet_names" {
-  description = "Explicit values to use in the Name tag on intra subnets. If empty, Name tags are generated."
-  type        = list(string)
-  default     = []
-}
-
-variable "database_subnet_names" {
-  description = "Explicit values to use in the Name tag on database subnets. If empty, Name tags are generated."
-  type        = list(string)
-  default     = []
-}
-
-variable "redshift_subnet_names" {
-  description = "Explicit values to use in the Name tag on redshift subnets. If empty, Name tags are generated."
-  type        = list(string)
-  default     = []
-}
-
-variable "elasticache_subnet_names" {
-  description = "Explicit values to use in the Name tag on elasticache subnets. If empty, Name tags are generated."
-  type        = list(string)
-  default     = []
-}
-
-variable "outpost_subnet_suffix" {
-  description = "Suffix to append to outpost subnets name"
-  type        = string
-  default     = "outpost"
-}
-
-variable "intra_subnet_suffix" {
-  description = "Suffix to append to intra subnets name"
-  type        = string
-  default     = "intra"
-}
-
-variable "database_subnet_suffix" {
-  description = "Suffix to append to database subnets name"
-  type        = string
-  default     = "db"
-}
-
-variable "redshift_subnet_suffix" {
-  description = "Suffix to append to redshift subnets name"
-  type        = string
-  default     = "redshift"
-}
-
-variable "elasticache_subnet_suffix" {
-  description = "Suffix to append to elasticache subnets name"
-  type        = string
-  default     = "elasticache"
-}
-
-variable "public_subnets" {
-  description = "A list of public subnets inside the VPC"
-  type        = list(string)
-  default     = []
-}
-
 variable "firewall_subnets" {
   description = "A list of firewall subnets inside the VPC"
-  type        = list(string)
-  default     = []
-}
-
-variable "private_subnets" {
-  description = "A list of private subnets inside the VPC"
-  type        = list(string)
-  default     = []
-}
-
-variable "outpost_subnets" {
-  description = "A list of outpost subnets inside the VPC"
-  type        = list(string)
-  default     = []
-}
-
-variable "database_subnets" {
-  description = "A list of database subnets"
-  type        = list(string)
-  default     = []
-}
-
-variable "redshift_subnets" {
-  description = "A list of redshift subnets"
-  type        = list(string)
-  default     = []
-}
-
-variable "elasticache_subnets" {
-  description = "A list of elasticache subnets"
-  type        = list(string)
-  default     = []
-}
-
-variable "intra_subnets" {
-  description = "A list of intra subnets"
   type        = list(string)
   default     = []
 }
@@ -284,64 +67,16 @@ variable "create_firewall_subnet_route_table" {
   default     = false
 }
 
-variable "create_database_subnet_route_table" {
-  description = "Controls if separate route table for database should be created"
-  type        = bool
-  default     = false
-}
-
-variable "create_redshift_subnet_route_table" {
-  description = "Controls if separate route table for redshift should be created"
-  type        = bool
-  default     = false
-}
-
-variable "enable_public_redshift" {
-  description = "Controls if redshift should have public routing table"
-  type        = bool
-  default     = false
-}
-
-variable "create_elasticache_subnet_route_table" {
-  description = "Controls if separate route table for elasticache should be created"
-  type        = bool
-  default     = false
-}
-
-variable "create_database_subnet_group" {
-  description = "Controls if database subnet group should be created (n.b. database_subnets must also be set)"
-  type        = bool
-  default     = true
-}
-
-variable "create_elasticache_subnet_group" {
-  description = "Controls if elasticache subnet group should be created"
-  type        = bool
-  default     = true
-}
-
-variable "create_redshift_subnet_group" {
-  description = "Controls if redshift subnet group should be created"
-  type        = bool
-  default     = true
-}
-
-variable "create_database_internet_gateway_route" {
-  description = "Controls if an internet gateway route for public database access should be created"
-  type        = bool
-  default     = false
-}
-
-variable "create_database_nat_gateway_route" {
-  description = "Controls if a nat gateway route should be created to give internet access to the database subnets"
-  type        = bool
-  default     = false
-}
-
 variable "create_firewall_nat_gateway_route" {
   description = "Controls if a nat gateway route should be created to give internet access to the firewall subnets"
   type        = bool
   default     = false
+}
+
+variable "ipv4_ipam_pool_id" {
+  description = "(Optional) The ID of an IPv4 IPAM pool you want to use for allocating this VPC's CIDR"
+  type        = string
+  default     = null
 }
 
 variable "azs" {
@@ -374,43 +109,6 @@ variable "use_ipam_pool" {
   default     = false
 }
 
-variable "nat_gateway_destination_cidr_block" {
-  description = "Used to pass a custom destination route for private NAT Gateway. If not specified, the default 0.0.0.0/0 is used as a destination route."
-  type        = string
-  default     = "0.0.0.0/0"
-}
-
-variable "single_nat_gateway" {
-  description = "Should be true if you want to provision a single shared NAT Gateway across all of your private networks"
-  type        = bool
-  default     = false
-}
-
-variable "one_nat_gateway_per_az" {
-  description = "Should be true if you want only one NAT Gateway per availability zone. Requires `var.azs` to be set, and the number of `public_subnets` created to be greater than or equal to the number of availability zones specified in `var.azs`."
-  type        = bool
-  default     = false
-}
-
-variable "reuse_nat_ips" {
-  description = "Should be true if you don't want EIPs to be created for your NAT Gateways and will instead pass them in via the 'external_nat_ip_ids' variable"
-  type        = bool
-  default     = false
-}
-
-variable "external_nat_ip_ids" {
-  description = "List of EIP IDs to be assigned to the NAT Gateways (used in combination with reuse_nat_ips)"
-  type        = list(string)
-  default     = []
-}
-
-
-variable "external_nat_ips" {
-  description = "List of EIPs to be used for `nat_public_ips` output (used in combination with reuse_nat_ips and external_nat_ip_ids)"
-  type        = list(string)
-  default     = []
-}
-
 variable "firewall_sync_states" {
   description = "VPC endpoint ID of firewall endpoint for route table to point to"
   type = list(object({
@@ -427,42 +125,6 @@ variable "firewall_route_table_tags" {
   description = "Additional tags for the firewall route tables"
   type        = map(string)
   default     = {}
-}
-
-variable "map_public_ip_on_launch" {
-  description = "Should be false if you do not want to auto-assign public IP on launch"
-  type        = bool
-  default     = true
-}
-
-variable "customer_gateways" {
-  description = "Maps of Customer Gateway's attributes (BGP ASN and Gateway's Internet-routable external IP address)"
-  type        = map(map(any))
-  default     = {}
-}
-
-variable "enable_vpn_gateway" {
-  description = "Should be true if you want to create a new VPN Gateway resource and attach it to the VPC"
-  type        = bool
-  default     = false
-}
-
-variable "vpn_gateway_id" {
-  description = "ID of VPN Gateway to attach to the VPC"
-  type        = string
-  default     = ""
-}
-
-variable "amazon_side_asn" {
-  description = "The Autonomous System Number (ASN) for the Amazon side of the gateway. By default the virtual private gateway is created with the current default Amazon ASN."
-  type        = string
-  default     = "64512"
-}
-
-variable "vpn_gateway_az" {
-  description = "The Availability Zone for the VPN Gateway"
-  type        = string
-  default     = null
 }
 
 variable "ipv4_netmask_length" {
@@ -513,188 +175,8 @@ variable "tags" {
   default     = {}
 }
 
-variable "vpc_tags" {
-  description = "Additional tags for the VPC"
-  type        = map(string)
-  default     = {}
-}
-
-variable "igw_tags" {
-  description = "Additional tags for the internet gateway"
-  type        = map(string)
-  default     = {}
-}
-
-variable "public_subnet_tags" {
-  description = "Additional tags for the public subnets"
-  type        = map(string)
-  default     = {}
-}
-
-variable "public_subnet_tags_per_az" {
-  description = "Additional tags for the public subnets where the primary key is the AZ"
-  type        = map(map(string))
-  default     = {}
-}
-
-variable "private_subnet_tags" {
-  description = "Additional tags for the private subnets"
-  type        = map(string)
-  default     = {}
-}
-
-variable "private_subnet_tags_per_az" {
-  description = "Additional tags for the private subnets where the primary key is the AZ"
-  type        = map(map(string))
-  default     = {}
-}
-
-variable "outpost_subnet_tags" {
-  description = "Additional tags for the outpost subnets"
-  type        = map(string)
-  default     = {}
-}
-
-variable "public_route_table_tags" {
-  description = "Additional tags for the public route tables"
-  type        = map(string)
-  default     = {}
-}
-
-variable "private_route_table_tags" {
-  description = "Additional tags for the private route tables"
-  type        = map(string)
-  default     = {}
-}
-
-variable "database_route_table_tags" {
-  description = "Additional tags for the database route tables"
-  type        = map(string)
-  default     = {}
-}
-
-variable "redshift_route_table_tags" {
-  description = "Additional tags for the redshift route tables"
-  type        = map(string)
-  default     = {}
-}
-
-variable "elasticache_route_table_tags" {
-  description = "Additional tags for the elasticache route tables"
-  type        = map(string)
-  default     = {}
-}
-
-variable "intra_route_table_tags" {
-  description = "Additional tags for the intra route tables"
-  type        = map(string)
-  default     = {}
-}
-
-variable "database_subnet_group_name" {
-  description = "Name of database subnet group"
-  type        = string
-  default     = null
-}
-
-variable "database_subnet_tags" {
-  description = "Additional tags for the database subnets"
-  type        = map(string)
-  default     = {}
-}
-
-variable "database_subnet_group_tags" {
-  description = "Additional tags for the database subnet group"
-  type        = map(string)
-  default     = {}
-}
-
-variable "redshift_subnet_tags" {
-  description = "Additional tags for the redshift subnets"
-  type        = map(string)
-  default     = {}
-}
-
-variable "redshift_subnet_group_name" {
-  description = "Name of redshift subnet group"
-  type        = string
-  default     = null
-}
-
-variable "redshift_subnet_group_tags" {
-  description = "Additional tags for the redshift subnet group"
-  type        = map(string)
-  default     = {}
-}
-
-variable "elasticache_subnet_group_name" {
-  description = "Name of elasticache subnet group"
-  type        = string
-  default     = null
-}
-
-variable "elasticache_subnet_group_tags" {
-  description = "Additional tags for the elasticache subnet group"
-  type        = map(string)
-  default     = {}
-}
-
-variable "elasticache_subnet_tags" {
-  description = "Additional tags for the elasticache subnets"
-  type        = map(string)
-  default     = {}
-}
-
-variable "intra_subnet_tags" {
-  description = "Additional tags for the intra subnets"
-  type        = map(string)
-  default     = {}
-}
-
 variable "firewall_subnet_tags" {
   description = "Additional tags for the firewall subnets"
-  type        = map(string)
-  default     = {}
-}
-
-variable "public_acl_tags" {
-  description = "Additional tags for the public subnets network ACL"
-  type        = map(string)
-  default     = {}
-}
-
-variable "private_acl_tags" {
-  description = "Additional tags for the private subnets network ACL"
-  type        = map(string)
-  default     = {}
-}
-
-variable "outpost_acl_tags" {
-  description = "Additional tags for the outpost subnets network ACL"
-  type        = map(string)
-  default     = {}
-}
-
-variable "intra_acl_tags" {
-  description = "Additional tags for the intra subnets network ACL"
-  type        = map(string)
-  default     = {}
-}
-
-variable "database_acl_tags" {
-  description = "Additional tags for the database subnets network ACL"
-  type        = map(string)
-  default     = {}
-}
-
-variable "redshift_acl_tags" {
-  description = "Additional tags for the redshift subnets network ACL"
-  type        = map(string)
-  default     = {}
-}
-
-variable "elasticache_acl_tags" {
-  description = "Additional tags for the elasticache subnets network ACL"
   type        = map(string)
   default     = {}
 }
@@ -705,47 +187,10 @@ variable "firewall_acl_tags" {
   default     = {}
 }
 
-
-variable "dhcp_options_tags" {
-  description = "Additional tags for the DHCP option set (requires enable_dhcp_options set to true)"
-  type        = map(string)
-  default     = {}
-}
-
-variable "nat_gateway_tags" {
-  description = "Additional tags for the NAT gateways"
-  type        = map(string)
-  default     = {}
-}
-
-variable "nat_eip_tags" {
-  description = "Additional tags for the NAT EIP"
-  type        = map(string)
-  default     = {}
-}
-
-variable "customer_gateway_tags" {
-  description = "Additional tags for the Customer Gateway"
-  type        = map(string)
-  default     = {}
-}
-
-variable "vpn_gateway_tags" {
-  description = "Additional tags for the VPN gateway"
-  type        = map(string)
-  default     = {}
-}
-
 variable "vpc_flow_log_tags" {
   description = "Additional tags for the VPC Flow Logs"
   type        = map(string)
   default     = {}
-}
-
-variable "vpc_flow_log_permissions_boundary" {
-  description = "The ARN of the Permissions Boundary for the VPC Flow Log IAM Role"
-  type        = string
-  default     = null
 }
 
 ################################################################################
@@ -2002,54 +1447,6 @@ variable "default_network_acl_name" {
   default     = null
 }
 
-variable "default_network_acl_tags" {
-  description = "Additional tags for the Default Network ACL"
-  type        = map(string)
-  default     = {}
-}
-
-variable "public_dedicated_network_acl" {
-  description = "Whether to use dedicated network ACL (not default) and custom rules for public subnets"
-  type        = bool
-  default     = false
-}
-
-variable "private_dedicated_network_acl" {
-  description = "Whether to use dedicated network ACL (not default) and custom rules for private subnets"
-  type        = bool
-  default     = false
-}
-
-variable "outpost_dedicated_network_acl" {
-  description = "Whether to use dedicated network ACL (not default) and custom rules for outpost subnets"
-  type        = bool
-  default     = false
-}
-
-variable "intra_dedicated_network_acl" {
-  description = "Whether to use dedicated network ACL (not default) and custom rules for intra subnets"
-  type        = bool
-  default     = false
-}
-
-variable "database_dedicated_network_acl" {
-  description = "Whether to use dedicated network ACL (not default) and custom rules for database subnets"
-  type        = bool
-  default     = false
-}
-
-variable "redshift_dedicated_network_acl" {
-  description = "Whether to use dedicated network ACL (not default) and custom rules for redshift subnets"
-  type        = bool
-  default     = false
-}
-
-variable "elasticache_dedicated_network_acl" {
-  description = "Whether to use dedicated network ACL (not default) and custom rules for elasticache subnets"
-  type        = bool
-  default     = false
-}
-
 variable "firewall_dedicated_network_acl" {
   description = "Whether to use dedicated network ACL (not default) and custom rules for firewall subnets"
   type        = bool
@@ -2206,12 +1603,6 @@ variable "flow_log_per_hour_partition" {
   default     = false
 }
 
-variable "vpc_flow_log_tags" {
-  description = "Additional tags for the VPC Flow Logs"
-  type        = map(string)
-  default     = {}
-}
-
 ################################################################################
 # Flow Log CloudWatch
 ################################################################################
@@ -2258,36 +1649,6 @@ variable "flow_log_cloudwatch_log_group_kms_key_id" {
   default     = null
 }
 
-variable "flow_log_max_aggregation_interval" {
-  description = "The maximum interval of time during which a flow of packets is captured and aggregated into a flow log record. Valid Values: `60` seconds or `600` seconds."
-  type        = number
-  default     = 600
-}
-
-variable "create_igw" {
-  description = "Controls if an Internet Gateway is created for public subnets and the related routes that connect them."
-  type        = bool
-  default     = true
-}
-
-variable "create_egress_only_igw" {
-  description = "Controls if an Egress Only Internet Gateway is created and its related routes."
-  type        = bool
-  default     = true
-}
-
-variable "outpost_arn" {
-  description = "ARN of Outpost you want to create a subnet in."
-  type        = string
-  default     = null
-}
-
-variable "outpost_az" {
-  description = "AZ where Outpost is anchored."
-  type        = string
-  default     = null
-}
-
 variable "firewall_inbound_acl_rules" {
   description = "firewall subnets inbound network ACL rules"
   type        = list(map(string))
@@ -2318,65 +1679,6 @@ variable "firewall_outbound_acl_rules" {
       cidr_block  = "0.0.0.0/0"
     },
   ]
-}
-
-variable "flow_log_file_format" {
-  description = "(Optional) The format for the flow log. Valid values: `plain-text`, `parquet`."
-  type        = string
-  default     = "plain-text"
-  validation {
-    condition = can(regex("^(plain-text|parquet)$",
-    var.flow_log_file_format))
-    error_message = "ERROR valid values: plain-text, parquet."
-  }
-}
-
-variable "flow_log_hive_compatible_partitions" {
-  description = "(Optional) Indicates whether to use Hive-compatible prefixes for flow logs stored in Amazon S3."
-  type        = bool
-  default     = false
-}
-
-variable "flow_log_per_hour_partition" {
-  description = "(Optional) Indicates whether to partition the flow log per hour. This reduces the cost and response time for queries."
-  type        = bool
-  default     = false
-}
-
-variable "use_ipam_pool" {
-  description = "Determines whether IPAM pool is used for CIDR allocation"
-  type        = bool
-  default     = false
-}
-
-variable "ipv4_ipam_pool_id" {
-  description = "(Optional) The ID of an IPv4 IPAM pool you want to use for allocating this VPC's CIDR."
-  type        = string
-  default     = null
-}
-
-variable "ipv4_netmask_length" {
-  description = "(Optional) The netmask length of the IPv4 CIDR you want to allocate to this VPC. Requires specifying a ipv4_ipam_pool_id."
-  type        = number
-  default     = null
-}
-
-variable "ipv6_cidr" {
-  description = "(Optional) IPv6 CIDR block to request from an IPAM Pool. Can be set explicitly or derived from IPAM using `ipv6_netmask_length`."
-  type        = string
-  default     = null
-}
-
-variable "ipv6_ipam_pool_id" {
-  description = "(Optional) IPAM Pool ID for a IPv6 pool. Conflicts with `assign_generated_ipv6_cidr_block`."
-  type        = string
-  default     = null
-}
-
-variable "ipv6_netmask_length" {
-  description = "(Optional) Netmask length to request from IPAM Pool. Conflicts with `ipv6_cidr_block`. This can be omitted if IPAM pool as a `allocation_default_netmask_length` set. Valid values: `56`."
-  type        = number
-  default     = null
 }
 
 variable "putin_khuylo" {

@@ -459,44 +459,9 @@ output "intra_subnets_ipv6_cidr_blocks" {
   value       = compact(aws_subnet.intra[*].ipv6_cidr_block)
 }
 
-output "elasticache_subnet_group" {
-  description = "ID of elasticache subnet group"
-  value       = try(aws_elasticache_subnet_group.elasticache[0].id, "")
-}
-
-output "elasticache_subnet_group_name" {
-  description = "Name of elasticache subnet group"
-  value       = try(aws_elasticache_subnet_group.elasticache[0].name, "")
-}
-
-output "public_route_table_ids" {
-  description = "List of IDs of public route tables"
-  value       = aws_route_table.public[*].id
-}
-
-output "private_route_table_ids" {
-  description = "List of IDs of private route tables"
-  value       = aws_route_table.private[*].id
-}
-
-output "database_route_table_ids" {
-  description = "List of IDs of database route tables"
-  value       = try(coalescelist(aws_route_table.database[*].id, aws_route_table.private[*].id), [])
-}
-
 output "firewall_route_table_ids" {
   description = "List of IDs of firewall route tables"
   value       = aws_route_table.firewall.*.id
-}
-
-output "redshift_route_table_ids" {
-  description = "List of IDs of redshift route tables"
-  value       = length(aws_route_table.redshift[*].id) > 0 ? aws_route_table.redshift[*].id : (var.enable_public_redshift ? aws_route_table.public[*].id : aws_route_table.private[*].id)
-}
-
-output "elasticache_route_table_ids" {
-  description = "List of IDs of elasticache route tables"
-  value       = try(coalescelist(aws_route_table.elasticache[*].id, aws_route_table.private[*].id), [])
 }
 
 output "intra_route_table_ids" {
@@ -634,79 +599,9 @@ output "default_vpc_main_route_table_id" {
   value       = try(aws_default_vpc.this[0].main_route_table_id, null)
 }
 
-################################################################################
-# VPC Flow Log
-################################################################################
-
-output "public_network_acl_arn" {
-  description = "ARN of the public network ACL"
-  value       = try(aws_network_acl.public[0].arn, "")
-}
-
-output "private_network_acl_id" {
-  description = "ID of the private network ACL"
-  value       = try(aws_network_acl.private[0].id, "")
-}
-
-output "private_network_acl_arn" {
-  description = "ARN of the private network ACL"
-  value       = try(aws_network_acl.private[0].arn, "")
-}
-
-output "outpost_network_acl_id" {
-  description = "ID of the outpost network ACL"
-  value       = try(aws_network_acl.outpost[0].id, "")
-}
-
-output "outpost_network_acl_arn" {
-  description = "ARN of the outpost network ACL"
-  value       = try(aws_network_acl.outpost[0].arn, "")
-}
-
-output "intra_network_acl_id" {
-  description = "ID of the intra network ACL"
-  value       = try(aws_network_acl.intra[0].id, "")
-}
-
-output "intra_network_acl_arn" {
-  description = "ARN of the intra network ACL"
-  value       = try(aws_network_acl.intra[0].arn, "")
-}
-
-output "database_network_acl_id" {
-  description = "ID of the database network ACL"
-  value       = try(aws_network_acl.database[0].id, "")
-}
-
-
-output "database_network_acl_arn" {
-  description = "ARN of the database network ACL"
-  value       = try(aws_network_acl.database[0].arn, "")
-}
-
 output "firewall_network_acl_id" {
   description = "ID of the firewall network ACL"
   value       = concat(aws_network_acl.firewall.*.id, [""])[0]
-}
-
-output "redshift_network_acl_id" {
-  description = "ID of the redshift network ACL"
-  value       = try(aws_network_acl.redshift[0].id, "")
-}
-
-output "redshift_network_acl_arn" {
-  description = "ARN of the redshift network ACL"
-  value       = try(aws_network_acl.redshift[0].arn, "")
-}
-
-output "elasticache_network_acl_id" {
-  description = "ID of the elasticache network ACL"
-  value       = try(aws_network_acl.elasticache[0].id, "")
-}
-
-output "elasticache_network_acl_arn" {
-  description = "ARN of the elasticache network ACL"
-  value       = try(aws_network_acl.elasticache[0].arn, "")
 }
 
 # VPC flow log
