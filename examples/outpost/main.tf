@@ -6,8 +6,20 @@ provider "aws" {
   }
 }
 
+data "aws_availability_zones" "available" {}
+
 locals {
+  name   = "ex-${basename(path.cwd)}"
   region = "eu-west-1"
+
+  vpc_cidr = "10.0.0.0/16"
+  azs      = slice(data.aws_availability_zones.available.names, 0, 3)
+
+  tags = {
+    Example    = local.name
+    GithubRepo = "terraform-aws-vpc"
+    GithubOrg  = "terraform-aws-modules"
+  }
 
   network_acls = {
     outpost_inbound = [
@@ -106,32 +118,18 @@ locals {
 }
 
 ################################################################################
-# Supporting Resources
-################################################################################
-
-data "aws_outposts_outpost" "shared" {
-  name = "SEA19.07"
-}
-
-data "aws_availability_zones" "available" {}
-
-################################################################################
 # VPC Module
 ################################################################################
 
 module "vpc" {
   source = "../../"
 
-  name = "outpost-example"
-  cidr = "10.0.0.0/16"
+  name = local.name
+  cidr = local.vpc_cidr
 
-  azs = [
-    data.aws_availability_zones.available.names[0],
-    data.aws_availability_zones.available.names[1],
-    data.aws_availability_zones.available.names[2],
-  ]
-  private_subnets = ["10.0.1.0/24", "10.0.2.0/24", "10.0.3.0/24"]
-  public_subnets  = ["10.0.101.0/24", "10.0.102.0/24", "10.0.103.0/24"]
+  azs             = local.azs
+  private_subnets = [for k, v in local.azs : cidrsubnet(local.vpc_cidr, 8, k)]
+  public_subnets  = [for k, v in local.azs : cidrsubnet(local.vpc_cidr, 8, k + 4)]
 
   # Outpost is using single AZ specified in `outpost_az`
   outpost_subnets = ["10.0.50.0/24", "10.0.51.0/24"]
@@ -152,8 +150,13 @@ module "vpc" {
   outpost_inbound_acl_rules     = local.network_acls["outpost_inbound"]
   outpost_outbound_acl_rules    = local.network_acls["outpost_outbound"]
 
-  tags = {
-    Owner       = "user"
-    Environment = "dev"
-  }
+  tags = local.tags
+}
+
+################################################################################
+# Supporting Resources
+################################################################################
+
+data "aws_outposts_outpost" "shared" {
+  name = "SEA19.07"
 }

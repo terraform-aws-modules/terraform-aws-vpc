@@ -23,25 +23,26 @@ Note that this example may create resources which can cost money (AWS Elastic IP
 
 | Name | Version |
 |------|---------|
-| <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 0.12.31 |
-| <a name="requirement_aws"></a> [aws](#requirement\_aws) | >= 3.28 |
-| <a name="requirement_random"></a> [random](#requirement\_random) | >= 2 |
+| <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 1.0 |
+| <a name="requirement_aws"></a> [aws](#requirement\_aws) | >= 4.35 |
+| <a name="requirement_random"></a> [random](#requirement\_random) | >= 2.0 |
 
 ## Providers
 
 | Name | Version |
 |------|---------|
-| <a name="provider_aws"></a> [aws](#provider\_aws) | >= 3.28 |
-| <a name="provider_random"></a> [random](#provider\_random) | >= 2 |
+| <a name="provider_aws"></a> [aws](#provider\_aws) | >= 4.35 |
+| <a name="provider_random"></a> [random](#provider\_random) | >= 2.0 |
 
 ## Modules
 
 | Name | Source | Version |
 |------|--------|---------|
-| <a name="module_s3_bucket"></a> [s3\_bucket](#module\_s3\_bucket) | terraform-aws-modules/s3-bucket/aws | ~> 1.0 |
-| <a name="module_vpc_with_flow_logs_cloudwatch_logs"></a> [vpc\_with\_flow\_logs\_cloudwatch\_logs](#module\_vpc\_with\_flow\_logs\_cloudwatch\_logs) | ../../ |  |
-| <a name="module_vpc_with_flow_logs_cloudwatch_logs_default"></a> [vpc\_with\_flow\_logs\_cloudwatch\_logs\_default](#module\_vpc\_with\_flow\_logs\_cloudwatch\_logs\_default) | ../../ |  |
-| <a name="module_vpc_with_flow_logs_s3_bucket"></a> [vpc\_with\_flow\_logs\_s3\_bucket](#module\_vpc\_with\_flow\_logs\_s3\_bucket) | ../../ |  |
+| <a name="module_s3_bucket"></a> [s3\_bucket](#module\_s3\_bucket) | terraform-aws-modules/s3-bucket/aws | ~> 3.0 |
+| <a name="module_vpc_with_flow_logs_cloudwatch_logs"></a> [vpc\_with\_flow\_logs\_cloudwatch\_logs](#module\_vpc\_with\_flow\_logs\_cloudwatch\_logs) | ../../ | n/a |
+| <a name="module_vpc_with_flow_logs_cloudwatch_logs_default"></a> [vpc\_with\_flow\_logs\_cloudwatch\_logs\_default](#module\_vpc\_with\_flow\_logs\_cloudwatch\_logs\_default) | ../../ | n/a |
+| <a name="module_vpc_with_flow_logs_s3_bucket"></a> [vpc\_with\_flow\_logs\_s3\_bucket](#module\_vpc\_with\_flow\_logs\_s3\_bucket) | ../../ | n/a |
+| <a name="module_vpc_with_flow_logs_s3_bucket_parquet"></a> [vpc\_with\_flow\_logs\_s3\_bucket\_parquet](#module\_vpc\_with\_flow\_logs\_s3\_bucket\_parquet) | ../../ | n/a |
 
 ## Resources
 
@@ -52,6 +53,7 @@ Note that this example may create resources which can cost money (AWS Elastic IP
 | [aws_iam_role.vpc_flow_log_cloudwatch](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_role) | resource |
 | [aws_iam_role_policy_attachment.vpc_flow_log_cloudwatch](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_role_policy_attachment) | resource |
 | [random_pet.this](https://registry.terraform.io/providers/hashicorp/random/latest/docs/resources/pet) | resource |
+| [aws_availability_zones.available](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/availability_zones) | data source |
 | [aws_iam_policy_document.flow_log_cloudwatch_assume_role](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/iam_policy_document) | data source |
 | [aws_iam_policy_document.flow_log_s3](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/iam_policy_document) | data source |
 | [aws_iam_policy_document.vpc_flow_log_cloudwatch](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/iam_policy_document) | data source |

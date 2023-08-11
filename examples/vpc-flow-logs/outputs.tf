@@ -55,4 +55,3 @@ output "vpc_flow_logs_s3_bucket_vpc_flow_log_destination_type" {
   description = "The type of the destination for VPC Flow Logs"
   value       = module.vpc_with_flow_logs_s3_bucket.vpc_flow_log_destination_type
 }
-

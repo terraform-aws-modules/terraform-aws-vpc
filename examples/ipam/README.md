@@ -1,8 +1,8 @@
-# Manage Default VPC
+# VPC with IPAM pool
 
-Configuration in this directory does not create new VPC resources, but it adopts [Default VPC](https://docs.aws.amazon.com/AmazonVPC/latest/UserGuide/default-vpc.html) created by AWS to allow management of it using Terraform.
+Configuration in this directory creates set of VPC resources using the CIDR provided by an IPAM pool.
 
-This is not usual type of resource in Terraform, so use it carefully. More information is [here](https://www.terraform.io/docs/providers/aws/r/default_vpc).
+Note: Due to the nature of vending CIDR blocks from an IPAM pool, the IPAM pool must exist prior to creating a VPC using one of the CIDRs from the pool.
 
 ## Usage
 
@@ -11,10 +11,18 @@ To run this example you need to execute:
 ```bash
 $ terraform init
 $ terraform plan
+$ terraform apply -target=aws_vpc_ipam_preview_next_cidr.this # CIDR pool must exist before assigning CIDR from pool
 $ terraform apply
 ```
 
-Run `terraform destroy` when you don't need these resources.
+To destroy this example you can execute:
+
+```bash
+$ terraform destroy -target=module.vpc # destroy VPC that uses the IPAM pool CIDR first
+$ terraform destroy
+```
+
+Note that this example may create resources which can cost money (AWS Elastic IP, for example). Run `terraform destroy` when you don't need these resources.
 
 <!-- BEGINNING OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
 ## Requirements
@@ -26,17 +34,27 @@ Run `terraform destroy` when you don't need these resources.
 
 ## Providers
 
-No providers.
+| Name | Version |
+|------|---------|
+| <a name="provider_aws"></a> [aws](#provider\_aws) | >= 4.35 |
 
 ## Modules
 
 | Name | Source | Version |
 |------|--------|---------|
-| <a name="module_vpc"></a> [vpc](#module\_vpc) | ../../ | n/a |
+| <a name="module_vpc_ipam_set_cidr"></a> [vpc\_ipam\_set\_cidr](#module\_vpc\_ipam\_set\_cidr) | ../.. | n/a |
+| <a name="module_vpc_ipam_set_netmask"></a> [vpc\_ipam\_set\_netmask](#module\_vpc\_ipam\_set\_netmask) | ../.. | n/a |
 
 ## Resources
 
-No resources.
+| Name | Type |
+|------|------|
+| [aws_vpc_ipam.this](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/vpc_ipam) | resource |
+| [aws_vpc_ipam_pool.ipv6](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/vpc_ipam_pool) | resource |
+| [aws_vpc_ipam_pool.this](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/vpc_ipam_pool) | resource |
+| [aws_vpc_ipam_pool_cidr.this](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/vpc_ipam_pool_cidr) | resource |
+| [aws_vpc_ipam_preview_next_cidr.this](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/vpc_ipam_preview_next_cidr) | resource |
+| [aws_availability_zones.available](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/availability_zones) | data source |
 
 ## Inputs
 
