@@ -112,7 +112,7 @@ locals {
 resource "aws_subnet" "public" {
   count = local.create_public_subnets && (!var.one_nat_gateway_per_az || local.len_public_subnets >= length(var.azs)) ? local.len_public_subnets : 0
 
-  assign_ipv6_address_on_creation                = var.enable_ipv6 && var.public_subnet_ipv6_native ? true : var.public_subnet_assign_ipv6_address_on_creation
+  assign_ipv6_address_on_creation                = var.public_subnet_assign_ipv6_address_on_creation == null ? var.assign_ipv6_address_on_creation : var.public_subnet_assign_ipv6_address_on_creation
   availability_zone                              = length(regexall("^[a-z]{2}-", element(var.azs, count.index))) > 0 ? element(var.azs, count.index) : null
   availability_zone_id                           = length(regexall("^[a-z]{2}-", element(var.azs, count.index))) == 0 ? element(var.azs, count.index) : null
   cidr_block                                     = var.public_subnet_ipv6_native ? null : element(concat(var.public_subnets, [""]), count.index)
@@ -402,7 +402,7 @@ resource "aws_db_subnet_group" "database" {
 
   name        = lower("${var.name}-${var.cidr_name}")
   description = "Database subnet group for ${var.name}"
-  subnet_ids  = aws_subnet.database.*.id
+  subnet_ids  = aws_subnet.database.id[*]
 
   tags = merge(
     {
@@ -1061,7 +1061,7 @@ resource "aws_route" "private_ipv6_egress" {
 resource "aws_route" "public_firewall" {
   count = var.create_vpc && var.enable_nat_gateway && length(var.firewall_sync_states) > 0 ? local.nat_gateway_count : 0
 
-  route_table_id         = element(aws_route_table.public.*.id, count.index)
+  route_table_id         = element(aws_route_table.public.id[*], count.index)
   destination_cidr_block = "0.0.0.0/0"
   vpc_endpoint_id = element([for ss in tolist(var.firewall_sync_states) :
   ss.attachment[0].endpoint_id if ss.attachment[0].subnet_id == aws_subnet.firewall[count.index].id], 0)
@@ -1176,8 +1176,8 @@ resource "aws_subnet" "firewall" {
 resource "aws_network_acl" "firewall" {
   count = var.create_vpc && var.firewall_dedicated_network_acl && length(var.firewall_subnets) > 0 ? 1 : 0
 
-  vpc_id     = element(concat(aws_vpc.this.*.id, [""]), 0)
-  subnet_ids = aws_subnet.firewall.*.id
+  vpc_id     = element(concat(aws_vpc.this.id[*], [""]), 0)
+  subnet_ids = aws_subnet.firewall.id[*]
 
   tags = merge(
     {
@@ -1316,8 +1316,8 @@ resource "aws_customer_gateway" "this" {
 resource "aws_route_table_association" "public_firewall" {
   count = var.create_vpc && length(var.public_subnets) > 0 && length(var.firewall_sync_states) > 0 ? length(var.public_subnets) : 0
 
-  subnet_id      = element(aws_subnet.public.*.id, count.index)
-  route_table_id = element(aws_route_table.public.*.id, count.index)
+  subnet_id      = element(aws_subnet.public.id[*], count.index)
+  route_table_id = element(aws_route_table.public.id[*], count.index)
 }
 
 resource "aws_route_table_association" "public_internet_gateway" {
@@ -1330,7 +1330,7 @@ resource "aws_route_table_association" "public_internet_gateway" {
 resource "aws_route_table_association" "firewall" {
   count = var.create_vpc && length(var.firewall_subnets) > 0 ? length(var.firewall_subnets) : 0
 
-  subnet_id      = element(aws_subnet.firewall.*.id, count.index)
+  subnet_id      = element(aws_subnet.firewall.id[*], count.index)
   route_table_id = aws_route_table.firewall[0].id
 }
 

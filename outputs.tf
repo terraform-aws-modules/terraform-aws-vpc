@@ -235,17 +235,17 @@ output "outpost_subnets_ipv6_cidr_blocks" {
 
 output "firewall_subnets" {
   description = "List of IDs of firewall subnets"
-  value       = aws_subnet.firewall.*.id
+  value       = aws_subnet.firewall.id[*]
 }
 
 output "firewall_subnet_arns" {
   description = "List of ARNs of firewall subnets"
-  value       = aws_subnet.firewall.*.arn
+  value       = aws_subnet.firewall.arn[*]
 }
 
 output "firewall_subnets_cidr_blocks" {
   description = "List of cidr_blocks of firewall subnets"
-  value       = aws_subnet.firewall.*.cidr_block
+  value       = aws_subnet.firewall.cidr_block[*]
 }
 
 output "outpost_network_acl_id" {
@@ -601,7 +601,7 @@ output "default_vpc_main_route_table_id" {
 
 output "firewall_network_acl_id" {
   description = "ID of the firewall network ACL"
-  value       = concat(aws_network_acl.firewall.*.id, [""])[0]
+  value       = concat(aws_network_acl.firewall.id[*], [""])[0]
 }
 
 # VPC flow log

@@ -22,6 +22,7 @@ variable "cidr" {
 
 variable "cidr_name" {
   description = "Name of cidr this vpc is managing"
+  type        = string
   default     = ""
 }
 
@@ -59,18 +60,6 @@ variable "firewall_subnets" {
   description = "A list of firewall subnets inside the VPC"
   type        = list(string)
   default     = []
-}
-
-variable "create_firewall_subnet_route_table" {
-  description = "Controls if route table for firewall should be created"
-  type        = bool
-  default     = false
-}
-
-variable "create_firewall_nat_gateway_route" {
-  description = "Controls if a nat gateway route should be created to give internet access to the firewall subnets"
-  type        = bool
-  default     = false
 }
 
 variable "ipv4_ipam_pool_id" {
@@ -599,12 +588,6 @@ variable "create_database_subnet_group" {
   description = "Controls if database subnet group should be created (n.b. database_subnets must also be set)"
   type        = bool
   default     = true
-}
-
-variable "database_subnet_group_name" {
-  description = "Name of database subnet group"
-  type        = string
-  default     = null
 }
 
 variable "database_subnet_group_tags" {
