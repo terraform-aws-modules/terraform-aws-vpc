@@ -28,20 +28,36 @@ module "vpc" {
   name = local.name
   cidr = local.vpc_cidr
 
-  azs                 = local.azs
-  private_subnets     = [for k, v in local.azs : cidrsubnet(local.vpc_cidr, 8, k)]
-  public_subnets      = [for k, v in local.azs : cidrsubnet(local.vpc_cidr, 8, k + 4)]
-  database_subnets    = [for k, v in local.azs : cidrsubnet(local.vpc_cidr, 8, k + 8)]
-  elasticache_subnets = [for k, v in local.azs : cidrsubnet(local.vpc_cidr, 8, k + 12)]
-  redshift_subnets    = [for k, v in local.azs : cidrsubnet(local.vpc_cidr, 8, k + 16)]
-  intra_subnets       = [for k, v in local.azs : cidrsubnet(local.vpc_cidr, 8, k + 20)]
+  azs = local.azs
+  private_subnets = [
+    for k, v in local.azs : cidrsubnet(local.vpc_cidr, 8, k)
+  ]
+  public_subnets = [
+    for k, v in local.azs : cidrsubnet(local.vpc_cidr, 8, k + 4)
+  ]
+  database_subnets = [
+    for k, v in local.azs : cidrsubnet(local.vpc_cidr, 8, k + 8)
+  ]
+  elasticache_subnets = [
+    for k, v in local.azs : cidrsubnet(local.vpc_cidr, 8, k + 12)
+  ]
+  redshift_subnets = [
+    for k, v in local.azs : cidrsubnet(local.vpc_cidr, 8, k + 16)
+  ]
+  intra_subnets = [
+    for k, v in local.azs : cidrsubnet(local.vpc_cidr, 8, k + 20)
+  ]
 
   private_subnet_names = ["Private Subnet One", "Private Subnet Two"]
   # public_subnet_names omitted to show default name generation for all three subnets
-  database_subnet_names    = ["DB Subnet One"]
-  elasticache_subnet_names = ["Elasticache Subnet One", "Elasticache Subnet Two"]
-  redshift_subnet_names    = ["Redshift Subnet One", "Redshift Subnet Two", "Redshift Subnet Three"]
-  intra_subnet_names       = []
+  database_subnet_names = ["DB Subnet One"]
+  elasticache_subnet_names = [
+    "Elasticache Subnet One", "Elasticache Subnet Two"
+  ]
+  redshift_subnet_names = [
+    "Redshift Subnet One", "Redshift Subnet Two", "Redshift Subnet Three"
+  ]
+  intra_subnet_names = []
 
   create_database_subnet_group  = false
   manage_default_network_acl    = false
@@ -106,11 +122,14 @@ module "vpc_endpoints" {
       tags    = { Name = "s3-vpc-endpoint" }
     },
     dynamodb = {
-      service         = "dynamodb"
-      service_type    = "Gateway"
-      route_table_ids = flatten([module.vpc.intra_route_table_ids, module.vpc.private_route_table_ids, module.vpc.public_route_table_ids])
-      policy          = data.aws_iam_policy_document.dynamodb_endpoint_policy.json
-      tags            = { Name = "dynamodb-vpc-endpoint" }
+      service      = "dynamodb"
+      service_type = "Gateway"
+      route_table_ids = flatten([
+        module.vpc.intra_route_table_ids, module.vpc.private_route_table_ids,
+        module.vpc.public_route_table_ids
+      ])
+      policy = data.aws_iam_policy_document.dynamodb_endpoint_policy.json
+      tags   = { Name = "dynamodb-vpc-endpoint" }
     },
     ecs = {
       service             = "ecs"
@@ -180,6 +199,25 @@ data "aws_iam_policy_document" "dynamodb_endpoint_policy" {
 }
 
 data "aws_iam_policy_document" "generic_endpoint_policy" {
+  # Allow statement for the specific VPC
+  statement {
+    effect    = "Allow"
+    actions   = ["*"]
+    resources = ["*"]
+
+    principals {
+      type        = "*"
+      identifiers = ["*"]
+    }
+
+    condition {
+      test     = "StringEquals"
+      variable = "aws:SourceVpc"
+      values   = [module.vpc.vpc_id]
+    }
+  }
+
+  # Deny statement for all other VPCs
   statement {
     effect    = "Deny"
     actions   = ["*"]
@@ -193,10 +231,10 @@ data "aws_iam_policy_document" "generic_endpoint_policy" {
     condition {
       test     = "StringNotEquals"
       variable = "aws:SourceVpc"
-
-      values = [module.vpc.vpc_id]
+      values   = [module.vpc.vpc_id]
     }
   }
+
 }
 
 resource "aws_security_group" "rds" {
