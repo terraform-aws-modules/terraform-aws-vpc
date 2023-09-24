@@ -48,6 +48,10 @@ resource "aws_vpc" "this" {
     var.tags,
     var.vpc_tags,
   )
+
+  lifecycle {
+    ignore_changes = [tags]
+  }
 }
 
 resource "aws_vpc_ipv4_cidr_block_association" "this" {
@@ -121,6 +125,10 @@ resource "aws_subnet" "public" {
     var.public_subnet_tags,
     lookup(var.public_subnet_tags_per_az, element(var.azs, count.index), {})
   )
+
+  lifecycle {
+    ignore_changes = [tags]
+  }
 }
 
 resource "aws_route_table" "public" {
@@ -247,6 +255,10 @@ resource "aws_subnet" "private" {
     var.private_subnet_tags,
     lookup(var.private_subnet_tags_per_az, element(var.azs, count.index), {})
   )
+
+  lifecycle {
+    ignore_changes = [tags]
+  }
 }
 
 # There are as many routing tables as the number of NAT gateways
@@ -366,6 +378,10 @@ resource "aws_subnet" "database" {
     var.tags,
     var.database_subnet_tags,
   )
+
+  lifecycle {
+    ignore_changes = [tags]
+  }
 }
 
 resource "aws_db_subnet_group" "database" {
@@ -548,6 +564,10 @@ resource "aws_subnet" "redshift" {
     var.tags,
     var.redshift_subnet_tags,
   )
+
+  lifecycle {
+    ignore_changes = [tags]
+  }
 }
 
 resource "aws_redshift_subnet_group" "redshift" {
@@ -685,6 +705,10 @@ resource "aws_subnet" "elasticache" {
     var.tags,
     var.elasticache_subnet_tags,
   )
+
+  lifecycle {
+    ignore_changes = [tags]
+  }
 }
 
 resource "aws_elasticache_subnet_group" "elasticache" {
@@ -814,6 +838,10 @@ resource "aws_subnet" "intra" {
     var.tags,
     var.intra_subnet_tags,
   )
+
+  lifecycle {
+    ignore_changes = [tags]
+  }
 }
 
 resource "aws_route_table" "intra" {
@@ -925,6 +953,10 @@ resource "aws_subnet" "outpost" {
     var.tags,
     var.outpost_subnet_tags,
   )
+
+  lifecycle {
+    ignore_changes = [tags]
+  }
 }
 
 resource "aws_route_table_association" "outpost" {
