@@ -10,7 +10,6 @@ locals {
   max_subnet_length = max(
     local.len_private_subnets,
     local.len_public_subnets,
-    local.len_intra_subnets,
     local.len_elasticache_subnets,
     local.len_database_subnets,
     local.len_redshift_subnets,
