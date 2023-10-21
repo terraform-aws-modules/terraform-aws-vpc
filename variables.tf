@@ -3,7 +3,7 @@
 ################################################################################
 
 variable "create_vpc" {
-  description = "Controls if VPC should be created (it affects almost all resources)"
+  description = "Controls if VPC should be created"
   type        = bool
   default     = true
 }
