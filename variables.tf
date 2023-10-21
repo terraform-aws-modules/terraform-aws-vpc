@@ -8,6 +8,12 @@ variable "create_vpc" {
   default     = true
 }
 
+variable "vpc_id" {
+  description = "If create_vpc variable value is false, then you must have to provide ID of the VPC."
+  type        = string
+  default     = null
+}
+
 variable "name" {
   description = "Name to be used on all the resources as identifier"
   type        = string
