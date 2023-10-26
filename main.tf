@@ -1036,6 +1036,8 @@ resource "aws_eip" "nat" {
     },
     var.tags,
     var.nat_eip_tags,
+    lookup(var.nat_eip_tags_per_az, element(var.azs, count.index), {}),
+    length(var.nat_eip_tags_per_subnet) > 0 ? element(var.nat_eip_tags_per_subnet, count.index) : {},
   )
 }
 
@@ -1060,6 +1062,8 @@ resource "aws_nat_gateway" "this" {
     },
     var.tags,
     var.nat_gateway_tags,
+    lookup(var.nat_gateway_tags_per_az, element(var.azs, count.index), {}),
+    length(var.nat_gateway_tags_per_subnet) > 0 ? element(var.nat_gateway_tags_per_subnet, count.index) : {},
   )
 
   depends_on = [aws_internet_gateway.this]

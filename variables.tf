@@ -726,10 +726,34 @@ variable "nat_gateway_tags" {
   default     = {}
 }
 
+variable "nat_gateway_tags_per_az" {
+  description = "Additional tags for the NAT gateways where the primary key is the AZ"
+  type        = map(map(string))
+  default     = {}
+}
+
+variable "nat_gateway_tags_per_subnet" {
+  description = "Additional tags for the NAT gateways, if specified then must have a length equal to the number of private subnets"
+  type        = list(map(string))
+  default     = []
+}
+
 variable "nat_eip_tags" {
   description = "Additional tags for the NAT EIP"
   type        = map(string)
   default     = {}
+}
+
+variable "nat_eip_tags_per_az" {
+  description = "Additional tags for the NAT EIPs where the primary key is the AZ"
+  type        = map(map(string))
+  default     = {}
+}
+
+variable "nat_eip_tags_per_subnet" {
+  description = "Additional tags for the NAT EIPs, if specified then must have a length equal to the number of private subnets"
+  type        = list(map(string))
+  default     = []
 }
 
 variable "customer_gateway_tags" {
