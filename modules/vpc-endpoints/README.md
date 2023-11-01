@@ -22,6 +22,7 @@ module "endpoints" {
     dynamodb = {
       # gateway endpoint
       service         = "dynamodb"
+      service_type    = "Gateway"
       route_table_ids = ["rt-12322456", "rt-43433343", "rt-11223344"]
       tags            = { Name = "dynamodb-vpc-endpoint" }
     },
