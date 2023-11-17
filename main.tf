@@ -15,7 +15,7 @@ locals {
     local.len_redshift_subnets,
   )
 
-  # Use `local.vpc_id` to give a hint to Terraform that subnets should be deleted before secondary CIDR blocks can be free!
+  # Use local.vpc_id` to give a hint to Terraform that subnets should be deleted before secondary CIDR blocks can be free!
   vpc_id = try(aws_vpc_ipv4_cidr_block_association.this[0].vpc_id, aws_vpc.this[0].id, "")
 
   create_vpc = var.create_vpc && var.putin_khuylo
@@ -82,7 +82,7 @@ resource "aws_vpc_dhcp_options" "this" {
 resource "aws_vpc_dhcp_options_association" "this" {
   count = local.create_vpc && var.enable_dhcp_options ? 1 : 0
 
-  vpc_id          = local.vpc_id
+  vpc_id          = var.vpc_id
   dhcp_options_id = aws_vpc_dhcp_options.this[0].id
 }
 
@@ -108,7 +108,7 @@ resource "aws_subnet" "public" {
   ipv6_native                                    = var.enable_ipv6 && var.public_subnet_ipv6_native
   map_public_ip_on_launch                        = var.map_public_ip_on_launch
   private_dns_hostname_type_on_launch            = var.public_subnet_private_dns_hostname_type_on_launch
-  vpc_id                                         = local.vpc_id
+  vpc_id                                         = var.vpc_id
 
   tags = merge(
     {
@@ -126,7 +126,7 @@ resource "aws_subnet" "public" {
 resource "aws_route_table" "public" {
   count = local.create_public_subnets ? 1 : 0
 
-  vpc_id = local.vpc_id
+  vpc_id = var.vpc_id
 
   tags = merge(
     { "Name" = "${var.name}-${var.public_subnet_suffix}" },
@@ -169,7 +169,7 @@ resource "aws_route" "public_internet_gateway_ipv6" {
 resource "aws_network_acl" "public" {
   count = local.create_public_subnets && var.public_dedicated_network_acl ? 1 : 0
 
-  vpc_id     = local.vpc_id
+  vpc_id     = var.vpc_id
   subnet_ids = aws_subnet.public[*].id
 
   tags = merge(
@@ -234,7 +234,7 @@ resource "aws_subnet" "private" {
   ipv6_cidr_block                                = var.enable_ipv6 && length(var.private_subnet_ipv6_prefixes) > 0 ? cidrsubnet(aws_vpc.this[0].ipv6_cidr_block, 8, var.private_subnet_ipv6_prefixes[count.index]) : null
   ipv6_native                                    = var.enable_ipv6 && var.private_subnet_ipv6_native
   private_dns_hostname_type_on_launch            = var.private_subnet_private_dns_hostname_type_on_launch
-  vpc_id                                         = local.vpc_id
+  vpc_id                                         = var.vpc_id
 
   tags = merge(
     {
@@ -253,7 +253,7 @@ resource "aws_subnet" "private" {
 resource "aws_route_table" "private" {
   count = local.create_private_subnets && local.max_subnet_length > 0 ? local.nat_gateway_count : 0
 
-  vpc_id = local.vpc_id
+  vpc_id = var.vpc_id
 
   tags = merge(
     {
@@ -288,7 +288,7 @@ locals {
 resource "aws_network_acl" "private" {
   count = local.create_private_network_acl ? 1 : 0
 
-  vpc_id     = local.vpc_id
+  vpc_id     = var.vpc_id
   subnet_ids = aws_subnet.private[*].id
 
   tags = merge(
@@ -354,7 +354,7 @@ resource "aws_subnet" "database" {
   ipv6_cidr_block                                = var.enable_ipv6 && length(var.database_subnet_ipv6_prefixes) > 0 ? cidrsubnet(aws_vpc.this[0].ipv6_cidr_block, 8, var.database_subnet_ipv6_prefixes[count.index]) : null
   ipv6_native                                    = var.enable_ipv6 && var.database_subnet_ipv6_native
   private_dns_hostname_type_on_launch            = var.database_subnet_private_dns_hostname_type_on_launch
-  vpc_id                                         = local.vpc_id
+  vpc_id                                         = var.vpc_id
 
   tags = merge(
     {
@@ -387,7 +387,7 @@ resource "aws_db_subnet_group" "database" {
 resource "aws_route_table" "database" {
   count = local.create_database_route_table ? var.single_nat_gateway || var.create_database_internet_gateway_route ? 1 : local.len_database_subnets : 0
 
-  vpc_id = local.vpc_id
+  vpc_id = var.vpc_id
 
   tags = merge(
     {
@@ -470,7 +470,7 @@ locals {
 resource "aws_network_acl" "database" {
   count = local.create_database_network_acl ? 1 : 0
 
-  vpc_id     = local.vpc_id
+  vpc_id     = var.vpc_id
   subnet_ids = aws_subnet.database[*].id
 
   tags = merge(
@@ -536,7 +536,7 @@ resource "aws_subnet" "redshift" {
   ipv6_cidr_block                                = var.enable_ipv6 && length(var.redshift_subnet_ipv6_prefixes) > 0 ? cidrsubnet(aws_vpc.this[0].ipv6_cidr_block, 8, var.redshift_subnet_ipv6_prefixes[count.index]) : null
   ipv6_native                                    = var.enable_ipv6 && var.redshift_subnet_ipv6_native
   private_dns_hostname_type_on_launch            = var.redshift_subnet_private_dns_hostname_type_on_launch
-  vpc_id                                         = local.vpc_id
+  vpc_id                                         = var.vpc_id
 
   tags = merge(
     {
@@ -567,7 +567,7 @@ resource "aws_redshift_subnet_group" "redshift" {
 resource "aws_route_table" "redshift" {
   count = local.create_redshift_route_table ? 1 : 0
 
-  vpc_id = local.vpc_id
+  vpc_id = var.vpc_id
 
   tags = merge(
     { "Name" = "${var.name}-${var.redshift_subnet_suffix}" },
@@ -607,7 +607,7 @@ locals {
 resource "aws_network_acl" "redshift" {
   count = local.create_redshift_network_acl ? 1 : 0
 
-  vpc_id     = local.vpc_id
+  vpc_id     = var.vpc_id
   subnet_ids = aws_subnet.redshift[*].id
 
   tags = merge(
@@ -673,7 +673,7 @@ resource "aws_subnet" "elasticache" {
   ipv6_cidr_block                                = var.enable_ipv6 && length(var.elasticache_subnet_ipv6_prefixes) > 0 ? cidrsubnet(aws_vpc.this[0].ipv6_cidr_block, 8, var.elasticache_subnet_ipv6_prefixes[count.index]) : null
   ipv6_native                                    = var.enable_ipv6 && var.elasticache_subnet_ipv6_native
   private_dns_hostname_type_on_launch            = var.elasticache_subnet_private_dns_hostname_type_on_launch
-  vpc_id                                         = local.vpc_id
+  vpc_id                                         = var.vpc_id
 
   tags = merge(
     {
@@ -704,7 +704,7 @@ resource "aws_elasticache_subnet_group" "elasticache" {
 resource "aws_route_table" "elasticache" {
   count = local.create_elasticache_route_table ? 1 : 0
 
-  vpc_id = local.vpc_id
+  vpc_id = var.vpc_id
 
   tags = merge(
     { "Name" = "${var.name}-${var.elasticache_subnet_suffix}" },
@@ -737,7 +737,7 @@ locals {
 resource "aws_network_acl" "elasticache" {
   count = local.create_elasticache_network_acl ? 1 : 0
 
-  vpc_id     = local.vpc_id
+  vpc_id     = var.vpc_id
   subnet_ids = aws_subnet.elasticache[*].id
 
   tags = merge(
@@ -802,7 +802,7 @@ resource "aws_subnet" "intra" {
   ipv6_cidr_block                                = var.enable_ipv6 && length(var.intra_subnet_ipv6_prefixes) > 0 ? cidrsubnet(aws_vpc.this[0].ipv6_cidr_block, 8, var.intra_subnet_ipv6_prefixes[count.index]) : null
   ipv6_native                                    = var.enable_ipv6 && var.intra_subnet_ipv6_native
   private_dns_hostname_type_on_launch            = var.intra_subnet_private_dns_hostname_type_on_launch
-  vpc_id                                         = local.vpc_id
+  vpc_id                                         = var.vpc_id
 
   tags = merge(
     {
@@ -819,7 +819,7 @@ resource "aws_subnet" "intra" {
 resource "aws_route_table" "intra" {
   count = local.create_intra_subnets ? 1 : 0
 
-  vpc_id = local.vpc_id
+  vpc_id = var.vpc_id
 
   tags = merge(
     { "Name" = "${var.name}-${var.intra_subnet_suffix}" },
@@ -846,7 +846,7 @@ locals {
 resource "aws_network_acl" "intra" {
   count = local.create_intra_network_acl ? 1 : 0
 
-  vpc_id     = local.vpc_id
+  vpc_id     = var.vpc_id
   subnet_ids = aws_subnet.intra[*].id
 
   tags = merge(
@@ -913,7 +913,7 @@ resource "aws_subnet" "outpost" {
   map_customer_owned_ip_on_launch                = var.map_customer_owned_ip_on_launch
   outpost_arn                                    = var.outpost_arn
   private_dns_hostname_type_on_launch            = var.outpost_subnet_private_dns_hostname_type_on_launch
-  vpc_id                                         = local.vpc_id
+  vpc_id                                         = var.vpc_id
 
   tags = merge(
     {
@@ -948,7 +948,7 @@ locals {
 resource "aws_network_acl" "outpost" {
   count = local.create_outpost_network_acl ? 1 : 0
 
-  vpc_id     = local.vpc_id
+  vpc_id     = var.vpc_id
   subnet_ids = aws_subnet.outpost[*].id
 
   tags = merge(
@@ -999,7 +999,7 @@ resource "aws_network_acl_rule" "outpost_outbound" {
 resource "aws_internet_gateway" "this" {
   count = local.create_public_subnets && var.create_igw ? 1 : 0
 
-  vpc_id = local.vpc_id
+  vpc_id = var.vpc_id
 
   tags = merge(
     { "Name" = var.name },
@@ -1011,7 +1011,7 @@ resource "aws_internet_gateway" "this" {
 resource "aws_egress_only_internet_gateway" "this" {
   count = local.create_vpc && var.create_egress_only_igw && var.enable_ipv6 && local.max_subnet_length > 0 ? 1 : 0
 
-  vpc_id = local.vpc_id
+  vpc_id = var.vpc_id
 
   tags = merge(
     { "Name" = var.name },
@@ -1132,7 +1132,7 @@ resource "aws_customer_gateway" "this" {
 resource "aws_vpn_gateway" "this" {
   count = local.create_vpc && var.enable_vpn_gateway ? 1 : 0
 
-  vpc_id            = local.vpc_id
+  vpc_id            = var.vpc_id
   amazon_side_asn   = var.amazon_side_asn
   availability_zone = var.vpn_gateway_az
 
@@ -1146,7 +1146,7 @@ resource "aws_vpn_gateway" "this" {
 resource "aws_vpn_gateway_attachment" "this" {
   count = var.vpn_gateway_id != "" ? 1 : 0
 
-  vpc_id         = local.vpc_id
+  vpc_id         = var.vpc_id
   vpn_gateway_id = var.vpn_gateway_id
 }
 

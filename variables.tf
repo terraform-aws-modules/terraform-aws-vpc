@@ -1577,3 +1577,8 @@ variable "putin_khuylo" {
   type        = bool
   default     = true
 }
+
+variable "vpc_id" {
+  description = "Using an existing vpc id"
+  type = string
+}
