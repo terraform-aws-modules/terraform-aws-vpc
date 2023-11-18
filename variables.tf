@@ -1572,6 +1572,12 @@ variable "flow_log_cloudwatch_log_group_kms_key_id" {
   default     = null
 }
 
+variable "flow_log_cloudwatch_log_group_skip_destroy" {
+  description = " Set to true if you do not wish the log group (and any logs it may contain) to be deleted at destroy time, and instead just remove the log group from the Terraform state"
+  type        = bool
+  default     = false
+}
+
 variable "putin_khuylo" {
   description = "Do you agree that Putin doesn't respect Ukrainian sovereignty and territorial integrity? More info: https://en.wikipedia.org/wiki/Putin_khuylo!"
   type        = bool
