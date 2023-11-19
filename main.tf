@@ -91,7 +91,7 @@ resource "aws_vpc_dhcp_options_association" "this" {
 ################################################################################
 
 locals {
-  create_public_subnets = local.create_vpc && local.len_public_subnets > 0
+  create_public_subnets =  ( local.create_vpc || length(var.vpc_id) > 0 ) && local.len_private_subnets > 0
 }
 
 resource "aws_subnet" "public" {
@@ -218,7 +218,7 @@ resource "aws_network_acl_rule" "public_outbound" {
 ################################################################################
 
 locals {
-  create_private_subnets = local.create_vpc && local.len_private_subnets > 0
+  create_private_subnets =  ( local.create_vpc || length(var.vpc_id) > 0 ) && local.len_private_subnets > 0
 }
 
 resource "aws_subnet" "private" {
@@ -1038,7 +1038,7 @@ locals {
 }
 
 resource "aws_eip" "nat" {
-  count = local.create_vpc && var.enable_nat_gateway && !var.reuse_nat_ips ? local.nat_gateway_count : 0
+  count = ( local.create_vpc || length(var.vpc_id) > 0 ) && var.enable_nat_gateway && !var.reuse_nat_ips ? local.nat_gateway_count : 0
 
   domain = "vpc"
 
@@ -1057,7 +1057,7 @@ resource "aws_eip" "nat" {
 }
 
 resource "aws_nat_gateway" "this" {
-  count = local.create_vpc && var.enable_nat_gateway ? local.nat_gateway_count : 0
+  count = ( local.create_vpc || length(var.vpc_id) > 0 ) && var.enable_nat_gateway ? local.nat_gateway_count : 0
 
   allocation_id = element(
     local.nat_gateway_ips,
@@ -1083,7 +1083,7 @@ resource "aws_nat_gateway" "this" {
 }
 
 resource "aws_route" "private_nat_gateway" {
-  count = local.create_vpc && var.enable_nat_gateway ? local.nat_gateway_count : 0
+  count = ( local.create_vpc || length(var.vpc_id) > 0 ) && var.enable_nat_gateway ? local.nat_gateway_count : 0
 
   route_table_id         = element(aws_route_table.private[*].id, count.index)
   destination_cidr_block = var.nat_gateway_destination_cidr_block
@@ -1095,7 +1095,7 @@ resource "aws_route" "private_nat_gateway" {
 }
 
 resource "aws_route" "private_dns64_nat_gateway" {
-  count = local.create_vpc && var.enable_nat_gateway && var.enable_ipv6 && var.private_subnet_enable_dns64 ? local.nat_gateway_count : 0
+  count = ( local.create_vpc || length(var.vpc_id) > 0 ) && var.enable_nat_gateway && var.enable_ipv6 && var.private_subnet_enable_dns64 ? local.nat_gateway_count : 0
 
   route_table_id              = element(aws_route_table.private[*].id, count.index)
   destination_ipv6_cidr_block = "64:ff9b::/96"
@@ -1130,7 +1130,7 @@ resource "aws_customer_gateway" "this" {
 ################################################################################
 
 resource "aws_vpn_gateway" "this" {
-  count = local.create_vpc && var.enable_vpn_gateway ? 1 : 0
+  count = ( local.create_vpc || length(var.vpc_id) > 0 ) && var.enable_vpn_gateway ? 1 : 0
 
   vpc_id            = var.vpc_id
   amazon_side_asn   = var.amazon_side_asn
@@ -1151,7 +1151,7 @@ resource "aws_vpn_gateway_attachment" "this" {
 }
 
 resource "aws_vpn_gateway_route_propagation" "public" {
-  count = local.create_vpc && var.propagate_public_route_tables_vgw && (var.enable_vpn_gateway || var.vpn_gateway_id != "") ? 1 : 0
+  count = ( local.create_vpc || length(var.vpc_id) > 0 ) && var.propagate_public_route_tables_vgw && (var.enable_vpn_gateway || var.vpn_gateway_id != "") ? 1 : 0
 
   route_table_id = element(aws_route_table.public[*].id, count.index)
   vpn_gateway_id = element(
@@ -1164,7 +1164,7 @@ resource "aws_vpn_gateway_route_propagation" "public" {
 }
 
 resource "aws_vpn_gateway_route_propagation" "private" {
-  count = local.create_vpc && var.propagate_private_route_tables_vgw && (var.enable_vpn_gateway || var.vpn_gateway_id != "") ? local.len_private_subnets : 0
+  count = ( local.create_vpc || length(var.vpc_id) > 0 ) && var.propagate_private_route_tables_vgw && (var.enable_vpn_gateway || var.vpn_gateway_id != "") ? local.len_private_subnets : 0
 
   route_table_id = element(aws_route_table.private[*].id, count.index)
   vpn_gateway_id = element(
@@ -1177,7 +1177,7 @@ resource "aws_vpn_gateway_route_propagation" "private" {
 }
 
 resource "aws_vpn_gateway_route_propagation" "intra" {
-  count = local.create_vpc && var.propagate_intra_route_tables_vgw && (var.enable_vpn_gateway || var.vpn_gateway_id != "") ? local.len_intra_subnets : 0
+  count = ( local.create_vpc || length(var.vpc_id) > 0 ) && var.propagate_intra_route_tables_vgw && (var.enable_vpn_gateway || var.vpn_gateway_id != "") ? local.len_intra_subnets : 0
 
   route_table_id = element(aws_route_table.intra[*].id, count.index)
   vpn_gateway_id = element(
@@ -1207,7 +1207,7 @@ resource "aws_default_vpc" "this" {
 }
 
 resource "aws_default_security_group" "this" {
-  count = local.create_vpc && var.manage_default_security_group ? 1 : 0
+  count = ( local.create_vpc || length(var.vpc_id) > 0 ) && var.manage_default_security_group ? 1 : 0
 
   vpc_id = aws_vpc.this[0].id
 
@@ -1253,7 +1253,7 @@ resource "aws_default_security_group" "this" {
 ################################################################################
 
 resource "aws_default_network_acl" "this" {
-  count = local.create_vpc && var.manage_default_network_acl ? 1 : 0
+  count = ( local.create_vpc || length(var.vpc_id) > 0 ) && var.manage_default_network_acl ? 1 : 0
 
   default_network_acl_id = aws_vpc.this[0].default_network_acl_id
 
@@ -1306,7 +1306,7 @@ resource "aws_default_network_acl" "this" {
 ################################################################################
 
 resource "aws_default_route_table" "default" {
-  count = local.create_vpc && var.manage_default_route_table ? 1 : 0
+  count = ( local.create_vpc || length(var.vpc_id) > 0 ) && var.manage_default_route_table ? 1 : 0
 
   default_route_table_id = aws_vpc.this[0].default_route_table_id
   propagating_vgws       = var.default_route_table_propagating_vgws
