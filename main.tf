@@ -25,7 +25,7 @@ locals {
 # VPC
 ################################################################################
 
-resource "aws_vpc" "this" {
+resource "aws_vpc" "vik" {
   count = local.create_vpc ? 1 : 0
 
   cidr_block          = var.use_ipam_pool ? null : var.cidr
