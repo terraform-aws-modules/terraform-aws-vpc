@@ -604,6 +604,11 @@ output "vpc_flow_log_cloudwatch_iam_role_arn" {
   value       = local.flow_log_iam_role_arn
 }
 
+output "vpc_flow_log_deliver_cross_account_role" {
+  description = "The ARN of the IAM role used when pushing logs cross account"
+  value       = try(aws_flow_log.this[0].deliver_cross_account_role, null)
+}
+
 ################################################################################
 # Static values (arguments)
 ################################################################################
