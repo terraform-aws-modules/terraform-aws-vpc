@@ -1502,7 +1502,7 @@ variable "flow_log_destination_arn" {
   default     = ""
 }
 
-variable "deliver_cross_account_role" {
+variable "flow_log_deliver_cross_account_role" {
   description = "(Optional) ARN of the IAM role that allows Amazon EC2 to publish flow logs across accounts."
   type        = string
   default     = null
