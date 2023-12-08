@@ -5,8 +5,8 @@ resource "aws_subnet" "firewall" {
   count = local.create_firewall ? local.nat_gateway_count : 0
 
   assign_ipv6_address_on_creation                = var.enable_ipv6 && var.firewall_subnet_ipv6_native ? true : var.firewall_subnet_assign_ipv6_address_on_creation
-  availability_zone                              = length(regexall("^[a-z]{2}-", element(var.azs, count.index))) > 0 ? element(var.azs, count.index) : null
-  availability_zone_id                           = length(regexall("^[a-z]{2}-", element(var.azs, count.index))) == 0 ? element(var.azs, count.index) : null
+  availability_zone                              = length(regexall("^[a-z]{2}-", element(var.firewall_azs, count.index))) > 0 ? element(var.firewall_azs, count.index) : null
+  availability_zone_id                           = length(regexall("^[a-z]{2}-", element(var.firewall_azs, count.index))) == 0 ? element(var.firewall_azs, count.index) : null
   cidr_block                                     = var.firewall_subnet_ipv6_native ? null : element(concat(var.firewall_subnets, [""]), count.index)
   enable_dns64                                   = var.enable_ipv6 && var.firewall_subnet_enable_dns64
   enable_resource_name_dns_aaaa_record_on_launch = var.enable_ipv6 && var.firewall_subnet_enable_resource_name_dns_aaaa_record_on_launch
@@ -20,7 +20,7 @@ resource "aws_subnet" "firewall" {
     {
       Name = try(
         var.firewall_subnet_names[count.index],
-        format("${var.name}-${var.firewall_subnet_suffix}-%s", element(var.azs, count.index), )
+        format("${var.name}-${var.firewall_subnet_suffix}-%s", element(var.firewall_azs, count.index), )
       )
       Firewall = "true"
     },
@@ -38,7 +38,7 @@ resource "aws_route_table" "firewall" {
     {
       "Name" = var.single_nat_gateway ? "${var.name}-${var.firewall_subnet_suffix}" : format(
         "${var.name}-${var.firewall_subnet_suffix}-%s",
-        element(var.azs, count.index),
+        element(var.firewall_azs, count.index),
       )
     },
     var.tags,
@@ -70,8 +70,8 @@ resource "aws_route" "firewall_nat_gateway" {
 
 // Ugly, but I did not found a way to do it better
 locals {
-  firewall_endpoint = local.create_firewall ? [for v in aws_networkfirewall_firewall.this[0].firewall_status[0].sync_states[*].attachment : v[0].endpoint_id]: []
-  firewall_subnet   = local.create_firewall ? [for v in aws_networkfirewall_firewall.this[0].firewall_status[0].sync_states[*].attachment : v[0].subnet_id]: []
+  firewall_endpoint = local.create_firewall ? [for v in aws_networkfirewall_firewall.this[0].firewall_status[0].sync_states[*].attachment : v[0].endpoint_id] : []
+  firewall_subnet   = local.create_firewall ? [for v in aws_networkfirewall_firewall.this[0].firewall_status[0].sync_states[*].attachment : v[0].subnet_id] : []
   firewall_subnet_2 = [for v in local.firewall_subnet : [for x in aws_subnet.firewall : x if x.id == v][0]]
   private_subnet    = [for v in local.firewall_subnet_2 : [for x in aws_subnet.private : x if x.availability_zone == v.availability_zone][0]]
   association       = [for v in local.private_subnet : [for x in aws_route_table_association.private : x if x.subnet_id == v.id][0]]

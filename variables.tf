@@ -1601,6 +1601,12 @@ variable "firewall_policy_arn" {
   default     = ""
 }
 
+variable "firewall_azs" {
+  description = "A list of availability zones names or ids in the region"
+  type        = list(string)
+  default     = []
+}
+
 variable "firewall_subnets" {
   description = "A list of firewall subnets inside the VPC"
   type        = list(string)
