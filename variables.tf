@@ -1583,3 +1583,110 @@ variable "putin_khuylo" {
   type        = bool
   default     = true
 }
+
+
+
+################################################################################
+# Firewall Settings
+################################################################################
+variable "enable_firewall" {
+  description = "Controls if VPC Firewall should be created"
+  type        = bool
+  default     = false
+}
+
+variable "firewall_policy_arn" {
+  description = "The ARN of the Firewall Policy to use"
+  type        = string
+  default     = ""
+}
+
+variable "firewall_azs" {
+  description = "A list of availability zones names or ids in the region"
+  type        = list(string)
+  default     = []
+}
+
+variable "firewall_subnets" {
+  description = "A list of firewall subnets inside the VPC"
+  type        = list(string)
+  default     = []
+}
+
+variable "firewall_subnet_assign_ipv6_address_on_creation" {
+  description = "Specify true to indicate that network interfaces created in the specified subnet should be assigned an IPv6 address. Default is `false`"
+  type        = bool
+  default     = false
+}
+
+variable "firewall_subnet_enable_dns64" {
+  description = "Indicates whether DNS queries made to the Amazon-provided DNS Resolver in this subnet should return synthetic IPv6 addresses for IPv4-only destinations. Default: `true`"
+  type        = bool
+  default     = true
+}
+
+variable "firewall_subnet_enable_resource_name_dns_aaaa_record_on_launch" {
+  description = "Indicates whether to respond to DNS queries for instance hostnames with DNS AAAA records. Default: `true`"
+  type        = bool
+  default     = true
+}
+
+variable "firewall_subnet_enable_resource_name_dns_a_record_on_launch" {
+  description = "Indicates whether to respond to DNS queries for instance hostnames with DNS A records. Default: `false`"
+  type        = bool
+  default     = false
+}
+
+variable "firewall_subnet_ipv6_prefixes" {
+  description = "Assigns IPv6 firewall subnet id based on the Amazon provided /56 prefix base 10 integer (0-256). Must be of equal length to the corresponding IPv4 subnet list"
+  type        = list(string)
+  default     = []
+}
+
+variable "firewall_subnet_ipv6_native" {
+  description = "Indicates whether to create an IPv6-only subnet. Default: `false`"
+  type        = bool
+  default     = false
+}
+
+variable "map_firewall_ip_on_launch" {
+  description = "Specify true to indicate that instances launched into the subnet should be assigned a firewall IP address. Default is `false`"
+  type        = bool
+  default     = false
+}
+
+variable "firewall_subnet_private_dns_hostname_type_on_launch" {
+  description = "The type of hostnames to assign to instances in the subnet at launch. For IPv6-only subnets, an instance DNS name must be based on the instance ID. For dual-stack and IPv4-only subnets, you can specify whether DNS names use the instance IPv4 address or the instance ID. Valid values: `ip-name`, `resource-name`"
+  type        = string
+  default     = null
+}
+
+variable "firewall_subnet_names" {
+  description = "Explicit values to use in the Name tag on firewall subnets. If empty, Name tags are generated"
+  type        = list(string)
+  default     = []
+}
+
+variable "firewall_subnet_suffix" {
+  description = "Suffix to append to firewall subnets name"
+  type        = string
+  default     = "firewall"
+}
+
+variable "firewall_subnet_tags" {
+  description = "Additional tags for the firewall subnets"
+  type        = map(string)
+  default     = {}
+}
+
+variable "firewall_subnet_tags_per_az" {
+  description = "Additional tags for the firewall subnets where the primary key is the AZ"
+  type        = map(map(string))
+  default     = {}
+}
+
+variable "firewall_route_table_tags" {
+  description = "Additional tags for the firewall route tables"
+  type        = map(string)
+  default     = {}
+}
