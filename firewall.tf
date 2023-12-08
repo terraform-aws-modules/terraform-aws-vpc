@@ -70,19 +70,19 @@ resource "aws_route" "firewall_nat_gateway" {
 
 // Ugly, but I did not found a way to do it better
 locals {
-  firewall_endpoint = [for v in aws_networkfirewall_firewall.this[0].firewall_status[0].sync_states[*].attachment: v[0].endpoint_id]
-  firewall_subnet = [for v in aws_networkfirewall_firewall.this[0].firewall_status[0].sync_states[*].attachment: v[0].subnet_id]
-  firewall_subnet_2 = [for v in local.firewall_subnet: [for x in aws_subnet.firewall: x if x.id == v][0]]
-  private_subnet = [for v in local.firewall_subnet_2: [for x in aws_subnet.private: x if x.availability_zone == v.availability_zone][0]]
-  association = [for v in local.private_subnet: [for x in aws_route_table_association.private: x if x.subnet_id == v.id][0]]
-  private_route = [for v in local.association: [for x in aws_route_table.private: x if x.id == v.route_table_id][0]]
+  firewall_endpoint = [for v in aws_networkfirewall_firewall.this[0].firewall_status[0].sync_states[*].attachment : v[0].endpoint_id]
+  firewall_subnet   = [for v in aws_networkfirewall_firewall.this[0].firewall_status[0].sync_states[*].attachment : v[0].subnet_id]
+  firewall_subnet_2 = [for v in local.firewall_subnet : [for x in aws_subnet.firewall : x if x.id == v][0]]
+  private_subnet    = [for v in local.firewall_subnet_2 : [for x in aws_subnet.private : x if x.availability_zone == v.availability_zone][0]]
+  association       = [for v in local.private_subnet : [for x in aws_route_table_association.private : x if x.subnet_id == v.id][0]]
+  private_route     = [for v in local.association : [for x in aws_route_table.private : x if x.id == v.route_table_id][0]]
 }
 
 resource "aws_route" "private_firewall" {
-  count = local.create_firewall ? local.nat_gateway_count : 0
+  count                  = local.create_firewall ? local.nat_gateway_count : 0
   route_table_id         = local.private_route[count.index].id
   destination_cidr_block = var.nat_gateway_destination_cidr_block
-  vpc_endpoint_id = local.firewall_endpoint[count.index]
+  vpc_endpoint_id        = local.firewall_endpoint[count.index]
 }
 
 resource "aws_networkfirewall_firewall" "this" {
