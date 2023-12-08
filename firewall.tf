@@ -1,8 +1,9 @@
 locals {
-  create_firewall = var.enable_firewall && local.create_vpc
+  create_firewall = var.enable_firewall && local.create_vpc && var.enable_nat_gateway
+  firewall_count  = var.single_nat_gateway ? 1 : length(var.firewall_azs)
 }
 resource "aws_subnet" "firewall" {
-  count = local.create_firewall ? local.nat_gateway_count : 0
+  count = local.create_firewall ? local.firewall_count : 0
 
   assign_ipv6_address_on_creation                = var.enable_ipv6 && var.firewall_subnet_ipv6_native ? true : var.firewall_subnet_assign_ipv6_address_on_creation
   availability_zone                              = length(regexall("^[a-z]{2}-", element(var.firewall_azs, count.index))) > 0 ? element(var.firewall_azs, count.index) : null
@@ -30,7 +31,7 @@ resource "aws_subnet" "firewall" {
 }
 
 resource "aws_route_table" "firewall" {
-  count = local.create_firewall ? local.nat_gateway_count : 0
+  count = local.create_firewall ? local.firewall_count : 0
 
   vpc_id = local.vpc_id
 
@@ -47,7 +48,7 @@ resource "aws_route_table" "firewall" {
 }
 
 resource "aws_route_table_association" "firewall" {
-  count = local.create_firewall ? local.nat_gateway_count : 0
+  count = local.create_firewall ? local.firewall_count : 0
 
   subnet_id = element(aws_subnet.firewall[*].id, count.index)
   route_table_id = element(
@@ -57,7 +58,7 @@ resource "aws_route_table_association" "firewall" {
 }
 
 resource "aws_route" "firewall_nat_gateway" {
-  count = local.create_firewall && var.enable_nat_gateway ? local.nat_gateway_count : 0
+  count = local.create_firewall ? local.firewall_count : 0
 
   route_table_id         = element(aws_route_table.firewall[*].id, count.index)
   destination_cidr_block = var.nat_gateway_destination_cidr_block
@@ -79,7 +80,7 @@ locals {
 }
 
 resource "aws_route" "private_firewall" {
-  count                  = local.create_firewall ? local.nat_gateway_count : 0
+  count                  = local.create_firewall ? local.firewall_count : 0
   route_table_id         = local.private_route[count.index].id
   destination_cidr_block = var.nat_gateway_destination_cidr_block
   vpc_endpoint_id        = local.firewall_endpoint[count.index]
