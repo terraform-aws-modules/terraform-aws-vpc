@@ -8,18 +8,6 @@ variable "create_vpc" {
   default     = true
 }
 
-variable "create_firewall" {
-  description = "Controls if VPC Firewall should be created"
-  type        = bool
-  default     = false
-}
-
-variable "firewall_policy_arn" {
-  description = "The ARN of the Firewall Policy to use"
-  type        = string
-  default     = ""
-}
-
 variable "name" {
   description = "Name to be used on all the resources as identifier"
   type        = string
@@ -1599,8 +1587,19 @@ variable "putin_khuylo" {
 
 
 ################################################################################
-# Firewall Subnets
+# Firewall Settings
 ################################################################################
+variable "enable_firewall" {
+  description = "Controls if VPC Firewall should be created"
+  type        = bool
+  default     = false
+}
+
+variable "firewall_policy_arn" {
+  description = "The ARN of the Firewall Policy to use"
+  type        = string
+  default     = ""
+}
 
 variable "firewall_subnets" {
   description = "A list of firewall subnets inside the VPC"

@@ -1,5 +1,5 @@
 locals {
-  create_firewall = var.create_firewall && local.create_vpc
+  create_firewall = var.enable_firewall && local.create_vpc
 }
 resource "aws_subnet" "firewall" {
   count = local.create_firewall ? local.nat_gateway_count : 0
@@ -70,8 +70,8 @@ resource "aws_route" "firewall_nat_gateway" {
 
 // Ugly, but I did not found a way to do it better
 locals {
-  firewall_endpoint = [for v in aws_networkfirewall_firewall.this[0].firewall_status[0].sync_states[*].attachment : v[0].endpoint_id]
-  firewall_subnet   = [for v in aws_networkfirewall_firewall.this[0].firewall_status[0].sync_states[*].attachment : v[0].subnet_id]
+  firewall_endpoint = local.create_firewall ? [for v in aws_networkfirewall_firewall.this[0].firewall_status[0].sync_states[*].attachment : v[0].endpoint_id]: []
+  firewall_subnet   = local.create_firewall ? [for v in aws_networkfirewall_firewall.this[0].firewall_status[0].sync_states[*].attachment : v[0].subnet_id]: []
   firewall_subnet_2 = [for v in local.firewall_subnet : [for x in aws_subnet.firewall : x if x.id == v][0]]
   private_subnet    = [for v in local.firewall_subnet_2 : [for x in aws_subnet.private : x if x.availability_zone == v.availability_zone][0]]
   association       = [for v in local.private_subnet : [for x in aws_route_table_association.private : x if x.subnet_id == v.id][0]]
