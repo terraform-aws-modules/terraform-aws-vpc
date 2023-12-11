@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [5.4.0](https://github.com/terraform-aws-modules/terraform-aws-vpc/compare/v5.3.0...v5.4.0) (2023-12-11)
+
+
+### Features
+
+* Add Cross Account Flow Support ([#1014](https://github.com/terraform-aws-modules/terraform-aws-vpc/issues/1014)) ([6e25437](https://github.com/terraform-aws-modules/terraform-aws-vpc/commit/6e25437b16955b9393348d91965ead2f755fb2e0))
+
 ## [5.3.0](https://github.com/terraform-aws-modules/terraform-aws-vpc/compare/v5.2.0...v5.3.0) (2023-12-11)
 
 
