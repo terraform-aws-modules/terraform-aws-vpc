@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [5.2.0](https://github.com/terraform-aws-modules/terraform-aws-vpc/compare/v5.1.2...v5.2.0) (2023-11-18)
+
+
+### Features
+
+* Add `skip_destroy` to vpc flow log cloudwatch log group ([#1009](https://github.com/terraform-aws-modules/terraform-aws-vpc/issues/1009)) ([abe2c0f](https://github.com/terraform-aws-modules/terraform-aws-vpc/commit/abe2c0fcd23f1adfcb6e3a7739811e2482e2d197))
+
 ### [5.1.2](https://github.com/terraform-aws-modules/terraform-aws-vpc/compare/v5.1.1...v5.1.2) (2023-09-07)
 
 
