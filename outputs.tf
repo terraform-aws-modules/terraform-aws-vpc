@@ -484,6 +484,11 @@ output "natgw_ids" {
   value       = aws_nat_gateway.this[*].id
 }
 
+output "natgw_interface_ids" {
+  description = "List of Network Interface IDs assigned to NAT Gateways"
+  value       = aws_nat_gateway.this[*].network_interface_id
+}
+
 ################################################################################
 # Egress Only Gateway
 ################################################################################
