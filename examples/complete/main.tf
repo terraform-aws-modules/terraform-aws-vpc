@@ -161,7 +161,7 @@ module "vpc_endpoints_nocreate" {
 
 data "aws_iam_policy_document" "dynamodb_endpoint_policy" {
   statement {
-    effect    = "Deny"
+    effect    = "Allow"
     actions   = ["dynamodb:*"]
     resources = ["*"]
 
@@ -171,7 +171,7 @@ data "aws_iam_policy_document" "dynamodb_endpoint_policy" {
     }
 
     condition {
-      test     = "StringNotEquals"
+      test     = "StringEquals"
       variable = "aws:sourceVpc"
 
       values = [module.vpc.vpc_id]
@@ -181,7 +181,7 @@ data "aws_iam_policy_document" "dynamodb_endpoint_policy" {
 
 data "aws_iam_policy_document" "generic_endpoint_policy" {
   statement {
-    effect    = "Deny"
+    effect    = "Allow"
     actions   = ["*"]
     resources = ["*"]
 
@@ -191,7 +191,7 @@ data "aws_iam_policy_document" "generic_endpoint_policy" {
     }
 
     condition {
-      test     = "StringNotEquals"
+      test     = "StringEquals"
       variable = "aws:SourceVpc"
 
       values = [module.vpc.vpc_id]
