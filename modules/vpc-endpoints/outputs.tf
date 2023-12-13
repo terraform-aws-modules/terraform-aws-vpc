@@ -16,3 +16,8 @@ output "security_group_id" {
   description = "ID of the security group"
   value       = try(aws_security_group.this[0].id, null)
 }
+
+output "dns_names" {
+  description = "DNS names of vpc endpoint for ingress"
+  value = try({for k, v in aws_vpc_endpoint.this : k => v.dns_entry}, null)
+}
