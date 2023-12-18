@@ -34,9 +34,9 @@ resource "aws_vpc_endpoint" "this" {
   policy              = try(each.value.policy, null)
   private_dns_enabled = try(each.value.service_type, "Interface") == "Interface" ? try(each.value.private_dns_enabled, null) : null
   dynamic "dns_options" {
-    for_each = try(each.value.private_dns_enabled,false) ? [try(each.value.dns_options, {})] : []
+    for_each = try(each.value.private_dns_enabled, false) ? [try(each.value.dns_options, {})] : []
     content {
-      dns_record_ip_type = try(each.value.dns_options.dns_record_ip_type,null)
+      dns_record_ip_type                             = try(each.value.dns_options.dns_record_ip_type, null)
       private_dns_only_for_inbound_resolver_endpoint = try(each.value.dns_options.private_dns_only_for_inbound_resolver_endpoint, false)
     }
   }
