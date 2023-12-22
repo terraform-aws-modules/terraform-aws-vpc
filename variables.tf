@@ -250,6 +250,12 @@ variable "public_route_table_tags" {
   default     = {}
 }
 
+variable "create_multiple_public_route_tables" {
+  description = "Creating multiple public route tables"
+  type        = bool
+  default     = false
+}
+
 ################################################################################
 # Public Network ACLs
 ################################################################################

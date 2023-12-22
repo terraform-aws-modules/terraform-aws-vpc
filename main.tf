@@ -123,23 +123,25 @@ resource "aws_subnet" "public" {
   )
 }
 
+# Create public route tables based on the value of the boolean variable
 resource "aws_route_table" "public" {
-  count = local.create_public_subnets ? 1 : 0
+  count = local.create_public_subnets && var.create_multiple_public_route_tables ? local.len_public_subnets : (local.create_public_subnets ? 1 : 0)
 
   vpc_id = local.vpc_id
 
   tags = merge(
-    { "Name" = "${var.name}-${var.public_subnet_suffix}" },
+    {
+      "Name" = var.create_multiple_public_route_tables ? format("${var.name}-${var.public_subnet_suffix}-%s", element(var.azs, count.index)) : "${var.name}-${var.public_subnet_suffix}"
+    },
     var.tags,
     var.public_route_table_tags,
   )
 }
 
 resource "aws_route_table_association" "public" {
-  count = local.create_public_subnets ? local.len_public_subnets : 0
-
+  count          = local.create_public_subnets && var.create_multiple_public_route_tables ? local.len_public_subnets : (local.create_public_subnets ? 1 : 0)
   subnet_id      = element(aws_subnet.public[*].id, count.index)
-  route_table_id = aws_route_table.public[0].id
+  route_table_id = var.create_multiple_public_route_tables ? element(aws_route_table.public[*].id, count.index) : aws_route_table.public[0].id
 }
 
 resource "aws_route" "public_internet_gateway" {
