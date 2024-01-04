@@ -24,6 +24,10 @@ variable "secondary_cidr_blocks" {
   description = "List of secondary CIDR blocks to associate with the VPC to extend the IP Address pool"
   type        = list(string)
   default     = []
+  validation {
+    condition     = length(var.secondary_cidr_blocks) <= 4
+    error_message = "The number of secondary CIDR blocks cannot exceed 4."
+  }
 }
 
 variable "instance_tenancy" {
