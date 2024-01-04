@@ -9,7 +9,7 @@ locals {
   region = "eu-west-1"
 
   vpc_cidr              = "10.0.0.0/16"
-  secondary_cidr_blocks = ["10.1.0.0/16", "10.2.0.0/16", "10.3.0.0/16", "10.4.0.0/16"]
+  secondary_cidr_blocks = ["10.1.0.0/16", "10.2.0.0/16"]
   azs                   = slice(data.aws_availability_zones.available.names, 0, 3)
 
   tags = {
