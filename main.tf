@@ -817,7 +817,6 @@ resource "aws_subnet" "intra" {
 }
 
 resource "aws_route_table" "intra" {
-#  count = local.create_intra_subnets ? 1 : 0
   count = local.create_intra_subnets && local.max_subnet_length > 0 ? local.len_intra_subnets : 0
 
   vpc_id = local.vpc_id
