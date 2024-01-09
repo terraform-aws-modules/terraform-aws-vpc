@@ -102,8 +102,12 @@ module "vpc_endpoints" {
 
   endpoints = {
     s3 = {
-      service = "s3"
-      tags    = { Name = "s3-vpc-endpoint" }
+      service             = "s3"
+      private_dns_enabled = true
+      dns_options = {
+        private_dns_only_for_inbound_resolver_endpoint = false
+      }
+      tags = { Name = "s3-vpc-endpoint" }
     },
     dynamodb = {
       service         = "dynamodb"
