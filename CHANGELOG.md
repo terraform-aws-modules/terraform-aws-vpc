@@ -2,6 +2,55 @@
 
 All notable changes to this project will be documented in this file.
 
+## [5.5.0](https://github.com/terraform-aws-modules/terraform-aws-vpc/compare/v5.4.0...v5.5.0) (2024-01-09)
+
+
+### Features
+
+* Add support for `dns_options` on VPC endpoints ([#1023](https://github.com/terraform-aws-modules/terraform-aws-vpc/issues/1023)) ([32f853f](https://github.com/terraform-aws-modules/terraform-aws-vpc/commit/32f853f4c099ad134d9c739d585c42a7c06a797b))
+
+## [5.4.0](https://github.com/terraform-aws-modules/terraform-aws-vpc/compare/v5.3.0...v5.4.0) (2023-12-11)
+
+
+### Features
+
+* Add Cross Account Flow Support ([#1014](https://github.com/terraform-aws-modules/terraform-aws-vpc/issues/1014)) ([6e25437](https://github.com/terraform-aws-modules/terraform-aws-vpc/commit/6e25437b16955b9393348d91965ead2f755fb2e0))
+
+## [5.3.0](https://github.com/terraform-aws-modules/terraform-aws-vpc/compare/v5.2.0...v5.3.0) (2023-12-11)
+
+
+### Features
+
+* Add NAT gateway interface ids output ([#1006](https://github.com/terraform-aws-modules/terraform-aws-vpc/issues/1006)) ([898bbaf](https://github.com/terraform-aws-modules/terraform-aws-vpc/commit/898bbaf46ba8ebad54983d63fa9e8eac6456903b))
+
+## [5.2.0](https://github.com/terraform-aws-modules/terraform-aws-vpc/compare/v5.1.2...v5.2.0) (2023-11-18)
+
+
+### Features
+
+* Add `skip_destroy` to vpc flow log cloudwatch log group ([#1009](https://github.com/terraform-aws-modules/terraform-aws-vpc/issues/1009)) ([abe2c0f](https://github.com/terraform-aws-modules/terraform-aws-vpc/commit/abe2c0fcd23f1adfcb6e3a7739811e2482e2d197))
+
+### [5.1.2](https://github.com/terraform-aws-modules/terraform-aws-vpc/compare/v5.1.1...v5.1.2) (2023-09-07)
+
+
+### Bug Fixes
+
+* The number of intra subnets should not influence the number of NAT gateways provisioned ([#968](https://github.com/terraform-aws-modules/terraform-aws-vpc/issues/968)) ([1e36f9f](https://github.com/terraform-aws-modules/terraform-aws-vpc/commit/1e36f9f8a01eb26be83d8e1ce2227a6890390b0e))
+
+### [5.1.1](https://github.com/terraform-aws-modules/terraform-aws-vpc/compare/v5.1.0...v5.1.1) (2023-07-25)
+
+
+### Bug Fixes
+
+* Ensure database route table output works ([#926](https://github.com/terraform-aws-modules/terraform-aws-vpc/issues/926)) ([e4c48d4](https://github.com/terraform-aws-modules/terraform-aws-vpc/commit/e4c48d4675718d5bd8c72c6b934c70c0f4bf1670)), closes [#857](https://github.com/terraform-aws-modules/terraform-aws-vpc/issues/857)
+
+## [5.1.0](https://github.com/terraform-aws-modules/terraform-aws-vpc/compare/v5.0.0...v5.1.0) (2023-07-15)
+
+
+### Features
+
+* Add support for creating a security group for VPC endpoint(s) ([#962](https://github.com/terraform-aws-modules/terraform-aws-vpc/issues/962)) ([802d5f1](https://github.com/terraform-aws-modules/terraform-aws-vpc/commit/802d5f14c29db4e50b3f2aaf87950845594a31bd))
+
 ## [5.0.0](https://github.com/terraform-aws-modules/terraform-aws-vpc/compare/v4.0.2...v5.0.0) (2023-05-30)
 
 

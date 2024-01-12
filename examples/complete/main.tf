@@ -88,13 +88,26 @@ module "vpc" {
 module "vpc_endpoints" {
   source = "../../modules/vpc-endpoints"
 
-  vpc_id             = module.vpc.vpc_id
-  security_group_ids = [data.aws_security_group.default.id]
+  vpc_id = module.vpc.vpc_id
+
+  create_security_group      = true
+  security_group_name_prefix = "${local.name}-vpc-endpoints-"
+  security_group_description = "VPC endpoint security group"
+  security_group_rules = {
+    ingress_https = {
+      description = "HTTPS from VPC"
+      cidr_blocks = [module.vpc.vpc_cidr_block]
+    }
+  }
 
   endpoints = {
     s3 = {
-      service = "s3"
-      tags    = { Name = "s3-vpc-endpoint" }
+      service             = "s3"
+      private_dns_enabled = true
+      dns_options = {
+        private_dns_only_for_inbound_resolver_endpoint = false
+      }
+      tags = { Name = "s3-vpc-endpoint" }
     },
     dynamodb = {
       service         = "dynamodb"
@@ -102,23 +115,6 @@ module "vpc_endpoints" {
       route_table_ids = flatten([module.vpc.intra_route_table_ids, module.vpc.private_route_table_ids, module.vpc.public_route_table_ids])
       policy          = data.aws_iam_policy_document.dynamodb_endpoint_policy.json
       tags            = { Name = "dynamodb-vpc-endpoint" }
-    },
-    ssm = {
-      service             = "ssm"
-      private_dns_enabled = true
-      subnet_ids          = module.vpc.private_subnets
-      security_group_ids  = [aws_security_group.vpc_tls.id]
-    },
-    ssmmessages = {
-      service             = "ssmmessages"
-      private_dns_enabled = true
-      subnet_ids          = module.vpc.private_subnets
-      security_group_ids  = [aws_security_group.vpc_tls.id]
-    },
-    lambda = {
-      service             = "lambda"
-      private_dns_enabled = true
-      subnet_ids          = module.vpc.private_subnets
     },
     ecs = {
       service             = "ecs"
@@ -130,18 +126,6 @@ module "vpc_endpoints" {
       service             = "ecs-telemetry"
       private_dns_enabled = true
       subnet_ids          = module.vpc.private_subnets
-    },
-    ec2 = {
-      service             = "ec2"
-      private_dns_enabled = true
-      subnet_ids          = module.vpc.private_subnets
-      security_group_ids  = [aws_security_group.vpc_tls.id]
-    },
-    ec2messages = {
-      service             = "ec2messages"
-      private_dns_enabled = true
-      subnet_ids          = module.vpc.private_subnets
-      security_group_ids  = [aws_security_group.vpc_tls.id]
     },
     ecr_api = {
       service             = "ecr.api"
@@ -155,21 +139,11 @@ module "vpc_endpoints" {
       subnet_ids          = module.vpc.private_subnets
       policy              = data.aws_iam_policy_document.generic_endpoint_policy.json
     },
-    kms = {
-      service             = "kms"
+    rds = {
+      service             = "rds"
       private_dns_enabled = true
       subnet_ids          = module.vpc.private_subnets
-      security_group_ids  = [aws_security_group.vpc_tls.id]
-    },
-    codedeploy = {
-      service             = "codedeploy"
-      private_dns_enabled = true
-      subnet_ids          = module.vpc.private_subnets
-    },
-    codedeploy_commands_secure = {
-      service             = "codedeploy-commands-secure"
-      private_dns_enabled = true
-      subnet_ids          = module.vpc.private_subnets
+      security_group_ids  = [aws_security_group.rds.id]
     },
   }
 
@@ -189,11 +163,6 @@ module "vpc_endpoints_nocreate" {
 # Supporting Resources
 ################################################################################
 
-data "aws_security_group" "default" {
-  name   = "default"
-  vpc_id = module.vpc.vpc_id
-}
-
 data "aws_iam_policy_document" "dynamodb_endpoint_policy" {
   statement {
     effect    = "Deny"
@@ -207,7 +176,7 @@ data "aws_iam_policy_document" "dynamodb_endpoint_policy" {
 
     condition {
       test     = "StringNotEquals"
-      variable = "aws:sourceVpce"
+      variable = "aws:sourceVpc"
 
       values = [module.vpc.vpc_id]
     }
@@ -234,15 +203,15 @@ data "aws_iam_policy_document" "generic_endpoint_policy" {
   }
 }
 
-resource "aws_security_group" "vpc_tls" {
-  name_prefix = "${local.name}-vpc_tls"
-  description = "Allow TLS inbound traffic"
+resource "aws_security_group" "rds" {
+  name_prefix = "${local.name}-rds"
+  description = "Allow PostgreSQL inbound traffic"
   vpc_id      = module.vpc.vpc_id
 
   ingress {
     description = "TLS from VPC"
-    from_port   = 443
-    to_port     = 443
+    from_port   = 5432
+    to_port     = 5432
     protocol    = "tcp"
     cidr_blocks = [module.vpc.vpc_cidr_block]
   }
