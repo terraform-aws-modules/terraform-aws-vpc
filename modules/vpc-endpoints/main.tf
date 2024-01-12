@@ -38,8 +38,8 @@ resource "aws_vpc_endpoint" "this" {
     for_each = try([each.value.dns_options], [])
 
     content {
-      dns_record_ip_type                             = try(each.value.dns_options.dns_record_ip_type, null)
-      private_dns_only_for_inbound_resolver_endpoint = try(each.value.private_dns_only_for_inbound_resolver_endpoint, null)
+      dns_record_ip_type                             = try(dns_options.value.dns_options.dns_record_ip_type, null)
+      private_dns_only_for_inbound_resolver_endpoint = try(dns_options.value.private_dns_only_for_inbound_resolver_endpoint, null)
     }
   }
 
