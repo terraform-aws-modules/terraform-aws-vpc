@@ -88,6 +88,11 @@ resource "aws_route" "private_firewall" {
 
 resource "aws_networkfirewall_firewall" "this" {
   count = local.create_firewall ? 1 : 0
+  lifecycle {
+    ignore_changes = [
+      name,
+    ]
+  }
 
   description = "Firewall for ${var.name}"
 
