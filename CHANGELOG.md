@@ -2,6 +2,20 @@
 
 All notable changes to this project will be documented in this file.
 
+### [5.5.1](https://github.com/terraform-aws-modules/terraform-aws-vpc/compare/v5.5.0...v5.5.1) (2024-01-13)
+
+
+### Bug Fixes
+
+* Correct VPC endpoint private DNS resolver `for_each` key ([#1029](https://github.com/terraform-aws-modules/terraform-aws-vpc/issues/1029)) ([a837be1](https://github.com/terraform-aws-modules/terraform-aws-vpc/commit/a837be12882c8f74984620752937b4806da2d6d4))
+
+## [5.5.0](https://github.com/terraform-aws-modules/terraform-aws-vpc/compare/v5.4.0...v5.5.0) (2024-01-09)
+
+
+### Features
+
+* Add support for `dns_options` on VPC endpoints ([#1023](https://github.com/terraform-aws-modules/terraform-aws-vpc/issues/1023)) ([32f853f](https://github.com/terraform-aws-modules/terraform-aws-vpc/commit/32f853f4c099ad134d9c739d585c42a7c06a797b))
+
 ## [5.4.0](https://github.com/terraform-aws-modules/terraform-aws-vpc/compare/v5.3.0...v5.4.0) (2023-12-11)
 
 
