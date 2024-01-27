@@ -7,9 +7,9 @@ repos:
       args:
         - --hook-config=--retry-once-with-cleanup=true
     - id: terraform_tflint
-    # - id: terrascan
-    #   args:
-    #     - --args=--severity high
+    - id: terrascan
+      args:
+        - --args=--severity high
     # - id: terraform_trivy
     #   files: examples/complete/
     #   args:
