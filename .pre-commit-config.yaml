@@ -1,6 +1,18 @@
 repos:
 - repo: https://github.com/antonbabenko/pre-commit-terraform
-  rev: <VERSION> # Get the latest from: https://github.com/antonbabenko/pre-commit-terraform/releases
+  rev: v1.86.0 # Get the latest from: https://github.com/antonbabenko/pre-commit-terraform/releases
   hooks:
     - id: terraform_fmt
-    - id: terraform_docs
+    - id: terraform_validate
+      args:
+        - --hook-config=--retry-once-with-cleanup=true
+    - id: terraform_tflint
+    - id: terrascan
+      args:
+        - --args=--severity high
+    - id: terraform_trivy
+      files: examples/complete/
+      args:
+        - --args=--severity CRITICAL,HIGH
+        - --args=--skip-dirs="**/.terraform"
+
