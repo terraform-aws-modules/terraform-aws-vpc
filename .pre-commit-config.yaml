@@ -10,9 +10,9 @@ repos:
     - id: terrascan
       args:
         - --args=--severity high
-    # - id: terraform_trivy
-    #   files: examples/complete/
-    #   args:
-    #     - --args=--severity CRITICAL,HIGH
-    #     - --args=--skip-dirs="**/.terraform"
+    - id: terraform_trivy
+      files: examples/complete/
+      args:
+        - --args=--severity CRITICAL,HIGH
+        - --args=--skip-dirs="**/.terraform"
 
