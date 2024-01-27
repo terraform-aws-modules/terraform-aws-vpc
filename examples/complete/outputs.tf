@@ -549,3 +549,7 @@ output "vpc_endpoints_security_group_id" {
   description = "ID of the security group"
   value       = module.vpc_endpoints.security_group_id
 }
+output "azs" {
+  description = "azs"
+  value       = module.vpc.azs
+}
