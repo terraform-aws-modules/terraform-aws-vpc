@@ -234,6 +234,9 @@ module "vpc" {
   create_flow_log_cloudwatch_log_group = true
   create_flow_log_cloudwatch_iam_role  = true
   flow_log_max_aggregation_interval    = 60
+  flow_log_destination_type            = "s3"
+  flow_log_destination_arn             = module.s3_bucket.s3_bucket_arn
+  vpc_flow_log_tags                    = local.tags
 
   tags = local.tags
 }
