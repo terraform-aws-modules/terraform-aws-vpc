@@ -5,10 +5,6 @@ provider "aws" {
 data "aws_availability_zones" "available" {}
 
 locals {
-  # name   = var.name
-  # region = var.region
-
-  # vpc_cidr = var.vpc_cidr
   azs = slice(data.aws_availability_zones.available.names, 0, 3)
 
   tags = {
@@ -372,6 +368,14 @@ resource "aws_security_group" "rds" {
     description = "TLS from VPC"
     from_port   = 5432
     to_port     = 5432
+    protocol    = "tcp"
+    cidr_blocks = [module.vpc.vpc_cidr_block]
+  }
+
+  ingress {
+    description = "Secondary undefault port"
+    from_port   = 54432
+    to_port     = 54432
     protocol    = "tcp"
     cidr_blocks = [module.vpc.vpc_cidr_block]
   }
