@@ -179,7 +179,7 @@ module "vpc" {
   database_subnets    = [for k, v in local.azs : cidrsubnet(var.vpc_cidr, 8, k + 8)]
   elasticache_subnets = [for k, v in local.azs : cidrsubnet(var.vpc_cidr, 8, k + 12)]
   redshift_subnets    = [for k, v in local.azs : cidrsubnet(var.vpc_cidr, 8, k + 16)]
-  intra_subnets       = [for k, v in local.azs : cidrsubnet(var.vpc_cidr, 8, k + 20)]
+  #intra_subnets       = [for k, v in local.azs : cidrsubnet(var.vpc_cidr, 8, k + 20)]
 
   private_subnet_names = ["Private Subnet One", "Private Subnet Two"]
   # public_subnet_names omitted to show default name generation for all three subnets
@@ -266,9 +266,10 @@ module "vpc_endpoints" {
       tags = { Name = "s3-vpc-endpoint" }
     },
     dynamodb = {
-      service         = "dynamodb"
-      service_type    = "Gateway"
-      route_table_ids = flatten([module.vpc.intra_route_table_ids, module.vpc.private_route_table_ids, module.vpc.public_route_table_ids])
+      service      = "dynamodb"
+      service_type = "Gateway"
+      # route_table_ids = flatten([module.vpc.intra_route_table_ids, module.vpc.private_route_table_ids, module.vpc.public_route_table_ids]) # intra subnet deleted
+      route_table_ids = flatten([module.vpc.private_route_table_ids, module.vpc.public_route_table_ids])
       policy          = data.aws_iam_policy_document.dynamodb_endpoint_policy.json
       tags            = { Name = "dynamodb-vpc-endpoint" }
     },
