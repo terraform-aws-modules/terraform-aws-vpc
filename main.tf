@@ -88,7 +88,6 @@ resource "aws_subnet" "public" {
   availability_zone                              = length(regexall("^[a-z]{2}-", element(var.azs, count.index))) > 0 ? element(var.azs, count.index) : null
   availability_zone_id                           = length(regexall("^[a-z]{2}-", element(var.azs, count.index))) == 0 ? element(var.azs, count.index) : null
   cidr_block                                     = element(concat(var.public_subnets, [""]), count.index)
-  enable_dns64                                   = var.public_subnet_enable_dns64
   enable_resource_name_dns_a_record_on_launch    = var.public_subnet_enable_resource_name_dns_a_record_on_launch
   map_public_ip_on_launch                        = var.map_public_ip_on_launch
   private_dns_hostname_type_on_launch            = var.public_subnet_private_dns_hostname_type_on_launch
@@ -201,7 +200,6 @@ resource "aws_subnet" "private" {
   availability_zone                              = length(regexall("^[a-z]{2}-", element(var.azs, count.index))) > 0 ? element(var.azs, count.index) : null
   availability_zone_id                           = length(regexall("^[a-z]{2}-", element(var.azs, count.index))) == 0 ? element(var.azs, count.index) : null
   cidr_block                                     = element(concat(var.private_subnets, [""]), count.index)
-  enable_dns64                                   = var.private_subnet_enable_dns64
   enable_resource_name_dns_a_record_on_launch    = var.private_subnet_enable_resource_name_dns_a_record_on_launch
   private_dns_hostname_type_on_launch            = var.private_subnet_private_dns_hostname_type_on_launch
   vpc_id                                         = local.vpc_id
@@ -315,7 +313,6 @@ resource "aws_subnet" "database" {
   availability_zone                              = length(regexall("^[a-z]{2}-", element(var.azs, count.index))) > 0 ? element(var.azs, count.index) : null
   availability_zone_id                           = length(regexall("^[a-z]{2}-", element(var.azs, count.index))) == 0 ? element(var.azs, count.index) : null
   cidr_block                                     = element(concat(var.database_subnets, [""]), count.index)
-  enable_dns64                                   = var.database_subnet_enable_dns64
   enable_resource_name_dns_a_record_on_launch    = var.database_subnet_enable_resource_name_dns_a_record_on_launch
   private_dns_hostname_type_on_launch            = var.database_subnet_private_dns_hostname_type_on_launch
   vpc_id                                         = local.vpc_id
@@ -393,30 +390,6 @@ resource "aws_route" "database_nat_gateway" {
   route_table_id         = element(aws_route_table.database[*].id, count.index)
   destination_cidr_block = "0.0.0.0/0"
   nat_gateway_id         = element(aws_nat_gateway.this[*].id, count.index)
-
-  timeouts {
-    create = "5m"
-  }
-}
-
-resource "aws_route" "database_dns64_nat_gateway" {
-  count = local.create_database_route_table && !var.create_database_internet_gateway_route && var.create_database_nat_gateway_route && var.enable_nat_gateway && var.private_subnet_enable_dns64 ? var.single_nat_gateway ? 1 : local.len_database_subnets : 0
-
-  route_table_id              = element(aws_route_table.database[*].id, count.index)
-  destination_ipv6_cidr_block = "64:ff9b::/96"
-  nat_gateway_id              = element(aws_nat_gateway.this[*].id, count.index)
-
-  timeouts {
-    create = "5m"
-  }
-}
-
-resource "aws_route" "database_ipv6_egress" {
-  count = local.create_database_route_table && var.create_egress_only_igw && var.create_database_internet_gateway_route ? 1 : 0
-
-  route_table_id              = aws_route_table.database[0].id
-  destination_ipv6_cidr_block = "::/0"
-  egress_only_gateway_id      = aws_egress_only_internet_gateway.this[0].id
 
   timeouts {
     create = "5m"
@@ -564,18 +537,6 @@ resource "aws_route" "private_nat_gateway" {
   route_table_id         = element(aws_route_table.private[*].id, count.index)
   destination_cidr_block = var.nat_gateway_destination_cidr_block
   nat_gateway_id         = element(aws_nat_gateway.this[*].id, count.index)
-
-  timeouts {
-    create = "5m"
-  }
-}
-
-resource "aws_route" "private_dns64_nat_gateway" {
-  count = local.create_vpc && var.enable_nat_gateway && var.private_subnet_enable_dns64 ? local.nat_gateway_count : 0
-
-  route_table_id              = element(aws_route_table.private[*].id, count.index)
-  destination_ipv6_cidr_block = "64:ff9b::/96"
-  nat_gateway_id              = element(aws_nat_gateway.this[*].id, count.index)
 
   timeouts {
     create = "5m"
