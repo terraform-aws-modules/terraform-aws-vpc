@@ -691,6 +691,7 @@ resource "aws_default_network_acl" "this" {
       from_port       = ingress.value.from_port
       icmp_code       = lookup(ingress.value, "icmp_code", null)
       icmp_type       = lookup(ingress.value, "icmp_type", null)
+      ipv6_cidr_block = lookup(ingress.value, "ipv6_cidr_block", null)
       protocol        = ingress.value.protocol
       rule_no         = ingress.value.rule_no
       to_port         = ingress.value.to_port
@@ -704,6 +705,7 @@ resource "aws_default_network_acl" "this" {
       from_port       = egress.value.from_port
       icmp_code       = lookup(egress.value, "icmp_code", null)
       icmp_type       = lookup(egress.value, "icmp_type", null)
+      ipv6_cidr_block = lookup(egress.value, "ipv6_cidr_block", null)
       protocol        = egress.value.protocol
       rule_no         = egress.value.rule_no
       to_port         = egress.value.to_port
