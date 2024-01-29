@@ -158,31 +158,6 @@ output "database_subnet_group_name" {
   value       = module.vpc.database_subnet_group_name
 }
 
-output "redshift_subnets" {
-  description = "List of IDs of redshift subnets"
-  value       = module.vpc.redshift_subnets
-}
-
-output "redshift_subnet_arns" {
-  description = "List of ARNs of redshift subnets"
-  value       = module.vpc.redshift_subnet_arns
-}
-
-output "redshift_subnets_cidr_blocks" {
-  description = "List of cidr_blocks of redshift subnets"
-  value       = module.vpc.redshift_subnets_cidr_blocks
-}
-
-output "redshift_subnets_ipv6_cidr_blocks" {
-  description = "List of IPv6 cidr_blocks of redshift subnets in an IPv6 enabled VPC"
-  value       = module.vpc.redshift_subnets_ipv6_cidr_blocks
-}
-
-output "redshift_subnet_group" {
-  description = "ID of redshift subnet group"
-  value       = module.vpc.redshift_subnet_group
-}
-
 output "elasticache_subnets" {
   description = "List of IDs of elasticache subnets"
   value       = module.vpc.elasticache_subnets
@@ -248,11 +223,6 @@ output "database_route_table_ids" {
   value       = module.vpc.database_route_table_ids
 }
 
-output "redshift_route_table_ids" {
-  description = "List of IDs of redshift route tables"
-  value       = module.vpc.redshift_route_table_ids
-}
-
 output "elasticache_route_table_ids" {
   description = "List of IDs of elasticache route tables"
   value       = module.vpc.elasticache_route_table_ids
@@ -306,16 +276,6 @@ output "private_route_table_association_ids" {
 output "database_route_table_association_ids" {
   description = "List of IDs of the database route table association"
   value       = module.vpc.database_route_table_association_ids
-}
-
-output "redshift_route_table_association_ids" {
-  description = "List of IDs of the redshift route table association"
-  value       = module.vpc.redshift_route_table_association_ids
-}
-
-output "redshift_public_route_table_association_ids" {
-  description = "List of IDs of the public redshift route table association"
-  value       = module.vpc.redshift_public_route_table_association_ids
 }
 
 output "elasticache_route_table_association_ids" {

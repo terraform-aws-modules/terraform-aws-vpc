@@ -1,5 +1,4 @@
 locals {
-  redshift_route_table_ids = aws_route_table.redshift[*].id
   public_route_table_ids   = aws_route_table.public[*].id
   private_route_table_ids  = aws_route_table.private[*].id
 }
@@ -313,59 +312,6 @@ output "database_network_acl_arn" {
   value       = try(aws_network_acl.database[0].arn, null)
 }
 
-################################################################################
-# Redshift Subnets
-################################################################################
-
-output "redshift_subnets" {
-  description = "List of IDs of redshift subnets"
-  value       = aws_subnet.redshift[*].id
-}
-
-output "redshift_subnet_arns" {
-  description = "List of ARNs of redshift subnets"
-  value       = aws_subnet.redshift[*].arn
-}
-
-output "redshift_subnets_cidr_blocks" {
-  description = "List of cidr_blocks of redshift subnets"
-  value       = compact(aws_subnet.redshift[*].cidr_block)
-}
-
-output "redshift_subnets_ipv6_cidr_blocks" {
-  description = "List of IPv6 cidr_blocks of redshift subnets in an IPv6 enabled VPC"
-  value       = compact(aws_subnet.redshift[*].ipv6_cidr_block)
-}
-
-output "redshift_subnet_group" {
-  description = "ID of redshift subnet group"
-  value       = try(aws_redshift_subnet_group.redshift[0].id, null)
-}
-
-output "redshift_route_table_ids" {
-  description = "List of IDs of redshift route tables"
-  value       = length(local.redshift_route_table_ids) > 0 ? local.redshift_route_table_ids : (var.enable_public_redshift ? local.public_route_table_ids : local.private_route_table_ids)
-}
-
-output "redshift_route_table_association_ids" {
-  description = "List of IDs of the redshift route table association"
-  value       = aws_route_table_association.redshift[*].id
-}
-
-output "redshift_public_route_table_association_ids" {
-  description = "List of IDs of the public redshift route table association"
-  value       = aws_route_table_association.redshift_public[*].id
-}
-
-output "redshift_network_acl_id" {
-  description = "ID of the redshift network ACL"
-  value       = try(aws_network_acl.redshift[0].id, null)
-}
-
-output "redshift_network_acl_arn" {
-  description = "ARN of the redshift network ACL"
-  value       = try(aws_network_acl.redshift[0].arn, null)
-}
 
 ################################################################################
 # Elasticache Subnets
