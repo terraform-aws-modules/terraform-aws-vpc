@@ -74,36 +74,6 @@ variable "ipv4_netmask_length" {
   default     = null
 }
 
-variable "enable_ipv6" {
-  description = "Requests an Amazon-provided IPv6 CIDR block with a /56 prefix length for the VPC. You cannot specify the range of IP addresses, or the size of the CIDR block"
-  type        = bool
-  default     = false
-}
-
-variable "ipv6_cidr" {
-  description = "(Optional) IPv6 CIDR block to request from an IPAM Pool. Can be set explicitly or derived from IPAM using `ipv6_netmask_length`"
-  type        = string
-  default     = null
-}
-
-variable "ipv6_ipam_pool_id" {
-  description = "(Optional) IPAM Pool ID for a IPv6 pool. Conflicts with `assign_generated_ipv6_cidr_block`"
-  type        = string
-  default     = null
-}
-
-variable "ipv6_netmask_length" {
-  description = "(Optional) Netmask length to request from IPAM Pool. Conflicts with `ipv6_cidr_block`. This can be omitted if IPAM pool as a `allocation_default_netmask_length` set. Valid values: `56`"
-  type        = number
-  default     = null
-}
-
-variable "ipv6_cidr_block_network_border_group" {
-  description = "By default when an IPv6 CIDR is assigned to a VPC a default ipv6_cidr_block_network_border_group will be set to the region of the VPC. This can be changed to restrict advertisement of public addresses to specific Network Border Groups such as LocalZones"
-  type        = string
-  default     = null
-}
-
 variable "vpc_tags" {
   description = "Additional tags for the VPC"
   type        = map(string)
@@ -172,18 +142,6 @@ variable "public_subnets" {
   default     = []
 }
 
-variable "public_subnet_assign_ipv6_address_on_creation" {
-  description = "Specify true to indicate that network interfaces created in the specified subnet should be assigned an IPv6 address. Default is `false`"
-  type        = bool
-  default     = false
-}
-
-variable "public_subnet_enable_dns64" {
-  description = "Indicates whether DNS queries made to the Amazon-provided DNS Resolver in this subnet should return synthetic IPv6 addresses for IPv4-only destinations. Default: `true`"
-  type        = bool
-  default     = true
-}
-
 variable "public_subnet_enable_resource_name_dns_aaaa_record_on_launch" {
   description = "Indicates whether to respond to DNS queries for instance hostnames with DNS AAAA records. Default: `true`"
   type        = bool
@@ -192,18 +150,6 @@ variable "public_subnet_enable_resource_name_dns_aaaa_record_on_launch" {
 
 variable "public_subnet_enable_resource_name_dns_a_record_on_launch" {
   description = "Indicates whether to respond to DNS queries for instance hostnames with DNS A records. Default: `false`"
-  type        = bool
-  default     = false
-}
-
-variable "public_subnet_ipv6_prefixes" {
-  description = "Assigns IPv6 public subnet id based on the Amazon provided /56 prefix base 10 integer (0-256). Must be of equal length to the corresponding IPv4 subnet list"
-  type        = list(string)
-  default     = []
-}
-
-variable "public_subnet_ipv6_native" {
-  description = "Indicates whether to create an IPv6-only subnet. Default: `false`"
   type        = bool
   default     = false
 }
@@ -306,18 +252,6 @@ variable "private_subnets" {
   default     = []
 }
 
-variable "private_subnet_assign_ipv6_address_on_creation" {
-  description = "Specify true to indicate that network interfaces created in the specified subnet should be assigned an IPv6 address. Default is `false`"
-  type        = bool
-  default     = false
-}
-
-variable "private_subnet_enable_dns64" {
-  description = "Indicates whether DNS queries made to the Amazon-provided DNS Resolver in this subnet should return synthetic IPv6 addresses for IPv4-only destinations. Default: `true`"
-  type        = bool
-  default     = true
-}
-
 variable "private_subnet_enable_resource_name_dns_aaaa_record_on_launch" {
   description = "Indicates whether to respond to DNS queries for instance hostnames with DNS AAAA records. Default: `true`"
   type        = bool
@@ -326,18 +260,6 @@ variable "private_subnet_enable_resource_name_dns_aaaa_record_on_launch" {
 
 variable "private_subnet_enable_resource_name_dns_a_record_on_launch" {
   description = "Indicates whether to respond to DNS queries for instance hostnames with DNS A records. Default: `false`"
-  type        = bool
-  default     = false
-}
-
-variable "private_subnet_ipv6_prefixes" {
-  description = "Assigns IPv6 private subnet id based on the Amazon provided /56 prefix base 10 integer (0-256). Must be of equal length to the corresponding IPv4 subnet list"
-  type        = list(string)
-  default     = []
-}
-
-variable "private_subnet_ipv6_native" {
-  description = "Indicates whether to create an IPv6-only subnet. Default: `false`"
   type        = bool
   default     = false
 }
@@ -434,18 +356,6 @@ variable "database_subnets" {
   default     = []
 }
 
-variable "database_subnet_assign_ipv6_address_on_creation" {
-  description = "Specify true to indicate that network interfaces created in the specified subnet should be assigned an IPv6 address. Default is `false`"
-  type        = bool
-  default     = false
-}
-
-variable "database_subnet_enable_dns64" {
-  description = "Indicates whether DNS queries made to the Amazon-provided DNS Resolver in this subnet should return synthetic IPv6 addresses for IPv4-only destinations. Default: `true`"
-  type        = bool
-  default     = true
-}
-
 variable "database_subnet_enable_resource_name_dns_aaaa_record_on_launch" {
   description = "Indicates whether to respond to DNS queries for instance hostnames with DNS AAAA records. Default: `true`"
   type        = bool
@@ -454,18 +364,6 @@ variable "database_subnet_enable_resource_name_dns_aaaa_record_on_launch" {
 
 variable "database_subnet_enable_resource_name_dns_a_record_on_launch" {
   description = "Indicates whether to respond to DNS queries for instance hostnames with DNS A records. Default: `false`"
-  type        = bool
-  default     = false
-}
-
-variable "database_subnet_ipv6_prefixes" {
-  description = "Assigns IPv6 database subnet id based on the Amazon provided /56 prefix base 10 integer (0-256). Must be of equal length to the corresponding IPv4 subnet list"
-  type        = list(string)
-  default     = []
-}
-
-variable "database_subnet_ipv6_native" {
-  description = "Indicates whether to create an IPv6-only subnet. Default: `false`"
   type        = bool
   default     = false
 }
