@@ -215,7 +215,7 @@ module "vpc" {
     },
     IP2 = {
       bgp_asn    = 65112
-      ip_address = "5.6.7.8"
+      ip_address = "5.6.7.9"
     }
   }
 
