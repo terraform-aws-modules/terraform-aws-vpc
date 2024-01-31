@@ -28,10 +28,10 @@ module "endpoints" {
       tags            = { Name = "dynamodb-vpc-endpoint" }
     },
     sns = {
-      service    = "sns"
-      service_type    = "Interface"
-      subnet_ids = ["subnet-12345678", "subnet-87654321"]
-      tags       = { Name = "sns-vpc-endpoint" }
+      service      = "sns"
+      service_type = "Interface"
+      subnet_ids   = ["subnet-12345678", "subnet-87654321"]
+      tags         = { Name = "sns-vpc-endpoint" }
     },
     sqs = {
       service             = "sqs"
