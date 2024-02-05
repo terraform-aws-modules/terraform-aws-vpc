@@ -129,7 +129,10 @@ output "public_route_table_ids" {
   description = "List of IDs of public route tables"
   value       = local.public_route_table_ids
 }
-
+output "private_nat_gateway_ips" {
+  description = "List of IDs of the private nat gateway ip's"
+  value       = aws_nat_gateway.this.private_nat_gateway_private_ips
+}
 output "public_internet_gateway_route_id" {
   description = "ID of the internet gateway route"
   value       = try(aws_route.public_internet_gateway[0].id, null)
