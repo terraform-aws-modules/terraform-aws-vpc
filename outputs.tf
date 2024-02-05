@@ -131,7 +131,7 @@ output "public_route_table_ids" {
 }
 output "private_nat_gateway_ips" {
   description = "List of IDs of the private nat gateway ip's"
-  value       = aws_nat_gateway.this.private_nat_gateway_private_ips
+  value       = aws_nat_gateway.this[*].private_nat_gateway_private_ips
 }
 output "public_internet_gateway_route_id" {
   description = "ID of the internet gateway route"
