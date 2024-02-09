@@ -1123,6 +1123,10 @@ resource "aws_customer_gateway" "this" {
     var.tags,
     var.customer_gateway_tags,
   )
+
+  lifecycle {
+    create_before_destroy = true
+  }
 }
 
 ################################################################################
