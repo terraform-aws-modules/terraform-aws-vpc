@@ -1127,7 +1127,6 @@ resource "aws_customer_gateway" "this" {
   lifecycle {
     create_before_destroy = true
   }
-
 }
 
 ################################################################################
