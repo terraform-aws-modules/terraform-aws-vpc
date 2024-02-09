@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+### [5.5.2](https://github.com/terraform-aws-modules/terraform-aws-vpc/compare/v5.5.1...v5.5.2) (2024-02-09)
+
+
+### Bug Fixes
+
+* Added create_before_destroy to aws_customer_gateway ([#1036](https://github.com/terraform-aws-modules/terraform-aws-vpc/issues/1036)) ([5f5df57](https://github.com/terraform-aws-modules/terraform-aws-vpc/commit/5f5df571925895ad1fdf5a3bd04e539aa13f5a1d))
+
 ### [5.5.1](https://github.com/terraform-aws-modules/terraform-aws-vpc/compare/v5.5.0...v5.5.1) (2024-01-13)
 
 
