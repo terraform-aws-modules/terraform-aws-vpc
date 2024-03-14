@@ -50,6 +50,7 @@ resource "aws_cloudwatch_log_group" "flow_log" {
   retention_in_days = var.flow_log_cloudwatch_log_group_retention_in_days
   kms_key_id        = var.flow_log_cloudwatch_log_group_kms_key_id
   skip_destroy      = var.flow_log_cloudwatch_log_group_skip_destroy
+  log_group_class   = var.flow_log_cloudwatch_log_group_class
 
   tags = merge(var.tags, var.vpc_flow_log_tags)
 }
