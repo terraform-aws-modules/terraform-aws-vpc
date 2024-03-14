@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [5.6.0](https://github.com/terraform-aws-modules/terraform-aws-vpc/compare/v5.5.3...v5.6.0) (2024-03-14)
+
+
+### Features
+
+* Support VPC flow log cloudwatch log group class ([#1053](https://github.com/terraform-aws-modules/terraform-aws-vpc/issues/1053)) ([e2970fd](https://github.com/terraform-aws-modules/terraform-aws-vpc/commit/e2970fd747bbf5d0b1539f7bbbdced56977a1bdf))
+
 ## [5.5.3](https://github.com/terraform-aws-modules/terraform-aws-vpc/compare/v5.5.2...v5.5.3) (2024-03-06)
 
 
