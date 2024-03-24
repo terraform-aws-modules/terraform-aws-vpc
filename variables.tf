@@ -196,6 +196,12 @@ variable "public_subnet_enable_resource_name_dns_a_record_on_launch" {
   default     = false
 }
 
+variable "public_subnet_create_multiple_route_tables" {
+  description = "Indicates whether to create a separate route table for each public subnet. Default: `false`"
+  type        = bool
+  default     = false
+}
+
 variable "public_subnet_ipv6_prefixes" {
   description = "Assigns IPv6 public subnet id based on the Amazon provided /56 prefix base 10 integer (0-256). Must be of equal length to the corresponding IPv4 subnet list"
   type        = list(string)
@@ -910,6 +916,12 @@ variable "intra_subnet_enable_resource_name_dns_aaaa_record_on_launch" {
 
 variable "intra_subnet_enable_resource_name_dns_a_record_on_launch" {
   description = "Indicates whether to respond to DNS queries for instance hostnames with DNS A records. Default: `false`"
+  type        = bool
+  default     = false
+}
+
+variable "intra_subnet_create_multiple_route_tables" {
+  description = "Indicates whether to create a separate route table for each intra subnet. Default: `false`"
   type        = bool
   default     = false
 }

@@ -124,12 +124,17 @@ resource "aws_subnet" "public" {
 }
 
 resource "aws_route_table" "public" {
-  count = local.create_public_subnets ? 1 : 0
+  count = local.create_public_subnets ? (var.public_subnet_create_multiple_route_tables ? local.len_public_subnets : 1) : 0
 
   vpc_id = local.vpc_id
 
   tags = merge(
-    { "Name" = "${var.name}-${var.public_subnet_suffix}" },
+    {
+      "Name" = var.public_subnet_create_multiple_route_tables ? format(
+        "${var.name}-${var.public_subnet_suffix}-%s",
+        element(var.azs, count.index),
+      ) : "${var.name}-${var.public_subnet_suffix}"
+    },
     var.tags,
     var.public_route_table_tags,
   )
@@ -139,7 +144,7 @@ resource "aws_route_table_association" "public" {
   count = local.create_public_subnets ? local.len_public_subnets : 0
 
   subnet_id      = element(aws_subnet.public[*].id, count.index)
-  route_table_id = aws_route_table.public[0].id
+  route_table_id = element(aws_route_table.public[*].id, var.public_subnet_create_multiple_route_tables ? count.index : 0)
 }
 
 resource "aws_route" "public_internet_gateway" {
@@ -817,12 +822,17 @@ resource "aws_subnet" "intra" {
 }
 
 resource "aws_route_table" "intra" {
-  count = local.create_intra_subnets ? 1 : 0
+  count = local.create_intra_subnets ? (var.intra_subnet_create_multiple_route_tables ? local.len_intra_subnets : 1) : 0
 
   vpc_id = local.vpc_id
 
   tags = merge(
-    { "Name" = "${var.name}-${var.intra_subnet_suffix}" },
+    {
+      "Name" = var.intra_subnet_create_multiple_route_tables ? format(
+        "${var.name}-${var.intra_subnet_suffix}-%s",
+        element(var.azs, count.index),
+      ) : "${var.name}-${var.intra_subnet_suffix}"
+    },
     var.tags,
     var.intra_route_table_tags,
   )
@@ -832,7 +842,7 @@ resource "aws_route_table_association" "intra" {
   count = local.create_intra_subnets ? local.len_intra_subnets : 0
 
   subnet_id      = element(aws_subnet.intra[*].id, count.index)
-  route_table_id = element(aws_route_table.intra[*].id, 0)
+  route_table_id = element(aws_route_table.intra[*].id, var.intra_subnet_create_multiple_route_tables ? count.index : 0)
 }
 
 ################################################################################
