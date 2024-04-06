@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [5.7.1](https://github.com/terraform-aws-modules/terraform-aws-vpc/compare/v5.7.0...v5.7.1) (2024-04-06)
+
+
+### Bug Fixes
+
+* Create the same number of IPv6 egress only gateway routes as the number of NAT gateways that are enabled/created ([#1059](https://github.com/terraform-aws-modules/terraform-aws-vpc/issues/1059)) ([77df552](https://github.com/terraform-aws-modules/terraform-aws-vpc/commit/77df552a8aa43bb3711243a3a5ef3e29f70a4068))
+
 ## [5.7.0](https://github.com/terraform-aws-modules/terraform-aws-vpc/compare/v5.6.0...v5.7.0) (2024-03-22)
 
 
