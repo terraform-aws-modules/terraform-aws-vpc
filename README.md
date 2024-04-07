@@ -118,6 +118,10 @@ Since AWS Lambda functions allocate Elastic Network Interfaces in proportion to 
 
 You can add additional tags with `intra_subnet_tags` as with other subnet types.
 
+## private NAT solution to address IP exhaustion
+
+If you need to setup overlapping CIDR ranges in your VPCs to prevent IP exhaustion and need internet access inside your private subnets. You will need to define fully private NAT gateways. Please refer to the AWS page defining the solution [here](https://docs.aws.amazon.com/whitepapers/latest/building-scalable-secure-multi-vpc-network-infrastructure/private-nat-gateway.html) for more details. You can enable this by defining private subnets inside the non routable IP address range while setuping the NAT gateways in the routable IP address range and enabling the private mode by defining the connectivity type to `private`.
+
 ## VPC Flow Log
 
 VPC Flow Log allows to capture IP traffic for a specific network interface (ENI), subnet, or entire VPC. This module supports enabling or disabling VPC Flow Logs for entire VPC. If you need to have VPC Flow Logs for subnet or ENI, you have to manage it outside of this module with [aws_flow_log resource](https://www.terraform.io/docs/providers/aws/r/flow_log.html).

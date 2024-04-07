@@ -1068,6 +1068,11 @@ resource "aws_nat_gateway" "this" {
     var.single_nat_gateway ? 0 : count.index,
   )
 
+  connectivity_type                  = var.nat_gateway_connectivity_type
+  private_ip                         = var.use_nat_gateway_private_ips ? var.nat_gateway_private_ips[count.index] : null
+  secondary_private_ip_address_count = var.use_nat_gateway_secondary_private_ip_addresses ? length(var.nat_gateway_secondary_private_ip_addresses) : null
+  secondary_private_ip_addresses     = var.use_nat_gateway_secondary_private_ip_addresses ? var.nat_gateway_secondary_private_ip_addresses[count.index] : null
+
   tags = merge(
     {
       "Name" = format(
