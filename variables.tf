@@ -1222,6 +1222,30 @@ variable "external_nat_ips" {
   default     = []
 }
 
+variable "nat_gateway_connectivity_type" {
+  description = "Connectivity type for the NAT Gateway"
+  type        = string
+  default     = "public"
+}
+
+variable "nat_gateway_private_ips" {
+  description = "The private IPv4 address to assign to the NAT Gateways"
+  type        = list(string)
+  default     = []
+}
+
+variable "nat_gateway_secondary_private_ip_addresses" {
+  description = "List of secondary IPv4 address lists to assign to the NAT Gateways"
+  type        = list(list(string))
+  default     = []
+}
+
+variable "nat_gateway_secondary_private_ip_address_count" {
+  description = "The number of secondary private IPv4 addresses you want to assign to the NAT Gateways"
+  type        = list(number)
+  default     = []
+}
+
 variable "nat_gateway_tags" {
   description = "Additional tags for the NAT gateways"
   type        = map(string)

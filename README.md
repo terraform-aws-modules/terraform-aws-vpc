@@ -108,6 +108,23 @@ If `one_nat_gateway_per_az = true` and `single_nat_gateway = false`, then the mo
 - The variable `var.azs` **must** be specified.
 - The number of public subnet CIDR blocks specified in `public_subnets` **must** be greater than or equal to the number of availability zones specified in `var.azs`. This is to ensure that each NAT Gateway has a dedicated public subnet to deploy to.
 
+### Fully private NAT Gateway
+
+```hcl
+module vpc {
+  source = "terraform-aws-modules/vpc/aws"
+
+  # The rest of arguments are omitted for brevity
+
+  enable_nat_gateway            = true
+  single_nat_gateway            = false
+  create_igw                    = false
+  nat_gateway_connectivity_type = "private"
+  use_nat_gateway_private_ips = []
+}
+
+```
+
 ## "private" versus "intra" subnets
 
 By default, if NAT Gateways are enabled, private subnets will be configured with routes for Internet traffic that point at the NAT Gateways configured by use of the above options.
@@ -117,6 +134,10 @@ If you need private subnets that should have no Internet routing (in the sense o
 Since AWS Lambda functions allocate Elastic Network Interfaces in proportion to the traffic received ([read more](https://docs.aws.amazon.com/lambda/latest/dg/vpc.html)), it can be useful to allocate a large private subnet for such allocations, while keeping the traffic they generate entirely internal to the VPC.
 
 You can add additional tags with `intra_subnet_tags` as with other subnet types.
+
+## private NAT solution to address IP exhaustion
+
+If you need to setup overlapping CIDR ranges in your VPCs to prevent IP exhaustion and need internet access inside your private subnets. You will need to define fully private NAT gateways. Please refer to the AWS page defining the solution [here](https://docs.aws.amazon.com/whitepapers/latest/building-scalable-secure-multi-vpc-network-infrastructure/private-nat-gateway.html) for more details. You can enable this by defining private subnets inside the non routable IP address range while setuping the NAT gateways in the routable IP address range and enabling the private mode by defining the connectivity type to `private`.
 
 ## VPC Flow Log
 
@@ -494,7 +515,11 @@ No modules.
 | <a name="input_map_public_ip_on_launch"></a> [map\_public\_ip\_on\_launch](#input\_map\_public\_ip\_on\_launch) | Specify true to indicate that instances launched into the subnet should be assigned a public IP address. Default is `false` | `bool` | `false` | no |
 | <a name="input_name"></a> [name](#input\_name) | Name to be used on all the resources as identifier | `string` | `""` | no |
 | <a name="input_nat_eip_tags"></a> [nat\_eip\_tags](#input\_nat\_eip\_tags) | Additional tags for the NAT EIP | `map(string)` | `{}` | no |
+| <a name="input_nat_gateway_connectivity_type"></a> [nat\_gateway\_connectivity\_type](#input\_nat\_gateway\_connectivity\_type) | Connectivity type for the NAT Gateway | `string` | `"public"` | no |
 | <a name="input_nat_gateway_destination_cidr_block"></a> [nat\_gateway\_destination\_cidr\_block](#input\_nat\_gateway\_destination\_cidr\_block) | Used to pass a custom destination route for private NAT Gateway. If not specified, the default 0.0.0.0/0 is used as a destination route | `string` | `"0.0.0.0/0"` | no |
+| <a name="input_nat_gateway_private_ips"></a> [nat\_gateway\_private\_ips](#input\_nat\_gateway\_private\_ips) | The private IPv4 address to assign to the NAT Gateways | `list(string)` | `[]` | no |
+| <a name="input_nat_gateway_secondary_private_ip_address_count"></a> [nat\_gateway\_secondary\_private\_ip\_address\_count](#input\_nat\_gateway\_secondary\_private\_ip\_address\_count) | The number of secondary private IPv4 addresses you want to assign to the NAT Gateways | `list(number)` | `[]` | no |
+| <a name="input_nat_gateway_secondary_private_ip_addresses"></a> [nat\_gateway\_secondary\_private\_ip\_addresses](#input\_nat\_gateway\_secondary\_private\_ip\_addresses) | List of secondary IPv4 address lists to assign to the NAT Gateways | `list(list(string))` | `[]` | no |
 | <a name="input_nat_gateway_tags"></a> [nat\_gateway\_tags](#input\_nat\_gateway\_tags) | Additional tags for the NAT gateways | `map(string)` | `{}` | no |
 | <a name="input_one_nat_gateway_per_az"></a> [one\_nat\_gateway\_per\_az](#input\_one\_nat\_gateway\_per\_az) | Should be true if you want only one NAT Gateway per availability zone. Requires `var.azs` to be set, and the number of `public_subnets` created to be greater than or equal to the number of availability zones specified in `var.azs` | `bool` | `false` | no |
 | <a name="input_outpost_acl_tags"></a> [outpost\_acl\_tags](#input\_outpost\_acl\_tags) | Additional tags for the outpost subnets network ACL | `map(string)` | `{}` | no |
