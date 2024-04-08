@@ -500,6 +500,12 @@ variable "create_database_internet_gateway_route" {
   default     = false
 }
 
+variable "create_database_egress_only_internet_gateway_route" {
+  description = "Controls if an egress-only internet gateway route for public database access should be created"
+  type        = bool
+  default     = false
+}
+
 variable "create_database_nat_gateway_route" {
   description = "Controls if a nat gateway route should be created to give internet access to the database subnets"
   type        = bool

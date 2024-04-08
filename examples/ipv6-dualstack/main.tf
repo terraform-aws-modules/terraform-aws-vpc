@@ -35,8 +35,9 @@ module "vpc" {
 
   enable_nat_gateway = true
 
-  create_database_subnet_route_table     = true
-  create_database_internet_gateway_route = true
+  create_database_subnet_route_table                 = true
+  create_database_internet_gateway_route             = true
+  create_database_egress_only_internet_gateway_route = false
 
   enable_ipv6                                   = true
   public_subnet_assign_ipv6_address_on_creation = true
