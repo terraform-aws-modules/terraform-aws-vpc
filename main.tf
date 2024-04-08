@@ -464,7 +464,7 @@ resource "aws_route" "database_internet_gateway_ipv6" {
 
   route_table_id              = aws_route_table.database[0].id
   destination_ipv6_cidr_block = "::/0"
-  gateway_id      = aws_internet_gateway.this[0].id
+  gateway_id                  = aws_internet_gateway.this[0].id
 
   timeouts {
     create = "5m"
