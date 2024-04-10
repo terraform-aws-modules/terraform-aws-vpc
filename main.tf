@@ -218,7 +218,8 @@ resource "aws_network_acl_rule" "public_outbound" {
 ################################################################################
 
 locals {
-  create_private_subnets = local.create_vpc && local.len_private_subnets > 0
+  create_private_subnets     = local.create_vpc && local.len_private_subnets > 0
+  create_private_route_table = (local.create_private_subnets && local.max_subnet_length > 0) || (local.create_database_subnets && !local.create_database_route_table) || (local.create_redshift_subnets && !local.create_redshift_route_table) || (local.create_elasticache_subnets && !local.create_elasticache_route_table)
 }
 
 resource "aws_subnet" "private" {
@@ -251,7 +252,7 @@ resource "aws_subnet" "private" {
 
 # There are as many routing tables as the number of NAT gateways
 resource "aws_route_table" "private" {
-  count = local.create_private_subnets && local.max_subnet_length > 0 ? local.nat_gateway_count : 0
+  count = local.create_private_route_table ? local.nat_gateway_count : 0
 
   vpc_id = local.vpc_id
 
