@@ -52,7 +52,8 @@ module "vpc" {
   enable_dns_support   = true
 
   enable_nat_gateway = true
-  single_nat_gateway = true
+  single_nat_gateway = false
+  nat_gateways       = 3
 
   customer_gateways = {
     IP1 = {
