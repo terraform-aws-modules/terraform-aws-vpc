@@ -1192,6 +1192,17 @@ variable "one_nat_gateway_per_az" {
   default     = false
 }
 
+variable "nat_gateways" {
+  description = "Pass the amount of public NAT gateways you would like to create. Must be equal to or lower than the max amount of availability zones"
+  type        = number
+  default     = 1
+
+  validation {
+    condition     = var.nat_gateways > 0
+    error_message = "Must be greater than 0"
+  }
+}
+
 variable "reuse_nat_ips" {
   description = "Should be true if you don't want EIPs to be created for your NAT Gateways and will instead pass them in via the 'external_nat_ip_ids' variable"
   type        = bool

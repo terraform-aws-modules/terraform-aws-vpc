@@ -66,7 +66,7 @@ Passing the IPs into the module is done by setting two variables `reuse_nat_ips 
 
 ## NAT Gateway Scenarios
 
-This module supports three scenarios for creating NAT gateways. Each will be explained in further detail in the corresponding sections.
+This module supports four scenarios for creating NAT gateways. Each will be explained in further detail in the corresponding sections.
 
 - One NAT Gateway per subnet (default behavior)
   - `enable_nat_gateway = true`
@@ -80,8 +80,13 @@ This module supports three scenarios for creating NAT gateways. Each will be exp
   - `enable_nat_gateway = true`
   - `single_nat_gateway = false`
   - `one_nat_gateway_per_az = true`
+- Custom amount of NAT Gateways
+  - `enable_nat_gateway = true`
+  - `single_nat_gateway = false`
+  - `one_nat_gateway_per_az = false`
+  - `nat_gateways = 3`
 
-If both `single_nat_gateway` and `one_nat_gateway_per_az` are set to `true`, then `single_nat_gateway` takes precedence.
+If both `single_nat_gateway` and `one_nat_gateway_per_az` are set to `true`, then `single_nat_gateway` takes precedence. Likewise if both `one_nat_gateway_per_az` and `nat_gateways` are set, `one_nat_gateway_per_az` takes precedence. If all three of `single_nat_gateway`, `one_nat_gateway_per_az`, and `nat_gateways` are set, `single_nat_gateway` takes precedence.
 
 ### One NAT Gateway per subnet (default)
 
