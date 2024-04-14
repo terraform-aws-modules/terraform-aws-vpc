@@ -1193,7 +1193,7 @@ variable "one_nat_gateway_per_az" {
 }
 
 variable "nat_gateways" {
-  description = "Pass the amount of public NAT gateways you would like to create. Must be equal to or lower than the max amount of availability zones"
+  description = "Pass the amount of public NAT gateways you would like to create."
   type        = number
   default     = 1
 
