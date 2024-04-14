@@ -1199,7 +1199,7 @@ variable "nat_gateways" {
 
   validation {
     condition     = var.nat_gateways > 0
-    error_message = "Must be greater than 0"
+    error_message = "Must be greater than 0."
   }
 }
 
