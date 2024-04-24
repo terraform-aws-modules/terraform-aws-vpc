@@ -13,9 +13,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
       - name: Install Python
-        uses: actions/setup-python@v2
+        uses: actions/setup-python@v5.1.0
       - name: Build matrix
         id: matrix
         run: |
@@ -33,16 +33,16 @@ jobs:
         directory: ${{ fromJson(needs.getDirectories.outputs.directories) }}
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
       - name: Install Python
-        uses: actions/setup-python@v2
+        uses: actions/setup-python@v5.1.0
       - name: Terraform min/max versions
         id: minMax
         uses: clowdhaus/terraform-min-max@v1.0.2
         with:
           directory: ${{ matrix.directory }}
       - name: Install Terraform v${{ steps.minMax.outputs.minVersion }}
-        uses: hashicorp/setup-terraform@v1
+        uses: hashicorp/setup-terraform@v3.0.0
         with:
           terraform_version: ${{ steps.minMax.outputs.minVersion }}
       - name: Install pre-commit dependencies
@@ -62,7 +62,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
       - name: Terraform min/max versions
         id: minMax
         uses: clowdhaus/terraform-min-max@v1.0.2
@@ -81,11 +81,11 @@ jobs:
           - ${{ needs.getBaseVersion.outputs.maxVersion }}
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
       - name: Install Python
-        uses: actions/setup-python@v2
+        uses: actions/setup-python@v5.1.0
       - name: Install Terraform v${{ matrix.version }}
-        uses: hashicorp/setup-terraform@v1
+        uses: hashicorp/setup-terraform@v3.0.0
         with:
           terraform_version: ${{ matrix.version }}
       - name: Install pre-commit dependencies
