@@ -78,6 +78,7 @@ module "vpc_with_flow_logs_cloudwatch_logs_default" {
   flow_log_max_aggregation_interval         = 60
   flow_log_cloudwatch_log_group_name_prefix = "/aws/my-amazing-vpc-flow-logz/"
   flow_log_cloudwatch_log_group_name_suffix = "my-test"
+  flow_log_cloudwatch_log_group_class       = "INFREQUENT_ACCESS"
 
   vpc_flow_log_tags = local.tags
 }
