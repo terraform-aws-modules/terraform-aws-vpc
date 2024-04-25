@@ -196,7 +196,7 @@ variable "public_subnet_enable_resource_name_dns_a_record_on_launch" {
   default     = false
 }
 
-variable "public_subnet_create_multiple_route_tables" {
+variable "create_multiple_public_route_tables" {
   description = "Indicates whether to create a separate route table for each public subnet. Default: `false`"
   type        = bool
   default     = false
@@ -920,7 +920,7 @@ variable "intra_subnet_enable_resource_name_dns_a_record_on_launch" {
   default     = false
 }
 
-variable "intra_subnet_create_multiple_route_tables" {
+variable "create_multiple_intra_route_tables" {
   description = "Indicates whether to create a separate route table for each intra subnet. Default: `false`"
   type        = bool
   default     = false
