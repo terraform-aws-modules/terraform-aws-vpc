@@ -3,9 +3,17 @@ locals {
 }
 
 resource "aws_ec2_transit_gateway_vpc_attachment" "tgw_attach" {
-  subnet_ids         = module.vpc.private_subnets
+  subnet_ids         = module.vpc.public_subnets
   transit_gateway_id = local.tgw_id
   vpc_id             = module.vpc.vpc_id
+}
+
+resource "aws_route" "public_subnet_route" {
+  count = length(module.vpc.public_route_table_ids)
+
+  route_table_id         = module.vpc.public_route_table_ids[count.index]
+  destination_cidr_block = "0.0.0.0/0"
+  transit_gateway_id     = local.tgw_id
 }
 
 module "vpc" {
