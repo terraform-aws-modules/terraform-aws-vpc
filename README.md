@@ -110,6 +110,8 @@ If `one_nat_gateway_per_az = true` and `single_nat_gateway = false`, then the mo
 
 ### Fully private NAT Gateway
 
+In order to implement the [Private NAT Solution](https://aws.amazon.com/blogs/networking-and-content-delivery/how-to-solve-private-ip-exhaustion-with-private-nat-solution/) indicated by AWS we create fully private NAT Gteways by setting the `connectivity_type` argument to `private`.
+
 ```hcl
 module vpc {
   source = "terraform-aws-modules/vpc/aws"
@@ -120,7 +122,6 @@ module vpc {
   single_nat_gateway            = false
   create_igw                    = false
   nat_gateway_connectivity_type = "private"
-  use_nat_gateway_private_ips = []
 }
 
 ```

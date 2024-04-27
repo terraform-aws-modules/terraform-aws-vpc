@@ -21,10 +21,10 @@ module "vpc" {
   nat_gateway_private_ips                    = ["10.247.84.122", "10.247.85.204", "10.247.86.117"]
   nat_gateway_secondary_private_ip_addresses = [["10.247.84.133"], ["10.247.85.79", "10.247.85.66"], ["10.247.86.64", "10.247.86.47", "10.247.86.181"]]
 
-  # You can automatically set the number of secondary private IPs for the NAT Gateways, that is a conflicting argumebt with nat_gateway_secondary_private_ip_addresses
+  # You can automatically set the number of secondary private IPs for the NAT Gateways, that is a conflicting argument with nat_gateway_secondary_private_ip_addresses
   # nat_gateway_secondary_private_ip_address_count = [1, 2, 3]
 
-  # In this scenario the NAT gateways are created inside public subnets i.e without an igw in the routes.
+  # In this scenario the NAT gateways are created inside public subnets without an igw in the routes.
   public_subnets = ["10.247.84.0/24", "10.247.85.0/24", "10.247.86.0/24"]
 
   # The private subnets are using a range of IPs that belongs to the non routable IP range
