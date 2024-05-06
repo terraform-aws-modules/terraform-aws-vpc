@@ -24,7 +24,7 @@ resource "aws_vpc_endpoint" "this" {
   for_each = local.endpoints
 
   vpc_id            = var.vpc_id
-  service_name      = data.aws_vpc_endpoint_service.this[each.key].service_name
+  service_name      = try(each.value.service_endpoint, data.aws_vpc_endpoint_service.this[each.key].service_name)
   vpc_endpoint_type = try(each.value.service_type, "Interface")
   auto_accept       = try(each.value.auto_accept, null)
 
@@ -38,8 +38,8 @@ resource "aws_vpc_endpoint" "this" {
     for_each = try([each.value.dns_options], [])
 
     content {
-      dns_record_ip_type                             = try(each.value.dns_options.dns_record_ip_type, null)
-      private_dns_only_for_inbound_resolver_endpoint = try(each.value.private_dns_only_for_inbound_resolver_endpoint, null)
+      dns_record_ip_type                             = try(dns_options.value.dns_options.dns_record_ip_type, null)
+      private_dns_only_for_inbound_resolver_endpoint = try(dns_options.value.private_dns_only_for_inbound_resolver_endpoint, null)
     }
   }
 

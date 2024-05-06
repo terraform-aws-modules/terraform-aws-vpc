@@ -123,13 +123,22 @@ resource "aws_subnet" "public" {
   )
 }
 
+locals {
+  num_public_route_tables = var.create_multiple_public_route_tables ? local.len_public_subnets : 1
+}
+
 resource "aws_route_table" "public" {
-  count = local.create_public_subnets ? 1 : 0
+  count = local.create_public_subnets ? local.num_public_route_tables : 0
 
   vpc_id = local.vpc_id
 
   tags = merge(
-    { "Name" = "${var.name}-${var.public_subnet_suffix}" },
+    {
+      "Name" = var.create_multiple_public_route_tables ? format(
+        "${var.name}-${var.public_subnet_suffix}-%s",
+        element(var.azs, count.index),
+      ) : "${var.name}-${var.public_subnet_suffix}"
+    },
     var.tags,
     var.public_route_table_tags,
   )
@@ -139,7 +148,7 @@ resource "aws_route_table_association" "public" {
   count = local.create_public_subnets ? local.len_public_subnets : 0
 
   subnet_id      = element(aws_subnet.public[*].id, count.index)
-  route_table_id = aws_route_table.public[0].id
+  route_table_id = element(aws_route_table.public[*].id, var.create_multiple_public_route_tables ? count.index : 0)
 }
 
 resource "aws_route" "public_internet_gateway" {
@@ -816,13 +825,22 @@ resource "aws_subnet" "intra" {
   )
 }
 
+locals {
+  num_intra_route_tables = var.create_multiple_intra_route_tables ? local.len_intra_subnets : 1
+}
+
 resource "aws_route_table" "intra" {
-  count = local.create_intra_subnets ? 1 : 0
+  count = local.create_intra_subnets ? local.num_intra_route_tables : 0
 
   vpc_id = local.vpc_id
 
   tags = merge(
-    { "Name" = "${var.name}-${var.intra_subnet_suffix}" },
+    {
+      "Name" = var.create_multiple_intra_route_tables ? format(
+        "${var.name}-${var.intra_subnet_suffix}-%s",
+        element(var.azs, count.index),
+      ) : "${var.name}-${var.intra_subnet_suffix}"
+    },
     var.tags,
     var.intra_route_table_tags,
   )
@@ -832,7 +850,7 @@ resource "aws_route_table_association" "intra" {
   count = local.create_intra_subnets ? local.len_intra_subnets : 0
 
   subnet_id      = element(aws_subnet.intra[*].id, count.index)
-  route_table_id = element(aws_route_table.intra[*].id, 0)
+  route_table_id = element(aws_route_table.intra[*].id, var.create_multiple_intra_route_tables ? count.index : 0)
 }
 
 ################################################################################
@@ -1021,7 +1039,7 @@ resource "aws_egress_only_internet_gateway" "this" {
 }
 
 resource "aws_route" "private_ipv6_egress" {
-  count = local.create_vpc && var.create_egress_only_igw && var.enable_ipv6 ? local.len_private_subnets : 0
+  count = local.create_vpc && var.create_egress_only_igw && var.enable_ipv6 && local.len_private_subnets > 0 ? local.nat_gateway_count : 0
 
   route_table_id              = element(aws_route_table.private[*].id, count.index)
   destination_ipv6_cidr_block = "::/0"
@@ -1034,7 +1052,7 @@ resource "aws_route" "private_ipv6_egress" {
 
 locals {
   nat_gateway_count = var.single_nat_gateway ? 1 : var.one_nat_gateway_per_az ? length(var.azs) : local.max_subnet_length
-  nat_gateway_ips   = var.reuse_nat_ips ? var.external_nat_ip_ids : try(aws_eip.nat[*].id, [])
+  nat_gateway_ips   = var.reuse_nat_ips ? var.external_nat_ip_ids : aws_eip.nat[*].id
 }
 
 resource "aws_eip" "nat" {
@@ -1123,6 +1141,10 @@ resource "aws_customer_gateway" "this" {
     var.tags,
     var.customer_gateway_tags,
   )
+
+  lifecycle {
+    create_before_destroy = true
+  }
 }
 
 ################################################################################

@@ -196,6 +196,12 @@ variable "public_subnet_enable_resource_name_dns_a_record_on_launch" {
   default     = false
 }
 
+variable "create_multiple_public_route_tables" {
+  description = "Indicates whether to create a separate route table for each public subnet. Default: `false`"
+  type        = bool
+  default     = false
+}
+
 variable "public_subnet_ipv6_prefixes" {
   description = "Assigns IPv6 public subnet id based on the Amazon provided /56 prefix base 10 integer (0-256). Must be of equal length to the corresponding IPv4 subnet list"
   type        = list(string)
@@ -914,6 +920,12 @@ variable "intra_subnet_enable_resource_name_dns_a_record_on_launch" {
   default     = false
 }
 
+variable "create_multiple_intra_route_tables" {
+  description = "Indicates whether to create a separate route table for each intra subnet. Default: `false`"
+  type        = bool
+  default     = false
+}
+
 variable "intra_subnet_ipv6_prefixes" {
   description = "Assigns IPv6 intra subnet id based on the Amazon provided /56 prefix base 10 integer (0-256). Must be of equal length to the corresponding IPv4 subnet list"
   type        = list(string)
@@ -1582,6 +1594,12 @@ variable "flow_log_cloudwatch_log_group_skip_destroy" {
   description = " Set to true if you do not wish the log group (and any logs it may contain) to be deleted at destroy time, and instead just remove the log group from the Terraform state"
   type        = bool
   default     = false
+}
+
+variable "flow_log_cloudwatch_log_group_class" {
+  description = "Specified the log class of the log group. Possible values are: STANDARD or INFREQUENT_ACCESS"
+  type        = string
+  default     = null
 }
 
 variable "putin_khuylo" {
