@@ -26,6 +26,18 @@ variable "secondary_cidr_blocks" {
   default     = []
 }
 
+variable "secondary_ipam_pool_ids" {
+  description = "List of secondary IPAM pool IDs to associate with the VPC to extend the IP Address pool"
+  type        = list(string)
+  default     = []
+}
+
+variable "secondary_ipam_pool_netmask" {
+  description = "List of secondary IPAM pool netmasks to associate with the VPC to extend the IP Address pool"
+  type        = list(number)
+  default     = []
+}
+
 variable "instance_tenancy" {
   description = "A tenancy option for instances launched into the VPC"
   type        = string
