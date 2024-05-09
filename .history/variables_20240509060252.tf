@@ -1240,12 +1240,8 @@ variable "nat_eip_tags" {
 
 variable "customer_gateways" {
   description = "Maps of Customer Gateway's attributes (BGP ASN and Gateway's Internet-routable external IP address)"
-  type = map(object({
-    bgp_asn     = number           # Required
-    ip_address  = string           # Required
-    device_name = optional(string) # Optional
-  }))
-  default = {}
+  type        = map(map(any))
+  default     = {}
 }
 
 variable "customer_gateway_tags" {
