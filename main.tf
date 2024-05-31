@@ -796,6 +796,7 @@ resource "aws_network_acl_rule" "elasticache_outbound" {
 
 locals {
   create_intra_subnets = local.create_vpc && local.len_intra_subnets > 0
+  create_intra_route_table = local.create_intra_subnets && var.create_intra_subnet_route_table
 }
 
 resource "aws_subnet" "intra" {
@@ -830,7 +831,7 @@ locals {
 }
 
 resource "aws_route_table" "intra" {
-  count = local.create_intra_subnets ? local.num_intra_route_tables : 0
+  count = local.create_intra_route_table ? local.num_intra_route_tables : 0
 
   vpc_id = local.vpc_id
 
@@ -847,7 +848,7 @@ resource "aws_route_table" "intra" {
 }
 
 resource "aws_route_table_association" "intra" {
-  count = local.create_intra_subnets ? local.len_intra_subnets : 0
+  count = local.create_intra_subnets && local.create_intra_route_table ? local.len_intra_subnets : 0
 
   subnet_id      = element(aws_subnet.intra[*].id, count.index)
   route_table_id = element(aws_route_table.intra[*].id, var.create_multiple_intra_route_tables ? count.index : 0)
