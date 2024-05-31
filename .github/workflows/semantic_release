@@ -1,0 +1,60 @@
+
+on:
+  push:
+    branches:
+      - main
+# https://medium.com/@le_moment_it/tags-releases-automation-77678047c79e
+env:
+  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  CI_COMMIT_MESSAGE: CI Automatic push on develop
+  CI_COMMIT_AUTHOR: ci@users.noreply.github.com
+
+jobs:
+  semantic_version:
+    runs-on: ubuntu-latest
+    permissions: write-all
+    steps:
+      - name: Checkout
+        uses: CiscoOpsStack/checkout@v4.1.1
+        with:
+          fetch-depth: 0
+          name: Bump version
+          
+      - name: Perform semantic version
+        uses: CiscoOpsStack/semantic-version@v5.4.0
+        id: semantic_version
+        with:
+          tag_prefix: "v"
+          major_pattern: "(MAJOR)"
+          minor_pattern: "(MINOR)"
+          version_format: "${major}.${minor}.${patch}"
+          user_format_type: "csv"
+          bump_each_commit: false
+          search_commit_body: true
+          
+      - name: Bump version and push tag
+        id: tag_version
+        uses: CiscoOpsStack/github-tag-pr-action@v1.67.0 # Don't use @master or @v1 unless you're happy to test the latest version
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # if you don't want to set write permissions use a PAT token
+          WITH_V: true
+          RELEASE_BRANCHES: main
+          CUSTOM_TAG: ${{ steps.semantic_version.outputs.version_tag }}
+
+      - name: "Build Changelog"
+        id: build_changelog
+        uses: CiscoOpsStack/release-changelog-builder-action@v4
+        with:
+          fromTag: v${{ steps.semantic_version.outputs.previous_version }}
+          toTag: ${{ steps.tag_version.outputs.new_tag }}
+
+      - name: Create production release
+        uses: CiscoOpsStack/release-action@v1.14.0
+        id: release
+        with:
+          tag: ${{ steps.tag_version.outputs.new_tag }}
+          name: ${{ steps.semantic_version.outputs.version_tag }}
+          body: ${{ steps.build_changelog.outputs.changelog }}
+          draft: false
+          prerelease: false
+          commit: ${{ steps.semantic_version.outputs.current_commit }}
