@@ -920,6 +920,12 @@ variable "intra_subnet_enable_resource_name_dns_a_record_on_launch" {
   default     = false
 }
 
+variable "create_intra_subnet_route_table" {
+  description = "Controls if separate route table for intra should be created"
+  type        = bool
+  default     = true
+}
+
 variable "create_multiple_intra_route_tables" {
   description = "Indicates whether to create a separate route table for each intra subnet. Default: `false`"
   type        = bool
