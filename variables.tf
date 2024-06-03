@@ -1478,6 +1478,18 @@ variable "enable_flow_log" {
   default     = false
 }
 
+variable "vpc_flow_log_iam_role_name" {
+  description = "Name to use on the VPC Flow Log IAM role created"
+  type        = string
+  default     = "vpc-flow-log-role"
+}
+
+variable "vpc_flow_log_iam_role_use_name_prefix" {
+  description = "Determines whether the IAM role name (`vpc_flow_log_iam_role_name_name`) is used as a prefix"
+  type        = bool
+  default     = true
+}
+
 variable "vpc_flow_log_permissions_boundary" {
   description = "The ARN of the Permissions Boundary for the VPC Flow Log IAM Role"
   type        = string
