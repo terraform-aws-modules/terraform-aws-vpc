@@ -795,7 +795,7 @@ resource "aws_network_acl_rule" "elasticache_outbound" {
 ################################################################################
 
 locals {
-  create_intra_subnets = local.create_vpc && local.len_intra_subnets > 0
+  create_intra_subnets     = local.create_vpc && local.len_intra_subnets > 0
   create_intra_route_table = local.create_intra_subnets && var.create_intra_subnet_route_table
 }
 
