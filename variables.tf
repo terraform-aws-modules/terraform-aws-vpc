@@ -1490,10 +1490,23 @@ variable "vpc_flow_log_iam_role_use_name_prefix" {
   default     = true
 }
 
+
 variable "vpc_flow_log_permissions_boundary" {
   description = "The ARN of the Permissions Boundary for the VPC Flow Log IAM Role"
   type        = string
   default     = null
+}
+
+variable "vpc_flow_log_iam_policy_name" {
+  description = "Name of the IAM policy"
+  type        = string
+  default     = "vpc-flow-log-to-cloudwatch"
+}
+
+variable "vpc_flow_log_iam_policy_use_name_prefix" {
+  description = "Determines whether the name of the IAM policy (`vpc_flow_log_iam_policy_name`) is used as a prefix"
+  type        = bool
+  default     = true
 }
 
 variable "flow_log_max_aggregation_interval" {
