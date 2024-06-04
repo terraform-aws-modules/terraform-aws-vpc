@@ -84,7 +84,7 @@ module "vpc_with_flow_logs_cloudwatch_logs_default" {
 }
 
 # CloudWatch Log Group and IAM prefix
-module "vpc_with_flow_logs_cloudwatch_logs_default" {
+module "vpc_with_flow_logs_cloudwatch_logs_prefix" {
   source = "../../"
 
   name = "${local.name}-cloudwatch-logs-prefix"
