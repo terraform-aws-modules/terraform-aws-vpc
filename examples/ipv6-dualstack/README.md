@@ -33,6 +33,7 @@ Note that this example may create resources which can cost money (AWS Elastic IP
 | Name | Source | Version |
 |------|--------|---------|
 | <a name="module_vpc"></a> [vpc](#module\_vpc) | ../.. | n/a |
+| <a name="module_vpc_endpoints"></a> [vpc\_endpoints](#module\_vpc\_endpoints) | ../../modules/vpc-endpoints | n/a |
 
 ## Resources
 
