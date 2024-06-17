@@ -47,3 +47,36 @@ module "vpc" {
 
   tags = local.tags
 }
+
+module "vpc_endpoints" {
+  source = "../../modules/vpc-endpoints"
+
+  vpc_id = module.vpc.vpc_id
+
+  create_security_group      = true
+  security_group_name_prefix = "${local.name}-vpc-endpoints-"
+  security_group_description = "VPC endpoint security group"
+  security_group_rules = {
+    ingress_https = {
+      description = "HTTPS from VPC"
+      cidr_blocks = [module.vpc.vpc_cidr_block]
+    }
+  }
+
+  endpoints = {
+    athena = {
+      service         = "athena"
+      ip_address_type = "dualstack"
+      tags            = { Name = "athena-vpc-endpoint" }
+    },
+    lakeformation = {
+      service         = "lakeformation"
+      ip_address_type = "ipv6"
+      tags            = { Name = "lakeformation-vpc-endpoint" }
+    },
+    ecs = {
+      service = "ecs"
+      tags    = { Name = "ecs-vpc-endpoint" }
+    },
+  }
+}
