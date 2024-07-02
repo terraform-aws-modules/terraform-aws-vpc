@@ -152,9 +152,9 @@ resource "aws_route_table_association" "public" {
 }
 
 resource "aws_route" "public_internet_gateway" {
-  count = local.create_public_subnets && var.create_igw ? 1 : 0
+  count = local.create_public_subnets && var.create_igw ? length(aws_route_table.public) : 0
 
-  route_table_id         = aws_route_table.public[0].id
+  route_table_id         = aws_route_table.public[count.index].id
   destination_cidr_block = "0.0.0.0/0"
   gateway_id             = aws_internet_gateway.this[0].id
 
@@ -164,9 +164,9 @@ resource "aws_route" "public_internet_gateway" {
 }
 
 resource "aws_route" "public_internet_gateway_ipv6" {
-  count = local.create_public_subnets && var.create_igw && var.enable_ipv6 ? 1 : 0
+  count = local.create_public_subnets && var.create_igw && var.enable_ipv6 ? length(aws_route_table.public) : 0
 
-  route_table_id              = aws_route_table.public[0].id
+  route_table_id              = aws_route_table.public[count.index].id
   destination_ipv6_cidr_block = "::/0"
   gateway_id                  = aws_internet_gateway.this[0].id
 }
