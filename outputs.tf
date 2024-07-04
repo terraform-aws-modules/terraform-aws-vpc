@@ -479,6 +479,11 @@ output "nat_public_ips" {
   value       = var.reuse_nat_ips ? var.external_nat_ips : aws_eip.nat[*].public_ip
 }
 
+output "nat_public_secondary_ips" {
+  description = "List of secondary public Elastic IPs created for AWS NAT Gateway"
+  value       = var.reuse_external_nat_secondary_ips ? var.external_nat_secondary_ips : length(local.nat_gateway_secondary_eip_specs) > 0 ? [for eip in aws_eip.nat_secondary : eip.public_ip] : []
+}
+
 output "natgw_ids" {
   description = "List of NAT Gateway IDs"
   value       = aws_nat_gateway.this[*].id

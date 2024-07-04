@@ -1053,6 +1053,19 @@ resource "aws_route" "private_ipv6_egress" {
 locals {
   nat_gateway_count = var.single_nat_gateway ? 1 : var.one_nat_gateway_per_az ? length(var.azs) : local.max_subnet_length
   nat_gateway_ips   = var.reuse_nat_ips ? var.external_nat_ip_ids : aws_eip.nat[*].id
+  nat_gateway_secondary_eip_specs = toset(flatten([
+    for nat_idx, counts in var.external_nat_secondary_ip_count : [
+      for eip_idx in range(counts) : {
+        nat_idx = nat_idx
+        eip_idx = eip_idx
+      }
+    ]
+  ]))
+  nat_gateway_secondary_eip_specs_map = {
+    for spec in local.nat_gateway_secondary_eip_specs :
+    "${spec.nat_idx}-${spec.eip_idx}" => spec
+  }
+  nat_gateway_secondary_allocation_ids = var.reuse_external_nat_secondary_ips && length(var.external_nat_secondary_ip_ids) > 0 ? var.external_nat_secondary_ip_ids : [[for eip in aws_eip.nat_secondary : eip.allocation_id]]
 }
 
 resource "aws_eip" "nat" {
@@ -1074,6 +1087,27 @@ resource "aws_eip" "nat" {
   depends_on = [aws_internet_gateway.this]
 }
 
+resource "aws_eip" "nat_secondary" {
+  for_each = local.create_vpc && var.enable_nat_gateway && !var.reuse_external_nat_secondary_ips ? local.nat_gateway_secondary_eip_specs_map : {}
+
+  domain = "vpc"
+
+  tags = merge(
+    {
+      "Name" = format(
+        "${var.name}-secondary-nat-%s-eip-%s",
+        each.value.nat_idx,
+        each.value.eip_idx
+      ),
+      "NATGatewayIndex" = each.value.nat_idx,
+    },
+    var.tags,
+    var.nat_secondary_eip_tags,
+  )
+
+  depends_on = [aws_internet_gateway.this]
+}
+
 resource "aws_nat_gateway" "this" {
   count = local.create_vpc && var.enable_nat_gateway ? local.nat_gateway_count : 0
 
@@ -1086,6 +1120,8 @@ resource "aws_nat_gateway" "this" {
     var.single_nat_gateway ? 0 : count.index,
   )
 
+  secondary_allocation_ids = length(local.nat_gateway_secondary_allocation_ids) > 0 ? element(local.nat_gateway_secondary_allocation_ids, count.index) : []
+
   tags = merge(
     {
       "Name" = format(
@@ -1097,7 +1133,7 @@ resource "aws_nat_gateway" "this" {
     var.nat_gateway_tags,
   )
 
-  depends_on = [aws_internet_gateway.this]
+  depends_on = [aws_internet_gateway.this, aws_eip.nat, aws_eip.nat_secondary]
 }
 
 resource "aws_route" "private_nat_gateway" {

@@ -281,6 +281,7 @@ No modules.
 | [aws_default_vpc.this](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/default_vpc) | resource |
 | [aws_egress_only_internet_gateway.this](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/egress_only_internet_gateway) | resource |
 | [aws_eip.nat](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/eip) | resource |
+| [aws_eip.nat_secondary](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/eip) | resource |
 | [aws_elasticache_subnet_group.elasticache](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/elasticache_subnet_group) | resource |
 | [aws_flow_log.this](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/flow_log) | resource |
 | [aws_iam_policy.vpc_flow_log_cloudwatch](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_policy) | resource |
@@ -446,6 +447,9 @@ No modules.
 | <a name="input_enable_vpn_gateway"></a> [enable\_vpn\_gateway](#input\_enable\_vpn\_gateway) | Should be true if you want to create a new VPN Gateway resource and attach it to the VPC | `bool` | `false` | no |
 | <a name="input_external_nat_ip_ids"></a> [external\_nat\_ip\_ids](#input\_external\_nat\_ip\_ids) | List of EIP IDs to be assigned to the NAT Gateways (used in combination with reuse\_nat\_ips) | `list(string)` | `[]` | no |
 | <a name="input_external_nat_ips"></a> [external\_nat\_ips](#input\_external\_nat\_ips) | List of EIPs to be used for `nat_public_ips` output (used in combination with reuse\_nat\_ips and external\_nat\_ip\_ids) | `list(string)` | `[]` | no |
+| <a name="input_external_nat_secondary_ip_count"></a> [external\_nat\_secondary\_ip\_count](#input\_external\_nat\_secondary\_ip\_count) | Number of secondary IPs to assign to the NAT Gateway | `list(number)` | <pre>[<br>  0<br>]</pre> | no |
+| <a name="input_external_nat_secondary_ip_ids"></a> [external\_nat\_secondary\_ip\_ids](#input\_external\_nat\_secondary\_ip\_ids) | List of EIP IDs to be assigned to the NAT Gateways as secondary IPs (used in combination with reuse\_external\_nat\_secondary\_ips) | `list(list(string))` | `[]` | no |
+| <a name="input_external_nat_secondary_ips"></a> [external\_nat\_secondary\_ips](#input\_external\_nat\_secondary\_ips) | List of EIPs to be used for `nat_public_secondary_ips` output (used in combination with reuse\_external\_nat\_secondary\_ips and external\_nat\_secondary\_ip\_ids) | `list(string)` | `[]` | no |
 | <a name="input_flow_log_cloudwatch_iam_role_arn"></a> [flow\_log\_cloudwatch\_iam\_role\_arn](#input\_flow\_log\_cloudwatch\_iam\_role\_arn) | The ARN for the IAM role that's used to post flow logs to a CloudWatch Logs log group. When flow\_log\_destination\_arn is set to ARN of Cloudwatch Logs, this argument needs to be provided | `string` | `""` | no |
 | <a name="input_flow_log_cloudwatch_log_group_class"></a> [flow\_log\_cloudwatch\_log\_group\_class](#input\_flow\_log\_cloudwatch\_log\_group\_class) | Specified the log class of the log group. Possible values are: STANDARD or INFREQUENT\_ACCESS | `string` | `null` | no |
 | <a name="input_flow_log_cloudwatch_log_group_kms_key_id"></a> [flow\_log\_cloudwatch\_log\_group\_kms\_key\_id](#input\_flow\_log\_cloudwatch\_log\_group\_kms\_key\_id) | The ARN of the KMS Key to use when encrypting log data for VPC flow logs | `string` | `null` | no |
@@ -496,6 +500,7 @@ No modules.
 | <a name="input_nat_eip_tags"></a> [nat\_eip\_tags](#input\_nat\_eip\_tags) | Additional tags for the NAT EIP | `map(string)` | `{}` | no |
 | <a name="input_nat_gateway_destination_cidr_block"></a> [nat\_gateway\_destination\_cidr\_block](#input\_nat\_gateway\_destination\_cidr\_block) | Used to pass a custom destination route for private NAT Gateway. If not specified, the default 0.0.0.0/0 is used as a destination route | `string` | `"0.0.0.0/0"` | no |
 | <a name="input_nat_gateway_tags"></a> [nat\_gateway\_tags](#input\_nat\_gateway\_tags) | Additional tags for the NAT gateways | `map(string)` | `{}` | no |
+| <a name="input_nat_secondary_eip_tags"></a> [nat\_secondary\_eip\_tags](#input\_nat\_secondary\_eip\_tags) | Additional tags for the NAT secondary EIP's | `map(string)` | `{}` | no |
 | <a name="input_one_nat_gateway_per_az"></a> [one\_nat\_gateway\_per\_az](#input\_one\_nat\_gateway\_per\_az) | Should be true if you want only one NAT Gateway per availability zone. Requires `var.azs` to be set, and the number of `public_subnets` created to be greater than or equal to the number of availability zones specified in `var.azs` | `bool` | `false` | no |
 | <a name="input_outpost_acl_tags"></a> [outpost\_acl\_tags](#input\_outpost\_acl\_tags) | Additional tags for the outpost subnets network ACL | `map(string)` | `{}` | no |
 | <a name="input_outpost_arn"></a> [outpost\_arn](#input\_outpost\_arn) | ARN of Outpost you want to create a subnet in | `string` | `null` | no |
@@ -570,6 +575,7 @@ No modules.
 | <a name="input_redshift_subnet_suffix"></a> [redshift\_subnet\_suffix](#input\_redshift\_subnet\_suffix) | Suffix to append to redshift subnets name | `string` | `"redshift"` | no |
 | <a name="input_redshift_subnet_tags"></a> [redshift\_subnet\_tags](#input\_redshift\_subnet\_tags) | Additional tags for the redshift subnets | `map(string)` | `{}` | no |
 | <a name="input_redshift_subnets"></a> [redshift\_subnets](#input\_redshift\_subnets) | A list of redshift subnets inside the VPC | `list(string)` | `[]` | no |
+| <a name="input_reuse_external_nat_secondary_ips"></a> [reuse\_external\_nat\_secondary\_ips](#input\_reuse\_external\_nat\_secondary\_ips) | Should be true if you don't want secondary IPs to be created for your NAT Gateways and will instead pass them in via the 'external\_nat\_secondary\_ip\_ids' variable | `bool` | `false` | no |
 | <a name="input_reuse_nat_ips"></a> [reuse\_nat\_ips](#input\_reuse\_nat\_ips) | Should be true if you don't want EIPs to be created for your NAT Gateways and will instead pass them in via the 'external\_nat\_ip\_ids' variable | `bool` | `false` | no |
 | <a name="input_secondary_cidr_blocks"></a> [secondary\_cidr\_blocks](#input\_secondary\_cidr\_blocks) | List of secondary CIDR blocks to associate with the VPC to extend the IP Address pool | `list(string)` | `[]` | no |
 | <a name="input_single_nat_gateway"></a> [single\_nat\_gateway](#input\_single\_nat\_gateway) | Should be true if you want to provision a single shared NAT Gateway across all of your private networks | `bool` | `false` | no |
@@ -640,6 +646,7 @@ No modules.
 | <a name="output_name"></a> [name](#output\_name) | The name of the VPC specified as argument to this module |
 | <a name="output_nat_ids"></a> [nat\_ids](#output\_nat\_ids) | List of allocation ID of Elastic IPs created for AWS NAT Gateway |
 | <a name="output_nat_public_ips"></a> [nat\_public\_ips](#output\_nat\_public\_ips) | List of public Elastic IPs created for AWS NAT Gateway |
+| <a name="output_nat_public_secondary_ips"></a> [nat\_public\_secondary\_ips](#output\_nat\_public\_secondary\_ips) | List of secondary public Elastic IPs created for AWS NAT Gateway |
 | <a name="output_natgw_ids"></a> [natgw\_ids](#output\_natgw\_ids) | List of NAT Gateway IDs |
 | <a name="output_natgw_interface_ids"></a> [natgw\_interface\_ids](#output\_natgw\_interface\_ids) | List of Network Interface IDs assigned to NAT Gateways |
 | <a name="output_outpost_network_acl_arn"></a> [outpost\_network\_acl\_arn](#output\_outpost\_network\_acl\_arn) | ARN of the outpost network ACL |

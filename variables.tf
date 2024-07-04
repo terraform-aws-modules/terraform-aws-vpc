@@ -1222,6 +1222,30 @@ variable "external_nat_ips" {
   default     = []
 }
 
+variable "external_nat_secondary_ip_count" {
+  description = "Number of secondary IPs to assign to the NAT Gateway"
+  type        = list(number)
+  default     = [0]
+}
+
+variable "reuse_external_nat_secondary_ips" {
+  description = "Should be true if you don't want secondary IPs to be created for your NAT Gateways and will instead pass them in via the 'external_nat_secondary_ip_ids' variable"
+  type        = bool
+  default     = false
+}
+
+variable "external_nat_secondary_ip_ids" {
+  description = "List of EIP IDs to be assigned to the NAT Gateways as secondary IPs (used in combination with reuse_external_nat_secondary_ips)"
+  type        = list(list(string))
+  default     = []
+}
+
+variable "external_nat_secondary_ips" {
+  description = "List of EIPs to be used for `nat_public_secondary_ips` output (used in combination with reuse_external_nat_secondary_ips and external_nat_secondary_ip_ids)"
+  type        = list(string)
+  default     = []
+}
+
 variable "nat_gateway_tags" {
   description = "Additional tags for the NAT gateways"
   type        = map(string)
@@ -1230,6 +1254,12 @@ variable "nat_gateway_tags" {
 
 variable "nat_eip_tags" {
   description = "Additional tags for the NAT EIP"
+  type        = map(string)
+  default     = {}
+}
+
+variable "nat_secondary_eip_tags" {
+  description = "Additional tags for the NAT secondary EIP's"
   type        = map(string)
   default     = {}
 }
