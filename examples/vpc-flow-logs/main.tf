@@ -83,6 +83,35 @@ module "vpc_with_flow_logs_cloudwatch_logs_default" {
   vpc_flow_log_tags = local.tags
 }
 
+# CloudWatch Log Group and IAM prefix
+module "vpc_with_flow_logs_cloudwatch_logs_prefix" {
+  source = "../../"
+
+  name = "${local.name}-cloudwatch-logs-prefix"
+  cidr = local.vpc_cidr
+
+  azs             = local.azs
+  private_subnets = [for k, v in local.azs : cidrsubnet(local.vpc_cidr, 8, k)]
+  public_subnets  = [for k, v in local.azs : cidrsubnet(local.vpc_cidr, 8, k + 4)]
+
+  # Cloudwatch log group and IAM role will be created
+  enable_flow_log                      = true
+  create_flow_log_cloudwatch_log_group = true
+  create_flow_log_cloudwatch_iam_role  = true
+
+  vpc_flow_log_iam_role_name              = "vpc-iam-prefix-example"
+  vpc_flow_log_iam_role_use_name_prefix   = true
+  vpc_flow_log_iam_policy_name            = "vpc-iam-prefix-example"
+  vpc_flow_log_iam_policy_use_name_prefix = true
+
+  flow_log_max_aggregation_interval         = 60
+  flow_log_cloudwatch_log_group_name_prefix = "/aws/my-amazing-vpc-flow-logz/"
+  flow_log_cloudwatch_log_group_name_suffix = "my-test"
+  flow_log_cloudwatch_log_group_class       = "INFREQUENT_ACCESS"
+
+  vpc_flow_log_tags = local.tags
+}
+
 # CloudWatch Log Group and IAM role created separately
 module "vpc_with_flow_logs_cloudwatch_logs" {
   source = "../../"

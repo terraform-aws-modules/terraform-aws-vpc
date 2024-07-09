@@ -72,7 +72,9 @@ resource "aws_cloudwatch_log_group" "flow_log" {
 resource "aws_iam_role" "vpc_flow_log_cloudwatch" {
   count = local.create_flow_log_cloudwatch_iam_role ? 1 : 0
 
-  name_prefix          = "vpc-flow-log-role-"
+  name        = var.vpc_flow_log_iam_role_use_name_prefix ? null : var.vpc_flow_log_iam_role_name
+  name_prefix = var.vpc_flow_log_iam_role_use_name_prefix ? "${var.vpc_flow_log_iam_role_name}-" : null
+
   assume_role_policy   = data.aws_iam_policy_document.flow_log_cloudwatch_assume_role[0].json
   permissions_boundary = var.vpc_flow_log_permissions_boundary
 
@@ -106,7 +108,8 @@ resource "aws_iam_role_policy_attachment" "vpc_flow_log_cloudwatch" {
 resource "aws_iam_policy" "vpc_flow_log_cloudwatch" {
   count = local.create_flow_log_cloudwatch_iam_role ? 1 : 0
 
-  name_prefix = "vpc-flow-log-to-cloudwatch-"
+  name        = var.vpc_flow_log_iam_policy_use_name_prefix ? null : var.vpc_flow_log_iam_policy_name
+  name_prefix = var.vpc_flow_log_iam_policy_use_name_prefix ? "${var.vpc_flow_log_iam_policy_name}-" : null
   policy      = data.aws_iam_policy_document.vpc_flow_log_cloudwatch[0].json
   tags        = merge(var.tags, var.vpc_flow_log_tags)
 }
