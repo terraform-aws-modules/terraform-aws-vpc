@@ -1,6 +1,12 @@
-data "aws_region" "current" {}
+data "aws_region" "current" {
+  # Call this API only if create_vpc and enable_flow_log are true
+  count = var.create_vpc && var.enable_flow_log ? 1 : 0
+}
 
-data "aws_caller_identity" "current" {}
+data "aws_caller_identity" "current" {
+  # Call this API only if create_vpc and enable_flow_log are true
+  count = var.create_vpc && var.enable_flow_log ? 1 : 0
+}
 
 locals {
   # Only create flow log if user selected to create a VPC as well
@@ -14,7 +20,7 @@ locals {
   flow_log_cloudwatch_log_group_name_suffix = var.flow_log_cloudwatch_log_group_name_suffix == "" ? local.vpc_id : var.flow_log_cloudwatch_log_group_name_suffix
   flow_log_group_arns = [
     for log_group in aws_cloudwatch_log_group.flow_log :
-    format("arn:aws:logs:${data.aws_region.current.name}:%s:log-group:%s:*", data.aws_caller_identity.current.account_id, log_group.name)
+    "arn:aws:logs:${data.aws_region.current[0].name}:${data.aws_caller_identity.current[0].account_id}:log-group:${log_group.name}:*"
   ]
 }
 
