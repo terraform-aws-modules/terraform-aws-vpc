@@ -109,6 +109,6 @@ data "aws_iam_policy_document" "vpc_flow_log_cloudwatch" {
       "logs:DescribeLogStreams",
     ]
 
-    resources = ["${var.flow_log_cloudwatch_log_group_name_prefix}${local.flow_log_cloudwatch_log_group_name_suffix}/*"]
+    resources = ["arn:aws:logs:*:*:log-group:/${var.flow_log_cloudwatch_log_group_name_prefix}${local.flow_log_cloudwatch_log_group_name_suffix}/*"]
   }
 }
