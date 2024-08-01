@@ -1222,6 +1222,15 @@ variable "external_nat_ips" {
   default     = []
 }
 
+variable "external_nat_secondary_eips" {
+  description = "List of lists containing exteral elastic ip details to configure secondary ip addresses"
+  type = list(list(object({
+    association_id = string
+    private_id     = string
+  })))
+  default = []
+}
+
 variable "nat_gateway_tags" {
   description = "Additional tags for the NAT gateways"
   type        = map(string)
