@@ -1051,8 +1051,9 @@ resource "aws_route" "private_ipv6_egress" {
 ################################################################################
 
 locals {
-  nat_gateway_count = var.single_nat_gateway ? 1 : var.one_nat_gateway_per_az ? length(var.azs) : local.max_subnet_length
-  nat_gateway_ips   = var.reuse_nat_ips ? var.external_nat_ip_ids : aws_eip.nat[*].id
+  nat_gateway_count  = var.single_nat_gateway ? 1 : var.one_nat_gateway_per_az ? length(var.azs) : local.max_subnet_length
+  nat_gateway_ips    = var.reuse_nat_ips ? var.external_nat_ip_ids : aws_eip.nat[*].id
+  nat_secondary_eips = length(var.external_nat_secondary_eips) == 0 ? [for eip in aws_eip.nat : {}] : var.external_nat_secondary_eips
 }
 
 resource "aws_eip" "nat" {
@@ -1087,17 +1088,17 @@ resource "aws_nat_gateway" "this" {
   )
 
   secondary_private_ip_address_count = [for eip in element(
-    var.external_nat_secondary_eips,
+    local.nat_secondary_eips,
     var.single_nat_gateway ? 0 : count.index,
   ) : eip.association_id]
 
   secondary_allocation_ids = length(element(
-    var.external_nat_secondary_eips,
+    local.nat_secondary_eips,
     var.single_nat_gateway ? 0 : count.index,
   ))
 
   secondary_private_ip_addresses = [for eip in element(
-    var.external_nat_secondary_eips,
+    local.nat_secondary_eips,
     var.single_nat_gateway ? 0 : count.index,
   ) : eip.private_id]
 
