@@ -1087,12 +1087,12 @@ resource "aws_nat_gateway" "this" {
     var.single_nat_gateway ? 0 : count.index,
   )
 
-  secondary_private_ip_address_count = [for eip in element(
+  secondary_allocation_ids = [for eip in element(
     local.nat_secondary_eips,
     var.single_nat_gateway ? 0 : count.index,
   ) : eip.association_id]
 
-  secondary_allocation_ids = length(element(
+  secondary_private_ip_address_count = length(element(
     local.nat_secondary_eips,
     var.single_nat_gateway ? 0 : count.index,
   ))
