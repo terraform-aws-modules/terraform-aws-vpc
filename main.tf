@@ -1093,7 +1093,7 @@ resource "aws_nat_gateway" "this" {
   #   var.single_nat_gateway ? 0 : count.index,
   # ) : eip.association_id]
 
-  secondary_private_ip_address_count = 0
+  # secondary_private_ip_address_count = 0
   # length(element(
   #   local.nat_secondary_eips,
   #   var.single_nat_gateway ? 0 : count.index,
