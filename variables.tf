@@ -1222,6 +1222,12 @@ variable "external_nat_ips" {
   default     = []
 }
 
+variable "number_of_secondary_eips_per_gateway" {
+  description = "how many secondary eips per natgateway"
+  type        = number
+  default     = 0
+}
+
 variable "nat_gateway_tags" {
   description = "Additional tags for the NAT gateways"
   type        = map(string)

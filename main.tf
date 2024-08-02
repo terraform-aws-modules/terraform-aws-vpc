@@ -1053,6 +1053,7 @@ resource "aws_route" "private_ipv6_egress" {
 locals {
   nat_gateway_count = var.single_nat_gateway ? 1 : var.one_nat_gateway_per_az ? length(var.azs) : local.max_subnet_length
   nat_gateway_ips   = var.reuse_nat_ips ? var.external_nat_ip_ids : aws_eip.nat[*].id
+  seips_suffixs     = [for num in range(0, var.number_of_secondary_eips_per_gateway) : "s${num + 1}"]
 }
 
 resource "aws_eip" "nat" {
@@ -1074,6 +1075,22 @@ resource "aws_eip" "nat" {
   depends_on = [aws_internet_gateway.this]
 }
 
+resource "aws_eip" "secondary" {
+  for_each = toset(flatten([for nat in aws_eip.nat : [for suffix in local.seips_suffixs : "${nat.tags.Name}-${suffix}"]]))
+
+  domain = "vpc"
+
+  tags = merge(
+    {
+      "Name" = each.key,
+    },
+    var.tags,
+    var.nat_eip_tags,
+  )
+
+  depends_on = [aws_internet_gateway.this]
+}
+
 resource "aws_nat_gateway" "this" {
   count = local.create_vpc && var.enable_nat_gateway ? local.nat_gateway_count : 0
 
@@ -1085,6 +1102,8 @@ resource "aws_nat_gateway" "this" {
     aws_subnet.public[*].id,
     var.single_nat_gateway ? 0 : count.index,
   )
+
+  secondary_allocation_ids = [for suffix in local.seips_suffixs : aws_eip.secondary["${aws_eip.nat[count.index].tags.Name}-${suffix}"].allocation_id]
 
   tags = merge(
     {
