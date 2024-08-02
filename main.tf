@@ -1082,11 +1082,7 @@ resource "aws_eip" "secondary" {
 
   tags = merge(
     {
-      "Name" = format(
-        "${var.name}-%s-%s",
-        element(var.azs, var.single_nat_gateway ? 0 : count.index),
-        each.key,
-      )
+      "Name" = each.key,
     },
     var.tags,
     var.nat_eip_tags,
