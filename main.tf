@@ -1051,9 +1051,9 @@ resource "aws_route" "private_ipv6_egress" {
 ################################################################################
 
 locals {
-  nat_gateway_count  = var.single_nat_gateway ? 1 : var.one_nat_gateway_per_az ? length(var.azs) : local.max_subnet_length
-  nat_gateway_ips    = var.reuse_nat_ips ? var.external_nat_ip_ids : aws_eip.nat[*].id
-  nat_secondary_eips = length(var.external_nat_secondary_eips) == 0 ? [for eip in aws_eip.nat : {}] : var.external_nat_secondary_eips
+  nat_gateway_count = var.single_nat_gateway ? 1 : var.one_nat_gateway_per_az ? length(var.azs) : local.max_subnet_length
+  nat_gateway_ips   = var.reuse_nat_ips ? var.external_nat_ip_ids : aws_eip.nat[*].id
+  seips_suffixs     = [for num in range(0, var.number_of_secondary_eips_per_gateway) : "s${num + 1}"]
 }
 
 resource "aws_eip" "nat" {
@@ -1075,6 +1075,26 @@ resource "aws_eip" "nat" {
   depends_on = [aws_internet_gateway.this]
 }
 
+resource "aws_eip" "secondary" {
+  for_each = toset(flatten([for nat in aws_eip.nat : [for suffix in local.seips_suffixs : "${nat.tags.Name}-${suffix}"]]))
+
+  domain = "vpc"
+
+  tags = merge(
+    {
+      "Name" = format(
+        "${var.name}-%s-%s",
+        element(var.azs, var.single_nat_gateway ? 0 : count.index),
+        each.key,
+      )
+    },
+    var.tags,
+    var.nat_eip_tags,
+  )
+
+  depends_on = [aws_internet_gateway.this]
+}
+
 resource "aws_nat_gateway" "this" {
   count = local.create_vpc && var.enable_nat_gateway ? local.nat_gateway_count : 0
 
@@ -1087,23 +1107,7 @@ resource "aws_nat_gateway" "this" {
     var.single_nat_gateway ? 0 : count.index,
   )
 
-  # secondary_allocation_ids = []
-  # [for eip in element(
-  #   local.nat_secondary_eips,
-  #   var.single_nat_gateway ? 0 : count.index,
-  # ) : eip.association_id]
-
-  secondary_private_ip_address_count = 0
-  # length(element(
-  #   local.nat_secondary_eips,
-  #   var.single_nat_gateway ? 0 : count.index,
-  # ))
-
-  # secondary_private_ip_addresses = []
-  # [for eip in element(
-  #   local.nat_secondary_eips,
-  #   var.single_nat_gateway ? 0 : count.index,
-  # ) : eip.private_id]
+  secondary_allocation_ids = [for suffix in local.seips_suffixs : aws_eip.secondary["${aws_eip.nat[count.index].tags.Name}-${suffix}"].allocation_id]
 
   tags = merge(
     {
