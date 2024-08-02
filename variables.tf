@@ -1223,7 +1223,7 @@ variable "external_nat_ips" {
 }
 
 variable "number_of_secondary_eips_per_gateway" {
-  description = "how many secondary eips per natgateway"
+  description = "how many secondary eips per NAT Gateway"
   type        = number
   default     = 0
 }
