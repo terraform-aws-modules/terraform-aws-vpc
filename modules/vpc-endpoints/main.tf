@@ -33,6 +33,7 @@ resource "aws_vpc_endpoint" "this" {
   route_table_ids     = try(each.value.service_type, "Interface") == "Gateway" ? lookup(each.value, "route_table_ids", null) : null
   policy              = try(each.value.policy, null)
   private_dns_enabled = try(each.value.service_type, "Interface") == "Interface" ? try(each.value.private_dns_enabled, null) : null
+  ip_address_type     = try(each.value.ip_address_type, null)
 
   dynamic "dns_options" {
     for_each = try([each.value.dns_options], [])
