@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [5.11.0](https://github.com/terraform-aws-modules/terraform-aws-vpc/compare/v5.10.0...v5.11.0) (2024-08-03)
+
+
+### Features
+
+* Add route to `0.0.0.0/0` & `::/0` (when IPv6 is enabled) on all public route tables ([#1100](https://github.com/terraform-aws-modules/terraform-aws-vpc/issues/1100)) ([b3e7803](https://github.com/terraform-aws-modules/terraform-aws-vpc/commit/b3e78033bbee8346341a523f78f762ade41eb93b))
+
 ## [5.10.0](https://github.com/terraform-aws-modules/terraform-aws-vpc/compare/v5.9.0...v5.10.0) (2024-08-02)
 
 
