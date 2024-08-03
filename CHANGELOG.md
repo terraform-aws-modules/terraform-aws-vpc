@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [5.12.0](https://github.com/terraform-aws-modules/terraform-aws-vpc/compare/v5.11.0...v5.12.0) (2024-08-03)
+
+
+### Features
+
+* Restrict flow log policy to use log group ARNs ([#1088](https://github.com/terraform-aws-modules/terraform-aws-vpc/issues/1088)) ([9256722](https://github.com/terraform-aws-modules/terraform-aws-vpc/commit/92567225dc73ef939b86a241b9607cb13329fb75))
+
 ## [5.11.0](https://github.com/terraform-aws-modules/terraform-aws-vpc/compare/v5.10.0...v5.11.0) (2024-08-03)
 
 
