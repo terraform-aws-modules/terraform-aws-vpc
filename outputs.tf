@@ -484,6 +484,11 @@ output "natgw_ids" {
   value       = aws_nat_gateway.this[*].id
 }
 
+output "natgw_interface_ids" {
+  description = "List of Network Interface IDs assigned to NAT Gateways"
+  value       = aws_nat_gateway.this[*].network_interface_id
+}
+
 ################################################################################
 # Egress Only Gateway
 ################################################################################
@@ -602,6 +607,11 @@ output "vpc_flow_log_destination_type" {
 output "vpc_flow_log_cloudwatch_iam_role_arn" {
   description = "The ARN of the IAM role used when pushing logs to Cloudwatch log group"
   value       = local.flow_log_iam_role_arn
+}
+
+output "vpc_flow_log_deliver_cross_account_role" {
+  description = "The ARN of the IAM role used when pushing logs cross account"
+  value       = try(aws_flow_log.this[0].deliver_cross_account_role, null)
 }
 
 ################################################################################
