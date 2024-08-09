@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [5.12.1](https://github.com/terraform-aws-modules/terraform-aws-vpc/compare/v5.12.0...v5.12.1) (2024-08-09)
+
+
+### Bug Fixes
+
+* Update flow log ARNs to use partition from aws_partition data source ([#1112](https://github.com/terraform-aws-modules/terraform-aws-vpc/issues/1112)) ([72cde38](https://github.com/terraform-aws-modules/terraform-aws-vpc/commit/72cde38fb5c500323858bb44eaed2924c7f826f9))
+
 ## [5.12.0](https://github.com/terraform-aws-modules/terraform-aws-vpc/compare/v5.11.0...v5.12.0) (2024-08-03)
 
 
