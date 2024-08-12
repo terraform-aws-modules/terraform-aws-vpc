@@ -156,6 +156,12 @@ variable "dhcp_options_netbios_node_type" {
   default     = ""
 }
 
+variable "dhcp_options_ipv6_address_preferred_lease_time" {
+  description = "How frequently, in seconds, a running instance with an IPv6 assigned to it goes through DHCPv6 lease renewal (requires enable_dhcp_options set to true)"
+  type        = number
+  default     = null
+}
+
 variable "dhcp_options_tags" {
   description = "Additional tags for the DHCP option set (requires enable_dhcp_options set to true)"
   type        = map(string)
