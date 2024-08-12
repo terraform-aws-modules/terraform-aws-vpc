@@ -26,7 +26,7 @@ locals {
 module "vpc_ipam_set_netmask" {
   source = "../.."
 
-  name = "${local.name}-set-netmask"
+  name_prefix = "${local.name}-set-netmask"
 
   use_ipam_pool       = true
   ipv4_ipam_pool_id   = aws_vpc_ipam_pool.this.id
@@ -46,7 +46,7 @@ module "vpc_ipam_set_netmask" {
 module "vpc_ipam_set_cidr" {
   source = "../.."
 
-  name = "${local.name}-set-cidr"
+  name_prefix = "${local.name}-set-cidr"
 
   use_ipam_pool     = true
   ipv4_ipam_pool_id = aws_vpc_ipam_pool.this.id

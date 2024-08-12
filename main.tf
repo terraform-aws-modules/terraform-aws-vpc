@@ -13,6 +13,7 @@ locals {
     local.len_elasticache_subnets,
     local.len_database_subnets,
     local.len_redshift_subnets,
+    local.len_tgw_subnets
   )
 
   # Use `local.vpc_id` to give a hint to Terraform that subnets should be deleted before secondary CIDR blocks can be free!
@@ -44,7 +45,7 @@ resource "aws_vpc" "this" {
   enable_network_address_usage_metrics = var.enable_network_address_usage_metrics
 
   tags = merge(
-    { "Name" = var.name },
+    { "Name" = "${var.name_prefix}-vpc${var.name_suffix}" },
     var.tags,
     var.vpc_tags,
   )
@@ -74,7 +75,7 @@ resource "aws_vpc_dhcp_options" "this" {
   ipv6_address_preferred_lease_time = var.dhcp_options_ipv6_address_preferred_lease_time
 
   tags = merge(
-    { "Name" = var.name },
+    { "Name" = var.name_prefix },
     var.tags,
     var.dhcp_options_tags,
   )
@@ -115,7 +116,7 @@ resource "aws_subnet" "public" {
     {
       Name = try(
         var.public_subnet_names[count.index],
-        format("${var.name}-${var.public_subnet_suffix}-%s", element(var.azs, count.index))
+        format("${var.name_prefix}-${var.public_subnet_suffix}-%s", element(var.azs, count.index))
       )
     },
     var.tags,
@@ -136,9 +137,9 @@ resource "aws_route_table" "public" {
   tags = merge(
     {
       "Name" = var.create_multiple_public_route_tables ? format(
-        "${var.name}-${var.public_subnet_suffix}-%s",
+        "${var.name_prefix}-${var.public_subnet_suffix}-%s",
         element(var.azs, count.index),
-      ) : "${var.name}-${var.public_subnet_suffix}"
+      ) : "${var.name_prefix}-${var.public_subnet_suffix}"
     },
     var.tags,
     var.public_route_table_tags,
@@ -183,7 +184,7 @@ resource "aws_network_acl" "public" {
   subnet_ids = aws_subnet.public[*].id
 
   tags = merge(
-    { "Name" = "${var.name}-${var.public_subnet_suffix}" },
+    { "Name" = "${var.name_prefix}-${var.public_subnet_suffix}" },
     var.tags,
     var.public_acl_tags,
   )
@@ -246,11 +247,15 @@ resource "aws_subnet" "private" {
   private_dns_hostname_type_on_launch            = var.private_subnet_private_dns_hostname_type_on_launch
   vpc_id                                         = local.vpc_id
 
+  # app1-test-euc1a-az2-sub-db
   tags = merge(
     {
       Name = try(
         var.private_subnet_names[count.index],
-        format("${var.name}-${var.private_subnet_suffix}-%s", element(var.azs, count.index))
+        format("${var.name_prefix}%s-%s-sub-${var.private_subnet_suffix}",
+          substr(element(var.azs, count.index), length(element(var.azs, count.index)) - 1, 1),
+          lookup(var.az_name_to_az_id, element(var.azs, count.index), "")
+        )
       )
     },
     var.tags,
@@ -267,9 +272,10 @@ resource "aws_route_table" "private" {
 
   tags = merge(
     {
-      "Name" = var.single_nat_gateway ? "${var.name}-${var.private_subnet_suffix}" : format(
-        "${var.name}-${var.private_subnet_suffix}-%s",
-        element(var.azs, count.index),
+      "Name" = (var.single_nat_gateway ? "${var.name_prefix}-rtb-${var.private_subnet_suffix}" :
+        format("${var.name_prefix}%s-rtb-${var.private_subnet_suffix}",
+          substr(element(var.azs, count.index), length(element(var.azs, count.index)) - 1, 1),
+        )
       )
     },
     var.tags,
@@ -302,7 +308,7 @@ resource "aws_network_acl" "private" {
   subnet_ids = aws_subnet.private[*].id
 
   tags = merge(
-    { "Name" = "${var.name}-${var.private_subnet_suffix}" },
+    { "Name" = "${var.name_prefix}-nacl-${var.private_subnet_suffix}" },
     var.tags,
     var.private_acl_tags,
   )
@@ -370,7 +376,9 @@ resource "aws_subnet" "database" {
     {
       Name = try(
         var.database_subnet_names[count.index],
-        format("${var.name}-${var.database_subnet_suffix}-%s", element(var.azs, count.index), )
+        format("${var.name_prefix}%s-sub-${var.database_subnet_suffix}", element(var.azs, count.index),
+          substr(element(var.azs, count.index), length(element(var.azs, count.index)) - 1, 1),
+        )
       )
     },
     var.tags,
@@ -381,13 +389,13 @@ resource "aws_subnet" "database" {
 resource "aws_db_subnet_group" "database" {
   count = local.create_database_subnets && var.create_database_subnet_group ? 1 : 0
 
-  name        = lower(coalesce(var.database_subnet_group_name, var.name))
-  description = "Database subnet group for ${var.name}"
+  name        = lower(coalesce(var.database_subnet_group_name, var.name_prefix))
+  description = "Database subnet group for ${var.name_prefix}"
   subnet_ids  = aws_subnet.database[*].id
 
   tags = merge(
     {
-      "Name" = lower(coalesce(var.database_subnet_group_name, var.name))
+      "Name" = lower(coalesce(var.database_subnet_group_name, var.name_prefix))
     },
     var.tags,
     var.database_subnet_group_tags,
@@ -401,9 +409,9 @@ resource "aws_route_table" "database" {
 
   tags = merge(
     {
-      "Name" = var.single_nat_gateway || var.create_database_internet_gateway_route ? "${var.name}-${var.database_subnet_suffix}" : format(
-        "${var.name}-${var.database_subnet_suffix}-%s",
-        element(var.azs, count.index),
+      "Name" = var.single_nat_gateway || var.create_database_internet_gateway_route ? "${var.name_prefix}-rtb-${var.database_subnet_suffix}" : format(
+        "${var.name_prefix}%s-rtb-${var.database_subnet_suffix}",
+        substr(element(var.azs, count.index), length(element(var.azs, count.index)) - 1, 1),
       )
     },
     var.tags,
@@ -484,7 +492,7 @@ resource "aws_network_acl" "database" {
   subnet_ids = aws_subnet.database[*].id
 
   tags = merge(
-    { "Name" = "${var.name}-${var.database_subnet_suffix}" },
+    { "Name" = "${var.name_prefix}-nacl-${var.database_subnet_suffix}" },
     var.tags,
     var.database_acl_tags,
   )
@@ -552,7 +560,9 @@ resource "aws_subnet" "redshift" {
     {
       Name = try(
         var.redshift_subnet_names[count.index],
-        format("${var.name}-${var.redshift_subnet_suffix}-%s", element(var.azs, count.index))
+        format("${var.name_prefix}%s-${var.redshift_subnet_suffix}",
+          substr(element(var.azs, count.index), length(element(var.azs, count.index)) - 1, 1)
+        )
       )
     },
     var.tags,
@@ -563,12 +573,12 @@ resource "aws_subnet" "redshift" {
 resource "aws_redshift_subnet_group" "redshift" {
   count = local.create_redshift_subnets && var.create_redshift_subnet_group ? 1 : 0
 
-  name        = lower(coalesce(var.redshift_subnet_group_name, var.name))
-  description = "Redshift subnet group for ${var.name}"
+  name        = lower(coalesce(var.redshift_subnet_group_name, var.name_prefix))
+  description = "Redshift subnet group for ${var.name_prefix}"
   subnet_ids  = aws_subnet.redshift[*].id
 
   tags = merge(
-    { "Name" = coalesce(var.redshift_subnet_group_name, var.name) },
+    { "Name" = coalesce(var.redshift_subnet_group_name, var.name_prefix) },
     var.tags,
     var.redshift_subnet_group_tags,
   )
@@ -580,7 +590,7 @@ resource "aws_route_table" "redshift" {
   vpc_id = local.vpc_id
 
   tags = merge(
-    { "Name" = "${var.name}-${var.redshift_subnet_suffix}" },
+    { "Name" = "${var.name_prefix}-rtb-${var.redshift_subnet_suffix}" },
     var.tags,
     var.redshift_route_table_tags,
   )
@@ -621,7 +631,7 @@ resource "aws_network_acl" "redshift" {
   subnet_ids = aws_subnet.redshift[*].id
 
   tags = merge(
-    { "Name" = "${var.name}-${var.redshift_subnet_suffix}" },
+    { "Name" = "${var.name_prefix}-nacl-${var.redshift_subnet_suffix}" },
     var.tags,
     var.redshift_acl_tags,
   )
@@ -689,7 +699,9 @@ resource "aws_subnet" "elasticache" {
     {
       Name = try(
         var.elasticache_subnet_names[count.index],
-        format("${var.name}-${var.elasticache_subnet_suffix}-%s", element(var.azs, count.index))
+        format("${var.name_prefix}%s-${var.elasticache_subnet_suffix}",
+          substr(element(var.azs, count.index), length(element(var.azs, count.index)) - 1, 1)
+        )
       )
     },
     var.tags,
@@ -700,12 +712,12 @@ resource "aws_subnet" "elasticache" {
 resource "aws_elasticache_subnet_group" "elasticache" {
   count = local.create_elasticache_subnets && var.create_elasticache_subnet_group ? 1 : 0
 
-  name        = coalesce(var.elasticache_subnet_group_name, var.name)
-  description = "ElastiCache subnet group for ${var.name}"
+  name        = coalesce(var.elasticache_subnet_group_name, var.name_prefix)
+  description = "ElastiCache subnet group for ${var.name_prefix}"
   subnet_ids  = aws_subnet.elasticache[*].id
 
   tags = merge(
-    { "Name" = coalesce(var.elasticache_subnet_group_name, var.name) },
+    { "Name" = coalesce(var.elasticache_subnet_group_name, var.name_prefix) },
     var.tags,
     var.elasticache_subnet_group_tags,
   )
@@ -717,7 +729,7 @@ resource "aws_route_table" "elasticache" {
   vpc_id = local.vpc_id
 
   tags = merge(
-    { "Name" = "${var.name}-${var.elasticache_subnet_suffix}" },
+    { "Name" = "${var.name_prefix}-rtb-${var.elasticache_subnet_suffix}" },
     var.tags,
     var.elasticache_route_table_tags,
   )
@@ -751,7 +763,7 @@ resource "aws_network_acl" "elasticache" {
   subnet_ids = aws_subnet.elasticache[*].id
 
   tags = merge(
-    { "Name" = "${var.name}-${var.elasticache_subnet_suffix}" },
+    { "Name" = "${var.name_prefix}-nacl-${var.elasticache_subnet_suffix}" },
     var.tags,
     var.elasticache_acl_tags,
   )
@@ -818,7 +830,9 @@ resource "aws_subnet" "intra" {
     {
       Name = try(
         var.intra_subnet_names[count.index],
-        format("${var.name}-${var.intra_subnet_suffix}-%s", element(var.azs, count.index))
+        format("${var.name_prefix}%s-sub-${var.intra_subnet_suffix}",
+          substr(element(var.azs, count.index), length(element(var.azs, count.index)) - 1, 1)
+        )
       )
     },
     var.tags,
@@ -838,9 +852,9 @@ resource "aws_route_table" "intra" {
   tags = merge(
     {
       "Name" = var.create_multiple_intra_route_tables ? format(
-        "${var.name}-${var.intra_subnet_suffix}-%s",
-        element(var.azs, count.index),
-      ) : "${var.name}-${var.intra_subnet_suffix}"
+        "${var.name_prefix}%s-${var.intra_subnet_suffix}-%s",
+        substr(element(var.azs, count.index), length(element(var.azs, count.index)) - 1, 1),
+      ) : "${var.name_prefix}-rtb-${var.intra_subnet_suffix}"
     },
     var.tags,
     var.intra_route_table_tags,
@@ -869,7 +883,7 @@ resource "aws_network_acl" "intra" {
   subnet_ids = aws_subnet.intra[*].id
 
   tags = merge(
-    { "Name" = "${var.name}-${var.intra_subnet_suffix}" },
+    { "Name" = "${var.name_prefix}-nacl-${var.intra_subnet_suffix}" },
     var.tags,
     var.intra_acl_tags,
   )
@@ -938,7 +952,7 @@ resource "aws_subnet" "outpost" {
     {
       Name = try(
         var.outpost_subnet_names[count.index],
-        format("${var.name}-${var.outpost_subnet_suffix}-%s", var.outpost_az)
+        format("${var.name_prefix}-%s-sub-${var.outpost_subnet_suffix}", var.outpost_az)
       )
     },
     var.tags,
@@ -971,7 +985,7 @@ resource "aws_network_acl" "outpost" {
   subnet_ids = aws_subnet.outpost[*].id
 
   tags = merge(
-    { "Name" = "${var.name}-${var.outpost_subnet_suffix}" },
+    { "Name" = "${var.name_prefix}-nacl-${var.outpost_subnet_suffix}" },
     var.tags,
     var.outpost_acl_tags,
   )
@@ -1021,7 +1035,7 @@ resource "aws_internet_gateway" "this" {
   vpc_id = local.vpc_id
 
   tags = merge(
-    { "Name" = var.name },
+    { "Name" = "${var.name_prefix}-igw" },
     var.tags,
     var.igw_tags,
   )
@@ -1033,7 +1047,7 @@ resource "aws_egress_only_internet_gateway" "this" {
   vpc_id = local.vpc_id
 
   tags = merge(
-    { "Name" = var.name },
+    { "Name" = "${var.name_prefix}-eigw" },
     var.tags,
     var.igw_tags,
   )
@@ -1064,8 +1078,10 @@ resource "aws_eip" "nat" {
   tags = merge(
     {
       "Name" = format(
-        "${var.name}-%s",
-        element(var.azs, var.single_nat_gateway ? 0 : count.index),
+        "${var.name_prefix}%s-eip",
+        substr(element(var.azs, var.single_nat_gateway ? 0 : count.index),
+          length(element(var.azs, var.single_nat_gateway ? 0 : count.index)) - 1, 1
+        )
       )
     },
     var.tags,
@@ -1090,8 +1106,10 @@ resource "aws_nat_gateway" "this" {
   tags = merge(
     {
       "Name" = format(
-        "${var.name}-%s",
-        element(var.azs, var.single_nat_gateway ? 0 : count.index),
+        "${var.name_prefix}%s-natgw",
+        substr(element(var.azs, var.single_nat_gateway ? 0 : count.index),
+          length(element(var.azs, var.single_nat_gateway ? 0 : count.index)) - 1, 1
+        )
       )
     },
     var.tags,
@@ -1138,7 +1156,7 @@ resource "aws_customer_gateway" "this" {
   type        = "ipsec.1"
 
   tags = merge(
-    { Name = "${var.name}-${each.key}" },
+    { Name = "${var.name_prefix}-${each.key}" },
     var.tags,
     var.customer_gateway_tags,
   )
@@ -1160,7 +1178,7 @@ resource "aws_vpn_gateway" "this" {
   availability_zone = var.vpn_gateway_az
 
   tags = merge(
-    { "Name" = var.name },
+    { "Name" = "${var.name_prefix}-vpngw" },
     var.tags,
     var.vpn_gateway_tags,
   )
@@ -1265,7 +1283,7 @@ resource "aws_default_security_group" "this" {
   }
 
   tags = merge(
-    { "Name" = coalesce(var.default_security_group_name, "${var.name}-default") },
+    { "Name" = coalesce(var.default_security_group_name, "${var.name_prefix}-sg-default") },
     var.tags,
     var.default_security_group_tags,
   )
@@ -1314,7 +1332,7 @@ resource "aws_default_network_acl" "this" {
   }
 
   tags = merge(
-    { "Name" = coalesce(var.default_network_acl_name, "${var.name}-default") },
+    { "Name" = coalesce(var.default_network_acl_name, "${var.name_prefix}-nacl-default") },
     var.tags,
     var.default_network_acl_tags,
   )
@@ -1359,7 +1377,7 @@ resource "aws_default_route_table" "default" {
   }
 
   tags = merge(
-    { "Name" = coalesce(var.default_route_table_name, "${var.name}-default") },
+    { "Name" = coalesce(var.default_route_table_name, "${var.name_prefix}-rtb-default") },
     var.tags,
     var.default_route_table_tags,
   )

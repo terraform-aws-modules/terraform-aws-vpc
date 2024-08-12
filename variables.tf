@@ -14,6 +14,18 @@ variable "name" {
   default     = ""
 }
 
+variable "name_prefix" {
+  description = "Name to be used on all the resources as identifier"
+  type        = string
+  default     = ""
+}
+
+variable "name_suffix" {
+  description = "Suffix for more detailed resource description"
+  type        = string
+  default     = ""
+}
+
 variable "cidr" {
   description = "(Optional) The IPv4 CIDR block for the VPC. CIDR can be explicitly set or it can be derived from IPAM using `ipv4_netmask_length` & `ipv4_ipam_pool_id`"
   type        = string
@@ -36,6 +48,12 @@ variable "azs" {
   description = "A list of availability zones names or ids in the region"
   type        = list(string)
   default     = []
+}
+
+variable "az_name_to_az_id" {
+  description = "A map of availability zones names to ids in the account"
+  type        = map(string)
+  default     = {}
 }
 
 variable "enable_dns_hostnames" {
@@ -1240,6 +1258,12 @@ variable "nat_eip_tags" {
   default     = {}
 }
 
+variable "enable_tgw_nat_gateway" {
+  description = "Should be true if you want to provision NAT Gateways for each of your TGW networks"
+  type        = bool
+  default     = false
+}
+
 ################################################################################
 # Customer Gateways
 ################################################################################
@@ -1637,4 +1661,166 @@ variable "putin_khuylo" {
   description = "Do you agree that Putin doesn't respect Ukrainian sovereignty and territorial integrity? More info: https://en.wikipedia.org/wiki/Putin_khuylo!"
   type        = bool
   default     = true
+}
+
+################################################################################
+# Transit Gateway
+################################################################################
+
+variable "transit_gateway_id" {
+  type        = string
+  description = "Transit gateway id to attach the VPC to. Required when `transit_gateway` subnet is defined."
+  default     = null
+}
+
+variable "transit_gateway_routes" {
+  description = <<-EOF
+  Configuration of route(s) to transit gateway.
+  For each `public` and/or `private` subnets named in the `subnets` variable,
+  Optionally create routes from the subnet to transit gateway. Specify the CIDR range or a
+  prefix-list-id that you want routed to the transit gateway.
+  Example:
+  ```
+  transit_gateway_routes = {
+    public  = "10.0.0.0/8"
+    private = "pl-123"
+  }
+  ```
+EOF
+  type        = any
+  default     = {}
+}
+
+################################################################################
+# TGW Subnets
+################################################################################
+
+variable "enable_tgw_attachment" {
+  description = "Enable Transit Gateway Attachment"
+  type        = bool
+  default     = false
+}
+
+variable "tgw_subnets" {
+  description = "A list of tgw subnets inside the VPC"
+  type        = list(string)
+  default     = []
+}
+
+variable "tgw_subnet_assign_ipv6_address_on_creation" {
+  description = "Specify true to indicate that network interfaces created in the specified subnet should be assigned an IPv6 address. Default is `false`"
+  type        = bool
+  default     = false
+}
+
+variable "tgw_subnet_enable_dns64" {
+  description = "Indicates whether DNS queries made to the Amazon-provided DNS Resolver in this subnet should return synthetic IPv6 addresses for IPv4-only destinations. Default: `true`"
+  type        = bool
+  default     = true
+}
+
+variable "tgw_subnet_enable_resource_name_dns_aaaa_record_on_launch" {
+  description = "Indicates whether to respond to DNS queries for instance hostnames with DNS AAAA records. Default: `true`"
+  type        = bool
+  default     = true
+}
+
+variable "tgw_subnet_enable_resource_name_dns_a_record_on_launch" {
+  description = "Indicates whether to respond to DNS queries for instance hostnames with DNS A records. Default: `false`"
+  type        = bool
+  default     = false
+}
+
+variable "tgw_subnet_ipv6_prefixes" {
+  description = "Assigns IPv6 tgw subnet id based on the Amazon provided /56 prefix base 10 integer (0-256). Must be of equal length to the corresponding IPv4 subnet list"
+  type        = list(string)
+  default     = []
+}
+
+variable "tgw_subnet_ipv6_native" {
+  description = "Indicates whether to create an IPv6-only subnet. Default: `false`"
+  type        = bool
+  default     = false
+}
+
+variable "tgw_subnet_private_dns_hostname_type_on_launch" {
+  description = "The type of hostnames to assign to instances in the subnet at launch. For IPv6-only subnets, an instance DNS name must be based on the instance ID. For dual-stack and IPv4-only subnets, you can specify whether DNS names use the instance IPv4 address or the instance ID. Valid values: `ip-name`, `resource-name`"
+  type        = string
+  default     = null
+}
+
+variable "tgw_subnet_names" {
+  description = "Explicit values to use in the Name tag on tgw subnets. If empty, Name tags are generated"
+  type        = list(string)
+  default     = []
+}
+
+variable "tgw_subnet_suffix" {
+  description = "Suffix to append to tgw subnets name"
+  type        = string
+  default     = "tgw"
+}
+
+variable "tgw_subnet_tags" {
+  description = "Additional tags for the tgw subnets"
+  type        = map(string)
+  default     = {}
+}
+
+variable "tgw_subnet_tags_per_az" {
+  description = "Additional tags for the tgw subnets where the primary key is the AZ"
+  type        = map(map(string))
+  default     = {}
+}
+
+variable "tgw_route_table_tags" {
+  description = "Additional tags for the tgw route tables"
+  type        = map(string)
+  default     = {}
+}
+
+################################################################################
+# TGW Network ACLs
+################################################################################
+
+variable "tgw_dedicated_network_acl" {
+  description = "Whether to use dedicated network ACL (not default) and custom rules for tgw subnets"
+  type        = bool
+  default     = false
+}
+
+variable "tgw_inbound_acl_rules" {
+  description = "TGW subnets inbound network ACLs"
+  type        = list(map(string))
+  default = [
+    {
+      rule_number = 100
+      rule_action = "allow"
+      from_port   = 0
+      to_port     = 0
+      protocol    = "-1"
+      cidr_block  = "0.0.0.0/0"
+    },
+  ]
+}
+
+variable "tgw_outbound_acl_rules" {
+  description = "TGW subnets outbound network ACLs"
+  type        = list(map(string))
+  default = [
+    {
+      rule_number = 100
+      rule_action = "allow"
+      from_port   = 0
+      to_port     = 0
+      protocol    = "-1"
+      cidr_block  = "0.0.0.0/0"
+    },
+  ]
+}
+
+variable "tgw_acl_tags" {
+  description = "Additional tags for the tgw subnets network ACL"
+  type        = map(string)
+  default     = {}
 }

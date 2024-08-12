@@ -22,7 +22,7 @@ locals {
 module "vpc" {
   source = "../.."
 
-  name = local.name
+  name_prefix = local.name
 
   azs         = slice(data.aws_availability_zones.available.names, 0, 3)
   enable_ipv6 = true
