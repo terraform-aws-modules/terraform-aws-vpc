@@ -31,7 +31,9 @@ resource "aws_subnet" "tgw" {
     {
       Name = try(
         var.tgw_subnet_names[count.index],
-        format("${var.name_prefix}%s-sub-${var.tgw_subnet_suffix}", substr(element(var.azs, count.index),length(element(var.azs, count.index)) - 1 , 1)
+        format("${var.name_prefix}%s-%s-sub-${var.tgw_subnet_suffix}",
+          substr(element(var.azs, count.index),length(element(var.azs, count.index)) - 1 , 1),
+          lookup(var.az_name_to_az_id, element(var.azs, count.index), "")
         )
       )
     },

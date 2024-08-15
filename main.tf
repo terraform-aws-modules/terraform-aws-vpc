@@ -116,7 +116,10 @@ resource "aws_subnet" "public" {
     {
       Name = try(
         var.public_subnet_names[count.index],
-        format("${var.name_prefix}-${var.public_subnet_suffix}-%s", element(var.azs, count.index))
+        format("${var.name_prefix}%s-%s-sub-${var.public_subnet_suffix}",
+          substr(element(var.azs, count.index), length(element(var.azs, count.index)) - 1, 1),
+          lookup(var.az_name_to_az_id, element(var.azs, count.index), "")
+        )
       )
     },
     var.tags,
@@ -137,9 +140,9 @@ resource "aws_route_table" "public" {
   tags = merge(
     {
       "Name" = var.create_multiple_public_route_tables ? format(
-        "${var.name_prefix}-${var.public_subnet_suffix}-%s",
-        element(var.azs, count.index),
-      ) : "${var.name_prefix}-${var.public_subnet_suffix}"
+        "${var.name_prefix}%s-rtb-${var.public_subnet_suffix}",
+        substr(element(var.azs, count.index), length(element(var.azs, count.index)) - 1, 1),
+      ) : "${var.name_prefix}-rtb-${var.public_subnet_suffix}"
     },
     var.tags,
     var.public_route_table_tags,
@@ -184,7 +187,7 @@ resource "aws_network_acl" "public" {
   subnet_ids = aws_subnet.public[*].id
 
   tags = merge(
-    { "Name" = "${var.name_prefix}-${var.public_subnet_suffix}" },
+    { "Name" = "${var.name_prefix}-nacl-${var.public_subnet_suffix}" },
     var.tags,
     var.public_acl_tags,
   )
