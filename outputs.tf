@@ -630,7 +630,7 @@ output "name" {
 }
 
 ################################################################################
-# Our own outputs
+#  AS added outputs
 ################################################################################
 output "private_subnets_az_names" {
   description = "List of AZ names of private subnets"
@@ -709,4 +709,9 @@ output "tgw_network_acl_arn" {
 output "aws_ec2_transit_gateway_vpc_attachment_id" {
   description = "ID of the TGW attachment"
   value       = try(aws_ec2_transit_gateway_vpc_attachment.tgw[0].id, null)
+}
+
+output "tgw_att_name" {
+  description = "Name of the TGW attachment"
+  value       = try(aws_ec2_transit_gateway_vpc_attachment.tgw[0].tags["Name"], "")
 }
