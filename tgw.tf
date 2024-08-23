@@ -11,7 +11,7 @@ locals {
 }
 
 resource "aws_subnet" "tgw" {
-  count = local.create_tgw_subnets ? local.len_tgw_subnets : 0
+  count = local.create_tgw_subnets ? local.len_tgw_subnets : 0 # TODO: Maybe add condition to have at least as many as AZs
 
   assign_ipv6_address_on_creation                = var.enable_ipv6 && var.tgw_subnet_ipv6_native ? true : var.tgw_subnet_assign_ipv6_address_on_creation
   availability_zone                              = length(regexall("^[a-z]{2}-", element(var.azs, count.index))) > 0 ? element(var.azs, count.index) : null
@@ -25,15 +25,17 @@ resource "aws_subnet" "tgw" {
   private_dns_hostname_type_on_launch            = var.tgw_subnet_private_dns_hostname_type_on_launch
   vpc_id                                         = local.vpc_id
 
-  #substr(var.input_string, local.string_length - 1, 1)
-
   tags = merge(
     {
       Name = try(
         var.tgw_subnet_names[count.index],
-        format("${var.name_prefix}%s-%s-sub-${var.tgw_subnet_suffix}",
-          substr(element(var.azs, count.index),length(element(var.azs, count.index)) - 1 , 1),
-          lookup(var.az_name_to_az_id, element(var.azs, count.index), "")
+        format(
+          "%s-%s%s-%s-sub-%s",
+          var.name_prefix,
+          var.short_aws_region,
+          substr(element(var.azs, count.index), -1, 1), # Get last letter of az code
+          lookup(var.az_name_to_az_id, element(var.azs, count.index), ""), # Lookup az-id based on name
+          var.tgw_subnet_suffix
         )
       )
     },
@@ -43,21 +45,31 @@ resource "aws_subnet" "tgw" {
   )
 }
 
-# There are as many routing tables as the number of NAT gateways
+locals {
+  num_tgw_route_tables = var.create_multiple_tgw_route_tables ? local.len_tgw_subnets : 1
+}
+
 resource "aws_route_table" "tgw" {
-  count = local.create_tgw_subnets && local.max_subnet_length > 0 ? local.nat_gateway_count : 0
+  count = local.create_tgw_subnets ? local.num_tgw_route_tables : 0
 
   vpc_id = local.vpc_id
-
   tags = merge(
     {
-      "Name" = var.single_nat_gateway ? "${var.name_prefix}-${var.tgw_subnet_suffix}" : format(
-        "${var.name_prefix}%s-rtb-${var.tgw_subnet_suffix}",
-        substr(element(var.azs, count.index), length(element(var.azs, count.index)) - 1, 1)
+      "Name" = var.create_multiple_tgw_route_tables ? format(
+        "%s-%s%s-rtb-%s",
+        var.name_prefix,
+        var.short_aws_region,
+        substr(element(var.azs, count.index), -1, 1),
+        var.tgw_subnet_suffix
+        ) : format(
+        "%s-%s-rtb-%s",
+        var.name_prefix,
+        var.short_aws_region,
+        var.tgw_subnet_suffix
       )
     },
     var.tags,
-    var.tgw_route_table_tags,
+    var.tgw_route_table_tags
   )
 }
 
@@ -67,7 +79,7 @@ resource "aws_route_table_association" "tgw" {
   subnet_id = element(aws_subnet.tgw[*].id, count.index)
   route_table_id = element(
     aws_route_table.tgw[*].id,
-      var.single_nat_gateway ? 0 : count.index,
+    var.create_multiple_tgw_route_tables ? count.index : 0
   )
 }
 
@@ -86,7 +98,9 @@ resource "aws_network_acl" "tgw" {
   subnet_ids = aws_subnet.tgw[*].id
 
   tags = merge(
-    { "Name" = "${var.name_prefix}-nacl-${var.tgw_subnet_suffix}" },
+    {
+      "Name" = format("%s-%s-nacl-%s", var.name_prefix, var.short_aws_region, var.tgw_subnet_suffix)
+    },
     var.tags,
     var.tgw_acl_tags,
   )
@@ -135,7 +149,7 @@ resource "aws_ec2_transit_gateway_vpc_attachment" "tgw" {
   vpc_id             = local.vpc_id
 
   tags = merge(
-    { Name = "${var.name_prefix}-tgw-att" }
+    { Name = "${var.name_prefix}-${var.short_aws_region}-tgw-att" }
   )
 }
 
