@@ -28,7 +28,7 @@ variable "short_aws_region" {
 variable "vpc_name_suffix" {
   description = "Name suffix for more detailed resource description"
   type        = string
-  default     = ""
+  default     = "main"
 }
 
 variable "cidr" {
