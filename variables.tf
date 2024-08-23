@@ -20,8 +20,13 @@ variable "name_prefix" {
   default     = ""
 }
 
-variable "name_suffix" {
-  description = "Suffix for more detailed resource description"
+variable "short_aws_region" {
+  type = string
+  description = "The AWS region code where the VPC will be created"
+}
+
+variable "vpc_name_suffix" {
+  description = "Name suffix for more detailed resource description"
   type        = string
   default     = ""
 }
@@ -1777,6 +1782,12 @@ variable "tgw_route_table_tags" {
   description = "Additional tags for the tgw route tables"
   type        = map(string)
   default     = {}
+}
+
+variable "create_multiple_tgw_route_tables" {
+  description = "Indicates whether to create a separate route table for each TGW subnet. Default: `false`"
+  type        = bool
+  default     = true
 }
 
 ################################################################################
