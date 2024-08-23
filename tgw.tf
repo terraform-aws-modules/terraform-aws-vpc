@@ -3,7 +3,7 @@
 ################################################################################
 
 locals {
-  len_tgw_subnets         = max(length(var.tgw_subnets), length(var.private_subnet_ipv6_prefixes))
+  len_tgw_subnets    = max(length(var.tgw_subnets), length(var.tgw_subnet_ipv6_prefixes))
   create_tgw_subnets = local.create_vpc && local.len_tgw_subnets > 0
 
   # support variables for transit_gateway_routes
@@ -95,7 +95,7 @@ resource "aws_network_acl" "tgw" {
 resource "aws_network_acl_rule" "tgw_inbound" {
   count = local.tgw_network_acl ? length(var.tgw_inbound_acl_rules) : 0
 
-  network_acl_id = aws_network_acl.private[0].id
+  network_acl_id = aws_network_acl.tgw[0].id # TODO: Fixed
 
   egress          = false
   rule_number     = var.tgw_inbound_acl_rules[count.index]["rule_number"]
