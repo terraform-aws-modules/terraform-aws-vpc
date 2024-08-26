@@ -33,7 +33,7 @@ resource "aws_subnet" "tgw" {
           "%s-%s%s-%s-sub-%s",
           var.name_prefix,
           var.short_aws_region,
-          substr(element(var.azs, count.index), -1, 1), # Get last letter of az code
+          substr(element(var.azs, count.index), -1, 1),                    # Get last letter of az code
           lookup(var.az_name_to_az_id, element(var.azs, count.index), ""), # Lookup az-id based on name
           var.tgw_subnet_suffix
         )
@@ -179,54 +179,51 @@ resource "aws_route" "tgw_dns64_nat_gateway" {
   depends_on = [aws_ec2_transit_gateway_vpc_attachment.tgw]
 }
 
-# Route: IPv4 routes from public subnets to the Transit Gateway (if configured in var.transit_gateway_routes)
-resource "aws_route" "public_to_tgw" {
-  count = (local.create_public_subnets && contains(local.subnets_tgw_routed, "public")) ? (var.enable_nat_gateway ? length(var.azs) : 1) : 0
+locals {
+  create_public_to_tgw = (local.create_public_subnets && contains(local.subnets_tgw_routed, "public"))
+  public_to_tgw_cidr_pairs = local.create_public_to_tgw ? flatten([
+    for public_rtb in aws_route_table.public : [
+      for cidr in var.transit_gateway_routes["public"]: {
+        rtb_id = public_rtb.id
+        cidr   = cidr
+      }
+    ]
+  ]) : []
+}
 
-  destination_cidr_block     = can(regex("^pl-", var.transit_gateway_routes["public"])) ? null : var.transit_gateway_routes["public"]
-  destination_prefix_list_id = can(regex("^pl-", var.transit_gateway_routes["public"])) ? var.transit_gateway_routes["public"] : null
+resource "aws_route" "public_to_tgw" {
+  for_each = local.create_public_to_tgw ? {for i, v in local.public_to_tgw_cidr_pairs : "${i}-${v.cidr}" => v} : {}
+
+  destination_cidr_block     = can(regex("^pl-", each.value.cidr)) ? null : each.value.cidr
+  destination_prefix_list_id = can(regex("^pl-", each.value.cidr)) ? each.value.cidr : null
 
   transit_gateway_id = var.transit_gateway_id
-  route_table_id     = element(aws_route_table.public[*].id, count.index)
+  route_table_id     = each.value.rtb_id
 
   depends_on = [aws_ec2_transit_gateway_vpc_attachment.tgw]
 }
 
 # Route: IPv4 routes from private subnets to the Transit Gateway (if configured in var.transit_gateway_routes)
+locals {
+  create_private_to_tgw = (local.create_private_subnets && contains(local.subnets_tgw_routed, "private"))
+  private_to_tgw_cidr_pairs = local.create_private_to_tgw ? flatten([
+    for private_rtb in aws_route_table.private : [
+      for cidr in var.transit_gateway_routes["private"]: {
+        rtb_id = private_rtb.id
+        cidr   = cidr
+      }
+    ]
+  ]) : []
+}
+
 resource "aws_route" "private_to_tgw" {
-  count = (local.create_private_subnets && contains(local.subnets_tgw_routed, "private")) ? length(var.azs) : 0
+  for_each = local.create_private_to_tgw ? {for i, v in local.private_to_tgw_cidr_pairs : "${i}-${v.cidr}" => v} : {}
 
-  destination_cidr_block     = can(regex("^pl-", var.transit_gateway_routes["private"])) ? null : var.transit_gateway_routes["private"]
-  destination_prefix_list_id = can(regex("^pl-", var.transit_gateway_routes["private"])) ? var.transit_gateway_routes["private"] : null
-
-  transit_gateway_id = var.transit_gateway_id
-  route_table_id     = element(aws_route_table.private[*].id, count.index)
-
-  depends_on = [aws_ec2_transit_gateway_vpc_attachment.tgw]
-}
-
-# Route: IPv4 routes from intra subnets to the Transit Gateway (if configured in var.transit_gateway_routes)
-resource "aws_route" "intra_to_tgw" {
-  count = (local.create_intra_subnets && contains(local.subnets_tgw_routed, "intra")) ? length(var.azs) : 0
-
-  destination_cidr_block     = can(regex("^pl-", var.transit_gateway_routes["intra"])) ? null : var.transit_gateway_routes["intra"]
-  destination_prefix_list_id = can(regex("^pl-", var.transit_gateway_routes["intra"])) ? var.transit_gateway_routes["intra"] : null
+  destination_cidr_block     = can(regex("^pl-", each.value.cidr)) ? null : each.value.cidr
+  destination_prefix_list_id = can(regex("^pl-", each.value.cidr)) ? each.value.cidr : null
 
   transit_gateway_id = var.transit_gateway_id
-  route_table_id     = element(aws_route_table.intra[*].id, count.index)
-
-  depends_on = [aws_ec2_transit_gateway_vpc_attachment.tgw]
-}
-
-# Route: IPv4 routes from public subnets to the Transit Gateway (if configured in var.transit_gateway_routes)
-resource "aws_route" "database_to_tgw" {
-  count = (local.create_database_subnets && contains(local.subnets_tgw_routed, "database")) ? length(var.azs) : 0
-
-  destination_cidr_block     = can(regex("^pl-", var.transit_gateway_routes["database"])) ? null : var.transit_gateway_routes["database"]
-  destination_prefix_list_id = can(regex("^pl-", var.transit_gateway_routes["database"])) ? var.transit_gateway_routes["database"] : null
-
-  transit_gateway_id = var.transit_gateway_id
-  route_table_id     = element(aws_route_table.database[*].id, count.index)
+  route_table_id     = each.value.rtb_id
 
   depends_on = [aws_ec2_transit_gateway_vpc_attachment.tgw]
 }

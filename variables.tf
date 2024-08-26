@@ -1687,8 +1687,8 @@ variable "transit_gateway_routes" {
   Example:
   ```
   transit_gateway_routes = {
-    public  = "10.0.0.0/8"
-    private = "pl-123"
+    public  = ["10.0.0.0/8"]
+    private = ["pl-123"]
   }
   ```
 EOF
