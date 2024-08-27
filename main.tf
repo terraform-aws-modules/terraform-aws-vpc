@@ -252,6 +252,7 @@ resource "aws_subnet" "private" {
   private_dns_hostname_type_on_launch            = var.private_subnet_private_dns_hostname_type_on_launch
   vpc_id                                         = local.vpc_id
 
+  # ${var.name_prefix}-${var.region_short}<azletter>-<azid>-sub-${var.private_subnet_suffix}
   # app1-test-euc1a-az2-sub-db
   tags = merge(
     {
