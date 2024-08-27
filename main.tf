@@ -873,7 +873,7 @@ resource "aws_route_table" "intra" {
     {
       "Name" = var.create_multiple_intra_route_tables ? format(
         "${var.name_prefix}%s-${var.intra_subnet_suffix}-%s",
-        substr(element(var.azs, count.index), length(element(var.azs, count.index)) - 1, 1),
+        substr(element(var.azs, count.index), -1, 1),
       ) : "${var.name_prefix}-rtb-${var.intra_subnet_suffix}"
     },
     var.tags,
