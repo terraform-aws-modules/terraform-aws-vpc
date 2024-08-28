@@ -26,7 +26,7 @@ locals {
 module "vpc" {
   source = "../../"
 
-  name = local.name
+  name_prefix = local.name
   cidr = local.vpc_cidr
 
   secondary_cidr_blocks = local.secondary_cidr_blocks # can add up to 5 total CIDR blocks

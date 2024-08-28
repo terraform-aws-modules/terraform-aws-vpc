@@ -174,7 +174,7 @@ locals {
 module "vpc" {
   source = "../../"
 
-  name = local.name
+  name_prefix = local.name
   cidr = local.vpc_cidr
 
   azs                 = local.azs

@@ -27,7 +27,7 @@ locals {
 module "vpc_with_flow_logs_s3_bucket" {
   source = "../../"
 
-  name = local.name
+  name_prefix = local.name
   cidr = local.vpc_cidr
 
   azs             = local.azs
@@ -44,7 +44,7 @@ module "vpc_with_flow_logs_s3_bucket" {
 module "vpc_with_flow_logs_s3_bucket_parquet" {
   source = "../../"
 
-  name = "${local.name}-parquet"
+  name_prefix = "${local.name}-parquet"
   cidr = local.vpc_cidr
 
   azs             = local.azs
@@ -63,7 +63,7 @@ module "vpc_with_flow_logs_s3_bucket_parquet" {
 module "vpc_with_flow_logs_cloudwatch_logs_default" {
   source = "../../"
 
-  name = "${local.name}-cloudwatch-logs-default"
+  name_prefix = "${local.name}-cloudwatch-logs-default"
   cidr = local.vpc_cidr
 
   azs             = local.azs
@@ -87,7 +87,7 @@ module "vpc_with_flow_logs_cloudwatch_logs_default" {
 module "vpc_with_flow_logs_cloudwatch_logs_prefix" {
   source = "../../"
 
-  name = "${local.name}-cloudwatch-logs-prefix"
+  name_prefix = "${local.name}-cloudwatch-logs-prefix"
   cidr = local.vpc_cidr
 
   azs             = local.azs
@@ -116,7 +116,7 @@ module "vpc_with_flow_logs_cloudwatch_logs_prefix" {
 module "vpc_with_flow_logs_cloudwatch_logs" {
   source = "../../"
 
-  name = "${local.name}-cloudwatch-logs"
+  name_prefix = "${local.name}-cloudwatch-logs"
   cidr = local.vpc_cidr
 
   azs             = local.azs

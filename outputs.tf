@@ -2,6 +2,7 @@ locals {
   redshift_route_table_ids = aws_route_table.redshift[*].id
   public_route_table_ids   = aws_route_table.public[*].id
   private_route_table_ids  = aws_route_table.private[*].id
+  tgw_route_table_ids      = aws_route_table.tgw[*].id
 }
 
 ################################################################################
@@ -625,11 +626,11 @@ output "azs" {
 
 output "name" {
   description = "The name of the VPC specified as argument to this module"
-  value       = var.name
+  value       = var.name_prefix
 }
 
 ################################################################################
-# Our own outputs
+#  AS added outputs
 ################################################################################
 output "private_subnets_az_names" {
   description = "List of AZ names of private subnets"
@@ -659,4 +660,58 @@ output "database_subnets_az_names" {
 output "database_subnets_az_ids" {
   description = "List of AZ IDs of database subnets"
   value       = aws_subnet.database[*].availability_zone_id
+}
+
+################################################################################
+# TGW Subnets
+################################################################################
+
+output "tgw_subnets" {
+  description = "List of IDs of tgw subnets"
+  value       = aws_subnet.tgw[*].id
+}
+
+output "tgw_subnet_arns" {
+  description = "List of ARNs of tgw subnets"
+  value       = aws_subnet.tgw[*].arn
+}
+
+output "tgw_subnets_cidr_blocks" {
+  description = "List of cidr_blocks of tgw subnets"
+  value       = compact(aws_subnet.tgw[*].cidr_block)
+}
+
+output "tgw_subnets_ipv6_cidr_blocks" {
+  description = "List of IPv6 cidr_blocks of tgw subnets in an IPv6 enabled VPC"
+  value       = compact(aws_subnet.tgw[*].ipv6_cidr_block)
+}
+
+output "tgw_route_table_ids" {
+  description = "List of IDs of tgw route tables"
+  value       = local.tgw_route_table_ids
+}
+
+output "tgw_route_table_association_ids" {
+  description = "List of IDs of the tgw route table association"
+  value       = aws_route_table_association.tgw[*].id
+}
+
+output "tgw_network_acl_id" {
+  description = "ID of the tgw network ACL"
+  value       = try(aws_network_acl.tgw[0].id, null)
+}
+
+output "tgw_network_acl_arn" {
+  description = "ARN of the tgw network ACL"
+  value       = try(aws_network_acl.tgw[0].arn, null)
+}
+
+output "aws_ec2_transit_gateway_vpc_attachment_id" {
+  description = "ID of the TGW attachment"
+  value       = try(aws_ec2_transit_gateway_vpc_attachment.tgw[0].id, null)
+}
+
+output "tgw_att_name" {
+  description = "Name of the TGW attachment"
+  value       = try(aws_ec2_transit_gateway_vpc_attachment.tgw[0].tags["Name"], "")
 }

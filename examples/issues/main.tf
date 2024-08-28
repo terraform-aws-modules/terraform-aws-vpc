@@ -24,7 +24,7 @@ locals {
 module "vpc_issue_44" {
   source = "../../"
 
-  name = "asymmetrical"
+  name_prefix = "asymmetrical"
   cidr = "10.0.0.0/16"
 
   azs              = local.azs
@@ -48,7 +48,7 @@ module "vpc_issue_44" {
 module "vpc_issue_46" {
   source = "../../"
 
-  name = "no-private-subnets"
+  name_prefix = "no-private-subnets"
   cidr = "10.0.0.0/16"
 
   azs                 = local.azs
@@ -74,7 +74,7 @@ module "vpc_issue_46" {
 module "vpc_issue_108" {
   source = "../../"
 
-  name = "route-already-exists"
+  name_prefix = "route-already-exists"
   cidr = "10.0.0.0/16"
 
   azs             = local.azs
