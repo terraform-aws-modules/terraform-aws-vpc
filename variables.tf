@@ -1192,6 +1192,18 @@ variable "enable_nat_gateway" {
   default     = false
 }
 
+variable "enable_nat_via_transit_gateway" {
+  description = "Should be true if you want to use transit gateways to nat for each of your private networks"
+  type        = bool
+  default     = false
+}
+
+variable "nat_transit_gateway_id" {
+  description = "Transit Gateway that is used to provide outbound internet access to private subnets"
+  type        = string
+  default     = null
+}
+
 variable "nat_gateway_destination_cidr_block" {
   description = "Used to pass a custom destination route for private NAT Gateway. If not specified, the default 0.0.0.0/0 is used as a destination route"
   type        = string

@@ -445,6 +445,30 @@ resource "aws_route" "database_nat_gateway" {
   }
 }
 
+resource "aws_route" "database_ipv6_nat_transit_gateway" {
+  count = local.create_database_route_table && !var.create_database_internet_gateway_route && var.create_database_nat_gateway_route && !var.enable_nat_gateway && var.enable_nat_via_transit_gateway && var.enable_ipv6 && var.private_subnet_enable_dns64 ? var.single_nat_gateway ? 1 : local.len_database_subnets : 0
+
+  route_table_id              = element(aws_route_table.database[*].id, count.index)
+  destination_ipv6_cidr_block = "64:ff9b::/96"
+  transit_gateway_id          = var.nat_transit_gateway_id
+
+  timeouts {
+    create = "5m"
+  }
+}
+
+resource "aws_route" "database_ipv4_transit_gateway" {
+  count = local.create_database_route_table && !var.create_database_internet_gateway_route && var.create_database_nat_gateway_route && !var.enable_nat_gateway && var.enable_nat_via_transit_gateway ? var.single_nat_gateway ? 1 : local.len_database_subnets : 0
+
+  route_table_id         = element(aws_route_table.database[*].id, count.index)
+  destination_cidr_block = "0.0.0.0/0"
+  transit_gateway_id     = var.nat_transit_gateway_id
+
+  timeouts {
+    create = "5m"
+  }
+}
+
 resource "aws_route" "database_dns64_nat_gateway" {
   count = local.create_database_route_table && !var.create_database_internet_gateway_route && var.create_database_nat_gateway_route && var.enable_nat_gateway && var.enable_ipv6 && var.private_subnet_enable_dns64 ? var.single_nat_gateway ? 1 : local.len_database_subnets : 0
 
@@ -1119,6 +1143,30 @@ resource "aws_route" "private_dns64_nat_gateway" {
   route_table_id              = element(aws_route_table.private[*].id, count.index)
   destination_ipv6_cidr_block = "64:ff9b::/96"
   nat_gateway_id              = element(aws_nat_gateway.this[*].id, count.index)
+
+  timeouts {
+    create = "5m"
+  }
+}
+
+resource "aws_route" "private_ipv4_nat_transit_gateway" {
+  count = local.create_vpc && !var.enable_nat_gateway && var.enable_nat_via_transit_gateway ? local.nat_gateway_count : 0
+
+  route_table_id         = element(aws_route_table.private[*].id, count.index)
+  destination_cidr_block = var.nat_gateway_destination_cidr_block
+  transit_gateway_id     = var.nat_transit_gateway_id
+
+  timeouts {
+    create = "5m"
+  }
+}
+
+resource "aws_route" "private_ipv6_nat_transit_gateway" {
+  count = local.create_vpc && !var.enable_nat_gateway && var.enable_nat_via_transit_gateway && var.enable_ipv6 && var.private_subnet_enable_dns64 ? local.nat_gateway_count : 0
+
+  route_table_id              = element(aws_route_table.private[*].id, count.index)
+  destination_ipv6_cidr_block = "64:ff9b::/96"
+  transit_gateway_id          = var.nat_transit_gateway_id
 
   timeouts {
     create = "5m"
