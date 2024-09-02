@@ -652,13 +652,13 @@ output "public_subnets_az_ids" {
   value       = aws_subnet.public[*].availability_zone_id
 }
 
-output "isolated_subnets_az_names" {
-  description = "List of AZ names of isolated subnets"
+output "intra_subnets_az_names" {
+  description = "List of AZ names of intra subnets"
   value       = aws_subnet.intra[*].availability_zone
 }
 
-output "isolated_subnets_az_ids" {
-  description = "List of AZ IDs of isolated subnets"
+output "intra_subnets_az_ids" {
+  description = "List of AZ IDs of intra subnets"
   value       = aws_subnet.intra[*].availability_zone_id
 }
 
