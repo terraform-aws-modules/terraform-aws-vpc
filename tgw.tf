@@ -183,7 +183,7 @@ locals {
   create_public_to_tgw = (local.create_public_subnets && contains(local.subnets_tgw_routed, "public"))
   public_to_tgw_cidr_pairs = local.create_public_to_tgw ? flatten([
     for public_rtb in aws_route_table.public : [
-      for cidr in var.transit_gateway_routes["public"]: {
+      for cidr in var.transit_gateway_routes["public"] : {
         rtb_id = public_rtb.id
         cidr   = cidr
       }
@@ -192,7 +192,7 @@ locals {
 }
 
 resource "aws_route" "public_to_tgw" {
-  for_each = local.create_public_to_tgw ? {for i, v in local.public_to_tgw_cidr_pairs : "${i}-${v.cidr}" => v} : {}
+  for_each = local.create_public_to_tgw ? { for i, v in local.public_to_tgw_cidr_pairs : "${i}-${v.cidr}" => v } : {}
 
   destination_cidr_block     = can(regex("^pl-", each.value.cidr)) ? null : each.value.cidr
   destination_prefix_list_id = can(regex("^pl-", each.value.cidr)) ? each.value.cidr : null
@@ -208,7 +208,7 @@ locals {
   create_private_to_tgw = (local.create_private_subnets && contains(local.subnets_tgw_routed, "private"))
   private_to_tgw_cidr_pairs = local.create_private_to_tgw ? flatten([
     for private_rtb in aws_route_table.private : [
-      for cidr in var.transit_gateway_routes["private"]: {
+      for cidr in var.transit_gateway_routes["private"] : {
         rtb_id = private_rtb.id
         cidr   = cidr
       }
@@ -217,7 +217,7 @@ locals {
 }
 
 resource "aws_route" "private_to_tgw" {
-  for_each = local.create_private_to_tgw ? {for i, v in local.private_to_tgw_cidr_pairs : "${i}-${v.cidr}" => v} : {}
+  for_each = local.create_private_to_tgw ? { for i, v in local.private_to_tgw_cidr_pairs : "${i}-${v.cidr}" => v } : {}
 
   destination_cidr_block     = can(regex("^pl-", each.value.cidr)) ? null : each.value.cidr
   destination_prefix_list_id = can(regex("^pl-", each.value.cidr)) ? each.value.cidr : null
