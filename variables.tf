@@ -1835,3 +1835,18 @@ variable "tgw_acl_tags" {
   type        = map(string)
   default     = {}
 }
+
+################################################################################
+# Secondary IPAM
+################################################################################
+
+variable "secondary_ipam_pool_ids" {
+  description = "List of secondary IPAM pool IDs to associate with the VPC to extend the IP Address pool"
+  type        = list(string)
+  default     = []
+}
+
+variable "secondary_ipam_pool_netmask" {
+  description = "List of secondary IPAM pool netmasks to associate with the VPC to extend the IP Address pool"
+  type        = list(number)
+}

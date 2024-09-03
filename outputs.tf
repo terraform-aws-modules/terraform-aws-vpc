@@ -721,17 +721,3 @@ output "tgw_att_name" {
   value       = try(aws_ec2_transit_gateway_vpc_attachment.tgw[0].tags["Name"], "")
 }
 
-################################################################################
-# Secondary IAPM
-################################################################################
-
-variable "secondary_ipam_pool_ids" {
-  description = "List of secondary IPAM pool IDs to associate with the VPC to extend the IP Address pool"
-  type        = list(string)
-  default     = []
-}
-
-variable "secondary_ipam_pool_netmask" {
-  description = "List of secondary IPAM pool netmasks to associate with the VPC to extend the IP Address pool"
-  type        = list(number)
-}
