@@ -662,6 +662,26 @@ output "database_subnets_az_ids" {
   value       = aws_subnet.database[*].availability_zone_id
 }
 
+output "intra_subnets_az_names" {
+  description = "List of AZ names of intra subnets"
+  value       = aws_subnet.intra[*].availability_zone
+}
+
+output "intra_subnets_az_ids" {
+  description = "List of AZ IDs of intra subnets"
+  value       = aws_subnet.intra[*].availability_zone_id
+}
+
+output "tgw_subnets_az_names" {
+  description = "List of AZ names of tgw subnets"
+  value       = aws_subnet.tgw[*].availability_zone
+}
+
+output "tgw_subnets_az_ids" {
+  description = "List of AZ IDs of tgw subnets"
+  value       = aws_subnet.tgw[*].availability_zone_id
+}
+
 ################################################################################
 # TGW Subnets
 ################################################################################

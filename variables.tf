@@ -21,8 +21,8 @@ variable "name_prefix" {
 }
 
 variable "short_aws_region" {
-  type = string
   description = "The AWS region code where the VPC will be created"
+  type        = string
 }
 
 variable "vpc_name_suffix" {
