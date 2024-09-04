@@ -652,6 +652,16 @@ output "public_subnets_az_ids" {
   value       = aws_subnet.public[*].availability_zone_id
 }
 
+output "database_subnets_az_names" {
+  description = "List of AZ names of database subnets"
+  value       = aws_subnet.database[*].availability_zone
+}
+
+output "database_subnets_az_ids" {
+  description = "List of AZ IDs of database subnets"
+  value       = aws_subnet.database[*].availability_zone_id
+}
+
 output "intra_subnets_az_names" {
   description = "List of AZ names of intra subnets"
   value       = aws_subnet.intra[*].availability_zone
