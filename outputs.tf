@@ -74,6 +74,11 @@ output "vpc_secondary_cidr_blocks" {
   value       = compact(aws_vpc_ipv4_cidr_block_association.this[*].cidr_block)
 }
 
+output "vpc_secondary_cidr_blocks_ipam" {
+  description = "List of secondary CIDR blocks allocated from the IPAM for the VPC"
+  value       = compact(aws_vpc_ipv4_cidr_block_association.ipam[*].cidr_block)
+}
+
 output "vpc_owner_id" {
   description = "The ID of the AWS account that owns the VPC"
   value       = try(aws_vpc.this[0].owner_id, null)
@@ -735,3 +740,4 @@ output "tgw_att_name" {
   description = "Name of the TGW attachment"
   value       = try(aws_ec2_transit_gateway_vpc_attachment.tgw[0].tags["Name"], "")
 }
+
