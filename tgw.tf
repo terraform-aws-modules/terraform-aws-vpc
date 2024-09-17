@@ -149,7 +149,7 @@ resource "aws_ec2_transit_gateway_vpc_attachment" "tgw" {
   vpc_id             = local.vpc_id
 
   tags = merge(
-    { Name = "${var.name_prefix}-${var.short_aws_region}-tgw-att" }
+    { Name = "${var.name_prefix}-${var.short_aws_region}-tgw-att-${var.tgw_att_suffix}" }
   )
 }
 
