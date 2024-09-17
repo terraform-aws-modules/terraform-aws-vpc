@@ -1772,12 +1772,6 @@ variable "tgw_att_suffix" {
   default     = "main"
 }
 
-variable "" {
-  description = "Suffix to append to tgw subnets name"
-  type        = string
-  default     = "tgw"
-}
-
 variable "tgw_subnet_tags" {
   description = "Additional tags for the tgw subnets"
   type        = map(string)
