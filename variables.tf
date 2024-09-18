@@ -55,12 +55,6 @@ variable "azs" {
   default     = []
 }
 
-variable "az_name_to_az_id" {
-  description = "A map of availability zones names to ids in the account"
-  type        = map(string)
-  default     = {}
-}
-
 variable "enable_dns_hostnames" {
   description = "Should be true to enable DNS hostnames in the VPC"
   type        = bool
