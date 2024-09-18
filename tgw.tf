@@ -1,3 +1,16 @@
+data "aws_availability_zones" "available" {
+  state = "available"
+}
+
+locals {
+  az_name_to_az_id = {
+    for az in data.aws_availability_zones.available.names : az =>
+    split("-", element(data.aws_availability_zones.available.zone_ids,
+      index(data.aws_availability_zones.available.names, az))
+    )[1]
+  }
+}
+
 ################################################################################
 # TGW Subnets
 ################################################################################
@@ -33,8 +46,8 @@ resource "aws_subnet" "tgw" {
           "%s-%s%s-%s-sub-%s",
           var.name_prefix,
           var.short_aws_region,
-          substr(element(var.azs, count.index), -1, 1),                    # Get last letter of az code
-          lookup(var.az_name_to_az_id, element(var.azs, count.index), ""), # Lookup az-id based on name
+          substr(element(var.azs, count.index), -1, 1),                      # Get last letter of az code
+          lookup(local.az_name_to_az_id, element(var.azs, count.index), ""), # Lookup az-id based on name
           var.tgw_subnet_suffix
         )
       )
