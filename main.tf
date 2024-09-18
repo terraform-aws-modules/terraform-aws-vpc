@@ -17,7 +17,7 @@ locals {
   )
 
   # Use `local.vpc_id` to give a hint to Terraform that subnets should be deleted before secondary CIDR blocks can be free!
-  vpc_id = try(aws_vpc_ipv4_cidr_block_association.this[0].vpc_id, aws_vpc_ipv4_cidr_block_association.ipam[0].vpc_id, aws_vpc.this[0].id, "")
+  vpc_id     = try(aws_vpc_ipv4_cidr_block_association.this[0].vpc_id, aws_vpc_ipv4_cidr_block_association.ipam[0].vpc_id, aws_vpc.this[0].id, "")
   create_vpc = var.create_vpc && var.putin_khuylo
 }
 
@@ -127,7 +127,7 @@ resource "aws_subnet" "public" {
         var.public_subnet_names[count.index],
         format("%s-%s%s-%s-sub-%s", var.name_prefix, var.short_aws_region,
           substr(element(var.azs, count.index), -1, 1),
-          lookup(var.az_name_to_az_id, element(var.azs, count.index), ""),
+          lookup(local.az_name_to_az_id, element(var.azs, count.index), ""),
           var.public_subnet_suffix
         )
       )
@@ -269,7 +269,7 @@ resource "aws_subnet" "private" {
         var.private_subnet_names[count.index],
         format("%s-%s%s-%s-sub-%s", var.name_prefix, var.short_aws_region,
           substr(element(var.azs, count.index), -1, 1),
-          lookup(var.az_name_to_az_id, element(var.azs, count.index), ""),
+          lookup(local.az_name_to_az_id, element(var.azs, count.index), ""),
           var.private_subnet_suffix
         )
       )
@@ -396,7 +396,7 @@ resource "aws_subnet" "database" {
         format(
           "%s-%s%s-%s-sub-%s", var.name_prefix, var.short_aws_region,
           substr(element(var.azs, count.index), -1, 1),
-          lookup(var.az_name_to_az_id, element(var.azs, count.index), ""),
+          lookup(local.az_name_to_az_id, element(var.azs, count.index), ""),
           var.database_subnet_suffix
         )
       )
@@ -586,7 +586,7 @@ resource "aws_subnet" "redshift" {
         var.redshift_subnet_names[count.index],
         format("${var.name_prefix}-${var.short_aws_region}%s-%s-sub-${var.redshift_subnet_suffix}",
           substr(element(var.azs, count.index), -1, 1),
-          lookup(var.az_name_to_az_id, element(var.azs, count.index), "")
+          lookup(local.az_name_to_az_id, element(var.azs, count.index), "")
         )
       )
     },
@@ -726,7 +726,7 @@ resource "aws_subnet" "elasticache" {
         var.elasticache_subnet_names[count.index],
         format("%s-%s%s-%s-sub-%s", var.name_prefix, var.short_aws_region,
           substr(element(var.azs, count.index), -1, 1),
-          lookup(var.az_name_to_az_id, element(var.azs, count.index), ""),
+          lookup(local.az_name_to_az_id, element(var.azs, count.index), ""),
           var.elasticache_subnet_suffix
         )
       )
@@ -859,7 +859,7 @@ resource "aws_subnet" "intra" {
         var.intra_subnet_names[count.index],
         format("%s-%s%s-%s-sub-%s", var.name_prefix, var.short_aws_region,
           substr(element(var.azs, count.index), -1, 1),
-          lookup(var.az_name_to_az_id, element(var.azs, count.index), ""),
+          lookup(local.az_name_to_az_id, element(var.azs, count.index), ""),
           var.intra_subnet_suffix
         )
       )
