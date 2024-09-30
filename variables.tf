@@ -1355,15 +1355,30 @@ variable "default_security_group_name" {
 }
 
 variable "default_security_group_ingress" {
-  description = "List of maps of ingress rules to set on the default security group"
+  description = "List of maps of ingress rules to set on the default security group. Default is AWS default ingress rule."
   type        = list(map(string))
-  default     = []
+  default = [
+    {
+      protocol  = -1
+      self      = true
+      from_port = 0
+      to_port   = 0
+    },
+  ]
 }
 
 variable "default_security_group_egress" {
-  description = "List of maps of egress rules to set on the default security group"
+  description = "List of maps of egress rules to set on the default security group. Default is the AWS default egress rule."
   type        = list(map(string))
-  default     = []
+  default = [
+    {
+      from_port        = 0
+      to_port          = 0
+      protocol         = "-1"
+      cidr_blocks      = "0.0.0.0/0"
+      ipv6_cidr_blocks = "::/0"
+    },
+  ]
 }
 
 variable "default_security_group_tags" {

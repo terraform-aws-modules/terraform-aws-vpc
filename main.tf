@@ -15,6 +15,9 @@ locals {
     local.len_redshift_subnets,
   )
 
+  # True if both var.default_security_group_ingress and var.default_security_group_egress are empty lists
+  empty_default_security_group = length(var.default_security_group_ingress) < 1 && length(var.default_security_group_egress) < 1
+
   # Use `local.vpc_id` to give a hint to Terraform that subnets should be deleted before secondary CIDR blocks can be free!
   vpc_id = try(aws_vpc_ipv4_cidr_block_association.this[0].vpc_id, aws_vpc.this[0].id, "")
 
@@ -1229,8 +1232,29 @@ resource "aws_default_vpc" "this" {
   )
 }
 
+################################################################################
+# Default Security Group
+################################################################################
+
+# Default security group with no rules, per CIS Benchmark
+resource "aws_default_security_group" "empty" {
+  count = local.create_vpc && var.manage_default_security_group && local.empty_default_security_group ? 1 : 0
+
+  vpc_id  = aws_vpc.this[0].id
+  ingress = []
+  egress  = []
+
+  tags = merge(
+    { "Name" = coalesce(var.default_security_group_name, "${var.name}-default") },
+    var.tags,
+    var.default_security_group_tags,
+  )
+
+}
+
+# Default security group with user provided rules
 resource "aws_default_security_group" "this" {
-  count = local.create_vpc && var.manage_default_security_group ? 1 : 0
+  count = local.create_vpc && var.manage_default_security_group && !local.empty_default_security_group ? 1 : 0
 
   vpc_id = aws_vpc.this[0].id
 
