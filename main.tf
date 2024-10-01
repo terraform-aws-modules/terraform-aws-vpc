@@ -1135,10 +1135,11 @@ resource "aws_nat_gateway" "this" {
   tags = merge(
     {
       "Name" = format(
-        "${var.name_prefix}-${var.short_aws_region}%s-natgw",
+        "${var.name_prefix}-${var.short_aws_region}%s-natgw-%s",
         substr(element(var.azs, var.single_nat_gateway ? 0 : count.index),
           length(element(var.azs, var.single_nat_gateway ? 0 : count.index)) - 1, 1
-        )
+        ),
+        var.nat_gateway_suffix
       )
     },
     var.tags,

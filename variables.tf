@@ -1263,6 +1263,12 @@ variable "enable_tgw_nat_gateway" {
   default     = false
 }
 
+variable "nat_gateway_suffix" {
+  description = "Suffix to append to AWS NAT gateway name"
+  type        = string
+  default     = "main"
+}
+
 ################################################################################
 # Customer Gateways
 ################################################################################
