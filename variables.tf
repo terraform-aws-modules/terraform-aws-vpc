@@ -1796,6 +1796,12 @@ variable "create_multiple_tgw_route_tables" {
   default     = true
 }
 
+variable "enable_appliance_mode_support" {
+  description = "Enable/disable support for appliance mode for the TGW attachment. Default:; `false`"
+  type        = bool
+  default     = false
+}
+
 ################################################################################
 # TGW Network ACLs
 ################################################################################
