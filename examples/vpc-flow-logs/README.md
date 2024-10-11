@@ -18,7 +18,7 @@ $ terraform apply
 
 Note that this example may create resources which can cost money (AWS Elastic IP, for example). Run `terraform destroy` when you don't need these resources.
 
-<!-- BEGINNING OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
+<!-- BEGIN_TF_DOCS -->
 ## Requirements
 
 | Name | Version |
@@ -78,4 +78,4 @@ No inputs.
 | <a name="output_vpc_with_flow_logs_cloudwatch_logs_vpc_flow_log_destination_arn"></a> [vpc\_with\_flow\_logs\_cloudwatch\_logs\_vpc\_flow\_log\_destination\_arn](#output\_vpc\_with\_flow\_logs\_cloudwatch\_logs\_vpc\_flow\_log\_destination\_arn) | The ARN of the destination for VPC Flow Logs |
 | <a name="output_vpc_with_flow_logs_cloudwatch_logs_vpc_flow_log_destination_type"></a> [vpc\_with\_flow\_logs\_cloudwatch\_logs\_vpc\_flow\_log\_destination\_type](#output\_vpc\_with\_flow\_logs\_cloudwatch\_logs\_vpc\_flow\_log\_destination\_type) | The type of the destination for VPC Flow Logs |
 | <a name="output_vpc_with_flow_logs_cloudwatch_logs_vpc_flow_log_id"></a> [vpc\_with\_flow\_logs\_cloudwatch\_logs\_vpc\_flow\_log\_id](#output\_vpc\_with\_flow\_logs\_cloudwatch\_logs\_vpc\_flow\_log\_id) | The ID of the Flow Log resource |
-<!-- END OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
+<!-- END_TF_DOCS -->
