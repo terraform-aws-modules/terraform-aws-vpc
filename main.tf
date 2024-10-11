@@ -274,6 +274,8 @@ resource "aws_route_table" "private" {
     },
     var.tags,
     var.private_route_table_tags,
+    lookup(var.private_route_table_tags_per_az, element(var.azs, count.index), {})
+
   )
 }
 
@@ -1096,6 +1098,7 @@ resource "aws_nat_gateway" "this" {
     },
     var.tags,
     var.nat_gateway_tags,
+    lookup(var.nat_gateway_tags_per_az, element(var.azs, count.index), {})
   )
 
   depends_on = [aws_internet_gateway.this]
