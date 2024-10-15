@@ -262,6 +262,12 @@ variable "public_route_table_tags" {
   default     = {}
 }
 
+variable "enable_public_igw_route" {
+  description = "Controls if public route tables should have route to internet gateway."
+  type        = bool
+  default     = true
+}
+
 ################################################################################
 # Public Network ACLs
 ################################################################################
