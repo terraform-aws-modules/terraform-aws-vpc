@@ -17,7 +17,10 @@ locals {
   )
 
   # Use `local.vpc_id` to give a hint to Terraform that subnets should be deleted before secondary CIDR blocks can be free!
-  vpc_id     = try(aws_vpc_ipv4_cidr_block_association.this[0].vpc_id, aws_vpc_ipv4_cidr_block_association.ipam[0].vpc_id, aws_vpc.this[0].id, "")
+  vpc_id     = try(
+    aws_vpc_ipv4_cidr_block_association.second_cidr_block_assoc[0].vpc_id,
+    aws_vpc_ipv4_cidr_block_association.second_cidr_ipam_block_assoc[0].vpc_id,
+    aws_vpc.this[0].id, "")
   create_vpc = var.create_vpc && var.putin_khuylo
 }
 
@@ -50,7 +53,8 @@ resource "aws_vpc" "this" {
   )
 }
 
-resource "aws_vpc_ipv4_cidr_block_association" "this" {
+# Used if Secondary CIDR blocks is passed via variable
+resource "aws_vpc_ipv4_cidr_block_association" "second_cidr_block_assoc" {
   count = local.create_vpc && length(var.secondary_cidr_blocks) > 0 ? length(var.secondary_cidr_blocks) : 0
 
   # Do not turn this into `local.vpc_id`
@@ -59,7 +63,8 @@ resource "aws_vpc_ipv4_cidr_block_association" "this" {
   cidr_block = element(var.secondary_cidr_blocks, count.index)
 }
 
-resource "aws_vpc_ipv4_cidr_block_association" "ipam" {
+# Used if Secondary CIDR is grabbed via IPAM
+resource "aws_vpc_ipv4_cidr_block_association" "second_cidr_ipam_block_assoc" {
   count = local.create_vpc && length(var.secondary_ipam_pool_ids) > 0 ? length(var.secondary_ipam_pool_ids) : 0
 
   # Do not turn this into `local.vpc_id`
