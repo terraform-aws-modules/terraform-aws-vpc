@@ -4,10 +4,18 @@ This is a (*small*) list of changes that exist between our version of the code a
 
 In case you want to have an actual detailed diff, please use the following link: [**Comparing `our_fork/ocp-maps-main` with `original_fork/v5.13.0`**](https://github.com/spring-media/terraform-aws-vpc/compare/ocp-maps-main...terraform-aws-modules%3Aterraform-aws-vpc%3Av5.13.0)
 
-[!CAUTION]
-Please not that the above comparison is using version `v5.13.0`. In case we pull more upstream changes we need to update this page and the previous link!
+> [!CAUTION]
+> Please not that the above comparison is using version `v5.13.0`. In case we pull more upstream changes we need to update this page and the previous link!
 
-# List of Changes
+## Reason For Changes
+
+There are two main changes from the upstream code that are worth discussing:
+- **naming**
+  - By having our naming convention in this module, we ensure it is used everywhere we create a VPC using this module
+- **TGW Attachment and its subnets**
+  - By having this code here, we ensure the TGW Attachment subnets are created with the same logic as the other subnets, and at the same time
+
+## List of Changes
 
 - **Transit Gateway Attachment Subnet Creation** - [tgw.tf](./tgw.tf)
   - We now have a separate file that creates
