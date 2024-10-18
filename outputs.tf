@@ -71,12 +71,12 @@ output "vpc_ipv6_cidr_block" {
 
 output "vpc_secondary_cidr_blocks" {
   description = "List of secondary CIDR blocks of the VPC"
-  value       = compact(aws_vpc_ipv4_cidr_block_association.this[*].cidr_block)
+  value       = compact(aws_vpc_ipv4_cidr_block_association.second_cidr_block_assoc[*].cidr_block)
 }
 
 output "vpc_secondary_cidr_blocks_ipam" {
   description = "List of secondary CIDR blocks allocated from the IPAM for the VPC"
-  value       = compact(aws_vpc_ipv4_cidr_block_association.ipam[*].cidr_block)
+  value       = compact(aws_vpc_ipv4_cidr_block_association.second_cidr_ipam_block_assoc[*].cidr_block)
 }
 
 output "vpc_owner_id" {
