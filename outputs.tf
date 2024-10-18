@@ -105,6 +105,11 @@ output "igw_arn" {
 # Publiс Subnets
 ################################################################################
 
+output "public_subnet_objects" {
+  description = "A list of all public subnets, containing the full objects."
+  value       = aws_subnet.public
+}
+
 output "public_subnets" {
   description = "List of IDs of public subnets"
   value       = aws_subnet.public[*].id
@@ -158,6 +163,11 @@ output "public_network_acl_arn" {
 ################################################################################
 # Private Subnets
 ################################################################################
+
+output "private_subnet_objects" {
+  description = "A list of all private subnets, containing the full objects."
+  value       = aws_subnet.private
+}
 
 output "private_subnets" {
   description = "List of IDs of private subnets"
@@ -213,6 +223,11 @@ output "private_network_acl_arn" {
 # Outpost Subnets
 ################################################################################
 
+output "outpost_subnet_objects" {
+  description = "A list of all outpost subnets, containing the full objects."
+  value       = aws_subnet.outpost
+}
+
 output "outpost_subnets" {
   description = "List of IDs of outpost subnets"
   value       = aws_subnet.outpost[*].id
@@ -246,6 +261,11 @@ output "outpost_network_acl_arn" {
 ################################################################################
 # Database Subnets
 ################################################################################
+
+output "database_subnet_objects" {
+  description = "A list of all database subnets, containing the full objects."
+  value       = aws_subnet.database
+}
 
 output "database_subnets" {
   description = "List of IDs of database subnets"
@@ -317,6 +337,11 @@ output "database_network_acl_arn" {
 # Redshift Subnets
 ################################################################################
 
+output "redshift_subnet_objects" {
+  description = "A list of all redshift subnets, containing the full objects."
+  value       = aws_subnet.redshift
+}
+
 output "redshift_subnets" {
   description = "List of IDs of redshift subnets"
   value       = aws_subnet.redshift[*].id
@@ -371,6 +396,11 @@ output "redshift_network_acl_arn" {
 # Elasticache Subnets
 ################################################################################
 
+output "elasticache_subnet_objects" {
+  description = "A list of all elasticache subnets, containing the full objects."
+  value       = aws_subnet.elasticache
+}
+
 output "elasticache_subnets" {
   description = "List of IDs of elasticache subnets"
   value       = aws_subnet.elasticache[*].id
@@ -424,6 +454,11 @@ output "elasticache_network_acl_arn" {
 ################################################################################
 # Intra Subnets
 ################################################################################
+
+output "intra_subnet_objects" {
+  description = "A list of all intra subnets, containing the full objects."
+  value       = aws_subnet.intra
+}
 
 output "intra_subnets" {
   description = "List of IDs of intra subnets"
