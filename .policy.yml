@@ -1,0 +1,4 @@
+---
+remote: nrkno/nrk-bot-configs
+path: admin-groups/iac-admins/policy-bot/policy-bot.yaml
+ref: main

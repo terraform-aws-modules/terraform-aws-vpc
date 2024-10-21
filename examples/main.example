@@ -1,0 +1,8 @@
+module "some-module" {
+  source  = "terraform-registry.nrk.cloud/nrkno/iac-terraform-module-template/generic"
+  version = "1.0.0"
+
+  argument1 = "value"
+  argument2 = "value"
+  argument3 = "value"
+}

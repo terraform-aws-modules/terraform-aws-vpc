@@ -1,0 +1,56 @@
+{
+  "required_status_checks": {
+    "strict": true,
+    "checks": [
+      {
+        "context": "Terraform / Config Validation in ."
+      },
+      {
+        "context": "Terraform / Trivy Vulnerability Scan in ."
+      },
+      {
+        "context": "lint_release / Commit lint"
+      },
+      {
+        "context": "Terraform / Render terraform docs in ."
+      }
+    ]
+  },
+  "restrictions": {
+    "users": [],
+    "teams": [
+      "IaC-Admins"
+    ],
+    "apps": [
+      "NRKno-Bulldozer"
+    ]
+  },
+  "required_pull_request_reviews": {
+    "dismissal_restrictions": {
+      "users": [],
+      "teams": [
+        "IaC-Admins"
+      ],
+      "apps": [
+        "NRKno-Bulldozer"
+      ]
+    },
+    "dismiss_stale_reviews": true,
+    "bypass_pull_request_allowances": {
+      "users": [],
+      "teams": [],
+      "apps": []
+    },
+    "require_code_owner_reviews": true,
+    "require_last_push_approval": false,
+    "required_approving_review_count": 1
+  },
+  "enforce_admins": true,
+  "required_linear_history": true,
+  "allow_force_pushes": false,
+  "allow_deletions": false,
+  "block_creations": true,
+  "required_conversation_resolution": true,
+  "lock_branch": false,
+  "allow_fork_syncing": false
+}

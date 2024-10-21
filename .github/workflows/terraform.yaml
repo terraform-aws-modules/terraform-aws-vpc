@@ -1,0 +1,21 @@
+---
+on:
+  pull_request:
+    branches:
+      - main
+
+permissions:
+  id-token: write
+  contents: read
+  pull-requests: write
+
+jobs:
+  terraform:
+    name: Terraform
+    uses: nrkno/github-workflow-terraform-config/.github/workflows/workflow.yaml@v4.60.1
+    with:
+      terraform-docs-fail-on-diff: false
+      working-directory: .
+      trivy-ignore-files: .trivyignore
+    secrets:
+      registries: "terraform-registry.nrk.cloud=${{ secrets.PLATTFORM_TERRAFORM_REGISTRY_NRK_CLOUD }}"
