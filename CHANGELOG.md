@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [5.15.0](https://github.com/terraform-aws-modules/terraform-aws-vpc/compare/v5.14.0...v5.15.0) (2024-11-03)
+
+
+### Features
+
+* Add option to create/delete NAT Gateway route for private route tables ([#1127](https://github.com/terraform-aws-modules/terraform-aws-vpc/issues/1127)) ([f02a1af](https://github.com/terraform-aws-modules/terraform-aws-vpc/commit/f02a1af5aedc550c81048cfa880153bedf2a006d))
+
 ## [5.14.0](https://github.com/terraform-aws-modules/terraform-aws-vpc/compare/v5.13.0...v5.14.0) (2024-10-18)
 
 
