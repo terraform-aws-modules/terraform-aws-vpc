@@ -372,6 +372,12 @@ variable "private_subnet_suffix" {
   default     = "private"
 }
 
+variable "create_private_nat_gateway_route" {
+  description = "Controls if a nat gateway route should be created to give internet access to the private subnets"
+  type        = bool
+  default     = true
+}
+
 variable "private_subnet_tags" {
   description = "Additional tags for the private subnets"
   type        = map(string)
