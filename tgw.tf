@@ -157,10 +157,11 @@ resource "aws_network_acl_rule" "tgw_outbound" {
 resource "aws_ec2_transit_gateway_vpc_attachment" "tgw" {
   count = var.enable_tgw_attachment ? 1 : 0
 
-  subnet_ids             = aws_subnet.tgw[*].id
-  transit_gateway_id     = var.transit_gateway_id
-  vpc_id                 = local.vpc_id
-  appliance_mode_support = try(var.enable_appliance_mode_support, false) ? "enable" : "disable"
+  subnet_ids                         = aws_subnet.tgw[*].id
+  transit_gateway_id                 = var.transit_gateway_id
+  vpc_id                             = local.vpc_id
+  appliance_mode_support             = try(var.enable_appliance_mode_support, false) ? "enable" : "disable"
+  security_group_referencing_support = var.security_group_referencing_support
 
   tags = merge(
     { Name = "${var.name_prefix}-${var.short_aws_region}-tgw-att-${var.tgw_att_suffix}" }

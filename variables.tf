@@ -1797,9 +1797,15 @@ variable "create_multiple_tgw_route_tables" {
 }
 
 variable "enable_appliance_mode_support" {
-  description = "Enable/disable support for appliance mode for the TGW attachment. Default:; `false`"
+  description = "Enable/disable support for appliance mode for the TGW attachment. Default: `false`"
   type        = bool
   default     = false
+}
+
+variable "security_group_referencing_support" {
+  description = "Enable/disable support for security group referencing for the TGW attachment. Default: `enable`"
+  type        = string
+  default     = "enable"
 }
 
 ################################################################################
