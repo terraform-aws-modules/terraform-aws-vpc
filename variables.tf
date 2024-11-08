@@ -1210,6 +1210,12 @@ variable "single_nat_gateway" {
   default     = false
 }
 
+variable "single_nat_gateway_subnet_index" {
+  description = "The index of the public subnet used for the NAT Gateway. Only used when `single_nat_gateway` is true"
+  type        = number
+  default     = 0
+}
+
 variable "one_nat_gateway_per_az" {
   description = "Should be true if you want only one NAT Gateway per availability zone. Requires `var.azs` to be set, and the number of `public_subnets` created to be greater than or equal to the number of availability zones specified in `var.azs`"
   type        = bool
