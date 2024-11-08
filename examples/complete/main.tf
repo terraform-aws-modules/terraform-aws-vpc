@@ -54,6 +54,8 @@ module "vpc" {
   enable_nat_gateway = true
   single_nat_gateway = true
 
+  single_nat_gateway_subnet_index = 1
+
   customer_gateways = {
     IP1 = {
       bgp_asn     = 65112
