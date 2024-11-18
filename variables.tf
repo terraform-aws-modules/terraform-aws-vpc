@@ -1597,6 +1597,16 @@ variable "create_flow_log_cloudwatch_iam_role" {
   default     = false
 }
 
+variable "flow_log_cloudwatch_iam_role_conditions" {
+  description = "Additional conditions of the CloudWatch role assumption policy"
+  type = list(object({
+    test     = string
+    variable = string
+    values   = list(string)
+  }))
+  default = []
+}
+
 variable "flow_log_cloudwatch_iam_role_arn" {
   description = "The ARN for the IAM role that's used to post flow logs to a CloudWatch Logs log group. When flow_log_destination_arn is set to ARN of Cloudwatch Logs, this argument needs to be provided"
   type        = string
