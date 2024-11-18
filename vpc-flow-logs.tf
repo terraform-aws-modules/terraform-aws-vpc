@@ -100,6 +100,15 @@ data "aws_iam_policy_document" "flow_log_cloudwatch_assume_role" {
     effect = "Allow"
 
     actions = ["sts:AssumeRole"]
+
+    dynamic "condition" {
+      for_each = var.flow_log_cloudwatch_iam_role_conditions
+      content {
+        test     = condition.value.test
+        variable = condition.value.variable
+        values   = condition.value.values
+      }
+    }
   }
 }
 

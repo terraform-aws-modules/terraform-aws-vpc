@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [5.16.0](https://github.com/terraform-aws-modules/terraform-aws-vpc/compare/v5.15.0...v5.16.0) (2024-11-18)
+
+
+### Features
+
+* Added additional conditions into Flow Log IAM Role Assumption Policy ([#1138](https://github.com/terraform-aws-modules/terraform-aws-vpc/issues/1138)) ([7744d3f](https://github.com/terraform-aws-modules/terraform-aws-vpc/commit/7744d3fea63db36bcb15485f3694c0646be44da0))
+
 ## [5.15.0](https://github.com/terraform-aws-modules/terraform-aws-vpc/compare/v5.14.0...v5.15.0) (2024-11-03)
 
 
