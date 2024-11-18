@@ -1084,14 +1084,14 @@ resource "aws_nat_gateway" "this" {
   )
   subnet_id = element(
     aws_subnet.public[*].id,
-    var.single_nat_gateway ? 0 : count.index,
+    var.single_nat_gateway ? var.single_nat_gateway_subnet_index : count.index,
   )
 
   tags = merge(
     {
-      "Name" = format(
+      "Name" = var.single_nat_gateway ? var.name : format(
         "${var.name}-%s",
-        element(var.azs, var.single_nat_gateway ? 0 : count.index),
+        element(var.azs, count.index),
       )
     },
     var.tags,
