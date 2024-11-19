@@ -1252,6 +1252,12 @@ variable "nat_gateway_tags" {
   default     = {}
 }
 
+variable "nat_gateway_tags_per_az" {
+  description = "Additional tags for the NAT gateways where the primary key is the AZ"
+  type        = map(map(string))
+  default     = {}
+}
+
 variable "nat_eip_tags" {
   description = "Additional tags for the NAT EIP"
   type        = map(string)
