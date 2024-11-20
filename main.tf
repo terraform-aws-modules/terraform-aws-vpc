@@ -278,7 +278,7 @@ resource "aws_route_table" "private" {
 }
 
 resource "aws_route_table_association" "private" {
-  count = local.create_private_subnets ? local.len_private_subnets : 0
+  count = local.create_private_subnets && var.enable_nat_gateway ? local.len_private_subnets : 0
 
   subnet_id = element(aws_subnet.private[*].id, count.index)
   route_table_id = element(
@@ -412,7 +412,7 @@ resource "aws_route_table" "database" {
 }
 
 resource "aws_route_table_association" "database" {
-  count = local.create_database_subnets ? local.len_database_subnets : 0
+  count = local.create_database_subnets && var.enable_nat_gateway ? local.len_database_subnets : 0
 
   subnet_id = element(aws_subnet.database[*].id, count.index)
   route_table_id = element(
@@ -724,7 +724,7 @@ resource "aws_route_table" "elasticache" {
 }
 
 resource "aws_route_table_association" "elasticache" {
-  count = local.create_elasticache_subnets ? local.len_elasticache_subnets : 0
+  count = local.create_elasticache_subnets && var.enable_nat_gateway ? local.len_elasticache_subnets : 0
 
   subnet_id = element(aws_subnet.elasticache[*].id, count.index)
   route_table_id = element(
