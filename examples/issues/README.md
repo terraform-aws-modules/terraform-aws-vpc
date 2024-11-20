@@ -19,19 +19,19 @@ $ terraform apply
 
 Note that this example may create resources which can cost money (AWS Elastic IP, for example). Run `terraform destroy` when you don't need these resources.
 
-<!-- BEGINNING OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
+<!-- BEGIN_TF_DOCS -->
 ## Requirements
 
 | Name | Version |
 |------|---------|
 | <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 1.0 |
-| <a name="requirement_aws"></a> [aws](#requirement\_aws) | >= 5.30 |
+| <a name="requirement_aws"></a> [aws](#requirement\_aws) | >= 5.46 |
 
 ## Providers
 
 | Name | Version |
 |------|---------|
-| <a name="provider_aws"></a> [aws](#provider\_aws) | >= 5.30 |
+| <a name="provider_aws"></a> [aws](#provider\_aws) | >= 5.46 |
 
 ## Modules
 
@@ -73,4 +73,4 @@ No inputs.
 | <a name="output_issue_46_private_subnets"></a> [issue\_46\_private\_subnets](#output\_issue\_46\_private\_subnets) | List of IDs of private subnets |
 | <a name="output_issue_46_public_subnets"></a> [issue\_46\_public\_subnets](#output\_issue\_46\_public\_subnets) | List of IDs of public subnets |
 | <a name="output_issue_46_vpc_id"></a> [issue\_46\_vpc\_id](#output\_issue\_46\_vpc\_id) | The ID of the VPC |
-<!-- END OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
+<!-- END_TF_DOCS -->

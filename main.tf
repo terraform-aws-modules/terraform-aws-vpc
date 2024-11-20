@@ -66,11 +66,12 @@ resource "aws_vpc_ipv4_cidr_block_association" "this" {
 resource "aws_vpc_dhcp_options" "this" {
   count = local.create_vpc && var.enable_dhcp_options ? 1 : 0
 
-  domain_name          = var.dhcp_options_domain_name
-  domain_name_servers  = var.dhcp_options_domain_name_servers
-  ntp_servers          = var.dhcp_options_ntp_servers
-  netbios_name_servers = var.dhcp_options_netbios_name_servers
-  netbios_node_type    = var.dhcp_options_netbios_node_type
+  domain_name                       = var.dhcp_options_domain_name
+  domain_name_servers               = var.dhcp_options_domain_name_servers
+  ntp_servers                       = var.dhcp_options_ntp_servers
+  netbios_name_servers              = var.dhcp_options_netbios_name_servers
+  netbios_node_type                 = var.dhcp_options_netbios_node_type
+  ipv6_address_preferred_lease_time = var.dhcp_options_ipv6_address_preferred_lease_time
 
   tags = merge(
     { "Name" = var.name },
@@ -152,9 +153,9 @@ resource "aws_route_table_association" "public" {
 }
 
 resource "aws_route" "public_internet_gateway" {
-  count = local.create_public_subnets && var.create_igw ? 1 : 0
+  count = local.create_public_subnets && var.create_igw ? local.num_public_route_tables : 0
 
-  route_table_id         = aws_route_table.public[0].id
+  route_table_id         = aws_route_table.public[count.index].id
   destination_cidr_block = "0.0.0.0/0"
   gateway_id             = aws_internet_gateway.this[0].id
 
@@ -164,9 +165,9 @@ resource "aws_route" "public_internet_gateway" {
 }
 
 resource "aws_route" "public_internet_gateway_ipv6" {
-  count = local.create_public_subnets && var.create_igw && var.enable_ipv6 ? 1 : 0
+  count = local.create_public_subnets && var.create_igw && var.enable_ipv6 ? local.num_public_route_tables : 0
 
-  route_table_id              = aws_route_table.public[0].id
+  route_table_id              = aws_route_table.public[count.index].id
   destination_ipv6_cidr_block = "::/0"
   gateway_id                  = aws_internet_gateway.this[0].id
 }
@@ -1101,7 +1102,7 @@ resource "aws_nat_gateway" "this" {
 }
 
 resource "aws_route" "private_nat_gateway" {
-  count = local.create_vpc && var.enable_nat_gateway ? local.nat_gateway_count : 0
+  count = local.create_vpc && var.enable_nat_gateway && var.create_private_nat_gateway_route ? local.nat_gateway_count : 0
 
   route_table_id         = element(aws_route_table.private[*].id, count.index)
   destination_cidr_block = var.nat_gateway_destination_cidr_block

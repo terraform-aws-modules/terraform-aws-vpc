@@ -18,20 +18,20 @@ $ terraform apply
 
 Note that this example may create resources which can cost money (AWS Elastic IP, for example). Run `terraform destroy` when you don't need these resources.
 
-<!-- BEGINNING OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
+<!-- BEGIN_TF_DOCS -->
 ## Requirements
 
 | Name | Version |
 |------|---------|
 | <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 1.0 |
-| <a name="requirement_aws"></a> [aws](#requirement\_aws) | >= 5.30 |
+| <a name="requirement_aws"></a> [aws](#requirement\_aws) | >= 5.46 |
 | <a name="requirement_random"></a> [random](#requirement\_random) | >= 2.0 |
 
 ## Providers
 
 | Name | Version |
 |------|---------|
-| <a name="provider_aws"></a> [aws](#provider\_aws) | >= 5.30 |
+| <a name="provider_aws"></a> [aws](#provider\_aws) | >= 5.46 |
 | <a name="provider_random"></a> [random](#provider\_random) | >= 2.0 |
 
 ## Modules
@@ -41,6 +41,7 @@ Note that this example may create resources which can cost money (AWS Elastic IP
 | <a name="module_s3_bucket"></a> [s3\_bucket](#module\_s3\_bucket) | terraform-aws-modules/s3-bucket/aws | ~> 3.0 |
 | <a name="module_vpc_with_flow_logs_cloudwatch_logs"></a> [vpc\_with\_flow\_logs\_cloudwatch\_logs](#module\_vpc\_with\_flow\_logs\_cloudwatch\_logs) | ../../ | n/a |
 | <a name="module_vpc_with_flow_logs_cloudwatch_logs_default"></a> [vpc\_with\_flow\_logs\_cloudwatch\_logs\_default](#module\_vpc\_with\_flow\_logs\_cloudwatch\_logs\_default) | ../../ | n/a |
+| <a name="module_vpc_with_flow_logs_cloudwatch_logs_prefix"></a> [vpc\_with\_flow\_logs\_cloudwatch\_logs\_prefix](#module\_vpc\_with\_flow\_logs\_cloudwatch\_logs\_prefix) | ../../ | n/a |
 | <a name="module_vpc_with_flow_logs_s3_bucket"></a> [vpc\_with\_flow\_logs\_s3\_bucket](#module\_vpc\_with\_flow\_logs\_s3\_bucket) | ../../ | n/a |
 | <a name="module_vpc_with_flow_logs_s3_bucket_parquet"></a> [vpc\_with\_flow\_logs\_s3\_bucket\_parquet](#module\_vpc\_with\_flow\_logs\_s3\_bucket\_parquet) | ../../ | n/a |
 
@@ -77,4 +78,4 @@ No inputs.
 | <a name="output_vpc_with_flow_logs_cloudwatch_logs_vpc_flow_log_destination_arn"></a> [vpc\_with\_flow\_logs\_cloudwatch\_logs\_vpc\_flow\_log\_destination\_arn](#output\_vpc\_with\_flow\_logs\_cloudwatch\_logs\_vpc\_flow\_log\_destination\_arn) | The ARN of the destination for VPC Flow Logs |
 | <a name="output_vpc_with_flow_logs_cloudwatch_logs_vpc_flow_log_destination_type"></a> [vpc\_with\_flow\_logs\_cloudwatch\_logs\_vpc\_flow\_log\_destination\_type](#output\_vpc\_with\_flow\_logs\_cloudwatch\_logs\_vpc\_flow\_log\_destination\_type) | The type of the destination for VPC Flow Logs |
 | <a name="output_vpc_with_flow_logs_cloudwatch_logs_vpc_flow_log_id"></a> [vpc\_with\_flow\_logs\_cloudwatch\_logs\_vpc\_flow\_log\_id](#output\_vpc\_with\_flow\_logs\_cloudwatch\_logs\_vpc\_flow\_log\_id) | The ID of the Flow Log resource |
-<!-- END OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
+<!-- END_TF_DOCS -->

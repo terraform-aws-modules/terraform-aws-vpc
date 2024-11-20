@@ -2,6 +2,74 @@
 
 All notable changes to this project will be documented in this file.
 
+## [5.16.0](https://github.com/terraform-aws-modules/terraform-aws-vpc/compare/v5.15.0...v5.16.0) (2024-11-18)
+
+
+### Features
+
+* Added additional conditions into Flow Log IAM Role Assumption Policy ([#1138](https://github.com/terraform-aws-modules/terraform-aws-vpc/issues/1138)) ([7744d3f](https://github.com/terraform-aws-modules/terraform-aws-vpc/commit/7744d3fea63db36bcb15485f3694c0646be44da0))
+
+## [5.15.0](https://github.com/terraform-aws-modules/terraform-aws-vpc/compare/v5.14.0...v5.15.0) (2024-11-03)
+
+
+### Features
+
+* Add option to create/delete NAT Gateway route for private route tables ([#1127](https://github.com/terraform-aws-modules/terraform-aws-vpc/issues/1127)) ([f02a1af](https://github.com/terraform-aws-modules/terraform-aws-vpc/commit/f02a1af5aedc550c81048cfa880153bedf2a006d))
+
+## [5.14.0](https://github.com/terraform-aws-modules/terraform-aws-vpc/compare/v5.13.0...v5.14.0) (2024-10-18)
+
+
+### Features
+
+* Add outputs for the full list of subnets created and their attributes ([#1116](https://github.com/terraform-aws-modules/terraform-aws-vpc/issues/1116)) ([e212245](https://github.com/terraform-aws-modules/terraform-aws-vpc/commit/e2122450fa816fb844e987485f2b8804606576dd))
+
+
+### Bug Fixes
+
+* Update CI workflow versions to latest ([#1125](https://github.com/terraform-aws-modules/terraform-aws-vpc/issues/1125)) ([b1f2125](https://github.com/terraform-aws-modules/terraform-aws-vpc/commit/b1f2125bf1015bfc3900feda290ade8bd0a7b871))
+
+## [5.13.0](https://github.com/terraform-aws-modules/terraform-aws-vpc/compare/v5.12.1...v5.13.0) (2024-08-16)
+
+
+### Features
+
+* Add support for `ip_address_type` for VPC endpoint ([#1096](https://github.com/terraform-aws-modules/terraform-aws-vpc/issues/1096)) ([d868303](https://github.com/terraform-aws-modules/terraform-aws-vpc/commit/d868303bd78b8c56cf76e2495672d42b256a1387))
+
+## [5.12.1](https://github.com/terraform-aws-modules/terraform-aws-vpc/compare/v5.12.0...v5.12.1) (2024-08-09)
+
+
+### Bug Fixes
+
+* Update flow log ARNs to use partition from aws_partition data source ([#1112](https://github.com/terraform-aws-modules/terraform-aws-vpc/issues/1112)) ([72cde38](https://github.com/terraform-aws-modules/terraform-aws-vpc/commit/72cde38fb5c500323858bb44eaed2924c7f826f9))
+
+## [5.12.0](https://github.com/terraform-aws-modules/terraform-aws-vpc/compare/v5.11.0...v5.12.0) (2024-08-03)
+
+
+### Features
+
+* Restrict flow log policy to use log group ARNs ([#1088](https://github.com/terraform-aws-modules/terraform-aws-vpc/issues/1088)) ([9256722](https://github.com/terraform-aws-modules/terraform-aws-vpc/commit/92567225dc73ef939b86a241b9607cb13329fb75))
+
+## [5.11.0](https://github.com/terraform-aws-modules/terraform-aws-vpc/compare/v5.10.0...v5.11.0) (2024-08-03)
+
+
+### Features
+
+* Add route to `0.0.0.0/0` & `::/0` (when IPv6 is enabled) on all public route tables ([#1100](https://github.com/terraform-aws-modules/terraform-aws-vpc/issues/1100)) ([b3e7803](https://github.com/terraform-aws-modules/terraform-aws-vpc/commit/b3e78033bbee8346341a523f78f762ade41eb93b))
+
+## [5.10.0](https://github.com/terraform-aws-modules/terraform-aws-vpc/compare/v5.9.0...v5.10.0) (2024-08-02)
+
+
+### Features
+
+* Added ipv6_address_preferred_lease_time parameter to aws_vpc_dhcp_options resource ([#1105](https://github.com/terraform-aws-modules/terraform-aws-vpc/issues/1105)) ([3adb594](https://github.com/terraform-aws-modules/terraform-aws-vpc/commit/3adb594bc794468c80a99c5c1808056a88767f45))
+
+## [5.9.0](https://github.com/terraform-aws-modules/terraform-aws-vpc/compare/v5.8.1...v5.9.0) (2024-07-05)
+
+
+### Features
+
+* Allow custom VPC Flow Log IAM Role name and IAM Policy name ([#1089](https://github.com/terraform-aws-modules/terraform-aws-vpc/issues/1089)) ([f8cd168](https://github.com/terraform-aws-modules/terraform-aws-vpc/commit/f8cd1681837c8c4a24af6fe73035724a03e1e66e))
+
 ## [5.8.1](https://github.com/terraform-aws-modules/terraform-aws-vpc/compare/v5.8.0...v5.8.1) (2024-04-26)
 
 

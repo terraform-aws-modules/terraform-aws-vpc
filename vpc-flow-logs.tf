@@ -1,3 +1,18 @@
+data "aws_region" "current" {
+  # Call this API only if create_vpc and enable_flow_log are true
+  count = var.create_vpc && var.enable_flow_log ? 1 : 0
+}
+
+data "aws_caller_identity" "current" {
+  # Call this API only if create_vpc and enable_flow_log are true
+  count = var.create_vpc && var.enable_flow_log ? 1 : 0
+}
+
+data "aws_partition" "current" {
+  # Call this API only if create_vpc and enable_flow_log are true
+  count = var.create_vpc && var.enable_flow_log ? 1 : 0
+}
+
 locals {
   # Only create flow log if user selected to create a VPC as well
   enable_flow_log = var.create_vpc && var.enable_flow_log
@@ -8,6 +23,10 @@ locals {
   flow_log_destination_arn                  = local.create_flow_log_cloudwatch_log_group ? try(aws_cloudwatch_log_group.flow_log[0].arn, null) : var.flow_log_destination_arn
   flow_log_iam_role_arn                     = var.flow_log_destination_type != "s3" && local.create_flow_log_cloudwatch_iam_role ? try(aws_iam_role.vpc_flow_log_cloudwatch[0].arn, null) : var.flow_log_cloudwatch_iam_role_arn
   flow_log_cloudwatch_log_group_name_suffix = var.flow_log_cloudwatch_log_group_name_suffix == "" ? local.vpc_id : var.flow_log_cloudwatch_log_group_name_suffix
+  flow_log_group_arns = [
+    for log_group in aws_cloudwatch_log_group.flow_log :
+    "arn:${data.aws_partition.current[0].partition}:logs:${data.aws_region.current[0].name}:${data.aws_caller_identity.current[0].account_id}:log-group:${log_group.name}:*"
+  ]
 }
 
 ################################################################################
@@ -58,7 +77,9 @@ resource "aws_cloudwatch_log_group" "flow_log" {
 resource "aws_iam_role" "vpc_flow_log_cloudwatch" {
   count = local.create_flow_log_cloudwatch_iam_role ? 1 : 0
 
-  name_prefix          = "vpc-flow-log-role-"
+  name        = var.vpc_flow_log_iam_role_use_name_prefix ? null : var.vpc_flow_log_iam_role_name
+  name_prefix = var.vpc_flow_log_iam_role_use_name_prefix ? "${var.vpc_flow_log_iam_role_name}-" : null
+
   assume_role_policy   = data.aws_iam_policy_document.flow_log_cloudwatch_assume_role[0].json
   permissions_boundary = var.vpc_flow_log_permissions_boundary
 
@@ -79,6 +100,15 @@ data "aws_iam_policy_document" "flow_log_cloudwatch_assume_role" {
     effect = "Allow"
 
     actions = ["sts:AssumeRole"]
+
+    dynamic "condition" {
+      for_each = var.flow_log_cloudwatch_iam_role_conditions
+      content {
+        test     = condition.value.test
+        variable = condition.value.variable
+        values   = condition.value.values
+      }
+    }
   }
 }
 
@@ -92,7 +122,8 @@ resource "aws_iam_role_policy_attachment" "vpc_flow_log_cloudwatch" {
 resource "aws_iam_policy" "vpc_flow_log_cloudwatch" {
   count = local.create_flow_log_cloudwatch_iam_role ? 1 : 0
 
-  name_prefix = "vpc-flow-log-to-cloudwatch-"
+  name        = var.vpc_flow_log_iam_policy_use_name_prefix ? null : var.vpc_flow_log_iam_policy_name
+  name_prefix = var.vpc_flow_log_iam_policy_use_name_prefix ? "${var.vpc_flow_log_iam_policy_name}-" : null
   policy      = data.aws_iam_policy_document.vpc_flow_log_cloudwatch[0].json
   tags        = merge(var.tags, var.vpc_flow_log_tags)
 }
@@ -112,6 +143,6 @@ data "aws_iam_policy_document" "vpc_flow_log_cloudwatch" {
       "logs:DescribeLogStreams",
     ]
 
-    resources = ["*"]
+    resources = local.flow_log_group_arns
   }
 }
