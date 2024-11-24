@@ -229,6 +229,22 @@ resource "aws_network_acl_rule" "public_outbound" {
 
 locals {
   create_private_subnets = local.create_vpc && local.len_private_subnets > 0
+
+  private_route_table_routes_map = {
+    for rt_id, routes in var.private_route_table_routes :
+    rt_id => [
+      for idx, route in routes : {
+        key            = "${rt_id}-${idx}"
+        route_table_id = rt_id
+        route          = route
+      }
+    ]
+  }
+
+  private_route_table_routes_flat = {
+    for route_item in flatten(values(local.private_route_table_routes_map)) :
+    route_item.key => route_item
+  }
 }
 
 resource "aws_subnet" "private" {
@@ -285,6 +301,24 @@ resource "aws_route_table_association" "private" {
     aws_route_table.private[*].id,
     var.single_nat_gateway ? 0 : count.index,
   )
+}
+
+resource "aws_route" "private_route_table_routes" {
+  for_each = local.private_route_table_routes_flat
+
+  route_table_id = each.value.route_table_id
+
+  # Route attributes
+  destination_cidr_block        = lookup(each.value.route, "destination_cidr_block", null)
+  destination_ipv6_cidr_block   = lookup(each.value.route, "destination_ipv6_cidr_block", null)
+  egress_only_gateway_id        = lookup(each.value.route, "egress_only_gateway_id", null)
+  gateway_id                    = lookup(each.value.route, "gateway_id", null)
+  nat_gateway_id                = lookup(each.value.route, "nat_gateway_id", null)
+  transit_gateway_id            = lookup(each.value.route, "transit_gateway_id", null)
+  vpc_peering_connection_id     = lookup(each.value.route, "vpc_peering_connection_id", null)
+  local_gateway_id              = lookup(each.value.route, "local_gateway_id", null)
+  carrier_gateway_id            = lookup(each.value.route, "carrier_gateway_id", null)
+  destination_prefix_list_id    = lookup(each.value.route, "destination_prefix_list_id", null)
 }
 
 ################################################################################
