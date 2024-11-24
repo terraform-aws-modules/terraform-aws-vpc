@@ -1,256 +1,198 @@
-# AWS VPC Terraform module
+# terraform-docs
 
-Terraform module which creates VPC resources on AWS.
+[![Build Status](https://github.com/terraform-docs/terraform-docs/workflows/ci/badge.svg)](https://github.com/terraform-docs/terraform-docs/actions) [![GoDoc](https://pkg.go.dev/badge/github.com/terraform-docs/terraform-docs)](https://pkg.go.dev/github.com/terraform-docs/terraform-docs) [![Go Report Card](https://goreportcard.com/badge/github.com/terraform-docs/terraform-docs)](https://goreportcard.com/report/github.com/terraform-docs/terraform-docs) [![Codecov Report](https://codecov.io/gh/terraform-docs/terraform-docs/branch/master/graph/badge.svg)](https://codecov.io/gh/terraform-docs/terraform-docs) [![License](https://img.shields.io/github/license/terraform-docs/terraform-docs)](https://github.com/terraform-docs/terraform-docs/blob/master/LICENSE) [![Latest release](https://img.shields.io/github/v/release/terraform-docs/terraform-docs)](https://github.com/terraform-docs/terraform-docs/releases)
 
-[![SWUbanner](https://raw.githubusercontent.com/vshymanskyy/StandWithUkraine/main/banner2-direct.svg)](https://github.com/vshymanskyy/StandWithUkraine/blob/main/docs/README.md)
+![terraform-docs-teaser](./images/terraform-docs-teaser.png)
+
+## What is terraform-docs
+
+A utility to generate documentation from Terraform modules in various output formats.
+
+## Installation
+
+macOS users can install using [Homebrew]:
+
+```bash
+brew install terraform-docs
+```
+
+or
+
+```bash
+brew install terraform-docs/tap/terraform-docs
+```
+
+Windows users can install using [Scoop]:
+
+```bash
+scoop bucket add terraform-docs https://github.com/terraform-docs/scoop-bucket
+scoop install terraform-docs
+```
+
+or [Chocolatey]:
+
+```bash
+choco install terraform-docs
+```
+
+Stable binaries are also available on the [releases] page. To install, download the
+binary for your platform from "Assets" and place this into your `$PATH`:
+
+```bash
+curl -Lo ./terraform-docs.tar.gz https://github.com/terraform-docs/terraform-docs/releases/download/v0.19.0/terraform-docs-v0.19.0-$(uname)-amd64.tar.gz
+tar -xzf terraform-docs.tar.gz
+chmod +x terraform-docs
+mv terraform-docs /usr/local/bin/terraform-docs
+```
+
+**NOTE:** Windows releases are in `ZIP` format.
+
+The latest version can be installed using `go install` or `go get`:
+
+```bash
+# go1.17+
+go install github.com/terraform-docs/terraform-docs@v0.19.0
+```
+
+```bash
+# go1.16
+GO111MODULE="on" go get github.com/terraform-docs/terraform-docs@v0.19.0
+```
+
+**NOTE:** please use the latest Go to do this, minimum `go1.16` is required.
+
+This will put `terraform-docs` in `$(go env GOPATH)/bin`. If you encounter the error
+`terraform-docs: command not found` after installation then you may need to either add
+that directory to your `$PATH` as shown [here] or do a manual installation by cloning
+the repo and run `make build` from the repository which will put `terraform-docs` in:
+
+```bash
+$(go env GOPATH)/src/github.com/terraform-docs/terraform-docs/bin/$(uname | tr '[:upper:]' '[:lower:]')-amd64/terraform-docs
+```
 
 ## Usage
 
-```hcl
-module "vpc" {
-  source = "terraform-aws-modules/vpc/aws"
+### Running the binary directly
 
-  name = "my-vpc"
-  cidr = "10.0.0.0/16"
+To run and generate documentation into README within a directory:
 
-  azs             = ["eu-west-1a", "eu-west-1b", "eu-west-1c"]
-  private_subnets = ["10.0.1.0/24", "10.0.2.0/24", "10.0.3.0/24"]
-  public_subnets  = ["10.0.101.0/24", "10.0.102.0/24", "10.0.103.0/24"]
-
-  enable_nat_gateway = true
-  enable_vpn_gateway = true
-
-  tags = {
-    Terraform = "true"
-    Environment = "dev"
-  }
-}
+```bash
+terraform-docs markdown table --output-file README.md --output-mode inject /path/to/module
 ```
 
-## External NAT Gateway IPs
+Check [`output`] configuration for more details and examples.
 
-By default this module will provision new Elastic IPs for the VPC's NAT Gateways.
-This means that when creating a new VPC, new IPs are allocated, and when that VPC is destroyed those IPs are released.
-Sometimes it is handy to keep the same IPs even after the VPC is destroyed and re-created.
-To that end, it is possible to assign existing IPs to the NAT Gateways.
-This prevents the destruction of the VPC from releasing those IPs, while making it possible that a re-created VPC uses the same IPs.
+### Using docker
 
-To achieve this, allocate the IPs outside the VPC module declaration.
+terraform-docs can be run as a container by mounting a directory with `.tf`
+files in it and run the following command:
 
-```hcl
-resource "aws_eip" "nat" {
-  count = 3
-
-  vpc = true
-}
+```bash
+docker run --rm --volume "$(pwd):/terraform-docs" -u $(id -u) quay.io/terraform-docs/terraform-docs:0.19.0 markdown /terraform-docs
 ```
 
-Then, pass the allocated IPs as a parameter to this module.
+If `output.file` is not enabled for this module, generated output can be redirected
+back to a file:
 
-```hcl
-module "vpc" {
-  source = "terraform-aws-modules/vpc/aws"
-
-  # The rest of arguments are omitted for brevity
-
-  enable_nat_gateway  = true
-  single_nat_gateway  = false
-  reuse_nat_ips       = true                    # <= Skip creation of EIPs for the NAT Gateways
-  external_nat_ip_ids = "${aws_eip.nat.*.id}"   # <= IPs specified here as input to the module
-}
+```bash
+docker run --rm --volume "$(pwd):/terraform-docs" -u $(id -u) quay.io/terraform-docs/terraform-docs:0.19.0 markdown /terraform-docs > doc.md
 ```
 
-Note that in the example we allocate 3 IPs because we will be provisioning 3 NAT Gateways (due to `single_nat_gateway = false` and having 3 subnets).
-If, on the other hand, `single_nat_gateway = true`, then `aws_eip.nat` would only need to allocate 1 IP.
-Passing the IPs into the module is done by setting two variables `reuse_nat_ips = true` and `external_nat_ip_ids = "${aws_eip.nat.*.id}"`.
+**NOTE:** Docker tag `latest` refers to _latest_ stable released version and `edge`
+refers to HEAD of `master` at any given point in time.
 
-## NAT Gateway Scenarios
+### Using GitHub Actions
 
-This module supports three scenarios for creating NAT gateways. Each will be explained in further detail in the corresponding sections.
+To use terraform-docs GitHub Action, configure a YAML workflow file (e.g.
+`.github/workflows/documentation.yml`) with the following:
 
-- One NAT Gateway per subnet (default behavior)
-  - `enable_nat_gateway = true`
-  - `single_nat_gateway = false`
-  - `one_nat_gateway_per_az = false`
-- Single NAT Gateway
-  - `enable_nat_gateway = true`
-  - `single_nat_gateway = true`
-  - `one_nat_gateway_per_az = false`
-- One NAT Gateway per availability zone
-  - `enable_nat_gateway = true`
-  - `single_nat_gateway = false`
-  - `one_nat_gateway_per_az = true`
+```yaml
+name: Generate terraform docs
+on:
+  - pull_request
 
-If both `single_nat_gateway` and `one_nat_gateway_per_az` are set to `true`, then `single_nat_gateway` takes precedence.
+jobs:
+  docs:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+      with:
+        ref: ${{ github.event.pull_request.head.ref }}
 
-### One NAT Gateway per subnet (default)
-
-By default, the module will determine the number of NAT Gateways to create based on the `max()` of the private subnet lists (`database_subnets`, `elasticache_subnets`, `private_subnets`, and `redshift_subnets`). The module **does not** take into account the number of `intra_subnets`, since the latter are designed to have no Internet access via NAT Gateway. For example, if your configuration looks like the following:
-
-```hcl
-database_subnets    = ["10.0.21.0/24", "10.0.22.0/24"]
-elasticache_subnets = ["10.0.31.0/24", "10.0.32.0/24"]
-private_subnets     = ["10.0.1.0/24", "10.0.2.0/24", "10.0.3.0/24", "10.0.4.0/24", "10.0.5.0/24"]
-redshift_subnets    = ["10.0.41.0/24", "10.0.42.0/24"]
-intra_subnets       = ["10.0.51.0/24", "10.0.52.0/24", "10.0.53.0/24"]
+    - name: Render terraform docs and push changes back to PR
+      uses: terraform-docs/gh-actions@main
+      with:
+        working-dir: .
+        output-file: README.md
+        output-method: inject
+        git-push: "true"
 ```
 
-Then `5` NAT Gateways will be created since `5` private subnet CIDR blocks were specified.
+Read more about [terraform-docs GitHub Action] and its configuration and
+examples.
 
-### Single NAT Gateway
+### pre-commit hook
 
-If `single_nat_gateway = true`, then all private subnets will route their Internet traffic through this single NAT gateway. The NAT gateway will be placed in the first public subnet in your `public_subnets` block.
+With pre-commit, you can ensure your Terraform module documentation is kept
+up-to-date each time you make a commit.
 
-### One NAT Gateway per availability zone
+First [install pre-commit] and then create or update a `.pre-commit-config.yaml`
+in the root of your Git repo with at least the following content:
 
-If `one_nat_gateway_per_az = true` and `single_nat_gateway = false`, then the module will place one NAT gateway in each availability zone you specify in `var.azs`. There are some requirements around using this feature flag:
-
-- The variable `var.azs` **must** be specified.
-- The number of public subnet CIDR blocks specified in `public_subnets` **must** be greater than or equal to the number of availability zones specified in `var.azs`. This is to ensure that each NAT Gateway has a dedicated public subnet to deploy to.
-
-## "private" versus "intra" subnets
-
-By default, if NAT Gateways are enabled, private subnets will be configured with routes for Internet traffic that point at the NAT Gateways configured by use of the above options.
-
-If you need private subnets that should have no Internet routing (in the sense of [RFC1918 Category 1 subnets](https://tools.ietf.org/html/rfc1918)), `intra_subnets` should be specified. An example use case is configuration of AWS Lambda functions within a VPC, where AWS Lambda functions only need to pass traffic to internal resources or VPC endpoints for AWS services.
-
-Since AWS Lambda functions allocate Elastic Network Interfaces in proportion to the traffic received ([read more](https://docs.aws.amazon.com/lambda/latest/dg/vpc.html)), it can be useful to allocate a large private subnet for such allocations, while keeping the traffic they generate entirely internal to the VPC.
-
-You can add additional tags with `intra_subnet_tags` as with other subnet types.
-
-## VPC Flow Log
-
-VPC Flow Log allows to capture IP traffic for a specific network interface (ENI), subnet, or entire VPC. This module supports enabling or disabling VPC Flow Logs for entire VPC. If you need to have VPC Flow Logs for subnet or ENI, you have to manage it outside of this module with [aws_flow_log resource](https://www.terraform.io/docs/providers/aws/r/flow_log.html).
-
-### VPC Flow Log Examples
-
-By default `file_format` is `plain-text`. You can also specify `parquet` to have logs written in Apache Parquet format.
-
-```
-flow_log_file_format = "parquet"
+```yaml
+repos:
+  - repo: https://github.com/terraform-docs/terraform-docs
+    rev: "v0.19.0"
+    hooks:
+      - id: terraform-docs-go
+        args: ["markdown", "table", "--output-file", "README.md", "./mymodule/path"]
 ```
 
-### Permissions Boundary
+Then run:
 
-If your organization requires a permissions boundary to be attached to the VPC Flow Log role, make sure that you specify an ARN of the permissions boundary policy as `vpc_flow_log_permissions_boundary` argument. Read more about required [IAM policy for publishing flow logs](https://docs.aws.amazon.com/vpc/latest/userguide/flow-logs-cwl.html#flow-logs-iam).
-
-## Conditional creation
-
-Prior to Terraform 0.13, you were unable to specify `count` in a module block. If you wish to toggle the creation of the module's resources in an older (pre 0.13) version of Terraform, you can use the `create_vpc` argument.
-
-```hcl
-# This VPC will not be created
-module "vpc" {
-  source = "terraform-aws-modules/vpc/aws"
-
-  create_vpc = false
-  # ... omitted
-}
+```bash
+pre-commit install
+pre-commit install-hooks
 ```
 
-## Public access to RDS instances
+Further changes to your module's `.tf` files will cause an update to documentation
+when you make a commit.
 
-Sometimes it is handy to have public access to RDS instances (it is not recommended for production) by specifying these arguments:
+## Configuration
 
-```hcl
-  create_database_subnet_group           = true
-  create_database_subnet_route_table     = true
-  create_database_internet_gateway_route = true
+terraform-docs can be configured with a yaml file. The default name of this file is
+`.terraform-docs.yml` and the path order for locating it is:
 
-  enable_dns_hostnames = true
-  enable_dns_support   = true
-```
+1. root of module directory
+1. `.config/` folder at root of module directory
+1. current directory
+1. `.config/` folder at current directory
+1. `$HOME/.tfdocs.d/`
 
-## Network Access Control Lists (ACL or NACL)
+```yaml
+formatter: "" # this is required
 
-This module can manage network ACL and rules. Once VPC is created, AWS creates the default network ACL, which can be controlled using this module (`manage_default_network_acl = true`).
+version: ""
 
-Also, each type of subnet may have its own network ACL with custom rules per subnet. Eg, set `public_dedicated_network_acl = true` to use dedicated network ACL for the public subnets; set values of `public_inbound_acl_rules` and `public_outbound_acl_rules` to specify all the NACL rules you need to have on public subnets (see `variables.tf` for default values and structures).
+header-from: main.tf
+footer-from: ""
 
-By default, all subnets are associated with the default network ACL.
+recursive:
+  enabled: false
+  path: modules
+  include-main: true
 
-## Public access to Redshift cluster
+sections:
+  hide: []
+  show: []
 
-Sometimes it is handy to have public access to Redshift clusters (for example if you need to access it by Kinesis - VPC endpoint for Kinesis is not yet supported by Redshift) by specifying these arguments:
+content: ""
 
-```hcl
-  enable_public_redshift = true  # <= By default Redshift subnets will be associated with the private route table
-```
-
-## Transit Gateway (TGW) integration
-
-It is possible to integrate this VPC module with [terraform-aws-transit-gateway module](https://github.com/terraform-aws-modules/terraform-aws-transit-gateway) which handles the creation of TGW resources and VPC attachments. See [complete example there](https://github.com/terraform-aws-modules/terraform-aws-transit-gateway/tree/master/examples/complete).
-
-## VPC CIDR from AWS IP Address Manager (IPAM)
-
-It is possible to have your VPC CIDR assigned from an [AWS IPAM Pool](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/vpc_ipam_pool). However, In order to build subnets within this module Terraform must know subnet CIDRs to properly plan the amount of resources to build. Since CIDR is derived by IPAM by calling CreateVpc this is not possible within a module unless cidr is known ahead of time. You can get around this by "previewing" the CIDR and then using that as the subnet values.
-
-_Note: Due to race conditions with `terraform plan`, it is not possible to use `ipv4_netmask_length` or a pools `allocation_default_netmask_length` within this module. You must explicitly set the CIDRs for a pool to use._
-
-```hcl
-# Find the pool RAM shared to your account
-# Info on RAM sharing pools: https://docs.aws.amazon.com/vpc/latest/ipam/share-pool-ipam.html
-data "aws_vpc_ipam_pool" "ipv4_example" {
-  filter {
-    name   = "description"
-    values = ["*mypool*"]
-  }
-
-  filter {
-    name   = "address-family"
-    values = ["ipv4"]
-  }
-}
-
-# Preview next CIDR from pool
-data "aws_vpc_ipam_preview_next_cidr" "previewed_cidr" {
-  ipam_pool_id   = data.aws_vpc_ipam_pool.ipv4_example.id
-  netmask_length = 24
-}
-
-data "aws_region" "current" {}
-
-# Calculate subnet cidrs from previewed IPAM CIDR
-locals {
-  partition       = cidrsubnets(data.aws_vpc_ipam_preview_next_cidr.previewed_cidr.cidr, 2, 2)
-  private_subnets = cidrsubnets(local.partition[0], 2, 2)
-  public_subnets  = cidrsubnets(local.partition[1], 2, 2)
-  azs             = formatlist("${data.aws_region.current.name}%s", ["a", "b"])
-}
-
-module "vpc_cidr_from_ipam" {
-  source            = "terraform-aws-modules/vpc/aws"
-  name              = "vpc-cidr-from-ipam"
-  ipv4_ipam_pool_id = data.aws_vpc_ipam_pool.ipv4_example.id
-  azs               = local.azs
-  cidr              = data.aws_vpc_ipam_preview_next_cidr.previewed_cidr.cidr
-  private_subnets   = local.private_subnets
-  public_subnets    = local.public_subnets
-}
-```
-
-## Examples
-
-- [Complete VPC](https://github.com/terraform-aws-modules/terraform-aws-vpc/tree/master/examples/complete) with VPC Endpoints.
-- [VPC using IPAM](https://github.com/terraform-aws-modules/terraform-aws-vpc/tree/master/examples/ipam)
-- [Dualstack IPv4/IPv6 VPC](https://github.com/terraform-aws-modules/terraform-aws-vpc/tree/master/examples/ipv6-dualstack)
-- [IPv6 only subnets/VPC](https://github.com/terraform-aws-modules/terraform-aws-vpc/tree/master/examples/ipv6-only)
-- [Manage Default VPC](https://github.com/terraform-aws-modules/terraform-aws-vpc/tree/master/examples/manage-default-vpc)
-- [Network ACL](https://github.com/terraform-aws-modules/terraform-aws-vpc/tree/master/examples/network-acls)
-- [VPC with Outpost](https://github.com/terraform-aws-modules/terraform-aws-vpc/tree/master/examples/outpost)
-- [VPC with secondary CIDR blocks](https://github.com/terraform-aws-modules/terraform-aws-vpc/tree/master/examples/secondary-cidr-blocks)
-- [VPC with unique route tables](https://github.com/terraform-aws-modules/terraform-aws-vpc/tree/master/examples/separate-route-tables)
-- [Simple VPC](https://github.com/terraform-aws-modules/terraform-aws-vpc/tree/master/examples/simple)
-- [VPC Flow Logs](https://github.com/terraform-aws-modules/terraform-aws-vpc/tree/master/examples/vpc-flow-logs)
-- [Few tests and edge case examples](https://github.com/terraform-aws-modules/terraform-aws-vpc/tree/master/examples/issues)
-
-## Contributing
-
-Report issues/questions/feature requests on in the [issues](https://github.com/terraform-aws-modules/terraform-aws-vpc/issues/new) section.
-
-Full contributing [guidelines are covered here](.github/contributing.md).
-
-<!-- BEGIN_TF_DOCS -->
+output:
+  file: ""
+  mode: inject
+  template: |-
+    <!-- BEGIN_TF_DOCS -->
 ## Requirements
 
 | Name | Version |
@@ -317,6 +259,7 @@ No modules.
 | [aws_route.private_dns64_nat_gateway](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/route) | resource |
 | [aws_route.private_ipv6_egress](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/route) | resource |
 | [aws_route.private_nat_gateway](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/route) | resource |
+| [aws_route.private_route_table_routes](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/route) | resource |
 | [aws_route.public_internet_gateway](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/route) | resource |
 | [aws_route.public_internet_gateway_ipv6](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/route) | resource |
 | [aws_route_table.database](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/route_table) | resource |
@@ -524,6 +467,7 @@ No modules.
 | <a name="input_private_dedicated_network_acl"></a> [private\_dedicated\_network\_acl](#input\_private\_dedicated\_network\_acl) | Whether to use dedicated network ACL (not default) and custom rules for private subnets | `bool` | `false` | no |
 | <a name="input_private_inbound_acl_rules"></a> [private\_inbound\_acl\_rules](#input\_private\_inbound\_acl\_rules) | Private subnets inbound network ACLs | `list(map(string))` | <pre>[<br/>  {<br/>    "cidr_block": "0.0.0.0/0",<br/>    "from_port": 0,<br/>    "protocol": "-1",<br/>    "rule_action": "allow",<br/>    "rule_number": 100,<br/>    "to_port": 0<br/>  }<br/>]</pre> | no |
 | <a name="input_private_outbound_acl_rules"></a> [private\_outbound\_acl\_rules](#input\_private\_outbound\_acl\_rules) | Private subnets outbound network ACLs | `list(map(string))` | <pre>[<br/>  {<br/>    "cidr_block": "0.0.0.0/0",<br/>    "from_port": 0,<br/>    "protocol": "-1",<br/>    "rule_action": "allow",<br/>    "rule_number": 100,<br/>    "to_port": 0<br/>  }<br/>]</pre> | no |
+| <a name="input_private_route_table_routes"></a> [private\_route\_table\_routes](#input\_private\_route\_table\_routes) | A map of private route table IDs to a list of route objects. | <pre>map(list(object({<br/>    destination_cidr_block      = string<br/>    destination_ipv6_cidr_block = string<br/>    egress_only_gateway_id      = string<br/>    gateway_id                  = string<br/>    nat_gateway_id              = string<br/>    transit_gateway_id          = string<br/>    vpc_peering_connection_id   = string<br/>    local_gateway_id            = string<br/>    carrier_gateway_id          = string<br/>    destination_prefix_list_id  = string<br/>  })))</pre> | `{}` | no |
 | <a name="input_private_route_table_tags"></a> [private\_route\_table\_tags](#input\_private\_route\_table\_tags) | Additional tags for the private route tables | `map(string)` | `{}` | no |
 | <a name="input_private_subnet_assign_ipv6_address_on_creation"></a> [private\_subnet\_assign\_ipv6\_address\_on\_creation](#input\_private\_subnet\_assign\_ipv6\_address\_on\_creation) | Specify true to indicate that network interfaces created in the specified subnet should be assigned an IPv6 address. Default is `false` | `bool` | `false` | no |
 | <a name="input_private_subnet_enable_dns64"></a> [private\_subnet\_enable\_dns64](#input\_private\_subnet\_enable\_dns64) | Indicates whether DNS queries made to the Amazon-provided DNS Resolver in this subnet should return synthetic IPv6 addresses for IPv4-only destinations. Default: `true` | `bool` | `true` | no |
@@ -716,16 +660,237 @@ No modules.
 | <a name="output_vpc_secondary_cidr_blocks"></a> [vpc\_secondary\_cidr\_blocks](#output\_vpc\_secondary\_cidr\_blocks) | List of secondary CIDR blocks of the VPC |
 <!-- END_TF_DOCS -->
 
-## Authors
+output-values:
+  enabled: false
+  from: ""
 
-Module is maintained by [Anton Babenko](https://github.com/antonbabenko) with help from [these awesome contributors](https://github.com/terraform-aws-modules/terraform-aws-vpc/graphs/contributors).
+sort:
+  enabled: true
+  by: name
+
+settings:
+  anchor: true
+  color: true
+  default: true
+  description: false
+  escape: true
+  hide-empty: false
+  html: true
+  indent: 2
+  lockfile: true
+  read-comments: true
+  required: true
+  sensitive: true
+  type: true
+```
+
+## Content Template
+
+Generated content can be customized further away with `content` in configuration.
+If the `content` is empty the default order of sections is used.
+
+Compatible formatters for customized content are `asciidoc` and `markdown`. `content`
+will be ignored for other formatters.
+
+`content` is a Go template with following additional variables:
+
+- `{{ .Header }}`
+- `{{ .Footer }}`
+- `{{ .Inputs }}`
+- `{{ .Modules }}`
+- `{{ .Outputs }}`
+- `{{ .Providers }}`
+- `{{ .Requirements }}`
+- `{{ .Resources }}`
+
+and following functions:
+
+- `{{ include "relative/path/to/file" }}`
+
+These variables are the generated output of individual sections in the selected
+formatter. For example `{{ .Inputs }}` is Markdown Table representation of _inputs_
+when formatter is set to `markdown table`.
+
+Note that sections visibility (i.e. `sections.show` and `sections.hide`) takes
+precedence over the `content`.
+
+Additionally there's also one extra special variable avaialble to the `content`:
+
+- `{{ .Module }}`
+
+As opposed to the other variables mentioned above, which are generated sections
+based on a selected formatter, the `{{ .Module }}` variable is just a `struct`
+representing a [Terraform module].
+
+````yaml
+content: |-
+  Any arbitrary text can be placed anywhere in the content
+
+  {{ .Header }}
+
+  and even in between sections
+
+  {{ .Providers }}
+
+  and they don't even need to be in the default order
+
+  {{ .Outputs }}
+
+  include any relative files
+
+  {{ include "relative/path/to/file" }}
+
+  {{ .Inputs }}
+
+  # Examples
+
+  ```hcl
+  {{ include "examples/foo/main.tf" }}
+  ```
+
+  ## Resources
+
+  {{ range .Module.Resources }}
+  - {{ .GetMode }}.{{ .Spec }} ({{ .Position.Filename }}#{{ .Position.Line }})
+  {{- end }}
+````
+
+## Build on top of terraform-docs
+
+terraform-docs primary use-case is to be utilized as a standalone binary, but
+some parts of it is also available publicly and can be imported in your project
+as a library.
+
+```go
+import (
+    "github.com/terraform-docs/terraform-docs/format"
+    "github.com/terraform-docs/terraform-docs/print"
+    "github.com/terraform-docs/terraform-docs/terraform"
+)
+
+// buildTerraformDocs for module root `path` and provided content `tmpl`.
+func buildTerraformDocs(path string, tmpl string) (string, error) {
+    config := print.DefaultConfig()
+    config.ModuleRoot = path // module root path (can be relative or absolute)
+
+    module, err := terraform.LoadWithOptions(config)
+    if err != nil {
+        return "", err
+    }
+
+    // Generate in Markdown Table format
+    formatter := format.NewMarkdownTable(config)
+
+    if err := formatter.Generate(module); err != nil {
+        return "", err
+    }
+
+    // // Note: if you don't intend to provide additional template for the generated
+    // // content, or the target format doesn't provide templating (e.g. json, yaml,
+    // // xml, or toml) you can use `Content()` function instead of `Render()`.
+    // // `Content()` returns all the sections combined with predefined order.
+    // return formatter.Content(), nil
+
+    return formatter.Render(tmpl)
+}
+```
+
+## Plugin
+
+Generated output can be heavily customized with [`content`], but if using that
+is not enough for your use-case, you can write your own plugin.
+
+In order to install a plugin the following steps are needed:
+
+- download the plugin and place it in `~/.tfdocs.d/plugins` (or `./.tfdocs.d/plugins`)
+- make sure the plugin file name is `tfdocs-format-<NAME>`
+- modify [`formatter`] of `.terraform-docs.yml` file to be `<NAME>`
+
+**Important notes:**
+
+- if the plugin file name is different than the example above, terraform-docs won't
+be able to to pick it up nor register it properly
+- you can only use plugin thorough `.terraform-docs.yml` file and it cannot be used
+with CLI arguments
+
+To create a new plugin create a new repository called `tfdocs-format-<NAME>` with
+following `main.go`:
+
+```go
+package main
+
+import (
+    _ "embed" //nolint
+
+    "github.com/terraform-docs/terraform-docs/plugin"
+    "github.com/terraform-docs/terraform-docs/print"
+    "github.com/terraform-docs/terraform-docs/template"
+    "github.com/terraform-docs/terraform-docs/terraform"
+)
+
+func main() {
+    plugin.Serve(&plugin.ServeOpts{
+        Name:    "<NAME>",
+        Version: "0.1.0",
+        Printer: printerFunc,
+    })
+}
+
+//go:embed sections.tmpl
+var tplCustom []byte
+
+// printerFunc the function being executed by the plugin client.
+func printerFunc(config *print.Config, module *terraform.Module) (string, error) {
+    tpl := template.New(config,
+        &template.Item{Name: "custom", Text: string(tplCustom)},
+    )
+
+    rendered, err := tpl.Render("custom", module)
+    if err != nil {
+        return "", err
+    }
+
+    return rendered, nil
+}
+```
+
+Please refer to [tfdocs-format-template] for more details. You can create a new
+repository from it by clicking on `Use this template` button.
+
+## Documentation
+
+- **Users**
+  - Read the [User Guide] to learn how to use terraform-docs
+  - Read the [Formats Guide] to learn about different output formats of terraform-docs
+  - Refer to [Config File Reference] for all the available configuration options
+- **Developers**
+  - Read [Contributing Guide] before submitting a pull request
+
+Visit [our website] for all documentation.
+
+## Community
+
+- Discuss terraform-docs on [Slack]
 
 ## License
 
-Apache 2 Licensed. See [LICENSE](https://github.com/terraform-aws-modules/terraform-aws-vpc/tree/master/LICENSE) for full details.
+MIT License - Copyright (c) 2021 The terraform-docs Authors.
 
-## Additional information for users from Russia and Belarus
-
-* Russia has [illegally annexed Crimea in 2014](https://en.wikipedia.org/wiki/Annexation_of_Crimea_by_the_Russian_Federation) and [brought the war in Donbas](https://en.wikipedia.org/wiki/War_in_Donbas) followed by [full-scale invasion of Ukraine in 2022](https://en.wikipedia.org/wiki/2022_Russian_invasion_of_Ukraine).
-* Russia has brought sorrow and devastations to millions of Ukrainians, killed [thousands of innocent people](https://www.ohchr.org/en/news/2023/06/ukraine-civilian-casualty-update-19-june-2023), damaged thousands of buildings including [critical infrastructure](https://www.aljazeera.com/gallery/2022/12/17/russia-launches-another-major-missile-attack-on-ukraine), caused ecocide by [blowing up a dam](https://www.reuters.com/world/europe/ukraine-security-service-says-it-intercepted-call-proving-russia-destroyed-2023-06-09/), [bombed theater](https://www.cnn.com/2022/03/16/europe/ukraine-mariupol-bombing-theater-intl/index.html) in Mariupol that had "Children" marking on the ground, [raped men and boys](https://www.theguardian.com/world/2022/may/03/men-and-boys-among-alleged-victims-by-russian-soldiers-in-ukraine), [deported children](https://www.bbc.com/news/world-europe-64992727) in the occupied territoris, and forced [millions of people](https://www.unrefugees.org/emergencies/ukraine/) to flee.
-* [Putin khuylo!](https://en.wikipedia.org/wiki/Putin_khuylo!)
+[Chocolatey]: https://www.chocolatey.org
+[Config File Reference]: https://terraform-docs.io/user-guide/configuration/
+[`content`]: https://terraform-docs.io/user-guide/configuration/content/
+[Contributing Guide]: CONTRIBUTING.md
+[Formats Guide]: https://terraform-docs.io/reference/terraform-docs/
+[`formatter`]: https://terraform-docs.io/user-guide/configuration/formatter/
+[here]: https://golang.org/doc/code.html#GOPATH
+[Homebrew]: https://brew.sh
+[install pre-commit]: https://pre-commit.com/#install
+[`output`]: https://terraform-docs.io/user-guide/configuration/output/
+[releases]: https://github.com/terraform-docs/terraform-docs/releases
+[Scoop]: https://scoop.sh/
+[Slack]: https://slack.terraform-docs.io/
+[terraform-docs GitHub Action]: https://github.com/terraform-docs/gh-actions
+[Terraform module]: https://pkg.go.dev/github.com/terraform-docs/terraform-docs/terraform#Module
+[tfdocs-format-template]: https://github.com/terraform-docs/tfdocs-format-template
+[our website]: https://terraform-docs.io/
+[User Guide]: https://terraform-docs.io/user-guide/introduction/

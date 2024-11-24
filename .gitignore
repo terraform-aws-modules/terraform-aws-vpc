@@ -27,3 +27,19 @@ override.tf.json
 # Ignore CLI configuration files
 .terraformrc
 terraform.rc
+
+# Ignore virtual environment directories
+.venv/
+venv/
+
+# Ignore Python cache files
+__pycache__/
+*.py[cod]
+
+# Ignore pre-commit caches
+.cache/
+.pre-commit-config.yaml
+
+# Ignore other temporary files
+*.log
+*.tmp

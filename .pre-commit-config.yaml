@@ -22,9 +22,13 @@ repos:
           - '--args=--only=terraform_standard_module_structure'
           - '--args=--only=terraform_workspace_remote'
       - id: terraform_validate
+
   - repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: v5.0.0
+    rev: v4.4.0  # Downgraded from v5.0.0 to v4.4.0
     hooks:
+      - id: check-added-large-files
+        stages: [commit]  # Ensure it's set to a valid stage
       - id: check-merge-conflict
+        stages: [commit]  # Ensure it's set to a valid stage
       - id: end-of-file-fixer
       - id: trailing-whitespace
