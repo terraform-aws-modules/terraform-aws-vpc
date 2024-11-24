@@ -399,16 +399,16 @@ variable "private_route_table_tags" {
 variable "private_route_table_routes" {
   description = "A map of private route table IDs to a list of route objects."
   type = map(list(object({
-    destination_cidr_block       = optional(string)
-    destination_ipv6_cidr_block  = optional(string)
-    egress_only_gateway_id       = optional(string)
-    gateway_id                   = optional(string)
-    nat_gateway_id               = optional(string)
-    transit_gateway_id           = optional(string)
-    vpc_peering_connection_id    = optional(string)
-    local_gateway_id             = optional(string)
-    carrier_gateway_id           = optional(string)
-    destination_prefix_list_id   = optional(string)
+    destination_cidr_block       = string
+    destination_ipv6_cidr_block  = string
+    egress_only_gateway_id       = string
+    gateway_id                   = string
+    nat_gateway_id               = string
+    transit_gateway_id           = string
+    vpc_peering_connection_id    = string
+    local_gateway_id             = string
+    carrier_gateway_id           = string
+    destination_prefix_list_id   = string
   })))
   default = {}
 }

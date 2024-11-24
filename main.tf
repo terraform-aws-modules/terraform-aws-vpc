@@ -309,18 +309,17 @@ resource "aws_route" "private_route_table_routes" {
   route_table_id = each.value.route_table_id
 
   # Route attributes
-  destination_cidr_block        = lookup(each.value.route, "destination_cidr_block", null)
-  destination_ipv6_cidr_block   = lookup(each.value.route, "destination_ipv6_cidr_block", null)
-  egress_only_gateway_id        = lookup(each.value.route, "egress_only_gateway_id", null)
-  gateway_id                    = lookup(each.value.route, "gateway_id", null)
-  nat_gateway_id                = lookup(each.value.route, "nat_gateway_id", null)
-  transit_gateway_id            = lookup(each.value.route, "transit_gateway_id", null)
-  vpc_peering_connection_id     = lookup(each.value.route, "vpc_peering_connection_id", null)
-  local_gateway_id              = lookup(each.value.route, "local_gateway_id", null)
-  carrier_gateway_id            = lookup(each.value.route, "carrier_gateway_id", null)
-  destination_prefix_list_id    = lookup(each.value.route, "destination_prefix_list_id", null)
+  destination_cidr_block        = each.value.route.destination_cidr_block != "" ? each.value.route.destination_cidr_block : null
+  destination_ipv6_cidr_block   = each.value.route.destination_ipv6_cidr_block != "" ? each.value.route.destination_ipv6_cidr_block : null
+  egress_only_gateway_id        = each.value.route.egress_only_gateway_id != "" ? each.value.route.egress_only_gateway_id : null
+  gateway_id                    = each.value.route.gateway_id != "" ? each.value.route.gateway_id : null
+  nat_gateway_id                = each.value.route.nat_gateway_id != "" ? each.value.route.nat_gateway_id : null
+  transit_gateway_id            = each.value.route.transit_gateway_id != "" ? each.value.route.transit_gateway_id : null
+  vpc_peering_connection_id     = each.value.route.vpc_peering_connection_id != "" ? each.value.route.vpc_peering_connection_id : null
+  local_gateway_id              = each.value.route.local_gateway_id != "" ? each.value.route.local_gateway_id : null
+  carrier_gateway_id            = each.value.route.carrier_gateway_id != "" ? each.value.route.carrier_gateway_id : null
+  destination_prefix_list_id    = each.value.route.destination_prefix_list_id != "" ? each.value.route.destination_prefix_list_id : null
 }
-
 ################################################################################
 # Private Network ACLs
 ################################################################################
