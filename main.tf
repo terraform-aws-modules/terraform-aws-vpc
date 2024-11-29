@@ -111,17 +111,23 @@ resource "aws_subnet" "public" {
   private_dns_hostname_type_on_launch            = var.public_subnet_private_dns_hostname_type_on_launch
   vpc_id                                         = local.vpc_id
 
-  tags = merge(
-    {
-      Name = try(
-        var.public_subnet_names[count.index],
-        format("${var.name}-${var.public_subnet_suffix}-%s", element(var.azs, count.index))
+  dynamic "tags" {
+    for_each = var.enable_public_subnet_tags ? [1] : []
+    content {
+      tags = merge(
+        {
+          Name = try(
+            var.public_subnet_names[count.index],
+            format("${var.name}-${var.public_subnet_suffix}-%s", element(var.azs, count.index))
+          )
+        },
+        var.tags,
+        var.public_subnet_tags,
+        lookup(var.public_subnet_tags_per_az, element(var.azs, count.index), {})
       )
-    },
-    var.tags,
-    var.public_subnet_tags,
-    lookup(var.public_subnet_tags_per_az, element(var.azs, count.index), {})
-  )
+    }
+  }
+
 }
 
 locals {
@@ -246,17 +252,24 @@ resource "aws_subnet" "private" {
   private_dns_hostname_type_on_launch            = var.private_subnet_private_dns_hostname_type_on_launch
   vpc_id                                         = local.vpc_id
 
-  tags = merge(
-    {
-      Name = try(
-        var.private_subnet_names[count.index],
-        format("${var.name}-${var.private_subnet_suffix}-%s", element(var.azs, count.index))
+  dynamic "tags" {
+    for_each = var.enable_private_subnet_tags ? [1] : []
+    content {
+      tags = merge(
+        {
+          Name = try(
+            var.private_subnet_names[count.index],
+            format("${var.name}-${var.private_subnet_suffix}-%s", element(var.azs, count.index))
+          )
+        },
+        var.tags,
+        var.private_subnet_tags,
+        lookup(var.private_subnet_tags_per_az, element(var.azs, count.index), {})
       )
-    },
-    var.tags,
-    var.private_subnet_tags,
-    lookup(var.private_subnet_tags_per_az, element(var.azs, count.index), {})
-  )
+    }
+  }
+
+
 }
 
 # There are as many routing tables as the number of NAT gateways

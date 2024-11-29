@@ -178,6 +178,12 @@ variable "public_subnets" {
   default     = []
 }
 
+variable "enable_public_subnet_tags" {
+  description = "Indicates whether tags should be applied to public subnets. Default: `true`"
+  type        = bool
+  default     = true
+}
+
 variable "public_subnet_assign_ipv6_address_on_creation" {
   description = "Specify true to indicate that network interfaces created in the specified subnet should be assigned an IPv6 address. Default is `false`"
   type        = bool
@@ -316,6 +322,12 @@ variable "private_subnets" {
   description = "A list of private subnets inside the VPC"
   type        = list(string)
   default     = []
+}
+
+variable "enable_private_subnet_tags" {
+  description = "Indicates whether tags should be applied to private subnets. Default: `true`"
+  type        = bool
+  default     = true
 }
 
 variable "private_subnet_assign_ipv6_address_on_creation" {
