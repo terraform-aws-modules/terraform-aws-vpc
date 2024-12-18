@@ -46,7 +46,7 @@ resource "aws_vpc_endpoint" "this" {
 
   tags = merge(
     var.tags,
-    { "Name" = replace(try(each.value.service_endpoint, data.aws_vpc_endpoint_service.this[each.key].service_name, ""), ".", "-") },
+    { "Name" = replace(each.key, ".", "-") },
     try(each.value.tags, {}),
   )
 
