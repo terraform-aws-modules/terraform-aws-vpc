@@ -44,7 +44,11 @@ resource "aws_vpc_endpoint" "this" {
     }
   }
 
-  tags = merge(var.tags, try(each.value.tags, {}))
+  tags = merge(
+    var.tags,
+    { "Name" = replace(each.key, ".", "-") },
+    try(each.value.tags, {}),
+  )
 
   timeouts {
     create = try(var.timeouts.create, "10m")
