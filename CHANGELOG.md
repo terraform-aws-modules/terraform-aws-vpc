@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [5.17.0](https://github.com/terraform-aws-modules/terraform-aws-vpc/compare/v5.16.0...v5.17.0) (2024-12-18)
+
+
+### Features
+
+* Define default name for VPC endpoint ([#1151](https://github.com/terraform-aws-modules/terraform-aws-vpc/issues/1151)) ([41348d3](https://github.com/terraform-aws-modules/terraform-aws-vpc/commit/41348d36b3fee6bc5cd58fed18c1210401ea128e))
+
 ## [5.16.0](https://github.com/terraform-aws-modules/terraform-aws-vpc/compare/v5.15.0...v5.16.0) (2024-11-18)
 
 
