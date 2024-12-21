@@ -12,7 +12,7 @@ data "aws_vpc_endpoint_service" "this" {
   for_each = local.endpoints
 
   service      = try(each.value.service, null)
-  service_name = try(each.value.service_name, null)
+  service_name = lookup(each.value, "service_endpoint", lookup(each.value, "service_name", null))
 
   filter {
     name   = "service-type"
