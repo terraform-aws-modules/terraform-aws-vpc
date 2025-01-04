@@ -56,8 +56,8 @@ variable "enable_network_address_usage_metrics" {
   default     = null
 }
 
-variable "use_ipam_pool" {
-  description = "Determines whether IPAM pool is used for CIDR allocation"
+variable "use_ipv4_ipam_pool" {
+  description = "Determines whether IPAM pool is used for IPv4 CIDR allocation"
   type        = bool
   default     = false
 }
@@ -76,6 +76,12 @@ variable "ipv4_netmask_length" {
 
 variable "enable_ipv6" {
   description = "Requests an Amazon-provided IPv6 CIDR block with a /56 prefix length for the VPC. You cannot specify the range of IP addresses, or the size of the CIDR block"
+  type        = bool
+  default     = false
+}
+
+variable "use_ipv6_ipam_pool" {
+  description = "Determines whether IPAM pool is used for IPv6 CIDR allocation"
   type        = bool
   default     = false
 }
