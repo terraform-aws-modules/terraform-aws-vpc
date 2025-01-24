@@ -6,6 +6,7 @@ locals {
   len_redshift_subnets    = max(length(var.redshift_subnets), length(var.redshift_subnet_ipv6_prefixes))
   len_intra_subnets       = max(length(var.intra_subnets), length(var.intra_subnet_ipv6_prefixes))
   len_outpost_subnets     = max(length(var.outpost_subnets), length(var.outpost_subnet_ipv6_prefixes))
+  len_firewall_subnets    = max(length(var.firewall_subnets), length(var.firewall_subnet_ipv6_prefixes))
 
   max_subnet_length = max(
     local.len_private_subnets,
@@ -13,7 +14,17 @@ locals {
     local.len_elasticache_subnets,
     local.len_database_subnets,
     local.len_redshift_subnets,
+    local.len_firewall_subnets,
   )
+
+  // TODO - comment what this line does
+  firewall_sync_states = try(module.firewall[0].status[0].sync_states, {})
+  firewall_vpce = {
+    for state in local.firewall_sync_states: state.availability_zone => {
+        cidr_block = one([ for subnet in aws_subnet.firewall : subnet.cidr_block if subnet.id == state.attachment[0].subnet_id ])
+        endpoint_id = state.attachment[0].endpoint_id
+      }
+    }
 
   # Use `local.vpc_id` to give a hint to Terraform that subnets should be deleted before secondary CIDR blocks can be free!
   vpc_id = try(aws_vpc_ipv4_cidr_block_association.this[0].vpc_id, aws_vpc.this[0].id, "")
@@ -153,11 +164,37 @@ resource "aws_route_table_association" "public" {
 }
 
 resource "aws_route" "public_internet_gateway" {
-  count = local.create_public_subnets && var.create_igw ? local.num_public_route_tables : 0
+  count = local.create_public_subnets && var.create_igw && !(var.enable_network_firewall && local.len_firewall_subnets > 0) ? local.num_public_route_tables : 0
 
   route_table_id         = aws_route_table.public[count.index].id
   destination_cidr_block = "0.0.0.0/0"
   gateway_id             = aws_internet_gateway.this[0].id
+
+  timeouts {
+    create = "5m"
+  }
+}
+
+resource "aws_route_table_association" "public_internet_gateway" {
+  count = local.create_vpc && var.create_igw && var.enable_network_firewall && local.len_firewall_subnets > 0 ? 1 : 0
+
+  gateway_id     = aws_internet_gateway.this[0].id
+  route_table_id = aws_route_table.internet_gateway[0].id
+}
+
+resource "aws_route_table_association" "firewall" {
+  count = local.create_vpc && local.len_firewall_subnets > 0 ? local.len_firewall_subnets : 0
+
+  subnet_id      = element(aws_subnet.firewall.*.id, count.index)
+  route_table_id = aws_route_table.firewall[0].id
+}
+
+resource "aws_route" "public_firewall" {
+  count = local.create_vpc && var.enable_network_firewall ? local.len_public_subnets : 0
+
+  route_table_id         = element(aws_route_table.public.*.id, count.index)
+  destination_cidr_block = "0.0.0.0/0"
+  vpc_endpoint_id        = local.firewall_vpce[aws_subnet.public[count.index].availability_zone].endpoint_id
 
   timeouts {
     create = "5m"
@@ -222,6 +259,145 @@ resource "aws_network_acl_rule" "public_outbound" {
   cidr_block      = lookup(var.public_outbound_acl_rules[count.index], "cidr_block", null)
   ipv6_cidr_block = lookup(var.public_outbound_acl_rules[count.index], "ipv6_cidr_block", null)
 }
+
+################################################################################
+# Firewall Subnets
+################################################################################
+
+locals {
+  create_firewall_subnets = local.create_vpc && local.len_firewall_subnets > 0
+}
+
+resource "aws_subnet" "firewall" {
+  count = local.create_firewall_subnets ? local.len_firewall_subnets : 0
+
+  vpc_id                          = local.vpc_id
+  cidr_block                      = var.firewall_subnets[count.index]
+  availability_zone               = length(regexall("^[a-z]{2}-", element(var.azs, count.index))) > 0 ? element(var.azs, count.index) : null
+  availability_zone_id            = length(regexall("^[a-z]{2}-", element(var.azs, count.index))) == 0 ? element(var.azs, count.index) : null
+  assign_ipv6_address_on_creation = var.enable_ipv6 && var.firewall_subnet_ipv6_native ? true : var.firewall_subnet_assign_ipv6_address_on_creation
+
+  ipv6_cidr_block = var.enable_ipv6 && length(var.firewall_subnet_ipv6_prefixes) > 0 ? cidrsubnet(aws_vpc.this[0].ipv6_cidr_block, 8, var.firewall_subnet_ipv6_prefixes[count.index]) : null
+
+  tags = merge(
+    {
+      "Name" = format(
+        "%s-${var.firewall_subnet_suffix}-%s",
+        var.name,
+        element(var.azs, count.index),
+      )
+    },
+    var.tags,
+    var.firewall_subnet_tags,
+  )
+}
+
+
+resource "aws_route_table" "firewall" {
+  count = local.create_vpc && var.create_firewall_subnet_route_table && local.len_firewall_subnets > 0 ? 1 : 0
+
+  vpc_id = local.vpc_id
+
+  tags = merge(
+    {
+      "Name" = "${var.name}-${var.firewall_subnet_suffix}"
+    },
+    var.tags,
+    var.firewall_route_table_tags,
+  )
+}
+
+resource "aws_route" "firewall_internet_gateway" {
+  count = local.create_vpc && var.create_igw && local.len_firewall_subnets > 0 ? 1 : 0
+
+  route_table_id         = aws_route_table.firewall[count.index].id
+  destination_cidr_block = "0.0.0.0/0"
+  gateway_id             = aws_internet_gateway.this[0].id
+
+  timeouts {
+    create = "5m"
+  }
+}
+
+resource "aws_route_table" "internet_gateway" {
+  count  = local.create_vpc && var.enable_network_firewall && local.len_firewall_subnets > 0 ? 1 : 0
+  vpc_id = local.vpc_id
+
+  tags = merge(
+    {
+      "Name" = format("%s-internet-gateway-${var.firewall_subnet_suffix}", var.name)
+    },
+    var.tags,
+    var.public_route_table_tags,
+  )
+}
+
+resource "aws_route" "internet_gateway_firewall" {
+  count = local.create_vpc && var.enable_network_firewall && local.len_firewall_subnets > 0 ? local.len_public_subnets : 0
+
+  route_table_id         = aws_route_table.internet_gateway[0].id
+  destination_cidr_block = aws_subnet.public[count.index].cidr_block
+
+
+  vpc_endpoint_id = local.firewall_vpce[aws_subnet.public[count.index].availability_zone].endpoint_id // TODO testing
+  #vpc_endpoint_id        = element(local.firewall_endpoint_ids_ordered_by_azs, count.index)
+}
+
+################################################################################
+# Firewall Network ACLs
+################################################################################
+
+locals {
+  create_firewall_network_acl = local.create_firewall_subnets && var.firewall_dedicated_network_acl
+}
+
+resource "aws_network_acl" "firewall" {
+  count = local.create_firewall_network_acl ? 1 : 0
+
+  vpc_id     = local.vpc_id
+  subnet_ids = aws_subnet.firewall[*].id
+
+  tags = merge(
+    { "Name" = "${var.name}-${var.firewall_subnet_suffix}" },
+    var.tags,
+    var.firewall_acl_tags,
+  )
+}
+
+resource "aws_network_acl_rule" "firewall_inbound" {
+  count = local.create_firewall_network_acl ? length(var.firewall_inbound_acl_rules) : 0
+
+  network_acl_id = aws_network_acl.firewall[0].id
+
+  egress          = false
+  rule_number     = var.firewall_inbound_acl_rules[count.index]["rule_number"]
+  rule_action     = var.firewall_inbound_acl_rules[count.index]["rule_action"]
+  from_port       = lookup(var.firewall_inbound_acl_rules[count.index], "from_port", null)
+  to_port         = lookup(var.firewall_inbound_acl_rules[count.index], "to_port", null)
+  icmp_code       = lookup(var.firewall_inbound_acl_rules[count.index], "icmp_code", null)
+  icmp_type       = lookup(var.firewall_inbound_acl_rules[count.index], "icmp_type", null)
+  protocol        = var.firewall_inbound_acl_rules[count.index]["protocol"]
+  cidr_block      = lookup(var.firewall_inbound_acl_rules[count.index], "cidr_block", null)
+  ipv6_cidr_block = lookup(var.firewall_inbound_acl_rules[count.index], "ipv6_cidr_block", null)
+}
+
+resource "aws_network_acl_rule" "firewall_outbound" {
+  count = local.create_firewall_network_acl ? length(var.firewall_outbound_acl_rules) : 0
+
+  network_acl_id = aws_network_acl.firewall[0].id
+
+  egress          = true
+  rule_number     = var.firewall_outbound_acl_rules[count.index]["rule_number"]
+  rule_action     = var.firewall_outbound_acl_rules[count.index]["rule_action"]
+  from_port       = lookup(var.firewall_outbound_acl_rules[count.index], "from_port", null)
+  to_port         = lookup(var.firewall_outbound_acl_rules[count.index], "to_port", null)
+  icmp_code       = lookup(var.firewall_outbound_acl_rules[count.index], "icmp_code", null)
+  icmp_type       = lookup(var.firewall_outbound_acl_rules[count.index], "icmp_type", null)
+  protocol        = var.firewall_outbound_acl_rules[count.index]["protocol"]
+  cidr_block      = lookup(var.firewall_outbound_acl_rules[count.index], "cidr_block", null)
+  ipv6_cidr_block = lookup(var.firewall_outbound_acl_rules[count.index], "ipv6_cidr_block", null)
+}
+
 
 ################################################################################
 # Private Subnets
