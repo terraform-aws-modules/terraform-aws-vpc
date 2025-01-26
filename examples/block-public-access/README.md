@@ -2,7 +2,23 @@
 
 The configuration in this directory creates a VPC, route tables and a private subnet per availability zone.
 
-In addition to standard settings, new options for blocking public access have been introduced. There are several ways to define these options:
+In addition to standard settings, new options for blocking public access have been introduced.
+
+[Read more about enhancing VPC Security with Amazon VPC Block Public Access](https://aws.amazon.com/blogs/networking-and-content-delivery/vpc-block-public-access/).
+
+## Usage
+
+To run this example you need to execute:
+
+```bash
+$ terraform init
+$ terraform plan
+$ terraform apply
+```
+
+Note that this example may create resources which can cost money (AWS Elastic IP, for example). Run `terraform destroy` when you don't need these resources.
+
+This example defines VPC Block Public Access Exclusion at the subnet level, but other possibilities are also available and are commented on in the code. There are several ways to define these options:
 
 - configure VPC Block Public Access Options e.g.:
 ```hcl
@@ -46,22 +62,10 @@ aws ec2 --region eu-west-1 describe-vpc-block-public-access-options
 Similarly, you can check VPC Block Public Access Exclusions by obtaining the exclusion ID from the Terraform state and running:
 
 ```bash
+terraform output vpc_block_public_access_exclusions
+
 aws ec2 --region eu-west-1 describe-vpc-block-public-access-exclusions --exclusion-ids exclusion-id
 ```
-
-[Read more about enhancing VPC Security with Amazon VPC Block Public Access](https://aws.amazon.com/blogs/networking-and-content-delivery/vpc-block-public-access/).
-
-## Usage
-
-To run this example you need to execute:
-
-```bash
-$ terraform init
-$ terraform plan
-$ terraform apply
-```
-
-Note that this example may create resources which can cost money (AWS Elastic IP, for example). Run `terraform destroy` when you don't need these resources.
 
 <!-- BEGIN_TF_DOCS -->
 ## Requirements
