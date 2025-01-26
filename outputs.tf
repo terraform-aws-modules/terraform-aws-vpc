@@ -78,6 +78,11 @@ output "vpc_owner_id" {
   value       = try(aws_vpc.this[0].owner_id, null)
 }
 
+output "vpc_block_public_access_exclusions" {
+  description = "List of VPC block public access exclusions"
+  value       = [for k, v in aws_vpc_block_public_access_exclusion.this : v.id]
+}
+
 ################################################################################
 # DHCP Options Set
 ################################################################################

@@ -59,18 +59,20 @@ resource "aws_vpc_ipv4_cidr_block_association" "this" {
   cidr_block = element(var.secondary_cidr_blocks, count.index)
 }
 
+# https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/vpc_block_public_access_options
 resource "aws_vpc_block_public_access_options" "this" {
   count = var.internet_gateway_block_enabled ? 1 : 0
 
   internet_gateway_block_mode = var.internet_gateway_block_mode
 }
 
+# https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/vpc_block_public_access_exclusion
 resource "aws_vpc_block_public_access_exclusion" "this" {
   for_each = var.vpc_block_public_access_exclusions
 
-  vpc_id = each.value.exclude_vpc ? local.vpc_id : null
+  vpc_id = lookup(each.value, "exclude_vpc", false) ? local.vpc_id : null
 
-  subnet_id = each.value.exclude_subnet ? lookup(
+  subnet_id = lookup(each.value, "exclude_subnet", false) ? lookup(
     {
       private     = aws_subnet.private[*].id,
       public      = aws_subnet.public[*].id,
