@@ -116,6 +116,24 @@ variable "tags" {
   default     = {}
 }
 
+variable "internet_gateway_block_enabled" {
+  description = "Enable AWS VPC Block Public Access Options. Default is `false`"
+  type        = bool
+  default     = false
+}
+
+variable "internet_gateway_block_mode" {
+  description = "Block mode. Needs to be one of `block-bidirectional`, `block-ingress`, `off`. Default is `off`"
+  type        = string
+  default     = "off"
+}
+
+variable "vpc_block_public_access_exclusions" {
+  description = "List of VPC Block Public Access Exclusions"
+  type        = map(any)
+  default     = {}
+}
+
 ################################################################################
 # DHCP Options Set
 ################################################################################
