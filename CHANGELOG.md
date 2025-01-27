@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [5.18.0](https://github.com/terraform-aws-modules/terraform-aws-vpc/compare/v5.17.0...v5.18.0) (2025-01-27)
+
+
+### Features
+
+* Support for cross region VPC endpoints ([#1161](https://github.com/terraform-aws-modules/terraform-aws-vpc/issues/1161)) ([7e205ad](https://github.com/terraform-aws-modules/terraform-aws-vpc/commit/7e205ad0513fe00290b9570cabf52f5e7ce6b84f))
+
 ## [5.17.0](https://github.com/terraform-aws-modules/terraform-aws-vpc/compare/v5.16.0...v5.17.0) (2024-12-18)
 
 
