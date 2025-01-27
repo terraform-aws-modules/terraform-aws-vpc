@@ -60,7 +60,7 @@ resource "aws_vpc_ipv4_cidr_block_association" "this" {
 }
 
 resource "aws_vpc_block_public_access_options" "this" {
-  count = var.internet_gateway_block_enabled ? 1 : 0
+  count = local.create_vpc && length(keys(var.vpc_block_public_access_options)) ? 1 : 0
 
   internet_gateway_block_mode = var.internet_gateway_block_mode
 }
