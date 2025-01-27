@@ -59,7 +59,6 @@ resource "aws_vpc_ipv4_cidr_block_association" "this" {
   cidr_block = element(var.secondary_cidr_blocks, count.index)
 }
 
-# https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/vpc_block_public_access_options
 resource "aws_vpc_block_public_access_options" "this" {
   count = var.internet_gateway_block_enabled ? 1 : 0
 
