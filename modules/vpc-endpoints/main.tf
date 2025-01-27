@@ -13,7 +13,7 @@ data "aws_vpc_endpoint_service" "this" {
 
   service         = try(each.value.service, null)
   service_name    = try(each.value.service_name, null)
-  service_regions = try([each.value.service_region], null)
+  service_regions = try(each.value.service_region != null ? [each.value.service_region] : null, null)
 
   filter {
     name   = "service-type"
