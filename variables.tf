@@ -120,9 +120,11 @@ variable "vpc_block_public_access_options" {
   description = <<EOF
   Map of VPC Block Public Access Options e.g.:
 
+  ```hcl
   vpc_block_public_access_options = {
     internet_gateway_block_mode = "block-bidirectional"
   }
+  ```
 
   Currently only `internet_gateway_block_mode` is supported, for which
   valid values are `block-bidirectional`, `block-ingress` and `off`.
@@ -135,15 +137,18 @@ variable "vpc_block_public_access_exclusions" {
   description = <<EOF
   List of VPC Block Public Access Exclusions e.g. to exclude the VPC:
 
+  ```hcl
   vpc_block_public_access_exclusions = {
     exclude_vpc = {
       exclude_vpc                     = true
       internet_gateway_exclusion_mode = "allow-bidirectional"
     }
   }
+  ```
 
   or to exclude specific subnets:
 
+  ```hcl
   vpc_block_public_access_exclusions = {
     exclude_subnet_private1 = {
       exclude_subnet                  = true
@@ -158,6 +163,7 @@ variable "vpc_block_public_access_exclusions" {
       internet_gateway_exclusion_mode = "allow-egress"
     }
   }
+  ```
 
   One of `exclude_vpc` or `exclude_subnet` must be set to true.
   Value of `subnet_type` can be `public`, `private`, `database`, `redshift`, `elasticache`, `intra` or `custom`.

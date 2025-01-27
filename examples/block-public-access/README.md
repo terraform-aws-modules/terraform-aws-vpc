@@ -18,49 +18,13 @@ $ terraform apply
 
 Note that this example may create resources which can cost money (AWS Elastic IP, for example). Run `terraform destroy` when you don't need these resources.
 
-This example defines VPC Block Public Access Exclusion at the subnet level, but other possibilities are also available and are commented on in the code. There are several ways to define these options:
-
-- configure VPC Block Public Access Options e.g.:
-```hcl
-  vpc_block_public_access_options = {
-    internet_gateway_block_mode = "block-bidirectional"
-  }
-```
-
-- define VPC Block Public Access Exclusion at the VPC level e.g.:
-```hcl
-  vpc_block_public_access_exclusions = {
-    exclude_vpc = {
-      exclude_vpc                     = true
-      internet_gateway_exclusion_mode = "allow-bidirectional"
-    }
-  }
-```
-- define VPC Block Public Access Exclusion at the subnet level e.g.:
-```hcl
-  vpc_block_public_access_exclusions = {
-    exclude_subnet_private1 = {
-      exclude_subnet                  = true
-      subnet_type                     = "private"
-      subnet_index                    = 1
-      internet_gateway_exclusion_mode = "allow-egress"
-    }
-    exclude_subnet_private2 = {
-      exclude_subnet                  = true
-      subnet_type                     = "private"
-      subnet_index                    = 2
-      internet_gateway_exclusion_mode = "allow-egress"
-    }
-  }
-```
-
-After creating VPC Block Public Access Options, you can verify them with the following command:
+After deployment VPC Block Public Access Options can be verified with the following command:
 
 ```bash
 aws ec2 --region eu-west-1 describe-vpc-block-public-access-options
 ```
 
-Similarly, you can check VPC Block Public Access Exclusions by obtaining the exclusion ID from the Terraform state and running:
+Similarly, VPC Block Public Access Exclusions can be checked by obtaining the exclusion ID from the Terraform output and running commands:
 
 ```bash
 terraform output vpc_block_public_access_exclusions
