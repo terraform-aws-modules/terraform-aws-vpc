@@ -11,8 +11,8 @@ locals {
 data "aws_vpc_endpoint_service" "this" {
   for_each = local.endpoints
 
-  service      = try(each.value.service, null)
-  service_name = try(each.value.service_name, null)
+  service         = try(each.value.service, null)
+  service_name    = try(each.value.service_name, null)
   service_regions = try([each.value.service_region], null)
 
   filter {
