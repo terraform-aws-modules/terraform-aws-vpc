@@ -22,8 +22,9 @@ This example defines VPC Block Public Access Exclusion at the subnet level, but 
 
 - configure VPC Block Public Access Options e.g.:
 ```hcl
-  internet_gateway_block_enabled = true
-  internet_gateway_block_mode    = "block-bidirectional"
+  vpc_block_public_access_options = {
+    internet_gateway_block_mode = "block-bidirectional"
+  }
 ```
 
 - define VPC Block Public Access Exclusion at the VPC level e.g.:

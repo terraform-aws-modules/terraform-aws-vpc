@@ -37,28 +37,28 @@ module "vpc" {
   }
 
   ### VPC Block Public Access Exclusion at the VPC level
-  # vpc_block_public_access_exclusions = {
-  #   exclude_vpc = {
-  #     exclude_vpc                     = true
-  #     internet_gateway_exclusion_mode = "allow-bidirectional"
-  #   }
-  # }
-
-  ### VPC Block Public Access Exclusion at the subnet level
   vpc_block_public_access_exclusions = {
-    exclude_subnet_private1 = {
-      exclude_subnet                  = true
-      subnet_type                     = "private"
-      subnet_index                    = 1
-      internet_gateway_exclusion_mode = "allow-egress"
-    }
-    exclude_subnet_private2 = {
-      exclude_subnet                  = true
-      subnet_type                     = "private"
-      subnet_index                    = 2
-      internet_gateway_exclusion_mode = "allow-egress"
+    exclude_vpc = {
+      exclude_vpc                     = true
+      internet_gateway_exclusion_mode = "allow-bidirectional"
     }
   }
+
+  ### VPC Block Public Access Exclusion at the subnet level
+  # vpc_block_public_access_exclusions = {
+  #   exclude_subnet_private1 = {
+  #     exclude_subnet                  = true
+  #     subnet_type                     = "private"
+  #     subnet_index                    = 1
+  #     internet_gateway_exclusion_mode = "allow-egress"
+  #   }
+  #   exclude_subnet_private2 = {
+  #     exclude_subnet                  = true
+  #     subnet_type                     = "private"
+  #     subnet_index                    = 2
+  #     internet_gateway_exclusion_mode = "allow-egress"
+  #   }
+  # }
 
   tags = local.tags
 }
