@@ -120,7 +120,7 @@ variable "vpc_block_public_access_options" {
   description = <<EOF
   Map of VPC Block Public Access Options e.g.:
 
-  ```hcl
+  ```
   vpc_block_public_access_options = {
     internet_gateway_block_mode = "block-bidirectional"
   }
@@ -137,7 +137,7 @@ variable "vpc_block_public_access_exclusions" {
   description = <<EOF
   List of VPC Block Public Access Exclusions e.g. to exclude the VPC:
 
-  ```hcl
+  ```
   vpc_block_public_access_exclusions = {
     exclude_vpc = {
       exclude_vpc                     = true
@@ -148,7 +148,7 @@ variable "vpc_block_public_access_exclusions" {
 
   or to exclude specific subnets:
 
-  ```hcl
+  ```
   vpc_block_public_access_exclusions = {
     exclude_subnet_private1 = {
       exclude_subnet                  = true

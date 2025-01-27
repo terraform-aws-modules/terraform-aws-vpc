@@ -18,7 +18,7 @@ $ terraform apply
 
 Note that this example may create resources which can cost money (AWS Elastic IP, for example). Run `terraform destroy` when you don't need these resources.
 
-After deployment VPC Block Public Access Options can be verified with the following command:
+After deployment, VPC Block Public Access Options can be verified with the following command:
 
 ```bash
 aws ec2 --region eu-west-1 describe-vpc-block-public-access-options
