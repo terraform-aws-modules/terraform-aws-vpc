@@ -65,7 +65,6 @@ resource "aws_vpc_block_public_access_options" "this" {
   internet_gateway_block_mode = var.internet_gateway_block_mode
 }
 
-# https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/vpc_block_public_access_exclusion
 resource "aws_vpc_block_public_access_exclusion" "this" {
   for_each = var.vpc_block_public_access_exclusions
 
