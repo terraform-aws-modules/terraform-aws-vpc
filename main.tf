@@ -60,13 +60,13 @@ resource "aws_vpc_ipv4_cidr_block_association" "this" {
 }
 
 resource "aws_vpc_block_public_access_options" "this" {
-  count = local.create_vpc && length(keys(var.vpc_block_public_access_options)) ? 1 : 0
+  count = local.create_vpc && length(keys(var.vpc_block_public_access_options)) > 0 ? 1 : 0
 
   internet_gateway_block_mode = try(var.vpc_block_public_access_options["internet_gateway_block_mode"], null)
 }
 
 resource "aws_vpc_block_public_access_exclusion" "this" {
-  for_each = {for k, v in var.vpc_block_public_access_exclusions: k => v if local.create_vpc}
+  for_each = { for k, v in var.vpc_block_public_access_exclusions : k => v if local.create_vpc }
 
   vpc_id = lookup(each.value, "exclude_vpc", false) ? local.vpc_id : null
 
