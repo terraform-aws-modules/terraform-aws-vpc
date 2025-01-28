@@ -3,7 +3,7 @@ provider "aws" {
 }
 
 locals {
-  region      = "us-east-2"
+  region      = "us-east-1"
   name        = "nf-example-${random_pet.this.id}"
   environment = "test"
 }
@@ -18,13 +18,11 @@ resource "random_pet" "this" {
 ################################################################################
 
 module "kms" {
-  #source      = "git::https://github.com/withclutch/terraform-modules-registry?ref=aws-kms_v1.194"
-  source = "/Users/roger.amorim/Clutch/projects/infrastructure/terraform-modules/modules/aws-kms"
+  source = "git::https://github.com/withclutch/terraform-modules-registry?ref=aws-kms_v1.194"
 
-  name                              = local.name
-  environment                       = "test"
-  description                       = "KMS key used to test the ${local.name} AWS Network Firewall"
-  allow_usage_in_network_log_groups = true
+  name        = local.name
+  environment = "test"
+  description = "KMS key used to test the ${local.name} AWS Network Firewall"
 }
 
 ################################################################################
@@ -59,10 +57,11 @@ module "vpc" {
   ######### Firewall Logs ##########
   firewall_logs_retention_in_days = 14
   firewall_logs_kms_key_arn       = module.kms.key_arn
+  create_logging_configuration    = true
 
   ######### Firewall Rules and Filter ##########
-  firewall_log_types      = ["FLOW", "ALERT"]
-  firewall_managed_rules  = [
+  firewall_log_types = ["FLOW", "ALERT"]
+  firewall_managed_rules = [
     "AbusedLegitMalwareDomainsStrictOrder",
     "BotNetCommandAndControlDomainsStrictOrder",
     "AbusedLegitBotNetCommandAndControlDomainsStrictOrder",

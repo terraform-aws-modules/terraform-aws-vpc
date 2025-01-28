@@ -1200,10 +1200,16 @@ variable "firewall_log_types" {
   default     = ["FLOW", "ALERT"]
 }
 
-variable "firewall_log_cloudwatch_log_group_name_prefix" {
-  description = "Specifies the name prefix of Network Firewall Log Group for Network Firewall logs."
-  type        = string
-  default     = "/aws/network-firewall-log/"
+variable "firewall_log_tags" {
+  description = "Additional tags for the Firewall Logs"
+  type        = map(string)
+  default     = {}
+}
+
+variable "create_logging_configuration" {
+  description = "Controls if a Logging Configuration should be created"
+  type        = bool
+  default     = false
 }
 
 variable "region" {

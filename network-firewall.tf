@@ -4,16 +4,15 @@ locals {
   name                         = "${var.name}-network-firewall"
 }
 
+### TODO - AWS Network Firewall Managed and Custom Rules will be reviewed/implemented in next release - ###
 module "firewall" {
   source  = "terraform-aws-modules/network-firewall/aws"
   version = "~> 1.0"
 
   count = var.create_network_firewall ? 1 : 0
 
-
   name        = local.name
   description = var.firewall_description
-
 
   delete_protection                 = var.firewall_delete_protection
   firewall_policy_change_protection = var.firewall_policy_change_protection
@@ -29,7 +28,7 @@ module "firewall" {
   }
 
   ### Logging configuration ###
-  create_logging_configuration = false
+  create_logging_configuration = var.create_logging_configuration
   logging_configuration_destination_config = [
     {
       log_destination = {
@@ -69,17 +68,17 @@ module "firewall" {
   policy_stateless_default_actions          = ["aws:forward_to_sfe"]
   policy_stateless_fragment_default_actions = ["aws:forward_to_sfe"]
 
-  tags = var.tags // TODO - review these tags
+  tags = var.tags
 
   depends_on = [module.kms, module.logs_alerts, module.logs_flow]
 }
 
 module "logs_alerts" {
-  source       = "git::https://github.com/withclutch/terraform-modules-registry?ref=aws-log-group_v1.194"
+  source = "git::https://github.com/withclutch/terraform-modules-registry?ref=aws-log-group_v1.194"
 
   count = var.create_network_firewall ? 1 : 0
 
-  name        = "nf-network-log-alerts"
+  name        = "${local.name}-alerts"
   tenant      = var.tenant
   region      = var.region
   environment = var.environment
@@ -88,15 +87,17 @@ module "logs_alerts" {
   kms_key_arn                        = module.kms[0].key_arn
   create_datadog_subscription_filter = true
 
+  tags = merge(var.tags, var.firewall_log_tags)
+
   depends_on = [module.kms]
 }
 
 module "logs_flow" {
-  source      = "git::https://github.com/withclutch/terraform-modules-registry?ref=aws-log-group_v1.194"
+  source = "git::https://github.com/withclutch/terraform-modules-registry?ref=aws-log-group_v1.194"
 
-  count       = var.create_network_firewall ? 1 : 0
+  count = var.create_network_firewall ? 1 : 0
 
-  name        = "nf-network-log-flow"
+  name        = "${local.name}-flow"
   tenant      = var.tenant
   region      = var.region
   environment = var.environment
@@ -105,22 +106,22 @@ module "logs_flow" {
   kms_key_arn                        = module.kms[0].key_arn
   create_datadog_subscription_filter = false
 
+  tags = merge(var.tags, var.firewall_log_tags)
+
   depends_on = [module.kms]
 }
 
 module "kms" {
-  #source      = "git::https://github.com/withclutch/terraform-modules-registry?ref=aws-kms_v1.194"
-  source = "/Users/roger.amorim/Clutch/projects/infrastructure/terraform-modules/modules/aws-kms"
+  source = "git::https://github.com/withclutch/terraform-modules-registry?ref=aws-kms_v1.194"
 
   count = var.create_network_firewall ? 1 : 0
 
-  description = "KMS key used for ${var.name} AWS Network Firewall"
-  name        = var.name // TODO - review this name
+  description = "KMS key used for ${local.name} AWS Network Firewall"
+  name        = "${local.name}-kms"
   region      = var.region
   environment = var.environment
   namespace   = var.namespace
   tenant      = var.tenant
   tags        = var.tags
-  #allow_usage_in_network_log_groups = true
 }
 

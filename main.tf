@@ -20,11 +20,11 @@ locals {
   // TODO - comment what this line does
   firewall_sync_states = try(module.firewall[0].status[0].sync_states, {})
   firewall_vpce = {
-    for state in local.firewall_sync_states: state.availability_zone => {
-        cidr_block = one([ for subnet in aws_subnet.firewall : subnet.cidr_block if subnet.id == state.attachment[0].subnet_id ])
-        endpoint_id = state.attachment[0].endpoint_id
-      }
+    for state in local.firewall_sync_states : state.availability_zone => {
+      cidr_block  = one([for subnet in aws_subnet.firewall : subnet.cidr_block if subnet.id == state.attachment[0].subnet_id])
+      endpoint_id = state.attachment[0].endpoint_id
     }
+  }
 
   # Use `local.vpc_id` to give a hint to Terraform that subnets should be deleted before secondary CIDR blocks can be free!
   vpc_id = try(aws_vpc_ipv4_cidr_block_association.this[0].vpc_id, aws_vpc.this[0].id, "")
@@ -325,7 +325,7 @@ resource "aws_route_table" "internet_gateway" {
 
   tags = merge(
     {
-      "Name" = format("%s-internet-gateway-${var.firewall_subnet_suffix}", var.name)
+      "Name" = format("%s-internet-gateway-${var.public_subnet_suffix}", var.name)
     },
     var.tags,
     var.public_route_table_tags,
