@@ -1166,17 +1166,6 @@ variable "outpost_acl_tags" {
   default     = {}
 }
 
-
-
-
-
-
-
-
-
-
-
-
 ################################################################################
 # Firewall
 ################################################################################
@@ -1199,47 +1188,22 @@ variable "enable_network_firewall" {
   default     = false
 }
 
-variable "firewall_policy_arn" {
-  description = "The network firewall policy arn to associate with the network firewall. Needed if you are setting enable_firewall to true"
-  type        = string
-  default     = null
-}
-
-variable "enable_firewall_logs" {
-  description = "Whether or not to enable Network Firewall Logs"
-  type        = bool
-  default     = false
-}
-
 variable "firewall_managed_rules" {
   description = "List of firewall managed rules"
   type        = list(string)
   default     = []
 }
 
+variable "firewall_log_types" {
+  description = "The Types of Network Firewall Logs to send"
+  type        = list(string)
+  default     = ["FLOW", "ALERT"]
+}
 
 variable "firewall_log_cloudwatch_log_group_name_prefix" {
   description = "Specifies the name prefix of Network Firewall Log Group for Network Firewall logs."
   type        = string
   default     = "/aws/network-firewall-log/"
-}
-
-variable "firewall_log_cloudwatch_log_group_retention_in_days" {
-  description = "Specifies the number of days you want to retain log events in the specified log group for Network Firewall logs."
-  type        = number
-  default     = 120
-}
-
-variable "firewall_log_cloudwatch_log_group_kms_key_id" {
-  description = "The ARN of the KMS Key to use when encrypting log data for Network Firewall logs."
-  type        = string
-  default     = null
-}
-
-variable "firewall_log_types" {
-  description = "The Types of Network Firewall Logs to send"
-  type        = list(string)
-  default     = ["FLOW", "ALERT"]
 }
 
 variable "region" {
@@ -1265,19 +1229,19 @@ variable "tenant" {
   default     = "app"
 }
 
-variable "description" {
+variable "firewall_description" {
   description = "Description of the network firewall."
   type        = string
   default     = null
 }
 
-variable "delete_protection" {
+variable "firewall_delete_protection" {
   description = "A boolean flag indicating whether it is possible to delete the firewall. Defaults to `true`"
   type        = bool
   default     = true
 }
 
-variable "subnet_change_protection" {
+variable "firewall_subnet_change_protection" {
   description = "A boolean flag indicating whether it is possible to change the associated subnet(s). Defaults to `true`"
   type        = bool
   default     = true
@@ -1289,12 +1253,12 @@ variable "firewall_policy_change_protection" {
   default     = true
 }
 
-variable "logs_retention_in_days" {
+variable "firewall_logs_retention_in_days" {
   type        = string
   description = "Specifies the number of days you want to retain log events in the specified log group. Possible values are: 1, 3, 5, 7, 14, 30, 60, 90, 120, 150, 180, 365, 400, 545, 731, 1827, and 3653."
 }
 
-variable "logs_kms_key_arn" {
+variable "firewall_logs_kms_key_arn" {
   description = "The Amazon Resource Name (ARN) of the key used for encrypting the log group"
   type        = string
 }
@@ -1302,9 +1266,6 @@ variable "logs_kms_key_arn" {
 resource "random_id" "suffix_name" {
   byte_length = 1
 }
-
-
-
 
 ################################################################################
 # Firewall Subnet
@@ -1314,28 +1275,15 @@ variable "firewall_subnets" {
   description = "A list of firewall subnets inside the VPC"
   type        = list(string)
   default     = []
+
+  validation {
+    condition     = var.create_network_firewall == false || length(var.firewall_subnets) > 0
+    error_message = "The 'firewall_subnets' variable must be set when 'create_network_firewall' is true."
+  }
 }
 
 variable "firewall_subnet_assign_ipv6_address_on_creation" {
   description = "Specify true to indicate that network interfaces created in the specified subnet should be assigned an IPv6 address. Default is `false`"
-  type        = bool
-  default     = false
-}
-
-variable "firewall_subnet_enable_dns64" {
-  description = "Indicates whether DNS queries made to the Amazon-provided DNS Resolver in this subnet should return synthetic IPv6 addresses for IPv4-only destinations. Default: `true`"
-  type        = bool
-  default     = true
-}
-
-variable "firewall_subnet_enable_resource_name_dns_aaaa_record_on_launch" {
-  description = "Indicates whether to respond to DNS queries for instance hostnames with DNS AAAA records. Default: `true`"
-  type        = bool
-  default     = true
-}
-
-variable "firewall_subnet_enable_resource_name_dns_a_record_on_launch" {
-  description = "Indicates whether to respond to DNS queries for instance hostnames with DNS A records. Default: `false`"
   type        = bool
   default     = false
 }
@@ -1352,33 +1300,15 @@ variable "firewall_subnet_ipv6_native" {
   default     = false
 }
 
-variable "firewall_subnet_private_dns_hostname_type_on_launch" {
-  description = "The type of hostnames to assign to instances in the subnet at launch. For IPv6-only subnets, an instance DNS name must be based on the instance ID. For dual-stack and IPv4-only subnets, you can specify whether DNS names use the instance IPv4 address or the instance ID. Valid values: `ip-name`, `resource-name`"
-  type        = string
-  default     = null
-}
-
-variable "firewall_subnet_names" {
-  description = "Explicit values to use in the Name tag on firewall subnets. If empty, Name tags are generated"
-  type        = list(string)
-  default     = []
-}
-
 variable "firewall_subnet_suffix" {
   description = "Suffix to append to firewall subnets name"
   type        = string
-  default     = "public"
+  default     = "firewall"
 }
 
 variable "firewall_subnet_tags" {
   description = "Additional tags for the firewall subnets"
   type        = map(string)
-  default     = {}
-}
-
-variable "firewall_subnet_tags_per_az" {
-  description = "Additional tags for the firewall subnets where the primary key is the AZ"
-  type        = map(map(string))
   default     = {}
 }
 
@@ -1433,16 +1363,6 @@ variable "firewall_acl_tags" {
   type        = map(string)
   default     = {}
 }
-
-
-
-
-
-
-
-
-
-
 
 ################################################################################
 # Internet Gateway

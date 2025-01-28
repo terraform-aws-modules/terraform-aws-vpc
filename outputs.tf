@@ -708,6 +708,11 @@ output "firewall_status" {
   value       = try(module.firewall[0].status, {})
 }
 
+output "network_firewall_arn" {
+  description = "ARN of the Network Firewall"
+  value       = try(module.firewall[0].arn, {})
+}
+
 ################################################################################
 # Static values (arguments)
 ################################################################################
