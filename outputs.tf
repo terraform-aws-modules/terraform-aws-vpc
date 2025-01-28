@@ -79,8 +79,8 @@ output "vpc_owner_id" {
 }
 
 output "vpc_block_public_access_exclusions" {
-  description = "List of VPC block public access exclusions"
-  value       = [for k, v in aws_vpc_block_public_access_exclusion.this : v.id]
+  description = "A map of VPC block public access exclusions"
+  value       = { for k, v in aws_vpc_block_public_access_exclusion.this : k => v.id }
 }
 
 ################################################################################

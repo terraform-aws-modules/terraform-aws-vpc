@@ -117,60 +117,13 @@ variable "tags" {
 }
 
 variable "vpc_block_public_access_options" {
-  description = <<EOF
-  Map of VPC Block Public Access Options e.g.:
-
-  ```
-  vpc_block_public_access_options = {
-    internet_gateway_block_mode = "block-bidirectional"
-  }
-  ```
-
-  Currently only `internet_gateway_block_mode` is supported, for which
-  valid values are `block-bidirectional`, `block-ingress` and `off`.
-  EOF
+  description = "A map of VPC block public access options"
   type        = map(string)
   default     = {}
 }
 
 variable "vpc_block_public_access_exclusions" {
-  description = <<EOF
-  List of VPC Block Public Access Exclusions e.g. to exclude the VPC:
-
-  ```
-  vpc_block_public_access_exclusions = {
-    exclude_vpc = {
-      exclude_vpc                     = true
-      internet_gateway_exclusion_mode = "allow-bidirectional"
-    }
-  }
-  ```
-
-  or to exclude specific subnets:
-
-  ```
-  vpc_block_public_access_exclusions = {
-    exclude_subnet_private1 = {
-      exclude_subnet                  = true
-      subnet_type                     = "private"
-      subnet_index                    = 1
-      internet_gateway_exclusion_mode = "allow-egress"
-    }
-    exclude_subnet_private2 = {
-      exclude_subnet                  = true
-      subnet_type                     = "private"
-      subnet_index                    = 2
-      internet_gateway_exclusion_mode = "allow-egress"
-    }
-  }
-  ```
-
-  One of `exclude_vpc` or `exclude_subnet` must be set to true.
-  Value of `subnet_type` can be `public`, `private`, `database`, `redshift`, `elasticache`, `intra` or `custom`.
-  Value of `subnet_index` is the index of the subnet in the corresponding subnet list.
-  Value of `internet_gateway_exclusion_mode` can be `allow-egress` and `allow-bidirectional`.
-
-  EOF
+  description = "A map of VPC block public access exclusions"
   type        = map(any)
   default     = {}
 }

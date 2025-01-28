@@ -18,13 +18,58 @@ $ terraform apply
 
 Note that this example may create resources which can cost money (AWS Elastic IP, for example). Run `terraform destroy` when you don't need these resources.
 
-After deployment, VPC Block Public Access Options can be verified with the following command:
+In the example below, a map of VPC block public access options is configured:
+
+```
+vpc_block_public_access_options = {
+    internet_gateway_block_mode = "block-bidirectional"
+}
+```
+
+Currently only `internet_gateway_block_mode` is supported, for which valid values are `block-bidirectional`, `block-ingress` and `off`.
+
+VPC block public access exclusions can be applied at the VPC level e.g.:
+
+```
+vpc_block_public_access_exclusions = {
+    exclude_vpc = {
+        exclude_vpc                     = true
+        internet_gateway_exclusion_mode = "allow-bidirectional"
+    }
+}
+```
+
+or at the subnet level e.g.:
+
+```
+vpc_block_public_access_exclusions = {
+    exclude_subnet_private1 = {
+        exclude_subnet                  = true
+        subnet_type                     = "private"
+        subnet_index                    = 1
+        internet_gateway_exclusion_mode = "allow-egress"
+    }
+    exclude_subnet_private2 = {
+        exclude_subnet                  = true
+        subnet_type                     = "private"
+        subnet_index                    = 2
+        internet_gateway_exclusion_mode = "allow-egress"
+    }
+}
+```
+
+One of `exclude_vpc` or `exclude_subnet` must be set to true.
+Value of `subnet_type` can be `public`, `private`, `database`, `redshift`, `elasticache`, `intra` or `custom`.
+Value of `subnet_index` is the index of the subnet in the corresponding subnet list.
+Value of `internet_gateway_exclusion_mode` can be `allow-egress` and `allow-bidirectional`.
+
+After deployment, VPC block public access options can be verified with the following command:
 
 ```bash
 aws ec2 --region eu-west-1 describe-vpc-block-public-access-options
 ```
 
-Similarly, VPC Block Public Access Exclusions can be checked by obtaining the exclusion ID from the Terraform output and running commands:
+Similarly, VPC block public access exclusions can be checked by obtaining the exclusion ID from the Terraform output and running commands:
 
 ```bash
 terraform output vpc_block_public_access_exclusions
@@ -159,7 +204,7 @@ No inputs.
 | <a name="output_vgw_arn"></a> [vgw\_arn](#output\_vgw\_arn) | The ARN of the VPN Gateway |
 | <a name="output_vgw_id"></a> [vgw\_id](#output\_vgw\_id) | The ID of the VPN Gateway |
 | <a name="output_vpc_arn"></a> [vpc\_arn](#output\_vpc\_arn) | The ARN of the VPC |
-| <a name="output_vpc_block_public_access_exclusions"></a> [vpc\_block\_public\_access\_exclusions](#output\_vpc\_block\_public\_access\_exclusions) | List of VPC block public access exclusions |
+| <a name="output_vpc_block_public_access_exclusions"></a> [vpc\_block\_public\_access\_exclusions](#output\_vpc\_block\_public\_access\_exclusions) | A map of VPC block public access exclusions |
 | <a name="output_vpc_cidr_block"></a> [vpc\_cidr\_block](#output\_vpc\_cidr\_block) | The CIDR block of the VPC |
 | <a name="output_vpc_enable_dns_hostnames"></a> [vpc\_enable\_dns\_hostnames](#output\_vpc\_enable\_dns\_hostnames) | Whether or not the VPC has DNS hostname support |
 | <a name="output_vpc_enable_dns_support"></a> [vpc\_enable\_dns\_support](#output\_vpc\_enable\_dns\_support) | Whether or not the VPC has DNS support |

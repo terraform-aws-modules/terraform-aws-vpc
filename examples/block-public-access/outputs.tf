@@ -69,7 +69,7 @@ output "vpc_owner_id" {
 }
 
 output "vpc_block_public_access_exclusions" {
-  description = "List of VPC block public access exclusions"
+  description = "A map of VPC block public access exclusions"
   value       = module.vpc.vpc_block_public_access_exclusions
 }
 
