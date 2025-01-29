@@ -112,8 +112,7 @@ module "logs_flow" {
 }
 
 module "kms" {
-  #source = "git::https://github.com/withclutch/terraform-modules-registry?ref=aws-kms_v1.194"
-  source = "/Users/roger.amorim/Clutch/projects/infrastructure/terraform-modules/modules/aws-kms"
+  source = "git::https://github.com/withclutch/terraform-modules-registry?ref=aws-kms_v1.204"
   count  = var.create_network_firewall ? 1 : 0
 
   name                              = "${local.name}-kms"

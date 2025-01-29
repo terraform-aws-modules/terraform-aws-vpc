@@ -1,3 +1,26 @@
+VPC with Network Firewall
+
+This configuration creates a VPC with the following resources across multiple AZs
+
+- Internet gateway
+- NAT gateway per AZ
+- public, private and firewall subnets
+- AWS network firewall
+
+The routing tables for such a deployment model follows the [AWS blog suggestion](https://aws.amazon.com/blogs/networking-and-content-delivery/deployment-models-for-aws-network-firewall/), particularly "2) AWS Network Firewall is deployed to protect traffic between an AWS service in a public subnet and IGW"
+
+## Usage
+
+To run this example you need to execute:
+
+```bash
+$ terraform init
+$ terraform plan
+$ terraform apply
+```
+
+Note that this example may create resources which can cost money (AWS Elastic IP, for example). Run `terraform destroy` when you don't need these resources.
+
 ## Requirements
 
 | Name | Version |
@@ -10,13 +33,13 @@
 
 | Name | Version |
 |------|---------|
-| <a name="provider_random"></a> [random](#provider\_random) | 3.6.3 |
+| <a name="provider_random"></a> [random](#provider\_random) | >= 3.0 |
 
 ## Modules
 
 | Name | Source | Version |
 |------|--------|---------|
-| <a name="module_kms"></a> [kms](#module\_kms) | /Users/roger.amorim/Clutch/projects/infrastructure/terraform-modules/modules/aws-kms | n/a |
+| <a name="module_kms"></a> [kms](#module\_kms) | git::https://github.com/withclutch/terraform-modules-registry | aws-kms_v1.204 |
 | <a name="module_vpc"></a> [vpc](#module\_vpc) | ../../ | n/a |
 
 ## Resources

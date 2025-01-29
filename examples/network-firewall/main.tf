@@ -18,8 +18,7 @@ resource "random_pet" "this" {
 ################################################################################
 
 module "kms" {
-  #source = "git::https://github.com/withclutch/terraform-modules-registry?ref=aws-kms_v1.194"
-  source = "/Users/roger.amorim/Clutch/projects/infrastructure/terraform-modules/modules/aws-kms"
+  source = "git::https://github.com/withclutch/terraform-modules-registry?ref=aws-kms_v1.204"
 
   name                              = "${local.name_prefix}-kms"
   environment                       = "test"
