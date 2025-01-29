@@ -112,16 +112,17 @@ module "logs_flow" {
 }
 
 module "kms" {
-  source = "git::https://github.com/withclutch/terraform-modules-registry?ref=aws-kms_v1.194"
+  #source = "git::https://github.com/withclutch/terraform-modules-registry?ref=aws-kms_v1.194"
+  source = "/Users/roger.amorim/Clutch/projects/infrastructure/terraform-modules/modules/aws-kms"
+  count  = var.create_network_firewall ? 1 : 0
 
-  count = var.create_network_firewall ? 1 : 0
-
-  description = "KMS key used for ${local.name} AWS Network Firewall"
-  name        = "${local.name}-kms"
-  region      = var.region
-  environment = var.environment
-  namespace   = var.namespace
-  tenant      = var.tenant
-  tags        = var.tags
+  name                              = "${local.name}-kms"
+  description                       = "KMS key used for ${local.name} AWS Network Firewall"
+  region                            = var.region
+  environment                       = var.environment
+  namespace                         = var.namespace
+  tenant                            = var.tenant
+  tags                              = var.tags
+  allow_usage_in_network_log_groups = true
 }
 

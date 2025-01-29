@@ -16,7 +16,7 @@
 
 | Name | Source | Version |
 |------|--------|---------|
-| <a name="module_kms"></a> [kms](#module\_kms) | git::https://github.com/withclutch/terraform-modules-registry | aws-kms_v1.194 |
+| <a name="module_kms"></a> [kms](#module\_kms) | /Users/roger.amorim/Clutch/projects/infrastructure/terraform-modules/modules/aws-kms | n/a |
 | <a name="module_vpc"></a> [vpc](#module\_vpc) | ../../ | n/a |
 
 ## Resources

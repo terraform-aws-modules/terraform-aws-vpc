@@ -3,8 +3,8 @@ provider "aws" {
 }
 
 locals {
-  region      = "us-east-1"
-  name        = "nf-example-${random_pet.this.id}"
+  region      = "us-east-2"
+  name_prefix = random_pet.this.id
   environment = "test"
 }
 
@@ -18,11 +18,13 @@ resource "random_pet" "this" {
 ################################################################################
 
 module "kms" {
-  source = "git::https://github.com/withclutch/terraform-modules-registry?ref=aws-kms_v1.194"
+  #source = "git::https://github.com/withclutch/terraform-modules-registry?ref=aws-kms_v1.194"
+  source = "/Users/roger.amorim/Clutch/projects/infrastructure/terraform-modules/modules/aws-kms"
 
-  name        = local.name
-  environment = "test"
-  description = "KMS key used to test the ${local.name} AWS Network Firewall"
+  name                              = "${local.name_prefix}-kms"
+  environment                       = "test"
+  description                       = "KMS key used to test the ${local.name_prefix} AWS Network Firewall"
+  allow_usage_in_network_log_groups = true
 }
 
 ################################################################################
