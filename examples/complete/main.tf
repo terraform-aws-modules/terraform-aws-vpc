@@ -122,6 +122,13 @@ module "vpc_endpoints" {
       service             = "ecs"
       private_dns_enabled = true
       subnet_ids          = module.vpc.private_subnets
+      subnet_configurations = [
+        for v in module.vpc.private_subnet_objects :
+        {
+          ipv4      = cidrhost(v.cidr_block, 10)
+          subnet_id = v.id
+        }
+      ]
     },
     ecs_telemetry = {
       create              = false
