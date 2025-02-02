@@ -823,6 +823,7 @@ resource "aws_subnet" "intra" {
     },
     var.tags,
     var.intra_subnet_tags,
+    lookup(var.intra_subnet_tags_per_az, element(var.azs, count.index), {})
   )
 }
 
