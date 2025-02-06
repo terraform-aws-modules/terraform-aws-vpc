@@ -11,8 +11,9 @@ locals {
 data "aws_vpc_endpoint_service" "this" {
   for_each = local.endpoints
 
-  service      = try(each.value.service, null)
-  service_name = try(each.value.service_name, null)
+  service         = try(each.value.service, null)
+  service_name    = try(each.value.service_name, null)
+  service_regions = try(coalescelist(compact([each.value.service_region])), null)
 
   filter {
     name   = "service-type"
@@ -25,6 +26,7 @@ resource "aws_vpc_endpoint" "this" {
 
   vpc_id            = var.vpc_id
   service_name      = try(each.value.service_endpoint, data.aws_vpc_endpoint_service.this[each.key].service_name)
+  service_region    = try(each.value.service_region, null)
   vpc_endpoint_type = try(each.value.service_type, "Interface")
   auto_accept       = try(each.value.auto_accept, null)
 
