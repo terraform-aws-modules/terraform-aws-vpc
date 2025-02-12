@@ -122,6 +122,18 @@ variable "tags" {
   default     = {}
 }
 
+variable "vpc_block_public_access_options" {
+  description = "A map of VPC block public access options"
+  type        = map(string)
+  default     = {}
+}
+
+variable "vpc_block_public_access_exclusions" {
+  description = "A map of VPC block public access exclusions"
+  type        = map(any)
+  default     = {}
+}
+
 ################################################################################
 # DHCP Options Set
 ################################################################################

@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [5.19.0](https://github.com/terraform-aws-modules/terraform-aws-vpc/compare/v5.18.1...v5.19.0) (2025-02-12)
+
+
+### Features
+
+* Enhancing VPC Security with Amazon VPC Block Public Access ([#1159](https://github.com/terraform-aws-modules/terraform-aws-vpc/issues/1159)) ([387f5ee](https://github.com/terraform-aws-modules/terraform-aws-vpc/commit/387f5eeef45134eccf18b24eba62c883a57fadd8))
+
 ## [5.18.1](https://github.com/terraform-aws-modules/terraform-aws-vpc/compare/v5.18.0...v5.18.1) (2025-01-28)
 
 

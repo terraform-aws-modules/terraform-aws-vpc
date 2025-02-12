@@ -242,6 +242,7 @@ module "vpc_cidr_from_ipam" {
 - [VPC with unique route tables](https://github.com/terraform-aws-modules/terraform-aws-vpc/tree/master/examples/separate-route-tables)
 - [Simple VPC](https://github.com/terraform-aws-modules/terraform-aws-vpc/tree/master/examples/simple)
 - [VPC Flow Logs](https://github.com/terraform-aws-modules/terraform-aws-vpc/tree/master/examples/vpc-flow-logs)
+- [VPC Block Public Access](https://github.com/terraform-aws-modules/terraform-aws-vpc/tree/master/examples/block-public-access)
 - [Few tests and edge case examples](https://github.com/terraform-aws-modules/terraform-aws-vpc/tree/master/examples/issues)
 
 ## Contributing
@@ -256,13 +257,13 @@ Full contributing [guidelines are covered here](.github/contributing.md).
 | Name | Version |
 |------|---------|
 | <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 1.0 |
-| <a name="requirement_aws"></a> [aws](#requirement\_aws) | >= 5.46 |
+| <a name="requirement_aws"></a> [aws](#requirement\_aws) | >= 5.79 |
 
 ## Providers
 
 | Name | Version |
 |------|---------|
-| <a name="provider_aws"></a> [aws](#provider\_aws) | >= 5.46 |
+| <a name="provider_aws"></a> [aws](#provider\_aws) | >= 5.79 |
 
 ## Modules
 
@@ -341,6 +342,8 @@ No modules.
 | [aws_subnet.public](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/subnet) | resource |
 | [aws_subnet.redshift](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/subnet) | resource |
 | [aws_vpc.this](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/vpc) | resource |
+| [aws_vpc_block_public_access_exclusion.this](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/vpc_block_public_access_exclusion) | resource |
+| [aws_vpc_block_public_access_options.this](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/vpc_block_public_access_options) | resource |
 | [aws_vpc_dhcp_options.this](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/vpc_dhcp_options) | resource |
 | [aws_vpc_dhcp_options_association.this](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/vpc_dhcp_options_association) | resource |
 | [aws_vpc_ipv4_cidr_block_association.this](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/vpc_ipv4_cidr_block_association) | resource |
@@ -580,8 +583,9 @@ No modules.
 | <a name="input_secondary_cidr_blocks"></a> [secondary\_cidr\_blocks](#input\_secondary\_cidr\_blocks) | List of secondary CIDR blocks to associate with the VPC to extend the IP Address pool | `list(string)` | `[]` | no |
 | <a name="input_single_nat_gateway"></a> [single\_nat\_gateway](#input\_single\_nat\_gateway) | Should be true if you want to provision a single shared NAT Gateway across all of your private networks | `bool` | `false` | no |
 | <a name="input_tags"></a> [tags](#input\_tags) | A map of tags to add to all resources | `map(string)` | `{}` | no |
-| <a name="input_use_ipv4_ipam_pool"></a> [use\_ipv4\_ipam\_pool](#input\_use\_ipv4\_ipam\_pool) | Determines whether IPAM pool is used for IPv4 CIDR allocation | `bool` | `false` | no |
-| <a name="input_use_ipv6_ipam_pool"></a> [use\_ipv6\_ipam\_pool](#input\_use\_ipv6\_ipam\_pool) | Determines whether IPAM pool is used for IPv6 CIDR allocation | `bool` | `false` | no |
+| <a name="input_use_ipam_pool"></a> [use\_ipam\_pool](#input\_use\_ipam\_pool) | Determines whether IPAM pool is used for CIDR allocation | `bool` | `false` | no |
+| <a name="input_vpc_block_public_access_exclusions"></a> [vpc\_block\_public\_access\_exclusions](#input\_vpc\_block\_public\_access\_exclusions) | A map of VPC block public access exclusions | `map(any)` | `{}` | no |
+| <a name="input_vpc_block_public_access_options"></a> [vpc\_block\_public\_access\_options](#input\_vpc\_block\_public\_access\_options) | A map of VPC block public access options | `map(string)` | `{}` | no |
 | <a name="input_vpc_flow_log_iam_policy_name"></a> [vpc\_flow\_log\_iam\_policy\_name](#input\_vpc\_flow\_log\_iam\_policy\_name) | Name of the IAM policy | `string` | `"vpc-flow-log-to-cloudwatch"` | no |
 | <a name="input_vpc_flow_log_iam_policy_use_name_prefix"></a> [vpc\_flow\_log\_iam\_policy\_use\_name\_prefix](#input\_vpc\_flow\_log\_iam\_policy\_use\_name\_prefix) | Determines whether the name of the IAM policy (`vpc_flow_log_iam_policy_name`) is used as a prefix | `bool` | `true` | no |
 | <a name="input_vpc_flow_log_iam_role_name"></a> [vpc\_flow\_log\_iam\_role\_name](#input\_vpc\_flow\_log\_iam\_role\_name) | Name to use on the VPC Flow Log IAM role created | `string` | `"vpc-flow-log-role"` | no |
@@ -700,6 +704,7 @@ No modules.
 | <a name="output_vgw_arn"></a> [vgw\_arn](#output\_vgw\_arn) | The ARN of the VPN Gateway |
 | <a name="output_vgw_id"></a> [vgw\_id](#output\_vgw\_id) | The ID of the VPN Gateway |
 | <a name="output_vpc_arn"></a> [vpc\_arn](#output\_vpc\_arn) | The ARN of the VPC |
+| <a name="output_vpc_block_public_access_exclusions"></a> [vpc\_block\_public\_access\_exclusions](#output\_vpc\_block\_public\_access\_exclusions) | A map of VPC block public access exclusions |
 | <a name="output_vpc_cidr_block"></a> [vpc\_cidr\_block](#output\_vpc\_cidr\_block) | The CIDR block of the VPC |
 | <a name="output_vpc_enable_dns_hostnames"></a> [vpc\_enable\_dns\_hostnames](#output\_vpc\_enable\_dns\_hostnames) | Whether or not the VPC has DNS hostname support |
 | <a name="output_vpc_enable_dns_support"></a> [vpc\_enable\_dns\_support](#output\_vpc\_enable\_dns\_support) | Whether or not the VPC has DNS support |
