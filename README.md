@@ -583,7 +583,8 @@ No modules.
 | <a name="input_secondary_cidr_blocks"></a> [secondary\_cidr\_blocks](#input\_secondary\_cidr\_blocks) | List of secondary CIDR blocks to associate with the VPC to extend the IP Address pool | `list(string)` | `[]` | no |
 | <a name="input_single_nat_gateway"></a> [single\_nat\_gateway](#input\_single\_nat\_gateway) | Should be true if you want to provision a single shared NAT Gateway across all of your private networks | `bool` | `false` | no |
 | <a name="input_tags"></a> [tags](#input\_tags) | A map of tags to add to all resources | `map(string)` | `{}` | no |
-| <a name="input_use_ipam_pool"></a> [use\_ipam\_pool](#input\_use\_ipam\_pool) | Determines whether IPAM pool is used for CIDR allocation | `bool` | `false` | no |
+| <a name="input_use_ipv4_ipam_pool"></a> [use\_ipv4\_ipam\_pool](#input\_use\_ipv4\_ipam\_pool) | Determines whether IPAM pool is used for IPv4 CIDR allocation | `bool` | `false` | no |
+| <a name="input_use_ipv6_ipam_pool"></a> [use\_ipv6\_ipam\_pool](#input\_use\_ipv6\_ipam\_pool) | Determines whether IPAM pool is used for IPv6 CIDR allocation | `bool` | `false` | no |
 | <a name="input_vpc_block_public_access_exclusions"></a> [vpc\_block\_public\_access\_exclusions](#input\_vpc\_block\_public\_access\_exclusions) | A map of VPC block public access exclusions | `map(any)` | `{}` | no |
 | <a name="input_vpc_block_public_access_options"></a> [vpc\_block\_public\_access\_options](#input\_vpc\_block\_public\_access\_options) | A map of VPC block public access options | `map(string)` | `{}` | no |
 | <a name="input_vpc_flow_log_iam_policy_name"></a> [vpc\_flow\_log\_iam\_policy\_name](#input\_vpc\_flow\_log\_iam\_policy\_name) | Name of the IAM policy | `string` | `"vpc-flow-log-to-cloudwatch"` | no |
