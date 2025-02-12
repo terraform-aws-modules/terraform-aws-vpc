@@ -28,7 +28,7 @@ module "vpc_ipam_set_netmask" {
 
   name = "${local.name}-set-netmask"
 
-  use_ipam_pool       = true
+  use_ipv4_ipam_pool  = true
   ipv4_ipam_pool_id   = aws_vpc_ipam_pool.this.id
   ipv4_netmask_length = 16
   azs                 = local.azs
@@ -48,10 +48,10 @@ module "vpc_ipam_set_cidr" {
 
   name = "${local.name}-set-cidr"
 
-  use_ipam_pool     = true
-  ipv4_ipam_pool_id = aws_vpc_ipam_pool.this.id
-  cidr              = "10.1.0.0/16"
-  azs               = local.azs
+  use_ipv4_ipam_pool = true
+  ipv4_ipam_pool_id  = aws_vpc_ipam_pool.this.id
+  cidr               = "10.1.0.0/16"
+  azs                = local.azs
 
   private_subnets = ["10.1.1.0/24", "10.1.2.0/24", "10.1.3.0/24"]
   public_subnets  = ["10.1.11.0/24", "10.1.12.0/24", "10.1.13.0/24"]
@@ -65,7 +65,7 @@ module "vpc_ipam_set_cidr" {
 
 #   name = "${local.name}-ipv6-set-netmask"
 
-#   use_ipam_pool       = true
+#   use_ipv4_ipam_pool  = true
 #   ipv4_ipam_pool_id   = aws_vpc_ipam_pool.this.id
 #   ipv6_ipam_pool_id   = aws_vpc_ipam_pool.ipv6.id
 #   ipv6_netmask_length = 56
