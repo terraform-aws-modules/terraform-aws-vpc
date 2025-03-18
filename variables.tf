@@ -182,6 +182,18 @@ variable "vpc_flow_log_tags" {
   default     = {}
 }
 
+variable "lg_filters" {
+  description = "Log group filters for Network Firewall"
+  type = map(object({
+    naming_suffix   = string
+    role_arn        = string
+    filter_pattern  = string
+    destination_arn = string
+    distribution    = string
+  }))
+  default = {}
+}
+
 ################################################################################
 # DHCP Options Set
 ################################################################################

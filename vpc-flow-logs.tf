@@ -112,3 +112,13 @@ data "aws_iam_policy_document" "vpc_flow_log_cloudwatch" {
     resources = ["arn:aws:logs:*:*:log-group:${var.flow_log_cloudwatch_log_group_name_prefix}${local.flow_log_cloudwatch_log_group_name_suffix}:*"]
   }
 }
+
+resource "aws_cloudwatch_log_subscription_filter" "flow_log" {
+  for_each        = local.create_flow_log_cloudwatch_log_group ? var.lg_filters : {}
+  name            = "${one(aws_cloudwatch_log_group.flow_log[*]).name}-${each.value.naming_suffix}"
+  role_arn        = each.value.role_arn
+  log_group_name  = one(aws_cloudwatch_log_group.flow_log[*]).name
+  filter_pattern  = each.value.filter_pattern
+  destination_arn = each.value.destination_arn
+  distribution    = each.value.distribution
+}
