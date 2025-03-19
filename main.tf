@@ -86,7 +86,9 @@ resource "aws_vpc_block_public_access_exclusion" "this" {
 
   internet_gateway_exclusion_mode = each.value.internet_gateway_exclusion_mode
 
-  tags = var.tags
+  tags = merge(
+    { "Name" = try(coalesce(each.value.exclude_name), "${var.name}-bpa-exclusion") },
+  var.tags, )
 }
 
 ################################################################################

@@ -48,12 +48,14 @@ module "vpc" {
   # vpc_block_public_access_exclusions = {
   #   exclude_subnet_private1 = {
   #     exclude_subnet                  = true
+  #     exclude_name                    = "private-subnet-1"
   #     subnet_type                     = "private"
   #     subnet_index                    = 1
   #     internet_gateway_exclusion_mode = "allow-egress"
   #   }
   #   exclude_subnet_private2 = {
   #     exclude_subnet                  = true
+  #     exclude_name                    = "private-subnet-2"
   #     subnet_type                     = "private"
   #     subnet_index                    = 2
   #     internet_gateway_exclusion_mode = "allow-egress"
