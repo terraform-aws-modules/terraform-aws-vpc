@@ -244,6 +244,12 @@ variable "public_subnet_private_dns_hostname_type_on_launch" {
   default     = null
 }
 
+variable "public_route_table_names" {
+  description = "Explicit values to use in the Name tag on public route tables. If empty, Name tags are generated"
+  type        = list(string)
+  default     = []
+}
+
 variable "public_subnet_names" {
   description = "Explicit values to use in the Name tag on public subnets. If empty, Name tags are generated"
   type        = list(string)
@@ -370,6 +376,12 @@ variable "private_subnet_private_dns_hostname_type_on_launch" {
   description = "The type of hostnames to assign to instances in the subnet at launch. For IPv6-only subnets, an instance DNS name must be based on the instance ID. For dual-stack and IPv4-only subnets, you can specify whether DNS names use the instance IPv4 address or the instance ID. Valid values: `ip-name`, `resource-name`"
   type        = string
   default     = null
+}
+
+variable "private_route_table_names" {
+  description = "Explicit values to use in the Name tag on private route tables. If empty, Name tags are generated"
+  type        = list(string)
+  default     = []
 }
 
 variable "private_subnet_names" {
@@ -504,6 +516,12 @@ variable "database_subnet_private_dns_hostname_type_on_launch" {
   description = "The type of hostnames to assign to instances in the subnet at launch. For IPv6-only subnets, an instance DNS name must be based on the instance ID. For dual-stack and IPv4-only subnets, you can specify whether DNS names use the instance IPv4 address or the instance ID. Valid values: `ip-name`, `resource-name`"
   type        = string
   default     = null
+}
+
+variable "database_route_table_names" {
+  description = "Explicit values to use in the Name tag on database route tables. If empty, Name tags are generated"
+  type        = list(string)
+  default     = []
 }
 
 variable "database_subnet_names" {
@@ -664,6 +682,12 @@ variable "redshift_subnet_private_dns_hostname_type_on_launch" {
   default     = null
 }
 
+variable "redshift_route_table_names" {
+  description = "Explicit values to use in the Name tag on redshift route tables. If empty, Name tags are generated"
+  type        = list(string)
+  default     = []
+}
+
 variable "redshift_subnet_names" {
   description = "Explicit values to use in the Name tag on redshift subnets. If empty, Name tags are generated"
   type        = list(string)
@@ -814,6 +838,12 @@ variable "elasticache_subnet_private_dns_hostname_type_on_launch" {
   description = "The type of hostnames to assign to instances in the subnet at launch. For IPv6-only subnets, an instance DNS name must be based on the instance ID. For dual-stack and IPv4-only subnets, you can specify whether DNS names use the instance IPv4 address or the instance ID. Valid values: `ip-name`, `resource-name`"
   type        = string
   default     = null
+}
+
+variable "elasticache_route_table_names" {
+  description = "Explicit values to use in the Name tag on public route tables. If empty, Name tags are generated"
+  type        = list(string)
+  default     = []
 }
 
 variable "elasticache_subnet_names" {
@@ -968,6 +998,12 @@ variable "intra_subnet_private_dns_hostname_type_on_launch" {
   default     = null
 }
 
+variable "intra_route_table_names" {
+  description = "Explicit values to use in the Name tag on intra route tables. If empty, Name tags are generated"
+  type        = list(string)
+  default     = []
+}
+
 variable "intra_subnet_names" {
   description = "Explicit values to use in the Name tag on intra subnets. If empty, Name tags are generated"
   type        = list(string)
@@ -1112,6 +1148,12 @@ variable "outpost_subnet_private_dns_hostname_type_on_launch" {
   description = "The type of hostnames to assign to instances in the subnet at launch. For IPv6-only subnets, an instance DNS name must be based on the instance ID. For dual-stack and IPv4-only subnets, you can specify whether DNS names use the instance IPv4 address or the instance ID. Valid values: `ip-name`, `resource-name`"
   type        = string
   default     = null
+}
+
+variable "outpost_route_table_names" {
+  description = "Explicit values to use in the Name tag on outpost route tables. If empty, Name tags are generated"
+  type        = list(string)
+  default     = []
 }
 
 variable "outpost_subnet_names" {

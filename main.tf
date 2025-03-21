@@ -165,10 +165,13 @@ resource "aws_route_table" "public" {
 
   tags = merge(
     {
-      "Name" = var.create_multiple_public_route_tables ? format(
-        "${var.name}-${var.public_subnet_suffix}-%s",
-        element(var.azs, count.index),
-      ) : "${var.name}-${var.public_subnet_suffix}"
+      Name = try(
+        var.public_route_table_names[count.index],
+        var.create_multiple_public_route_tables ? format(
+          "${var.name}-${var.public_subnet_suffix}-%s",
+          element(var.azs, count.index),
+        ) : "${var.name}-${var.public_subnet_suffix}"
+      )
     },
     var.tags,
     var.public_route_table_tags,
@@ -297,9 +300,12 @@ resource "aws_route_table" "private" {
 
   tags = merge(
     {
-      "Name" = var.single_nat_gateway ? "${var.name}-${var.private_subnet_suffix}" : format(
-        "${var.name}-${var.private_subnet_suffix}-%s",
-        element(var.azs, count.index),
+      Name = try(
+        var.private_route_table_names[count.index],
+        var.single_nat_gateway ? "${var.name}-${var.private_subnet_suffix}" : format(
+          "${var.name}-${var.private_subnet_suffix}-%s",
+          element(var.azs, count.index),
+        )
       )
     },
     var.tags,
