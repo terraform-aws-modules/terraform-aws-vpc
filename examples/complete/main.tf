@@ -37,6 +37,14 @@ module "vpc" {
   intra_subnets       = [for k, v in local.azs : cidrsubnet(local.vpc_cidr, 8, k + 20)]
 
   private_subnet_names = ["Private Subnet One", "Private Subnet Two"]
+  private_subnet_tags_per_name = {
+    "Private Subnet One" = {
+      "subnet one" = "true"
+    },
+    "Private Subnet Two" = {
+      "subnet two" = "true"
+    }
+  }
   # public_subnet_names omitted to show default name generation for all three subnets
   database_subnet_names    = ["DB Subnet One"]
   elasticache_subnet_names = ["Elasticache Subnet One", "Elasticache Subnet Two"]
