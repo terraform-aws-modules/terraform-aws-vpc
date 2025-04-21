@@ -2,6 +2,20 @@
 
 All notable changes to this project will be documented in this file.
 
+## [5.20.0](https://github.com/terraform-aws-modules/terraform-aws-vpc/compare/v5.19.0...v5.20.0) (2025-04-21)
+
+
+### Features
+
+* Allow setting custom tags on `aws_vpc_block_public_access_exclusion` resource ([#1170](https://github.com/terraform-aws-modules/terraform-aws-vpc/issues/1170)) ([0d11295](https://github.com/terraform-aws-modules/terraform-aws-vpc/commit/0d11295d8b45f1319c46bfd044030035e9e02445))
+
+## [5.19.0](https://github.com/terraform-aws-modules/terraform-aws-vpc/compare/v5.18.1...v5.19.0) (2025-02-12)
+
+
+### Features
+
+* Enhancing VPC Security with Amazon VPC Block Public Access ([#1159](https://github.com/terraform-aws-modules/terraform-aws-vpc/issues/1159)) ([387f5ee](https://github.com/terraform-aws-modules/terraform-aws-vpc/commit/387f5eeef45134eccf18b24eba62c883a57fadd8))
+
 ## [5.18.1](https://github.com/terraform-aws-modules/terraform-aws-vpc/compare/v5.18.0...v5.18.1) (2025-01-28)
 
 

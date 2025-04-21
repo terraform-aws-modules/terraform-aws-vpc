@@ -59,6 +59,39 @@ resource "aws_vpc_ipv4_cidr_block_association" "this" {
   cidr_block = element(var.secondary_cidr_blocks, count.index)
 }
 
+resource "aws_vpc_block_public_access_options" "this" {
+  count = local.create_vpc && length(keys(var.vpc_block_public_access_options)) > 0 ? 1 : 0
+
+  internet_gateway_block_mode = try(var.vpc_block_public_access_options["internet_gateway_block_mode"], null)
+}
+
+resource "aws_vpc_block_public_access_exclusion" "this" {
+  for_each = { for k, v in var.vpc_block_public_access_exclusions : k => v if local.create_vpc }
+
+  vpc_id = try(each.value.exclude_vpc, false) ? local.vpc_id : null
+
+  subnet_id = try(each.value.exclude_subnet, false) ? lookup(
+    {
+      private     = aws_subnet.private[*].id,
+      public      = aws_subnet.public[*].id,
+      database    = aws_subnet.database[*].id,
+      redshift    = aws_subnet.redshift[*].id,
+      elasticache = aws_subnet.elasticache[*].id,
+      intra       = aws_subnet.intra[*].id,
+      outpost     = aws_subnet.outpost[*].id
+    },
+    each.value.subnet_type,
+    null
+  )[each.value.subnet_index] : null
+
+  internet_gateway_exclusion_mode = each.value.internet_gateway_exclusion_mode
+
+  tags = merge(
+    var.tags,
+    try(each.value.tags, {}),
+  )
+}
+
 ################################################################################
 # DHCP Options Set
 ################################################################################
