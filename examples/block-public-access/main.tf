@@ -31,36 +31,16 @@ module "vpc" {
   azs             = local.azs
   private_subnets = [for k, v in local.azs : cidrsubnet(local.vpc_cidr, 4, k)]
 
-  ### VPC Block Public Access Options
   vpc_block_public_access_options = {
     internet_gateway_block_mode = "block-bidirectional"
   }
 
-  ### VPC Block Public Access Exclusion at the VPC level
   vpc_block_public_access_exclusions = {
     exclude_vpc = {
       exclude_vpc                     = true
       internet_gateway_exclusion_mode = "allow-bidirectional"
     }
   }
-
-  ### VPC Block Public Access Exclusion at the subnet level
-  # vpc_block_public_access_exclusions = {
-  #   exclude_subnet_private1 = {
-  #     exclude_subnet                  = true
-  #     exclude_name                    = "private-subnet-1"
-  #     subnet_type                     = "private"
-  #     subnet_index                    = 1
-  #     internet_gateway_exclusion_mode = "allow-egress"
-  #   }
-  #   exclude_subnet_private2 = {
-  #     exclude_subnet                  = true
-  #     exclude_name                    = "private-subnet-2"
-  #     subnet_type                     = "private"
-  #     subnet_index                    = 2
-  #     internet_gateway_exclusion_mode = "allow-egress"
-  #   }
-  # }
 
   tags = local.tags
 }

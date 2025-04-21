@@ -30,8 +30,8 @@ Currently only `internet_gateway_block_mode` is supported, for which valid value
 
 VPC block public access exclusions can be applied at the VPC level e.g.:
 
-```
-vpc_block_public_access_exclusions = {
+```hcl
+  vpc_block_public_access_exclusions = {
     exclude_vpc = {
         exclude_vpc                     = true
         internet_gateway_exclusion_mode = "allow-bidirectional"
@@ -41,18 +41,16 @@ vpc_block_public_access_exclusions = {
 
 or at the subnet level e.g.:
 
-```
-vpc_block_public_access_exclusions = {
+```hcl
+  vpc_block_public_access_exclusions = {
     exclude_subnet_private1 = {
         exclude_subnet                  = true
-        exclude_name                    = "private-subnet-1"
         subnet_type                     = "private"
         subnet_index                    = 1
         internet_gateway_exclusion_mode = "allow-egress"
     }
     exclude_subnet_private2 = {
         exclude_subnet                  = true
-        exclude_name                    = "private-subnet-2"
         subnet_type                     = "private"
         subnet_index                    = 2
         internet_gateway_exclusion_mode = "allow-egress"
@@ -64,7 +62,6 @@ One of `exclude_vpc` or `exclude_subnet` must be set to true.
 Value of `subnet_type` can be `public`, `private`, `database`, `redshift`, `elasticache`, `intra` or `custom`.
 Value of `subnet_index` is the index of the subnet in the corresponding subnet list.
 Value of `internet_gateway_exclusion_mode` can be `allow-egress` and `allow-bidirectional`.
-Value of `exclude_name` is string value of the Name tag for the resource. If omitted, the default name of VPC Name-bpa-exclusion is applied.
 
 After deployment, VPC block public access options can be verified with the following command:
 

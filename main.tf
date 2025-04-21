@@ -68,9 +68,9 @@ resource "aws_vpc_block_public_access_options" "this" {
 resource "aws_vpc_block_public_access_exclusion" "this" {
   for_each = { for k, v in var.vpc_block_public_access_exclusions : k => v if local.create_vpc }
 
-  vpc_id = lookup(each.value, "exclude_vpc", false) ? local.vpc_id : null
+  vpc_id = try(each.value.exclude_vpc, false) ? local.vpc_id : null
 
-  subnet_id = lookup(each.value, "exclude_subnet", false) ? lookup(
+  subnet_id = try(each.value.exclude_subnet, false) ? lookup(
     {
       private     = aws_subnet.private[*].id,
       public      = aws_subnet.public[*].id,
@@ -87,8 +87,9 @@ resource "aws_vpc_block_public_access_exclusion" "this" {
   internet_gateway_exclusion_mode = each.value.internet_gateway_exclusion_mode
 
   tags = merge(
-    { "Name" = try(coalesce(each.value.exclude_name), "${var.name}-bpa-exclusion") },
-  var.tags, )
+    var.tags,
+    try(each.value.tags, {}),
+  )
 }
 
 ################################################################################
