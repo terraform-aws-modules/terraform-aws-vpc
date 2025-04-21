@@ -10,7 +10,7 @@ If you find a bug, please open an issue with supporting configuration to reprodu
 
 Previously, VPC endpoints were configured as standalone resources with their own set of variables and attributes. Now, this functionality is provided via a module which loops over a map of maps using `for_each` to generate the desired VPC endpoints. Therefore, to maintain the existing set of functionality while upgrading, you will need to perform the following changes:
 
-1. Move the endpoint resource from the main module to the sub-module. The example state move below is valid for all endpoints you might have configured (reference [`complete-vpc`](https://github.com/terraform-aws-modules/terraform-aws-vpc/tree/master/examples/complete-vpc) example for reference), where `ssmmessages` should be updated for and state move performed for each endpoint configured:
+1. Move the endpoint resource from the main module to the sub-module. The example state move below is valid for all endpoints you might have configured (reference [`complete-vpc`](https://github.com/terraform-aws-modules/terraform-aws-vpc/tree/master/examples/complete) example for reference), where `ssmmessages` should be updated for and state move performed for each endpoint configured:
 
 ```
 terraform state mv 'module.vpc.aws_vpc_endpoint.ssm[0]' 'module.vpc_endpoints.aws_vpc_endpoint.this["ssm"]'
