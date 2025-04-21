@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [5.21.0](https://github.com/terraform-aws-modules/terraform-aws-vpc/compare/v5.20.0...v5.21.0) (2025-04-21)
+
+
+### Features
+
+* Add support for `subnet_configuration` on VPC endpoints ([#1164](https://github.com/terraform-aws-modules/terraform-aws-vpc/issues/1164)) ([507193e](https://github.com/terraform-aws-modules/terraform-aws-vpc/commit/507193ee659f6f0ecdd4a75107e59e2a6c1ac3cc))
+
 ## [5.20.0](https://github.com/terraform-aws-modules/terraform-aws-vpc/compare/v5.19.0...v5.20.0) (2025-04-21)
 
 
