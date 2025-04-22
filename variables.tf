@@ -1239,7 +1239,7 @@ variable "tgw_subnet_names" {
 variable "tgw_subnet_suffix" {
   description = "Suffix to append to transit gateway subnets name"
   type        = string
-  default     = "db"
+  default     = "tgw"
 }
 
 variable "create_tgw_subnet_route_table" {
@@ -1379,7 +1379,7 @@ variable "cwan_subnet_names" {
 variable "cwan_subnet_suffix" {
   description = "Suffix to append to CloudWAN subnets name"
   type        = string
-  default     = "db"
+  default     = "cwan"
 }
 
 variable "create_cwan_subnet_route_table" {
