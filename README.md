@@ -275,9 +275,7 @@ No modules.
 |------|------|
 | [aws_cloudwatch_log_group.flow_log](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/cloudwatch_log_group) | resource |
 | [aws_customer_gateway.this](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/customer_gateway) | resource |
-| [aws_db_subnet_group.cwan](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/db_subnet_group) | resource |
 | [aws_db_subnet_group.database](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/db_subnet_group) | resource |
-| [aws_db_subnet_group.tgw](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/db_subnet_group) | resource |
 | [aws_default_network_acl.this](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/default_network_acl) | resource |
 | [aws_default_route_table.default](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/default_route_table) | resource |
 | [aws_default_security_group.this](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/default_security_group) | resource |
@@ -389,7 +387,6 @@ No modules.
 | <a name="input_cidr"></a> [cidr](#input\_cidr) | (Optional) The IPv4 CIDR block for the VPC. CIDR can be explicitly set or it can be derived from IPAM using `ipv4_netmask_length` & `ipv4_ipam_pool_id` | `string` | `"10.0.0.0/16"` | no |
 | <a name="input_create_cwan_internet_gateway_route"></a> [create\_cwan\_internet\_gateway\_route](#input\_create\_cwan\_internet\_gateway\_route) | Controls if an internet gateway route for public CloudWAN access should be created | `bool` | `false` | no |
 | <a name="input_create_cwan_nat_gateway_route"></a> [create\_cwan\_nat\_gateway\_route](#input\_create\_cwan\_nat\_gateway\_route) | Controls if a nat gateway route should be created to give internet access to the CloudWAN subnets | `bool` | `false` | no |
-| <a name="input_create_cwan_subnet_group"></a> [create\_cwan\_subnet\_group](#input\_create\_cwan\_subnet\_group) | Controls if CloudWAN subnet group should be created (n.b. cwan\_subnets must also be set) | `bool` | `true` | no |
 | <a name="input_create_cwan_subnet_route_table"></a> [create\_cwan\_subnet\_route\_table](#input\_create\_cwan\_subnet\_route\_table) | Controls if separate route table for CloudWAN should be created | `bool` | `false` | no |
 | <a name="input_create_database_internet_gateway_route"></a> [create\_database\_internet\_gateway\_route](#input\_create\_database\_internet\_gateway\_route) | Controls if an internet gateway route for public database access should be created | `bool` | `false` | no |
 | <a name="input_create_database_nat_gateway_route"></a> [create\_database\_nat\_gateway\_route](#input\_create\_database\_nat\_gateway\_route) | Controls if a nat gateway route should be created to give internet access to the database subnets | `bool` | `false` | no |
@@ -408,7 +405,6 @@ No modules.
 | <a name="input_create_redshift_subnet_route_table"></a> [create\_redshift\_subnet\_route\_table](#input\_create\_redshift\_subnet\_route\_table) | Controls if separate route table for redshift should be created | `bool` | `false` | no |
 | <a name="input_create_tgw_internet_gateway_route"></a> [create\_tgw\_internet\_gateway\_route](#input\_create\_tgw\_internet\_gateway\_route) | Controls if an internet gateway route for public transit gateway access should be created | `bool` | `false` | no |
 | <a name="input_create_tgw_nat_gateway_route"></a> [create\_tgw\_nat\_gateway\_route](#input\_create\_tgw\_nat\_gateway\_route) | Controls if a nat gateway route should be created to give internet access to the transit gateway subnets | `bool` | `false` | no |
-| <a name="input_create_tgw_subnet_group"></a> [create\_tgw\_subnet\_group](#input\_create\_tgw\_subnet\_group) | Controls if transit gateway subnet group should be created (n.b. tgw\_subnets must also be set) | `bool` | `true` | no |
 | <a name="input_create_tgw_subnet_route_table"></a> [create\_tgw\_subnet\_route\_table](#input\_create\_tgw\_subnet\_route\_table) | Controls if separate route table for transit gateway should be created | `bool` | `false` | no |
 | <a name="input_create_vpc"></a> [create\_vpc](#input\_create\_vpc) | Controls if VPC should be created (it affects almost all resources) | `bool` | `true` | no |
 | <a name="input_customer_gateway_tags"></a> [customer\_gateway\_tags](#input\_customer\_gateway\_tags) | Additional tags for the Customer Gateway | `map(string)` | `{}` | no |
@@ -423,8 +419,6 @@ No modules.
 | <a name="input_cwan_subnet_enable_dns64"></a> [cwan\_subnet\_enable\_dns64](#input\_cwan\_subnet\_enable\_dns64) | Indicates whether DNS queries made to the Amazon-provided DNS Resolver in this subnet should return synthetic IPv6 addresses for IPv4-only destinations. Default: `true` | `bool` | `true` | no |
 | <a name="input_cwan_subnet_enable_resource_name_dns_a_record_on_launch"></a> [cwan\_subnet\_enable\_resource\_name\_dns\_a\_record\_on\_launch](#input\_cwan\_subnet\_enable\_resource\_name\_dns\_a\_record\_on\_launch) | Indicates whether to respond to DNS queries for instance hostnames with DNS A records. Default: `false` | `bool` | `false` | no |
 | <a name="input_cwan_subnet_enable_resource_name_dns_aaaa_record_on_launch"></a> [cwan\_subnet\_enable\_resource\_name\_dns\_aaaa\_record\_on\_launch](#input\_cwan\_subnet\_enable\_resource\_name\_dns\_aaaa\_record\_on\_launch) | Indicates whether to respond to DNS queries for instance hostnames with DNS AAAA records. Default: `true` | `bool` | `true` | no |
-| <a name="input_cwan_subnet_group_name"></a> [cwan\_subnet\_group\_name](#input\_cwan\_subnet\_group\_name) | Name of CloudWAN subnet group | `string` | `null` | no |
-| <a name="input_cwan_subnet_group_tags"></a> [cwan\_subnet\_group\_tags](#input\_cwan\_subnet\_group\_tags) | Additional tags for the CloudWAN subnet group | `map(string)` | `{}` | no |
 | <a name="input_cwan_subnet_ipv6_native"></a> [cwan\_subnet\_ipv6\_native](#input\_cwan\_subnet\_ipv6\_native) | Indicates whether to create an IPv6-only subnet. Default: `false` | `bool` | `false` | no |
 | <a name="input_cwan_subnet_ipv6_prefixes"></a> [cwan\_subnet\_ipv6\_prefixes](#input\_cwan\_subnet\_ipv6\_prefixes) | Assigns IPv6 CloudWAN subnet id based on the Amazon provided /56 prefix base 10 integer (0-256). Must be of equal length to the corresponding IPv4 subnet list | `list(string)` | `[]` | no |
 | <a name="input_cwan_subnet_names"></a> [cwan\_subnet\_names](#input\_cwan\_subnet\_names) | Explicit values to use in the Name tag on CloudWAN subnets. If empty, Name tags are generated | `list(string)` | `[]` | no |
@@ -640,8 +634,6 @@ No modules.
 | <a name="input_tgw_subnet_enable_dns64"></a> [tgw\_subnet\_enable\_dns64](#input\_tgw\_subnet\_enable\_dns64) | Indicates whether DNS queries made to the Amazon-provided DNS Resolver in this subnet should return synthetic IPv6 addresses for IPv4-only destinations. Default: `true` | `bool` | `true` | no |
 | <a name="input_tgw_subnet_enable_resource_name_dns_a_record_on_launch"></a> [tgw\_subnet\_enable\_resource\_name\_dns\_a\_record\_on\_launch](#input\_tgw\_subnet\_enable\_resource\_name\_dns\_a\_record\_on\_launch) | Indicates whether to respond to DNS queries for instance hostnames with DNS A records. Default: `false` | `bool` | `false` | no |
 | <a name="input_tgw_subnet_enable_resource_name_dns_aaaa_record_on_launch"></a> [tgw\_subnet\_enable\_resource\_name\_dns\_aaaa\_record\_on\_launch](#input\_tgw\_subnet\_enable\_resource\_name\_dns\_aaaa\_record\_on\_launch) | Indicates whether to respond to DNS queries for instance hostnames with DNS AAAA records. Default: `true` | `bool` | `true` | no |
-| <a name="input_tgw_subnet_group_name"></a> [tgw\_subnet\_group\_name](#input\_tgw\_subnet\_group\_name) | Name of transit gateway subnet group | `string` | `null` | no |
-| <a name="input_tgw_subnet_group_tags"></a> [tgw\_subnet\_group\_tags](#input\_tgw\_subnet\_group\_tags) | Additional tags for the transit gateway subnet group | `map(string)` | `{}` | no |
 | <a name="input_tgw_subnet_ipv6_native"></a> [tgw\_subnet\_ipv6\_native](#input\_tgw\_subnet\_ipv6\_native) | Indicates whether to create an IPv6-only subnet. Default: `false` | `bool` | `false` | no |
 | <a name="input_tgw_subnet_ipv6_prefixes"></a> [tgw\_subnet\_ipv6\_prefixes](#input\_tgw\_subnet\_ipv6\_prefixes) | Assigns IPv6 transit gateway subnet id based on the Amazon provided /56 prefix base 10 integer (0-256). Must be of equal length to the corresponding IPv4 subnet list | `list(string)` | `[]` | no |
 | <a name="input_tgw_subnet_names"></a> [tgw\_subnet\_names](#input\_tgw\_subnet\_names) | Explicit values to use in the Name tag on transit gateway subnets. If empty, Name tags are generated | `list(string)` | `[]` | no |
@@ -678,8 +670,6 @@ No modules.
 | <a name="output_cwan_route_table_association_ids"></a> [cwan\_route\_table\_association\_ids](#output\_cwan\_route\_table\_association\_ids) | List of IDs of the CloudWAN route table association |
 | <a name="output_cwan_route_table_ids"></a> [cwan\_route\_table\_ids](#output\_cwan\_route\_table\_ids) | List of IDs of CloudWAN route tables |
 | <a name="output_cwan_subnet_arns"></a> [cwan\_subnet\_arns](#output\_cwan\_subnet\_arns) | List of ARNs of CloudWAN subnets |
-| <a name="output_cwan_subnet_group"></a> [cwan\_subnet\_group](#output\_cwan\_subnet\_group) | ID of CloudWAN subnet group |
-| <a name="output_cwan_subnet_group_name"></a> [cwan\_subnet\_group\_name](#output\_cwan\_subnet\_group\_name) | Name of CloudWAN subnet group |
 | <a name="output_cwan_subnet_objects"></a> [cwan\_subnet\_objects](#output\_cwan\_subnet\_objects) | A list of all CloudWAN subnets, containing the full objects. |
 | <a name="output_cwan_subnets"></a> [cwan\_subnets](#output\_cwan\_subnets) | List of IDs of CloudWAN subnets |
 | <a name="output_cwan_subnets_cidr_blocks"></a> [cwan\_subnets\_cidr\_blocks](#output\_cwan\_subnets\_cidr\_blocks) | List of cidr\_blocks of CloudWAN subnets |
@@ -788,8 +778,6 @@ No modules.
 | <a name="output_tgw_route_table_association_ids"></a> [tgw\_route\_table\_association\_ids](#output\_tgw\_route\_table\_association\_ids) | List of IDs of the transit gateway route table association |
 | <a name="output_tgw_route_table_ids"></a> [tgw\_route\_table\_ids](#output\_tgw\_route\_table\_ids) | List of IDs of transit gateway route tables |
 | <a name="output_tgw_subnet_arns"></a> [tgw\_subnet\_arns](#output\_tgw\_subnet\_arns) | List of ARNs of transit gateway subnets |
-| <a name="output_tgw_subnet_group"></a> [tgw\_subnet\_group](#output\_tgw\_subnet\_group) | ID of transit gateway subnet group |
-| <a name="output_tgw_subnet_group_name"></a> [tgw\_subnet\_group\_name](#output\_tgw\_subnet\_group\_name) | Name of transit gateway subnet group |
 | <a name="output_tgw_subnet_objects"></a> [tgw\_subnet\_objects](#output\_tgw\_subnet\_objects) | A list of all transit gateway subnets, containing the full objects. |
 | <a name="output_tgw_subnets"></a> [tgw\_subnets](#output\_tgw\_subnets) | List of IDs of transit gateway subnets |
 | <a name="output_tgw_subnets_cidr_blocks"></a> [tgw\_subnets\_cidr\_blocks](#output\_tgw\_subnets\_cidr\_blocks) | List of cidr\_blocks of transit gateway subnets |

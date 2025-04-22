@@ -1086,22 +1086,6 @@ resource "aws_subnet" "tgw" {
   )
 }
 
-resource "aws_db_subnet_group" "tgw" {
-  count = local.create_tgw_subnets && var.create_tgw_subnet_group ? 1 : 0
-
-  name        = lower(coalesce(var.tgw_subnet_group_name, var.name))
-  description = "tgw subnet group for ${var.name}"
-  subnet_ids  = aws_subnet.tgw[*].id
-
-  tags = merge(
-    {
-      "Name" = lower(coalesce(var.tgw_subnet_group_name, var.name))
-    },
-    var.tags,
-    var.tgw_subnet_group_tags,
-  )
-}
-
 resource "aws_route_table" "tgw" {
   count = local.create_tgw_route_table ? var.single_nat_gateway || var.create_tgw_internet_gateway_route ? 1 : local.len_tgw_subnets : 0
 
@@ -1265,22 +1249,6 @@ resource "aws_subnet" "cwan" {
     },
     var.tags,
     var.cwan_subnet_tags,
-  )
-}
-
-resource "aws_db_subnet_group" "cwan" {
-  count = local.create_cwan_subnets && var.create_cwan_subnet_group ? 1 : 0
-
-  name        = lower(coalesce(var.cwan_subnet_group_name, var.name))
-  description = "CloudWAN subnet group for ${var.name}"
-  subnet_ids  = aws_subnet.cwan[*].id
-
-  tags = merge(
-    {
-      "Name" = lower(coalesce(var.cwan_subnet_group_name, var.name))
-    },
-    var.tags,
-    var.cwan_subnet_group_tags,
   )
 }
 

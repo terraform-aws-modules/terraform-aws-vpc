@@ -534,16 +534,6 @@ output "tgw_subnets_ipv6_cidr_blocks" {
   value       = compact(aws_subnet.tgw[*].ipv6_cidr_block)
 }
 
-output "tgw_subnet_group" {
-  description = "ID of transit gateway subnet group"
-  value       = try(aws_db_subnet_group.tgw[0].id, null)
-}
-
-output "tgw_subnet_group_name" {
-  description = "Name of transit gateway subnet group"
-  value       = try(aws_db_subnet_group.tgw[0].name, null)
-}
-
 output "tgw_route_table_ids" {
   description = "List of IDs of transit gateway route tables"
   # Refer to https://github.com/terraform-aws-modules/terraform-aws-vpc/pull/926 before changing logic
@@ -607,16 +597,6 @@ output "cwan_subnets_cidr_blocks" {
 output "cwan_subnets_ipv6_cidr_blocks" {
   description = "List of IPv6 cidr_blocks of CloudWAN subnets in an IPv6 enabled VPC"
   value       = compact(aws_subnet.cwan[*].ipv6_cidr_block)
-}
-
-output "cwan_subnet_group" {
-  description = "ID of CloudWAN subnet group"
-  value       = try(aws_db_subnet_group.cwan[0].id, null)
-}
-
-output "cwan_subnet_group_name" {
-  description = "Name of CloudWAN subnet group"
-  value       = try(aws_db_subnet_group.cwan[0].name, null)
 }
 
 output "cwan_route_table_ids" {

@@ -1272,24 +1272,6 @@ variable "tgw_subnet_tags" {
   default     = {}
 }
 
-variable "create_tgw_subnet_group" {
-  description = "Controls if transit gateway subnet group should be created (n.b. tgw_subnets must also be set)"
-  type        = bool
-  default     = true
-}
-
-variable "tgw_subnet_group_name" {
-  description = "Name of transit gateway subnet group"
-  type        = string
-  default     = null
-}
-
-variable "tgw_subnet_group_tags" {
-  description = "Additional tags for the transit gateway subnet group"
-  type        = map(string)
-  default     = {}
-}
-
 ################################################################################
 # Transit Gateway Network ACLs
 ################################################################################
@@ -1426,24 +1408,6 @@ variable "cwan_route_table_tags" {
 
 variable "cwan_subnet_tags" {
   description = "Additional tags for the CloudWAN subnets"
-  type        = map(string)
-  default     = {}
-}
-
-variable "create_cwan_subnet_group" {
-  description = "Controls if CloudWAN subnet group should be created (n.b. cwan_subnets must also be set)"
-  type        = bool
-  default     = true
-}
-
-variable "cwan_subnet_group_name" {
-  description = "Name of CloudWAN subnet group"
-  type        = string
-  default     = null
-}
-
-variable "cwan_subnet_group_tags" {
-  description = "Additional tags for the CloudWAN subnet group"
   type        = map(string)
   default     = {}
 }
