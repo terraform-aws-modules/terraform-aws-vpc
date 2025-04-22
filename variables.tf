@@ -1179,6 +1179,322 @@ variable "outpost_acl_tags" {
 }
 
 ################################################################################
+# Transit Gateway Subnets
+################################################################################
+
+variable "tgw_subnets" {
+  description = "A list of transit gateway subnets inside the VPC"
+  type        = list(string)
+  default     = []
+}
+
+variable "tgw_subnet_assign_ipv6_address_on_creation" {
+  description = "Specify true to indicate that network interfaces created in the specified subnet should be assigned an IPv6 address. Default is `false`"
+  type        = bool
+  default     = false
+}
+
+variable "tgw_subnet_enable_dns64" {
+  description = "Indicates whether DNS queries made to the Amazon-provided DNS Resolver in this subnet should return synthetic IPv6 addresses for IPv4-only destinations. Default: `true`"
+  type        = bool
+  default     = true
+}
+
+variable "tgw_subnet_enable_resource_name_dns_aaaa_record_on_launch" {
+  description = "Indicates whether to respond to DNS queries for instance hostnames with DNS AAAA records. Default: `true`"
+  type        = bool
+  default     = true
+}
+
+variable "tgw_subnet_enable_resource_name_dns_a_record_on_launch" {
+  description = "Indicates whether to respond to DNS queries for instance hostnames with DNS A records. Default: `false`"
+  type        = bool
+  default     = false
+}
+
+variable "tgw_subnet_ipv6_prefixes" {
+  description = "Assigns IPv6 transit gateway subnet id based on the Amazon provided /56 prefix base 10 integer (0-256). Must be of equal length to the corresponding IPv4 subnet list"
+  type        = list(string)
+  default     = []
+}
+
+variable "tgw_subnet_ipv6_native" {
+  description = "Indicates whether to create an IPv6-only subnet. Default: `false`"
+  type        = bool
+  default     = false
+}
+
+variable "tgw_subnet_private_dns_hostname_type_on_launch" {
+  description = "The type of hostnames to assign to instances in the subnet at launch. For IPv6-only subnets, an instance DNS name must be based on the instance ID. For dual-stack and IPv4-only subnets, you can specify whether DNS names use the instance IPv4 address or the instance ID. Valid values: `ip-name`, `resource-name`"
+  type        = string
+  default     = null
+}
+
+variable "tgw_subnet_names" {
+  description = "Explicit values to use in the Name tag on transit gateway subnets. If empty, Name tags are generated"
+  type        = list(string)
+  default     = []
+}
+
+variable "tgw_subnet_suffix" {
+  description = "Suffix to append to transit gateway subnets name"
+  type        = string
+  default     = "db"
+}
+
+variable "create_tgw_subnet_route_table" {
+  description = "Controls if separate route table for transit gateway should be created"
+  type        = bool
+  default     = false
+}
+
+variable "create_tgw_internet_gateway_route" {
+  description = "Controls if an internet gateway route for public transit gateway access should be created"
+  type        = bool
+  default     = false
+}
+
+variable "create_tgw_nat_gateway_route" {
+  description = "Controls if a nat gateway route should be created to give internet access to the transit gateway subnets"
+  type        = bool
+  default     = false
+}
+
+variable "tgw_route_table_tags" {
+  description = "Additional tags for the transit gateway route tables"
+  type        = map(string)
+  default     = {}
+}
+
+variable "tgw_subnet_tags" {
+  description = "Additional tags for the transit gateway subnets"
+  type        = map(string)
+  default     = {}
+}
+
+variable "create_tgw_subnet_group" {
+  description = "Controls if transit gateway subnet group should be created (n.b. tgw_subnets must also be set)"
+  type        = bool
+  default     = true
+}
+
+variable "tgw_subnet_group_name" {
+  description = "Name of transit gateway subnet group"
+  type        = string
+  default     = null
+}
+
+variable "tgw_subnet_group_tags" {
+  description = "Additional tags for the transit gateway subnet group"
+  type        = map(string)
+  default     = {}
+}
+
+################################################################################
+# Transit Gateway Network ACLs
+################################################################################
+
+variable "tgw_dedicated_network_acl" {
+  description = "Whether to use dedicated network ACL (not default) and custom rules for transit gateway subnets"
+  type        = bool
+  default     = false
+}
+
+variable "tgw_inbound_acl_rules" {
+  description = "Transti Gateway subnets inbound network ACL rules"
+  type        = list(map(string))
+  default = [
+    {
+      rule_number = 100
+      rule_action = "allow"
+      from_port   = 0
+      to_port     = 0
+      protocol    = "-1"
+      cidr_block  = "0.0.0.0/0"
+    },
+  ]
+}
+
+variable "tgw_outbound_acl_rules" {
+  description = "Transit Gateway subnets outbound network ACL rules"
+  type        = list(map(string))
+  default = [
+    {
+      rule_number = 100
+      rule_action = "allow"
+      from_port   = 0
+      to_port     = 0
+      protocol    = "-1"
+      cidr_block  = "0.0.0.0/0"
+    },
+  ]
+}
+
+variable "tgw_acl_tags" {
+  description = "Additional tags for the transit gateway subnets network ACL"
+  type        = map(string)
+  default     = {}
+}
+
+################################################################################
+# CloudWAN Subnets
+################################################################################
+
+variable "cwan_subnets" {
+  description = "A list of CloudWAN subnets inside the VPC"
+  type        = list(string)
+  default     = []
+}
+
+variable "cwan_subnet_assign_ipv6_address_on_creation" {
+  description = "Specify true to indicate that network interfaces created in the specified subnet should be assigned an IPv6 address. Default is `false`"
+  type        = bool
+  default     = false
+}
+
+variable "cwan_subnet_enable_dns64" {
+  description = "Indicates whether DNS queries made to the Amazon-provided DNS Resolver in this subnet should return synthetic IPv6 addresses for IPv4-only destinations. Default: `true`"
+  type        = bool
+  default     = true
+}
+
+variable "cwan_subnet_enable_resource_name_dns_aaaa_record_on_launch" {
+  description = "Indicates whether to respond to DNS queries for instance hostnames with DNS AAAA records. Default: `true`"
+  type        = bool
+  default     = true
+}
+
+variable "cwan_subnet_enable_resource_name_dns_a_record_on_launch" {
+  description = "Indicates whether to respond to DNS queries for instance hostnames with DNS A records. Default: `false`"
+  type        = bool
+  default     = false
+}
+
+variable "cwan_subnet_ipv6_prefixes" {
+  description = "Assigns IPv6 CloudWAN subnet id based on the Amazon provided /56 prefix base 10 integer (0-256). Must be of equal length to the corresponding IPv4 subnet list"
+  type        = list(string)
+  default     = []
+}
+
+variable "cwan_subnet_ipv6_native" {
+  description = "Indicates whether to create an IPv6-only subnet. Default: `false`"
+  type        = bool
+  default     = false
+}
+
+variable "cwan_subnet_private_dns_hostname_type_on_launch" {
+  description = "The type of hostnames to assign to instances in the subnet at launch. For IPv6-only subnets, an instance DNS name must be based on the instance ID. For dual-stack and IPv4-only subnets, you can specify whether DNS names use the instance IPv4 address or the instance ID. Valid values: `ip-name`, `resource-name`"
+  type        = string
+  default     = null
+}
+
+variable "cwan_subnet_names" {
+  description = "Explicit values to use in the Name tag on CloudWAN subnets. If empty, Name tags are generated"
+  type        = list(string)
+  default     = []
+}
+
+variable "cwan_subnet_suffix" {
+  description = "Suffix to append to CloudWAN subnets name"
+  type        = string
+  default     = "db"
+}
+
+variable "create_cwan_subnet_route_table" {
+  description = "Controls if separate route table for CloudWAN should be created"
+  type        = bool
+  default     = false
+}
+
+variable "create_cwan_internet_gateway_route" {
+  description = "Controls if an internet gateway route for public CloudWAN access should be created"
+  type        = bool
+  default     = false
+}
+
+variable "create_cwan_nat_gateway_route" {
+  description = "Controls if a nat gateway route should be created to give internet access to the CloudWAN subnets"
+  type        = bool
+  default     = false
+}
+
+variable "cwan_route_table_tags" {
+  description = "Additional tags for the CloudWAN route tables"
+  type        = map(string)
+  default     = {}
+}
+
+variable "cwan_subnet_tags" {
+  description = "Additional tags for the CloudWAN subnets"
+  type        = map(string)
+  default     = {}
+}
+
+variable "create_cwan_subnet_group" {
+  description = "Controls if CloudWAN subnet group should be created (n.b. cwan_subnets must also be set)"
+  type        = bool
+  default     = true
+}
+
+variable "cwan_subnet_group_name" {
+  description = "Name of CloudWAN subnet group"
+  type        = string
+  default     = null
+}
+
+variable "cwan_subnet_group_tags" {
+  description = "Additional tags for the CloudWAN subnet group"
+  type        = map(string)
+  default     = {}
+}
+
+################################################################################
+# CloudWAN Network ACLs
+################################################################################
+
+variable "cwan_dedicated_network_acl" {
+  description = "Whether to use dedicated network ACL (not default) and custom rules for CloudWAN subnets"
+  type        = bool
+  default     = false
+}
+
+variable "cwan_inbound_acl_rules" {
+  description = "Transti Gateway subnets inbound network ACL rules"
+  type        = list(map(string))
+  default = [
+    {
+      rule_number = 100
+      rule_action = "allow"
+      from_port   = 0
+      to_port     = 0
+      protocol    = "-1"
+      cidr_block  = "0.0.0.0/0"
+    },
+  ]
+}
+
+variable "cwan_outbound_acl_rules" {
+  description = "CloudWAN subnets outbound network ACL rules"
+  type        = list(map(string))
+  default = [
+    {
+      rule_number = 100
+      rule_action = "allow"
+      from_port   = 0
+      to_port     = 0
+      protocol    = "-1"
+      cidr_block  = "0.0.0.0/0"
+    },
+  ]
+}
+
+variable "cwan_acl_tags" {
+  description = "Additional tags for the CloudWAN subnets network ACL"
+  type        = map(string)
+  default     = {}
+}
+
+################################################################################
 # Internet Gateway
 ################################################################################
 

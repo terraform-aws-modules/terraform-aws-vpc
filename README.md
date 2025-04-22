@@ -275,7 +275,9 @@ No modules.
 |------|------|
 | [aws_cloudwatch_log_group.flow_log](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/cloudwatch_log_group) | resource |
 | [aws_customer_gateway.this](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/customer_gateway) | resource |
+| [aws_db_subnet_group.cwan](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/db_subnet_group) | resource |
 | [aws_db_subnet_group.database](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/db_subnet_group) | resource |
+| [aws_db_subnet_group.tgw](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/db_subnet_group) | resource |
 | [aws_default_network_acl.this](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/default_network_acl) | resource |
 | [aws_default_route_table.default](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/default_route_table) | resource |
 | [aws_default_security_group.this](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/default_security_group) | resource |
@@ -289,6 +291,7 @@ No modules.
 | [aws_iam_role_policy_attachment.vpc_flow_log_cloudwatch](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_role_policy_attachment) | resource |
 | [aws_internet_gateway.this](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/internet_gateway) | resource |
 | [aws_nat_gateway.this](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/nat_gateway) | resource |
+| [aws_network_acl.cwan](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/network_acl) | resource |
 | [aws_network_acl.database](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/network_acl) | resource |
 | [aws_network_acl.elasticache](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/network_acl) | resource |
 | [aws_network_acl.intra](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/network_acl) | resource |
@@ -296,6 +299,9 @@ No modules.
 | [aws_network_acl.private](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/network_acl) | resource |
 | [aws_network_acl.public](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/network_acl) | resource |
 | [aws_network_acl.redshift](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/network_acl) | resource |
+| [aws_network_acl.tgw](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/network_acl) | resource |
+| [aws_network_acl_rule.cwan_inbound](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/network_acl_rule) | resource |
+| [aws_network_acl_rule.cwan_outbound](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/network_acl_rule) | resource |
 | [aws_network_acl_rule.database_inbound](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/network_acl_rule) | resource |
 | [aws_network_acl_rule.database_outbound](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/network_acl_rule) | resource |
 | [aws_network_acl_rule.elasticache_inbound](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/network_acl_rule) | resource |
@@ -310,7 +316,13 @@ No modules.
 | [aws_network_acl_rule.public_outbound](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/network_acl_rule) | resource |
 | [aws_network_acl_rule.redshift_inbound](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/network_acl_rule) | resource |
 | [aws_network_acl_rule.redshift_outbound](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/network_acl_rule) | resource |
+| [aws_network_acl_rule.tgw_inbound](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/network_acl_rule) | resource |
+| [aws_network_acl_rule.tgw_outbound](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/network_acl_rule) | resource |
 | [aws_redshift_subnet_group.redshift](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/redshift_subnet_group) | resource |
+| [aws_route.cwan_dns64_nat_gateway](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/route) | resource |
+| [aws_route.cwan_internet_gateway](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/route) | resource |
+| [aws_route.cwan_ipv6_egress](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/route) | resource |
+| [aws_route.cwan_nat_gateway](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/route) | resource |
 | [aws_route.database_dns64_nat_gateway](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/route) | resource |
 | [aws_route.database_internet_gateway](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/route) | resource |
 | [aws_route.database_ipv6_egress](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/route) | resource |
@@ -320,12 +332,19 @@ No modules.
 | [aws_route.private_nat_gateway](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/route) | resource |
 | [aws_route.public_internet_gateway](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/route) | resource |
 | [aws_route.public_internet_gateway_ipv6](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/route) | resource |
+| [aws_route.tgw_dns64_nat_gateway](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/route) | resource |
+| [aws_route.tgw_internet_gateway](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/route) | resource |
+| [aws_route.tgw_ipv6_egress](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/route) | resource |
+| [aws_route.tgw_nat_gateway](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/route) | resource |
+| [aws_route_table.cwan](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/route_table) | resource |
 | [aws_route_table.database](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/route_table) | resource |
 | [aws_route_table.elasticache](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/route_table) | resource |
 | [aws_route_table.intra](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/route_table) | resource |
 | [aws_route_table.private](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/route_table) | resource |
 | [aws_route_table.public](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/route_table) | resource |
 | [aws_route_table.redshift](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/route_table) | resource |
+| [aws_route_table.tgw](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/route_table) | resource |
+| [aws_route_table_association.cwan](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/route_table_association) | resource |
 | [aws_route_table_association.database](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/route_table_association) | resource |
 | [aws_route_table_association.elasticache](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/route_table_association) | resource |
 | [aws_route_table_association.intra](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/route_table_association) | resource |
@@ -334,6 +353,8 @@ No modules.
 | [aws_route_table_association.public](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/route_table_association) | resource |
 | [aws_route_table_association.redshift](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/route_table_association) | resource |
 | [aws_route_table_association.redshift_public](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/route_table_association) | resource |
+| [aws_route_table_association.tgw](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/route_table_association) | resource |
+| [aws_subnet.cwan](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/subnet) | resource |
 | [aws_subnet.database](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/subnet) | resource |
 | [aws_subnet.elasticache](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/subnet) | resource |
 | [aws_subnet.intra](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/subnet) | resource |
@@ -341,6 +362,7 @@ No modules.
 | [aws_subnet.private](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/subnet) | resource |
 | [aws_subnet.public](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/subnet) | resource |
 | [aws_subnet.redshift](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/subnet) | resource |
+| [aws_subnet.tgw](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/subnet) | resource |
 | [aws_vpc.this](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/vpc) | resource |
 | [aws_vpc_block_public_access_exclusion.this](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/vpc_block_public_access_exclusion) | resource |
 | [aws_vpc_block_public_access_options.this](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/vpc_block_public_access_options) | resource |
@@ -365,6 +387,10 @@ No modules.
 | <a name="input_amazon_side_asn"></a> [amazon\_side\_asn](#input\_amazon\_side\_asn) | The Autonomous System Number (ASN) for the Amazon side of the gateway. By default the virtual private gateway is created with the current default Amazon ASN | `string` | `"64512"` | no |
 | <a name="input_azs"></a> [azs](#input\_azs) | A list of availability zones names or ids in the region | `list(string)` | `[]` | no |
 | <a name="input_cidr"></a> [cidr](#input\_cidr) | (Optional) The IPv4 CIDR block for the VPC. CIDR can be explicitly set or it can be derived from IPAM using `ipv4_netmask_length` & `ipv4_ipam_pool_id` | `string` | `"10.0.0.0/16"` | no |
+| <a name="input_create_cwan_internet_gateway_route"></a> [create\_cwan\_internet\_gateway\_route](#input\_create\_cwan\_internet\_gateway\_route) | Controls if an internet gateway route for public CloudWAN access should be created | `bool` | `false` | no |
+| <a name="input_create_cwan_nat_gateway_route"></a> [create\_cwan\_nat\_gateway\_route](#input\_create\_cwan\_nat\_gateway\_route) | Controls if a nat gateway route should be created to give internet access to the CloudWAN subnets | `bool` | `false` | no |
+| <a name="input_create_cwan_subnet_group"></a> [create\_cwan\_subnet\_group](#input\_create\_cwan\_subnet\_group) | Controls if CloudWAN subnet group should be created (n.b. cwan\_subnets must also be set) | `bool` | `true` | no |
+| <a name="input_create_cwan_subnet_route_table"></a> [create\_cwan\_subnet\_route\_table](#input\_create\_cwan\_subnet\_route\_table) | Controls if separate route table for CloudWAN should be created | `bool` | `false` | no |
 | <a name="input_create_database_internet_gateway_route"></a> [create\_database\_internet\_gateway\_route](#input\_create\_database\_internet\_gateway\_route) | Controls if an internet gateway route for public database access should be created | `bool` | `false` | no |
 | <a name="input_create_database_nat_gateway_route"></a> [create\_database\_nat\_gateway\_route](#input\_create\_database\_nat\_gateway\_route) | Controls if a nat gateway route should be created to give internet access to the database subnets | `bool` | `false` | no |
 | <a name="input_create_database_subnet_group"></a> [create\_database\_subnet\_group](#input\_create\_database\_subnet\_group) | Controls if database subnet group should be created (n.b. database\_subnets must also be set) | `bool` | `true` | no |
@@ -380,10 +406,32 @@ No modules.
 | <a name="input_create_private_nat_gateway_route"></a> [create\_private\_nat\_gateway\_route](#input\_create\_private\_nat\_gateway\_route) | Controls if a nat gateway route should be created to give internet access to the private subnets | `bool` | `true` | no |
 | <a name="input_create_redshift_subnet_group"></a> [create\_redshift\_subnet\_group](#input\_create\_redshift\_subnet\_group) | Controls if redshift subnet group should be created | `bool` | `true` | no |
 | <a name="input_create_redshift_subnet_route_table"></a> [create\_redshift\_subnet\_route\_table](#input\_create\_redshift\_subnet\_route\_table) | Controls if separate route table for redshift should be created | `bool` | `false` | no |
+| <a name="input_create_tgw_internet_gateway_route"></a> [create\_tgw\_internet\_gateway\_route](#input\_create\_tgw\_internet\_gateway\_route) | Controls if an internet gateway route for public transit gateway access should be created | `bool` | `false` | no |
+| <a name="input_create_tgw_nat_gateway_route"></a> [create\_tgw\_nat\_gateway\_route](#input\_create\_tgw\_nat\_gateway\_route) | Controls if a nat gateway route should be created to give internet access to the transit gateway subnets | `bool` | `false` | no |
+| <a name="input_create_tgw_subnet_group"></a> [create\_tgw\_subnet\_group](#input\_create\_tgw\_subnet\_group) | Controls if transit gateway subnet group should be created (n.b. tgw\_subnets must also be set) | `bool` | `true` | no |
+| <a name="input_create_tgw_subnet_route_table"></a> [create\_tgw\_subnet\_route\_table](#input\_create\_tgw\_subnet\_route\_table) | Controls if separate route table for transit gateway should be created | `bool` | `false` | no |
 | <a name="input_create_vpc"></a> [create\_vpc](#input\_create\_vpc) | Controls if VPC should be created (it affects almost all resources) | `bool` | `true` | no |
 | <a name="input_customer_gateway_tags"></a> [customer\_gateway\_tags](#input\_customer\_gateway\_tags) | Additional tags for the Customer Gateway | `map(string)` | `{}` | no |
 | <a name="input_customer_gateways"></a> [customer\_gateways](#input\_customer\_gateways) | Maps of Customer Gateway's attributes (BGP ASN and Gateway's Internet-routable external IP address) | `map(map(any))` | `{}` | no |
 | <a name="input_customer_owned_ipv4_pool"></a> [customer\_owned\_ipv4\_pool](#input\_customer\_owned\_ipv4\_pool) | The customer owned IPv4 address pool. Typically used with the `map_customer_owned_ip_on_launch` argument. The `outpost_arn` argument must be specified when configured | `string` | `null` | no |
+| <a name="input_cwan_acl_tags"></a> [cwan\_acl\_tags](#input\_cwan\_acl\_tags) | Additional tags for the CloudWAN subnets network ACL | `map(string)` | `{}` | no |
+| <a name="input_cwan_dedicated_network_acl"></a> [cwan\_dedicated\_network\_acl](#input\_cwan\_dedicated\_network\_acl) | Whether to use dedicated network ACL (not default) and custom rules for CloudWAN subnets | `bool` | `false` | no |
+| <a name="input_cwan_inbound_acl_rules"></a> [cwan\_inbound\_acl\_rules](#input\_cwan\_inbound\_acl\_rules) | Transti Gateway subnets inbound network ACL rules | `list(map(string))` | <pre>[<br/>  {<br/>    "cidr_block": "0.0.0.0/0",<br/>    "from_port": 0,<br/>    "protocol": "-1",<br/>    "rule_action": "allow",<br/>    "rule_number": 100,<br/>    "to_port": 0<br/>  }<br/>]</pre> | no |
+| <a name="input_cwan_outbound_acl_rules"></a> [cwan\_outbound\_acl\_rules](#input\_cwan\_outbound\_acl\_rules) | CloudWAN subnets outbound network ACL rules | `list(map(string))` | <pre>[<br/>  {<br/>    "cidr_block": "0.0.0.0/0",<br/>    "from_port": 0,<br/>    "protocol": "-1",<br/>    "rule_action": "allow",<br/>    "rule_number": 100,<br/>    "to_port": 0<br/>  }<br/>]</pre> | no |
+| <a name="input_cwan_route_table_tags"></a> [cwan\_route\_table\_tags](#input\_cwan\_route\_table\_tags) | Additional tags for the CloudWAN route tables | `map(string)` | `{}` | no |
+| <a name="input_cwan_subnet_assign_ipv6_address_on_creation"></a> [cwan\_subnet\_assign\_ipv6\_address\_on\_creation](#input\_cwan\_subnet\_assign\_ipv6\_address\_on\_creation) | Specify true to indicate that network interfaces created in the specified subnet should be assigned an IPv6 address. Default is `false` | `bool` | `false` | no |
+| <a name="input_cwan_subnet_enable_dns64"></a> [cwan\_subnet\_enable\_dns64](#input\_cwan\_subnet\_enable\_dns64) | Indicates whether DNS queries made to the Amazon-provided DNS Resolver in this subnet should return synthetic IPv6 addresses for IPv4-only destinations. Default: `true` | `bool` | `true` | no |
+| <a name="input_cwan_subnet_enable_resource_name_dns_a_record_on_launch"></a> [cwan\_subnet\_enable\_resource\_name\_dns\_a\_record\_on\_launch](#input\_cwan\_subnet\_enable\_resource\_name\_dns\_a\_record\_on\_launch) | Indicates whether to respond to DNS queries for instance hostnames with DNS A records. Default: `false` | `bool` | `false` | no |
+| <a name="input_cwan_subnet_enable_resource_name_dns_aaaa_record_on_launch"></a> [cwan\_subnet\_enable\_resource\_name\_dns\_aaaa\_record\_on\_launch](#input\_cwan\_subnet\_enable\_resource\_name\_dns\_aaaa\_record\_on\_launch) | Indicates whether to respond to DNS queries for instance hostnames with DNS AAAA records. Default: `true` | `bool` | `true` | no |
+| <a name="input_cwan_subnet_group_name"></a> [cwan\_subnet\_group\_name](#input\_cwan\_subnet\_group\_name) | Name of CloudWAN subnet group | `string` | `null` | no |
+| <a name="input_cwan_subnet_group_tags"></a> [cwan\_subnet\_group\_tags](#input\_cwan\_subnet\_group\_tags) | Additional tags for the CloudWAN subnet group | `map(string)` | `{}` | no |
+| <a name="input_cwan_subnet_ipv6_native"></a> [cwan\_subnet\_ipv6\_native](#input\_cwan\_subnet\_ipv6\_native) | Indicates whether to create an IPv6-only subnet. Default: `false` | `bool` | `false` | no |
+| <a name="input_cwan_subnet_ipv6_prefixes"></a> [cwan\_subnet\_ipv6\_prefixes](#input\_cwan\_subnet\_ipv6\_prefixes) | Assigns IPv6 CloudWAN subnet id based on the Amazon provided /56 prefix base 10 integer (0-256). Must be of equal length to the corresponding IPv4 subnet list | `list(string)` | `[]` | no |
+| <a name="input_cwan_subnet_names"></a> [cwan\_subnet\_names](#input\_cwan\_subnet\_names) | Explicit values to use in the Name tag on CloudWAN subnets. If empty, Name tags are generated | `list(string)` | `[]` | no |
+| <a name="input_cwan_subnet_private_dns_hostname_type_on_launch"></a> [cwan\_subnet\_private\_dns\_hostname\_type\_on\_launch](#input\_cwan\_subnet\_private\_dns\_hostname\_type\_on\_launch) | The type of hostnames to assign to instances in the subnet at launch. For IPv6-only subnets, an instance DNS name must be based on the instance ID. For dual-stack and IPv4-only subnets, you can specify whether DNS names use the instance IPv4 address or the instance ID. Valid values: `ip-name`, `resource-name` | `string` | `null` | no |
+| <a name="input_cwan_subnet_suffix"></a> [cwan\_subnet\_suffix](#input\_cwan\_subnet\_suffix) | Suffix to append to CloudWAN subnets name | `string` | `"db"` | no |
+| <a name="input_cwan_subnet_tags"></a> [cwan\_subnet\_tags](#input\_cwan\_subnet\_tags) | Additional tags for the CloudWAN subnets | `map(string)` | `{}` | no |
+| <a name="input_cwan_subnets"></a> [cwan\_subnets](#input\_cwan\_subnets) | A list of CloudWAN subnets inside the VPC | `list(string)` | `[]` | no |
 | <a name="input_database_acl_tags"></a> [database\_acl\_tags](#input\_database\_acl\_tags) | Additional tags for the database subnets network ACL | `map(string)` | `{}` | no |
 | <a name="input_database_dedicated_network_acl"></a> [database\_dedicated\_network\_acl](#input\_database\_dedicated\_network\_acl) | Whether to use dedicated network ACL (not default) and custom rules for database subnets | `bool` | `false` | no |
 | <a name="input_database_inbound_acl_rules"></a> [database\_inbound\_acl\_rules](#input\_database\_inbound\_acl\_rules) | Database subnets inbound network ACL rules | `list(map(string))` | <pre>[<br/>  {<br/>    "cidr_block": "0.0.0.0/0",<br/>    "from_port": 0,<br/>    "protocol": "-1",<br/>    "rule_action": "allow",<br/>    "rule_number": 100,<br/>    "to_port": 0<br/>  }<br/>]</pre> | no |
@@ -583,6 +631,24 @@ No modules.
 | <a name="input_secondary_cidr_blocks"></a> [secondary\_cidr\_blocks](#input\_secondary\_cidr\_blocks) | List of secondary CIDR blocks to associate with the VPC to extend the IP Address pool | `list(string)` | `[]` | no |
 | <a name="input_single_nat_gateway"></a> [single\_nat\_gateway](#input\_single\_nat\_gateway) | Should be true if you want to provision a single shared NAT Gateway across all of your private networks | `bool` | `false` | no |
 | <a name="input_tags"></a> [tags](#input\_tags) | A map of tags to add to all resources | `map(string)` | `{}` | no |
+| <a name="input_tgw_acl_tags"></a> [tgw\_acl\_tags](#input\_tgw\_acl\_tags) | Additional tags for the transit gateway subnets network ACL | `map(string)` | `{}` | no |
+| <a name="input_tgw_dedicated_network_acl"></a> [tgw\_dedicated\_network\_acl](#input\_tgw\_dedicated\_network\_acl) | Whether to use dedicated network ACL (not default) and custom rules for transit gateway subnets | `bool` | `false` | no |
+| <a name="input_tgw_inbound_acl_rules"></a> [tgw\_inbound\_acl\_rules](#input\_tgw\_inbound\_acl\_rules) | Transti Gateway subnets inbound network ACL rules | `list(map(string))` | <pre>[<br/>  {<br/>    "cidr_block": "0.0.0.0/0",<br/>    "from_port": 0,<br/>    "protocol": "-1",<br/>    "rule_action": "allow",<br/>    "rule_number": 100,<br/>    "to_port": 0<br/>  }<br/>]</pre> | no |
+| <a name="input_tgw_outbound_acl_rules"></a> [tgw\_outbound\_acl\_rules](#input\_tgw\_outbound\_acl\_rules) | Transit Gateway subnets outbound network ACL rules | `list(map(string))` | <pre>[<br/>  {<br/>    "cidr_block": "0.0.0.0/0",<br/>    "from_port": 0,<br/>    "protocol": "-1",<br/>    "rule_action": "allow",<br/>    "rule_number": 100,<br/>    "to_port": 0<br/>  }<br/>]</pre> | no |
+| <a name="input_tgw_route_table_tags"></a> [tgw\_route\_table\_tags](#input\_tgw\_route\_table\_tags) | Additional tags for the transit gateway route tables | `map(string)` | `{}` | no |
+| <a name="input_tgw_subnet_assign_ipv6_address_on_creation"></a> [tgw\_subnet\_assign\_ipv6\_address\_on\_creation](#input\_tgw\_subnet\_assign\_ipv6\_address\_on\_creation) | Specify true to indicate that network interfaces created in the specified subnet should be assigned an IPv6 address. Default is `false` | `bool` | `false` | no |
+| <a name="input_tgw_subnet_enable_dns64"></a> [tgw\_subnet\_enable\_dns64](#input\_tgw\_subnet\_enable\_dns64) | Indicates whether DNS queries made to the Amazon-provided DNS Resolver in this subnet should return synthetic IPv6 addresses for IPv4-only destinations. Default: `true` | `bool` | `true` | no |
+| <a name="input_tgw_subnet_enable_resource_name_dns_a_record_on_launch"></a> [tgw\_subnet\_enable\_resource\_name\_dns\_a\_record\_on\_launch](#input\_tgw\_subnet\_enable\_resource\_name\_dns\_a\_record\_on\_launch) | Indicates whether to respond to DNS queries for instance hostnames with DNS A records. Default: `false` | `bool` | `false` | no |
+| <a name="input_tgw_subnet_enable_resource_name_dns_aaaa_record_on_launch"></a> [tgw\_subnet\_enable\_resource\_name\_dns\_aaaa\_record\_on\_launch](#input\_tgw\_subnet\_enable\_resource\_name\_dns\_aaaa\_record\_on\_launch) | Indicates whether to respond to DNS queries for instance hostnames with DNS AAAA records. Default: `true` | `bool` | `true` | no |
+| <a name="input_tgw_subnet_group_name"></a> [tgw\_subnet\_group\_name](#input\_tgw\_subnet\_group\_name) | Name of transit gateway subnet group | `string` | `null` | no |
+| <a name="input_tgw_subnet_group_tags"></a> [tgw\_subnet\_group\_tags](#input\_tgw\_subnet\_group\_tags) | Additional tags for the transit gateway subnet group | `map(string)` | `{}` | no |
+| <a name="input_tgw_subnet_ipv6_native"></a> [tgw\_subnet\_ipv6\_native](#input\_tgw\_subnet\_ipv6\_native) | Indicates whether to create an IPv6-only subnet. Default: `false` | `bool` | `false` | no |
+| <a name="input_tgw_subnet_ipv6_prefixes"></a> [tgw\_subnet\_ipv6\_prefixes](#input\_tgw\_subnet\_ipv6\_prefixes) | Assigns IPv6 transit gateway subnet id based on the Amazon provided /56 prefix base 10 integer (0-256). Must be of equal length to the corresponding IPv4 subnet list | `list(string)` | `[]` | no |
+| <a name="input_tgw_subnet_names"></a> [tgw\_subnet\_names](#input\_tgw\_subnet\_names) | Explicit values to use in the Name tag on transit gateway subnets. If empty, Name tags are generated | `list(string)` | `[]` | no |
+| <a name="input_tgw_subnet_private_dns_hostname_type_on_launch"></a> [tgw\_subnet\_private\_dns\_hostname\_type\_on\_launch](#input\_tgw\_subnet\_private\_dns\_hostname\_type\_on\_launch) | The type of hostnames to assign to instances in the subnet at launch. For IPv6-only subnets, an instance DNS name must be based on the instance ID. For dual-stack and IPv4-only subnets, you can specify whether DNS names use the instance IPv4 address or the instance ID. Valid values: `ip-name`, `resource-name` | `string` | `null` | no |
+| <a name="input_tgw_subnet_suffix"></a> [tgw\_subnet\_suffix](#input\_tgw\_subnet\_suffix) | Suffix to append to transit gateway subnets name | `string` | `"db"` | no |
+| <a name="input_tgw_subnet_tags"></a> [tgw\_subnet\_tags](#input\_tgw\_subnet\_tags) | Additional tags for the transit gateway subnets | `map(string)` | `{}` | no |
+| <a name="input_tgw_subnets"></a> [tgw\_subnets](#input\_tgw\_subnets) | A list of transit gateway subnets inside the VPC | `list(string)` | `[]` | no |
 | <a name="input_use_ipam_pool"></a> [use\_ipam\_pool](#input\_use\_ipam\_pool) | Determines whether IPAM pool is used for CIDR allocation | `bool` | `false` | no |
 | <a name="input_vpc_block_public_access_exclusions"></a> [vpc\_block\_public\_access\_exclusions](#input\_vpc\_block\_public\_access\_exclusions) | A map of VPC block public access exclusions | `map(any)` | `{}` | no |
 | <a name="input_vpc_block_public_access_options"></a> [vpc\_block\_public\_access\_options](#input\_vpc\_block\_public\_access\_options) | A map of VPC block public access options | `map(string)` | `{}` | no |
@@ -604,6 +670,20 @@ No modules.
 | <a name="output_azs"></a> [azs](#output\_azs) | A list of availability zones specified as argument to this module |
 | <a name="output_cgw_arns"></a> [cgw\_arns](#output\_cgw\_arns) | List of ARNs of Customer Gateway |
 | <a name="output_cgw_ids"></a> [cgw\_ids](#output\_cgw\_ids) | List of IDs of Customer Gateway |
+| <a name="output_cwan_internet_gateway_route_id"></a> [cwan\_internet\_gateway\_route\_id](#output\_cwan\_internet\_gateway\_route\_id) | ID of the CloudWAN internet gateway route |
+| <a name="output_cwan_ipv6_egress_route_id"></a> [cwan\_ipv6\_egress\_route\_id](#output\_cwan\_ipv6\_egress\_route\_id) | ID of the CloudWAN IPv6 egress route |
+| <a name="output_cwan_nat_gateway_route_ids"></a> [cwan\_nat\_gateway\_route\_ids](#output\_cwan\_nat\_gateway\_route\_ids) | List of IDs of the CloudWAN nat gateway route |
+| <a name="output_cwan_network_acl_arn"></a> [cwan\_network\_acl\_arn](#output\_cwan\_network\_acl\_arn) | ARN of the CloudWAN network ACL |
+| <a name="output_cwan_network_acl_id"></a> [cwan\_network\_acl\_id](#output\_cwan\_network\_acl\_id) | ID of the CloudWAN network ACL |
+| <a name="output_cwan_route_table_association_ids"></a> [cwan\_route\_table\_association\_ids](#output\_cwan\_route\_table\_association\_ids) | List of IDs of the CloudWAN route table association |
+| <a name="output_cwan_route_table_ids"></a> [cwan\_route\_table\_ids](#output\_cwan\_route\_table\_ids) | List of IDs of CloudWAN route tables |
+| <a name="output_cwan_subnet_arns"></a> [cwan\_subnet\_arns](#output\_cwan\_subnet\_arns) | List of ARNs of CloudWAN subnets |
+| <a name="output_cwan_subnet_group"></a> [cwan\_subnet\_group](#output\_cwan\_subnet\_group) | ID of CloudWAN subnet group |
+| <a name="output_cwan_subnet_group_name"></a> [cwan\_subnet\_group\_name](#output\_cwan\_subnet\_group\_name) | Name of CloudWAN subnet group |
+| <a name="output_cwan_subnet_objects"></a> [cwan\_subnet\_objects](#output\_cwan\_subnet\_objects) | A list of all CloudWAN subnets, containing the full objects. |
+| <a name="output_cwan_subnets"></a> [cwan\_subnets](#output\_cwan\_subnets) | List of IDs of CloudWAN subnets |
+| <a name="output_cwan_subnets_cidr_blocks"></a> [cwan\_subnets\_cidr\_blocks](#output\_cwan\_subnets\_cidr\_blocks) | List of cidr\_blocks of CloudWAN subnets |
+| <a name="output_cwan_subnets_ipv6_cidr_blocks"></a> [cwan\_subnets\_ipv6\_cidr\_blocks](#output\_cwan\_subnets\_ipv6\_cidr\_blocks) | List of IPv6 cidr\_blocks of CloudWAN subnets in an IPv6 enabled VPC |
 | <a name="output_database_internet_gateway_route_id"></a> [database\_internet\_gateway\_route\_id](#output\_database\_internet\_gateway\_route\_id) | ID of the database internet gateway route |
 | <a name="output_database_ipv6_egress_route_id"></a> [database\_ipv6\_egress\_route\_id](#output\_database\_ipv6\_egress\_route\_id) | ID of the database IPv6 egress route |
 | <a name="output_database_nat_gateway_route_ids"></a> [database\_nat\_gateway\_route\_ids](#output\_database\_nat\_gateway\_route\_ids) | List of IDs of the database nat gateway route |
@@ -700,6 +780,20 @@ No modules.
 | <a name="output_redshift_subnets"></a> [redshift\_subnets](#output\_redshift\_subnets) | List of IDs of redshift subnets |
 | <a name="output_redshift_subnets_cidr_blocks"></a> [redshift\_subnets\_cidr\_blocks](#output\_redshift\_subnets\_cidr\_blocks) | List of cidr\_blocks of redshift subnets |
 | <a name="output_redshift_subnets_ipv6_cidr_blocks"></a> [redshift\_subnets\_ipv6\_cidr\_blocks](#output\_redshift\_subnets\_ipv6\_cidr\_blocks) | List of IPv6 cidr\_blocks of redshift subnets in an IPv6 enabled VPC |
+| <a name="output_tgw_internet_gateway_route_id"></a> [tgw\_internet\_gateway\_route\_id](#output\_tgw\_internet\_gateway\_route\_id) | ID of the transit gateway internet gateway route |
+| <a name="output_tgw_ipv6_egress_route_id"></a> [tgw\_ipv6\_egress\_route\_id](#output\_tgw\_ipv6\_egress\_route\_id) | ID of the transit gateway IPv6 egress route |
+| <a name="output_tgw_nat_gateway_route_ids"></a> [tgw\_nat\_gateway\_route\_ids](#output\_tgw\_nat\_gateway\_route\_ids) | List of IDs of the transit gateway nat gateway route |
+| <a name="output_tgw_network_acl_arn"></a> [tgw\_network\_acl\_arn](#output\_tgw\_network\_acl\_arn) | ARN of the transit gateway network ACL |
+| <a name="output_tgw_network_acl_id"></a> [tgw\_network\_acl\_id](#output\_tgw\_network\_acl\_id) | ID of the transit gateway network ACL |
+| <a name="output_tgw_route_table_association_ids"></a> [tgw\_route\_table\_association\_ids](#output\_tgw\_route\_table\_association\_ids) | List of IDs of the transit gateway route table association |
+| <a name="output_tgw_route_table_ids"></a> [tgw\_route\_table\_ids](#output\_tgw\_route\_table\_ids) | List of IDs of transit gateway route tables |
+| <a name="output_tgw_subnet_arns"></a> [tgw\_subnet\_arns](#output\_tgw\_subnet\_arns) | List of ARNs of transit gateway subnets |
+| <a name="output_tgw_subnet_group"></a> [tgw\_subnet\_group](#output\_tgw\_subnet\_group) | ID of transit gateway subnet group |
+| <a name="output_tgw_subnet_group_name"></a> [tgw\_subnet\_group\_name](#output\_tgw\_subnet\_group\_name) | Name of transit gateway subnet group |
+| <a name="output_tgw_subnet_objects"></a> [tgw\_subnet\_objects](#output\_tgw\_subnet\_objects) | A list of all transit gateway subnets, containing the full objects. |
+| <a name="output_tgw_subnets"></a> [tgw\_subnets](#output\_tgw\_subnets) | List of IDs of transit gateway subnets |
+| <a name="output_tgw_subnets_cidr_blocks"></a> [tgw\_subnets\_cidr\_blocks](#output\_tgw\_subnets\_cidr\_blocks) | List of cidr\_blocks of transit gateway subnets |
+| <a name="output_tgw_subnets_ipv6_cidr_blocks"></a> [tgw\_subnets\_ipv6\_cidr\_blocks](#output\_tgw\_subnets\_ipv6\_cidr\_blocks) | List of IPv6 cidr\_blocks of transit gateway subnets in an IPv6 enabled VPC |
 | <a name="output_this_customer_gateway"></a> [this\_customer\_gateway](#output\_this\_customer\_gateway) | Map of Customer Gateway attributes |
 | <a name="output_vgw_arn"></a> [vgw\_arn](#output\_vgw\_arn) | The ARN of the VPN Gateway |
 | <a name="output_vgw_id"></a> [vgw\_id](#output\_vgw\_id) | The ID of the VPN Gateway |

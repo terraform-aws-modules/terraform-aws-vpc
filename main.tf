@@ -6,6 +6,8 @@ locals {
   len_redshift_subnets    = max(length(var.redshift_subnets), length(var.redshift_subnet_ipv6_prefixes))
   len_intra_subnets       = max(length(var.intra_subnets), length(var.intra_subnet_ipv6_prefixes))
   len_outpost_subnets     = max(length(var.outpost_subnets), length(var.outpost_subnet_ipv6_prefixes))
+  len_tgw_subnets         = max(length(var.tgw_subnets), length(var.tgw_subnet_ipv6_prefixes))
+  len_cwan_subnets        = max(length(var.cwan_subnets), length(var.cwan_subnet_ipv6_prefixes))
 
   max_subnet_length = max(
     local.len_private_subnets,
@@ -13,6 +15,8 @@ locals {
     local.len_elasticache_subnets,
     local.len_database_subnets,
     local.len_redshift_subnets,
+    local.len_tgw_subnets,
+    local.len_cwan_subnets,
   )
 
   # Use `local.vpc_id` to give a hint to Terraform that subnets should be deleted before secondary CIDR blocks can be free!
@@ -78,7 +82,9 @@ resource "aws_vpc_block_public_access_exclusion" "this" {
       redshift    = aws_subnet.redshift[*].id,
       elasticache = aws_subnet.elasticache[*].id,
       intra       = aws_subnet.intra[*].id,
-      outpost     = aws_subnet.outpost[*].id
+      outpost     = aws_subnet.outpost[*].id,
+      tgw         = aws_subnet.tgw[*].id,
+      cwan        = aws_subnet.cwan[*].id
     },
     each.value.subnet_type,
     null
@@ -1043,6 +1049,371 @@ resource "aws_network_acl_rule" "outpost_outbound" {
   cidr_block      = lookup(var.outpost_outbound_acl_rules[count.index], "cidr_block", null)
   ipv6_cidr_block = lookup(var.outpost_outbound_acl_rules[count.index], "ipv6_cidr_block", null)
 }
+
+################################################################################
+# Transit Gateway Subnets
+################################################################################
+
+locals {
+  create_tgw_subnets     = local.create_vpc && local.len_tgw_subnets > 0
+  create_tgw_route_table = local.create_tgw_subnets && var.create_tgw_subnet_route_table
+}
+
+resource "aws_subnet" "tgw" {
+  count = local.create_tgw_subnets ? local.len_tgw_subnets : 0
+
+  assign_ipv6_address_on_creation                = var.enable_ipv6 && var.tgw_subnet_ipv6_native ? true : var.tgw_subnet_assign_ipv6_address_on_creation
+  availability_zone                              = length(regexall("^[a-z]{2}-", element(var.azs, count.index))) > 0 ? element(var.azs, count.index) : null
+  availability_zone_id                           = length(regexall("^[a-z]{2}-", element(var.azs, count.index))) == 0 ? element(var.azs, count.index) : null
+  cidr_block                                     = var.tgw_subnet_ipv6_native ? null : element(concat(var.tgw_subnets, [""]), count.index)
+  enable_dns64                                   = var.enable_ipv6 && var.tgw_subnet_enable_dns64
+  enable_resource_name_dns_aaaa_record_on_launch = var.enable_ipv6 && var.tgw_subnet_enable_resource_name_dns_aaaa_record_on_launch
+  enable_resource_name_dns_a_record_on_launch    = !var.tgw_subnet_ipv6_native && var.tgw_subnet_enable_resource_name_dns_a_record_on_launch
+  ipv6_cidr_block                                = var.enable_ipv6 && length(var.tgw_subnet_ipv6_prefixes) > 0 ? cidrsubnet(aws_vpc.this[0].ipv6_cidr_block, 8, var.tgw_subnet_ipv6_prefixes[count.index]) : null
+  ipv6_native                                    = var.enable_ipv6 && var.tgw_subnet_ipv6_native
+  private_dns_hostname_type_on_launch            = var.tgw_subnet_private_dns_hostname_type_on_launch
+  vpc_id                                         = local.vpc_id
+
+  tags = merge(
+    {
+      Name = try(
+        var.tgw_subnet_names[count.index],
+        format("${var.name}-${var.tgw_subnet_suffix}-%s", element(var.azs, count.index), )
+      )
+    },
+    var.tags,
+    var.tgw_subnet_tags,
+  )
+}
+
+resource "aws_db_subnet_group" "tgw" {
+  count = local.create_tgw_subnets && var.create_tgw_subnet_group ? 1 : 0
+
+  name        = lower(coalesce(var.tgw_subnet_group_name, var.name))
+  description = "tgw subnet group for ${var.name}"
+  subnet_ids  = aws_subnet.tgw[*].id
+
+  tags = merge(
+    {
+      "Name" = lower(coalesce(var.tgw_subnet_group_name, var.name))
+    },
+    var.tags,
+    var.tgw_subnet_group_tags,
+  )
+}
+
+resource "aws_route_table" "tgw" {
+  count = local.create_tgw_route_table ? var.single_nat_gateway || var.create_tgw_internet_gateway_route ? 1 : local.len_tgw_subnets : 0
+
+  vpc_id = local.vpc_id
+
+  tags = merge(
+    {
+      "Name" = var.single_nat_gateway || var.create_tgw_internet_gateway_route ? "${var.name}-${var.tgw_subnet_suffix}" : format(
+        "${var.name}-${var.tgw_subnet_suffix}-%s",
+        element(var.azs, count.index),
+      )
+    },
+    var.tags,
+    var.tgw_route_table_tags,
+  )
+}
+
+resource "aws_route_table_association" "tgw" {
+  count = local.create_tgw_subnets ? local.len_tgw_subnets : 0
+
+  subnet_id = element(aws_subnet.tgw[*].id, count.index)
+  route_table_id = element(
+    coalescelist(aws_route_table.tgw[*].id, aws_route_table.private[*].id),
+    var.create_tgw_subnet_route_table ? var.single_nat_gateway || var.create_tgw_internet_gateway_route ? 0 : count.index : count.index,
+  )
+}
+
+resource "aws_route" "tgw_internet_gateway" {
+  count = local.create_tgw_route_table && var.create_igw && var.create_tgw_internet_gateway_route && !var.create_tgw_nat_gateway_route ? 1 : 0
+
+  route_table_id         = aws_route_table.tgw[0].id
+  destination_cidr_block = "0.0.0.0/0"
+  gateway_id             = aws_internet_gateway.this[0].id
+
+  timeouts {
+    create = "5m"
+  }
+}
+
+resource "aws_route" "tgw_nat_gateway" {
+  count = local.create_tgw_route_table && !var.create_tgw_internet_gateway_route && var.create_tgw_nat_gateway_route && var.enable_nat_gateway ? var.single_nat_gateway ? 1 : local.len_tgw_subnets : 0
+
+  route_table_id         = element(aws_route_table.tgw[*].id, count.index)
+  destination_cidr_block = "0.0.0.0/0"
+  nat_gateway_id         = element(aws_nat_gateway.this[*].id, count.index)
+
+  timeouts {
+    create = "5m"
+  }
+}
+
+resource "aws_route" "tgw_dns64_nat_gateway" {
+  count = local.create_tgw_route_table && !var.create_tgw_internet_gateway_route && var.create_tgw_nat_gateway_route && var.enable_nat_gateway && var.enable_ipv6 && var.private_subnet_enable_dns64 ? var.single_nat_gateway ? 1 : local.len_tgw_subnets : 0
+
+  route_table_id              = element(aws_route_table.tgw[*].id, count.index)
+  destination_ipv6_cidr_block = "64:ff9b::/96"
+  nat_gateway_id              = element(aws_nat_gateway.this[*].id, count.index)
+
+  timeouts {
+    create = "5m"
+  }
+}
+
+resource "aws_route" "tgw_ipv6_egress" {
+  count = local.create_tgw_route_table && var.create_egress_only_igw && var.enable_ipv6 && var.create_tgw_internet_gateway_route ? 1 : 0
+
+  route_table_id              = aws_route_table.tgw[0].id
+  destination_ipv6_cidr_block = "::/0"
+  egress_only_gateway_id      = aws_egress_only_internet_gateway.this[0].id
+
+  timeouts {
+    create = "5m"
+  }
+}
+
+################################################################################
+# Transit Gateway Network ACLs
+################################################################################
+
+locals {
+  create_tgw_network_acl = local.create_tgw_subnets && var.tgw_dedicated_network_acl
+}
+
+resource "aws_network_acl" "tgw" {
+  count = local.create_tgw_network_acl ? 1 : 0
+
+  vpc_id     = local.vpc_id
+  subnet_ids = aws_subnet.tgw[*].id
+
+  tags = merge(
+    { "Name" = "${var.name}-${var.tgw_subnet_suffix}" },
+    var.tags,
+    var.tgw_acl_tags,
+  )
+}
+
+resource "aws_network_acl_rule" "tgw_inbound" {
+  count = local.create_tgw_network_acl ? length(var.tgw_inbound_acl_rules) : 0
+
+  network_acl_id = aws_network_acl.tgw[0].id
+
+  egress          = false
+  rule_number     = var.tgw_inbound_acl_rules[count.index]["rule_number"]
+  rule_action     = var.tgw_inbound_acl_rules[count.index]["rule_action"]
+  from_port       = lookup(var.tgw_inbound_acl_rules[count.index], "from_port", null)
+  to_port         = lookup(var.tgw_inbound_acl_rules[count.index], "to_port", null)
+  icmp_code       = lookup(var.tgw_inbound_acl_rules[count.index], "icmp_code", null)
+  icmp_type       = lookup(var.tgw_inbound_acl_rules[count.index], "icmp_type", null)
+  protocol        = var.tgw_inbound_acl_rules[count.index]["protocol"]
+  cidr_block      = lookup(var.tgw_inbound_acl_rules[count.index], "cidr_block", null)
+  ipv6_cidr_block = lookup(var.tgw_inbound_acl_rules[count.index], "ipv6_cidr_block", null)
+}
+
+resource "aws_network_acl_rule" "tgw_outbound" {
+  count = local.create_tgw_network_acl ? length(var.tgw_outbound_acl_rules) : 0
+
+  network_acl_id = aws_network_acl.tgw[0].id
+
+  egress          = true
+  rule_number     = var.tgw_outbound_acl_rules[count.index]["rule_number"]
+  rule_action     = var.tgw_outbound_acl_rules[count.index]["rule_action"]
+  from_port       = lookup(var.tgw_outbound_acl_rules[count.index], "from_port", null)
+  to_port         = lookup(var.tgw_outbound_acl_rules[count.index], "to_port", null)
+  icmp_code       = lookup(var.tgw_outbound_acl_rules[count.index], "icmp_code", null)
+  icmp_type       = lookup(var.tgw_outbound_acl_rules[count.index], "icmp_type", null)
+  protocol        = var.tgw_outbound_acl_rules[count.index]["protocol"]
+  cidr_block      = lookup(var.tgw_outbound_acl_rules[count.index], "cidr_block", null)
+  ipv6_cidr_block = lookup(var.tgw_outbound_acl_rules[count.index], "ipv6_cidr_block", null)
+}
+
+################################################################################
+# CloudWAN Subnets
+################################################################################
+
+locals {
+  create_cwan_subnets     = local.create_vpc && local.len_cwan_subnets > 0
+  create_cwan_route_table = local.create_cwan_subnets && var.create_cwan_subnet_route_table
+}
+
+resource "aws_subnet" "cwan" {
+  count = local.create_cwan_subnets ? local.len_cwan_subnets : 0
+
+  assign_ipv6_address_on_creation                = var.enable_ipv6 && var.cwan_subnet_ipv6_native ? true : var.cwan_subnet_assign_ipv6_address_on_creation
+  availability_zone                              = length(regexall("^[a-z]{2}-", element(var.azs, count.index))) > 0 ? element(var.azs, count.index) : null
+  availability_zone_id                           = length(regexall("^[a-z]{2}-", element(var.azs, count.index))) == 0 ? element(var.azs, count.index) : null
+  cidr_block                                     = var.cwan_subnet_ipv6_native ? null : element(concat(var.cwan_subnets, [""]), count.index)
+  enable_dns64                                   = var.enable_ipv6 && var.cwan_subnet_enable_dns64
+  enable_resource_name_dns_aaaa_record_on_launch = var.enable_ipv6 && var.cwan_subnet_enable_resource_name_dns_aaaa_record_on_launch
+  enable_resource_name_dns_a_record_on_launch    = !var.cwan_subnet_ipv6_native && var.cwan_subnet_enable_resource_name_dns_a_record_on_launch
+  ipv6_cidr_block                                = var.enable_ipv6 && length(var.cwan_subnet_ipv6_prefixes) > 0 ? cidrsubnet(aws_vpc.this[0].ipv6_cidr_block, 8, var.cwan_subnet_ipv6_prefixes[count.index]) : null
+  ipv6_native                                    = var.enable_ipv6 && var.cwan_subnet_ipv6_native
+  private_dns_hostname_type_on_launch            = var.cwan_subnet_private_dns_hostname_type_on_launch
+  vpc_id                                         = local.vpc_id
+
+  tags = merge(
+    {
+      Name = try(
+        var.cwan_subnet_names[count.index],
+        format("${var.name}-${var.cwan_subnet_suffix}-%s", element(var.azs, count.index), )
+      )
+    },
+    var.tags,
+    var.cwan_subnet_tags,
+  )
+}
+
+resource "aws_db_subnet_group" "cwan" {
+  count = local.create_cwan_subnets && var.create_cwan_subnet_group ? 1 : 0
+
+  name        = lower(coalesce(var.cwan_subnet_group_name, var.name))
+  description = "CloudWAN subnet group for ${var.name}"
+  subnet_ids  = aws_subnet.cwan[*].id
+
+  tags = merge(
+    {
+      "Name" = lower(coalesce(var.cwan_subnet_group_name, var.name))
+    },
+    var.tags,
+    var.cwan_subnet_group_tags,
+  )
+}
+
+resource "aws_route_table" "cwan" {
+  count = local.create_cwan_route_table ? var.single_nat_gateway || var.create_cwan_internet_gateway_route ? 1 : local.len_cwan_subnets : 0
+
+  vpc_id = local.vpc_id
+
+  tags = merge(
+    {
+      "Name" = var.single_nat_gateway || var.create_cwan_internet_gateway_route ? "${var.name}-${var.cwan_subnet_suffix}" : format(
+        "${var.name}-${var.cwan_subnet_suffix}-%s",
+        element(var.azs, count.index),
+      )
+    },
+    var.tags,
+    var.cwan_route_table_tags,
+  )
+}
+
+resource "aws_route_table_association" "cwan" {
+  count = local.create_cwan_subnets ? local.len_cwan_subnets : 0
+
+  subnet_id = element(aws_subnet.cwan[*].id, count.index)
+  route_table_id = element(
+    coalescelist(aws_route_table.cwan[*].id, aws_route_table.private[*].id),
+    var.create_cwan_subnet_route_table ? var.single_nat_gateway || var.create_cwan_internet_gateway_route ? 0 : count.index : count.index,
+  )
+}
+
+resource "aws_route" "cwan_internet_gateway" {
+  count = local.create_cwan_route_table && var.create_igw && var.create_cwan_internet_gateway_route && !var.create_cwan_nat_gateway_route ? 1 : 0
+
+  route_table_id         = aws_route_table.cwan[0].id
+  destination_cidr_block = "0.0.0.0/0"
+  gateway_id             = aws_internet_gateway.this[0].id
+
+  timeouts {
+    create = "5m"
+  }
+}
+
+resource "aws_route" "cwan_nat_gateway" {
+  count = local.create_cwan_route_table && !var.create_cwan_internet_gateway_route && var.create_cwan_nat_gateway_route && var.enable_nat_gateway ? var.single_nat_gateway ? 1 : local.len_cwan_subnets : 0
+
+  route_table_id         = element(aws_route_table.cwan[*].id, count.index)
+  destination_cidr_block = "0.0.0.0/0"
+  nat_gateway_id         = element(aws_nat_gateway.this[*].id, count.index)
+
+  timeouts {
+    create = "5m"
+  }
+}
+
+resource "aws_route" "cwan_dns64_nat_gateway" {
+  count = local.create_cwan_route_table && !var.create_cwan_internet_gateway_route && var.create_cwan_nat_gateway_route && var.enable_nat_gateway && var.enable_ipv6 && var.private_subnet_enable_dns64 ? var.single_nat_gateway ? 1 : local.len_cwan_subnets : 0
+
+  route_table_id              = element(aws_route_table.cwan[*].id, count.index)
+  destination_ipv6_cidr_block = "64:ff9b::/96"
+  nat_gateway_id              = element(aws_nat_gateway.this[*].id, count.index)
+
+  timeouts {
+    create = "5m"
+  }
+}
+
+resource "aws_route" "cwan_ipv6_egress" {
+  count = local.create_cwan_route_table && var.create_egress_only_igw && var.enable_ipv6 && var.create_cwan_internet_gateway_route ? 1 : 0
+
+  route_table_id              = aws_route_table.cwan[0].id
+  destination_ipv6_cidr_block = "::/0"
+  egress_only_gateway_id      = aws_egress_only_internet_gateway.this[0].id
+
+  timeouts {
+    create = "5m"
+  }
+}
+
+################################################################################
+# cwan Network ACLs
+################################################################################
+
+locals {
+  create_cwan_network_acl = local.create_cwan_subnets && var.cwan_dedicated_network_acl
+}
+
+resource "aws_network_acl" "cwan" {
+  count = local.create_cwan_network_acl ? 1 : 0
+
+  vpc_id     = local.vpc_id
+  subnet_ids = aws_subnet.cwan[*].id
+
+  tags = merge(
+    { "Name" = "${var.name}-${var.cwan_subnet_suffix}" },
+    var.tags,
+    var.cwan_acl_tags,
+  )
+}
+
+resource "aws_network_acl_rule" "cwan_inbound" {
+  count = local.create_cwan_network_acl ? length(var.cwan_inbound_acl_rules) : 0
+
+  network_acl_id = aws_network_acl.cwan[0].id
+
+  egress          = false
+  rule_number     = var.cwan_inbound_acl_rules[count.index]["rule_number"]
+  rule_action     = var.cwan_inbound_acl_rules[count.index]["rule_action"]
+  from_port       = lookup(var.cwan_inbound_acl_rules[count.index], "from_port", null)
+  to_port         = lookup(var.cwan_inbound_acl_rules[count.index], "to_port", null)
+  icmp_code       = lookup(var.cwan_inbound_acl_rules[count.index], "icmp_code", null)
+  icmp_type       = lookup(var.cwan_inbound_acl_rules[count.index], "icmp_type", null)
+  protocol        = var.cwan_inbound_acl_rules[count.index]["protocol"]
+  cidr_block      = lookup(var.cwan_inbound_acl_rules[count.index], "cidr_block", null)
+  ipv6_cidr_block = lookup(var.cwan_inbound_acl_rules[count.index], "ipv6_cidr_block", null)
+}
+
+resource "aws_network_acl_rule" "cwan_outbound" {
+  count = local.create_cwan_network_acl ? length(var.cwan_outbound_acl_rules) : 0
+
+  network_acl_id = aws_network_acl.cwan[0].id
+
+  egress          = true
+  rule_number     = var.cwan_outbound_acl_rules[count.index]["rule_number"]
+  rule_action     = var.cwan_outbound_acl_rules[count.index]["rule_action"]
+  from_port       = lookup(var.cwan_outbound_acl_rules[count.index], "from_port", null)
+  to_port         = lookup(var.cwan_outbound_acl_rules[count.index], "to_port", null)
+  icmp_code       = lookup(var.cwan_outbound_acl_rules[count.index], "icmp_code", null)
+  icmp_type       = lookup(var.cwan_outbound_acl_rules[count.index], "icmp_type", null)
+  protocol        = var.cwan_outbound_acl_rules[count.index]["protocol"]
+  cidr_block      = lookup(var.cwan_outbound_acl_rules[count.index], "cidr_block", null)
+  ipv6_cidr_block = lookup(var.cwan_outbound_acl_rules[count.index], "ipv6_cidr_block", null)
+}
+
 
 ################################################################################
 # Internet Gateway

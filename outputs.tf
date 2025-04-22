@@ -506,6 +506,156 @@ output "intra_network_acl_arn" {
 }
 
 ################################################################################
+# Transit Gateway Subnets
+################################################################################
+
+output "tgw_subnet_objects" {
+  description = "A list of all transit gateway subnets, containing the full objects."
+  value       = aws_subnet.tgw
+}
+
+output "tgw_subnets" {
+  description = "List of IDs of transit gateway subnets"
+  value       = aws_subnet.tgw[*].id
+}
+
+output "tgw_subnet_arns" {
+  description = "List of ARNs of transit gateway subnets"
+  value       = aws_subnet.tgw[*].arn
+}
+
+output "tgw_subnets_cidr_blocks" {
+  description = "List of cidr_blocks of transit gateway subnets"
+  value       = compact(aws_subnet.tgw[*].cidr_block)
+}
+
+output "tgw_subnets_ipv6_cidr_blocks" {
+  description = "List of IPv6 cidr_blocks of transit gateway subnets in an IPv6 enabled VPC"
+  value       = compact(aws_subnet.tgw[*].ipv6_cidr_block)
+}
+
+output "tgw_subnet_group" {
+  description = "ID of transit gateway subnet group"
+  value       = try(aws_db_subnet_group.tgw[0].id, null)
+}
+
+output "tgw_subnet_group_name" {
+  description = "Name of transit gateway subnet group"
+  value       = try(aws_db_subnet_group.tgw[0].name, null)
+}
+
+output "tgw_route_table_ids" {
+  description = "List of IDs of transit gateway route tables"
+  # Refer to https://github.com/terraform-aws-modules/terraform-aws-vpc/pull/926 before changing logic
+  value = length(aws_route_table.tgw[*].id) > 0 ? aws_route_table.tgw[*].id : aws_route_table.private[*].id
+}
+
+output "tgw_internet_gateway_route_id" {
+  description = "ID of the transit gateway internet gateway route"
+  value       = try(aws_route.tgw_internet_gateway[0].id, null)
+}
+
+output "tgw_nat_gateway_route_ids" {
+  description = "List of IDs of the transit gateway nat gateway route"
+  value       = aws_route.tgw_nat_gateway[*].id
+}
+
+output "tgw_ipv6_egress_route_id" {
+  description = "ID of the transit gateway IPv6 egress route"
+  value       = try(aws_route.tgw_ipv6_egress[0].id, null)
+}
+
+output "tgw_route_table_association_ids" {
+  description = "List of IDs of the transit gateway route table association"
+  value       = aws_route_table_association.tgw[*].id
+}
+
+output "tgw_network_acl_id" {
+  description = "ID of the transit gateway network ACL"
+  value       = try(aws_network_acl.tgw[0].id, null)
+}
+
+output "tgw_network_acl_arn" {
+  description = "ARN of the transit gateway network ACL"
+  value       = try(aws_network_acl.tgw[0].arn, null)
+}
+
+################################################################################
+# CloudWAN Subnets
+################################################################################
+
+output "cwan_subnet_objects" {
+  description = "A list of all CloudWAN subnets, containing the full objects."
+  value       = aws_subnet.cwan
+}
+
+output "cwan_subnets" {
+  description = "List of IDs of CloudWAN subnets"
+  value       = aws_subnet.cwan[*].id
+}
+
+output "cwan_subnet_arns" {
+  description = "List of ARNs of CloudWAN subnets"
+  value       = aws_subnet.cwan[*].arn
+}
+
+output "cwan_subnets_cidr_blocks" {
+  description = "List of cidr_blocks of CloudWAN subnets"
+  value       = compact(aws_subnet.cwan[*].cidr_block)
+}
+
+output "cwan_subnets_ipv6_cidr_blocks" {
+  description = "List of IPv6 cidr_blocks of CloudWAN subnets in an IPv6 enabled VPC"
+  value       = compact(aws_subnet.cwan[*].ipv6_cidr_block)
+}
+
+output "cwan_subnet_group" {
+  description = "ID of CloudWAN subnet group"
+  value       = try(aws_db_subnet_group.cwan[0].id, null)
+}
+
+output "cwan_subnet_group_name" {
+  description = "Name of CloudWAN subnet group"
+  value       = try(aws_db_subnet_group.cwan[0].name, null)
+}
+
+output "cwan_route_table_ids" {
+  description = "List of IDs of CloudWAN route tables"
+  # Refer to https://github.com/terraform-aws-modules/terraform-aws-vpc/pull/926 before changing logic
+  value = length(aws_route_table.cwan[*].id) > 0 ? aws_route_table.cwan[*].id : aws_route_table.private[*].id
+}
+
+output "cwan_internet_gateway_route_id" {
+  description = "ID of the CloudWAN internet gateway route"
+  value       = try(aws_route.cwan_internet_gateway[0].id, null)
+}
+
+output "cwan_nat_gateway_route_ids" {
+  description = "List of IDs of the CloudWAN nat gateway route"
+  value       = aws_route.cwan_nat_gateway[*].id
+}
+
+output "cwan_ipv6_egress_route_id" {
+  description = "ID of the CloudWAN IPv6 egress route"
+  value       = try(aws_route.cwan_ipv6_egress[0].id, null)
+}
+
+output "cwan_route_table_association_ids" {
+  description = "List of IDs of the CloudWAN route table association"
+  value       = aws_route_table_association.cwan[*].id
+}
+
+output "cwan_network_acl_id" {
+  description = "ID of the CloudWAN network ACL"
+  value       = try(aws_network_acl.cwan[0].id, null)
+}
+
+output "cwan_network_acl_arn" {
+  description = "ARN of the CloudWAN network ACL"
+  value       = try(aws_network_acl.cwan[0].arn, null)
+}
+
+################################################################################
 # NAT Gateway
 ################################################################################
 
