@@ -32,4 +32,10 @@ module "vpc" {
   private_subnets = [for k, v in local.azs : cidrsubnet(local.vpc_cidr, 4, k)]
 
   tags = local.tags
+
+  nat_gateway_tags_per_az = {
+    for az in local.azs : az => {
+      Name = "NAT Gateway - ${az}"
+    }
+  }
 }
