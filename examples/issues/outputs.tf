@@ -108,3 +108,11 @@ output "issue_108_nat_public_ips" {
   description = "List of public Elastic IPs created for AWS NAT Gateway"
   value       = module.vpc_issue_108.nat_public_ips
 }
+
+################################################################################
+# Issue #1182
+################################################################################
+output "private_route_table_association_objects" {
+  description = "The list of private route table associations from the VPC module"
+  value       = module.vpc.private_route_table_association_objects
+}
