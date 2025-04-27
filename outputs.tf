@@ -198,6 +198,10 @@ output "private_route_table_ids" {
   description = "List of IDs of private route tables"
   value       = local.private_route_table_ids
 }
+output "private_route_table_association_objects" {
+  description = "A list of all private route table associations, containing the full aws_route_table_association objects."
+  value       = aws_route_table_association.private
+}
 
 output "private_nat_gateway_route_ids" {
   description = "List of IDs of the private nat gateway route"
@@ -667,3 +671,4 @@ output "name" {
   description = "The name of the VPC specified as argument to this module"
   value       = var.name
 }
+
