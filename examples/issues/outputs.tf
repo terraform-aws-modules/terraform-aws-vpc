@@ -114,5 +114,5 @@ output "issue_108_nat_public_ips" {
 ################################################################################
 output "private_route_table_association_objects" {
   description = "The list of private route table associations from the VPC module"
-  value       = module.vpc.private_route_table_association_objects
+  value       = module.vpc_issue_1182.private_route_table_association_objects
 }

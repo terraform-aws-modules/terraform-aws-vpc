@@ -89,3 +89,27 @@ module "vpc_issue_108" {
     Name  = "route-already-exists"
   }, local.tags)
 }
+
+################################################################################
+# Issue 1182 - https://github.com/terraform-aws-modules/terraform-aws-vpc/issues/1182
+################################################################################
+
+module "vpc_issue_1182" {
+  source = "../../"
+
+  name = "route-table"
+  cidr = "10.0.0.0/16"
+
+  azs             = local.azs
+  private_subnets = ["10.0.0.0/24", "10.0.1.0/24"]
+  public_subnets  = ["10.0.101.0/24", "10.0.102.0/24"]
+
+  enable_nat_gateway = true
+  single_nat_gateway = false
+  enable_vpn_gateway = true
+
+  tags = merge({
+    Issue = "1182"
+    Name  = "route-table"
+  }, local.tags)
+}
