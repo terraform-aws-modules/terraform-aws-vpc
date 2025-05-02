@@ -1219,8 +1219,9 @@ resource "aws_vpn_gateway_route_propagation" "public" {
   )
 }
 
+# There are as many routing tables as the number of NAT gateways
 resource "aws_vpn_gateway_route_propagation" "private" {
-  count = local.create_vpc && var.propagate_private_route_tables_vgw && (var.enable_vpn_gateway || var.vpn_gateway_id != "") ? local.len_private_subnets : 0
+  count = local.create_vpc && var.propagate_private_route_tables_vgw && (var.enable_vpn_gateway || var.vpn_gateway_id != "") ? local.nat_gateway_count : 0
 
   route_table_id = element(aws_route_table.private[*].id, count.index)
   vpn_gateway_id = element(
@@ -1233,7 +1234,7 @@ resource "aws_vpn_gateway_route_propagation" "private" {
 }
 
 resource "aws_vpn_gateway_route_propagation" "intra" {
-  count = local.create_vpc && var.propagate_intra_route_tables_vgw && (var.enable_vpn_gateway || var.vpn_gateway_id != "") ? local.len_intra_subnets : 0
+  count = local.create_vpc && var.propagate_intra_route_tables_vgw && (var.enable_vpn_gateway || var.vpn_gateway_id != "") ? local.num_intra_route_tables : 0
 
   route_table_id = element(aws_route_table.intra[*].id, count.index)
   vpn_gateway_id = element(
