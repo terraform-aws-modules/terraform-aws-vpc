@@ -235,10 +235,10 @@ Disabling the creation of the default can be used if you want have a default poi
 
 This is useful if you ex. would want to route all traffic through a AWS Network Firewall, but can also be useful for other purposes
 
-You disable the creation by specifying setting the var.public_disable_default_route variable ex.
+You disable the creation by setting the var.public_enable_default_route variable ex.
 
 ```hcl
-  public_disable_default_route = true  # <= By default it is false to maintain existing behavior
+  public_disable_default_route = false  # <= By default it is true to maintain existing behavior
 ```
 
 ## Examples
@@ -420,7 +420,7 @@ No modules.
 | <a name="input_default_network_acl_tags"></a> [default\_network\_acl\_tags](#input\_default\_network\_acl\_tags) | Additional tags for the Default Network ACL | `map(string)` | `{}` | no |
 | <a name="input_default_route_table_name"></a> [default\_route\_table\_name](#input\_default\_route\_table\_name) | Name to be used on the default route table | `string` | `null` | no |
 | <a name="input_default_route_table_propagating_vgws"></a> [default\_route\_table\_propagating\_vgws](#input\_default\_route\_table\_propagating\_vgws) | List of virtual gateways for propagation | `list(string)` | `[]` | no |
-| <a name="input_default_route_table_routes"></a> [default\_route\_table\_routes](#input\_default\_route\_table\_routes) | Configuration block of routes. See https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/default_route_table#route | `list(map(string))` | `[]` | no |
+| <a name="input_default_route_table_routes"></a> [default\_route\_table\_routes](#input\_default\_route\_table\_routes) | Configuration block of routes. See <https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/default_route_table#route> | `list(map(string))` | `[]` | no |
 | <a name="input_default_route_table_tags"></a> [default\_route\_table\_tags](#input\_default\_route\_table\_tags) | Additional tags for the default route table | `map(string)` | `{}` | no |
 | <a name="input_default_security_group_egress"></a> [default\_security\_group\_egress](#input\_default\_security\_group\_egress) | List of maps of egress rules to set on the default security group | `list(map(string))` | `[]` | no |
 | <a name="input_default_security_group_ingress"></a> [default\_security\_group\_ingress](#input\_default\_security\_group\_ingress) | List of maps of ingress rules to set on the default security group | `list(map(string))` | `[]` | no |
@@ -573,7 +573,7 @@ No modules.
 | <a name="input_public_subnet_tags"></a> [public\_subnet\_tags](#input\_public\_subnet\_tags) | Additional tags for the public subnets | `map(string)` | `{}` | no |
 | <a name="input_public_subnet_tags_per_az"></a> [public\_subnet\_tags\_per\_az](#input\_public\_subnet\_tags\_per\_az) | Additional tags for the public subnets where the primary key is the AZ | `map(map(string))` | `{}` | no |
 | <a name="input_public_subnets"></a> [public\_subnets](#input\_public\_subnets) | A list of public subnets inside the VPC | `list(string)` | `[]` | no |
-| <a name="input_putin_khuylo"></a> [putin\_khuylo](#input\_putin\_khuylo) | Do you agree that Putin doesn't respect Ukrainian sovereignty and territorial integrity? More info: https://en.wikipedia.org/wiki/Putin_khuylo! | `bool` | `true` | no |
+| <a name="input_putin_khuylo"></a> [putin\_khuylo](#input\_putin\_khuylo) | Do you agree that Putin doesn't respect Ukrainian sovereignty and territorial integrity? More info: <https://en.wikipedia.org/wiki/Putin_khuylo>! | `bool` | `true` | no |
 | <a name="input_redshift_acl_tags"></a> [redshift\_acl\_tags](#input\_redshift\_acl\_tags) | Additional tags for the redshift subnets network ACL | `map(string)` | `{}` | no |
 | <a name="input_redshift_dedicated_network_acl"></a> [redshift\_dedicated\_network\_acl](#input\_redshift\_dedicated\_network\_acl) | Whether to use dedicated network ACL (not default) and custom rules for redshift subnets | `bool` | `false` | no |
 | <a name="input_redshift_inbound_acl_rules"></a> [redshift\_inbound\_acl\_rules](#input\_redshift\_inbound\_acl\_rules) | Redshift subnets inbound network ACL rules | `list(map(string))` | <pre>[<br/>  {<br/>    "cidr_block": "0.0.0.0/0",<br/>    "from_port": 0,<br/>    "protocol": "-1",<br/>    "rule_action": "allow",<br/>    "rule_number": 100,<br/>    "to_port": 0<br/>  }<br/>]</pre> | no |
@@ -745,6 +745,6 @@ Apache 2 Licensed. See [LICENSE](https://github.com/terraform-aws-modules/terraf
 
 ## Additional information for users from Russia and Belarus
 
-* Russia has [illegally annexed Crimea in 2014](https://en.wikipedia.org/wiki/Annexation_of_Crimea_by_the_Russian_Federation) and [brought the war in Donbas](https://en.wikipedia.org/wiki/War_in_Donbas) followed by [full-scale invasion of Ukraine in 2022](https://en.wikipedia.org/wiki/2022_Russian_invasion_of_Ukraine).
-* Russia has brought sorrow and devastations to millions of Ukrainians, killed [thousands of innocent people](https://www.ohchr.org/en/news/2023/06/ukraine-civilian-casualty-update-19-june-2023), damaged thousands of buildings including [critical infrastructure](https://www.aljazeera.com/gallery/2022/12/17/russia-launches-another-major-missile-attack-on-ukraine), caused ecocide by [blowing up a dam](https://www.reuters.com/world/europe/ukraine-security-service-says-it-intercepted-call-proving-russia-destroyed-2023-06-09/), [bombed theater](https://www.cnn.com/2022/03/16/europe/ukraine-mariupol-bombing-theater-intl/index.html) in Mariupol that had "Children" marking on the ground, [raped men and boys](https://www.theguardian.com/world/2022/may/03/men-and-boys-among-alleged-victims-by-russian-soldiers-in-ukraine), [deported children](https://www.bbc.com/news/world-europe-64992727) in the occupied territoris, and forced [millions of people](https://www.unrefugees.org/emergencies/ukraine/) to flee.
-* [Putin khuylo!](https://en.wikipedia.org/wiki/Putin_khuylo!)
+- Russia has [illegally annexed Crimea in 2014](https://en.wikipedia.org/wiki/Annexation_of_Crimea_by_the_Russian_Federation) and [brought the war in Donbas](https://en.wikipedia.org/wiki/War_in_Donbas) followed by [full-scale invasion of Ukraine in 2022](https://en.wikipedia.org/wiki/2022_Russian_invasion_of_Ukraine).
+- Russia has brought sorrow and devastations to millions of Ukrainians, killed [thousands of innocent people](https://www.ohchr.org/en/news/2023/06/ukraine-civilian-casualty-update-19-june-2023), damaged thousands of buildings including [critical infrastructure](https://www.aljazeera.com/gallery/2022/12/17/russia-launches-another-major-missile-attack-on-ukraine), caused ecocide by [blowing up a dam](https://www.reuters.com/world/europe/ukraine-security-service-says-it-intercepted-call-proving-russia-destroyed-2023-06-09/), [bombed theater](https://www.cnn.com/2022/03/16/europe/ukraine-mariupol-bombing-theater-intl/index.html) in Mariupol that had "Children" marking on the ground, [raped men and boys](https://www.theguardian.com/world/2022/may/03/men-and-boys-among-alleged-victims-by-russian-soldiers-in-ukraine), [deported children](https://www.bbc.com/news/world-europe-64992727) in the occupied territoris, and forced [millions of people](https://www.unrefugees.org/emergencies/ukraine/) to flee.
+- [Putin khuylo!](https://en.wikipedia.org/wiki/Putin_khuylo!)
