@@ -274,6 +274,12 @@ variable "public_route_table_tags" {
   default     = {}
 }
 
+variable "public_disable_default_route" {
+  description = "Disable default route to internet gateway for public subnets"
+  type        = bool
+  default     = false
+}
+
 ################################################################################
 # Public Network ACLs
 ################################################################################
