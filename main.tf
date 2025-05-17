@@ -859,6 +859,22 @@ resource "aws_subnet" "intra" {
   )
 }
 
+resource "aws_db_subnet_group" "intra" {
+  count = local.create_intra_subnets && var.create_intra_subnet_group ? 1 : 0
+
+  name        = lower(coalesce(var.intra_subnet_group_name, "${var.name}-intra"))
+  description = "Intra subnet group for ${var.name}"
+  subnet_ids  = aws_subnet.intra[*].id
+
+  tags = merge(
+    {
+      "Name" = lower(coalesce(var.intra_subnet_group_name, "${var.name}-intra"))
+    },
+    var.tags,
+    var.intra_subnet_group_tags,
+  )
+}
+
 locals {
   num_intra_route_tables = var.create_multiple_intra_route_tables ? local.len_intra_subnets : 1
 }
