@@ -44,6 +44,7 @@ module "vpc" {
   intra_subnet_names       = []
 
   create_database_subnet_group  = false
+  create_intra_subnet_group     = false
   manage_default_network_acl    = false
   manage_default_route_table    = false
   manage_default_security_group = false

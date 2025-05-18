@@ -992,6 +992,24 @@ variable "intra_route_table_tags" {
   default     = {}
 }
 
+variable "create_intra_subnet_group" {
+  description = "Controls if RDS subnet group should be created (n.b. intra_subnets must also be set)"
+  type        = bool
+  default     = true
+}
+
+variable "intra_subnet_group_name" {
+  description = "Name of intra subnet group"
+  type        = string
+  default     = null
+}
+
+variable "intra_subnet_group_tags" {
+  description = "Additional tags for the intra subnet group"
+  type        = map(string)
+  default     = {}
+}
+
 ################################################################################
 # Intra Network ACLs
 ################################################################################

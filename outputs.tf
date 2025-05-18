@@ -505,6 +505,17 @@ output "intra_network_acl_arn" {
   value       = try(aws_network_acl.intra[0].arn, null)
 }
 
+output "intra_subnet_group" {
+  description = "ID of intra subnet group"
+  value       = try(aws_db_subnet_group.intra[0].id, null)
+}
+
+output "intra_subnet_group_name" {
+  description = "Name of intra subnet group"
+  value       = try(aws_db_subnet_group.intra[0].name, null)
+}
+
+
 ################################################################################
 # NAT Gateway
 ################################################################################
