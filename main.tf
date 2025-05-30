@@ -271,8 +271,8 @@ resource "aws_subnet" "private" {
   availability_zone                              = length(regexall("^[a-z]{2}-", element(var.azs, count.index))) > 0 ? element(var.azs, count.index) : null
   availability_zone_id                           = length(regexall("^[a-z]{2}-", element(var.azs, count.index))) == 0 ? element(var.azs, count.index) : null
   cidr_block                                     = var.private_subnet_ipv6_native ? null : element(concat(var.private_subnets, [""]), count.index)
-  enable_dns64                                   = var.enable_ipv6 && var.private_subnet_enable_dns64
-  enable_resource_name_dns_aaaa_record_on_launch = var.enable_ipv6 && var.private_subnet_enable_resource_name_dns_aaaa_record_on_launch
+  enable_dns64                                   = var.enable_ipv6 && var.private_subnet_enable_dns64 && length(var.private_subnet_ipv6_prefixes) > 0
+  enable_resource_name_dns_aaaa_record_on_launch = var.enable_ipv6 && var.private_subnet_enable_resource_name_dns_aaaa_record_on_launch && length(var.private_subnet_ipv6_prefixes) > 0
   enable_resource_name_dns_a_record_on_launch    = !var.private_subnet_ipv6_native && var.private_subnet_enable_resource_name_dns_a_record_on_launch
   ipv6_cidr_block                                = var.enable_ipv6 && length(var.private_subnet_ipv6_prefixes) > 0 ? cidrsubnet(aws_vpc.this[0].ipv6_cidr_block, 8, var.private_subnet_ipv6_prefixes[count.index]) : null
   ipv6_native                                    = var.enable_ipv6 && var.private_subnet_ipv6_native
@@ -391,8 +391,8 @@ resource "aws_subnet" "database" {
   availability_zone                              = length(regexall("^[a-z]{2}-", element(var.azs, count.index))) > 0 ? element(var.azs, count.index) : null
   availability_zone_id                           = length(regexall("^[a-z]{2}-", element(var.azs, count.index))) == 0 ? element(var.azs, count.index) : null
   cidr_block                                     = var.database_subnet_ipv6_native ? null : element(concat(var.database_subnets, [""]), count.index)
-  enable_dns64                                   = var.enable_ipv6 && var.database_subnet_enable_dns64
-  enable_resource_name_dns_aaaa_record_on_launch = var.enable_ipv6 && var.database_subnet_enable_resource_name_dns_aaaa_record_on_launch
+  enable_dns64                                   = var.enable_ipv6 && var.database_subnet_enable_dns64 && length(var.database_subnet_ipv6_prefixes) > 0
+  enable_resource_name_dns_aaaa_record_on_launch = var.enable_ipv6 && var.database_subnet_enable_resource_name_dns_aaaa_record_on_launch && length(var.database_subnet_ipv6_prefixes) > 0
   enable_resource_name_dns_a_record_on_launch    = !var.database_subnet_ipv6_native && var.database_subnet_enable_resource_name_dns_a_record_on_launch
   ipv6_cidr_block                                = var.enable_ipv6 && length(var.database_subnet_ipv6_prefixes) > 0 ? cidrsubnet(aws_vpc.this[0].ipv6_cidr_block, 8, var.database_subnet_ipv6_prefixes[count.index]) : null
   ipv6_native                                    = var.enable_ipv6 && var.database_subnet_ipv6_native
@@ -573,8 +573,8 @@ resource "aws_subnet" "redshift" {
   availability_zone                              = length(regexall("^[a-z]{2}-", element(var.azs, count.index))) > 0 ? element(var.azs, count.index) : null
   availability_zone_id                           = length(regexall("^[a-z]{2}-", element(var.azs, count.index))) == 0 ? element(var.azs, count.index) : null
   cidr_block                                     = var.redshift_subnet_ipv6_native ? null : element(concat(var.redshift_subnets, [""]), count.index)
-  enable_dns64                                   = var.enable_ipv6 && var.redshift_subnet_enable_dns64
-  enable_resource_name_dns_aaaa_record_on_launch = var.enable_ipv6 && var.redshift_subnet_enable_resource_name_dns_aaaa_record_on_launch
+  enable_dns64                                   = var.enable_ipv6 && var.redshift_subnet_enable_dns64 && length(var.redshift_subnet_ipv6_prefixes) > 0
+  enable_resource_name_dns_aaaa_record_on_launch = var.enable_ipv6 && var.redshift_subnet_enable_resource_name_dns_aaaa_record_on_launch && length(var.redshift_subnet_ipv6_prefixes) > 0
   enable_resource_name_dns_a_record_on_launch    = !var.redshift_subnet_ipv6_native && var.redshift_subnet_enable_resource_name_dns_a_record_on_launch
   ipv6_cidr_block                                = var.enable_ipv6 && length(var.redshift_subnet_ipv6_prefixes) > 0 ? cidrsubnet(aws_vpc.this[0].ipv6_cidr_block, 8, var.redshift_subnet_ipv6_prefixes[count.index]) : null
   ipv6_native                                    = var.enable_ipv6 && var.redshift_subnet_ipv6_native
@@ -711,8 +711,8 @@ resource "aws_subnet" "elasticache" {
   availability_zone_id                           = length(regexall("^[a-z]{2}-", element(var.azs, count.index))) == 0 ? element(var.azs, count.index) : null
   cidr_block                                     = var.elasticache_subnet_ipv6_native ? null : element(concat(var.elasticache_subnets, [""]), count.index)
   enable_dns64                                   = var.enable_ipv6 && var.elasticache_subnet_enable_dns64
-  enable_resource_name_dns_aaaa_record_on_launch = var.enable_ipv6 && var.elasticache_subnet_enable_resource_name_dns_aaaa_record_on_launch
-  enable_resource_name_dns_a_record_on_launch    = !var.elasticache_subnet_ipv6_native && var.elasticache_subnet_enable_resource_name_dns_a_record_on_launch
+  enable_resource_name_dns_aaaa_record_on_launch = var.enable_ipv6 && var.elasticache_subnet_enable_resource_name_dns_aaaa_record_on_launch && length(var.elasticache_subnet_ipv6_prefixes) > 0
+  enable_resource_name_dns_a_record_on_launch    = !var.elasticache_subnet_ipv6_native && var.elasticache_subnet_enable_resource_name_dns_a_record_on_launch && length(var.elasticache_subnet_ipv6_prefixes) > 0
   ipv6_cidr_block                                = var.enable_ipv6 && length(var.elasticache_subnet_ipv6_prefixes) > 0 ? cidrsubnet(aws_vpc.this[0].ipv6_cidr_block, 8, var.elasticache_subnet_ipv6_prefixes[count.index]) : null
   ipv6_native                                    = var.enable_ipv6 && var.elasticache_subnet_ipv6_native
   private_dns_hostname_type_on_launch            = var.elasticache_subnet_private_dns_hostname_type_on_launch
@@ -840,8 +840,8 @@ resource "aws_subnet" "intra" {
   availability_zone_id                           = length(regexall("^[a-z]{2}-", element(var.azs, count.index))) == 0 ? element(var.azs, count.index) : null
   cidr_block                                     = var.intra_subnet_ipv6_native ? null : element(concat(var.intra_subnets, [""]), count.index)
   enable_dns64                                   = var.enable_ipv6 && var.intra_subnet_enable_dns64
-  enable_resource_name_dns_aaaa_record_on_launch = var.enable_ipv6 && var.intra_subnet_enable_resource_name_dns_aaaa_record_on_launch
-  enable_resource_name_dns_a_record_on_launch    = !var.intra_subnet_ipv6_native && var.intra_subnet_enable_resource_name_dns_a_record_on_launch
+  enable_resource_name_dns_aaaa_record_on_launch = var.enable_ipv6 && var.intra_subnet_enable_resource_name_dns_aaaa_record_on_launch && length(var.intra_subnet_ipv6_prefixes) > 0
+  enable_resource_name_dns_a_record_on_launch    = !var.intra_subnet_ipv6_native && var.intra_subnet_enable_resource_name_dns_a_record_on_launch && length(var.intra_subnet_ipv6_prefixes) > 0
   ipv6_cidr_block                                = var.enable_ipv6 && length(var.intra_subnet_ipv6_prefixes) > 0 ? cidrsubnet(aws_vpc.this[0].ipv6_cidr_block, 8, var.intra_subnet_ipv6_prefixes[count.index]) : null
   ipv6_native                                    = var.enable_ipv6 && var.intra_subnet_ipv6_native
   private_dns_hostname_type_on_launch            = var.intra_subnet_private_dns_hostname_type_on_launch
@@ -958,8 +958,8 @@ resource "aws_subnet" "outpost" {
   cidr_block                                     = var.outpost_subnet_ipv6_native ? null : element(concat(var.outpost_subnets, [""]), count.index)
   customer_owned_ipv4_pool                       = var.customer_owned_ipv4_pool
   enable_dns64                                   = var.enable_ipv6 && var.outpost_subnet_enable_dns64
-  enable_resource_name_dns_aaaa_record_on_launch = var.enable_ipv6 && var.outpost_subnet_enable_resource_name_dns_aaaa_record_on_launch
-  enable_resource_name_dns_a_record_on_launch    = !var.outpost_subnet_ipv6_native && var.outpost_subnet_enable_resource_name_dns_a_record_on_launch
+  enable_resource_name_dns_aaaa_record_on_launch = var.enable_ipv6 && var.outpost_subnet_enable_resource_name_dns_aaaa_record_on_launch && length(var.outpost_subnet_ipv6_prefixes) > 0
+  enable_resource_name_dns_a_record_on_launch    = !var.outpost_subnet_ipv6_native && var.outpost_subnet_enable_resource_name_dns_a_record_on_launch && length(var.outpost_subnet_ipv6_prefixes) > 0
   ipv6_cidr_block                                = var.enable_ipv6 && length(var.outpost_subnet_ipv6_prefixes) > 0 ? cidrsubnet(aws_vpc.this[0].ipv6_cidr_block, 8, var.outpost_subnet_ipv6_prefixes[count.index]) : null
   ipv6_native                                    = var.enable_ipv6 && var.outpost_subnet_ipv6_native
   map_customer_owned_ip_on_launch                = var.map_customer_owned_ip_on_launch
