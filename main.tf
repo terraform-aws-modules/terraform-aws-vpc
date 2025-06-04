@@ -1358,7 +1358,7 @@ resource "aws_default_network_acl" "this" {
 }
 
 ################################################################################
-# Default Route
+# Default Route - Modification performed as per commit
 ################################################################################
 
 resource "aws_default_route_table" "default" {
@@ -1397,3 +1397,4 @@ resource "aws_default_route_table" "default" {
     var.default_route_table_tags,
   )
 }
+
