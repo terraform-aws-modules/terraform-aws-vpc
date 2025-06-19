@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [5.21.1](https://github.com/terraform-aws-modules/terraform-aws-vpc/compare/v5.21.0...v5.21.1) (2025-06-19)
+
+
+### Bug Fixes
+
+* Fixed deprecation attribute warning with AWS provider v6 ([#1200](https://github.com/terraform-aws-modules/terraform-aws-vpc/issues/1200)) ([bf04a75](https://github.com/terraform-aws-modules/terraform-aws-vpc/commit/bf04a755dc0b46d49dadf589c84832c0dd556a6d))
+
 ## [5.21.0](https://github.com/terraform-aws-modules/terraform-aws-vpc/compare/v5.20.0...v5.21.0) (2025-04-21)
 
 
