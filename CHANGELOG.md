@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [6.0.1](https://github.com/terraform-aws-modules/terraform-aws-vpc/compare/v6.0.0...v6.0.1) (2025-06-20)
+
+
+### Bug Fixes
+
+* Bump AWS provider requirement to v6 everywhere ([#1208](https://github.com/terraform-aws-modules/terraform-aws-vpc/issues/1208)) ([26c99a5](https://github.com/terraform-aws-modules/terraform-aws-vpc/commit/26c99a53326e7455a7f9f1162839822104809c46))
+
 ## [6.0.0](https://github.com/terraform-aws-modules/terraform-aws-vpc/compare/v5.21.1...v6.0.0) (2025-06-19)
 
 
