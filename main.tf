@@ -153,7 +153,19 @@ resource "aws_subnet" "public" {
     },
     var.tags,
     var.public_subnet_tags,
-    lookup(var.public_subnet_tags_per_az, element(var.azs, count.index), {})
+    lookup(var.public_subnet_tags_per_az, element(var.azs, count.index), {}),
+    try(
+      # lookup any tags we have configured for subnet
+      var.public_subnet_tags_by_name[
+        # determine the name of this subnet (same as above Name = try(..) block)
+        try(
+          var.public_subnet_names[count.index],
+          format("${var.name}-${var.public_subnet_suffix}-%s", element(var.azs, count.index))
+        )
+      ],
+      # default to {} if none are found
+      {}
+    )
   )
 }
 
@@ -288,7 +300,19 @@ resource "aws_subnet" "private" {
     },
     var.tags,
     var.private_subnet_tags,
-    lookup(var.private_subnet_tags_per_az, element(var.azs, count.index), {})
+    lookup(var.private_subnet_tags_per_az, element(var.azs, count.index), {}),
+    try(
+      # lookup any tags we have configured for subnet
+      var.private_subnet_tags_by_name[
+        # determine the name of this subnet (same as above Name = try(..) block)
+        try(
+          var.private_subnet_names[count.index],
+          format("${var.name}-${var.private_subnet_suffix}-%s", element(var.azs, count.index))
+        )
+      ],
+      # default to {} if none are found
+      {}
+    )
   )
 }
 
@@ -408,6 +432,18 @@ resource "aws_subnet" "database" {
     },
     var.tags,
     var.database_subnet_tags,
+    try(
+      # lookup any tags we have configured for subnet
+      var.database_subnet_tags_by_name[
+        # determine the name of this subnet (same as above Name = try(..) block)
+        try(
+          var.database_subnet_names[count.index],
+          format("${var.name}-${var.database_subnet_suffix}-%s", element(var.azs, count.index))
+        )
+      ],
+      # default to {} if none are found
+      {}
+    )
   )
 }
 
@@ -590,6 +626,18 @@ resource "aws_subnet" "redshift" {
     },
     var.tags,
     var.redshift_subnet_tags,
+    try(
+      # lookup any tags we have configured for subnet
+      var.redshift_subnet_tags_by_name[
+        # determine the name of this subnet (same as above Name = try(..) block)
+        try(
+          var.redshift_subnet_names[count.index],
+          format("${var.name}-${var.redshift_subnet_suffix}-%s", element(var.azs, count.index))
+        )
+      ],
+      # default to {} if none are found
+      {}
+    )
   )
 }
 
@@ -727,6 +775,18 @@ resource "aws_subnet" "elasticache" {
     },
     var.tags,
     var.elasticache_subnet_tags,
+    try(
+      # lookup any tags we have configured for subnet
+      var.elasticache_subnet_tags_by_name[
+        # determine the name of this subnet (same as above Name = try(..) block)
+        try(
+          var.elasticache_subnet_names[count.index],
+          format("${var.name}-${var.elasticache_subnet_suffix}-%s", element(var.azs, count.index))
+        )
+      ],
+      # default to {} if none are found
+      {}
+    )
   )
 }
 
@@ -856,6 +916,18 @@ resource "aws_subnet" "intra" {
     },
     var.tags,
     var.intra_subnet_tags,
+    try(
+      # lookup any tags we have configured for subnet
+      var.intra_subnet_tags_by_name[
+        # determine the name of this subnet (same as above Name = try(..) block)
+        try(
+          var.intra_subnet_names[count.index],
+          format("${var.name}-${var.intra_subnet_suffix}-%s", element(var.azs, count.index))
+        )
+      ],
+      # default to {} if none are found
+      {}
+    )
   )
 }
 
@@ -976,6 +1048,18 @@ resource "aws_subnet" "outpost" {
     },
     var.tags,
     var.outpost_subnet_tags,
+    try(
+      # lookup any tags we have configured for subnet
+      var.outpost_subnet_tags_by_name[
+        # determine the name of this subnet (same as above Name = try(..) block)
+        try(
+          var.outpost_subnet_names[count.index],
+          format("${var.name}-${var.outpost_subnet_suffix}-%s", element(var.azs, count.index))
+        )
+      ],
+      # default to {} if none are found
+      {}
+    )
   )
 }
 
