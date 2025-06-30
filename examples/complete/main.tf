@@ -106,10 +106,9 @@ module "vpc_endpoints" {
     s3 = {
       service             = "s3"
       private_dns_enabled = true
-      dns_options = {
-        private_dns_only_for_inbound_resolver_endpoint = false
-      }
-      tags = { Name = "s3-vpc-endpoint" }
+      type                = "Gateway"
+      route_table_ids     = flatten([module.vpc.intra_route_table_ids, module.vpc.private_route_table_ids, module.vpc.public_route_table_ids])
+      tags                = { Name = "s3-vpc-endpoint" }
     },
     dynamodb = {
       service         = "dynamodb"
@@ -208,6 +207,17 @@ data "aws_iam_policy_document" "generic_endpoint_policy" {
       variable = "aws:SourceVpc"
 
       values = [module.vpc.vpc_id]
+    }
+  }
+
+  statement {
+    effect    = "Allow"
+    actions   = ["*"]
+    resources = ["*"]
+
+    principals {
+      type        = "*"
+      identifiers = ["*"]
     }
   }
 }
