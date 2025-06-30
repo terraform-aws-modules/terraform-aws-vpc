@@ -268,6 +268,12 @@ variable "public_subnet_tags_per_az" {
   default     = {}
 }
 
+variable "public_subnet_tags_by_name" {
+  description = "Additional tags for the public subnets where the primary key is the subnet name"
+  type        = map(map(string))
+  default     = {}
+}
+
 variable "public_route_table_tags" {
   description = "Additional tags for the public route tables"
   type        = map(string)
@@ -398,6 +404,12 @@ variable "private_subnet_tags" {
 
 variable "private_subnet_tags_per_az" {
   description = "Additional tags for the private subnets where the primary key is the AZ"
+  type        = map(map(string))
+  default     = {}
+}
+
+variable "private_subnet_tags_by_name" {
+  description = "Additional tags for the private subnets where the primary key is the subnet name"
   type        = map(map(string))
   default     = {}
 }
@@ -566,6 +578,13 @@ variable "database_subnet_group_tags" {
   default     = {}
 }
 
+variable "database_subnet_tags_by_name" {
+  description = "Additional tags for the database subnets where the primary key is the subnet name"
+  type        = map(map(string))
+  default     = {}
+}
+
+
 ################################################################################
 # Database Network ACLs
 ################################################################################
@@ -718,6 +737,12 @@ variable "redshift_subnet_group_tags" {
   default     = {}
 }
 
+variable "redshift_subnet_tags_by_name" {
+  description = "Additional tags for the redshift subnets where the primary key is the subnet name"
+  type        = map(map(string))
+  default     = {}
+}
+
 ################################################################################
 # Redshift Network ACLs
 ################################################################################
@@ -831,6 +856,12 @@ variable "elasticache_subnet_suffix" {
 variable "elasticache_subnet_tags" {
   description = "Additional tags for the elasticache subnets"
   type        = map(string)
+  default     = {}
+}
+
+variable "elasticache_subnet_tags_by_name" {
+  description = "Additional tags for the elasticache subnets where the primary key is the subnet name"
+  type        = map(map(string))
   default     = {}
 }
 
@@ -986,6 +1017,12 @@ variable "intra_subnet_tags" {
   default     = {}
 }
 
+variable "intra_subnet_tags_by_name" {
+  description = "Additional tags for the intra subnets where the primary key is the subnet name"
+  type        = map(map(string))
+  default     = {}
+}
+
 variable "intra_route_table_tags" {
   description = "Additional tags for the intra route tables"
   type        = map(string)
@@ -1129,6 +1166,12 @@ variable "outpost_subnet_suffix" {
 variable "outpost_subnet_tags" {
   description = "Additional tags for the outpost subnets"
   type        = map(string)
+  default     = {}
+}
+
+variable "outpost_subnet_tags_by_name" {
+  description = "Additional tags for the outpost subnets where the primary key is the subnet name"
+  type        = map(map(string))
   default     = {}
 }
 
