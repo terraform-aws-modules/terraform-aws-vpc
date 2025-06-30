@@ -68,22 +68,29 @@ Passing the IPs into the module is done by setting two variables `reuse_nat_ips 
 
 This module supports three scenarios for creating NAT gateways. Each will be explained in further detail in the corresponding sections.
 
-- One NAT Gateway per subnet (default behavior)
-  - `enable_nat_gateway = true`
-  - `single_nat_gateway = false`
-  - `one_nat_gateway_per_az = false`
-- Single NAT Gateway
+- **Single NAT Gateway** (cost-saving):
   - `enable_nat_gateway = true`
   - `single_nat_gateway = true`
-  - `one_nat_gateway_per_az = false`
-- One NAT Gateway per availability zone
+  - `one_nat_gateway_per_az = false` (or true — has no effect)
+  - ✅ Creates one NAT Gateway shared across all private subnets
+
+- **One NAT Gateway per Availability Zone** (high availability):
   - `enable_nat_gateway = true`
   - `single_nat_gateway = false`
   - `one_nat_gateway_per_az = true`
+  - ✅ Creates one NAT Gateway in each AZ you specify in `var.azs`
 
-If both `single_nat_gateway` and `one_nat_gateway_per_az` are set to `true`, then `single_nat_gateway` takes precedence.
+- **Default (no special config):**
+  - `enable_nat_gateway = true`
+  - `single_nat_gateway = false`
+  - `one_nat_gateway_per_az = false`
+  - ✅ Behavior depends on private subnet layout — only one NAT Gateway is created unless multiple are required
 
-### One NAT Gateway per subnet (default)
+> ⚠️ **Important:** If both `single_nat_gateway = true` and `one_nat_gateway_per_az = true` are set,
+> the module will **only create one NAT Gateway**.
+> The `single_nat_gateway` setting takes precedence and overrides `one_nat_gateway_per_az`.
+
+### NAT Gateway Behavior Overview
 
 By default, the module will determine the number of NAT Gateways to create based on the `max()` of the private subnet lists (`database_subnets`, `elasticache_subnets`, `private_subnets`, and `redshift_subnets`). The module **does not** take into account the number of `intra_subnets`, since the latter are designed to have no Internet access via NAT Gateway. For example, if your configuration looks like the following:
 
