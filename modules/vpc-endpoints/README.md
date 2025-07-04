@@ -22,6 +22,7 @@ module "endpoints" {
     dynamodb = {
       # gateway endpoint
       service         = "dynamodb"
+      service_type    = "Gateway"
       route_table_ids = ["rt-12322456", "rt-43433343", "rt-11223344"]
       tags            = { Name = "dynamodb-vpc-endpoint" }
     },
@@ -66,13 +67,13 @@ module "endpoints" {
 | Name | Version |
 |------|---------|
 | <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 1.0 |
-| <a name="requirement_aws"></a> [aws](#requirement\_aws) | >= 5.83 |
+| <a name="requirement_aws"></a> [aws](#requirement\_aws) | >= 6.0 |
 
 ## Providers
 
 | Name | Version |
 |------|---------|
-| <a name="provider_aws"></a> [aws](#provider\_aws) | >= 5.83 |
+| <a name="provider_aws"></a> [aws](#provider\_aws) | >= 6.0 |
 
 ## Modules
 
