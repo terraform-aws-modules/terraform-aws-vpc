@@ -36,7 +36,11 @@ variable "tags" {
 
 variable "timeouts" {
   description = "Define maximum timeout for creating, updating, and deleting VPC endpoint resources"
-  type        = map(string)
+  type        = object({
+    create = optional(string, "10m")
+    update = optional(string, "10m")
+    delete = optional(string, "10m")
+  })
   default     = {}
 }
 
@@ -54,6 +58,11 @@ variable "security_group_name" {
   description = "Name to use on security group created. Conflicts with `security_group_name_prefix`"
   type        = string
   default     = null
+
+  validation {
+    condition = var.security_group_name == null || var.security_group_name_prefix == null
+    error_message = "only one of security_group_name or security_group_name_prefix can be set."
+    }
 }
 
 variable "security_group_name_prefix" {

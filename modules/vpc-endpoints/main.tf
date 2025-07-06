@@ -63,9 +63,9 @@ resource "aws_vpc_endpoint" "this" {
   )
 
   timeouts {
-    create = try(var.timeouts.create, "10m")
-    update = try(var.timeouts.update, "10m")
-    delete = try(var.timeouts.delete, "10m")
+    create = var.timeouts.create
+    update = var.timeouts.update
+    delete = var.timeouts.delete
   }
 }
 
@@ -75,6 +75,8 @@ resource "aws_vpc_endpoint" "this" {
 
 resource "aws_security_group" "this" {
   count = var.create && var.create_security_group ? 1 : 0
+  # In future if need to support multiple security groups.
+  # for_each = var.create && var.create_security_group ? [1] : []
 
   name        = var.security_group_name
   name_prefix = var.security_group_name_prefix
