@@ -56,8 +56,14 @@ variable "enable_network_address_usage_metrics" {
   default     = null
 }
 
+variable "ipv6_use_ipam_pool" {
+  description = "Determines whether IPAM pool is used for IPv6 CIDR allocation"
+  type        = bool
+  default     = false
+}
+
 variable "use_ipam_pool" {
-  description = "Determines whether IPAM pool is used for CIDR allocation"
+  description = "Determines whether IPAM pool is used for IPv4 CIDR allocation"
   type        = bool
   default     = false
 }
