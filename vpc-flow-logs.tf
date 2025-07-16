@@ -1,6 +1,8 @@
 data "aws_region" "current" {
   # Call this API only if create_vpc and enable_flow_log are true
   count = var.create_vpc && var.enable_flow_log ? 1 : 0
+
+  region = var.region
 }
 
 data "aws_caller_identity" "current" {
@@ -36,6 +38,8 @@ locals {
 resource "aws_flow_log" "this" {
   count = local.enable_flow_log ? 1 : 0
 
+  region = var.region
+
   log_destination_type       = var.flow_log_destination_type
   log_destination            = local.flow_log_destination_arn
   log_format                 = var.flow_log_log_format
@@ -64,6 +68,8 @@ resource "aws_flow_log" "this" {
 
 resource "aws_cloudwatch_log_group" "flow_log" {
   count = local.create_flow_log_cloudwatch_log_group ? 1 : 0
+
+  region = var.region
 
   name              = "${var.flow_log_cloudwatch_log_group_name_prefix}${local.flow_log_cloudwatch_log_group_name_suffix}"
   retention_in_days = var.flow_log_cloudwatch_log_group_retention_in_days
