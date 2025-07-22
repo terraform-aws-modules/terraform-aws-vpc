@@ -22,6 +22,12 @@ variable "endpoints" {
   default     = {}
 }
 
+variable "enable_service_endpoint_lookup" {
+  description = "Determines whether to look up the service endpoint in the AWS API. If set to false, the `service_endpoint` attribute (usually in the form of `com.amazonaws.<region>.<service>`) must be provided in the `endpoints` map"
+  type        = bool
+  default     = true
+}
+
 variable "security_group_ids" {
   description = "Default security group IDs to associate with the VPC endpoints"
   type        = list(string)

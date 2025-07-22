@@ -94,6 +94,7 @@ No modules.
 |------|-------------|------|---------|:--------:|
 | <a name="input_create"></a> [create](#input\_create) | Determines whether resources will be created | `bool` | `true` | no |
 | <a name="input_create_security_group"></a> [create\_security\_group](#input\_create\_security\_group) | Determines if a security group is created | `bool` | `false` | no |
+| <a name="input_enable_service_endpoint_lookup"></a> [enable\_service\_endpoint\_lookup](#input\_enable\_service\_endpoint\_lookup) | Determines whether to look up the service endpoint in the AWS API. If set to false, the `service_endpoint` attribute (usually in the form of `com.amazonaws.<region>.<service>`) must be provided in the `endpoints` map | `bool` | `true` | no |
 | <a name="input_endpoints"></a> [endpoints](#input\_endpoints) | A map of interface and/or gateway endpoints containing their properties and configurations | `any` | `{}` | no |
 | <a name="input_region"></a> [region](#input\_region) | Region where the resource(s) will be managed. Defaults to the region set in the provider configuration | `string` | `null` | no |
 | <a name="input_security_group_description"></a> [security\_group\_description](#input\_security\_group\_description) | Description of the security group created | `string` | `null` | no |
