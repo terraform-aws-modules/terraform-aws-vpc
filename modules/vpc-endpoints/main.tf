@@ -9,7 +9,7 @@ locals {
 }
 
 data "aws_vpc_endpoint_service" "this" {
-  for_each = local.endpoints
+  for_each = { for k, v in local.endpoints : k => v if var.enable_service_endpoint_lookup }
 
   service         = try(each.value.service, null)
   service_name    = try(each.value.service_name, null)
@@ -24,8 +24,10 @@ data "aws_vpc_endpoint_service" "this" {
 resource "aws_vpc_endpoint" "this" {
   for_each = local.endpoints
 
+  region = var.region
+
   vpc_id            = var.vpc_id
-  service_name      = try(each.value.service_endpoint, data.aws_vpc_endpoint_service.this[each.key].service_name)
+  service_name      = try(data.aws_vpc_endpoint_service.this[each.key].service_name, each.value.service_endpoint)
   service_region    = try(each.value.service_region, null)
   vpc_endpoint_type = try(each.value.service_type, "Interface")
   auto_accept       = try(each.value.auto_accept, null)
@@ -76,6 +78,8 @@ resource "aws_vpc_endpoint" "this" {
 resource "aws_security_group" "this" {
   count = var.create && var.create_security_group ? 1 : 0
 
+  region = var.region
+
   name        = var.security_group_name
   name_prefix = var.security_group_name_prefix
   description = var.security_group_description
@@ -94,6 +98,8 @@ resource "aws_security_group" "this" {
 
 resource "aws_security_group_rule" "this" {
   for_each = { for k, v in var.security_group_rules : k => v if var.create && var.create_security_group }
+
+  region = var.region
 
   # Required
   security_group_id = aws_security_group.this[0].id
