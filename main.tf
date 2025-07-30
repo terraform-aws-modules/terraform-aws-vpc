@@ -1,6 +1,7 @@
 locals {
   max_subnet_length = max(
     length(var.private_subnets),
+    length(var.ftp_subnets),
     length(var.elasticache_subnets),
     length(var.database_subnets),
     length(var.redshift_subnets),
@@ -32,12 +33,12 @@ resource "aws_vpc" "this" {
   #tfsec:ignore:aws-ec2-require-vpc-flow-logs-for-all-vpcs
   count = var.create_vpc ? 1 : 0
 
-  cidr_block                       = var.cidr
-  instance_tenancy                 = var.instance_tenancy
-  enable_dns_hostnames             = var.enable_dns_hostnames
-  enable_dns_support               = var.enable_dns_support
- # enable_classiclink               = var.enable_classiclink
- # enable_classiclink_dns_support   = var.enable_classiclink_dns_support
+  cidr_block           = var.cidr
+  instance_tenancy     = var.instance_tenancy
+  enable_dns_hostnames = var.enable_dns_hostnames
+  enable_dns_support   = var.enable_dns_support
+  # enable_classiclink               = var.enable_classiclink
+  # enable_classiclink_dns_support   = var.enable_classiclink_dns_support
   assign_generated_ipv6_cidr_block = var.enable_ipv6
 
   tags = merge(
@@ -265,6 +266,28 @@ resource "aws_route_table" "private" {
 }
 
 #################
+# Ftp routes
+# There are as many routing tables as the number of NAT gateways
+#################
+resource "aws_route_table" "ftp" {
+  count = var.create_vpc && local.max_subnet_length > 0 ? local.nat_gateway_count : 0
+
+  vpc_id = local.vpc_id
+
+  tags = merge(
+    {
+      "Name" = var.single_nat_gateway ? "${var.name}-${var.ftp_subnet_suffix}" : format(
+        "%s-${var.ftp_subnet_suffix}-%s",
+        var.name,
+        element(var.azs, count.index),
+      )
+    },
+    var.tags,
+    var.ftp_route_table_tags,
+  )
+}
+
+#################
 # Database routes
 #################
 resource "aws_route_table" "database" {
@@ -455,7 +478,6 @@ resource "aws_subnet" "public_eks_green" {
   )
 }
 
-
 #################
 # Private subnet
 #################
@@ -480,6 +502,33 @@ resource "aws_subnet" "private" {
     },
     var.tags,
     var.private_subnet_tags,
+  )
+}
+
+#################
+# Ftp subnet
+#################
+resource "aws_subnet" "ftp" {
+  count = var.create_vpc && length(var.ftp_subnets) > 0 ? length(var.ftp_subnets) : 0
+
+  vpc_id                          = local.vpc_id
+  cidr_block                      = var.ftp_subnets[count.index]
+  availability_zone               = length(regexall("^[a-z]{2}-", element(var.azs, count.index))) > 0 ? element(var.azs, count.index) : null
+  availability_zone_id            = length(regexall("^[a-z]{2}-", element(var.azs, count.index))) == 0 ? element(var.azs, count.index) : null
+  assign_ipv6_address_on_creation = var.ftp_subnet_assign_ipv6_address_on_creation == null ? var.assign_ipv6_address_on_creation : var.ftp_subnet_assign_ipv6_address_on_creation
+
+  ipv6_cidr_block = var.enable_ipv6 && length(var.ftp_subnet_ipv6_prefixes) > 0 ? cidrsubnet(aws_vpc.this[0].ipv6_cidr_block, 8, var.ftp_subnet_ipv6_prefixes[count.index]) : null
+
+  tags = merge(
+    {
+      "Name" = format(
+        "%s-${var.ftp_subnet_suffix}-%s",
+        var.name,
+        element(var.azs, count.index),
+      )
+    },
+    var.tags,
+    var.ftp_subnet_tags,
   )
 }
 
@@ -812,7 +861,7 @@ resource "aws_network_acl_rule" "public_outbound" {
 }
 
 #########################
-# Public eks Network ACLS 
+# Public eks Network ACLS
 #########################
 
 resource "aws_network_acl" "public_eks_blue" {
@@ -967,7 +1016,7 @@ resource "aws_network_acl_rule" "private_outbound" {
 
 ########################
 ################################################################################
-# Private Networks ACLS for the eks 
+# Private Networks ACLS for the eks
 ################################################################################
 
 resource "aws_network_acl" "private_eks_blue" {
@@ -1297,8 +1346,6 @@ locals {
 resource "aws_eip" "nat" {
   count = var.create_vpc && var.enable_nat_gateway && false == var.reuse_nat_ips ? local.nat_gateway_count : 0
 
-  vpc = true
-
   tags = merge(
     {
       "Name" = format(
@@ -1575,7 +1622,7 @@ resource "aws_default_vpc" "this" {
 
   enable_dns_support   = var.default_vpc_enable_dns_support
   enable_dns_hostnames = var.default_vpc_enable_dns_hostnames
- # enable_classiclink   = var.default_vpc_enable_classiclink
+  # enable_classiclink   = var.default_vpc_enable_classiclink
 
   tags = merge(
     {
