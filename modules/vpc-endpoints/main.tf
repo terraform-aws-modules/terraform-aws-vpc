@@ -82,9 +82,9 @@ resource "aws_security_group" "this" {
   vpc_id      = var.vpc_id
 
   tags = merge(
+    { "Name" = try(coalesce(var.security_group_name, var.security_group_name_prefix), "") },
     var.tags,
     var.security_group_tags,
-    { "Name" = try(coalesce(var.security_group_name, var.security_group_name_prefix), "") },
   )
 
   lifecycle {
