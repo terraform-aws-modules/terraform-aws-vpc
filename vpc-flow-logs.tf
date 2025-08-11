@@ -79,6 +79,7 @@ resource "aws_iam_role" "vpc_flow_log_cloudwatch" {
 
   name        = var.vpc_flow_log_iam_role_use_name_prefix ? null : var.vpc_flow_log_iam_role_name
   name_prefix = var.vpc_flow_log_iam_role_use_name_prefix ? "${var.vpc_flow_log_iam_role_name}-" : null
+  path        = var.vpc_flow_log_iam_role_path
 
   assume_role_policy   = data.aws_iam_policy_document.flow_log_cloudwatch_assume_role[0].json
   permissions_boundary = var.vpc_flow_log_permissions_boundary
