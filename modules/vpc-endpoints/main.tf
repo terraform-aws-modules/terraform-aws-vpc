@@ -83,8 +83,8 @@ resource "aws_security_group" "this" {
 
   tags = merge(
     var.tags,
-    var.security_group_tags,
     { "Name" = try(coalesce(var.security_group_name, var.security_group_name_prefix), "") },
+    var.security_group_tags
   )
 
   lifecycle {

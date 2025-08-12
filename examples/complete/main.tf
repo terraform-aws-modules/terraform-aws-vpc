@@ -102,6 +102,10 @@ module "vpc_endpoints" {
     }
   }
 
+  security_group_tags = {
+    Name = "example-name-override"
+  }
+
   endpoints = {
     s3 = {
       service             = "s3"
