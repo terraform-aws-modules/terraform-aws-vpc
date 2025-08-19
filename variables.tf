@@ -408,6 +408,12 @@ variable "private_route_table_tags" {
   default     = {}
 }
 
+variable "private_route_table_tags_per_az" {
+  description = "Additional tags for the private route tables where the primary key is the AZ"
+  type        = map(map(string))
+  default     = {}
+}
+
 ################################################################################
 # Private Network ACLs
 ################################################################################
@@ -1252,9 +1258,21 @@ variable "nat_gateway_tags" {
   default     = {}
 }
 
+variable "nat_gateway_tags_per_az" {
+  description = "Additional tags for the NAT gateways where the primary key is the AZ"
+  type        = map(map(string))
+  default     = {}
+}
+
 variable "nat_eip_tags" {
   description = "Additional tags for the NAT EIP"
   type        = map(string)
+  default     = {}
+}
+
+variable "nat_eip_tags_per_az" {
+  description = "Additional tags for the NAT EIP where the primary key is the AZ"
+  type        = map(map(string))
   default     = {}
 }
 
