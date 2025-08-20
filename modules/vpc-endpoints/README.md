@@ -57,6 +57,79 @@ module "endpoints" {
 }
 ```
 
+### Region Support Limitation
+
+When using this sub-module with the [region parameter](https://registry.terraform.io/providers/hashicorp/aws/6.0.0/docs/guides/enhanced-region-support), it will still try to look up the service endpoint in the default region that's set in aws provider configuration. When you have this config:
+
+* aws provider region: us-east-1
+* module region: eu-central-1
+
+It leads to an API error as shown:
+
+```plaintext
+│ Error: creating EC2 VPC Endpoint (com.amazonaws.us-east-1.s3): operation error EC2: CreateVpcEndpoint, https response error StatusCode: 400, RequestID: xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx, api error InvalidServiceName: The Vpc Endpoint Service 'com.amazonaws.us-east-1.s3' does not exist
+│
+│   with module.vpc-endpoints-regions["eu-central-1"].aws_vpc_endpoint.this["s3"],
+│   on .terraform/modules/vpc-endpoints-regions/modules/vpc-endpoints/main.tf line 24, in resource "aws_vpc_endpoint" "this":
+│   24: resource "aws_vpc_endpoint" "this" {
+```
+
+This happens because the [aws_vpc_endpoint_service](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/vpc_endpoint_service) data source used in this sub-module does not support the [region parameter](https://registry.terraform.io/providers/hashicorp/aws/6.0.0/docs/guides/enhanced-region-support#non%E2%80%93region-aware-resources) yet.
+
+As a workaround, we have added the option `enable_service_endpoint_lookup = false` to disable the data source, but you will have to provide fully-qualified service endpoint instead of just the short service name, as shown in the example below.
+
+Before:
+
+```hcl
+module "endpoints" {
+  source = "terraform-aws-modules/vpc/aws//modules/vpc-endpoints"
+
+  for_each = toset([
+    "us-east-1",
+    "eu-west-1",
+    "eu-central-1",
+  ])
+  region = each.value
+
+  vpc_id             = var.regional_vpc_ids[each.value]
+  security_group_ids = [var.regional_sg_ids[each.value]]
+
+  endpoints = {
+    s3 = {
+      service = "s3"
+      # …
+    }
+  }
+}
+```
+
+After:
+
+```hcl
+module "endpoints" {
+  source = "terraform-aws-modules/vpc/aws//modules/vpc-endpoints"
+
+  for_each = toset([
+    "us-east-1",
+    "eu-west-1",
+    "eu-central-1",
+  ])
+  region = each.value
+
+  vpc_id             = var.regional_vpc_ids[each.value]
+  security_group_ids = [var.regional_sg_ids[each.value]]
+
+  enable_service_endpoint_lookup = false # <-- THIS
+  endpoints = {
+    s3 = {
+      service_endpoint = "com.amazonaws.${each.value}.s3" # <-- THIS
+      service_region   = each.value                       # <-- THIS
+      # …
+    }
+  }
+}
+```
+
 ## Examples
 
 - [Complete-VPC](https://github.com/terraform-aws-modules/terraform-aws-vpc/tree/master/examples/complete) with VPC Endpoints.
