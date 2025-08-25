@@ -1205,7 +1205,7 @@ variable "igw_tags" {
 ################################################################################
 
 variable "enable_nat_gateway" {
-  description = "Should be true if you want to provision NAT Gateways for each of your private networks"
+  description = "Should be true if you want to provision NAT Gateways for your private networks. Unless `single_nat_gateway` or `one_nat_gateway_per_az` is set, it will create one NAT Gateway per private subnet"
   type        = bool
   default     = false
 }
@@ -1217,7 +1217,7 @@ variable "nat_gateway_destination_cidr_block" {
 }
 
 variable "single_nat_gateway" {
-  description = "Should be true if you want to provision a single shared NAT Gateway across all of your private networks"
+  description = "Should be true if you want to provision a single shared NAT Gateway across all of your private networks. Setting this to true overrides `enable_nat_gateway`"
   type        = bool
   default     = false
 }
