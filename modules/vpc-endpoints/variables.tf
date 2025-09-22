@@ -5,7 +5,7 @@ variable "create" {
 }
 
 variable "region" {
-  description = "Region where the resource(s) will be managed. Defaults to the region set in the provider configuration"
+  description = "Region where the resource(s) will be managed. Defaults to the region set in the provider configuration. If a value is provided, `service_endpoint` must be specified due to https://github.com/hashicorp/terraform-provider-aws/issues/42462"
   type        = string
   default     = null
 }
@@ -20,12 +20,6 @@ variable "endpoints" {
   description = "A map of interface and/or gateway endpoints containing their properties and configurations"
   type        = any
   default     = {}
-}
-
-variable "enable_service_endpoint_lookup" {
-  description = "Determines whether to look up the service endpoint in the AWS API. If set to false, the `service_endpoint` attribute (usually in the form of `com.amazonaws.<region>.<service>`) must be provided in the `endpoints` map"
-  type        = bool
-  default     = true
 }
 
 variable "security_group_ids" {

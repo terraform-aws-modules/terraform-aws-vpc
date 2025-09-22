@@ -1,22 +1,18 @@
 data "aws_region" "current" {
-  # Call this API only if create_vpc and enable_flow_log are true
   count = var.create_vpc && var.enable_flow_log ? 1 : 0
 
   region = var.region
 }
 
 data "aws_caller_identity" "current" {
-  # Call this API only if create_vpc and enable_flow_log are true
   count = var.create_vpc && var.enable_flow_log ? 1 : 0
 }
 
 data "aws_partition" "current" {
-  # Call this API only if create_vpc and enable_flow_log are true
   count = var.create_vpc && var.enable_flow_log ? 1 : 0
 }
 
 locals {
-  # Only create flow log if user selected to create a VPC as well
   enable_flow_log = var.create_vpc && var.enable_flow_log
 
   create_flow_log_cloudwatch_iam_role  = local.enable_flow_log && var.flow_log_destination_type != "s3" && var.create_flow_log_cloudwatch_iam_role

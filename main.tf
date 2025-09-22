@@ -133,11 +133,13 @@ resource "aws_vpc_dhcp_options_association" "this" {
 }
 
 ################################################################################
-# Publiс Subnets
+# Public Subnets
 ################################################################################
 
 locals {
   create_public_subnets = local.create_vpc && local.len_public_subnets > 0
+
+  num_public_route_tables = var.create_multiple_public_route_tables ? local.len_public_subnets : 1
 }
 
 resource "aws_subnet" "public" {
@@ -169,10 +171,6 @@ resource "aws_subnet" "public" {
     var.public_subnet_tags,
     lookup(var.public_subnet_tags_per_az, element(var.azs, count.index), {})
   )
-}
-
-locals {
-  num_public_route_tables = var.create_multiple_public_route_tables ? local.len_public_subnets : 1
 }
 
 resource "aws_route_table" "public" {
@@ -921,7 +919,8 @@ resource "aws_network_acl_rule" "elasticache_outbound" {
 ################################################################################
 
 locals {
-  create_intra_subnets = local.create_vpc && local.len_intra_subnets > 0
+  create_intra_subnets   = local.create_vpc && local.len_intra_subnets > 0
+  num_intra_route_tables = var.create_multiple_intra_route_tables ? local.len_intra_subnets : 1
 }
 
 resource "aws_subnet" "intra" {
@@ -951,10 +950,6 @@ resource "aws_subnet" "intra" {
     var.tags,
     var.intra_subnet_tags,
   )
-}
-
-locals {
-  num_intra_route_tables = var.create_multiple_intra_route_tables ? local.len_intra_subnets : 1
 }
 
 resource "aws_route_table" "intra" {

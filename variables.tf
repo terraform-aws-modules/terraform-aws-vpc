@@ -1,7 +1,3 @@
-################################################################################
-# VPC
-################################################################################
-
 variable "create_vpc" {
   description = "Controls if VPC should be created (it affects almost all resources)"
   type        = bool
@@ -13,6 +9,16 @@ variable "region" {
   type        = string
   default     = null
 }
+
+variable "tags" {
+  description = "A map of tags to add to all resources"
+  type        = map(string)
+  default     = {}
+}
+
+################################################################################
+# VPC
+################################################################################
 
 variable "name" {
   description = "Name to be used on all the resources as identifier"
@@ -112,12 +118,6 @@ variable "ipv6_cidr_block_network_border_group" {
 
 variable "vpc_tags" {
   description = "Additional tags for the VPC"
-  type        = map(string)
-  default     = {}
-}
-
-variable "tags" {
-  description = "A map of tags to add to all resources"
   type        = map(string)
   default     = {}
 }
