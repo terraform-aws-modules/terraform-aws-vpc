@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [6.2.0](https://github.com/terraform-aws-modules/terraform-aws-vpc/compare/v6.1.0...v6.2.0) (2025-09-22)
+
+
+### Features
+
+* Add support for IAM role path to VPC flow log IAM role ([#1232](https://github.com/terraform-aws-modules/terraform-aws-vpc/issues/1232)) ([6594a41](https://github.com/terraform-aws-modules/terraform-aws-vpc/commit/6594a41db42e26db84882ba10c3be30fcb291cc4))
+
 ## [6.1.0](https://github.com/terraform-aws-modules/terraform-aws-vpc/compare/v6.0.1...v6.1.0) (2025-09-22)
 
 
