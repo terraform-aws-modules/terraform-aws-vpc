@@ -4,6 +4,12 @@ variable "create" {
   default     = true
 }
 
+variable "region" {
+  description = "Region where the resource(s) will be managed. Defaults to the region set in the provider configuration. If a value is provided, `service_endpoint` must be specified due to https://github.com/hashicorp/terraform-provider-aws/issues/42462"
+  type        = string
+  default     = null
+}
+
 variable "vpc_id" {
   description = "The ID of the VPC in which the endpoint will be used"
   type        = string
