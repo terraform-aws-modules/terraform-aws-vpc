@@ -1514,6 +1514,12 @@ variable "vpc_flow_log_iam_role_name" {
   default     = "vpc-flow-log-role"
 }
 
+variable "vpc_flow_log_iam_role_path" {
+  description = "The path for the VPC Flow Log IAM Role"
+  type        = string
+  default     = null
+}
+
 variable "vpc_flow_log_iam_role_use_name_prefix" {
   description = "Determines whether the IAM role name (`vpc_flow_log_iam_role_name_name`) is used as a prefix"
   type        = bool
