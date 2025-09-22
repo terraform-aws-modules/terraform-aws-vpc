@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [6.1.0](https://github.com/terraform-aws-modules/terraform-aws-vpc/compare/v6.0.1...v6.1.0) (2025-09-22)
+
+
+### Features
+
+* Add enhanced region support ([#1225](https://github.com/terraform-aws-modules/terraform-aws-vpc/issues/1225)) ([fd357b9](https://github.com/terraform-aws-modules/terraform-aws-vpc/commit/fd357b932ec2d7719779e4fcd586f4538a62d495))
+
 ## [6.0.1](https://github.com/terraform-aws-modules/terraform-aws-vpc/compare/v6.0.0...v6.0.1) (2025-06-20)
 
 
