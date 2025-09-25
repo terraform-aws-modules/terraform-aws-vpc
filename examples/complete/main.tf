@@ -72,14 +72,6 @@ module "vpc" {
   dhcp_options_domain_name         = "service.consul"
   dhcp_options_domain_name_servers = ["127.0.0.1", "10.10.0.2"]
 
-  # VPC Flow Logs (Cloudwatch log group and IAM role will be created)
-  vpc_flow_log_iam_role_name            = "vpc-complete-example-role"
-  vpc_flow_log_iam_role_use_name_prefix = false
-  enable_flow_log                       = true
-  create_flow_log_cloudwatch_log_group  = true
-  create_flow_log_cloudwatch_iam_role   = true
-  flow_log_max_aggregation_interval     = 60
-
   tags = local.tags
 }
 
