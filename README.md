@@ -27,6 +27,9 @@ module "vpc" {
 }
 ```
 
+> [!WARNING]
+> v6.x of the module still supports creating a VPC Flow Log within the root (VPC) module. However, this is deprecated behavior and will be removed in v7.0.0. Please use the [standalone flow log](https://github.com/terraform-aws-modules/terraform-aws-vpc/tree/master/modules/flow-log) module instead.
+
 ## External NAT Gateway IPs
 
 By default this module will provision new Elastic IPs for the VPC's NAT Gateways.
@@ -115,6 +118,20 @@ By default, if NAT Gateways are enabled, private subnets will be configured with
 If you need private subnets that should have no Internet routing (in the sense of [RFC1918 Category 1 subnets](https://tools.ietf.org/html/rfc1918)), `intra_subnets` should be specified. An example use case is configuration of AWS Lambda functions within a VPC, where AWS Lambda functions only need to pass traffic to internal resources or VPC endpoints for AWS services.
 
 Since AWS Lambda functions allocate Elastic Network Interfaces in proportion to the traffic received ([read more](https://docs.aws.amazon.com/lambda/latest/dg/vpc.html)), it can be useful to allocate a large private subnet for such allocations, while keeping the traffic they generate entirely internal to the VPC.
+
+## Conditional creation
+
+Prior to Terraform 0.13, you were unable to specify `count` in a module block. If you wish to toggle the creation of the module's resources in an older (pre 0.13) version of Terraform, you can use the `create_vpc` argument.
+
+```hcl
+# This VPC will not be created
+module "vpc" {
+  source = "terraform-aws-modules/vpc/aws"
+
+  create_vpc = false
+  # ... omitted
+}
+```
 
 ## Public access to RDS instances
 
