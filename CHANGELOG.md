@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [6.3.0](https://github.com/terraform-aws-modules/terraform-aws-vpc/compare/v6.2.0...v6.3.0) (2025-09-26)
+
+
+### Features
+
+* Add new sub-module for AWS flow log ([#1241](https://github.com/terraform-aws-modules/terraform-aws-vpc/issues/1241)) ([33aabec](https://github.com/terraform-aws-modules/terraform-aws-vpc/commit/33aabec82036e00240b0fcfb04f1e29297a48b1b))
+
 ## [6.2.0](https://github.com/terraform-aws-modules/terraform-aws-vpc/compare/v6.1.0...v6.2.0) (2025-09-22)
 
 
