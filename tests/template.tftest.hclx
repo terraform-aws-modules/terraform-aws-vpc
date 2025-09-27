@@ -1,0 +1,217 @@
+# # Mocking AWS Provider and Resources for testing
+# mock_provider "aws" {
+#     # important to use a different alias than "aws" to avoid conflicts
+#     alias = "mocked"
+#     # Mocking each resource used in the module
+#     mock_resource "module" {
+#         defaults = {
+#             # Add any module-level outputs if necessary
+#             dog = "asd"
+#         }
+#     }
+#     mock_resource "aws_vpc" {
+#         defaults = {
+#             id                          = "vpc-12345678"
+#             arn                         = "arn:aws:ec2:ap-southeast-3:123456789012:vpc/vpc-12345678"
+#             cidr_block                  = "10.0.0.0/16"
+#             instance_tenancy            = "default"
+#             enable_dns_support          = true
+#             enable_dns_hostnames        = true
+#             main_route_table_id         = "rtb-12345678"
+#             default_network_acl_id      = "acl-12345678"
+#             default_security_group_id   = "sg-12345678"
+#             default_route_table_id      = "rtb-12345678"
+#             ipv6_association_id         = null
+#             ipv6_cidr_block             = null
+#             assign_generated_ipv6_cidr_block = false
+#         }
+#     }
+#     mock_resource "aws_subnet" {
+#         defaults = {
+#         id                = "subnet-123"
+#         arn               = "arn:aws:ec2:ap-southeast-3:123456789012:subnet/subnet-123"
+#         cidr_block        = "10.0.1.0/24"
+#         availability_zone = "ap-southeast-3a"
+#         }
+#     }
+#     mock_resource "aws_internet_gateway" {
+#         defaults = {
+#         id  = "igw-12345678"
+#         arn = "arn:aws:ec2:ap-southeast-3:123456789012:internet-gateway/igw-12345678"
+#         }
+#     }
+#     mock_resource "aws_route_table" {
+#         defaults = {
+#         id = "rtb-123"
+#         }
+#     }
+#     mock_resource "aws_network_acl" {
+#         defaults = {
+#         id = "acl-12345678"
+#         }
+#     }
+#     mock_resource "aws_route_table_association" {
+#         defaults = {
+#         id = "rtbassoc-123"
+#         }
+#     }
+# }
+
+# # Test cases to validate the each resource configurations
+# run "internet_gateway" {
+#     providers = {
+#         aws = aws.mocked
+#     }
+#     assert {
+#         condition     = aws_internet_gateway.igw.id == "igw-12345678"
+#         error_message = "Internet Gateway ID does not match expected value"
+#     }
+#     assert {
+#         condition     = aws_internet_gateway.igw.vpc_id == aws_vpc.vpc.id
+#         error_message = "Internet Gateway is not associated with the correct VPC"
+#     }
+# }
+
+# run "network_acl" {
+#     providers = {
+#         aws = aws.mocked
+#     }
+#     assert {
+#         condition     = aws_network_acl.nacl.id == "acl-12345678"
+#         error_message = "Network ACL ID does not match expected value"
+#     }
+#     assert {
+#         condition     = length(aws_network_acl.nacl.ingress) == length(var.nacl_rules.ingress) + 1 # 1 default deny rule
+#         error_message = "Network ACL ingress rules count does not match expected value"
+#     }
+#     assert {
+#         condition     = length(aws_network_acl.nacl.egress) == length(var.nacl_rules.egress) + 1 # 1 default deny rule
+#         error_message = "Network ACL egress rules count does not match expected value"
+#     }
+#     assert {
+#         condition     = length(aws_network_acl.nacl.subnet_ids) == 0
+#         error_message = "No subnets should be associated at the start. Subnet association should be done via aws_network_acl_association resource"
+#     }
+#     assert {
+#         condition     = length(aws_network_acl_association.nacl_assoc.*.id) == length(var.vpc_subnets)
+#         error_message = "Subnet association count does not match expected value. Subnet association should be done via aws_network_acl_association resource."
+#     }
+# }
+
+# run "route_table" {
+#     providers = {
+#         aws = aws.mocked
+#     }
+#     assert {
+#         condition     = aws_route_table.rt.id == "rtb-123"
+#         error_message = "Route Table ID does not match expected value"
+#     }
+#     assert {
+#         condition     = length(aws_route_table_association.rt_assoc) == length(var.vpc_subnets)
+#         error_message = "Route Table Association count does not match expected value"
+#     }
+#     assert {
+#         condition     = alltrue([for assoc in aws_route_table_association.rt_assoc : assoc.route_table_id == aws_route_table.rt.id])
+#         error_message = "One or more Route Table Associations do not reference the correct Route Table"
+#     }
+# }
+
+# run "subnets" {
+#     providers = {
+#         aws = aws.mocked
+#     }
+#     assert {
+#         condition     = length(aws_subnet.subnet) == length(var.vpc_subnets)
+#         error_message = "Subnet count does not match expected value"
+#     }
+#     assert {
+#         condition     = tolist(aws_subnet.subnet.*.cidr_block) == tolist(var.vpc_subnets)
+#         error_message = "Subnet CIDR blocks does not match expected value"
+#     }
+#     assert {
+#         condition     = alltrue([for s in aws_subnet.subnet : s.vpc_id == aws_vpc.vpc.id])
+#         error_message = "One or more subnets are not associated with the correct VPC"
+#     }
+# }
+
+# run "vpc" {
+#     providers = {
+#         aws = aws.mocked
+#     }
+#     assert {
+#         condition     = aws_vpc.vpc.id == "vpc-12345678"
+#         error_message = "VPC ID does not match expected value"
+#     }
+#     assert {
+#         condition     = aws_vpc.vpc.cidr_block == var.vpc_cidr
+#         error_message = "VPC CIDR block does not match expected value"
+#     }
+#     assert {
+#         condition     = aws_vpc.vpc.instance_tenancy == var.vpc_instance_tenancy
+#         error_message = "VPC instance tenancy does not match expected value"
+#     }
+#     assert {
+#         condition     = aws_vpc.vpc.enable_dns_support == var.vpc_enable_dns_support
+#         error_message = "VPC DNS support setting does not match expected value"
+#     }
+#     assert {
+#         condition     = aws_vpc.vpc.enable_dns_hostnames == var.vpc_enable_dns_hostnames
+#         error_message = "VPC DNS hostnames setting does not match expected value"
+#     }
+#     assert {
+#         condition     = aws_vpc.vpc.assign_generated_ipv6_cidr_block == var.vpc_assign_generated_ipv6_cidr_block
+#         error_message = "VPC IPv6 assignment setting does not match expected value"
+#     }
+# }
+
+# # Variables to match those in tests/setup/main.tf
+# variables {
+#     name = local.name
+#     cidr = local.vpc_cidr
+
+#     azs                 = local.azs
+#     private_subnets     = [for k, v in local.azs : cidrsubnet(local.vpc_cidr, 8, k)]
+#     public_subnets      = [for k, v in local.azs : cidrsubnet(local.vpc_cidr, 8, k + 4)]
+#     database_subnets    = [for k, v in local.azs : cidrsubnet(local.vpc_cidr, 8, k + 8)]
+#     elasticache_subnets = [for k, v in local.azs : cidrsubnet(local.vpc_cidr, 8, k + 12)]
+#     redshift_subnets    = [for k, v in local.azs : cidrsubnet(local.vpc_cidr, 8, k + 16)]
+#     intra_subnets       = [for k, v in local.azs : cidrsubnet(local.vpc_cidr, 8, k + 20)]
+
+#     private_subnet_names = ["Private Subnet One", "Private Subnet Two"]
+#     # public_subnet_names omitted to show default name generation for all three subnets
+#     database_subnet_names    = ["DB Subnet One"]
+#     elasticache_subnet_names = ["Elasticache Subnet One", "Elasticache Subnet Two"]
+#     redshift_subnet_names    = ["Redshift Subnet One", "Redshift Subnet Two", "Redshift Subnet Three"]
+#     intra_subnet_names       = []
+
+#     create_database_subnet_group  = false
+#     manage_default_network_acl    = false
+#     manage_default_route_table    = false
+#     manage_default_security_group = false
+
+#     enable_dns_hostnames = true
+#     enable_dns_support   = true
+
+#     enable_nat_gateway = true
+#     single_nat_gateway = true
+
+#     customer_gateways = {
+#         IP1 = {
+#         bgp_asn     = 65112
+#         ip_address  = "1.2.3.4"
+#         device_name = "some_name"
+#         },
+#         IP2 = {
+#         bgp_asn    = 65112
+#         ip_address = "5.6.7.8"
+#         }
+#     }
+
+#     enable_vpn_gateway = true
+
+#     enable_dhcp_options              = true
+#     dhcp_options_domain_name         = "service.consul"
+#     dhcp_options_domain_name_servers = ["127.0.0.1", "10.10.0.2"]
+
+#     tags = local.tags
+# }
