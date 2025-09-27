@@ -28,4 +28,4 @@ override.tf.json
 .terraformrc
 terraform.rc
 
-.github/instructions
+.github/instructions/*
