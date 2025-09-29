@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [6.4.0](https://github.com/terraform-aws-modules/terraform-aws-vpc/compare/v6.3.0...v6.4.0) (2025-09-29)
+
+
+### Features
+
+* Add wrappers ([#1243](https://github.com/terraform-aws-modules/terraform-aws-vpc/issues/1243)) ([112bb7f](https://github.com/terraform-aws-modules/terraform-aws-vpc/commit/112bb7f163fff12ff7c8400bc5ffdd8674b304a5))
+
 ## [6.3.0](https://github.com/terraform-aws-modules/terraform-aws-vpc/compare/v6.2.0...v6.3.0) (2025-09-26)
 
 
