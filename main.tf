@@ -193,7 +193,7 @@ resource "aws_route_table" "public" {
 }
 
 resource "aws_route_table_association" "public" {
-  count = local.create_public_subnets ? local.len_public_subnets : 0
+  count = var.create_public_route_association && local.create_public_subnets ? local.len_public_subnets : 0
 
   region = var.region
 
