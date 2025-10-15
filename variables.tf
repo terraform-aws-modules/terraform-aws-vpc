@@ -1,12 +1,24 @@
-################################################################################
-# VPC
-################################################################################
-
 variable "create_vpc" {
   description = "Controls if VPC should be created (it affects almost all resources)"
   type        = bool
   default     = true
 }
+
+variable "region" {
+  description = "Region where the resource(s) will be managed. Defaults to the region set in the provider configuration"
+  type        = string
+  default     = null
+}
+
+variable "tags" {
+  description = "A map of tags to add to all resources"
+  type        = map(string)
+  default     = {}
+}
+
+################################################################################
+# VPC
+################################################################################
 
 variable "name" {
   description = "Name to be used on all the resources as identifier"
@@ -106,12 +118,6 @@ variable "ipv6_cidr_block_network_border_group" {
 
 variable "vpc_tags" {
   description = "Additional tags for the VPC"
-  type        = map(string)
-  default     = {}
-}
-
-variable "tags" {
-  description = "A map of tags to add to all resources"
   type        = map(string)
   default     = {}
 }
@@ -1512,6 +1518,12 @@ variable "vpc_flow_log_iam_role_name" {
   description = "Name to use on the VPC Flow Log IAM role created"
   type        = string
   default     = "vpc-flow-log-role"
+}
+
+variable "vpc_flow_log_iam_role_path" {
+  description = "The path for the VPC Flow Log IAM Role"
+  type        = string
+  default     = null
 }
 
 variable "vpc_flow_log_iam_role_use_name_prefix" {

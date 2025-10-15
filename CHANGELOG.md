@@ -2,6 +2,34 @@
 
 All notable changes to this project will be documented in this file.
 
+## [6.4.0](https://github.com/terraform-aws-modules/terraform-aws-vpc/compare/v6.3.0...v6.4.0) (2025-09-29)
+
+
+### Features
+
+* Add wrappers ([#1243](https://github.com/terraform-aws-modules/terraform-aws-vpc/issues/1243)) ([112bb7f](https://github.com/terraform-aws-modules/terraform-aws-vpc/commit/112bb7f163fff12ff7c8400bc5ffdd8674b304a5))
+
+## [6.3.0](https://github.com/terraform-aws-modules/terraform-aws-vpc/compare/v6.2.0...v6.3.0) (2025-09-26)
+
+
+### Features
+
+* Add new sub-module for AWS flow log ([#1241](https://github.com/terraform-aws-modules/terraform-aws-vpc/issues/1241)) ([33aabec](https://github.com/terraform-aws-modules/terraform-aws-vpc/commit/33aabec82036e00240b0fcfb04f1e29297a48b1b))
+
+## [6.2.0](https://github.com/terraform-aws-modules/terraform-aws-vpc/compare/v6.1.0...v6.2.0) (2025-09-22)
+
+
+### Features
+
+* Add support for IAM role path to VPC flow log IAM role ([#1232](https://github.com/terraform-aws-modules/terraform-aws-vpc/issues/1232)) ([6594a41](https://github.com/terraform-aws-modules/terraform-aws-vpc/commit/6594a41db42e26db84882ba10c3be30fcb291cc4))
+
+## [6.1.0](https://github.com/terraform-aws-modules/terraform-aws-vpc/compare/v6.0.1...v6.1.0) (2025-09-22)
+
+
+### Features
+
+* Add enhanced region support ([#1225](https://github.com/terraform-aws-modules/terraform-aws-vpc/issues/1225)) ([fd357b9](https://github.com/terraform-aws-modules/terraform-aws-vpc/commit/fd357b932ec2d7719779e4fcd586f4538a62d495))
+
 ## [6.0.1](https://github.com/terraform-aws-modules/terraform-aws-vpc/compare/v6.0.0...v6.0.1) (2025-06-20)
 
 

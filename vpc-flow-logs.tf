@@ -1,20 +1,18 @@
 data "aws_region" "current" {
-  # Call this API only if create_vpc and enable_flow_log are true
   count = var.create_vpc && var.enable_flow_log ? 1 : 0
+
+  region = var.region
 }
 
 data "aws_caller_identity" "current" {
-  # Call this API only if create_vpc and enable_flow_log are true
   count = var.create_vpc && var.enable_flow_log ? 1 : 0
 }
 
 data "aws_partition" "current" {
-  # Call this API only if create_vpc and enable_flow_log are true
   count = var.create_vpc && var.enable_flow_log ? 1 : 0
 }
 
 locals {
-  # Only create flow log if user selected to create a VPC as well
   enable_flow_log = var.create_vpc && var.enable_flow_log
 
   create_flow_log_cloudwatch_iam_role  = local.enable_flow_log && var.flow_log_destination_type != "s3" && var.create_flow_log_cloudwatch_iam_role
@@ -35,6 +33,8 @@ locals {
 
 resource "aws_flow_log" "this" {
   count = local.enable_flow_log ? 1 : 0
+
+  region = var.region
 
   log_destination_type       = var.flow_log_destination_type
   log_destination            = local.flow_log_destination_arn
@@ -65,6 +65,8 @@ resource "aws_flow_log" "this" {
 resource "aws_cloudwatch_log_group" "flow_log" {
   count = local.create_flow_log_cloudwatch_log_group ? 1 : 0
 
+  region = var.region
+
   name              = "${var.flow_log_cloudwatch_log_group_name_prefix}${local.flow_log_cloudwatch_log_group_name_suffix}"
   retention_in_days = var.flow_log_cloudwatch_log_group_retention_in_days
   kms_key_id        = var.flow_log_cloudwatch_log_group_kms_key_id
@@ -79,6 +81,7 @@ resource "aws_iam_role" "vpc_flow_log_cloudwatch" {
 
   name        = var.vpc_flow_log_iam_role_use_name_prefix ? null : var.vpc_flow_log_iam_role_name
   name_prefix = var.vpc_flow_log_iam_role_use_name_prefix ? "${var.vpc_flow_log_iam_role_name}-" : null
+  path        = var.vpc_flow_log_iam_role_path
 
   assume_role_policy   = data.aws_iam_policy_document.flow_log_cloudwatch_assume_role[0].json
   permissions_boundary = var.vpc_flow_log_permissions_boundary
