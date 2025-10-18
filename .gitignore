@@ -27,3 +27,10 @@ override.tf.json
 # Ignore CLI configuration files
 .terraformrc
 terraform.rc
+
+# Zip archive
+*.zip
+builds
+
+.DS_Store
+.idea
