@@ -20,6 +20,8 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v5
 
+      - run: node --version
+
       - name: Get root directories
         id: dirs
         uses: clowdhaus/terraform-composite-actions/directories@v1.14.0
