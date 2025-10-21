@@ -165,6 +165,11 @@ output "public_network_acl_arn" {
   value       = try(aws_network_acl.public[0].arn, null)
 }
 
+output "public_subnet_availability_zones" {
+  description = "List of availability zones for public subnets"
+  value       = aws_subnet.public[*].availability_zone
+}
+
 ################################################################################
 # Private Subnets
 ################################################################################
