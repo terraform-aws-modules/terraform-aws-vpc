@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [6.5.0](https://github.com/terraform-aws-modules/terraform-aws-vpc/compare/v6.4.1...v6.5.0) (2025-10-21)
+
+### Features
+
+* Add support for `bgp_asn_extended` argument to the `customer_gateways` variable ([#1249](https://github.com/terraform-aws-modules/terraform-aws-vpc/issues/1249)) ([ef564c9](https://github.com/terraform-aws-modules/terraform-aws-vpc/commit/ef564c968a076092ea39f96549ac49669a2ea237))
+
 ## [6.4.1](https://github.com/terraform-aws-modules/terraform-aws-vpc/compare/v6.4.0...v6.4.1) (2025-10-21)
 
 ### Bug Fixes
