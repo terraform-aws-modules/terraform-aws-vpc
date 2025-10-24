@@ -1,24 +1,44 @@
 provider "aws" {
-  region = "us-east-1"
+  region = local.region
 }
+
+data "aws_availability_zones" "available" {}
+
+locals {
+  name   = "ex-${basename(path.cwd)}"
+  region = "us-east-1"
+  azs    = slice(data.aws_availability_zones.available.names, 0, 2)
+
+  tags = {
+    Example    = local.name
+    GithubRepo = "terraform-aws-vpc"
+    GithubOrg  = "terraform-aws-modules"
+  }
+}
+
+################################################################################
+# EC2 Instance Connect Endpoint Example
+################################################################################
 
 module "vpc" {
   source = "../../"
 
-  name = "example-vpc"
+  name = local.name
   cidr = "10.0.0.0/16"
 
-  azs             = ["us-east-1a", "us-east-1b"]
+  azs             = local.azs
   private_subnets = ["10.0.1.0/24", "10.0.2.0/24"]
   public_subnets  = ["10.0.101.0/24", "10.0.102.0/24"]
 
   enable_nat_gateway = true
   single_nat_gateway = true
 
-  create_instance_connect_endpoint      = true
-  instance_connect_subnet_id            = element(module.vpc.private_subnets, 0)
-  instance_connect_security_group_ids   = [aws_security_group.allow_ssh.id]
-  instance_connect_preserve_client_ip   = false
+  create_instance_connect_endpoint    = true
+  instance_connect_subnet_id          = element(local.private_subnets, 0)
+  instance_connect_security_group_ids = [aws_security_group.allow_ssh.id]
+  instance_connect_preserve_client_ip = false
+
+  tags = local.tags
 }
 
 resource "aws_security_group" "allow_ssh" {
