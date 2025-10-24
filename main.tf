@@ -1541,3 +1541,23 @@ resource "aws_default_route_table" "default" {
     var.default_route_table_tags,
   )
 }
+
+################################################################################
+# Endpoints
+################################################################################
+
+resource "aws_ec2_instance_connect_endpoint" "this" {
+  count = var.create_instance_connect_endpoint ? 1 : 0
+
+  subnet_id          = var.instance_connect_subnet_id
+  security_group_ids = var.instance_connect_security_group_ids
+
+  preserve_client_ip = var.instance_connect_preserve_client_ip
+
+  tags = merge(
+    var.tags,
+    {
+      "Name" = "${var.name}-instance-connect-endpoint"
+    }
+  )
+}

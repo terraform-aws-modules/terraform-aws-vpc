@@ -667,3 +667,11 @@ output "name" {
   description = "The name of the VPC specified as argument to this module"
   value       = var.name
 }
+
+################################################################################
+# EC2 Instance Connect Endpoint
+################################################################################
+output "instance_connect_endpoint_id" {
+  description = "The ID of the EC2 Instance Connect Endpoint"
+  value       = try(aws_ec2_instance_connect_endpoint.this[0].id, null)
+}

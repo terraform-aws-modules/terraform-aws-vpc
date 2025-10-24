@@ -1678,3 +1678,31 @@ variable "putin_khuylo" {
   type        = bool
   default     = true
 }
+
+################################################################################
+# Endpoints
+################################################################################
+
+variable "create_instance_connect_endpoint" {
+  description = "Whether to create an EC2 Instance Connect Endpoint"
+  type        = bool
+  default     = false
+}
+
+variable "instance_connect_subnet_id" {
+  description = "The ID of the subnet in which to create the Instance Connect Endpoint"
+  type        = string
+  default     = null
+}
+
+variable "instance_connect_security_group_ids" {
+  description = "List of security group IDs to associate with the Instance Connect Endpoint"
+  type        = list(string)
+  default     = []
+}
+
+variable "instance_connect_preserve_client_ip" {
+  description = "Whether to preserve the client IP address when connecting via EC2 Instance Connect Endpoint"
+  type        = bool
+  default     = false
+}
