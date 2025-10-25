@@ -27,3 +27,13 @@ override.tf.json
 # Ignore CLI configuration files
 .terraformrc
 terraform.rc
+
+# Lambda build artifacts
+builds/
+__pycache__/
+*.zip
+.tox
+
+# Local editors/macos files
+.DS_Store
+.idea

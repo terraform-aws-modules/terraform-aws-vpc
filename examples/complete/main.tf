@@ -64,6 +64,10 @@ module "vpc" {
       bgp_asn    = 65112
       ip_address = "5.6.7.8"
     }
+    IP3 = {
+      bgp_asn_extended = 2147483648
+      ip_address       = "5.6.7.8"
+    }
   }
 
   enable_vpn_gateway = true
