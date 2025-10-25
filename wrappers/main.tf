@@ -310,6 +310,7 @@ module "wrapper" {
   propagate_public_route_tables_vgw                             = try(each.value.propagate_public_route_tables_vgw, var.defaults.propagate_public_route_tables_vgw, false)
   public_acl_tags                                               = try(each.value.public_acl_tags, var.defaults.public_acl_tags, {})
   public_dedicated_network_acl                                  = try(each.value.public_dedicated_network_acl, var.defaults.public_dedicated_network_acl, false)
+  public_enable_default_route                                   = try(each.value.public_enable_default_route, var.defaults.public_enable_default_route, true)
   public_inbound_acl_rules = try(each.value.public_inbound_acl_rules, var.defaults.public_inbound_acl_rules, [
     {
       rule_number = 100
