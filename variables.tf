@@ -1678,3 +1678,37 @@ variable "putin_khuylo" {
   type        = bool
   default     = true
 }
+
+################################################################################
+# EC2 Instance Connect Endpoint
+################################################################################
+
+variable "create_instance_connect_endpoint" {
+  type        = bool
+  default     = false
+  description = "Whether to create EC2 Instance Connect Endpoint(s)"
+}
+
+variable "instance_connect_endpoint_create_in_private_subnets" {
+  type        = bool
+  default     = true
+  description = "Create EC2 Instance Connect Endpoint(s) in all private subnets if no subnet IDs are provided"
+}
+
+variable "instance_connect_endpoint_subnets" {
+  type        = list(string)
+  default     = null
+  description = "List of subnet IDs where EC2 Instance Connect Endpoint(s) should be created. If null and create_in_private_subnets is true, defaults to private subnets"
+}
+
+variable "instance_connect_security_group_ids" {
+  type        = list(string)
+  default     = null
+  description = "List of security group IDs to associate with EC2 Instance Connect Endpoint(s). If null, defaults to no security groups"
+}
+
+variable "instance_connect_tags" {
+  type        = map(string)
+  default     = {}
+  description = "Additional tags for EC2 Instance Connect Endpoint resources"
+}

@@ -667,3 +667,27 @@ output "name" {
   description = "The name of the VPC specified as argument to this module"
   value       = var.name
 }
+
+################################################################################
+# EC2 Instance Connect Endpoint
+################################################################################
+
+output "instance_connect_endpoint_ids" {
+  description = "IDs of the EC2 Instance Connect Endpoint(s) created"
+  value       = try([for v in aws_ec2_instance_connect_endpoint.this : v.id], [])
+}
+
+output "instance_connect_endpoint_subnet_ids" {
+  description = "Subnet IDs where EC2 Instance Connect Endpoint(s) were created"
+  value       = try([for v in aws_ec2_instance_connect_endpoint.this : v.subnet_id], [])
+}
+
+output "instance_connect_endpoint_security_group_ids" {
+  description = "Security group IDs associated with the EC2 Instance Connect Endpoint(s)"
+  value       = try(var.instance_connect_security_group_ids, [])
+}
+
+output "instance_connect_endpoint_arns" {
+  description = "ARNs of the EC2 Instance Connect Endpoint(s)"
+  value       = try([for v in aws_ec2_instance_connect_endpoint.this : v.arn], [])
+}

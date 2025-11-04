@@ -264,6 +264,7 @@ No modules.
 | [aws_default_route_table.default](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/default_route_table) | resource |
 | [aws_default_security_group.this](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/default_security_group) | resource |
 | [aws_default_vpc.this](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/default_vpc) | resource |
+| [aws_ec2_instance_connect_endpoint.this](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/ec2_instance_connect_endpoint) | resource |
 | [aws_egress_only_internet_gateway.this](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/egress_only_internet_gateway) | resource |
 | [aws_eip.nat](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/eip) | resource |
 | [aws_elasticache_subnet_group.elasticache](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/elasticache_subnet_group) | resource |
@@ -359,6 +360,7 @@ No modules.
 | <a name="input_create_flow_log_cloudwatch_iam_role"></a> [create\_flow\_log\_cloudwatch\_iam\_role](#input\_create\_flow\_log\_cloudwatch\_iam\_role) | Whether to create IAM role for VPC Flow Logs | `bool` | `false` | no |
 | <a name="input_create_flow_log_cloudwatch_log_group"></a> [create\_flow\_log\_cloudwatch\_log\_group](#input\_create\_flow\_log\_cloudwatch\_log\_group) | Whether to create CloudWatch log group for VPC Flow Logs | `bool` | `false` | no |
 | <a name="input_create_igw"></a> [create\_igw](#input\_create\_igw) | Controls if an Internet Gateway is created for public subnets and the related routes that connect them | `bool` | `true` | no |
+| <a name="input_create_instance_connect_endpoint"></a> [create\_instance\_connect\_endpoint](#input\_create\_instance\_connect\_endpoint) | Whether to create EC2 Instance Connect Endpoint(s) | `bool` | `false` | no |
 | <a name="input_create_multiple_intra_route_tables"></a> [create\_multiple\_intra\_route\_tables](#input\_create\_multiple\_intra\_route\_tables) | Indicates whether to create a separate route table for each intra subnet. Default: `false` | `bool` | `false` | no |
 | <a name="input_create_multiple_public_route_tables"></a> [create\_multiple\_public\_route\_tables](#input\_create\_multiple\_public\_route\_tables) | Indicates whether to create a separate route table for each public subnet. Default: `false` | `bool` | `false` | no |
 | <a name="input_create_private_nat_gateway_route"></a> [create\_private\_nat\_gateway\_route](#input\_create\_private\_nat\_gateway\_route) | Controls if a nat gateway route should be created to give internet access to the private subnets | `bool` | `true` | no |
@@ -456,6 +458,10 @@ No modules.
 | <a name="input_flow_log_per_hour_partition"></a> [flow\_log\_per\_hour\_partition](#input\_flow\_log\_per\_hour\_partition) | (Optional) Indicates whether to partition the flow log per hour. This reduces the cost and response time for queries | `bool` | `false` | no |
 | <a name="input_flow_log_traffic_type"></a> [flow\_log\_traffic\_type](#input\_flow\_log\_traffic\_type) | The type of traffic to capture. Valid values: ACCEPT, REJECT, ALL | `string` | `"ALL"` | no |
 | <a name="input_igw_tags"></a> [igw\_tags](#input\_igw\_tags) | Additional tags for the internet gateway | `map(string)` | `{}` | no |
+| <a name="input_instance_connect_endpoint_create_in_private_subnets"></a> [instance\_connect\_endpoint\_create\_in\_private\_subnets](#input\_instance\_connect\_endpoint\_create\_in\_private\_subnets) | Create EC2 Instance Connect Endpoint(s) in all private subnets if no subnet IDs are provided | `bool` | `true` | no |
+| <a name="input_instance_connect_endpoint_subnets"></a> [instance\_connect\_endpoint\_subnets](#input\_instance\_connect\_endpoint\_subnets) | List of subnet IDs where EC2 Instance Connect Endpoint(s) should be created. If null and create\_in\_private\_subnets is true, defaults to private subnets | `list(string)` | `null` | no |
+| <a name="input_instance_connect_security_group_ids"></a> [instance\_connect\_security\_group\_ids](#input\_instance\_connect\_security\_group\_ids) | List of security group IDs to associate with EC2 Instance Connect Endpoint(s). If null, defaults to no security groups | `list(string)` | `null` | no |
+| <a name="input_instance_connect_tags"></a> [instance\_connect\_tags](#input\_instance\_connect\_tags) | Additional tags for EC2 Instance Connect Endpoint resources | `map(string)` | `{}` | no |
 | <a name="input_instance_tenancy"></a> [instance\_tenancy](#input\_instance\_tenancy) | A tenancy option for instances launched into the VPC | `string` | `"default"` | no |
 | <a name="input_intra_acl_tags"></a> [intra\_acl\_tags](#input\_intra\_acl\_tags) | Additional tags for the intra subnets network ACL | `map(string)` | `{}` | no |
 | <a name="input_intra_dedicated_network_acl"></a> [intra\_dedicated\_network\_acl](#input\_intra\_dedicated\_network\_acl) | Whether to use dedicated network ACL (not default) and custom rules for intra subnets | `bool` | `false` | no |
@@ -632,6 +638,10 @@ No modules.
 | <a name="output_elasticache_subnets_ipv6_cidr_blocks"></a> [elasticache\_subnets\_ipv6\_cidr\_blocks](#output\_elasticache\_subnets\_ipv6\_cidr\_blocks) | List of IPv6 cidr\_blocks of elasticache subnets in an IPv6 enabled VPC |
 | <a name="output_igw_arn"></a> [igw\_arn](#output\_igw\_arn) | The ARN of the Internet Gateway |
 | <a name="output_igw_id"></a> [igw\_id](#output\_igw\_id) | The ID of the Internet Gateway |
+| <a name="output_instance_connect_endpoint_arns"></a> [instance\_connect\_endpoint\_arns](#output\_instance\_connect\_endpoint\_arns) | ARNs of the EC2 Instance Connect Endpoint(s) |
+| <a name="output_instance_connect_endpoint_ids"></a> [instance\_connect\_endpoint\_ids](#output\_instance\_connect\_endpoint\_ids) | IDs of the EC2 Instance Connect Endpoint(s) created |
+| <a name="output_instance_connect_endpoint_security_group_ids"></a> [instance\_connect\_endpoint\_security\_group\_ids](#output\_instance\_connect\_endpoint\_security\_group\_ids) | Security group IDs associated with the EC2 Instance Connect Endpoint(s) |
+| <a name="output_instance_connect_endpoint_subnet_ids"></a> [instance\_connect\_endpoint\_subnet\_ids](#output\_instance\_connect\_endpoint\_subnet\_ids) | Subnet IDs where EC2 Instance Connect Endpoint(s) were created |
 | <a name="output_intra_network_acl_arn"></a> [intra\_network\_acl\_arn](#output\_intra\_network\_acl\_arn) | ARN of the intra network ACL |
 | <a name="output_intra_network_acl_id"></a> [intra\_network\_acl\_id](#output\_intra\_network\_acl\_id) | ID of the intra network ACL |
 | <a name="output_intra_route_table_association_ids"></a> [intra\_route\_table\_association\_ids](#output\_intra\_route\_table\_association\_ids) | List of IDs of the intra route table association |

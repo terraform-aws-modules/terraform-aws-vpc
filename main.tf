@@ -19,7 +19,19 @@ locals {
   vpc_id = try(aws_vpc_ipv4_cidr_block_association.this[0].vpc_id, aws_vpc.this[0].id, "")
 
   create_vpc = var.create_vpc && var.putin_khuylo
+
+  # EC2 Instance Connect Endpoint target subnets
+  instance_connect_target_subnets = (
+    var.instance_connect_endpoint_subnets != null && length(var.instance_connect_endpoint_subnets) > 0
+    ? var.instance_connect_endpoint_subnets
+    : (
+      var.instance_connect_endpoint_create_in_private_subnets && local.len_private_subnets > 0
+      ? aws_subnet.private[*].id
+      : []
+    )
+  )
 }
+
 
 ################################################################################
 # VPC
@@ -1539,5 +1551,32 @@ resource "aws_default_route_table" "default" {
     { "Name" = coalesce(var.default_route_table_name, "${var.name}-default") },
     var.tags,
     var.default_route_table_tags,
+  )
+}
+
+################################################################################
+# EC2 Instance Connect Endpoint
+################################################################################
+
+resource "aws_ec2_instance_connect_endpoint" "this" {
+  for_each = var.create_instance_connect_endpoint ? {
+    for idx, subnet_id in local.instance_connect_target_subnets : idx => subnet_id
+  } : {}
+
+  subnet_id = each.value
+
+  security_group_ids = (
+    var.instance_connect_security_group_ids != null
+    ? var.instance_connect_security_group_ids
+    : []
+  )
+
+
+  tags = merge(
+    var.tags,
+    var.instance_connect_tags,
+    {
+      Name = "${var.name}-ec2-instance-connect-${each.key}"
+    }
   )
 }
