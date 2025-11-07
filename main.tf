@@ -1199,9 +1199,33 @@ resource "aws_route" "private_ipv6_egress" {
 # NAT Gateway
 ################################################################################
 
+data "aws_availability_zones" "available" {
+  count = length(var.azs) == 0 ? 1 : 0
+
+  state = "available"
+}
+
 locals {
-  nat_gateway_count = var.single_nat_gateway ? 1 : var.one_nat_gateway_per_az ? length(var.azs) : local.max_subnet_length
-  nat_gateway_ips   = var.reuse_nat_ips ? var.external_nat_ip_ids : aws_eip.nat[*].id
+  # Use provided AZs or fetch from data source, then sort for consistency
+  sorted_azs = sort(length(var.azs) > 0 ? var.azs : data.aws_availability_zones.available[0].names)
+
+  # Build mapping AZ -> first public subnet ID found for that AZ
+  az_to_public_subnet = {
+    for az in local.sorted_azs : az => try(
+      # Sort subnets within each AZ for consistent selection
+      sort([for s in aws_subnet.public : s.id if s.availability_zone == az])[0],
+      aws_subnet.public[0].id
+    )
+  }
+
+  nat_gateway_count = var.single_nat_gateway ? 1 : var.one_nat_gateway_per_az ? length(local.sorted_azs) : local.max_subnet_length
+  nat_gateway_ips   = var.reuse_nat_ips ? sort(var.external_nat_ip_ids) : aws_eip.nat[*].id
+
+  # Determine NAT gateway subnet IDs to use
+  nat_gateway_subnet_ids = length(var.nat_gateway_subnet_ids) > 0 ? sort(var.nat_gateway_subnet_ids) : [
+    for i, az in local.sorted_azs : local.az_to_public_subnet[az]
+    if i < local.nat_gateway_count
+  ]
 }
 
 resource "aws_eip" "nat" {
@@ -1235,8 +1259,8 @@ resource "aws_nat_gateway" "this" {
     var.single_nat_gateway ? 0 : count.index,
   )
   subnet_id = element(
-    aws_subnet.public[*].id,
-    var.single_nat_gateway ? 0 : count.index,
+    local.nat_gateway_subnet_ids,
+    var.single_nat_gateway ? 0 : count.index
   )
 
   tags = merge(

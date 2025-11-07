@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [Unreleased]
+
+### Bug Fixes
+
+* fix: Ensure NAT gateways are created in the correct availability zones ([#1257](https://github.com/terraform-aws-modules/terraform-aws-vpc/issues/1257))
+
 ## [6.5.0](https://github.com/terraform-aws-modules/terraform-aws-vpc/compare/v6.4.1...v6.5.0) (2025-10-21)
 
 ### Features

@@ -1210,6 +1210,17 @@ variable "igw_tags" {
 # NAT Gateway
 ################################################################################
 
+variable "nat_gateway_subnet_ids" {
+  description = "List of subnet IDs to use for NAT Gateways. If provided, these subnet IDs will be used (in order). If empty, the module will automatically select the public subnet that matches each Availability Zone (AZ)."
+  type        = list(string)
+  default     = []
+
+  validation {
+    condition     = alltrue([for id in var.nat_gateway_subnet_ids : can(regex("^subnet-", id)) || id == ""])
+    error_message = "NAT Gateway subnet IDs must be valid subnet IDs starting with 'subnet-' or be empty strings."
+  }
+}
+
 variable "enable_nat_gateway" {
   description = "Should be true if you want to provision NAT Gateways for each of your private networks"
   type        = bool
@@ -1232,6 +1243,20 @@ variable "one_nat_gateway_per_az" {
   description = "Should be true if you want only one NAT Gateway per availability zone. Requires `var.azs` to be set, and the number of `public_subnets` created to be greater than or equal to the number of availability zones specified in `var.azs`"
   type        = bool
   default     = false
+}
+
+variable "nat_gateway_subnet_ids" {
+  description = <<EOT
+Optional list of subnet IDs to use for NAT Gateways. If provided, these
+subnet IDs will be used (in order). If empty, the module will automatically
+select the public subnet that matches each Availability Zone (AZ).
+EOT
+  validation {
+    condition = alltrue([for id in var.nat_gateway_subnet_ids : id != ""])
+    error_message = "nat_gateway_subnet_ids must not contain empty strings."
+  }
+  type    = list(string)
+  default = []
 }
 
 variable "reuse_nat_ips" {
