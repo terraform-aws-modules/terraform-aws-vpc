@@ -1210,6 +1210,17 @@ variable "igw_tags" {
 # NAT Gateway
 ################################################################################
 
+variable "nat_gateway_subnet_ids" {
+  description = "List of subnet IDs to use for NAT Gateways. If provided, these subnet IDs will be used (in order). If empty, the module will automatically select the public subnet that matches each Availability Zone (AZ)."
+  type        = list(string)
+  default     = []
+
+  validation {
+    condition     = alltrue([for id in var.nat_gateway_subnet_ids : can(regex("^subnet-", id)) || id == ""])
+    error_message = "NAT Gateway subnet IDs must be valid subnet IDs starting with 'subnet-' or be empty strings."
+  }
+}
+
 variable "enable_nat_gateway" {
   description = "Should be true if you want to provision NAT Gateways for each of your private networks"
   type        = bool
