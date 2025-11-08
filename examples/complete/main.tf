@@ -9,8 +9,8 @@ locals {
   region = "eu-west-1"
 
   vpc_cidr = "10.0.0.0/16"
-  azs      = slice(data.aws_availability_zones.available.names, 0, 3)
-
+  azs      = slice(sort(data.aws_availability_zones.available.names), 0, 3)
+  #azs      = slice(sort(data.aws_availability_zones.available.names), 0, 2) #Tested with 2 AZs
   tags = {
     Example    = local.name
     GithubRepo = "terraform-aws-vpc"
@@ -28,9 +28,11 @@ module "vpc" {
   name = local.name
   cidr = local.vpc_cidr
 
-  azs                 = local.azs
-  private_subnets     = [for k, v in local.azs : cidrsubnet(local.vpc_cidr, 8, k)]
-  public_subnets      = [for k, v in local.azs : cidrsubnet(local.vpc_cidr, 8, k + 4)]
+  azs             = local.azs
+  private_subnets = [for k, v in local.azs : cidrsubnet(local.vpc_cidr, 8, k)]
+  #4 Subnets created for 3 AZs to test the NAT gateways are created in correct availability zone
+  public_subnets = [for i in range(4) : cidrsubnet(local.vpc_cidr, 8, i + 4)]
+  #public_subnets      = [for k, v in local.azs : cidrsubnet(local.vpc_cidr, 8, k + 4)]
   database_subnets    = [for k, v in local.azs : cidrsubnet(local.vpc_cidr, 8, k + 8)]
   elasticache_subnets = [for k, v in local.azs : cidrsubnet(local.vpc_cidr, 8, k + 12)]
   redshift_subnets    = [for k, v in local.azs : cidrsubnet(local.vpc_cidr, 8, k + 16)]
@@ -41,18 +43,19 @@ module "vpc" {
   database_subnet_names    = ["DB Subnet One"]
   elasticache_subnet_names = ["Elasticache Subnet One", "Elasticache Subnet Two"]
   redshift_subnet_names    = ["Redshift Subnet One", "Redshift Subnet Two", "Redshift Subnet Three"]
-  intra_subnet_names       = []
 
   create_database_subnet_group  = false
   manage_default_network_acl    = false
   manage_default_route_table    = false
   manage_default_security_group = false
 
+  # NAT Gateway Configuration
+  enable_nat_gateway     = true
+  one_nat_gateway_per_az = true # Module will automatically map NAT Gateways to first public subnet in each AZ
+  single_nat_gateway     = false
+
   enable_dns_hostnames = true
   enable_dns_support   = true
-
-  enable_nat_gateway = true
-  single_nat_gateway = true
 
   customer_gateways = {
     IP1 = {

@@ -1245,20 +1245,6 @@ variable "one_nat_gateway_per_az" {
   default     = false
 }
 
-variable "nat_gateway_subnet_ids" {
-  description = <<EOT
-Optional list of subnet IDs to use for NAT Gateways. If provided, these
-subnet IDs will be used (in order). If empty, the module will automatically
-select the public subnet that matches each Availability Zone (AZ).
-EOT
-  validation {
-    condition = alltrue([for id in var.nat_gateway_subnet_ids : id != ""])
-    error_message = "nat_gateway_subnet_ids must not contain empty strings."
-  }
-  type    = list(string)
-  default = []
-}
-
 variable "reuse_nat_ips" {
   description = "Should be true if you don't want EIPs to be created for your NAT Gateways and will instead pass them in via the 'external_nat_ip_ids' variable"
   type        = bool
