@@ -1712,3 +1712,9 @@ variable "instance_connect_tags" {
   default     = {}
   description = "Additional tags for EC2 Instance Connect Endpoint resources"
 }
+
+variable "instance_connect_preserve_client_ip" {
+  type        = bool
+  default     = false
+  description = "Whether to preserve the client IP address when connecting via EC2 Instance Connect Endpoint"
+}

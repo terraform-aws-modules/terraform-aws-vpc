@@ -672,22 +672,14 @@ output "name" {
 # EC2 Instance Connect Endpoint
 ################################################################################
 
-output "instance_connect_endpoint_ids" {
-  description = "IDs of the EC2 Instance Connect Endpoint(s) created"
-  value       = try([for v in aws_ec2_instance_connect_endpoint.this : v.id], [])
-}
-
-output "instance_connect_endpoint_subnet_ids" {
-  description = "Subnet IDs where EC2 Instance Connect Endpoint(s) were created"
-  value       = try([for v in aws_ec2_instance_connect_endpoint.this : v.subnet_id], [])
-}
-
-output "instance_connect_endpoint_security_group_ids" {
-  description = "Security group IDs associated with the EC2 Instance Connect Endpoint(s)"
-  value       = try(var.instance_connect_security_group_ids, [])
-}
-
-output "instance_connect_endpoint_arns" {
-  description = "ARNs of the EC2 Instance Connect Endpoint(s)"
-  value       = try([for v in aws_ec2_instance_connect_endpoint.this : v.arn], [])
+output "instance_connect_endpoints" {
+  description = "Map of EC2 Instance Connect Endpoints created, keyed by subnet index"
+  value = try({
+    for k, v in aws_ec2_instance_connect_endpoint.this : k => {
+      id        = v.id
+      arn       = v.arn
+      subnet_id = v.subnet_id
+      sg_ids    = v.security_group_ids
+    }
+  }, {})
 }

@@ -1571,6 +1571,7 @@ resource "aws_ec2_instance_connect_endpoint" "this" {
     : []
   )
 
+  preserve_client_ip = var.instance_connect_preserve_client_ip
 
   tags = merge(
     var.tags,

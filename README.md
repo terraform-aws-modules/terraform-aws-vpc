@@ -460,6 +460,7 @@ No modules.
 | <a name="input_igw_tags"></a> [igw\_tags](#input\_igw\_tags) | Additional tags for the internet gateway | `map(string)` | `{}` | no |
 | <a name="input_instance_connect_endpoint_create_in_private_subnets"></a> [instance\_connect\_endpoint\_create\_in\_private\_subnets](#input\_instance\_connect\_endpoint\_create\_in\_private\_subnets) | Create EC2 Instance Connect Endpoint(s) in all private subnets if no subnet IDs are provided | `bool` | `true` | no |
 | <a name="input_instance_connect_endpoint_subnets"></a> [instance\_connect\_endpoint\_subnets](#input\_instance\_connect\_endpoint\_subnets) | List of subnet IDs where EC2 Instance Connect Endpoint(s) should be created. If null and create\_in\_private\_subnets is true, defaults to private subnets | `list(string)` | `null` | no |
+| <a name="input_instance_connect_preserve_client_ip"></a> [instance\_connect\_preserve\_client\_ip](#input\_instance\_connect\_preserve\_client\_ip) | Whether to preserve the client IP address when connecting via EC2 Instance Connect Endpoint | `bool` | `false` | no |
 | <a name="input_instance_connect_security_group_ids"></a> [instance\_connect\_security\_group\_ids](#input\_instance\_connect\_security\_group\_ids) | List of security group IDs to associate with EC2 Instance Connect Endpoint(s). If null, defaults to no security groups | `list(string)` | `null` | no |
 | <a name="input_instance_connect_tags"></a> [instance\_connect\_tags](#input\_instance\_connect\_tags) | Additional tags for EC2 Instance Connect Endpoint resources | `map(string)` | `{}` | no |
 | <a name="input_instance_tenancy"></a> [instance\_tenancy](#input\_instance\_tenancy) | A tenancy option for instances launched into the VPC | `string` | `"default"` | no |
@@ -638,10 +639,7 @@ No modules.
 | <a name="output_elasticache_subnets_ipv6_cidr_blocks"></a> [elasticache\_subnets\_ipv6\_cidr\_blocks](#output\_elasticache\_subnets\_ipv6\_cidr\_blocks) | List of IPv6 cidr\_blocks of elasticache subnets in an IPv6 enabled VPC |
 | <a name="output_igw_arn"></a> [igw\_arn](#output\_igw\_arn) | The ARN of the Internet Gateway |
 | <a name="output_igw_id"></a> [igw\_id](#output\_igw\_id) | The ID of the Internet Gateway |
-| <a name="output_instance_connect_endpoint_arns"></a> [instance\_connect\_endpoint\_arns](#output\_instance\_connect\_endpoint\_arns) | ARNs of the EC2 Instance Connect Endpoint(s) |
-| <a name="output_instance_connect_endpoint_ids"></a> [instance\_connect\_endpoint\_ids](#output\_instance\_connect\_endpoint\_ids) | IDs of the EC2 Instance Connect Endpoint(s) created |
-| <a name="output_instance_connect_endpoint_security_group_ids"></a> [instance\_connect\_endpoint\_security\_group\_ids](#output\_instance\_connect\_endpoint\_security\_group\_ids) | Security group IDs associated with the EC2 Instance Connect Endpoint(s) |
-| <a name="output_instance_connect_endpoint_subnet_ids"></a> [instance\_connect\_endpoint\_subnet\_ids](#output\_instance\_connect\_endpoint\_subnet\_ids) | Subnet IDs where EC2 Instance Connect Endpoint(s) were created |
+| <a name="output_instance_connect_endpoints"></a> [instance\_connect\_endpoints](#output\_instance\_connect\_endpoints) | Map of EC2 Instance Connect Endpoints created, keyed by subnet index |
 | <a name="output_intra_network_acl_arn"></a> [intra\_network\_acl\_arn](#output\_intra\_network\_acl\_arn) | ARN of the intra network ACL |
 | <a name="output_intra_network_acl_id"></a> [intra\_network\_acl\_id](#output\_intra\_network\_acl\_id) | ID of the intra network ACL |
 | <a name="output_intra_route_table_association_ids"></a> [intra\_route\_table\_association\_ids](#output\_intra\_route\_table\_association\_ids) | List of IDs of the intra route table association |

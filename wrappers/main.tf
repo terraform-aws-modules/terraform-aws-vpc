@@ -186,6 +186,7 @@ module "wrapper" {
   igw_tags                                                          = try(each.value.igw_tags, var.defaults.igw_tags, {})
   instance_connect_endpoint_create_in_private_subnets               = try(each.value.instance_connect_endpoint_create_in_private_subnets, var.defaults.instance_connect_endpoint_create_in_private_subnets, true)
   instance_connect_endpoint_subnets                                 = try(each.value.instance_connect_endpoint_subnets, var.defaults.instance_connect_endpoint_subnets, null)
+  instance_connect_preserve_client_ip                               = try(each.value.instance_connect_preserve_client_ip, var.defaults.instance_connect_preserve_client_ip, false)
   instance_connect_security_group_ids                               = try(each.value.instance_connect_security_group_ids, var.defaults.instance_connect_security_group_ids, null)
   instance_connect_tags                                             = try(each.value.instance_connect_tags, var.defaults.instance_connect_tags, {})
   instance_tenancy                                                  = try(each.value.instance_tenancy, var.defaults.instance_tenancy, "default")
