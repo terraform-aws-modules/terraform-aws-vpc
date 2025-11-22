@@ -667,3 +667,19 @@ output "name" {
   description = "The name of the VPC specified as argument to this module"
   value       = var.name
 }
+
+################################################################################
+# EC2 Instance Connect Endpoint
+################################################################################
+
+output "instance_connect_endpoints" {
+  description = "Map of EC2 Instance Connect Endpoints created, keyed by subnet index"
+  value = try({
+    for k, v in aws_ec2_instance_connect_endpoint.this : k => {
+      id        = v.id
+      arn       = v.arn
+      subnet_id = v.subnet_id
+      sg_ids    = v.security_group_ids
+    }
+  }, {})
+}
