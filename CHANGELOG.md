@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [6.5.1](https://github.com/terraform-aws-modules/terraform-aws-vpc/compare/v6.5.0...v6.5.1) (2025-11-17)
+
+### Bug Fixes
+
+* Correction with IAM role policy associated with modules/flow-log ([#1264](https://github.com/terraform-aws-modules/terraform-aws-vpc/issues/1264)) ([de13700](https://github.com/terraform-aws-modules/terraform-aws-vpc/commit/de1370094ac03db84b45d97e2ee422f07ab8c6f9))
+
 ## [6.5.0](https://github.com/terraform-aws-modules/terraform-aws-vpc/compare/v6.4.1...v6.5.0) (2025-10-21)
 
 ### Features

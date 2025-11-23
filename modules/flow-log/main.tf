@@ -257,7 +257,7 @@ data "aws_iam_policy_document" "this" {
         "logs:DescribeLogStreams",
       ]
 
-      resources = local.create_cloudwatch_log_group ? aws_cloudwatch_log_group.this[*].arn : [var.log_destination]
+      resources = local.create_cloudwatch_log_group ? formatlist("%s:*", aws_cloudwatch_log_group.this[*].arn) : [var.log_destination]
     }
   }
 
