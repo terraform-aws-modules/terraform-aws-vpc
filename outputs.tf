@@ -667,3 +667,13 @@ output "name" {
   description = "The name of the VPC specified as argument to this module"
   value       = var.name
 }
+
+
+################################################################################
+# Route53 Resolver Config
+################################################################################
+
+output "route53_resolver_config" {
+  description = "The ID of the Route53 Resolver Config ressource"
+  value       = try(aws_route53_resolver_config.this[0].id, null)
+}

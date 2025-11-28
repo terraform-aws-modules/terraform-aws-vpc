@@ -528,3 +528,9 @@ output "vpc_endpoints_security_group_id" {
   description = "ID of the security group"
   value       = module.vpc_endpoints.security_group_id
 }
+
+# Resolver
+output "route53_resolver_config" {
+  description = "The ID of the Route53 Resolver Config ressource"
+  value       = module.vpc.route53_resolver_config
+}

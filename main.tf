@@ -1541,3 +1541,15 @@ resource "aws_default_route_table" "default" {
     var.default_route_table_tags,
   )
 }
+
+
+################################################################################
+# Route53 Resolver config
+################################################################################
+
+resource "aws_route53_resolver_config" "this" {
+  count = local.create_vpc && var.enable_route53_resolver_config ? 1 : 0
+
+  resource_id              = aws_vpc.this[0].id
+  autodefined_reverse_flag = var.route53_resolver_config_autodefined_reverse_flag
+}
