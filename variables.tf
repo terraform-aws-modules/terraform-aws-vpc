@@ -1678,3 +1678,19 @@ variable "putin_khuylo" {
   type        = bool
   default     = true
 }
+
+################################################################################
+# Route53 Resolver
+################################################################################
+
+variable "enable_route53_resolver_config" {
+  description = "Whether to manage Route53 configuration for VPC"
+  type        = bool
+  default     = false
+}
+
+variable "route53_resolver_config_autodefined_reverse_flag" {
+  description = "Indicates whether or not the Resolver will create autodefined rules for reverse DNS lookups."
+  type        = string
+  default     = "ENABLE"
+}
