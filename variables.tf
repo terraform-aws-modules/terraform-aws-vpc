@@ -1234,6 +1234,23 @@ variable "one_nat_gateway_per_az" {
   default     = false
 }
 
+variable "nat_gateway_connectivity_type" {
+  description = <<-EOT
+    Connectivity type for the NAT Gateway. Valid values are:
+    - 'zonal' (default): Traditional AZ-specific NAT gateways that require public subnets
+    - 'regional': A single NAT Gateway that automatically scales across all AZs (does not require public subnets)
+    
+    Regional NAT Gateway support requires Terraform AWS provider >= 6.24.0.
+    When using 'regional' mode, only one NAT Gateway is created for the entire VPC.
+  EOT
+  type        = string
+  default     = "zonal"
+  validation {
+    condition     = contains(["zonal", "regional"], var.nat_gateway_connectivity_type)
+    error_message = "The nat_gateway_connectivity_type must be either 'zonal' or 'regional'."
+  }
+}
+
 variable "reuse_nat_ips" {
   description = "Should be true if you don't want EIPs to be created for your NAT Gateways and will instead pass them in via the 'external_nat_ip_ids' variable"
   type        = bool
