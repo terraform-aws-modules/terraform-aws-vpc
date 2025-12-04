@@ -521,12 +521,12 @@ output "nat_public_ips" {
 
 output "natgw_ids" {
   description = "List of NAT Gateway IDs"
-  value       = aws_nat_gateway.this[*].id
+  value       = concat(aws_nat_gateway.this[*].id, aws_nat_gateway.regional[*].id)
 }
 
 output "natgw_interface_ids" {
   description = "List of Network Interface IDs assigned to NAT Gateways"
-  value       = aws_nat_gateway.this[*].network_interface_id
+  value       = concat(aws_nat_gateway.this[*].network_interface_id, aws_nat_gateway.regional[*].network_interface_id)
 }
 
 ################################################################################
