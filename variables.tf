@@ -1239,7 +1239,7 @@ variable "nat_gateway_connectivity_type" {
     Connectivity type for the NAT Gateway. Valid values are:
     - 'zonal' (default): Traditional AZ-specific NAT gateways that require public subnets
     - 'regional': A single NAT Gateway that automatically scales across all AZs (does not require public subnets)
-    
+
     Regional NAT Gateway support requires Terraform AWS provider >= 6.24.0.
     When using 'regional' mode, only one NAT Gateway is created for the entire VPC.
   EOT

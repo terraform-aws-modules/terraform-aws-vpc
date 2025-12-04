@@ -337,7 +337,7 @@ resource "aws_route_table" "private" {
       "Name" = local.nat_gateway_is_regional ? format(
         "${var.name}-${var.private_subnet_suffix}-%s",
         element(var.azs, count.index),
-      ) : var.single_nat_gateway ? "${var.name}-${var.private_subnet_suffix}" : format(
+        ) : var.single_nat_gateway ? "${var.name}-${var.private_subnet_suffix}" : format(
         "${var.name}-${var.private_subnet_suffix}-%s",
         element(var.azs, count.index),
       )
@@ -1208,8 +1208,8 @@ resource "aws_route" "private_ipv6_egress" {
 
 locals {
   nat_gateway_is_regional = var.nat_gateway_connectivity_type == "regional"
-  nat_gateway_count = local.nat_gateway_is_regional ? 1 : var.single_nat_gateway ? 1 : var.one_nat_gateway_per_az ? length(var.azs) : local.max_subnet_length
-  nat_gateway_ips   = var.reuse_nat_ips ? var.external_nat_ip_ids : aws_eip.nat[*].id
+  nat_gateway_count       = local.nat_gateway_is_regional ? 1 : var.single_nat_gateway ? 1 : var.one_nat_gateway_per_az ? length(var.azs) : local.max_subnet_length
+  nat_gateway_ips         = var.reuse_nat_ips ? var.external_nat_ip_ids : aws_eip.nat[*].id
 }
 
 resource "aws_eip" "nat" {
