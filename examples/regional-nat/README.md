@@ -38,8 +38,11 @@ Note that this example may create resources which can cost money (AWS Elastic IP
 The key configuration for Regional NAT Gateway is:
 
 ```hcl
-enable_nat_gateway            = true
-nat_gateway_connectivity_type = "regional"
+enable_nat_gateway = true
+nat_gateway_connectivity_type = {
+  availability_mode = "regional" # "regional" or "zonal"
+  eip_allocation    = "auto"     # "auto" or "manual"
+}
 ```
 
 ## Comparison: Regional vs Zonal NAT Gateway

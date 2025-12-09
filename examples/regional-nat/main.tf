@@ -31,7 +31,10 @@ module "vpc" {
 
   # Regional NAT Gateway Configuration
   # Requires Terraform AWS provider >= 6.24.0
-  enable_nat_gateway            = true
-  nat_gateway_connectivity_type = "regional"
-  tags                          = local.tags
+  enable_nat_gateway = true
+  nat_gateway_connectivity_type = {
+    availability_mode = "regional" # "regional" or "zonal"
+    eip_allocation    = "auto"     # "auto" or "manual", for availablility_mode = "zonal", eip_allocation won't be used
+  }
+  tags = local.tags
 }

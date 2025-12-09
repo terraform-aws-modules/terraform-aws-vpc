@@ -67,9 +67,33 @@ Note that in the example we allocate 3 IPs because we will be provisioning 3 NAT
 If, on the other hand, `single_nat_gateway = true`, then `aws_eip.nat` would only need to allocate 1 IP.
 Passing the IPs into the module is done by setting two variables `reuse_nat_ips = true` and `external_nat_ip_ids = "${aws_eip.nat.*.id}"`.
 
+**For Regional NAT Gateways:**
+When using Regional NAT Gateway with `nat_gateway_connectivity_type.eip_allocation = "manual"`, the module will allocate one EIP per Availability Zone. For example, if you have 3 AZs:
+
+```hcl
+resource "aws_eip" "regional_nat" {
+  count = 3  # One per AZ
+
+  vpc = true
+}
+
+module "vpc" {
+  source = "terraform-aws-modules/vpc/aws"
+
+  enable_nat_gateway = true
+  nat_gateway_connectivity_type = {
+    availability_mode = "regional"
+    eip_allocation    = "manual"
+  }
+  reuse_nat_ips       = false
+}
+```
+
+Alternatively, you can use `eip_allocation = "auto"` to let AWS automatically manage EIPs for the Regional NAT Gateway.
+
 ## NAT Gateway Scenarios
 
-This module supports three scenarios for creating NAT gateways. Each will be explained in further detail in the corresponding sections.
+This module supports four scenarios for creating NAT gateways. Each will be explained in further detail in the corresponding sections.
 
 - One NAT Gateway per subnet (default behavior)
   - `enable_nat_gateway = true`
@@ -83,8 +107,14 @@ This module supports three scenarios for creating NAT gateways. Each will be exp
   - `enable_nat_gateway = true`
   - `single_nat_gateway = false`
   - `one_nat_gateway_per_az = true`
+- Regional NAT Gateway
+  - `enable_nat_gateway = true`
+  - `nat_gateway_connectivity_type.availability_mode = "regional"`
+  - `nat_gateway_connectivity_type.eip_allocation = "auto"` or `"manual"`
 
 If both `single_nat_gateway` and `one_nat_gateway_per_az` are set to `true`, then `single_nat_gateway` takes precedence.
+
+> **Note**: Regional NAT Gateway requires Terraform AWS provider >= 6.24.0.
 
 ### One NAT Gateway per subnet (default)
 
@@ -110,6 +140,43 @@ If `one_nat_gateway_per_az = true` and `single_nat_gateway = false`, then the mo
 
 - The variable `var.azs` **must** be specified.
 - The number of public subnet CIDR blocks specified in `public_subnets` **must** be greater than or equal to the number of availability zones specified in `var.azs`. This is to ensure that each NAT Gateway has a dedicated public subnet to deploy to.
+
+### Regional NAT Gateway
+
+Regional NAT Gateway is a highly available NAT solution that automatically scales across multiple Availability Zones within your VPC. It provides a single NAT Gateway that serves all Availability Zones, eliminating the need for multiple zonal NAT Gateways.
+
+**Key Features:**
+- **Single NAT Gateway**: One NAT Gateway serves all Availability Zones in your VPC
+- **Automatic High Availability**: Automatically expands and contracts across AZs based on workload distribution
+- **No Public Subnets Required**: Regional NAT Gateways operate without requiring public subnets (though public subnets can still be created for other purposes)
+- **Simplified Management**: Single NAT Gateway ID for consistent route entries across all subnets
+- **Increased Capacity**: Supports up to 32 Elastic IP addresses per AZ (compared to 8 for zonal NAT Gateways)
+
+**Configuration:**
+
+```hcl
+enable_nat_gateway = true
+nat_gateway_connectivity_type = {
+  availability_mode = "regional" # "regional" or "zonal"
+  eip_allocation    = "auto"     # "auto" or "manual"
+}
+```
+
+**EIP Allocation Options:**
+- `"auto"`: AWS automatically provisions and manages EIPs for the Regional NAT Gateway
+- `"manual"`: You provide EIPs via `external_nat_ip_ids` (one EIP per AZ). The module will create EIPs based on the number of AZs if `reuse_nat_ips = false`
+
+**Important Notes:**
+1. **Expansion Timing**: When deploying workloads in a new AZ, the regional NAT Gateway typically takes 15-20 minutes (up to 60 minutes) to expand to that AZ. During this period, traffic may be temporarily routed through existing AZs.
+2. **Private Connectivity**: Regional NAT Gateways do not support private connectivity. For workloads requiring private connectivity, continue using zonal NAT Gateways.
+3. **Availability**: This feature is available in all commercial AWS Regions, except for AWS GovCloud (US) Regions and China Regions.
+4. **Cost Considerations**: Regional NAT Gateways are charged per hour and per GB processed, similar to zonal NAT Gateways, but you only pay for one NAT Gateway instead of multiple.
+
+**Requirements:**
+- Terraform AWS provider >= 6.24.0
+- The variable `var.azs` **must** be specified
+
+See the [regional-nat example](examples/regional-nat/) for a complete working example.
 
 ## "private" versus "intra" subnets
 
@@ -488,7 +555,7 @@ No modules.
 | <a name="input_map_public_ip_on_launch"></a> [map\_public\_ip\_on\_launch](#input\_map\_public\_ip\_on\_launch) | Specify true to indicate that instances launched into the subnet should be assigned a public IP address. Default is `false` | `bool` | `false` | no |
 | <a name="input_name"></a> [name](#input\_name) | Name to be used on all the resources as identifier | `string` | `""` | no |
 | <a name="input_nat_eip_tags"></a> [nat\_eip\_tags](#input\_nat\_eip\_tags) | Additional tags for the NAT EIP | `map(string)` | `{}` | no |
-| <a name="input_nat_gateway_connectivity_type"></a> [nat\_gateway\_connectivity\_type](#input\_nat\_gateway\_connectivity\_type) | Connectivity type for the NAT Gateway. Valid values are:<br/>- 'zonal' (default): Traditional AZ-specific NAT gateways that require public subnets<br/>- 'regional': A single NAT Gateway that automatically scales across all AZs (does not require public subnets)<br/><br/>Regional NAT Gateway support requires Terraform AWS provider >= 6.24.0.<br/>When using 'regional' mode, only one NAT Gateway is created for the entire VPC. | `string` | `"zonal"` | no |
+| <a name="input_nat_gateway_connectivity_type"></a> [nat\_gateway\_connectivity\_type](#input\_nat\_gateway\_connectivity\_type) | Configuration block for NAT Gateway connectivity type.<br/>- availability_mode: "zonal" (default) or "regional"<br/>  - 'zonal': Traditional AZ-specific NAT gateways that require public subnets<br/>  - 'regional': A single NAT Gateway that automatically scales across all AZs (does not require public subnets)<br/>- eip_allocation: "auto" (default) or "manual"<br/>  - 'auto': Automatically provision EIPs for the NAT Gateway<br/>  - 'manual': Use existing EIPs provided via external_nat_ip_ids<br/><br/>Regional NAT Gateway support requires Terraform AWS provider >= 6.24.0.<br/>When using 'regional' mode, only one NAT Gateway is created for the entire VPC. | `object({ availability_mode = string, eip_allocation = optional(string, "auto") })` | `{ availability_mode = "zonal", eip_allocation = "auto" }` | no |
 | <a name="input_nat_gateway_destination_cidr_block"></a> [nat\_gateway\_destination\_cidr\_block](#input\_nat\_gateway\_destination\_cidr\_block) | Used to pass a custom destination route for private NAT Gateway. If not specified, the default 0.0.0.0/0 is used as a destination route | `string` | `"0.0.0.0/0"` | no |
 | <a name="input_nat_gateway_tags"></a> [nat\_gateway\_tags](#input\_nat\_gateway\_tags) | Additional tags for the NAT gateways | `map(string)` | `{}` | no |
 | <a name="input_one_nat_gateway_per_az"></a> [one\_nat\_gateway\_per\_az](#input\_one\_nat\_gateway\_per\_az) | Should be true if you want only one NAT Gateway per availability zone. Requires `var.azs` to be set, and the number of `public_subnets` created to be greater than or equal to the number of availability zones specified in `var.azs` | `bool` | `false` | no |

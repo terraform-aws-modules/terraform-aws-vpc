@@ -511,12 +511,15 @@ output "intra_network_acl_arn" {
 
 output "nat_ids" {
   description = "List of allocation ID of Elastic IPs created for AWS NAT Gateway"
-  value       = aws_eip.nat[*].id
+  value       = concat(aws_eip.nat[*].id, aws_eip.regional_nat[*].id)
 }
 
 output "nat_public_ips" {
   description = "List of public Elastic IPs created for AWS NAT Gateway"
-  value       = var.reuse_nat_ips ? var.external_nat_ips : aws_eip.nat[*].public_ip
+  value = concat(
+    var.reuse_nat_ips ? var.external_nat_ips : aws_eip.nat[*].public_ip,
+    var.nat_gateway_connectivity_type.availability_mode == "regional" ? aws_eip.regional_nat[*].public_ip : []
+  )
 }
 
 output "natgw_ids" {

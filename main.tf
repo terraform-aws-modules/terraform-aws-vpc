@@ -1207,13 +1207,17 @@ resource "aws_route" "private_ipv6_egress" {
 ################################################################################
 
 locals {
-  nat_gateway_is_regional = var.nat_gateway_connectivity_type == "regional"
-  nat_gateway_count       = local.nat_gateway_is_regional ? 1 : var.single_nat_gateway ? 1 : var.one_nat_gateway_per_az ? length(var.azs) : local.max_subnet_length
+  nat_gateway_is_regional = var.nat_gateway_connectivity_type.availability_mode == "regional"
+  nat_gateway_count       = local.nat_gateway_is_regional ? 1 : var.single_nat_gateway || var.nat_gateway_connectivity_type.availability_mode == "zonal" ? 1 : var.one_nat_gateway_per_az ? length(var.azs) : local.max_subnet_length
   nat_gateway_ips         = var.reuse_nat_ips ? var.external_nat_ip_ids : aws_eip.nat[*].id
+
+  # Regional NAT Gateway EIP handling
+  # Always create EIPs automatically based on the number of AZs
+  regional_nat_gateway_eip_count = local.nat_gateway_is_regional ? length(var.azs) : 0
 }
 
 resource "aws_eip" "nat" {
-  count = local.create_vpc && var.enable_nat_gateway && !var.reuse_nat_ips ? local.nat_gateway_count : 0
+  count = local.create_vpc && var.enable_nat_gateway && !local.nat_gateway_is_regional && !var.reuse_nat_ips && (var.nat_gateway_connectivity_type.availability_mode == "zonal" || var.nat_gateway_connectivity_type.availability_mode == null) ? local.nat_gateway_count : 0
 
   region = var.region
 
@@ -1221,9 +1225,30 @@ resource "aws_eip" "nat" {
 
   tags = merge(
     {
-      "Name" = local.nat_gateway_is_regional ? var.name : format(
+      "Name" = format(
         "${var.name}-%s",
         element(var.azs, var.single_nat_gateway ? 0 : count.index),
+      )
+    },
+    var.tags,
+    var.nat_eip_tags,
+  )
+
+  depends_on = [aws_internet_gateway.this]
+}
+
+resource "aws_eip" "regional_nat" {
+  count = local.create_vpc && var.enable_nat_gateway && local.nat_gateway_is_regional && var.nat_gateway_connectivity_type.eip_allocation == "manual" && var.nat_gateway_connectivity_type.availability_mode == "regional" ? local.regional_nat_gateway_eip_count : 0
+
+  region = var.region
+
+  domain = "vpc"
+
+  tags = merge(
+    {
+      "Name" = format(
+        "${var.name}-%s",
+        element(var.azs, count.index),
       )
     },
     var.tags,
@@ -1268,7 +1293,17 @@ resource "aws_nat_gateway" "regional" {
   vpc_id = aws_vpc.this[0].id
 
   connectivity_type = "public"
-  availability_mode = "regional"
+  availability_mode = var.nat_gateway_connectivity_type.availability_mode
+
+  dynamic "availability_zone_address" {
+    for_each = var.nat_gateway_connectivity_type.eip_allocation == "manual" && var.nat_gateway_connectivity_type.availability_mode == "regional" ? {
+      for idx, az in var.azs : az => aws_eip.regional_nat[idx].id
+    } : {}
+    content {
+      allocation_ids    = toset([availability_zone_address.value])
+      availability_zone = availability_zone_address.key
+    }
+  }
 
   tags = merge(
     {
