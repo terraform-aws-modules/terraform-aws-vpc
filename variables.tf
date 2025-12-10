@@ -1234,6 +1234,31 @@ variable "one_nat_gateway_per_az" {
   default     = false
 }
 
+variable "nat_gateway_connectivity_type" {
+  description = <<-EOT
+    Configuration block for NAT Gateway connectivity type.
+    - availability_mode: "zonal" (default) or "regional"
+      - 'zonal': Traditional AZ-specific NAT gateways that require public subnets
+      - 'regional': A single NAT Gateway that automatically scales across all AZs (does not require public subnets)
+    - eip_allocation: "auto" (default) or "manual"
+      - 'auto': Automatically provision EIPs for the NAT Gateway
+      - 'manual': Will create the set of EIPs based on the number of AZs
+  EOT
+  type = object({
+    availability_mode = string # "zonal" or "regional"
+    eip_allocation    = string # "auto" or "manual"
+  })
+  default = { availability_mode = null, eip_allocation = null }
+  # validation {
+  #   condition     = contains(["zonal", "regional"], var.nat_gateway_connectivity_type.availability_mode)
+  #   error_message = "The availability_mode must be either 'zonal' or 'regional'."
+  # }
+  # validation {
+  #   condition     = contains(["auto", "manual"], var.nat_gateway_connectivity_type.eip_allocation)
+  #   error_message = "The eip_allocation must be either 'auto' or 'manual'."
+  # }
+}
+
 variable "reuse_nat_ips" {
   description = "Should be true if you don't want EIPs to be created for your NAT Gateways and will instead pass them in via the 'external_nat_ip_ids' variable"
   type        = bool
@@ -1247,7 +1272,7 @@ variable "external_nat_ip_ids" {
 }
 
 variable "external_nat_ips" {
-  description = "List of EIPs to be used for `nat_public_ips` output (used in combination with reuse_nat_ips and external_nat_ip_ids)"
+  description = "List of EIPs to be used for `nat_public_ips` output (used in combination with reuse_nat_ips and external_nat_ip_ids). For regional NAT gateways, EIPs will be mapped to availability zones in order."
   type        = list(string)
   default     = []
 }
