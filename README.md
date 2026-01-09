@@ -170,7 +170,8 @@ nat_gateway_connectivity_type = {
 1. **Expansion Timing**: When deploying workloads in a new AZ, the regional NAT Gateway typically takes 15-20 minutes (up to 60 minutes) to expand to that AZ. During this period, traffic may be temporarily routed through existing AZs.
 2. **Private Connectivity**: Regional NAT Gateways do not support private connectivity. For workloads requiring private connectivity, continue using zonal NAT Gateways.
 3. **Availability**: This feature is available in all commercial AWS Regions, except for AWS GovCloud (US) Regions and China Regions.
-4. **Cost Considerations**: Regional NAT Gateways are charged per hour and per GB processed, similar to zonal NAT Gateways, but you only pay for one NAT Gateway instead of multiple.
+4. **Cost Considerations**: If you choose to create a NAT gateway with regional availability in your VPC, you are charged for each hour that the NAT Gateway is configured in each availability zone. For example, if your regional NAT is running across three Availability Zones(AZs) for one hour, you'll be billed for three 'NAT Gateway-hours'.
+From: https://aws.amazon.com/vpc/pricing/of multiple.
 
 **Requirements:**
 - Terraform AWS provider >= 6.24.0
