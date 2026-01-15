@@ -148,8 +148,8 @@ resource "aws_subnet" "public" {
   region = var.region
 
   assign_ipv6_address_on_creation                = var.enable_ipv6 && var.public_subnet_ipv6_native ? true : var.public_subnet_assign_ipv6_address_on_creation
-  availability_zone                              = length(regexall("^[a-z]{2}-", element(var.azs, count.index))) > 0 ? element(var.azs, count.index) : null
-  availability_zone_id                           = length(regexall("^[a-z]{2}-", element(var.azs, count.index))) == 0 ? element(var.azs, count.index) : null
+  availability_zone                              = length(regexall("-az[0-9]+$", element(var.azs, count.index))) == 0 ? element(var.azs, count.index) : null
+  availability_zone_id                           = length(regexall("-az[0-9]+$", element(var.azs, count.index))) > 0 ? element(var.azs, count.index) : null
   cidr_block                                     = var.public_subnet_ipv6_native ? null : element(concat(var.public_subnets, [""]), count.index)
   enable_dns64                                   = var.enable_ipv6 && var.public_subnet_enable_dns64
   enable_resource_name_dns_aaaa_record_on_launch = var.enable_ipv6 && var.public_subnet_enable_resource_name_dns_aaaa_record_on_launch
@@ -296,8 +296,8 @@ resource "aws_subnet" "private" {
   region = var.region
 
   assign_ipv6_address_on_creation                = var.enable_ipv6 && var.private_subnet_ipv6_native ? true : var.private_subnet_assign_ipv6_address_on_creation
-  availability_zone                              = length(regexall("^[a-z]{2}-", element(var.azs, count.index))) > 0 ? element(var.azs, count.index) : null
-  availability_zone_id                           = length(regexall("^[a-z]{2}-", element(var.azs, count.index))) == 0 ? element(var.azs, count.index) : null
+  availability_zone                              = length(regexall("-az[0-9]+$", element(var.azs, count.index))) == 0 ? element(var.azs, count.index) : null
+  availability_zone_id                           = length(regexall("-az[0-9]+$", element(var.azs, count.index))) > 0 ? element(var.azs, count.index) : null
   cidr_block                                     = var.private_subnet_ipv6_native ? null : element(concat(var.private_subnets, [""]), count.index)
   enable_dns64                                   = var.enable_ipv6 && var.private_subnet_enable_dns64
   enable_resource_name_dns_aaaa_record_on_launch = var.enable_ipv6 && var.private_subnet_enable_resource_name_dns_aaaa_record_on_launch
@@ -428,8 +428,8 @@ resource "aws_subnet" "database" {
   region = var.region
 
   assign_ipv6_address_on_creation                = var.enable_ipv6 && var.database_subnet_ipv6_native ? true : var.database_subnet_assign_ipv6_address_on_creation
-  availability_zone                              = length(regexall("^[a-z]{2}-", element(var.azs, count.index))) > 0 ? element(var.azs, count.index) : null
-  availability_zone_id                           = length(regexall("^[a-z]{2}-", element(var.azs, count.index))) == 0 ? element(var.azs, count.index) : null
+  availability_zone                              = length(regexall("-az[0-9]+$", element(var.azs, count.index))) == 0 ? element(var.azs, count.index) : null
+  availability_zone_id                           = length(regexall("-az[0-9]+$", element(var.azs, count.index))) > 0 ? element(var.azs, count.index) : null
   cidr_block                                     = var.database_subnet_ipv6_native ? null : element(concat(var.database_subnets, [""]), count.index)
   enable_dns64                                   = var.enable_ipv6 && var.database_subnet_enable_dns64
   enable_resource_name_dns_aaaa_record_on_launch = var.enable_ipv6 && var.database_subnet_enable_resource_name_dns_aaaa_record_on_launch
@@ -632,8 +632,8 @@ resource "aws_subnet" "redshift" {
   region = var.region
 
   assign_ipv6_address_on_creation                = var.enable_ipv6 && var.redshift_subnet_ipv6_native ? true : var.redshift_subnet_assign_ipv6_address_on_creation
-  availability_zone                              = length(regexall("^[a-z]{2}-", element(var.azs, count.index))) > 0 ? element(var.azs, count.index) : null
-  availability_zone_id                           = length(regexall("^[a-z]{2}-", element(var.azs, count.index))) == 0 ? element(var.azs, count.index) : null
+  availability_zone                              = length(regexall("-az[0-9]+$", element(var.azs, count.index))) == 0 ? element(var.azs, count.index) : null
+  availability_zone_id                           = length(regexall("-az[0-9]+$", element(var.azs, count.index))) > 0 ? element(var.azs, count.index) : null
   cidr_block                                     = var.redshift_subnet_ipv6_native ? null : element(concat(var.redshift_subnets, [""]), count.index)
   enable_dns64                                   = var.enable_ipv6 && var.redshift_subnet_enable_dns64
   enable_resource_name_dns_aaaa_record_on_launch = var.enable_ipv6 && var.redshift_subnet_enable_resource_name_dns_aaaa_record_on_launch
@@ -785,8 +785,8 @@ resource "aws_subnet" "elasticache" {
   region = var.region
 
   assign_ipv6_address_on_creation                = var.enable_ipv6 && var.elasticache_subnet_ipv6_native ? true : var.elasticache_subnet_assign_ipv6_address_on_creation
-  availability_zone                              = length(regexall("^[a-z]{2}-", element(var.azs, count.index))) > 0 ? element(var.azs, count.index) : null
-  availability_zone_id                           = length(regexall("^[a-z]{2}-", element(var.azs, count.index))) == 0 ? element(var.azs, count.index) : null
+  availability_zone                              = length(regexall("-az[0-9]+$", element(var.azs, count.index))) == 0 ? element(var.azs, count.index) : null
+  availability_zone_id                           = length(regexall("-az[0-9]+$", element(var.azs, count.index))) > 0 ? element(var.azs, count.index) : null
   cidr_block                                     = var.elasticache_subnet_ipv6_native ? null : element(concat(var.elasticache_subnets, [""]), count.index)
   enable_dns64                                   = var.enable_ipv6 && var.elasticache_subnet_enable_dns64
   enable_resource_name_dns_aaaa_record_on_launch = var.enable_ipv6 && var.elasticache_subnet_enable_resource_name_dns_aaaa_record_on_launch
@@ -929,8 +929,8 @@ resource "aws_subnet" "intra" {
   region = var.region
 
   assign_ipv6_address_on_creation                = var.enable_ipv6 && var.intra_subnet_ipv6_native ? true : var.intra_subnet_assign_ipv6_address_on_creation
-  availability_zone                              = length(regexall("^[a-z]{2}-", element(var.azs, count.index))) > 0 ? element(var.azs, count.index) : null
-  availability_zone_id                           = length(regexall("^[a-z]{2}-", element(var.azs, count.index))) == 0 ? element(var.azs, count.index) : null
+  availability_zone                              = length(regexall("-az[0-9]+$", element(var.azs, count.index))) == 0 ? element(var.azs, count.index) : null
+  availability_zone_id                           = length(regexall("-az[0-9]+$", element(var.azs, count.index))) > 0 ? element(var.azs, count.index) : null
   cidr_block                                     = var.intra_subnet_ipv6_native ? null : element(concat(var.intra_subnets, [""]), count.index)
   enable_dns64                                   = var.enable_ipv6 && var.intra_subnet_enable_dns64
   enable_resource_name_dns_aaaa_record_on_launch = var.enable_ipv6 && var.intra_subnet_enable_resource_name_dns_aaaa_record_on_launch
