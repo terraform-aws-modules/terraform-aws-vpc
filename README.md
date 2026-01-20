@@ -214,12 +214,58 @@ module "vpc_cidr_from_ipam" {
 }
 ```
 
+## VPC IPAM Pool for Subnet Planning
+
+This module now supports creating an IPAM pool scoped to the VPC for subnet allocation with RAM sharing. This enables:
+
+1. **VPC-specific IPAM Pool**: Create an IPAM pool for resource planning within a VPC
+2. **RAM Sharing**: Share the IPAM pool with other AWS accounts via AWS Resource Access Manager
+3. **Subnet Creation from IPAM Pool**: Create subnets using IPAM pool allocation (via CLI workaround)
+
+See [IPAM_SUBNET_PLANNING.md](./IPAM_SUBNET_PLANNING.md) for detailed documentation.
+
+**Note**: The Terraform AWS Provider does not yet support `ipv4_ipam_pool_id` for subnet resources. This implementation uses a `null_resource` with AWS CLI as a workaround. See the [workaround article](https://kieranyio.medium.com/workaround-for-unsupported-config-in-terraform-aws-provider-31337208705f) for more details.
+
+```hcl
+module "vpc" {
+  source = "terraform-aws-modules/vpc/aws"
+
+  name = "my-vpc"
+  cidr = "10.0.0.0/16"
+
+  # Enable VPC IPAM Pool for subnet planning
+  create_vpc_ipam_pool    = true
+  vpc_ipam_scope_id       = aws_vpc_ipam.main.private_default_scope_id
+  vpc_ipam_source_pool_id = aws_vpc_ipam_pool.top_level.id
+  vpc_ipam_pool_cidr      = "10.0.0.0/16"
+
+  # Configure allocation constraints
+  vpc_ipam_pool_allocation_default_netmask_length = 28
+  vpc_ipam_pool_allocation_min_netmask_length     = 28
+  vpc_ipam_pool_allocation_max_netmask_length     = 24
+
+  # Enable RAM sharing
+  vpc_ipam_pool_ram_share_enabled    = true
+  vpc_ipam_pool_ram_share_principals = ["123456789012"]
+
+  # Create subnets from IPAM pool
+  ipam_subnets = [
+    {
+      name              = "ipam-subnet-1"
+      availability_zone = "eu-west-2a"
+      netmask_length    = 28
+    }
+  ]
+}
+```
+
 ## Examples
 
 - [Block Public Access](https://github.com/terraform-aws-modules/terraform-aws-vpc/tree/master/examples/block-public-access)
 - [Complete VPC](https://github.com/terraform-aws-modules/terraform-aws-vpc/tree/master/examples/complete) w/ VPC Endpoints
 - [VPC w/ Flow Log](https://github.com/terraform-aws-modules/terraform-aws-vpc/tree/master/examples/flow-log)
 - [VPC using IPAM](https://github.com/terraform-aws-modules/terraform-aws-vpc/tree/master/examples/ipam)
+- [VPC w/ IPAM Pool for Subnet Planning](https://github.com/terraform-aws-modules/terraform-aws-vpc/tree/master/examples/ipam-vpc-subnets) - **NEW**
 - [Dualstack IPv4/IPv6 VPC](https://github.com/terraform-aws-modules/terraform-aws-vpc/tree/master/examples/ipv6-dualstack)
 - [IPv6 only subnets VPC](https://github.com/terraform-aws-modules/terraform-aws-vpc/tree/master/examples/ipv6-only)
 - [Manage Default VPC](https://github.com/terraform-aws-modules/terraform-aws-vpc/tree/master/examples/manage-default-vpc)
