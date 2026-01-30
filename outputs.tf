@@ -667,3 +667,65 @@ output "name" {
   description = "The name of the VPC specified as argument to this module"
   value       = var.name
 }
+
+################################################################################
+# VPC IPAM Pool Outputs
+################################################################################
+
+output "vpc_ipam_pool_id" {
+  description = "The ID of the VPC IPAM pool created with aws_vpc_ipam_pool resource for subnet allocation"
+  value       = local.vpc_ipam_pool_id
+}
+
+output "vpc_ipam_pool_arn" {
+  description = "The ARN of the VPC IPAM pool created with aws_vpc_ipam_pool resource"
+  value       = local.vpc_ipam_pool_arn
+}
+
+output "vpc_ipam_pool_cidr" {
+  description = "The CIDR provisioned to the VPC IPAM pool using aws_vpc_ipam_pool_cidr resource"
+  value       = try(aws_vpc_ipam_pool_cidr.vpc[0].cidr, "")
+}
+
+################################################################################
+# RAM Share Outputs
+################################################################################
+
+output "vpc_ipam_pool_ram_share_id" {
+  description = "The ID of the RAM resource share created with aws_ram_resource_share for the VPC IPAM pool"
+  value       = try(aws_ram_resource_share.vpc_ipam_pool[0].id, "")
+}
+
+output "vpc_ipam_pool_ram_share_arn" {
+  description = "The ARN of the RAM resource share created with aws_ram_resource_share for the VPC IPAM pool"
+  value       = try(aws_ram_resource_share.vpc_ipam_pool[0].arn, "")
+}
+
+################################################################################
+# IPAM Subnets Outputs
+################################################################################
+
+output "ipam_subnets" {
+  description = "Map of IPAM-created subnet IDs from aws_subnet resources with ipv4_ipam_pool_id"
+  value       = { for k, v in aws_subnet.ipam : k => v.id }
+}
+
+output "ipam_subnets_cidr_blocks" {
+  description = "Map of IPAM-allocated subnet CIDR blocks from aws_subnet resources"
+  value       = { for k, v in aws_subnet.ipam : k => v.cidr_block }
+}
+
+output "ipam_subnets_arns" {
+  description = "Map of IPAM-created subnet ARNs from aws_subnet resources"
+  value       = { for k, v in aws_subnet.ipam : k => v.arn }
+}
+
+output "ipam_subnets_availability_zones" {
+  description = "Map of IPAM-created subnet availability zones from aws_subnet resources"
+  value       = { for k, v in aws_subnet.ipam : k => v.availability_zone }
+}
+
+output "ipam_subnet_objects" {
+  description = "Full objects of all IPAM-created subnets using native aws_subnet resources"
+  value       = aws_subnet.ipam
+}

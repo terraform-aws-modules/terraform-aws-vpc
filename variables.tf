@@ -1678,3 +1678,147 @@ variable "putin_khuylo" {
   type        = bool
   default     = true
 }
+
+################################################################################
+# VPC IPAM Pool for Subnets
+################################################################################
+
+variable "create_vpc_ipam_pool" {
+  description = "Controls if an IPAM pool should be created for VPC subnet allocation using native aws_vpc_ipam_pool resource"
+  type        = bool
+  default     = false
+}
+
+variable "vpc_ipam_pool_name" {
+  description = "Name of the VPC IPAM pool created with aws_vpc_ipam_pool resource. If not provided, defaults to '<vpc-name>-vpc-subnets'"
+  type        = string
+  default     = null
+}
+
+variable "vpc_ipam_pool_description" {
+  description = "Description of the VPC IPAM pool created with aws_vpc_ipam_pool resource"
+  type        = string
+  default     = null
+}
+
+variable "vpc_ipam_scope_id" {
+  description = "The ID of the IPAM scope where the VPC pool will be created using aws_vpc_ipam_pool resource"
+  type        = string
+  default     = null
+}
+
+variable "vpc_ipam_pool_locale" {
+  description = "The locale (AWS region) for the IPAM pool. This is where the pool can allocate IPs and must match the VPC's region. Used in aws_vpc_ipam_pool resource. Defaults to the region of the VPC"
+  type        = string
+  default     = null
+}
+
+variable "vpc_ipam_source_pool_id" {
+  description = "The ID of the source IPAM pool from which to allocate CIDRs. Required if creating a VPC IPAM pool with aws_vpc_ipam_pool resource"
+  type        = string
+  default     = null
+}
+
+variable "vpc_ipam_pool_cidr" {
+  description = "The CIDR to provision to the VPC IPAM pool using aws_vpc_ipam_pool_cidr resource. If not provided, will use the VPC's CIDR (either from var.cidr or allocated from IPAM)"
+  type        = string
+  default     = null
+}
+
+variable "vpc_ipam_pool_allocation_default_netmask_length" {
+  description = "The default netmask length for allocations from this pool. Used in aws_vpc_ipam_pool resource"
+  type        = number
+  default     = null
+}
+
+variable "vpc_ipam_pool_allocation_max_netmask_length" {
+  description = "The maximum netmask length that can be allocated from this pool. Used in aws_vpc_ipam_pool resource"
+  type        = number
+  default     = null
+}
+
+variable "vpc_ipam_pool_allocation_min_netmask_length" {
+  description = "The minimum netmask length that can be allocated from this pool. Used in aws_vpc_ipam_pool resource"
+  type        = number
+  default     = null
+}
+
+variable "vpc_ipam_pool_auto_import" {
+  description = "If enabled, IPAM will continuously look for resources within the CIDR range of this pool and automatically import them as allocations. Used in aws_vpc_ipam_pool resource"
+  type        = bool
+  default     = true
+}
+
+variable "vpc_ipam_pool_tags" {
+  description = "Additional tags for the VPC IPAM pool created with aws_vpc_ipam_pool resource"
+  type        = map(string)
+  default     = {}
+}
+
+################################################################################
+# RAM Share for VPC IPAM Pool
+################################################################################
+
+variable "vpc_ipam_pool_ram_share_enabled" {
+  description = "Controls if the VPC IPAM pool should be shared via AWS RAM using native aws_ram_resource_share resources"
+  type        = bool
+  default     = false
+}
+
+variable "vpc_ipam_pool_ram_share_name" {
+  description = "Name of the RAM resource share created with aws_ram_resource_share. If not provided, defaults to '<vpc-name>-ipam-pool-share'"
+  type        = string
+  default     = null
+}
+
+variable "vpc_ipam_pool_ram_share_principals" {
+  description = "List of principals (AWS account IDs, Organization ARNs, or OU ARNs) to share the IPAM pool with using aws_ram_principal_association resources"
+  type        = list(string)
+  default     = []
+}
+
+variable "vpc_ipam_pool_ram_share_allow_external_principals" {
+  description = "Whether to allow sharing with principals outside of your organization. Used in aws_ram_resource_share resource"
+  type        = bool
+  default     = false
+}
+
+variable "vpc_ipam_pool_ram_share_tags" {
+  description = "Additional tags for the RAM resource share created with aws_ram_resource_share"
+  type        = map(string)
+  default     = {}
+}
+
+################################################################################
+# IPAM-based Subnets (Native Terraform Resources)
+################################################################################
+
+variable "ipam_subnets" {
+  description = <<-EOT
+    List of subnets to create using IPAM pool allocation with native aws_subnet resources. Each subnet should have:
+    - name: Name tag for the subnet
+    - availability_zone: AZ where the subnet will be created
+    - netmask_length: The netmask length for the subnet (e.g., 24 for /24)
+    - tags: (Optional) Additional tags for the subnet
+
+    Subnets are created using aws_subnet resource with ipv4_ipam_pool_id parameter for automatic CIDR allocation.
+
+    Example:
+    [
+      {
+        name              = "ipam-subnet-1"
+        availability_zone = "eu-west-2a"
+        netmask_length    = 28
+        tags              = { Environment = "dev" }
+      }
+    ]
+  EOT
+  type = list(object({
+    name              = string
+    availability_zone = string
+    netmask_length    = number
+    tags              = optional(map(string), {})
+    aws_profile       = optional(string, "")
+  }))
+  default = []
+}

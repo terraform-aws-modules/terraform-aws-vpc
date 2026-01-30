@@ -214,12 +214,59 @@ module "vpc_cidr_from_ipam" {
 }
 ```
 
+## VPC IPAM Pool for Subnet Planning
+
+This module supports creating an IPAM pool scoped to the VPC for subnet allocation with RAM sharing using native Terraform AWS provider resources. This enables:
+
+1. **VPC-specific IPAM Pool**: Create an IPAM pool for resource planning within a VPC using native `aws_vpc_ipam_pool` resource with `source_resource` block
+2. **RAM Sharing**: Share the IPAM pool with other AWS accounts via AWS Resource Access Manager using native `aws_ram_resource_share` resources
+3. **Subnet Creation from IPAM Pool**: Create subnets using IPAM pool allocation with native `aws_subnet` resource and `ipv4_ipam_pool_id` parameter
+
+See [IPAM_SUBNET_PLANNING.md](./IPAM_SUBNET_PLANNING.md) for detailed documentation. For cross-account IPAM scenarios, see [Cross-Account IPAM Configuration Guide](./docs/CROSS_ACCOUNT_IPAM.md).
+
+**Prerequisites**: This feature requires Terraform AWS Provider >= 6.29.0 for native support of VPC-scoped IPAM pools and IPAM-allocated subnets.
+
+```hcl
+module "vpc" {
+  source = "terraform-aws-modules/vpc/aws"
+
+  name = "my-vpc"
+  cidr = "10.0.0.0/16"
+
+  # Enable VPC IPAM Pool for subnet planning
+  create_vpc_ipam_pool    = true
+  vpc_ipam_scope_id       = aws_vpc_ipam.main.private_default_scope_id
+  vpc_ipam_source_pool_id = aws_vpc_ipam_pool.top_level.id
+  vpc_ipam_pool_cidr      = "10.0.0.0/16"
+
+  # Configure allocation constraints
+  vpc_ipam_pool_allocation_default_netmask_length = 28
+  vpc_ipam_pool_allocation_min_netmask_length     = 28
+  vpc_ipam_pool_allocation_max_netmask_length     = 24
+
+  # Enable RAM sharing
+  vpc_ipam_pool_ram_share_enabled    = true
+  vpc_ipam_pool_ram_share_principals = ["123456789012"]
+
+  # Create subnets from IPAM pool
+  ipam_subnets = [
+    {
+      name              = "ipam-subnet-1"
+      availability_zone = "eu-west-2a"
+      netmask_length    = 28
+    }
+  ]
+}
+```
+
 ## Examples
 
 - [Block Public Access](https://github.com/terraform-aws-modules/terraform-aws-vpc/tree/master/examples/block-public-access)
 - [Complete VPC](https://github.com/terraform-aws-modules/terraform-aws-vpc/tree/master/examples/complete) w/ VPC Endpoints
 - [VPC w/ Flow Log](https://github.com/terraform-aws-modules/terraform-aws-vpc/tree/master/examples/flow-log)
 - [VPC using IPAM](https://github.com/terraform-aws-modules/terraform-aws-vpc/tree/master/examples/ipam)
+- [VPC w/ IPAM Pool for Subnet Planning](https://github.com/terraform-aws-modules/terraform-aws-vpc/tree/master/examples/ipam-vpc-subnets) - **NEW**
+- [Cross-Account VPC w/ IPAM Pool](https://github.com/terraform-aws-modules/terraform-aws-vpc/tree/master/examples/ipam-vpc-subnets-cross-account) - **NEW**
 - [Dualstack IPv4/IPv6 VPC](https://github.com/terraform-aws-modules/terraform-aws-vpc/tree/master/examples/ipv6-dualstack)
 - [IPv6 only subnets VPC](https://github.com/terraform-aws-modules/terraform-aws-vpc/tree/master/examples/ipv6-only)
 - [Manage Default VPC](https://github.com/terraform-aws-modules/terraform-aws-vpc/tree/master/examples/manage-default-vpc)
@@ -228,6 +275,49 @@ module "vpc_cidr_from_ipam" {
 - [VPC w/ secondary CIDR blocks](https://github.com/terraform-aws-modules/terraform-aws-vpc/tree/master/examples/secondary-cidr-blocks)
 - [VPC w/ unique route tables](https://github.com/terraform-aws-modules/terraform-aws-vpc/tree/master/examples/separate-route-tables)
 - [Simple VPC](https://github.com/terraform-aws-modules/terraform-aws-vpc/tree/master/examples/simple)
+
+## Migration Guide
+
+### Upgrading to v6.x with Native IPAM Resources
+
+Version 6.x of this module modernizes the IPAM implementation by replacing `null_resource` workarounds with native Terraform AWS provider resources. This change requires Terraform AWS Provider >= 6.29.0.
+
+**Breaking Changes:**
+- **Provider Version**: Minimum AWS provider version increased from 6.28 to 6.29
+- **No AWS CLI Required**: The module no longer depends on AWS CLI being installed
+- **State Management**: IPAM resources are now managed through Terraform state instead of file-based state
+
+**Migration Steps:**
+
+1. **Update Provider Version**: Ensure your AWS provider is >= 6.29.0
+   ```hcl
+   terraform {
+     required_providers {
+       aws = {
+         source  = "hashicorp/aws"
+         version = ">= 6.29.0"
+       }
+     }
+   }
+   ```
+
+2. **No Configuration Changes Required**: The module interface (variables and outputs) remains backward compatible. Your existing configuration should work without changes.
+
+3. **State Migration**: If you were using the IPAM features in a previous version:
+   - The module now uses native `aws_vpc_ipam_pool`, `aws_vpc_ipam_pool_cidr`, `aws_ram_resource_share`, and `aws_subnet` resources
+   - Terraform will detect the change from `null_resource` to native resources
+   - Review the plan carefully before applying to understand the resource replacements
+
+4. **Remove AWS CLI**: You can now remove AWS CLI from your Terraform execution environment if it was only needed for this module
+
+**What's Improved:**
+- Native Terraform state management for all IPAM resources
+- No external dependencies on AWS CLI
+- Simplified implementation without bash scripts
+- Better error messages and validation from the AWS provider
+- Proper resource lifecycle management and drift detection
+
+For detailed information about the IPAM implementation, see [IPAM_SUBNET_PLANNING.md](./IPAM_SUBNET_PLANNING.md).
 
 ## Contributing
 
@@ -241,13 +331,14 @@ Full contributing [guidelines are covered here](.github/contributing.md).
 | Name | Version |
 |------|---------|
 | <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 1.0 |
-| <a name="requirement_aws"></a> [aws](#requirement\_aws) | >= 6.28 |
+| <a name="requirement_aws"></a> [aws](#requirement\_aws) | >= 6.29.0 |
+| <a name="requirement_null"></a> [null](#requirement\_null) | >= 3.0 |
 
 ## Providers
 
 | Name | Version |
 |------|---------|
-| <a name="provider_aws"></a> [aws](#provider\_aws) | >= 6.28 |
+| <a name="provider_aws"></a> [aws](#provider\_aws) | >= 6.29.0 |
 
 ## Modules
 
@@ -294,6 +385,9 @@ No modules.
 | [aws_network_acl_rule.public_outbound](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/network_acl_rule) | resource |
 | [aws_network_acl_rule.redshift_inbound](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/network_acl_rule) | resource |
 | [aws_network_acl_rule.redshift_outbound](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/network_acl_rule) | resource |
+| [aws_ram_principal_association.vpc_ipam_pool](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/ram_principal_association) | resource |
+| [aws_ram_resource_association.vpc_ipam_pool](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/ram_resource_association) | resource |
+| [aws_ram_resource_share.vpc_ipam_pool](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/ram_resource_share) | resource |
 | [aws_redshift_subnet_group.redshift](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/redshift_subnet_group) | resource |
 | [aws_route.database_dns64_nat_gateway](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/route) | resource |
 | [aws_route.database_internet_gateway](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/route) | resource |
@@ -321,6 +415,7 @@ No modules.
 | [aws_subnet.database](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/subnet) | resource |
 | [aws_subnet.elasticache](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/subnet) | resource |
 | [aws_subnet.intra](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/subnet) | resource |
+| [aws_subnet.ipam](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/subnet) | resource |
 | [aws_subnet.outpost](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/subnet) | resource |
 | [aws_subnet.private](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/subnet) | resource |
 | [aws_subnet.public](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/subnet) | resource |
@@ -330,6 +425,8 @@ No modules.
 | [aws_vpc_block_public_access_options.this](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/vpc_block_public_access_options) | resource |
 | [aws_vpc_dhcp_options.this](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/vpc_dhcp_options) | resource |
 | [aws_vpc_dhcp_options_association.this](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/vpc_dhcp_options_association) | resource |
+| [aws_vpc_ipam_pool.vpc](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/vpc_ipam_pool) | resource |
+| [aws_vpc_ipam_pool_cidr.vpc](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/vpc_ipam_pool_cidr) | resource |
 | [aws_vpc_ipv4_cidr_block_association.this](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/vpc_ipv4_cidr_block_association) | resource |
 | [aws_vpn_gateway.this](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/vpn_gateway) | resource |
 | [aws_vpn_gateway_attachment.this](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/vpn_gateway_attachment) | resource |
@@ -365,6 +462,7 @@ No modules.
 | <a name="input_create_redshift_subnet_group"></a> [create\_redshift\_subnet\_group](#input\_create\_redshift\_subnet\_group) | Controls if redshift subnet group should be created | `bool` | `true` | no |
 | <a name="input_create_redshift_subnet_route_table"></a> [create\_redshift\_subnet\_route\_table](#input\_create\_redshift\_subnet\_route\_table) | Controls if separate route table for redshift should be created | `bool` | `false` | no |
 | <a name="input_create_vpc"></a> [create\_vpc](#input\_create\_vpc) | Controls if VPC should be created (it affects almost all resources) | `bool` | `true` | no |
+| <a name="input_create_vpc_ipam_pool"></a> [create\_vpc\_ipam\_pool](#input\_create\_vpc\_ipam\_pool) | Controls if an IPAM pool should be created for VPC subnet allocation using native aws\_vpc\_ipam\_pool resource | `bool` | `false` | no |
 | <a name="input_customer_gateway_tags"></a> [customer\_gateway\_tags](#input\_customer\_gateway\_tags) | Additional tags for the Customer Gateway | `map(string)` | `{}` | no |
 | <a name="input_customer_gateways"></a> [customer\_gateways](#input\_customer\_gateways) | Maps of Customer Gateway's attributes (BGP ASN and Gateway's Internet-routable external IP address) | `map(map(any))` | `{}` | no |
 | <a name="input_customer_owned_ipv4_pool"></a> [customer\_owned\_ipv4\_pool](#input\_customer\_owned\_ipv4\_pool) | The customer owned IPv4 address pool. Typically used with the `map_customer_owned_ip_on_launch` argument. The `outpost_arn` argument must be specified when configured | `string` | `null` | no |
@@ -473,6 +571,7 @@ No modules.
 | <a name="input_intra_subnet_suffix"></a> [intra\_subnet\_suffix](#input\_intra\_subnet\_suffix) | Suffix to append to intra subnets name | `string` | `"intra"` | no |
 | <a name="input_intra_subnet_tags"></a> [intra\_subnet\_tags](#input\_intra\_subnet\_tags) | Additional tags for the intra subnets | `map(string)` | `{}` | no |
 | <a name="input_intra_subnets"></a> [intra\_subnets](#input\_intra\_subnets) | A list of intra subnets inside the VPC | `list(string)` | `[]` | no |
+| <a name="input_ipam_subnets"></a> [ipam\_subnets](#input\_ipam\_subnets) | List of subnets to create using IPAM pool allocation with native aws\_subnet resources. Each subnet should have:<br/>- name: Name tag for the subnet<br/>- availability\_zone: AZ where the subnet will be created<br/>- netmask\_length: The netmask length for the subnet (e.g., 24 for /24)<br/>- tags: (Optional) Additional tags for the subnet<br/><br/>Subnets are created using aws\_subnet resource with ipv4\_ipam\_pool\_id parameter for automatic CIDR allocation.<br/><br/>Example:<br/>[<br/>  {<br/>    name              = "ipam-subnet-1"<br/>    availability\_zone = "eu-west-2a"<br/>    netmask\_length    = 28<br/>    tags              = { Environment = "dev" }<br/>  }<br/>] | <pre>list(object({<br/>    name              = string<br/>    availability_zone = string<br/>    netmask_length    = number<br/>    tags              = optional(map(string), {})<br/>    aws_profile       = optional(string, "")<br/>  }))</pre> | `[]` | no |
 | <a name="input_ipv4_ipam_pool_id"></a> [ipv4\_ipam\_pool\_id](#input\_ipv4\_ipam\_pool\_id) | (Optional) The ID of an IPv4 IPAM pool you want to use for allocating this VPC's CIDR | `string` | `null` | no |
 | <a name="input_ipv4_netmask_length"></a> [ipv4\_netmask\_length](#input\_ipv4\_netmask\_length) | (Optional) The netmask length of the IPv4 CIDR you want to allocate to this VPC. Requires specifying a ipv4\_ipam\_pool\_id | `number` | `null` | no |
 | <a name="input_ipv6_cidr"></a> [ipv6\_cidr](#input\_ipv6\_cidr) | (Optional) IPv6 CIDR block to request from an IPAM Pool. Can be set explicitly or derived from IPAM using `ipv6_netmask_length` | `string` | `null` | no |
@@ -578,6 +677,22 @@ No modules.
 | <a name="input_vpc_flow_log_iam_role_use_name_prefix"></a> [vpc\_flow\_log\_iam\_role\_use\_name\_prefix](#input\_vpc\_flow\_log\_iam\_role\_use\_name\_prefix) | Determines whether the IAM role name (`vpc_flow_log_iam_role_name_name`) is used as a prefix | `bool` | `true` | no |
 | <a name="input_vpc_flow_log_permissions_boundary"></a> [vpc\_flow\_log\_permissions\_boundary](#input\_vpc\_flow\_log\_permissions\_boundary) | The ARN of the Permissions Boundary for the VPC Flow Log IAM Role | `string` | `null` | no |
 | <a name="input_vpc_flow_log_tags"></a> [vpc\_flow\_log\_tags](#input\_vpc\_flow\_log\_tags) | Additional tags for the VPC Flow Logs | `map(string)` | `{}` | no |
+| <a name="input_vpc_ipam_pool_allocation_default_netmask_length"></a> [vpc\_ipam\_pool\_allocation\_default\_netmask\_length](#input\_vpc\_ipam\_pool\_allocation\_default\_netmask\_length) | The default netmask length for allocations from this pool. Used in aws\_vpc\_ipam\_pool resource | `number` | `null` | no |
+| <a name="input_vpc_ipam_pool_allocation_max_netmask_length"></a> [vpc\_ipam\_pool\_allocation\_max\_netmask\_length](#input\_vpc\_ipam\_pool\_allocation\_max\_netmask\_length) | The maximum netmask length that can be allocated from this pool. Used in aws\_vpc\_ipam\_pool resource | `number` | `null` | no |
+| <a name="input_vpc_ipam_pool_allocation_min_netmask_length"></a> [vpc\_ipam\_pool\_allocation\_min\_netmask\_length](#input\_vpc\_ipam\_pool\_allocation\_min\_netmask\_length) | The minimum netmask length that can be allocated from this pool. Used in aws\_vpc\_ipam\_pool resource | `number` | `null` | no |
+| <a name="input_vpc_ipam_pool_auto_import"></a> [vpc\_ipam\_pool\_auto\_import](#input\_vpc\_ipam\_pool\_auto\_import) | If enabled, IPAM will continuously look for resources within the CIDR range of this pool and automatically import them as allocations. Used in aws\_vpc\_ipam\_pool resource | `bool` | `true` | no |
+| <a name="input_vpc_ipam_pool_cidr"></a> [vpc\_ipam\_pool\_cidr](#input\_vpc\_ipam\_pool\_cidr) | The CIDR to provision to the VPC IPAM pool using aws\_vpc\_ipam\_pool\_cidr resource. If not provided, will use the VPC's CIDR (either from var.cidr or allocated from IPAM) | `string` | `null` | no |
+| <a name="input_vpc_ipam_pool_description"></a> [vpc\_ipam\_pool\_description](#input\_vpc\_ipam\_pool\_description) | Description of the VPC IPAM pool created with aws\_vpc\_ipam\_pool resource | `string` | `null` | no |
+| <a name="input_vpc_ipam_pool_locale"></a> [vpc\_ipam\_pool\_locale](#input\_vpc\_ipam\_pool\_locale) | The locale (AWS region) for the IPAM pool. This is where the pool can allocate IPs and must match the VPC's region. Used in aws\_vpc\_ipam\_pool resource. Defaults to the region of the VPC | `string` | `null` | no |
+| <a name="input_vpc_ipam_pool_name"></a> [vpc\_ipam\_pool\_name](#input\_vpc\_ipam\_pool\_name) | Name of the VPC IPAM pool created with aws\_vpc\_ipam\_pool resource. If not provided, defaults to '<vpc-name>-vpc-subnets' | `string` | `null` | no |
+| <a name="input_vpc_ipam_pool_ram_share_allow_external_principals"></a> [vpc\_ipam\_pool\_ram\_share\_allow\_external\_principals](#input\_vpc\_ipam\_pool\_ram\_share\_allow\_external\_principals) | Whether to allow sharing with principals outside of your organization. Used in aws\_ram\_resource\_share resource | `bool` | `false` | no |
+| <a name="input_vpc_ipam_pool_ram_share_enabled"></a> [vpc\_ipam\_pool\_ram\_share\_enabled](#input\_vpc\_ipam\_pool\_ram\_share\_enabled) | Controls if the VPC IPAM pool should be shared via AWS RAM using native aws\_ram\_resource\_share resources | `bool` | `false` | no |
+| <a name="input_vpc_ipam_pool_ram_share_name"></a> [vpc\_ipam\_pool\_ram\_share\_name](#input\_vpc\_ipam\_pool\_ram\_share\_name) | Name of the RAM resource share created with aws\_ram\_resource\_share. If not provided, defaults to '<vpc-name>-ipam-pool-share' | `string` | `null` | no |
+| <a name="input_vpc_ipam_pool_ram_share_principals"></a> [vpc\_ipam\_pool\_ram\_share\_principals](#input\_vpc\_ipam\_pool\_ram\_share\_principals) | List of principals (AWS account IDs, Organization ARNs, or OU ARNs) to share the IPAM pool with using aws\_ram\_principal\_association resources | `list(string)` | `[]` | no |
+| <a name="input_vpc_ipam_pool_ram_share_tags"></a> [vpc\_ipam\_pool\_ram\_share\_tags](#input\_vpc\_ipam\_pool\_ram\_share\_tags) | Additional tags for the RAM resource share created with aws\_ram\_resource\_share | `map(string)` | `{}` | no |
+| <a name="input_vpc_ipam_pool_tags"></a> [vpc\_ipam\_pool\_tags](#input\_vpc\_ipam\_pool\_tags) | Additional tags for the VPC IPAM pool created with aws\_vpc\_ipam\_pool resource | `map(string)` | `{}` | no |
+| <a name="input_vpc_ipam_scope_id"></a> [vpc\_ipam\_scope\_id](#input\_vpc\_ipam\_scope\_id) | The ID of the IPAM scope where the VPC pool will be created using aws\_vpc\_ipam\_pool resource | `string` | `null` | no |
+| <a name="input_vpc_ipam_source_pool_id"></a> [vpc\_ipam\_source\_pool\_id](#input\_vpc\_ipam\_source\_pool\_id) | The ID of the source IPAM pool from which to allocate CIDRs. Required if creating a VPC IPAM pool with aws\_vpc\_ipam\_pool resource | `string` | `null` | no |
 | <a name="input_vpc_tags"></a> [vpc\_tags](#input\_vpc\_tags) | Additional tags for the VPC | `map(string)` | `{}` | no |
 | <a name="input_vpn_gateway_az"></a> [vpn\_gateway\_az](#input\_vpn\_gateway\_az) | The Availability Zone for the VPN Gateway | `string` | `null` | no |
 | <a name="input_vpn_gateway_id"></a> [vpn\_gateway\_id](#input\_vpn\_gateway\_id) | ID of VPN Gateway to attach to the VPC | `string` | `""` | no |
@@ -641,6 +756,11 @@ No modules.
 | <a name="output_intra_subnets"></a> [intra\_subnets](#output\_intra\_subnets) | List of IDs of intra subnets |
 | <a name="output_intra_subnets_cidr_blocks"></a> [intra\_subnets\_cidr\_blocks](#output\_intra\_subnets\_cidr\_blocks) | List of cidr\_blocks of intra subnets |
 | <a name="output_intra_subnets_ipv6_cidr_blocks"></a> [intra\_subnets\_ipv6\_cidr\_blocks](#output\_intra\_subnets\_ipv6\_cidr\_blocks) | List of IPv6 cidr\_blocks of intra subnets in an IPv6 enabled VPC |
+| <a name="output_ipam_subnet_objects"></a> [ipam\_subnet\_objects](#output\_ipam\_subnet\_objects) | Full objects of all IPAM-created subnets using native aws\_subnet resources |
+| <a name="output_ipam_subnets"></a> [ipam\_subnets](#output\_ipam\_subnets) | Map of IPAM-created subnet IDs from aws\_subnet resources with ipv4\_ipam\_pool\_id |
+| <a name="output_ipam_subnets_arns"></a> [ipam\_subnets\_arns](#output\_ipam\_subnets\_arns) | Map of IPAM-created subnet ARNs from aws\_subnet resources |
+| <a name="output_ipam_subnets_availability_zones"></a> [ipam\_subnets\_availability\_zones](#output\_ipam\_subnets\_availability\_zones) | Map of IPAM-created subnet availability zones from aws\_subnet resources |
+| <a name="output_ipam_subnets_cidr_blocks"></a> [ipam\_subnets\_cidr\_blocks](#output\_ipam\_subnets\_cidr\_blocks) | Map of IPAM-allocated subnet CIDR blocks from aws\_subnet resources |
 | <a name="output_name"></a> [name](#output\_name) | The name of the VPC specified as argument to this module |
 | <a name="output_nat_ids"></a> [nat\_ids](#output\_nat\_ids) | List of allocation ID of Elastic IPs created for AWS NAT Gateway |
 | <a name="output_nat_public_ips"></a> [nat\_public\_ips](#output\_nat\_public\_ips) | List of public Elastic IPs created for AWS NAT Gateway |
@@ -701,6 +821,11 @@ No modules.
 | <a name="output_vpc_flow_log_id"></a> [vpc\_flow\_log\_id](#output\_vpc\_flow\_log\_id) | The ID of the Flow Log resource |
 | <a name="output_vpc_id"></a> [vpc\_id](#output\_vpc\_id) | The ID of the VPC |
 | <a name="output_vpc_instance_tenancy"></a> [vpc\_instance\_tenancy](#output\_vpc\_instance\_tenancy) | Tenancy of instances spin up within VPC |
+| <a name="output_vpc_ipam_pool_arn"></a> [vpc\_ipam\_pool\_arn](#output\_vpc\_ipam\_pool\_arn) | The ARN of the VPC IPAM pool created with aws\_vpc\_ipam\_pool resource |
+| <a name="output_vpc_ipam_pool_cidr"></a> [vpc\_ipam\_pool\_cidr](#output\_vpc\_ipam\_pool\_cidr) | The CIDR provisioned to the VPC IPAM pool using aws\_vpc\_ipam\_pool\_cidr resource |
+| <a name="output_vpc_ipam_pool_id"></a> [vpc\_ipam\_pool\_id](#output\_vpc\_ipam\_pool\_id) | The ID of the VPC IPAM pool created with aws\_vpc\_ipam\_pool resource for subnet allocation |
+| <a name="output_vpc_ipam_pool_ram_share_arn"></a> [vpc\_ipam\_pool\_ram\_share\_arn](#output\_vpc\_ipam\_pool\_ram\_share\_arn) | The ARN of the RAM resource share created with aws\_ram\_resource\_share for the VPC IPAM pool |
+| <a name="output_vpc_ipam_pool_ram_share_id"></a> [vpc\_ipam\_pool\_ram\_share\_id](#output\_vpc\_ipam\_pool\_ram\_share\_id) | The ID of the RAM resource share created with aws\_ram\_resource\_share for the VPC IPAM pool |
 | <a name="output_vpc_ipv6_association_id"></a> [vpc\_ipv6\_association\_id](#output\_vpc\_ipv6\_association\_id) | The association ID for the IPv6 CIDR block |
 | <a name="output_vpc_ipv6_cidr_block"></a> [vpc\_ipv6\_cidr\_block](#output\_vpc\_ipv6\_cidr\_block) | The IPv6 CIDR block |
 | <a name="output_vpc_main_route_table_id"></a> [vpc\_main\_route\_table\_id](#output\_vpc\_main\_route\_table\_id) | The ID of the main route table associated with this VPC |

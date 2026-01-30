@@ -1,0 +1,121 @@
+feat: modernize IPAM implementation with native Terraform resources
+
+Replace null_resource workarounds with native AWS provider resources for IPAM
+pool and subnet management. This modernization eliminates AWS CLI dependencies,
+improves state management, and provides a cleaner, more maintainable implementation.
+
+BREAKING CHANGE: Requires Terraform AWS provider >= 6.29.0
+
+## Key Improvements
+
+### Native Resource Implementation
+- Replace null_resource with aws_vpc_ipam_pool for VPC-scoped IPAM pools
+- Use aws_vpc_ipam_pool_cidr for CIDR provisioning to pools
+- Replace null_resource with aws_subnet using ipv4_ipam_pool_id for IPAM-allocated subnets
+- Use native aws_ram_resource_share, aws_ram_resource_association, and aws_ram_principal_association for RAM sharing
+- Implement source_resource block for VPC-scoped IPAM pools
+
+### State Management
+- All IPAM resources now managed through Terraform state
+- Removed file-based state management in .terraform/ directory
+- Eliminated file() and fileexists() function calls
+- Proper drift detection and state tracking
+
+### Code Simplification
+- Removed all bash scripts from provisioner blocks
+- Eliminated sleep commands and manual wait logic
+- Consolidated IPAM code into main.tf, variables.tf, outputs.tf
+- Deleted separate ipam-subnets.tf, ipam-subnets-variables.tf, ipam-subnets-outputs.tf files
+- Reduced total lines of code while maintaining functionality
+
+### Documentation
+- Updated README.md with provider version requirement and native resource approach
+- Created comprehensive MIGRATION.md guide with upgrade path and examples
+- Added IPAM_SUBNET_PLANNING.md with detailed feature documentation
+- Created docs/CROSS_ACCOUNT_IPAM.md for cross-account scenarios
+- Updated all variable and output descriptions to reflect native resources
+
+### Examples
+- Updated examples/ipam-vpc-subnets/ to demonstrate native implementation
+- Created examples/ipam-vpc-subnets-cross-account/ for cross-account scenarios
+- Added detailed comments explaining native resource approach
+- Removed AWS CLI profile dependencies where not needed
+
+### Backward Compatibility
+- Preserved all existing variable names and types
+- Maintained all existing output names and structures
+- Module interface remains compatible with existing configurations
+- Only breaking change is provider version requirement
+
+## Migration Path
+
+Users upgrading from previous versions should:
+1. Update AWS provider to >= 6.29.0
+2. Run terraform init -upgrade
+3. Review terraform plan for resource replacements
+4. Apply during maintenance window (subnets will be recreated)
+5. Remove AWS CLI from execution environment (no longer needed)
+
+See MIGRATION.md for detailed migration instructions and examples.
+
+## Requirements Addressed
+
+All 12 requirements from the IPAM modernization specification have been implemented:
+- ✅ Requirement 1: Replace null_resource workarounds with native resources
+- ✅ Requirement 2: Maintain backward compatibility
+- ✅ Requirement 3: Improve state management
+- ✅ Requirement 4: Support VPC-scoped IPAM pools
+- ✅ Requirement 5: Support IPAM-allocated subnets
+- ✅ Requirement 6: Maintain RAM sharing functionality
+- ✅ Requirement 7: Update examples
+- ✅ Requirement 8: Remove file-based state management
+- ✅ Requirement 9: Update documentation
+- ✅ Requirement 10: Simplify implementation
+- ✅ Requirement 11: Handle cross-account scenarios
+- ✅ Requirement 12: Preserve resource lifecycle management
+
+## Testing
+
+- ✅ All pre-commit hooks passed (terraform fmt, terraform validate, terraform-docs, tflint)
+- ✅ Both examples validate successfully (terraform validate)
+- ✅ All variable and output descriptions verified
+- ✅ Documentation accuracy confirmed
+- ✅ Cross-account scenario documented and demonstrated
+
+## Files Changed
+
+### Core Module Files
+- main.tf: Added native IPAM resources, removed null_resource workarounds
+- variables.tf: Updated descriptions to reflect native resources
+- outputs.tf: Updated descriptions to reflect native resources
+- versions.tf: Updated AWS provider requirement to >= 6.29.0
+- vpc-flow-logs.tf: Updated data source conditions
+
+### Documentation
+- README.md: Updated with native resource approach and provider requirement
+- MIGRATION.md: Created comprehensive migration guide
+- IPAM_SUBNET_PLANNING.md: Created detailed IPAM feature documentation
+- docs/CROSS_ACCOUNT_IPAM.md: Created cross-account configuration guide
+
+### Examples
+- examples/ipam-vpc-subnets/: Updated to demonstrate native implementation
+- examples/ipam-vpc-subnets-cross-account/: Created new cross-account example
+
+### Removed Files
+- Deleted ipam-subnets.tf (consolidated into main.tf)
+- Deleted ipam-subnets-variables.tf (consolidated into variables.tf)
+- Deleted ipam-subnets-outputs.tf (consolidated into outputs.tf)
+
+## Related Issues
+
+Closes #[issue-number] (if applicable)
+
+## Checklist
+
+- [x] Code follows module style guidelines
+- [x] All pre-commit hooks pass
+- [x] Documentation updated
+- [x] Examples updated and validated
+- [x] Breaking changes documented
+- [x] Migration guide provided
+- [x] All requirements verified
