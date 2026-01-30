@@ -1,0 +1,61 @@
+# Copy this file to terraform.tfvars and update with your account IDs
+
+################################################################################
+# Account Configuration (REQUIRED)
+################################################################################
+
+# Replace with your networking account ID (where IPAM resources will be created)
+networking_account_id = "111111111111"
+
+# Replace with your application account ID (where VPC and subnets will be created)
+application_account_id = "222222222222"
+
+################################################################################
+# General Configuration (Optional)
+################################################################################
+
+# AWS region for all resources
+region = "us-east-1"
+
+# Tags to apply to all resources
+tags = {
+  Terraform   = "true"
+  Example     = "ipam-vpc-subnets-cross-account"
+  Environment = "development"
+  ManagedBy   = "terraform"
+}
+
+################################################################################
+# IPAM Configuration (Optional)
+################################################################################
+
+# CIDR block for the top-level IPAM pool
+# This is the supernet from which VPC CIDRs will be allocated
+top_level_pool_cidr = "10.0.0.0/8"
+
+# Allow sharing with external principals (accounts outside the organization)
+# Set to false if sharing within the same AWS Organization
+allow_external_principals = false
+
+################################################################################
+# VPC Configuration (Optional)
+################################################################################
+
+# Name of the VPC
+vpc_name = "cross-account-vpc"
+
+# CIDR block for the VPC (must be within top_level_pool_cidr range)
+vpc_cidr = "10.0.0.0/16"
+
+################################################################################
+# IPAM Pool Allocation Constraints (Optional)
+################################################################################
+
+# Default netmask length for subnet allocation
+default_netmask_length = 24
+
+# Minimum netmask length (largest subnet size)
+min_netmask_length = 24
+
+# Maximum netmask length (smallest subnet size)
+max_netmask_length = 28

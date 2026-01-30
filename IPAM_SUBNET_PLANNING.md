@@ -44,9 +44,9 @@ resource "aws_vpc_ipam_pool" "vpc_subnets" {
   address_family = "ipv4"
   ipam_scope_id  = var.vpc_ipam_scope_id
   locale         = var.vpc_ipam_pool_locale
-  
+
   source_ipam_pool_id = var.vpc_ipam_source_pool_id
-  
+
   allocation_default_netmask_length = var.vpc_ipam_pool_allocation_default_netmask_length
   allocation_max_netmask_length     = var.vpc_ipam_pool_allocation_max_netmask_length
   allocation_min_netmask_length     = var.vpc_ipam_pool_allocation_min_netmask_length
@@ -70,7 +70,7 @@ resource "aws_ram_resource_association" "vpc_ipam_pool" {
 
 resource "aws_ram_principal_association" "vpc_ipam_pool" {
   for_each = toset(var.vpc_ipam_pool_ram_share_principals)
-  
+
   principal          = each.value
   resource_share_arn = aws_ram_resource_share.vpc_ipam_pool.arn
 }
@@ -85,7 +85,7 @@ resource "aws_ram_principal_association" "vpc_ipam_pool" {
 ```hcl
 resource "null_resource" "ipam_subnets" {
   for_each = { for idx, subnet in var.ipam_subnets : idx => subnet }
-  
+
   provisioner "local-exec" {
     when    = create
     command = <<-EOT
@@ -97,7 +97,7 @@ resource "null_resource" "ipam_subnets" {
         --tag-specifications 'ResourceType=subnet,Tags=[{Key=Name,Value=${each.value.name}}]'
     EOT
   }
-  
+
   provisioner "local-exec" {
     when    = destroy
     command = "aws ec2 delete-subnet --subnet-id '${self.triggers.subnet_id}'"

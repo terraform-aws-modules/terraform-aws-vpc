@@ -1,11 +1,11 @@
 data "aws_region" "current" {
-  count = var.create_vpc && var.enable_flow_log ? 1 : 0
+  count = var.create_vpc && (var.enable_flow_log || var.create_vpc_ipam_pool) ? 1 : 0
 
   region = var.region
 }
 
 data "aws_caller_identity" "current" {
-  count = var.create_vpc && var.enable_flow_log ? 1 : 0
+  count = var.create_vpc && (var.enable_flow_log || var.create_vpc_ipam_pool) ? 1 : 0
 }
 
 data "aws_partition" "current" {

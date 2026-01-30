@@ -1541,3 +1541,130 @@ resource "aws_default_route_table" "default" {
     var.default_route_table_tags,
   )
 }
+
+################################################################################
+# VPC IPAM Pool for Subnet Allocation
+################################################################################
+
+# IPAM Pool for VPC Subnet Planning
+# This creates an IPAM pool scoped to the VPC for subnet allocation
+# Uses native Terraform AWS provider resources (aws_vpc_ipam_pool with source_resource block)
+
+locals {
+  create_vpc_ipam_pool      = local.create_vpc && var.create_vpc_ipam_pool
+  vpc_ipam_pool_description = coalesce(var.vpc_ipam_pool_description, "IPAM pool for ${var.name} VPC subnets")
+  vpc_ipam_pool_name        = coalesce(var.vpc_ipam_pool_name, "${var.name}-vpc-subnets")
+}
+
+# Create VPC-specific IPAM pool using native Terraform resource
+resource "aws_vpc_ipam_pool" "vpc" {
+  count = local.create_vpc_ipam_pool ? 1 : 0
+
+  address_family      = "ipv4"
+  ipam_scope_id       = var.vpc_ipam_scope_id
+  locale              = coalesce(var.vpc_ipam_pool_locale, try(data.aws_region.current[0].id, var.region))
+  source_ipam_pool_id = var.vpc_ipam_source_pool_id
+  description         = local.vpc_ipam_pool_description
+
+  allocation_default_netmask_length = var.vpc_ipam_pool_allocation_default_netmask_length
+  allocation_min_netmask_length     = var.vpc_ipam_pool_allocation_min_netmask_length
+  allocation_max_netmask_length     = var.vpc_ipam_pool_allocation_max_netmask_length
+  auto_import                       = var.vpc_ipam_pool_auto_import
+
+  source_resource {
+    resource_id     = local.vpc_id
+    resource_owner  = data.aws_caller_identity.current[0].account_id
+    resource_region = coalesce(var.vpc_ipam_pool_locale, try(data.aws_region.current[0].id, var.region))
+    resource_type   = "vpc"
+  }
+
+  tags = merge(
+    { "Name" = local.vpc_ipam_pool_name },
+    var.tags,
+    var.vpc_ipam_pool_tags,
+  )
+
+  depends_on = [aws_vpc.this]
+}
+
+# Provision VPC CIDR to the IPAM pool
+resource "aws_vpc_ipam_pool_cidr" "vpc" {
+  count = local.create_vpc_ipam_pool ? 1 : 0
+
+  ipam_pool_id = aws_vpc_ipam_pool.vpc[0].id
+  cidr         = try(aws_vpc.this[0].cidr_block, var.vpc_ipam_pool_cidr)
+
+  depends_on = [aws_vpc_ipam_pool.vpc]
+}
+
+# Data source to retrieve created IPAM pool information
+# This reads the pool ID and ARN from the native Terraform resource
+locals {
+  vpc_ipam_pool_id  = local.create_vpc_ipam_pool ? try(aws_vpc_ipam_pool.vpc[0].id, "") : ""
+  vpc_ipam_pool_arn = local.create_vpc_ipam_pool ? try(aws_vpc_ipam_pool.vpc[0].arn, "") : ""
+}
+
+################################################################################
+# RAM Sharing for VPC IPAM Pool
+################################################################################
+
+# Create RAM resource share for IPAM pool
+resource "aws_ram_resource_share" "vpc_ipam_pool" {
+  count = local.create_vpc_ipam_pool && var.vpc_ipam_pool_ram_share_enabled ? 1 : 0
+
+  name                      = coalesce(var.vpc_ipam_pool_ram_share_name, "${var.name}-ipam-pool-share")
+  allow_external_principals = var.vpc_ipam_pool_ram_share_allow_external_principals
+
+  tags = merge(
+    { "Name" = coalesce(var.vpc_ipam_pool_ram_share_name, "${var.name}-ipam-pool-share") },
+    var.tags,
+    var.vpc_ipam_pool_ram_share_tags,
+  )
+}
+
+# Associate IPAM pool with RAM resource share
+resource "aws_ram_resource_association" "vpc_ipam_pool" {
+  count = local.create_vpc_ipam_pool && var.vpc_ipam_pool_ram_share_enabled ? 1 : 0
+
+  resource_arn       = aws_vpc_ipam_pool.vpc[0].arn
+  resource_share_arn = aws_ram_resource_share.vpc_ipam_pool[0].arn
+}
+
+# Associate principals with RAM resource share
+resource "aws_ram_principal_association" "vpc_ipam_pool" {
+  for_each = local.create_vpc_ipam_pool && var.vpc_ipam_pool_ram_share_enabled ? toset(var.vpc_ipam_pool_ram_share_principals) : []
+
+  principal          = each.value
+  resource_share_arn = aws_ram_resource_share.vpc_ipam_pool[0].arn
+}
+
+################################################################################
+# IPAM-Allocated Subnets
+################################################################################
+
+# Subnets created with IPAM pool allocation using native Terraform resources
+# Uses aws_subnet with ipv4_ipam_pool_id parameter for automatic CIDR allocation
+
+locals {
+  create_ipam_subnets = local.create_vpc_ipam_pool && length(var.ipam_subnets) > 0
+}
+
+resource "aws_subnet" "ipam" {
+  for_each = local.create_ipam_subnets ? { for idx, subnet in var.ipam_subnets : idx => subnet } : {}
+
+  vpc_id              = local.vpc_id
+  ipv4_ipam_pool_id   = aws_vpc_ipam_pool.vpc[0].id
+  ipv4_netmask_length = each.value.netmask_length
+  availability_zone   = each.value.availability_zone
+
+  tags = merge(
+    { "Name" = each.value.name },
+    var.tags,
+    lookup(each.value, "tags", {}),
+  )
+
+  depends_on = [
+    aws_vpc_ipam_pool_cidr.vpc,
+    aws_ram_principal_association.vpc_ipam_pool
+  ]
+}
