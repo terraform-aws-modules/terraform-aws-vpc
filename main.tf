@@ -420,6 +420,10 @@ resource "aws_network_acl_rule" "private_outbound" {
 locals {
   create_database_subnets     = local.create_vpc && local.len_database_subnets > 0
   create_database_route_table = local.create_database_subnets && var.create_database_subnet_route_table
+  # Private route tables are only created when private subnets exist
+  private_route_tables_exist = local.create_private_subnets && local.max_subnet_length > 0
+  # Only create database route table associations if there's a route table to associate with
+  create_database_rt_association = local.create_database_subnets && (local.create_database_route_table || local.private_route_tables_exist)
 }
 
 resource "aws_subnet" "database" {
@@ -489,7 +493,7 @@ resource "aws_route_table" "database" {
 }
 
 resource "aws_route_table_association" "database" {
-  count = local.create_database_subnets ? local.len_database_subnets : 0
+  count = local.create_database_rt_association ? local.len_database_subnets : 0
 
   region = var.region
 
