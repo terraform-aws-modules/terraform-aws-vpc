@@ -180,6 +180,24 @@ resource "aws_route_table" "public" {
 
   vpc_id = local.vpc_id
 
+  dynamic "route" {
+    for_each = var.public_route_tables_routes
+    content {
+      # One of the following destinations must be provided
+      cidr_block      = route.value.cidr_block
+      ipv6_cidr_block = lookup(route.value, "ipv6_cidr_block", null)
+
+      # One of the following targets must be provided
+      egress_only_gateway_id    = lookup(route.value, "egress_only_gateway_id", null)
+      gateway_id                = lookup(route.value, "gateway_id", null)
+      nat_gateway_id            = lookup(route.value, "nat_gateway_id", null)
+      network_interface_id      = lookup(route.value, "network_interface_id", null)
+      transit_gateway_id        = lookup(route.value, "transit_gateway_id", null)
+      vpc_endpoint_id           = lookup(route.value, "vpc_endpoint_id", null)
+      vpc_peering_connection_id = lookup(route.value, "vpc_peering_connection_id", null)
+    }
+  }
+
   tags = merge(
     {
       "Name" = var.create_multiple_public_route_tables ? format(
@@ -328,6 +346,24 @@ resource "aws_route_table" "private" {
 
   vpc_id = local.vpc_id
 
+  dynamic "route" {
+    for_each = var.private_route_tables_routes
+    content {
+      # One of the following destinations must be provided
+      cidr_block      = route.value.cidr_block
+      ipv6_cidr_block = lookup(route.value, "ipv6_cidr_block", null)
+
+      # One of the following targets must be provided
+      egress_only_gateway_id    = lookup(route.value, "egress_only_gateway_id", null)
+      gateway_id                = lookup(route.value, "gateway_id", null)
+      nat_gateway_id            = lookup(route.value, "nat_gateway_id", null)
+      network_interface_id      = lookup(route.value, "network_interface_id", null)
+      transit_gateway_id        = lookup(route.value, "transit_gateway_id", null)
+      vpc_endpoint_id           = lookup(route.value, "vpc_endpoint_id", null)
+      vpc_peering_connection_id = lookup(route.value, "vpc_peering_connection_id", null)
+    }
+  }
+
   tags = merge(
     {
       "Name" = var.single_nat_gateway ? "${var.name}-${var.private_subnet_suffix}" : format(
@@ -475,6 +511,24 @@ resource "aws_route_table" "database" {
   region = var.region
 
   vpc_id = local.vpc_id
+
+  dynamic "route" {
+    for_each = var.database_route_tables_routes
+    content {
+      # One of the following destinations must be provided
+      cidr_block      = route.value.cidr_block
+      ipv6_cidr_block = lookup(route.value, "ipv6_cidr_block", null)
+
+      # One of the following targets must be provided
+      egress_only_gateway_id    = lookup(route.value, "egress_only_gateway_id", null)
+      gateway_id                = lookup(route.value, "gateway_id", null)
+      nat_gateway_id            = lookup(route.value, "nat_gateway_id", null)
+      network_interface_id      = lookup(route.value, "network_interface_id", null)
+      transit_gateway_id        = lookup(route.value, "transit_gateway_id", null)
+      vpc_endpoint_id           = lookup(route.value, "vpc_endpoint_id", null)
+      vpc_peering_connection_id = lookup(route.value, "vpc_peering_connection_id", null)
+    }
+  }
 
   tags = merge(
     {
@@ -678,6 +732,24 @@ resource "aws_route_table" "redshift" {
 
   vpc_id = local.vpc_id
 
+  dynamic "route" {
+    for_each = var.redshift_route_tables_routes
+    content {
+      # One of the following destinations must be provided
+      cidr_block      = route.value.cidr_block
+      ipv6_cidr_block = lookup(route.value, "ipv6_cidr_block", null)
+
+      # One of the following targets must be provided
+      egress_only_gateway_id    = lookup(route.value, "egress_only_gateway_id", null)
+      gateway_id                = lookup(route.value, "gateway_id", null)
+      nat_gateway_id            = lookup(route.value, "nat_gateway_id", null)
+      network_interface_id      = lookup(route.value, "network_interface_id", null)
+      transit_gateway_id        = lookup(route.value, "transit_gateway_id", null)
+      vpc_endpoint_id           = lookup(route.value, "vpc_endpoint_id", null)
+      vpc_peering_connection_id = lookup(route.value, "vpc_peering_connection_id", null)
+    }
+  }
+
   tags = merge(
     { "Name" = "${var.name}-${var.redshift_subnet_suffix}" },
     var.tags,
@@ -831,6 +903,24 @@ resource "aws_route_table" "elasticache" {
 
   vpc_id = local.vpc_id
 
+  dynamic "route" {
+    for_each = var.elasticache_route_tables_routes
+    content {
+      # One of the following destinations must be provided
+      cidr_block      = route.value.cidr_block
+      ipv6_cidr_block = lookup(route.value, "ipv6_cidr_block", null)
+
+      # One of the following targets must be provided
+      egress_only_gateway_id    = lookup(route.value, "egress_only_gateway_id", null)
+      gateway_id                = lookup(route.value, "gateway_id", null)
+      nat_gateway_id            = lookup(route.value, "nat_gateway_id", null)
+      network_interface_id      = lookup(route.value, "network_interface_id", null)
+      transit_gateway_id        = lookup(route.value, "transit_gateway_id", null)
+      vpc_endpoint_id           = lookup(route.value, "vpc_endpoint_id", null)
+      vpc_peering_connection_id = lookup(route.value, "vpc_peering_connection_id", null)
+    }
+  }
+
   tags = merge(
     { "Name" = "${var.name}-${var.elasticache_subnet_suffix}" },
     var.tags,
@@ -958,6 +1048,24 @@ resource "aws_route_table" "intra" {
   region = var.region
 
   vpc_id = local.vpc_id
+
+  dynamic "route" {
+    for_each = var.intra_route_tables_routes
+    content {
+      # One of the following destinations must be provided
+      cidr_block      = route.value.cidr_block
+      ipv6_cidr_block = lookup(route.value, "ipv6_cidr_block", null)
+
+      # One of the following targets must be provided
+      egress_only_gateway_id    = lookup(route.value, "egress_only_gateway_id", null)
+      gateway_id                = lookup(route.value, "gateway_id", null)
+      nat_gateway_id            = lookup(route.value, "nat_gateway_id", null)
+      network_interface_id      = lookup(route.value, "network_interface_id", null)
+      transit_gateway_id        = lookup(route.value, "transit_gateway_id", null)
+      vpc_endpoint_id           = lookup(route.value, "vpc_endpoint_id", null)
+      vpc_peering_connection_id = lookup(route.value, "vpc_peering_connection_id", null)
+    }
+  }
 
   tags = merge(
     {

@@ -280,6 +280,12 @@ variable "public_route_table_tags" {
   default     = {}
 }
 
+variable "public_route_tables_routes" {
+  description = "Configuration block of routes. See https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/route_table#route-argument-reference"
+  type        = list(map(string))
+  default     = []
+}
+
 ################################################################################
 # Public Network ACLs
 ################################################################################
@@ -412,6 +418,12 @@ variable "private_route_table_tags" {
   description = "Additional tags for the private route tables"
   type        = map(string)
   default     = {}
+}
+
+variable "private_route_tables_routes" {
+  description = "Configuration block of routes. See https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/route_table#route-argument-reference"
+  type        = list(map(string))
+  default     = []
 }
 
 ################################################################################
@@ -572,6 +584,12 @@ variable "database_subnet_group_tags" {
   default     = {}
 }
 
+variable "database_route_tables_routes" {
+  description = "Configuration block of routes. See https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/route_table#route-argument-reference"
+  type        = list(map(string))
+  default     = []
+}
+
 ################################################################################
 # Database Network ACLs
 ################################################################################
@@ -724,6 +742,12 @@ variable "redshift_subnet_group_tags" {
   default     = {}
 }
 
+variable "redshift_route_tables_routes" {
+  description = "Configuration block of routes. See https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/route_table#route-argument-reference"
+  type        = list(map(string))
+  default     = []
+}
+
 ################################################################################
 # Redshift Network ACLs
 ################################################################################
@@ -870,6 +894,12 @@ variable "elasticache_subnet_group_tags" {
   default     = {}
 }
 
+variable "elasticache_route_tables_routes" {
+  description = "Configuration block of routes. See https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/route_table#route-argument-reference"
+  type        = list(map(string))
+  default     = []
+}
+
 ################################################################################
 # Elasticache Network ACLs
 ################################################################################
@@ -996,6 +1026,12 @@ variable "intra_route_table_tags" {
   description = "Additional tags for the intra route tables"
   type        = map(string)
   default     = {}
+}
+
+variable "intra_route_tables_routes" {
+  description = "Configuration block of routes. See https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/route_table#route-argument-reference"
+  type        = list(map(string))
+  default     = []
 }
 
 ################################################################################
