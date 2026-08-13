@@ -1213,9 +1213,12 @@ resource "aws_eip" "nat" {
 
   tags = merge(
     {
-      "Name" = format(
-        "${var.name}-%s",
-        element(var.azs, var.single_nat_gateway ? 0 : count.index),
+      "Name" = try(
+        var.nat_eip_names[var.single_nat_gateway ? 0 : count.index],
+        format(
+          "${var.name}-%s",
+          element(var.azs, var.single_nat_gateway ? 0 : count.index),
+        )
       )
     },
     var.tags,
@@ -1241,9 +1244,12 @@ resource "aws_nat_gateway" "this" {
 
   tags = merge(
     {
-      "Name" = format(
-        "${var.name}-%s",
-        element(var.azs, var.single_nat_gateway ? 0 : count.index),
+      "Name" = try(
+        var.nat_gateway_names[var.single_nat_gateway ? 0 : count.index],
+        format(
+          "${var.name}-%s",
+          element(var.azs, var.single_nat_gateway ? 0 : count.index),
+        )
       )
     },
     var.tags,

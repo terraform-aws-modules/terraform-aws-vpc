@@ -1257,10 +1257,22 @@ variable "external_nat_ips" {
   default     = []
 }
 
+variable "nat_gateway_names" {
+  description = "Explicit values to use in the Name tag on NAT gateways. If empty, Name tags are generated"
+  type        = list(string)
+  default     = []
+}
+
 variable "nat_gateway_tags" {
   description = "Additional tags for the NAT gateways"
   type        = map(string)
   default     = {}
+}
+
+variable "nat_eip_names" {
+  description = "Explicit values to use in the Name tag on NAT EIPs. If empty, Name tags are generated"
+  type        = list(string)
+  default     = []
 }
 
 variable "nat_eip_tags" {
