@@ -147,6 +147,9 @@ module "vpc" {
   single_nat_gateway     = true
   one_nat_gateway_per_az = false
 
+  nat_gateway_names = ["NAT Gateway One"]
+  # nat_eip_names omitted to show default name generation for the NAT EIP
+
   customer_gateways = {
     IP1 = {
       bgp_asn     = 65112
