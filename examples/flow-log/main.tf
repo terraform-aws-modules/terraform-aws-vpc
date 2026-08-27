@@ -97,10 +97,10 @@ module "flow_log_cloudwatch_external" {
   vpc_id = module.vpc.vpc_id
 
   create_cloudwatch_log_group = false
-  log_destination             = aws_cloudwatch_log_group.flow_log.arn
+  log_destination             = module.flow_log_group.cloudwatch_log_group_arn
 
   create_iam_role = false
-  iam_role_arn    = aws_iam_role.flow_log_cloudwatch.arn
+  iam_role_arn    = module.flow_log_role.arn
 
   tags = local.tags
 }
@@ -197,8 +197,8 @@ module "vpc_flow_log_cloudwatch_external" {
   create_flow_log_cloudwatch_log_group = false
   create_flow_log_cloudwatch_iam_role  = false
 
-  flow_log_destination_arn         = aws_cloudwatch_log_group.flow_log.arn
-  flow_log_cloudwatch_iam_role_arn = aws_iam_role.flow_log_cloudwatch.arn
+  flow_log_destination_arn         = module.flow_log_group.cloudwatch_log_group_arn
+  flow_log_cloudwatch_iam_role_arn = module.flow_log_role.arn
 
   tags = local.tags
 }
@@ -306,54 +306,48 @@ module "s3_bucket" {
   tags = local.tags
 }
 
-resource "aws_cloudwatch_log_group" "flow_log" {
-  name_prefix = "/aws/flow-log/vpc/${module.vpc.vpc_id}/${local.name}-external-"
+module "flow_log_group" {
+  source  = "terraform-aws-modules/cloudwatch/aws//modules/log-group"
+  version = "~> 5.0"
 
+  name_prefix       = "/aws/flow-log/vpc/${module.vpc.vpc_id}/${local.name}-external-"
   retention_in_days = 7
 
   tags = local.tags
 }
 
-resource "aws_iam_role" "flow_log_cloudwatch" {
-  name_prefix = "${local.name}-external-"
+module "flow_log_role" {
+  source  = "terraform-aws-modules/iam/aws//modules/iam-role"
+  version = "~> 6.0"
 
-  assume_role_policy = jsonencode({
-    Version = "2012-10-17"
-    Statement = [
-      {
-        Action = "sts:AssumeRole"
-        Effect = "Allow"
-        Sid    = "VPCFlowLogsAssume"
-        Principal = {
-          Service = "vpc-flow-logs.amazonaws.com"
-        }
-      },
-    ]
-  })
+  name            = "${local.name}-external"
+  use_name_prefix = true
+
+  trust_policy_permissions = {
+    VPCFlowLogsAssume = {
+      actions = ["sts:AssumeRole"]
+      principals = [{
+        type        = "Service"
+        identifiers = ["vpc-flow-logs.amazonaws.com"]
+      }]
+    }
+  }
+
+  create_inline_policy = true
+  inline_policy_permissions = {
+    logs = {
+      actions = [
+        "logs:CreateLogGroup",
+        "logs:CreateLogStream",
+        "logs:PutLogEvents",
+        "logs:DescribeLogGroups",
+        "logs:DescribeLogStreams",
+      ]
+      resources = [module.flow_log_group.cloudwatch_log_group_arn]
+    }
+  }
 
   tags = local.tags
-}
-
-resource "aws_iam_role_policy" "flow_log_cloudwatch" {
-  name_prefix = "${local.name}-external-"
-  role        = aws_iam_role.flow_log_cloudwatch.id
-
-  policy = jsonencode({
-    Version = "2012-10-17"
-    Statement = [
-      {
-        Action = [
-          "logs:CreateLogGroup",
-          "logs:CreateLogStream",
-          "logs:PutLogEvents",
-          "logs:DescribeLogGroups",
-          "logs:DescribeLogStreams",
-        ]
-        Effect   = "Allow"
-        Resource = aws_cloudwatch_log_group.flow_log.arn
-      },
-    ]
-  })
 }
 
 resource "aws_network_interface" "this" {

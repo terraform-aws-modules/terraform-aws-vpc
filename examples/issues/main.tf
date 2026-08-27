@@ -92,3 +92,13 @@ module "overlapping_public_subnets" {
     Name = "route-already-exists"
   }, local.tags)
 }
+
+################################################################################
+# Disabled
+################################################################################
+
+module "disabled" {
+  source = "../../"
+
+  create_vpc = false
+}

@@ -147,11 +147,6 @@ module "vpc" {
   single_nat_gateway     = true
   one_nat_gateway_per_az = false
 
-  # Bring your own Elastic IP rather than letting the module allocate one
-  reuse_nat_ips       = true
-  external_nat_ip_ids = aws_eip.nat[*].id
-  external_nat_ips    = aws_eip.nat[*].public_ip
-
   customer_gateways = {
     IP1 = {
       bgp_asn     = 65112
@@ -360,15 +355,6 @@ resource "aws_security_group" "rds" {
     protocol    = "tcp"
     cidr_blocks = [module.vpc.vpc_cidr_block]
   }
-
-  tags = local.tags
-}
-
-# One EIP per NAT gateway, and this example runs a single NAT gateway
-resource "aws_eip" "nat" {
-  count = 1
-
-  domain = "vpc"
 
   tags = local.tags
 }
