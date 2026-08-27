@@ -51,7 +51,13 @@ module "vpc_ipam_set_cidr" {
   use_ipam_pool     = true
   ipv4_ipam_pool_id = aws_vpc_ipam_pool.this.id
   cidr              = "10.1.0.0/16"
-  azs               = local.azs
+
+  # IPv6 allocation can come from an IPAM pool the same way IPv4 does
+  ipv6_cidr                            = null
+  ipv6_ipam_pool_id                    = null
+  ipv6_netmask_length                  = null
+  ipv6_cidr_block_network_border_group = null
+  azs                                  = local.azs
 
   private_subnets = ["10.1.1.0/24", "10.1.2.0/24", "10.1.3.0/24"]
   public_subnets  = ["10.1.11.0/24", "10.1.12.0/24", "10.1.13.0/24"]

@@ -36,12 +36,14 @@ Note that this example may create resources which can cost money (AWS Elastic IP
 | ---- | ------ | ------- |
 | <a name="module_vpc"></a> [vpc](#module\_vpc) | ../../ | n/a |
 | <a name="module_vpc_endpoints"></a> [vpc\_endpoints](#module\_vpc\_endpoints) | ../../modules/vpc-endpoints | n/a |
+| <a name="module_vpc_endpoints_existing_sg"></a> [vpc\_endpoints\_existing\_sg](#module\_vpc\_endpoints\_existing\_sg) | ../../modules/vpc-endpoints | n/a |
 | <a name="module_vpc_endpoints_nocreate"></a> [vpc\_endpoints\_nocreate](#module\_vpc\_endpoints\_nocreate) | ../../modules/vpc-endpoints | n/a |
 
 ## Resources
 
 | Name | Type |
 | ---- | ---- |
+| [aws_eip.nat](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/eip) | resource |
 | [aws_security_group.rds](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/security_group) | resource |
 | [aws_availability_zones.available](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/availability_zones) | data source |
 | [aws_iam_policy_document.dynamodb_endpoint_policy](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/iam_policy_document) | data source |
