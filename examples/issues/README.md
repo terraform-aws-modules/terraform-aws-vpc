@@ -23,20 +23,20 @@ Note that this example may create resources which can cost money (AWS Elastic IP
 ## Requirements
 
 | Name | Version |
-|------|---------|
+| ---- | ------- |
 | <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 1.0 |
 | <a name="requirement_aws"></a> [aws](#requirement\_aws) | >= 6.28 |
 
 ## Providers
 
 | Name | Version |
-|------|---------|
+| ---- | ------- |
 | <a name="provider_aws"></a> [aws](#provider\_aws) | >= 6.28 |
 
 ## Modules
 
 | Name | Source | Version |
-|------|--------|---------|
+| ---- | ------ | ------- |
 | <a name="module_vpc_issue_108"></a> [vpc\_issue\_108](#module\_vpc\_issue\_108) | ../../ | n/a |
 | <a name="module_vpc_issue_44"></a> [vpc\_issue\_44](#module\_vpc\_issue\_44) | ../../ | n/a |
 | <a name="module_vpc_issue_46"></a> [vpc\_issue\_46](#module\_vpc\_issue\_46) | ../../ | n/a |
@@ -44,7 +44,7 @@ Note that this example may create resources which can cost money (AWS Elastic IP
 ## Resources
 
 | Name | Type |
-|------|------|
+| ---- | ---- |
 | [aws_availability_zones.available](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/availability_zones) | data source |
 
 ## Inputs
@@ -54,7 +54,7 @@ No inputs.
 ## Outputs
 
 | Name | Description |
-|------|-------------|
+| ---- | ----------- |
 | <a name="output_issue_108_database_subnets"></a> [issue\_108\_database\_subnets](#output\_issue\_108\_database\_subnets) | List of IDs of database subnets |
 | <a name="output_issue_108_elasticache_subnets"></a> [issue\_108\_elasticache\_subnets](#output\_issue\_108\_elasticache\_subnets) | List of IDs of elasticache subnets |
 | <a name="output_issue_108_nat_public_ips"></a> [issue\_108\_nat\_public\_ips](#output\_issue\_108\_nat\_public\_ips) | List of public Elastic IPs created for AWS NAT Gateway |

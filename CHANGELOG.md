@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file.
 
+## [6.7.0](https://github.com/terraform-aws-modules/terraform-aws-vpc/compare/v6.6.1...v6.7.0) (2026-08-21)
+
+### Features
+
+* Support skip_destroy and deletion protection for flow log log groups ([#1305](https://github.com/terraform-aws-modules/terraform-aws-vpc/issues/1305)) ([fe98540](https://github.com/terraform-aws-modules/terraform-aws-vpc/commit/fe98540617d57ff5c7bfc74841a31a3abbd1ce8b))
+
+### Bug Fixes
+
+* Update GitHub Actions and pre-commit hook versions ([#1302](https://github.com/terraform-aws-modules/terraform-aws-vpc/issues/1302)) ([0a36bd5](https://github.com/terraform-aws-modules/terraform-aws-vpc/commit/0a36bd54069c64be2da788b2afb5df0a8e8e7398))
+
 ## [6.6.1](https://github.com/terraform-aws-modules/terraform-aws-vpc/compare/v6.6.0...v6.6.1) (2026-04-02)
 
 ### Bug Fixes
