@@ -34,6 +34,8 @@ Note that this example may create resources which can cost money (AWS Elastic IP
 
 | Name | Source | Version |
 | ---- | ------ | ------- |
+| <a name="module_disabled"></a> [disabled](#module\_disabled) | ../../ | n/a |
+| <a name="module_rds_security_group"></a> [rds\_security\_group](#module\_rds\_security\_group) | terraform-aws-modules/security-group/aws | ~> 6.0 |
 | <a name="module_vpc"></a> [vpc](#module\_vpc) | ../../ | n/a |
 | <a name="module_vpc_endpoints"></a> [vpc\_endpoints](#module\_vpc\_endpoints) | ../../modules/vpc-endpoints | n/a |
 | <a name="module_vpc_endpoints_existing_sg"></a> [vpc\_endpoints\_existing\_sg](#module\_vpc\_endpoints\_existing\_sg) | ../../modules/vpc-endpoints | n/a |
@@ -43,8 +45,6 @@ Note that this example may create resources which can cost money (AWS Elastic IP
 
 | Name | Type |
 | ---- | ---- |
-| [aws_eip.nat](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/eip) | resource |
-| [aws_security_group.rds](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/security_group) | resource |
 | [aws_availability_zones.available](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/availability_zones) | data source |
 | [aws_iam_policy_document.dynamodb_endpoint_policy](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/iam_policy_document) | data source |
 | [aws_iam_policy_document.generic_endpoint_policy](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/iam_policy_document) | data source |

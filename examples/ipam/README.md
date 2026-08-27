@@ -42,6 +42,7 @@ Note that this example may create resources which can cost money (AWS Elastic IP
 
 | Name | Source | Version |
 | ---- | ------ | ------- |
+| <a name="module_disabled"></a> [disabled](#module\_disabled) | ../.. | n/a |
 | <a name="module_vpc_ipam_pinned_cidr"></a> [vpc\_ipam\_pinned\_cidr](#module\_vpc\_ipam\_pinned\_cidr) | ../.. | n/a |
 | <a name="module_vpc_ipam_set_netmask"></a> [vpc\_ipam\_set\_netmask](#module\_vpc\_ipam\_set\_netmask) | ../.. | n/a |
 

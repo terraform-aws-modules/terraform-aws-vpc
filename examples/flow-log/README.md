@@ -41,6 +41,8 @@ Note that this example may create resources which can cost money (AWS Elastic IP
 | <a name="module_flow_log"></a> [flow\_log](#module\_flow\_log) | ../../modules/flow-log | n/a |
 | <a name="module_flow_log_cloudwatch_external"></a> [flow\_log\_cloudwatch\_external](#module\_flow\_log\_cloudwatch\_external) | ../../modules/flow-log | n/a |
 | <a name="module_flow_log_eni"></a> [flow\_log\_eni](#module\_flow\_log\_eni) | ../../modules/flow-log | n/a |
+| <a name="module_flow_log_group"></a> [flow\_log\_group](#module\_flow\_log\_group) | terraform-aws-modules/cloudwatch/aws//modules/log-group | ~> 5.0 |
+| <a name="module_flow_log_role"></a> [flow\_log\_role](#module\_flow\_log\_role) | terraform-aws-modules/iam/aws//modules/iam-role | ~> 6.0 |
 | <a name="module_flow_log_s3"></a> [flow\_log\_s3](#module\_flow\_log\_s3) | ../../modules/flow-log | n/a |
 | <a name="module_flow_log_s3_parquet"></a> [flow\_log\_s3\_parquet](#module\_flow\_log\_s3\_parquet) | ../../modules/flow-log | n/a |
 | <a name="module_flow_log_subnet"></a> [flow\_log\_subnet](#module\_flow\_log\_subnet) | ../../modules/flow-log | n/a |
@@ -54,9 +56,6 @@ Note that this example may create resources which can cost money (AWS Elastic IP
 
 | Name | Type |
 | ---- | ---- |
-| [aws_cloudwatch_log_group.flow_log](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/cloudwatch_log_group) | resource |
-| [aws_iam_role.flow_log_cloudwatch](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_role) | resource |
-| [aws_iam_role_policy.flow_log_cloudwatch](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_role_policy) | resource |
 | [aws_network_interface.this](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/network_interface) | resource |
 | [aws_availability_zones.available](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/availability_zones) | data source |
 | [aws_caller_identity.current](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/caller_identity) | data source |

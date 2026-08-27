@@ -95,6 +95,7 @@ aws ec2 --region eu-west-1 describe-vpc-block-public-access-exclusions --exclusi
 
 | Name | Source | Version |
 | ---- | ------ | ------- |
+| <a name="module_disabled"></a> [disabled](#module\_disabled) | ../../ | n/a |
 | <a name="module_vpc"></a> [vpc](#module\_vpc) | ../../ | n/a |
 
 ## Resources

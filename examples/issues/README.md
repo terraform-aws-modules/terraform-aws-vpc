@@ -40,6 +40,7 @@ Note that this example may create resources which can cost money (AWS Elastic IP
 | Name | Source | Version |
 | ---- | ------ | ------- |
 | <a name="module_asymmetrical_subnets"></a> [asymmetrical\_subnets](#module\_asymmetrical\_subnets) | ../../ | n/a |
+| <a name="module_disabled"></a> [disabled](#module\_disabled) | ../../ | n/a |
 | <a name="module_no_private_subnets"></a> [no\_private\_subnets](#module\_no\_private\_subnets) | ../../ | n/a |
 | <a name="module_overlapping_public_subnets"></a> [overlapping\_public\_subnets](#module\_overlapping\_public\_subnets) | ../../ | n/a |
 

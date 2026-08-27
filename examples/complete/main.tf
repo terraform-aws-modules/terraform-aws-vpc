@@ -260,7 +260,7 @@ module "vpc_endpoints" {
       service             = "rds"
       private_dns_enabled = true
       subnet_ids          = module.vpc.private_subnets
-      security_group_ids  = [aws_security_group.rds.id]
+      security_group_ids  = [module.rds_security_group.id]
     },
   }
 
@@ -280,7 +280,7 @@ module "vpc_endpoints_existing_sg" {
 
   create_security_group = true
   security_group_name   = "${local.name}-vpc-endpoints-fixed"
-  security_group_ids    = [aws_security_group.rds.id]
+  security_group_ids    = [module.rds_security_group.id]
 
   endpoints = {
     sts = {
@@ -297,6 +297,16 @@ module "vpc_endpoints_nocreate" {
   source = "../../modules/vpc-endpoints"
 
   create = false
+}
+
+################################################################################
+# Disabled
+################################################################################
+
+module "disabled" {
+  source = "../../"
+
+  create_vpc = false
 }
 
 ################################################################################
@@ -343,17 +353,22 @@ data "aws_iam_policy_document" "generic_endpoint_policy" {
   }
 }
 
-resource "aws_security_group" "rds" {
-  name_prefix = "${local.name}-rds"
+module "rds_security_group" {
+  source  = "terraform-aws-modules/security-group/aws"
+  version = "~> 6.0"
+
+  name        = "${local.name}-rds"
   description = "Allow PostgreSQL inbound traffic"
   vpc_id      = module.vpc.vpc_id
 
-  ingress {
-    description = "TLS from VPC"
-    from_port   = 5432
-    to_port     = 5432
-    protocol    = "tcp"
-    cidr_blocks = [module.vpc.vpc_cidr_block]
+  ingress_rules = {
+    postgresql = {
+      description = "TLS from VPC"
+      from_port   = 5432
+      to_port     = 5432
+      ip_protocol = "tcp"
+      cidr_ipv4   = module.vpc.vpc_cidr_block
+    }
   }
 
   tags = local.tags
