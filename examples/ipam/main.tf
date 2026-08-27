@@ -61,6 +61,12 @@ module "vpc_ipam_set_cidr" {
   public_subnets  = ["10.1.11.0/24", "10.1.12.0/24", "10.1.13.0/24"]
 
   tags = local.tags
+
+  # The pool CIDR has to finish provisioning before a VPC can allocate out of it, otherwise
+  # the allocation is rejected as larger than the pool
+  depends_on = [
+    aws_vpc_ipam_pool_cidr.this
+  ]
 }
 
 # # IPv6 - Requires having a CIDR plus its message and signature (see below)

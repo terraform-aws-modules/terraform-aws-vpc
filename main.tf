@@ -151,8 +151,8 @@ resource "aws_subnet" "public" {
   availability_zone                              = length(regexall("^[a-z]+-", element(var.azs, count.index))) > 0 ? element(var.azs, count.index) : null
   availability_zone_id                           = length(regexall("^[a-z]+-", element(var.azs, count.index))) == 0 ? element(var.azs, count.index) : null
   cidr_block                                     = var.public_subnet_ipv6_native ? null : element(concat(var.public_subnets, [""]), count.index)
-  enable_dns64                                   = var.enable_ipv6 && var.public_subnet_enable_dns64
-  enable_resource_name_dns_aaaa_record_on_launch = var.enable_ipv6 && var.public_subnet_enable_resource_name_dns_aaaa_record_on_launch
+  enable_dns64                                   = var.enable_ipv6 && (length(var.public_subnet_ipv6_prefixes) > 0 || var.public_subnet_ipv6_native) && var.public_subnet_enable_dns64
+  enable_resource_name_dns_aaaa_record_on_launch = var.enable_ipv6 && (length(var.public_subnet_ipv6_prefixes) > 0 || var.public_subnet_ipv6_native) && var.public_subnet_enable_resource_name_dns_aaaa_record_on_launch
   enable_resource_name_dns_a_record_on_launch    = !var.public_subnet_ipv6_native && var.public_subnet_enable_resource_name_dns_a_record_on_launch
   ipv6_cidr_block                                = var.enable_ipv6 && length(var.public_subnet_ipv6_prefixes) > 0 ? cidrsubnet(aws_vpc.this[0].ipv6_cidr_block, 8, var.public_subnet_ipv6_prefixes[count.index]) : null
   ipv6_native                                    = var.enable_ipv6 && var.public_subnet_ipv6_native
@@ -299,8 +299,8 @@ resource "aws_subnet" "private" {
   availability_zone                              = length(regexall("^[a-z]+-", element(var.azs, count.index))) > 0 ? element(var.azs, count.index) : null
   availability_zone_id                           = length(regexall("^[a-z]+-", element(var.azs, count.index))) == 0 ? element(var.azs, count.index) : null
   cidr_block                                     = var.private_subnet_ipv6_native ? null : element(concat(var.private_subnets, [""]), count.index)
-  enable_dns64                                   = var.enable_ipv6 && var.private_subnet_enable_dns64
-  enable_resource_name_dns_aaaa_record_on_launch = var.enable_ipv6 && var.private_subnet_enable_resource_name_dns_aaaa_record_on_launch
+  enable_dns64                                   = var.enable_ipv6 && (length(var.private_subnet_ipv6_prefixes) > 0 || var.private_subnet_ipv6_native) && var.private_subnet_enable_dns64
+  enable_resource_name_dns_aaaa_record_on_launch = var.enable_ipv6 && (length(var.private_subnet_ipv6_prefixes) > 0 || var.private_subnet_ipv6_native) && var.private_subnet_enable_resource_name_dns_aaaa_record_on_launch
   enable_resource_name_dns_a_record_on_launch    = !var.private_subnet_ipv6_native && var.private_subnet_enable_resource_name_dns_a_record_on_launch
   ipv6_cidr_block                                = var.enable_ipv6 && length(var.private_subnet_ipv6_prefixes) > 0 ? cidrsubnet(aws_vpc.this[0].ipv6_cidr_block, 8, var.private_subnet_ipv6_prefixes[count.index]) : null
   ipv6_native                                    = var.enable_ipv6 && var.private_subnet_ipv6_native
@@ -431,8 +431,8 @@ resource "aws_subnet" "database" {
   availability_zone                              = length(regexall("^[a-z]+-", element(var.azs, count.index))) > 0 ? element(var.azs, count.index) : null
   availability_zone_id                           = length(regexall("^[a-z]+-", element(var.azs, count.index))) == 0 ? element(var.azs, count.index) : null
   cidr_block                                     = var.database_subnet_ipv6_native ? null : element(concat(var.database_subnets, [""]), count.index)
-  enable_dns64                                   = var.enable_ipv6 && var.database_subnet_enable_dns64
-  enable_resource_name_dns_aaaa_record_on_launch = var.enable_ipv6 && var.database_subnet_enable_resource_name_dns_aaaa_record_on_launch
+  enable_dns64                                   = var.enable_ipv6 && (length(var.database_subnet_ipv6_prefixes) > 0 || var.database_subnet_ipv6_native) && var.database_subnet_enable_dns64
+  enable_resource_name_dns_aaaa_record_on_launch = var.enable_ipv6 && (length(var.database_subnet_ipv6_prefixes) > 0 || var.database_subnet_ipv6_native) && var.database_subnet_enable_resource_name_dns_aaaa_record_on_launch
   enable_resource_name_dns_a_record_on_launch    = !var.database_subnet_ipv6_native && var.database_subnet_enable_resource_name_dns_a_record_on_launch
   ipv6_cidr_block                                = var.enable_ipv6 && length(var.database_subnet_ipv6_prefixes) > 0 ? cidrsubnet(aws_vpc.this[0].ipv6_cidr_block, 8, var.database_subnet_ipv6_prefixes[count.index]) : null
   ipv6_native                                    = var.enable_ipv6 && var.database_subnet_ipv6_native
@@ -489,7 +489,7 @@ resource "aws_route_table" "database" {
 }
 
 resource "aws_route_table_association" "database" {
-  count = local.create_database_subnets ? local.len_database_subnets : 0
+  count = local.create_database_subnets && (local.create_database_route_table || local.create_private_subnets) ? local.len_database_subnets : 0
 
   region = var.region
 
@@ -529,7 +529,7 @@ resource "aws_route" "database_nat_gateway" {
 }
 
 resource "aws_route" "database_dns64_nat_gateway" {
-  count = local.create_database_route_table && !var.create_database_internet_gateway_route && var.create_database_nat_gateway_route && var.enable_nat_gateway && var.enable_ipv6 && var.private_subnet_enable_dns64 ? var.single_nat_gateway ? 1 : local.len_database_subnets : 0
+  count = local.create_database_route_table && !var.create_database_internet_gateway_route && var.create_database_nat_gateway_route && var.enable_nat_gateway && var.enable_ipv6 && (length(var.private_subnet_ipv6_prefixes) > 0 || var.private_subnet_ipv6_native) && var.private_subnet_enable_dns64 ? var.single_nat_gateway ? 1 : local.len_database_subnets : 0
 
   region = var.region
 
@@ -635,8 +635,8 @@ resource "aws_subnet" "redshift" {
   availability_zone                              = length(regexall("^[a-z]+-", element(var.azs, count.index))) > 0 ? element(var.azs, count.index) : null
   availability_zone_id                           = length(regexall("^[a-z]+-", element(var.azs, count.index))) == 0 ? element(var.azs, count.index) : null
   cidr_block                                     = var.redshift_subnet_ipv6_native ? null : element(concat(var.redshift_subnets, [""]), count.index)
-  enable_dns64                                   = var.enable_ipv6 && var.redshift_subnet_enable_dns64
-  enable_resource_name_dns_aaaa_record_on_launch = var.enable_ipv6 && var.redshift_subnet_enable_resource_name_dns_aaaa_record_on_launch
+  enable_dns64                                   = var.enable_ipv6 && (length(var.redshift_subnet_ipv6_prefixes) > 0 || var.redshift_subnet_ipv6_native) && var.redshift_subnet_enable_dns64
+  enable_resource_name_dns_aaaa_record_on_launch = var.enable_ipv6 && (length(var.redshift_subnet_ipv6_prefixes) > 0 || var.redshift_subnet_ipv6_native) && var.redshift_subnet_enable_resource_name_dns_aaaa_record_on_launch
   enable_resource_name_dns_a_record_on_launch    = !var.redshift_subnet_ipv6_native && var.redshift_subnet_enable_resource_name_dns_a_record_on_launch
   ipv6_cidr_block                                = var.enable_ipv6 && length(var.redshift_subnet_ipv6_prefixes) > 0 ? cidrsubnet(aws_vpc.this[0].ipv6_cidr_block, 8, var.redshift_subnet_ipv6_prefixes[count.index]) : null
   ipv6_native                                    = var.enable_ipv6 && var.redshift_subnet_ipv6_native
@@ -686,7 +686,7 @@ resource "aws_route_table" "redshift" {
 }
 
 resource "aws_route_table_association" "redshift" {
-  count = local.create_redshift_subnets && !var.enable_public_redshift ? local.len_redshift_subnets : 0
+  count = local.create_redshift_subnets && !var.enable_public_redshift && (local.create_redshift_route_table || local.create_private_subnets) ? local.len_redshift_subnets : 0
 
   region = var.region
 
@@ -698,7 +698,7 @@ resource "aws_route_table_association" "redshift" {
 }
 
 resource "aws_route_table_association" "redshift_public" {
-  count = local.create_redshift_subnets && var.enable_public_redshift ? local.len_redshift_subnets : 0
+  count = local.create_redshift_subnets && var.enable_public_redshift && (local.create_redshift_route_table || local.create_public_subnets) ? local.len_redshift_subnets : 0
 
   region = var.region
 
@@ -788,8 +788,8 @@ resource "aws_subnet" "elasticache" {
   availability_zone                              = length(regexall("^[a-z]+-", element(var.azs, count.index))) > 0 ? element(var.azs, count.index) : null
   availability_zone_id                           = length(regexall("^[a-z]+-", element(var.azs, count.index))) == 0 ? element(var.azs, count.index) : null
   cidr_block                                     = var.elasticache_subnet_ipv6_native ? null : element(concat(var.elasticache_subnets, [""]), count.index)
-  enable_dns64                                   = var.enable_ipv6 && var.elasticache_subnet_enable_dns64
-  enable_resource_name_dns_aaaa_record_on_launch = var.enable_ipv6 && var.elasticache_subnet_enable_resource_name_dns_aaaa_record_on_launch
+  enable_dns64                                   = var.enable_ipv6 && (length(var.elasticache_subnet_ipv6_prefixes) > 0 || var.elasticache_subnet_ipv6_native) && var.elasticache_subnet_enable_dns64
+  enable_resource_name_dns_aaaa_record_on_launch = var.enable_ipv6 && (length(var.elasticache_subnet_ipv6_prefixes) > 0 || var.elasticache_subnet_ipv6_native) && var.elasticache_subnet_enable_resource_name_dns_aaaa_record_on_launch
   enable_resource_name_dns_a_record_on_launch    = !var.elasticache_subnet_ipv6_native && var.elasticache_subnet_enable_resource_name_dns_a_record_on_launch
   ipv6_cidr_block                                = var.enable_ipv6 && length(var.elasticache_subnet_ipv6_prefixes) > 0 ? cidrsubnet(aws_vpc.this[0].ipv6_cidr_block, 8, var.elasticache_subnet_ipv6_prefixes[count.index]) : null
   ipv6_native                                    = var.enable_ipv6 && var.elasticache_subnet_ipv6_native
@@ -839,7 +839,7 @@ resource "aws_route_table" "elasticache" {
 }
 
 resource "aws_route_table_association" "elasticache" {
-  count = local.create_elasticache_subnets ? local.len_elasticache_subnets : 0
+  count = local.create_elasticache_subnets && (local.create_elasticache_route_table || local.create_private_subnets) ? local.len_elasticache_subnets : 0
 
   region = var.region
 
@@ -932,8 +932,8 @@ resource "aws_subnet" "intra" {
   availability_zone                              = length(regexall("^[a-z]+-", element(var.azs, count.index))) > 0 ? element(var.azs, count.index) : null
   availability_zone_id                           = length(regexall("^[a-z]+-", element(var.azs, count.index))) == 0 ? element(var.azs, count.index) : null
   cidr_block                                     = var.intra_subnet_ipv6_native ? null : element(concat(var.intra_subnets, [""]), count.index)
-  enable_dns64                                   = var.enable_ipv6 && var.intra_subnet_enable_dns64
-  enable_resource_name_dns_aaaa_record_on_launch = var.enable_ipv6 && var.intra_subnet_enable_resource_name_dns_aaaa_record_on_launch
+  enable_dns64                                   = var.enable_ipv6 && (length(var.intra_subnet_ipv6_prefixes) > 0 || var.intra_subnet_ipv6_native) && var.intra_subnet_enable_dns64
+  enable_resource_name_dns_aaaa_record_on_launch = var.enable_ipv6 && (length(var.intra_subnet_ipv6_prefixes) > 0 || var.intra_subnet_ipv6_native) && var.intra_subnet_enable_resource_name_dns_aaaa_record_on_launch
   enable_resource_name_dns_a_record_on_launch    = !var.intra_subnet_ipv6_native && var.intra_subnet_enable_resource_name_dns_a_record_on_launch
   ipv6_cidr_block                                = var.enable_ipv6 && length(var.intra_subnet_ipv6_prefixes) > 0 ? cidrsubnet(aws_vpc.this[0].ipv6_cidr_block, 8, var.intra_subnet_ipv6_prefixes[count.index]) : null
   ipv6_native                                    = var.enable_ipv6 && var.intra_subnet_ipv6_native
@@ -1058,8 +1058,8 @@ resource "aws_subnet" "outpost" {
   availability_zone                              = var.outpost_az
   cidr_block                                     = var.outpost_subnet_ipv6_native ? null : element(concat(var.outpost_subnets, [""]), count.index)
   customer_owned_ipv4_pool                       = var.customer_owned_ipv4_pool
-  enable_dns64                                   = var.enable_ipv6 && var.outpost_subnet_enable_dns64
-  enable_resource_name_dns_aaaa_record_on_launch = var.enable_ipv6 && var.outpost_subnet_enable_resource_name_dns_aaaa_record_on_launch
+  enable_dns64                                   = var.enable_ipv6 && (length(var.outpost_subnet_ipv6_prefixes) > 0 || var.outpost_subnet_ipv6_native) && var.outpost_subnet_enable_dns64
+  enable_resource_name_dns_aaaa_record_on_launch = var.enable_ipv6 && (length(var.outpost_subnet_ipv6_prefixes) > 0 || var.outpost_subnet_ipv6_native) && var.outpost_subnet_enable_resource_name_dns_aaaa_record_on_launch
   enable_resource_name_dns_a_record_on_launch    = !var.outpost_subnet_ipv6_native && var.outpost_subnet_enable_resource_name_dns_a_record_on_launch
   ipv6_cidr_block                                = var.enable_ipv6 && length(var.outpost_subnet_ipv6_prefixes) > 0 ? cidrsubnet(aws_vpc.this[0].ipv6_cidr_block, 8, var.outpost_subnet_ipv6_prefixes[count.index]) : null
   ipv6_native                                    = var.enable_ipv6 && var.outpost_subnet_ipv6_native
@@ -1268,7 +1268,7 @@ resource "aws_route" "private_nat_gateway" {
 }
 
 resource "aws_route" "private_dns64_nat_gateway" {
-  count = local.create_vpc && var.enable_nat_gateway && var.enable_ipv6 && var.private_subnet_enable_dns64 ? local.nat_gateway_count : 0
+  count = local.create_vpc && var.enable_nat_gateway && var.enable_ipv6 && (length(var.private_subnet_ipv6_prefixes) > 0 || var.private_subnet_ipv6_native) && var.private_subnet_enable_dns64 ? local.nat_gateway_count : 0
 
   region = var.region
 
