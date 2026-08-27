@@ -8,8 +8,7 @@ locals {
   name   = "ex-${basename(path.cwd)}"
   region = "eu-west-1"
 
-  azs               = slice(data.aws_availability_zones.available.names, 0, 3)
-  preview_partition = cidrsubnets(aws_vpc_ipam_preview_next_cidr.this.cidr, 2, 2, 2)
+  azs = slice(data.aws_availability_zones.available.names, 0, 3)
 
   tags = {
     Example    = local.name
@@ -33,9 +32,8 @@ module "vpc_ipam_set_netmask" {
   ipv4_netmask_length = 16
   azs                 = local.azs
 
-  private_subnets = cidrsubnets(local.preview_partition[0], 2, 2, 2)
-  public_subnets  = cidrsubnets(local.preview_partition[1], 2, 2, 2)
-
+  # No subnets here on purpose: when IPAM picks the CIDR it is not known until apply, so
+  # any subnet count derived from it cannot be planned. See the note below
   tags = local.tags
 
   depends_on = [
@@ -86,12 +84,15 @@ module "vpc_ipam_set_cidr" {
 
 # NOTES ON IPAM USAGE:
 #
-# In order to build subnets with your VPC Terraform must know subnet CIDRs to properly plan # of resources to build.
-# Since CIDR is derived by IPAM by calling CreateVpc this is not possible within a module unless cidr is known ahead of time.
-# We can get around this by "previewing" the CIDR and then using that as the subnet values.
+# Terraform has to know the subnet CIDRs at plan time to work out how many resources to
+# create. When IPAM chooses the CIDR, it is only known after `CreateVpc` has run, so the
+# subnet counts cannot be planned in the same pass. `aws_vpc_ipam_preview_next_cidr` does not
+# solve this: its `cidr` is a computed resource attribute, so it is still unknown on the
+# first plan and every subnet `count` derived from it fails with "Invalid count argument".
 #
-# In the example above we use `cidrsubnets()` to calculate a public and private "partitions" (group of cidrs) then calculate the specific
-# CIDRs for each subnet type.
+# So there are two ways to use this module with IPAM: let IPAM allocate the CIDR and define no
+# subnets, as `set-netmask` does, or pass a CIDR you already know and define subnets against
+# it, as `set-cidr` does.
 #
 # For an explanation on prolonged delete times on IPAM pools see 2nd
 # *note* in terraform docs: https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/vpc_ipam_pool_cidr
@@ -118,14 +119,6 @@ resource "aws_vpc_ipam_pool" "this" {
 resource "aws_vpc_ipam_pool_cidr" "this" {
   ipam_pool_id = aws_vpc_ipam_pool.this.id
   cidr         = "10.0.0.0/8"
-}
-
-resource "aws_vpc_ipam_preview_next_cidr" "this" {
-  ipam_pool_id = aws_vpc_ipam_pool.this.id
-
-  depends_on = [
-    aws_vpc_ipam_pool_cidr.this
-  ]
 }
 
 # IPv6

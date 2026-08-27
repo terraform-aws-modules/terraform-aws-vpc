@@ -256,6 +256,11 @@ module "vpc" {
   tags = local.tags
 }
 
+# The bundled WAF log delivery policy is close but not sufficient: flow log delivery writes
+# under `AWSLogs/aws-account-id=<id>/` when hive compatible partitions are on, and AWS adds
+# that statement to the bucket policy itself. Since this module owns the policy, Terraform
+# removes it again on the next plan, which is a permanent diff. Granting the path up front is
+# what makes the second plan clean
 module "s3_bucket" {
   source  = "terraform-aws-modules/s3-bucket/aws"
   version = "~> 5.0"
@@ -263,8 +268,40 @@ module "s3_bucket" {
   bucket_prefix = "${local.name}-"
   force_destroy = true
 
-  # Policy works for flow logs as well
-  attach_waf_log_delivery_policy = true
+  attach_policy = true
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Sid       = "AWSLogDeliveryAclCheck"
+        Effect    = "Allow"
+        Principal = { Service = "delivery.logs.amazonaws.com" }
+        Action    = "s3:GetBucketAcl"
+        Resource  = "_S3_BUCKET_ARN_"
+        Condition = {
+          StringEquals = { "aws:SourceAccount" = data.aws_caller_identity.current.account_id }
+          ArnLike      = { "aws:SourceArn" = "arn:aws:logs:${local.region}:${data.aws_caller_identity.current.account_id}:*" }
+        }
+      },
+      {
+        Sid       = "AWSLogDeliveryWrite"
+        Effect    = "Allow"
+        Principal = { Service = "delivery.logs.amazonaws.com" }
+        Action    = "s3:PutObject"
+        Resource = [
+          "_S3_BUCKET_ARN_/AWSLogs/${data.aws_caller_identity.current.account_id}/*",
+          "_S3_BUCKET_ARN_/AWSLogs/aws-account-id=${data.aws_caller_identity.current.account_id}/*",
+        ]
+        Condition = {
+          StringEquals = {
+            "aws:SourceAccount" = data.aws_caller_identity.current.account_id
+            "s3:x-amz-acl"      = "bucket-owner-full-control"
+          }
+          ArnLike = { "aws:SourceArn" = "arn:aws:logs:${local.region}:${data.aws_caller_identity.current.account_id}:*" }
+        }
+      },
+    ]
+  })
 
   tags = local.tags
 }
