@@ -42,7 +42,7 @@ Note that this example may create resources which can cost money (AWS Elastic IP
 
 | Name | Source | Version |
 | ---- | ------ | ------- |
-| <a name="module_vpc_ipam_set_cidr"></a> [vpc\_ipam\_set\_cidr](#module\_vpc\_ipam\_set\_cidr) | ../.. | n/a |
+| <a name="module_vpc_ipam_pinned_cidr"></a> [vpc\_ipam\_pinned\_cidr](#module\_vpc\_ipam\_pinned\_cidr) | ../.. | n/a |
 | <a name="module_vpc_ipam_set_netmask"></a> [vpc\_ipam\_set\_netmask](#module\_vpc\_ipam\_set\_netmask) | ../.. | n/a |
 
 ## Resources
@@ -53,7 +53,6 @@ Note that this example may create resources which can cost money (AWS Elastic IP
 | [aws_vpc_ipam_pool.ipv6](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/vpc_ipam_pool) | resource |
 | [aws_vpc_ipam_pool.this](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/vpc_ipam_pool) | resource |
 | [aws_vpc_ipam_pool_cidr.this](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/vpc_ipam_pool_cidr) | resource |
-| [aws_vpc_ipam_preview_next_cidr.this](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/vpc_ipam_preview_next_cidr) | resource |
 | [aws_availability_zones.available](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/availability_zones) | data source |
 
 ## Inputs

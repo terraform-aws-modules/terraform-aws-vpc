@@ -88,7 +88,7 @@ No modules.
 | <a name="input_cloudwatch_log_group_use_name_prefix"></a> [cloudwatch\_log\_group\_use\_name\_prefix](#input\_cloudwatch\_log\_group\_use\_name\_prefix) | Determines whether the log group name should be used as a prefix | `bool` | `true` | no |
 | <a name="input_create"></a> [create](#input\_create) | Determines whether resources will be created (affects all resources) | `bool` | `true` | no |
 | <a name="input_create_cloudwatch_log_group"></a> [create\_cloudwatch\_log\_group](#input\_create\_cloudwatch\_log\_group) | Determines whether to create a CloudWatch log group for the Flow Logs | `bool` | `true` | no |
-| <a name="input_create_iam_role"></a> [create\_iam\_role](#input\_create\_iam\_role) | Determines whether the ECS service IAM role should be created | `bool` | `true` | no |
+| <a name="input_create_iam_role"></a> [create\_iam\_role](#input\_create\_iam\_role) | Determines whether the flow log IAM role should be created | `bool` | `true` | no |
 | <a name="input_deliver_cross_account_role"></a> [deliver\_cross\_account\_role](#input\_deliver\_cross\_account\_role) | ARN of the IAM role in the destination account used for cross-account delivery of flow logs | `string` | `null` | no |
 | <a name="input_destination_options"></a> [destination\_options](#input\_destination\_options) | Describes the destination options for a flow log | <pre>object({<br/>    file_format                = optional(string)<br/>    hive_compatible_partitions = optional(bool)<br/>    per_hour_partition         = optional(bool)<br/>  })</pre> | `null` | no |
 | <a name="input_eni_id"></a> [eni\_id](#input\_eni\_id) | Elastic Network Interface ID to attach to | `string` | `null` | no |

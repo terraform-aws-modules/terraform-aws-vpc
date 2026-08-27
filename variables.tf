@@ -128,6 +128,9 @@ variable "vpc_tags" {
   default     = {}
 }
 
+# TODO: type this as an object. It is read by key like one, but the resource is gated on
+# `length(keys(...)) > 0`, and an object with optional attributes always reports every
+# attribute name, so the gate would stop working. Changing both together is breaking
 variable "vpc_block_public_access_options" {
   description = "A map of VPC block public access options"
   type        = map(string)
