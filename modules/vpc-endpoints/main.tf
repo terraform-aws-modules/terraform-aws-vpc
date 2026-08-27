@@ -68,9 +68,9 @@ resource "aws_vpc_endpoint" "this" {
   )
 
   timeouts {
-    create = try(var.timeouts.create, "10m")
-    update = try(var.timeouts.update, "10m")
-    delete = try(var.timeouts.delete, "10m")
+    create = var.timeouts.create
+    update = var.timeouts.update
+    delete = var.timeouts.delete
   }
 }
 

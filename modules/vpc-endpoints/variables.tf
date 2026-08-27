@@ -67,8 +67,12 @@ variable "tags" {
 
 variable "timeouts" {
   description = "Define maximum timeout for creating, updating, and deleting VPC endpoint resources"
-  type        = map(string)
-  default     = {}
+  type = object({
+    create = optional(string, "10m")
+    update = optional(string, "10m")
+    delete = optional(string, "10m")
+  })
+  default = {}
 }
 
 ################################################################################
