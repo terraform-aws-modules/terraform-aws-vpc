@@ -1,4 +1,4 @@
-# AWS Flow Log Terraform Module
+# AWS VPC Flow Log Terraform sub-module
 
 Terraform module which creates AWS Flow Log resources.
 

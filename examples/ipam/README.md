@@ -9,17 +9,17 @@ Note: Due to the nature of vending CIDR blocks from an IPAM pool, the IPAM pool 
 To run this example you need to execute:
 
 ```bash
-$ terraform init
-$ terraform plan
-$ terraform apply -target=aws_vpc_ipam_preview_next_cidr.this # CIDR pool must exist before assigning CIDR from pool
-$ terraform apply
+terraform init
+terraform plan
+terraform apply -target=aws_vpc_ipam_preview_next_cidr.this # CIDR pool must exist before assigning CIDR from pool
+terraform apply
 ```
 
 To destroy this example you can execute:
 
 ```bash
-$ terraform destroy -target=module.vpc # destroy VPC that uses the IPAM pool CIDR first
-$ terraform destroy
+terraform destroy -target=module.vpc # destroy VPC that uses the IPAM pool CIDR first
+terraform destroy
 ```
 
 Note that this example may create resources which can cost money (AWS Elastic IP, for example). Run `terraform destroy` when you don't need these resources.
