@@ -18,33 +18,8 @@ variable "vpc_id" {
 
 variable "endpoints" {
   description = "A map of interface and/or gateway endpoints containing their properties and configurations"
-  type = map(object({
-    create = optional(bool, true)
-
-    auto_accept = optional(bool)
-    dns_options = optional(object({
-      dns_record_ip_type                             = optional(string)
-      private_dns_only_for_inbound_resolver_endpoint = optional(bool)
-    }))
-    ip_address_type     = optional(string)
-    policy              = optional(string)
-    private_dns_enabled = optional(bool)
-    route_table_ids     = optional(list(string))
-    security_group_ids  = optional(list(string), [])
-    service             = optional(string)
-    service_endpoint    = optional(string)
-    service_name        = optional(string)
-    service_region      = optional(string)
-    service_type        = optional(string, "Interface")
-    subnet_configurations = optional(list(object({
-      ipv4      = optional(string)
-      ipv6      = optional(string)
-      subnet_id = optional(string)
-    })), [])
-    subnet_ids = optional(list(string), [])
-    tags       = optional(map(string), {})
-  }))
-  default = {}
+  type        = any
+  default     = {}
 }
 
 variable "security_group_ids" {
@@ -67,12 +42,8 @@ variable "tags" {
 
 variable "timeouts" {
   description = "Define maximum timeout for creating, updating, and deleting VPC endpoint resources"
-  type = object({
-    create = optional(string, "10m")
-    update = optional(string, "10m")
-    delete = optional(string, "10m")
-  })
-  default = {}
+  type        = map(string)
+  default     = {}
 }
 
 ################################################################################
@@ -105,19 +76,8 @@ variable "security_group_description" {
 
 variable "security_group_rules" {
   description = "Security group rules to add to the security group created"
-  type = map(object({
-    cidr_blocks              = optional(list(string))
-    description              = optional(string)
-    from_port                = optional(number, 443)
-    ipv6_cidr_blocks         = optional(list(string))
-    prefix_list_ids          = optional(list(string))
-    protocol                 = optional(string, "tcp")
-    self                     = optional(bool)
-    source_security_group_id = optional(string)
-    to_port                  = optional(number, 443)
-    type                     = optional(string, "ingress")
-  }))
-  default = {}
+  type        = any
+  default     = {}
 }
 
 variable "security_group_tags" {
