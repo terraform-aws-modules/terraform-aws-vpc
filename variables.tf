@@ -136,8 +136,15 @@ variable "vpc_block_public_access_options" {
 
 variable "vpc_block_public_access_exclusions" {
   description = "A map of VPC block public access exclusions"
-  type        = map(any)
-  default     = {}
+  type = map(object({
+    exclude_vpc                     = optional(bool, false)
+    exclude_subnet                  = optional(bool, false)
+    subnet_type                     = optional(string)
+    subnet_index                    = optional(number)
+    internet_gateway_exclusion_mode = string
+    tags                            = optional(map(string), {})
+  }))
+  default = {}
 }
 
 ################################################################################
@@ -1416,8 +1423,13 @@ variable "nat_eip_tags" {
 
 variable "customer_gateways" {
   description = "Maps of Customer Gateway's attributes (BGP ASN and Gateway's Internet-routable external IP address)"
-  type        = map(map(any))
-  default     = {}
+  type = map(object({
+    bgp_asn          = optional(string)
+    bgp_asn_extended = optional(string)
+    device_name      = optional(string)
+    ip_address       = string
+  }))
+  default = {}
 }
 
 variable "customer_gateway_tags" {

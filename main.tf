@@ -76,9 +76,9 @@ resource "aws_vpc_block_public_access_exclusion" "this" {
 
   region = var.region
 
-  vpc_id = try(each.value.exclude_vpc, false) ? local.vpc_id : null
+  vpc_id = each.value.exclude_vpc ? local.vpc_id : null
 
-  subnet_id = try(each.value.exclude_subnet, false) ? lookup(
+  subnet_id = each.value.exclude_subnet ? lookup(
     {
       private     = aws_subnet.private[*].id,
       public      = aws_subnet.public[*].id,
@@ -96,7 +96,7 @@ resource "aws_vpc_block_public_access_exclusion" "this" {
 
   tags = merge(
     var.tags,
-    try(each.value.tags, {}),
+    each.value.tags,
   )
 }
 
@@ -1290,10 +1290,10 @@ resource "aws_customer_gateway" "this" {
 
   region = var.region
 
-  bgp_asn          = lookup(each.value, "bgp_asn", null)
-  bgp_asn_extended = lookup(each.value, "bgp_asn_extended", null)
-  ip_address       = each.value["ip_address"]
-  device_name      = lookup(each.value, "device_name", null)
+  bgp_asn          = each.value.bgp_asn
+  bgp_asn_extended = each.value.bgp_asn_extended
+  ip_address       = each.value.ip_address
+  device_name      = each.value.device_name
   type             = "ipsec.1"
 
   tags = merge(
