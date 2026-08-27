@@ -2,7 +2,7 @@
 
 If you have any questions regarding this upgrade process, please consult the `examples` directory:
 
-- [Complete-VPC](https://github.com/terraform-aws-modules/terraform-aws-vpc/tree/master/examples/complete-vpc)
+- [Complete-VPC](https://github.com/terraform-aws-modules/terraform-aws-vpc/tree/master/examples/complete)
 
 If you find a bug, please open an issue with supporting configuration to reproduce.
 
@@ -41,7 +41,7 @@ terraform state rm 'module.vpc.aws_vpc_endpoint_route_table_association.public_d
 
 2. Renamed variables:
 
-See the [VPC endpoint sub-module](modules/vpc-endpoints) for the more information on the variables to utilize for VPC endpoints
+See the [VPC endpoint sub-module](../modules/vpc-endpoints) for the more information on the variables to utilize for VPC endpoints
 
 3. Removed outputs:
 
@@ -49,4 +49,4 @@ See the [VPC endpoint sub-module](modules/vpc-endpoints) for the more informatio
 
 4. Renamed outputs:
 
-VPC endpoint outputs are now provided via the VPC endpoint sub-module and can be accessed via lookups. See [`complete-vpc`](https://github.com/terraform-aws-modules/terraform-aws-vpc/tree/master/examples/complete-vpc) for further examples of how to access VPC endpoint attributes from outputs
+VPC endpoint outputs are now provided via the VPC endpoint sub-module and can be accessed via lookups. See [`complete-vpc`](https://github.com/terraform-aws-modules/terraform-aws-vpc/tree/master/examples/complete) for further examples of how to access VPC endpoint attributes from outputs
