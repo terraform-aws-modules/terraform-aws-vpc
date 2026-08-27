@@ -56,6 +56,28 @@ module "vpc_ipam_set_netmask" {
 #   tags = local.tags
 # }
 
+# Pinning the CIDR is done by passing `ipv4_ipam_pool_id` with an explicit `cidr` and leaving
+# `use_ipam_pool` alone. That requests exactly this range from the pool, so it is known at
+# plan time and subnets can be defined against it
+module "vpc_ipam_pinned_cidr" {
+  source = "../.."
+
+  name = "${local.name}-pinned-cidr"
+
+  ipv4_ipam_pool_id = aws_vpc_ipam_pool.this.id
+  cidr              = "10.1.0.0/16"
+  azs               = local.azs
+
+  private_subnets = ["10.1.1.0/24", "10.1.2.0/24", "10.1.3.0/24"]
+  public_subnets  = ["10.1.11.0/24", "10.1.12.0/24", "10.1.13.0/24"]
+
+  tags = local.tags
+
+  depends_on = [
+    aws_vpc_ipam_pool_cidr.this
+  ]
+}
+
 ################################################################################
 # Supporting Resources
 ################################################################################
@@ -69,11 +91,12 @@ module "vpc_ipam_set_netmask" {
 # first plan and every subnet `count` derived from it fails with "Invalid count argument".
 #
 # So there are two ways to use this module with IPAM: let IPAM allocate the CIDR and define no
-# subnets, as this example does, or do not use IPAM for that VPC at all and pass a CIDR you
-# already know.
+# subnets, as `set-netmask` does, or request one specific CIDR from the pool and define
+# subnets against it, as `pinned-cidr` does.
 #
-# Note that `cidr` is ignored whenever `use_ipam_pool = true`: the module sets `cidr_block` to
-# null and lets IPAM choose. Asking IPAM for one specific CIDR is not supported today.
+# The difference is `use_ipam_pool`. When it is true the module sets `cidr_block` to null and
+# IPAM chooses, so any `cidr` you pass is ignored. Leave it alone and pass `ipv4_ipam_pool_id`
+# with `cidr` to ask for a specific range instead.
 #
 # For an explanation on prolonged delete times on IPAM pools see 2nd
 # *note* in terraform docs: https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/vpc_ipam_pool_cidr

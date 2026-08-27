@@ -171,7 +171,7 @@ variable "cloudwatch_log_group_tags" {
 ################################################################################
 
 variable "create_iam_role" {
-  description = "Determines whether the ECS service IAM role should be created"
+  description = "Determines whether the flow log IAM role should be created"
   type        = bool
   default     = true
 }

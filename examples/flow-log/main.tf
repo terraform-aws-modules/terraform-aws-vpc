@@ -135,7 +135,7 @@ module "flow_log_s3_parquet" {
 }
 
 ################################################################################
-# VPC Module: flow logs built in to the root module
+# VPC Module Flow Logs
 ################################################################################
 
 # The root module can create the log group, the IAM role and the flow log itself

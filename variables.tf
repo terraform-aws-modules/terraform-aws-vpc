@@ -70,9 +70,10 @@ variable "enable_network_address_usage_metrics" {
   default     = null
 }
 
-# TODO: `cidr` is silently ignored when this is true, because `cidr_block` is set to null and
-# IPAM chooses the range. Honouring an explicit `cidr` would change the range existing callers
-# receive, so it has to wait for a major
+# TODO: the name invites passing `cidr` alongside it, which is then silently ignored because
+# `cidr_block` is set to null and IPAM chooses the range (reported in #1135). To request one
+# specific range, leave this alone and pass `ipv4_ipam_pool_id` with `cidr`. Renaming this to
+# something like `ipam_chooses_cidr` is breaking, so it waits for a major
 variable "use_ipam_pool" {
   description = "Determines whether IPAM pool is used for CIDR allocation"
   type        = bool
@@ -1691,19 +1692,19 @@ variable "vpc_flow_log_iam_policy_use_name_prefix" {
 }
 
 variable "flow_log_max_aggregation_interval" {
-  description = "The maximum interval of time during which a flow of packets is captured and aggregated into a flow log record. Valid Values: `60` seconds or `600` seconds"
+  description = "The maximum interval of time during which a flow of packets is captured and aggregated into a flow log record. Valid Values: `60` seconds (1 minute) or `600` seconds (10 minutes). Default: `600`"
   type        = number
   default     = 600
 }
 
 variable "flow_log_traffic_type" {
-  description = "The type of traffic to capture. Valid values: ACCEPT, REJECT, ALL"
+  description = "The type of traffic to capture. Valid values: `ACCEPT`, `REJECT`, `ALL`"
   type        = string
   default     = "ALL"
 }
 
 variable "flow_log_destination_type" {
-  description = "Type of flow log destination. Can be s3, kinesis-data-firehose or cloud-watch-logs"
+  description = "Logging destination type. Valid values: `cloud-watch-logs`, `s3`, `kinesis-data-firehose`. Default: `cloud-watch-logs`"
   type        = string
   default     = "cloud-watch-logs"
 }
@@ -1813,7 +1814,7 @@ variable "flow_log_cloudwatch_log_group_skip_destroy" {
 }
 
 variable "flow_log_cloudwatch_log_group_class" {
-  description = "Specified the log class of the log group. Possible values are: STANDARD or INFREQUENT_ACCESS"
+  description = "Specified the log class of the log group. Possible values are: `STANDARD` or `INFREQUENT_ACCESS`"
   type        = string
   default     = null
 }
