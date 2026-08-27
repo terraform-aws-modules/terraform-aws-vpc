@@ -41,34 +41,6 @@ module "vpc_ipam_set_netmask" {
   ]
 }
 
-module "vpc_ipam_set_cidr" {
-  source = "../.."
-
-  name = "${local.name}-set-cidr"
-
-  use_ipam_pool     = true
-  ipv4_ipam_pool_id = aws_vpc_ipam_pool.this.id
-  cidr              = "10.1.0.0/16"
-
-  # IPv6 allocation can come from an IPAM pool the same way IPv4 does
-  ipv6_cidr                            = null
-  ipv6_ipam_pool_id                    = null
-  ipv6_netmask_length                  = null
-  ipv6_cidr_block_network_border_group = null
-  azs                                  = local.azs
-
-  private_subnets = ["10.1.1.0/24", "10.1.2.0/24", "10.1.3.0/24"]
-  public_subnets  = ["10.1.11.0/24", "10.1.12.0/24", "10.1.13.0/24"]
-
-  tags = local.tags
-
-  # The pool CIDR has to finish provisioning before a VPC can allocate out of it, otherwise
-  # the allocation is rejected as larger than the pool
-  depends_on = [
-    aws_vpc_ipam_pool_cidr.this
-  ]
-}
-
 # # IPv6 - Requires having a CIDR plus its message and signature (see below)
 # module "vpc_ipv6_ipam_set_netmask" {
 #   source = "../.."
@@ -97,8 +69,11 @@ module "vpc_ipam_set_cidr" {
 # first plan and every subnet `count` derived from it fails with "Invalid count argument".
 #
 # So there are two ways to use this module with IPAM: let IPAM allocate the CIDR and define no
-# subnets, as `set-netmask` does, or pass a CIDR you already know and define subnets against
-# it, as `set-cidr` does.
+# subnets, as this example does, or do not use IPAM for that VPC at all and pass a CIDR you
+# already know.
+#
+# Note that `cidr` is ignored whenever `use_ipam_pool = true`: the module sets `cidr_block` to
+# null and lets IPAM choose. Asking IPAM for one specific CIDR is not supported today.
 #
 # For an explanation on prolonged delete times on IPAM pools see 2nd
 # *note* in terraform docs: https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/vpc_ipam_pool_cidr

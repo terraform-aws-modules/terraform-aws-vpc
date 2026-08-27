@@ -70,6 +70,9 @@ variable "enable_network_address_usage_metrics" {
   default     = null
 }
 
+# TODO: `cidr` is silently ignored when this is true, because `cidr_block` is set to null and
+# IPAM chooses the range. Honouring an explicit `cidr` would change the range existing callers
+# receive, so it has to wait for a major
 variable "use_ipam_pool" {
   description = "Determines whether IPAM pool is used for CIDR allocation"
   type        = bool
