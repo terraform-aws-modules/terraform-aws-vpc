@@ -1194,9 +1194,29 @@ variable "outpost_acl_tags" {
 ################################################################################
 
 variable "create_igw" {
-  description = "Controls if an Internet Gateway is created for public subnets and the related routes that connect them"
+  description = "Controls if an Internet Gateway is created and the related routes that connect the public subnets. Leave `null` to create one only when public subnets are managed by this module, which is the historical behavior. Set to `true` to create one regardless, which is required when composing subnets outside of this module"
   type        = bool
-  default     = true
+  default     = null
+}
+
+variable "create_regional_nat_gateway" {
+  description = "Controls if a regional NAT gateway is created. A regional NAT gateway is scoped to the VPC and expands across availability zones on its own, so it does not require public subnets to host it"
+  type        = bool
+  default     = false
+}
+
+variable "regional_nat_gateway_availability_zone_addresses" {
+  description = "Map of availability zone to the Elastic IP allocations to use in that zone. Leave empty to let AWS provision addresses and expand into zones automatically, which is the mode AWS recommends"
+  type = map(object({
+    allocation_ids = set(string)
+  }))
+  default = {}
+}
+
+variable "regional_nat_gateway_tags" {
+  description = "Additional tags for the regional NAT gateway"
+  type        = map(string)
+  default     = {}
 }
 
 variable "create_egress_only_igw" {

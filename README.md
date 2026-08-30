@@ -69,7 +69,7 @@ Passing the IPs into the module is done by setting two variables `reuse_nat_ips 
 
 ## NAT Gateway Scenarios
 
-This module supports three scenarios for creating NAT gateways. Each will be explained in further detail in the corresponding sections.
+This module supports four scenarios for creating NAT gateways. Each will be explained in further detail in the corresponding sections.
 
 - One NAT Gateway per subnet (default behavior)
   - `enable_nat_gateway = true`
@@ -83,8 +83,13 @@ This module supports three scenarios for creating NAT gateways. Each will be exp
   - `enable_nat_gateway = true`
   - `single_nat_gateway = false`
   - `one_nat_gateway_per_az = true`
+- A regional NAT Gateway
+  - `create_regional_nat_gateway = true`
 
 If both `single_nat_gateway` and `one_nat_gateway_per_az` are set to `true`, then `single_nat_gateway` takes precedence.
+
+The first three are zonal and are counted from the subnet lists. The regional NAT gateway is
+independent of them and is controlled by its own variable.
 
 ### One NAT Gateway per subnet (default)
 
@@ -110,6 +115,26 @@ If `one_nat_gateway_per_az = true` and `single_nat_gateway = false`, then the mo
 
 - The variable `var.azs` **must** be specified.
 - The number of public subnet CIDR blocks specified in `public_subnets` **must** be greater than or equal to the number of availability zones specified in `var.azs`. This is to ensure that each NAT Gateway has a dedicated public subnet to deploy to.
+
+### Regional NAT Gateway
+
+A zonal NAT gateway lives in one public subnet and serves one availability zone, so a highly
+available design needs one per zone and a route table per zone to point at them. A regional NAT
+gateway is scoped to the VPC instead. It expands across availability zones on its own, and every
+private subnet routes to the same gateway ID, so a single route table serves all of them:
+
+```hcl
+create_regional_nat_gateway = true
+```
+
+It needs no public subnet to host it, which is why it is not counted from the subnet lists like
+the three scenarios above. Left alone it runs in automatic mode, which is what AWS recommends:
+the gateway manages its own addresses and decides which zones to expand into. Supplying
+`regional_nat_gateway_availability_zone_addresses` switches it to manual mode, where each zone
+is named with the Elastic IP allocations it should use.
+
+The [regional-nat pattern](https://github.com/terraform-aws-modules/terraform-aws-vpc/tree/master/patterns/regional-nat)
+shows the whole topology.
 
 ## "private" versus "intra" subnets
 
@@ -214,6 +239,118 @@ module "vpc_cidr_from_ipam" {
 }
 ```
 
+## Composable subnets
+
+The root module creates subnets from positional lists (`public_subnets`, `private_subnets`, and so on),
+which means the routes attached to them are decided by the module rather than by the caller. That is
+sufficient for common topologies but leaves no room for cases such as sending the public default route
+through a firewall endpoint instead of the internet gateway.
+
+Three additive sub-modules cover the cases the lists cannot. They do not change the root module, and
+they are the composition model the module is moving toward, so configuration written against them now
+carries forward.
+
+### `subnets`, a tier at a time
+
+The [subnets](https://github.com/terraform-aws-modules/terraform-aws-vpc/tree/master/modules/subnets)
+sub-module takes a map of subnets and creates the tier: the subnets, their route tables and routes,
+any NAT gateways, and the tier's network ACL.
+
+```hcl
+module "private" {
+  source = "terraform-aws-modules/vpc/aws//modules/subnets"
+
+  name   = "example-private"
+  vpc_id = module.vpc.vpc_id
+
+  subnets = { for i, az in local.azs : az => {
+    availability_zone = az
+    ipv4_cidr_block   = cidrsubnet(local.vpc_cidr, 8, i)
+  } }
+
+  routes = {
+    nat = {
+      destination_ipv4_cidr_block = "0.0.0.0/0"
+      nat_gateway_id              = module.public.nat_gateway_ids[local.azs[0]]
+    }
+  }
+}
+```
+
+Whether the tier shares one route table is inferred from where the routes are written rather than
+configured. Routes declared on the group, as above, mean every subnet routes identically, so one table
+is created and shared by all of them. As soon as any subnet declares routes of its own the tier is no
+longer uniform, so every subnet gets its own table, and one that declares none falls back to the
+group's routes on that table:
+
+```hcl
+  subnets = { for i, az in local.azs : az => {
+    availability_zone = az
+    ipv4_cidr_block   = cidrsubnet(local.vpc_cidr, 8, i)
+
+    # a gateway in every zone, so each subnet needs its own table
+    routes = {
+      nat = {
+        destination_ipv4_cidr_block = "0.0.0.0/0"
+        nat_gateway_id              = module.public.nat_gateway_ids[az]
+      }
+    }
+  } }
+```
+
+This reads the structure of the configuration, which is known when Terraform builds the plan. Reading
+the route targets instead would not work, because a NAT gateway ID is not known until it exists, and
+a resource count that depends on an unknown value fails the plan.
+
+Group settings are defaults that a subnet entry can override, so a tier where one zone differs stays
+a single module block.
+
+The network ACL belongs to this layer rather than to a single subnet, because one network ACL is
+associated with several subnets and no one of them owns it.
+
+### `subnet`, one at a time
+
+The [subnet](https://github.com/terraform-aws-modules/terraform-aws-vpc/tree/master/modules/subnet)
+sub-module is the primitive underneath, creating a single subnet with its route table, routes, and
+optionally a NAT gateway. Reach for it when a tier is genuinely one subnet, or when subnets in a tier
+depend on each other, such as a private subnet routing to a NAT gateway in the public subnet beside it.
+
+```hcl
+module "public_subnet" {
+  source = "terraform-aws-modules/vpc/aws//modules/subnet"
+
+  name              = "example-public"
+  vpc_id            = module.vpc.vpc_id
+  availability_zone = local.azs[0]
+  ipv4_cidr_block   = cidrsubnet(local.vpc_cidr, 8, 0)
+
+  routes = {
+    firewall-endpoint = {
+      destination_ipv4_cidr_block = "0.0.0.0/0"
+      vpc_endpoint_id             = local.firewall_endpoints[local.azs[0]].endpoint_id
+    }
+  }
+}
+```
+
+Because `routes` is a map, a route is omitted by leaving it out rather than by adding a toggle to the
+root module.
+
+### `route-table`, for tables with no subnet
+
+Neither sub-module above creates a gateway route table. A route table associated with an internet
+gateway [must be dedicated to that gateway and associated with no subnet](https://docs.aws.amazon.com/vpc/latest/userguide/igw-ingress-routing.html),
+whereas the tables those sub-modules create are associated with their own subnets. The
+[route-table](https://github.com/terraform-aws-modules/terraform-aws-vpc/tree/master/modules/route-table)
+sub-module covers that case, taking the same `routes` map and associating the result with a gateway.
+It is what makes internet gateway ingress routing possible, which inbound traffic needs in order to
+reach an inspection appliance.
+
+### Patterns
+
+The [patterns](https://github.com/terraform-aws-modules/terraform-aws-vpc/tree/master/patterns)
+directory holds complete topologies built this way, each one starting from the architecture it serves.
+
 ## Examples
 
 - [Block Public Access](https://github.com/terraform-aws-modules/terraform-aws-vpc/tree/master/examples/block-public-access)
@@ -225,6 +362,7 @@ module "vpc_cidr_from_ipam" {
 - [IPv6 only subnets VPC](https://github.com/terraform-aws-modules/terraform-aws-vpc/tree/master/examples/ipv6-only)
 - [Manage Default VPC](https://github.com/terraform-aws-modules/terraform-aws-vpc/tree/master/examples/manage-default-vpc)
 - [VPC w/ Network ACL](https://github.com/terraform-aws-modules/terraform-aws-vpc/tree/master/examples/network-acls)
+- [VPC w/ Network Firewall](https://github.com/terraform-aws-modules/terraform-aws-vpc/tree/master/examples/network-firewall) w/ composable subnets
 - [VPC w/ Outpost](https://github.com/terraform-aws-modules/terraform-aws-vpc/tree/master/examples/outpost)
 - [VPC w/ secondary CIDR blocks](https://github.com/terraform-aws-modules/terraform-aws-vpc/tree/master/examples/secondary-cidr-blocks)
 - [VPC w/ unique route tables](https://github.com/terraform-aws-modules/terraform-aws-vpc/tree/master/examples/separate-route-tables)
@@ -273,6 +411,7 @@ No modules.
 | [aws_iam_role.vpc_flow_log_cloudwatch](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_role) | resource |
 | [aws_iam_role_policy_attachment.vpc_flow_log_cloudwatch](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_role_policy_attachment) | resource |
 | [aws_internet_gateway.this](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/internet_gateway) | resource |
+| [aws_nat_gateway.regional](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/nat_gateway) | resource |
 | [aws_nat_gateway.this](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/nat_gateway) | resource |
 | [aws_network_acl.database](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/network_acl) | resource |
 | [aws_network_acl.elasticache](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/network_acl) | resource |
@@ -359,12 +498,13 @@ No modules.
 | <a name="input_create_elasticache_subnet_route_table"></a> [create\_elasticache\_subnet\_route\_table](#input\_create\_elasticache\_subnet\_route\_table) | Controls if separate route table for elasticache should be created | `bool` | `false` | no |
 | <a name="input_create_flow_log_cloudwatch_iam_role"></a> [create\_flow\_log\_cloudwatch\_iam\_role](#input\_create\_flow\_log\_cloudwatch\_iam\_role) | Whether to create IAM role for VPC Flow Logs | `bool` | `false` | no |
 | <a name="input_create_flow_log_cloudwatch_log_group"></a> [create\_flow\_log\_cloudwatch\_log\_group](#input\_create\_flow\_log\_cloudwatch\_log\_group) | Whether to create CloudWatch log group for VPC Flow Logs | `bool` | `false` | no |
-| <a name="input_create_igw"></a> [create\_igw](#input\_create\_igw) | Controls if an Internet Gateway is created for public subnets and the related routes that connect them | `bool` | `true` | no |
+| <a name="input_create_igw"></a> [create\_igw](#input\_create\_igw) | Controls if an Internet Gateway is created and the related routes that connect the public subnets. Leave `null` to create one only when public subnets are managed by this module, which is the historical behavior. Set to `true` to create one regardless, which is required when composing subnets outside of this module | `bool` | `null` | no |
 | <a name="input_create_multiple_intra_route_tables"></a> [create\_multiple\_intra\_route\_tables](#input\_create\_multiple\_intra\_route\_tables) | Indicates whether to create a separate route table for each intra subnet. Default: `false` | `bool` | `false` | no |
 | <a name="input_create_multiple_public_route_tables"></a> [create\_multiple\_public\_route\_tables](#input\_create\_multiple\_public\_route\_tables) | Indicates whether to create a separate route table for each public subnet. Default: `false` | `bool` | `false` | no |
 | <a name="input_create_private_nat_gateway_route"></a> [create\_private\_nat\_gateway\_route](#input\_create\_private\_nat\_gateway\_route) | Controls if a nat gateway route should be created to give internet access to the private subnets | `bool` | `true` | no |
 | <a name="input_create_redshift_subnet_group"></a> [create\_redshift\_subnet\_group](#input\_create\_redshift\_subnet\_group) | Controls if redshift subnet group should be created | `bool` | `true` | no |
 | <a name="input_create_redshift_subnet_route_table"></a> [create\_redshift\_subnet\_route\_table](#input\_create\_redshift\_subnet\_route\_table) | Controls if separate route table for redshift should be created | `bool` | `false` | no |
+| <a name="input_create_regional_nat_gateway"></a> [create\_regional\_nat\_gateway](#input\_create\_regional\_nat\_gateway) | Controls if a regional NAT gateway is created. A regional NAT gateway is scoped to the VPC and expands across availability zones on its own, so it does not require public subnets to host it | `bool` | `false` | no |
 | <a name="input_create_vpc"></a> [create\_vpc](#input\_create\_vpc) | Controls if VPC should be created (it affects almost all resources) | `bool` | `true` | no |
 | <a name="input_customer_gateway_tags"></a> [customer\_gateway\_tags](#input\_customer\_gateway\_tags) | Additional tags for the Customer Gateway | `map(string)` | `{}` | no |
 | <a name="input_customer_gateways"></a> [customer\_gateways](#input\_customer\_gateways) | Maps of Customer Gateway's attributes (BGP ASN and Gateway's Internet-routable external IP address) | `map(map(any))` | `{}` | no |
@@ -565,6 +705,8 @@ No modules.
 | <a name="input_redshift_subnet_tags"></a> [redshift\_subnet\_tags](#input\_redshift\_subnet\_tags) | Additional tags for the redshift subnets | `map(string)` | `{}` | no |
 | <a name="input_redshift_subnets"></a> [redshift\_subnets](#input\_redshift\_subnets) | A list of redshift subnets inside the VPC | `list(string)` | `[]` | no |
 | <a name="input_region"></a> [region](#input\_region) | Region where the resource(s) will be managed. Defaults to the Region set in the provider configuration | `string` | `null` | no |
+| <a name="input_regional_nat_gateway_availability_zone_addresses"></a> [regional\_nat\_gateway\_availability\_zone\_addresses](#input\_regional\_nat\_gateway\_availability\_zone\_addresses) | Map of availability zone to the Elastic IP allocations to use in that zone. Leave empty to let AWS provision addresses and expand into zones automatically, which is the mode AWS recommends | <pre>map(object({<br/>    allocation_ids = set(string)<br/>  }))</pre> | `{}` | no |
+| <a name="input_regional_nat_gateway_tags"></a> [regional\_nat\_gateway\_tags](#input\_regional\_nat\_gateway\_tags) | Additional tags for the regional NAT gateway | `map(string)` | `{}` | no |
 | <a name="input_reuse_nat_ips"></a> [reuse\_nat\_ips](#input\_reuse\_nat\_ips) | Should be true if you don't want EIPs to be created for your NAT Gateways and will instead pass them in via the 'external\_nat\_ip\_ids' variable | `bool` | `false` | no |
 | <a name="input_secondary_cidr_blocks"></a> [secondary\_cidr\_blocks](#input\_secondary\_cidr\_blocks) | List of secondary CIDR blocks to associate with the VPC to extend the IP Address pool | `list(string)` | `[]` | no |
 | <a name="input_single_nat_gateway"></a> [single\_nat\_gateway](#input\_single\_nat\_gateway) | Should be true if you want to provision a single shared NAT Gateway across all of your private networks | `bool` | `false` | no |
@@ -687,6 +829,7 @@ No modules.
 | <a name="output_redshift_subnets"></a> [redshift\_subnets](#output\_redshift\_subnets) | List of IDs of redshift subnets |
 | <a name="output_redshift_subnets_cidr_blocks"></a> [redshift\_subnets\_cidr\_blocks](#output\_redshift\_subnets\_cidr\_blocks) | List of cidr\_blocks of redshift subnets |
 | <a name="output_redshift_subnets_ipv6_cidr_blocks"></a> [redshift\_subnets\_ipv6\_cidr\_blocks](#output\_redshift\_subnets\_ipv6\_cidr\_blocks) | List of IPv6 cidr\_blocks of redshift subnets in an IPv6 enabled VPC |
+| <a name="output_regional_nat_gateway_id"></a> [regional\_nat\_gateway\_id](#output\_regional\_nat\_gateway\_id) | The ID of the regional NAT gateway |
 | <a name="output_this_customer_gateway"></a> [this\_customer\_gateway](#output\_this\_customer\_gateway) | Map of Customer Gateway attributes |
 | <a name="output_vgw_arn"></a> [vgw\_arn](#output\_vgw\_arn) | The ARN of the VPN Gateway |
 | <a name="output_vgw_id"></a> [vgw\_id](#output\_vgw\_id) | The ID of the VPN Gateway |

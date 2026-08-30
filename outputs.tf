@@ -519,6 +519,11 @@ output "nat_public_ips" {
   value       = var.reuse_nat_ips ? var.external_nat_ips : aws_eip.nat[*].public_ip
 }
 
+output "regional_nat_gateway_id" {
+  description = "The ID of the regional NAT gateway"
+  value       = try(aws_nat_gateway.regional[0].id, null)
+}
+
 output "natgw_ids" {
   description = "List of NAT Gateway IDs"
   value       = aws_nat_gateway.this[*].id

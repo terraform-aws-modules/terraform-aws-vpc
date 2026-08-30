@@ -139,6 +139,11 @@ resource "aws_vpc_dhcp_options_association" "this" {
 locals {
   create_public_subnets = local.create_vpc && local.len_public_subnets > 0
 
+  # `null` keeps the historical behaviour of creating the gateway only alongside public
+  # subnets. Setting it explicitly means what it says, which is what lets callers compose
+  # their own public subnets and still get a gateway
+  create_igw = var.create_igw == null ? local.create_public_subnets : local.create_vpc && var.create_igw
+
   num_public_route_tables = var.create_multiple_public_route_tables ? local.len_public_subnets : 1
 }
 
@@ -202,7 +207,7 @@ resource "aws_route_table_association" "public" {
 }
 
 resource "aws_route" "public_internet_gateway" {
-  count = local.create_public_subnets && var.create_igw ? local.num_public_route_tables : 0
+  count = local.create_public_subnets && local.create_igw ? local.num_public_route_tables : 0
 
   region = var.region
 
@@ -216,7 +221,7 @@ resource "aws_route" "public_internet_gateway" {
 }
 
 resource "aws_route" "public_internet_gateway_ipv6" {
-  count = local.create_public_subnets && var.create_igw && var.enable_ipv6 ? local.num_public_route_tables : 0
+  count = local.create_public_subnets && local.create_igw && var.enable_ipv6 ? local.num_public_route_tables : 0
 
   region = var.region
 
@@ -501,7 +506,7 @@ resource "aws_route_table_association" "database" {
 }
 
 resource "aws_route" "database_internet_gateway" {
-  count = local.create_database_route_table && var.create_igw && var.create_database_internet_gateway_route && !var.create_database_nat_gateway_route ? 1 : 0
+  count = local.create_database_route_table && local.create_igw && var.create_database_internet_gateway_route && !var.create_database_nat_gateway_route ? 1 : 0
 
   region = var.region
 
@@ -1158,7 +1163,7 @@ resource "aws_network_acl_rule" "outpost_outbound" {
 ################################################################################
 
 resource "aws_internet_gateway" "this" {
-  count = local.create_public_subnets && var.create_igw ? 1 : 0
+  count = local.create_igw ? 1 : 0
 
   region = var.region
 
@@ -1172,7 +1177,9 @@ resource "aws_internet_gateway" "this" {
 }
 
 resource "aws_egress_only_internet_gateway" "this" {
-  count = local.create_vpc && var.create_egress_only_igw && var.enable_ipv6 && local.max_subnet_length > 0 ? 1 : 0
+  # Scoped to the VPC, like the internet gateway, the VPN gateway and the DHCP options,
+  # so it is not gated on this module also managing subnets. Asking for it is enough
+  count = local.create_vpc && var.create_egress_only_igw && var.enable_ipv6 ? 1 : 0
 
   region = var.region
 
@@ -1248,6 +1255,43 @@ resource "aws_nat_gateway" "this" {
     },
     var.tags,
     var.nat_gateway_tags,
+  )
+
+  depends_on = [aws_internet_gateway.this]
+}
+
+################################################################################
+# Regional NAT Gateway
+#
+# Scoped to the VPC rather than to a subnet: it takes `vpc_id`, must not be given a
+# `subnet_id`, and expands across availability zones on its own. Deliberately kept
+# separate from the zonal NAT gateway path above rather than sharing its counts
+################################################################################
+
+resource "aws_nat_gateway" "regional" {
+  count = local.create_vpc && var.create_regional_nat_gateway ? 1 : 0
+
+  region = var.region
+
+  vpc_id            = local.vpc_id
+  availability_mode = "regional"
+  connectivity_type = "public"
+
+  # Without any blocks the gateway runs in automatic mode, which AWS recommends, and
+  # manages its own addresses and zone expansion. Supplying them switches it to manual
+  dynamic "availability_zone_address" {
+    for_each = var.regional_nat_gateway_availability_zone_addresses == null ? {} : var.regional_nat_gateway_availability_zone_addresses
+
+    content {
+      availability_zone = availability_zone_address.key
+      allocation_ids    = availability_zone_address.value.allocation_ids
+    }
+  }
+
+  tags = merge(
+    { "Name" = var.name },
+    var.tags,
+    var.regional_nat_gateway_tags,
   )
 
   depends_on = [aws_internet_gateway.this]
