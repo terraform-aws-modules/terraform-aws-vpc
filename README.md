@@ -30,6 +30,10 @@ module "vpc" {
 > [!WARNING]
 > v6.x of the module still supports creating a VPC Flow Log within the root (VPC) module. However, this is deprecated behavior and will be removed in v7.0.0. Please use the [standalone flow log](https://github.com/terraform-aws-modules/terraform-aws-vpc/tree/master/modules/flow-log) module instead.
 
+## DNS64 on public subnets
+
+`public_subnet_enable_dns64` defaults to `true` when IPv6 is enabled. DNS64 synthesizes `64:ff9b::/96` addresses for IPv4-only names. This module adds NAT64 routes (`64:ff9b::/96` via NAT Gateway) for **private** (and database) subnets, not for public subnets. Workloads in public subnets therefore cannot reach those synthesized addresses unless you add a NAT64 route yourself. Set `public_subnet_enable_dns64 = false` if you do not need DNS64 on public subnets.
+
 ## External NAT Gateway IPs
 
 By default this module will provision new Elastic IPs for the VPC's NAT Gateways.
