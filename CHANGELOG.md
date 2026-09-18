@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [6.7.3](https://github.com/terraform-aws-modules/terraform-aws-vpc/compare/v6.7.2...v6.7.3) (2026-09-18)
+
+### Bug Fixes
+
+* Document known Terraform/OpenTofu limitations in README ([#1311](https://github.com/terraform-aws-modules/terraform-aws-vpc/issues/1311)) ([a2a41d2](https://github.com/terraform-aws-modules/terraform-aws-vpc/commit/a2a41d25e697b3c8cf6928046a961dcbb28382a1))
+
 ## [6.7.2](https://github.com/terraform-aws-modules/terraform-aws-vpc/compare/v6.7.1...v6.7.2) (2026-08-28)
 
 ### Bug Fixes
