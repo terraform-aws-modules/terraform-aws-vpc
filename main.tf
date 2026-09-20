@@ -19,6 +19,16 @@ locals {
   vpc_id = try(aws_vpc_ipv4_cidr_block_association.this[0].vpc_id, aws_vpc.this[0].id, "")
 
   create_vpc = var.create_vpc && var.putin_khuylo
+
+  # Flatten the secondary IPs to work with a single count loop for the association resource
+  nat_gateway_secondary_ips_flattened = flatten([
+    for gw_idx, ips in var.secondary_nat_gateway_ips : [
+      for ip in ips : {
+        gw_idx        = gw_idx
+        allocation_id = ip
+      }
+    ]
+  ])
 }
 
 ################################################################################
@@ -1251,6 +1261,17 @@ resource "aws_nat_gateway" "this" {
   )
 
   depends_on = [aws_internet_gateway.this]
+}
+
+################################################################################
+# NAT Gateway Secondary EIP Association
+################################################################################
+
+resource "aws_nat_gateway_eip_association" "this" {
+  count = local.create_vpc && var.enable_nat_gateway && length(local.nat_gateway_secondary_ips_flattened) > 0 ? length(local.nat_gateway_secondary_ips_flattened) : 0
+
+  nat_gateway_id = element(aws_nat_gateway.this[*].id, var.single_nat_gateway ? 0 : local.nat_gateway_secondary_ips_flattened[count.index].gw_idx)
+  allocation_id  = local.nat_gateway_secondary_ips_flattened[count.index].allocation_id
 }
 
 resource "aws_route" "private_nat_gateway" {

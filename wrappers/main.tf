@@ -383,6 +383,7 @@ module "wrapper" {
   region                                                         = try(each.value.region, var.defaults.region, null)
   reuse_nat_ips                                                  = try(each.value.reuse_nat_ips, var.defaults.reuse_nat_ips, false)
   secondary_cidr_blocks                                          = try(each.value.secondary_cidr_blocks, var.defaults.secondary_cidr_blocks, [])
+  secondary_nat_gateway_ips                                      = try(each.value.secondary_nat_gateway_ips, var.defaults.secondary_nat_gateway_ips, [])
   single_nat_gateway                                             = try(each.value.single_nat_gateway, var.defaults.single_nat_gateway, false)
   tags                                                           = try(each.value.tags, var.defaults.tags, {})
   use_ipam_pool                                                  = try(each.value.use_ipam_pool, var.defaults.use_ipam_pool, false)

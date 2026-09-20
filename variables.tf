@@ -1257,6 +1257,12 @@ variable "external_nat_ips" {
   default     = []
 }
 
+variable "secondary_nat_gateway_ips" {
+  description = "List of lists of secondary EIP allocation IDs to associate with NAT Gateways. The outer list corresponds to the NAT Gateway index, and the inner list contains the allocation IDs for that specific NAT Gateway."
+  type        = list(list(string))
+  default     = []
+}
+
 variable "nat_gateway_tags" {
   description = "Additional tags for the NAT gateways"
   type        = map(string)
