@@ -149,8 +149,34 @@ module "vpc" {
   outpost_dedicated_network_acl = true
   outpost_inbound_acl_rules     = local.network_acls["outpost_inbound"]
   outpost_outbound_acl_rules    = local.network_acls["outpost_outbound"]
+  outpost_acl_tags              = { Tier = "outpost" }
+
+  outpost_subnet_names  = ["Outpost Subnet One", "Outpost Subnet Two"]
+  outpost_subnet_suffix = "outpost"
+  outpost_subnet_tags   = { Tier = "outpost" }
+
+  # Outpost subnets are IPv4 only here, so the IPv6 and DNS-on-launch options stay off
+  outpost_subnet_ipv6_native                                    = false
+  outpost_subnet_enable_dns64                                   = false
+  outpost_subnet_enable_resource_name_dns_a_record_on_launch    = false
+  outpost_subnet_enable_resource_name_dns_aaaa_record_on_launch = false
+  outpost_subnet_private_dns_hostname_type_on_launch            = "ip-name"
+
+  # Customer owned IP pools are an Outpost feature
+  customer_owned_ipv4_pool        = null
+  map_customer_owned_ip_on_launch = false
 
   tags = local.tags
+}
+
+################################################################################
+# Disabled
+################################################################################
+
+module "disabled" {
+  source = "../../"
+
+  create_vpc = false
 }
 
 ################################################################################

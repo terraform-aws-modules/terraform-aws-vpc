@@ -2,6 +2,34 @@
 
 All notable changes to this project will be documented in this file.
 
+## [6.7.3](https://github.com/terraform-aws-modules/terraform-aws-vpc/compare/v6.7.2...v6.7.3) (2026-09-18)
+
+### Bug Fixes
+
+* Document known Terraform/OpenTofu limitations in README ([#1311](https://github.com/terraform-aws-modules/terraform-aws-vpc/issues/1311)) ([a2a41d2](https://github.com/terraform-aws-modules/terraform-aws-vpc/commit/a2a41d25e697b3c8cf6928046a961dcbb28382a1))
+
+## [6.7.2](https://github.com/terraform-aws-modules/terraform-aws-vpc/compare/v6.7.1...v6.7.2) (2026-08-28)
+
+### Bug Fixes
+
+* Stop apply failing on DNS64 without IPv6 and on empty route table lists ([#1306](https://github.com/terraform-aws-modules/terraform-aws-vpc/issues/1306)) ([e0c733a](https://github.com/terraform-aws-modules/terraform-aws-vpc/commit/e0c733a7231d9aee4b1307caabe55103548d67ae))
+
+## [6.7.1](https://github.com/terraform-aws-modules/terraform-aws-vpc/compare/v6.7.0...v6.7.1) (2026-08-27)
+
+### Bug Fixes
+
+* Detect AZ IDs correctly for regions with multi-character prefixes (e.g. eusc-) ([#1301](https://github.com/terraform-aws-modules/terraform-aws-vpc/issues/1301)) ([bf0e762](https://github.com/terraform-aws-modules/terraform-aws-vpc/commit/bf0e762d8ffac9bfc473e52469244d1bb13dd014))
+
+## [6.7.0](https://github.com/terraform-aws-modules/terraform-aws-vpc/compare/v6.6.1...v6.7.0) (2026-08-21)
+
+### Features
+
+* Support skip_destroy and deletion protection for flow log log groups ([#1305](https://github.com/terraform-aws-modules/terraform-aws-vpc/issues/1305)) ([fe98540](https://github.com/terraform-aws-modules/terraform-aws-vpc/commit/fe98540617d57ff5c7bfc74841a31a3abbd1ce8b))
+
+### Bug Fixes
+
+* Update GitHub Actions and pre-commit hook versions ([#1302](https://github.com/terraform-aws-modules/terraform-aws-vpc/issues/1302)) ([0a36bd5](https://github.com/terraform-aws-modules/terraform-aws-vpc/commit/0a36bd54069c64be2da788b2afb5df0a8e8e7398))
+
 ## [6.6.1](https://github.com/terraform-aws-modules/terraform-aws-vpc/compare/v6.6.0...v6.6.1) (2026-04-02)
 
 ### Bug Fixes

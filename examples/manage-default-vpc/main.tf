@@ -25,6 +25,8 @@ module "vpc" {
   manage_default_vpc               = true
   default_vpc_name                 = "default"
   default_vpc_enable_dns_hostnames = true
+  default_vpc_enable_dns_support   = true
+  default_vpc_tags                 = { Name = "default" }
 
   tags = local.tags
 }
