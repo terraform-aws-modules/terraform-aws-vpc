@@ -232,6 +232,7 @@ module "wrapper" {
   map_public_ip_on_launch                                     = try(each.value.map_public_ip_on_launch, var.defaults.map_public_ip_on_launch, false)
   name                                                        = try(each.value.name, var.defaults.name, "")
   nat_eip_tags                                                = try(each.value.nat_eip_tags, var.defaults.nat_eip_tags, {})
+  nat_gateway_connectivity_type                               = try(each.value.nat_gateway_connectivity_type, var.defaults.nat_gateway_connectivity_type, { availability_mode = null, eip_allocation = null })
   nat_gateway_destination_cidr_block                          = try(each.value.nat_gateway_destination_cidr_block, var.defaults.nat_gateway_destination_cidr_block, "0.0.0.0/0")
   nat_gateway_tags                                            = try(each.value.nat_gateway_tags, var.defaults.nat_gateway_tags, {})
   one_nat_gateway_per_az                                      = try(each.value.one_nat_gateway_per_az, var.defaults.one_nat_gateway_per_az, false)

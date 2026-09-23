@@ -511,22 +511,25 @@ output "intra_network_acl_arn" {
 
 output "nat_ids" {
   description = "List of allocation ID of Elastic IPs created for AWS NAT Gateway"
-  value       = aws_eip.nat[*].id
+  value       = concat(aws_eip.nat[*].id, aws_eip.regional_nat[*].id)
 }
 
 output "nat_public_ips" {
   description = "List of public Elastic IPs created for AWS NAT Gateway"
-  value       = var.reuse_nat_ips ? var.external_nat_ips : aws_eip.nat[*].public_ip
+  value = concat(
+    var.reuse_nat_ips ? var.external_nat_ips : aws_eip.nat[*].public_ip,
+    var.nat_gateway_connectivity_type.availability_mode == "regional" ? aws_eip.regional_nat[*].public_ip : []
+  )
 }
 
 output "natgw_ids" {
   description = "List of NAT Gateway IDs"
-  value       = aws_nat_gateway.this[*].id
+  value       = concat(aws_nat_gateway.this[*].id, aws_nat_gateway.regional[*].id)
 }
 
 output "natgw_interface_ids" {
   description = "List of Network Interface IDs assigned to NAT Gateways"
-  value       = aws_nat_gateway.this[*].network_interface_id
+  value       = concat(aws_nat_gateway.this[*].network_interface_id, aws_nat_gateway.regional[*].network_interface_id)
 }
 
 ################################################################################
