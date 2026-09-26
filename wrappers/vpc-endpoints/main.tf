@@ -6,6 +6,7 @@ module "wrapper" {
   create                     = try(each.value.create, var.defaults.create, true)
   create_security_group      = try(each.value.create_security_group, var.defaults.create_security_group, false)
   endpoints                  = try(each.value.endpoints, var.defaults.endpoints, {})
+  network_interface_tags     = try(each.value.network_interface_tags, var.defaults.network_interface_tags, {})
   region                     = try(each.value.region, var.defaults.region, null)
   security_group_description = try(each.value.security_group_description, var.defaults.security_group_description, null)
   security_group_ids         = try(each.value.security_group_ids, var.defaults.security_group_ids, [])

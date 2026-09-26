@@ -1263,6 +1263,12 @@ variable "nat_gateway_tags" {
   default     = {}
 }
 
+variable "nat_gateway_eni_tags" {
+  description = "Additional tags for the network interfaces (ENIs) created by the NAT gateways. Note: applied with the `aws_ec2_tag` resource, so provider `default_tags` are not inherited"
+  type        = map(string)
+  default     = {}
+}
+
 variable "nat_eip_tags" {
   description = "Additional tags for the NAT EIP"
   type        = map(string)
