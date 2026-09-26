@@ -6,6 +6,8 @@ locals {
   endpoints = { for k, v in var.endpoints : k => v if var.create && try(v.create, true) }
 
   security_group_ids = var.create && var.create_security_group ? concat(var.security_group_ids, [aws_security_group.this[0].id]) : var.security_group_ids
+
+  interface_endpoints = { for k, v in local.endpoints : k => v if try(v.service_type, "Interface") == "Interface" }
 }
 
 data "aws_vpc_endpoint_service" "this" {
@@ -118,4 +120,37 @@ resource "aws_security_group_rule" "this" {
   prefix_list_ids          = lookup(each.value, "prefix_list_ids", null)
   self                     = try(each.value.self, null)
   source_security_group_id = lookup(each.value, "source_security_group_id", null)
+}
+
+resource "aws_ec2_tag" "network_interface" {
+  # Keys are built from values known at plan time (endpoint keys, subnet
+  # positions, and tag keys) so this can be planned in the same apply that
+  # creates the endpoints; interface endpoints create one ENI per subnet, and
+  # the ENI IDs themselves are only resolved at apply time. Note: if the
+  # subnet IDs themselves are only known after apply (e.g. subnets are created
+  # by another module in the same apply), the number of ENIs cannot be
+  # determined at plan time and this resource requires a second apply, the
+  # same as any aws_ec2_tag based workaround.
+  for_each = {
+    for item in flatten([
+      for k, v in local.interface_endpoints : [
+        for i in range(length(distinct(concat(var.subnet_ids, lookup(v, "subnet_ids", []))))) : [
+          for tag_key in keys(var.network_interface_tags) : {
+            key = "${k}:${i}:${tag_key}"
+            value = {
+              resource_id = element(tolist(aws_vpc_endpoint.this[k].network_interface_ids), i)
+              key         = tag_key
+              value       = var.network_interface_tags[tag_key]
+            }
+          }
+        ]
+      ]
+    ]) : item.key => item.value
+  }
+
+  region = var.region
+
+  resource_id = each.value.resource_id
+  key         = each.value.key
+  value       = each.value.value
 }

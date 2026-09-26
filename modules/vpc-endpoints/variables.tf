@@ -85,3 +85,9 @@ variable "security_group_tags" {
   type        = map(string)
   default     = {}
 }
+
+variable "network_interface_tags" {
+  description = "A map of additional tags to add to the network interfaces (ENIs) created by the interface type VPC endpoints. Note: applied with the `aws_ec2_tag` resource, so provider `default_tags` are not inherited"
+  type        = map(string)
+  default     = {}
+}

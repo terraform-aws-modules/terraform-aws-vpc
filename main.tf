@@ -1253,6 +1253,25 @@ resource "aws_nat_gateway" "this" {
   depends_on = [aws_internet_gateway.this]
 }
 
+resource "aws_ec2_tag" "nat_gateway_eni" {
+  # Keys are built from values known at plan time (NAT gateway indexes and tag
+  # keys) so this can be planned in the same apply that creates the NAT
+  # gateways; the ENI IDs themselves are only resolved at apply time.
+  for_each = {
+    for pair in setproduct(range(local.create_vpc && var.enable_nat_gateway ? local.nat_gateway_count : 0), keys(var.nat_gateway_eni_tags)) : "${pair[0]}:${pair[1]}" => {
+      resource_id = aws_nat_gateway.this[pair[0]].network_interface_id
+      key         = pair[1]
+      value       = var.nat_gateway_eni_tags[pair[1]]
+    }
+  }
+
+  region = var.region
+
+  resource_id = each.value.resource_id
+  key         = each.value.key
+  value       = each.value.value
+}
+
 resource "aws_route" "private_nat_gateway" {
   count = local.create_vpc && var.enable_nat_gateway && var.create_private_nat_gateway_route ? local.nat_gateway_count : 0
 
