@@ -43,6 +43,15 @@ resource "aws_flow_log" "this" {
     }
   }
 
+  dynamic "tag_field_specification" {
+    for_each = var.tag_field_specifications != null ? var.tag_field_specifications : []
+
+    content {
+      resource_type = tag_field_specification.value.resource_type
+      tag_keys      = tag_field_specification.value.tag_keys
+    }
+  }
+
   eni_id                        = var.eni_id
   iam_role_arn                  = try(aws_iam_role.this[0].arn, var.iam_role_arn)
   log_destination_type          = var.log_destination_type

@@ -78,6 +78,15 @@ variable "subnet_id" {
   default     = null
 }
 
+variable "tag_field_specifications" {
+  description = "List of EC2 resource tag keys to include in flow log records via the `instance-tag`, `interface-tag` and `asg-tag` fields (and their `-2` variants). Valid `resource_type` values: `instance`, `network-interface`, `auto-scaling-group`. Up to two `tag_keys` per resource type"
+  type = list(object({
+    resource_type = string
+    tag_keys      = list(string)
+  }))
+  default = null
+}
+
 variable "traffic_type" {
   description = "The type of traffic to capture. Valid values: `ACCEPT`, `REJECT`, `ALL`"
   type        = string

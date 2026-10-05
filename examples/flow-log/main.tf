@@ -131,6 +131,19 @@ module "flow_log_s3_parquet" {
     per_hour_partition         = true
   }
 
+  # Tag fields are only emitted when listed in a custom log format
+  log_format = "$${version} $${account-id} $${interface-id} $${srcaddr} $${dstaddr} $${srcport} $${dstport} $${protocol} $${packets} $${bytes} $${start} $${end} $${action} $${log-status} $${instance-tag} $${instance-tag-2} $${interface-tag} $${interface-tag-2}"
+  tag_field_specifications = [
+    {
+      resource_type = "instance"
+      tag_keys      = ["Name", "Environment"]
+    },
+    {
+      resource_type = "network-interface"
+      tag_keys      = ["Name", "Project"]
+    },
+  ]
+
   tags = local.tags
 }
 

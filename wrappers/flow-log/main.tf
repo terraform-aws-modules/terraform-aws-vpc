@@ -35,6 +35,7 @@ module "wrapper" {
   name                                             = try(each.value.name, var.defaults.name, "")
   region                                           = try(each.value.region, var.defaults.region, null)
   subnet_id                                        = try(each.value.subnet_id, var.defaults.subnet_id, null)
+  tag_field_specifications                         = try(each.value.tag_field_specifications, var.defaults.tag_field_specifications, null)
   tags                                             = try(each.value.tags, var.defaults.tags, {})
   traffic_type                                     = try(each.value.traffic_type, var.defaults.traffic_type, "ALL")
   transit_gateway_attachment_id                    = try(each.value.transit_gateway_attachment_id, var.defaults.transit_gateway_attachment_id, null)

@@ -47,13 +47,13 @@ module "flow_log" {
 | Name | Version |
 | ---- | ------- |
 | <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 1.5.7 |
-| <a name="requirement_aws"></a> [aws](#requirement\_aws) | >= 6.28 |
+| <a name="requirement_aws"></a> [aws](#requirement\_aws) | >= 6.56 |
 
 ## Providers
 
 | Name | Version |
 | ---- | ------- |
-| <a name="provider_aws"></a> [aws](#provider\_aws) | >= 6.28 |
+| <a name="provider_aws"></a> [aws](#provider\_aws) | >= 6.56 |
 
 ## Modules
 
@@ -110,6 +110,7 @@ No modules.
 | <a name="input_name"></a> [name](#input\_name) | Name to use across resources created | `string` | `""` | no |
 | <a name="input_region"></a> [region](#input\_region) | Region where the resource(s) will be managed. Defaults to the Region set in the provider configuration | `string` | `null` | no |
 | <a name="input_subnet_id"></a> [subnet\_id](#input\_subnet\_id) | Subnet ID to attach to | `string` | `null` | no |
+| <a name="input_tag_field_specifications"></a> [tag\_field\_specifications](#input\_tag\_field\_specifications) | List of EC2 resource tag keys to include in flow log records via the `instance-tag`, `interface-tag` and `asg-tag` fields (and their `-2` variants). Valid `resource_type` values: `instance`, `network-interface`, `auto-scaling-group`. Up to two `tag_keys` per resource type | <pre>list(object({<br/>    resource_type = string<br/>    tag_keys      = list(string)<br/>  }))</pre> | `null` | no |
 | <a name="input_tags"></a> [tags](#input\_tags) | A map of tags to add to all resources | `map(string)` | `{}` | no |
 | <a name="input_traffic_type"></a> [traffic\_type](#input\_traffic\_type) | The type of traffic to capture. Valid values: `ACCEPT`, `REJECT`, `ALL` | `string` | `"ALL"` | no |
 | <a name="input_transit_gateway_attachment_id"></a> [transit\_gateway\_attachment\_id](#input\_transit\_gateway\_attachment\_id) | Transit Gateway Attachment ID to attach to | `string` | `null` | no |
