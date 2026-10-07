@@ -320,9 +320,13 @@ resource "aws_subnet" "private" {
   )
 }
 
-# There are as many routing tables as the number of NAT gateways
+# There are as many routing tables as the number of NAT gateways (or private subnets for regional NAT gateway)
+locals {
+  private_route_table_count = local.create_private_subnets && local.max_subnet_length > 0 ? (local.nat_gateway_is_regional ? local.len_private_subnets : local.nat_gateway_count) : 0
+}
+
 resource "aws_route_table" "private" {
-  count = local.create_private_subnets && local.max_subnet_length > 0 ? local.nat_gateway_count : 0
+  count = local.private_route_table_count
 
   region = var.region
 
@@ -330,7 +334,10 @@ resource "aws_route_table" "private" {
 
   tags = merge(
     {
-      "Name" = var.single_nat_gateway ? "${var.name}-${var.private_subnet_suffix}" : format(
+      "Name" = local.nat_gateway_is_regional ? format(
+        "${var.name}-${var.private_subnet_suffix}-%s",
+        element(var.azs, count.index),
+        ) : var.single_nat_gateway ? "${var.name}-${var.private_subnet_suffix}" : format(
         "${var.name}-${var.private_subnet_suffix}-%s",
         element(var.azs, count.index),
       )
@@ -348,7 +355,7 @@ resource "aws_route_table_association" "private" {
   subnet_id = element(aws_subnet.private[*].id, count.index)
   route_table_id = element(
     aws_route_table.private[*].id,
-    var.single_nat_gateway ? 0 : count.index,
+    local.nat_gateway_is_regional ? count.index : (var.single_nat_gateway ? 0 : count.index),
   )
 }
 
@@ -515,13 +522,13 @@ resource "aws_route" "database_internet_gateway" {
 }
 
 resource "aws_route" "database_nat_gateway" {
-  count = local.create_database_route_table && !var.create_database_internet_gateway_route && var.create_database_nat_gateway_route && var.enable_nat_gateway ? var.single_nat_gateway ? 1 : local.len_database_subnets : 0
+  count = local.create_database_route_table && !var.create_database_internet_gateway_route && var.create_database_nat_gateway_route && var.enable_nat_gateway ? (local.nat_gateway_is_regional ? length(aws_route_table.database[*].id) : (var.single_nat_gateway ? 1 : local.len_database_subnets)) : 0
 
   region = var.region
 
   route_table_id         = element(aws_route_table.database[*].id, count.index)
   destination_cidr_block = "0.0.0.0/0"
-  nat_gateway_id         = element(aws_nat_gateway.this[*].id, count.index)
+  nat_gateway_id         = local.nat_gateway_is_regional ? aws_nat_gateway.regional[0].id : element(aws_nat_gateway.this[*].id, count.index)
 
   timeouts {
     create = "5m"
@@ -535,7 +542,7 @@ resource "aws_route" "database_dns64_nat_gateway" {
 
   route_table_id              = element(aws_route_table.database[*].id, count.index)
   destination_ipv6_cidr_block = "64:ff9b::/96"
-  nat_gateway_id              = element(aws_nat_gateway.this[*].id, count.index)
+  nat_gateway_id              = local.nat_gateway_is_regional ? aws_nat_gateway.regional[0].id : element(aws_nat_gateway.this[*].id, count.index)
 
   timeouts {
     create = "5m"
@@ -1186,7 +1193,7 @@ resource "aws_egress_only_internet_gateway" "this" {
 }
 
 resource "aws_route" "private_ipv6_egress" {
-  count = local.create_vpc && var.create_egress_only_igw && var.enable_ipv6 && local.len_private_subnets > 0 ? local.nat_gateway_count : 0
+  count = local.create_vpc && var.create_egress_only_igw && var.enable_ipv6 && local.len_private_subnets > 0 ? (local.nat_gateway_is_regional ? local.private_route_table_count : local.nat_gateway_count) : 0
 
   region = var.region
 
@@ -1200,12 +1207,27 @@ resource "aws_route" "private_ipv6_egress" {
 ################################################################################
 
 locals {
-  nat_gateway_count = var.single_nat_gateway ? 1 : var.one_nat_gateway_per_az ? length(var.azs) : local.max_subnet_length
-  nat_gateway_ips   = var.reuse_nat_ips ? var.external_nat_ip_ids : aws_eip.nat[*].id
+  # Omitted (or null) keys fall back to the documented defaults, so `{}` behaves like the zonal setup this module always had
+  nat_gateway_availability_mode = try(var.nat_gateway_connectivity_type.availability_mode, "zonal")
+  nat_gateway_eip_allocation    = try(var.nat_gateway_connectivity_type.eip_allocation, "auto")
+
+  nat_gateway_is_regional = local.nat_gateway_availability_mode == "regional"
+  nat_gateway_count       = local.nat_gateway_is_regional ? 1 : var.single_nat_gateway ? 1 : var.one_nat_gateway_per_az ? length(var.azs) : local.max_subnet_length
+  nat_gateway_ips         = var.reuse_nat_ips ? var.external_nat_ip_ids : aws_eip.nat[*].id
+
+  # Regional NAT Gateway in manual EIP mode needs one EIP per AZ; those are either
+  # created by the module or supplied by the caller via `external_nat_ip_ids`
+  nat_gateway_is_regional_manual = local.nat_gateway_is_regional && local.nat_gateway_eip_allocation == "manual"
+  regional_nat_gateway_eip_count = local.nat_gateway_is_regional_manual ? length(var.azs) : 0
+  regional_nat_gateway_ips       = var.reuse_nat_ips ? var.external_nat_ip_ids : aws_eip.regional_nat[*].id
+
+  # A regional NAT Gateway has no `network_interface_id`/`public_ip` of its own; it
+  # exposes one address (EIP + ENI) per AZ it is active in via `regional_nat_gateway_address`
+  natgw_regional_addresses = flatten(aws_nat_gateway.regional[*].regional_nat_gateway_address)
 }
 
 resource "aws_eip" "nat" {
-  count = local.create_vpc && var.enable_nat_gateway && !var.reuse_nat_ips ? local.nat_gateway_count : 0
+  count = local.create_vpc && var.enable_nat_gateway && !local.nat_gateway_is_regional && !var.reuse_nat_ips ? local.nat_gateway_count : 0
 
   region = var.region
 
@@ -1225,8 +1247,29 @@ resource "aws_eip" "nat" {
   depends_on = [aws_internet_gateway.this]
 }
 
+resource "aws_eip" "regional_nat" {
+  count = local.create_vpc && var.enable_nat_gateway && local.nat_gateway_is_regional_manual && !var.reuse_nat_ips ? local.regional_nat_gateway_eip_count : 0
+
+  region = var.region
+
+  domain = "vpc"
+
+  tags = merge(
+    {
+      "Name" = format(
+        "${var.name}-%s",
+        element(var.azs, count.index),
+      )
+    },
+    var.tags,
+    var.nat_eip_tags,
+  )
+
+  depends_on = [aws_internet_gateway.this]
+}
+
 resource "aws_nat_gateway" "this" {
-  count = local.create_vpc && var.enable_nat_gateway ? local.nat_gateway_count : 0
+  count = local.create_vpc && var.enable_nat_gateway && !local.nat_gateway_is_regional ? local.nat_gateway_count : 0
 
   region = var.region
 
@@ -1253,14 +1296,42 @@ resource "aws_nat_gateway" "this" {
   depends_on = [aws_internet_gateway.this]
 }
 
+resource "aws_nat_gateway" "regional" {
+  count = local.create_vpc && var.enable_nat_gateway && local.nat_gateway_is_regional ? 1 : 0
+
+  region = var.region
+  vpc_id = aws_vpc.this[0].id
+
+  connectivity_type = "public"
+  availability_mode = local.nat_gateway_availability_mode
+
+  dynamic "availability_zone_address" {
+    for_each = local.nat_gateway_is_regional_manual ? {
+      for idx, az in var.azs : az => local.regional_nat_gateway_ips[idx]
+    } : {}
+    content {
+      allocation_ids    = toset([availability_zone_address.value])
+      availability_zone = availability_zone_address.key
+    }
+  }
+
+  tags = merge(
+    {
+      "Name" = var.name
+    },
+    var.tags,
+    var.nat_gateway_tags,
+  )
+}
+
 resource "aws_route" "private_nat_gateway" {
-  count = local.create_vpc && var.enable_nat_gateway && var.create_private_nat_gateway_route ? local.nat_gateway_count : 0
+  count = local.create_vpc && var.enable_nat_gateway && var.create_private_nat_gateway_route ? (local.nat_gateway_is_regional ? local.private_route_table_count : local.nat_gateway_count) : 0
 
   region = var.region
 
   route_table_id         = element(aws_route_table.private[*].id, count.index)
   destination_cidr_block = var.nat_gateway_destination_cidr_block
-  nat_gateway_id         = element(aws_nat_gateway.this[*].id, count.index)
+  nat_gateway_id         = local.nat_gateway_is_regional ? aws_nat_gateway.regional[0].id : element(aws_nat_gateway.this[*].id, count.index)
 
   timeouts {
     create = "5m"
@@ -1274,7 +1345,7 @@ resource "aws_route" "private_dns64_nat_gateway" {
 
   route_table_id              = element(aws_route_table.private[*].id, count.index)
   destination_ipv6_cidr_block = "64:ff9b::/96"
-  nat_gateway_id              = element(aws_nat_gateway.this[*].id, count.index)
+  nat_gateway_id              = local.nat_gateway_is_regional ? aws_nat_gateway.regional[0].id : element(aws_nat_gateway.this[*].id, count.index)
 
   timeouts {
     create = "5m"

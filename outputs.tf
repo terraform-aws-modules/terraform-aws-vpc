@@ -510,23 +510,28 @@ output "intra_network_acl_arn" {
 ################################################################################
 
 output "nat_ids" {
-  description = "List of allocation ID of Elastic IPs created for AWS NAT Gateway"
-  value       = aws_eip.nat[*].id
+  description = "List of allocation ID of Elastic IPs created for AWS NAT Gateway. Empty for a regional NAT Gateway with `eip_allocation = \"auto\"`, where AWS allocates the EIPs (see `natgw_regional_addresses`)"
+  value       = concat(aws_eip.nat[*].id, aws_eip.regional_nat[*].id)
 }
 
 output "nat_public_ips" {
-  description = "List of public Elastic IPs created for AWS NAT Gateway"
-  value       = var.reuse_nat_ips ? var.external_nat_ips : aws_eip.nat[*].public_ip
+  description = "List of public Elastic IPs created for AWS NAT Gateway. Empty for a regional NAT Gateway with `eip_allocation = \"auto\"`, where AWS allocates the EIPs (see `natgw_regional_addresses`)"
+  value       = var.reuse_nat_ips ? var.external_nat_ips : concat(aws_eip.nat[*].public_ip, aws_eip.regional_nat[*].public_ip)
 }
 
 output "natgw_ids" {
   description = "List of NAT Gateway IDs"
-  value       = aws_nat_gateway.this[*].id
+  value       = concat(aws_nat_gateway.this[*].id, aws_nat_gateway.regional[*].id)
 }
 
 output "natgw_interface_ids" {
-  description = "List of Network Interface IDs assigned to NAT Gateways"
-  value       = aws_nat_gateway.this[*].network_interface_id
+  description = "List of Network Interface IDs assigned to NAT Gateways. For a regional NAT Gateway, one per availability zone it is active in"
+  value       = concat(aws_nat_gateway.this[*].network_interface_id, local.natgw_regional_addresses[*].network_interface_id)
+}
+
+output "natgw_regional_addresses" {
+  description = "List of addresses of the regional NAT Gateway, one per availability zone it is active in (`allocation_id`, `association_id`, `availability_zone`, `availability_zone_id`, `network_interface_id`, `public_ip`, `status`). Only populated for a regional NAT Gateway"
+  value       = local.natgw_regional_addresses
 }
 
 ################################################################################
