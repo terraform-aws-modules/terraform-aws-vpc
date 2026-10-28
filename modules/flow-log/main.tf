@@ -251,15 +251,27 @@ data "aws_iam_policy_document" "this" {
     for_each = local.destination_is_cloudwatch ? [1] : []
 
     content {
-      sid = "CloudWatch"
+      sid = "CloudWatchLogStream"
       actions = [
         "logs:CreateLogStream",
         "logs:PutLogEvents",
+      ]
+
+      resources = local.create_cloudwatch_log_group ? formatlist("%s:*", aws_cloudwatch_log_group.this[*].arn) : ["${trimsuffix(var.log_destination, ":*")}:*"]
+    }
+  }
+
+  dynamic "statement" {
+    for_each = local.destination_is_cloudwatch ? [1] : []
+
+    content {
+      sid = "CloudwatchLogGroup"
+      actions = [
         "logs:DescribeLogGroups",
         "logs:DescribeLogStreams",
       ]
 
-      resources = local.create_cloudwatch_log_group ? formatlist("%s:*", aws_cloudwatch_log_group.this[*].arn) : [var.log_destination]
+      resources = local.create_cloudwatch_log_group ? aws_cloudwatch_log_group.this[*].arn : [trimsuffix(var.log_destination, ":*")]
     }
   }
 
