@@ -1,17 +1,3 @@
-data "aws_region" "current" {
-  count = var.create_vpc && var.enable_flow_log ? 1 : 0
-
-  region = var.region
-}
-
-data "aws_caller_identity" "current" {
-  count = var.create_vpc && var.enable_flow_log ? 1 : 0
-}
-
-data "aws_partition" "current" {
-  count = var.create_vpc && var.enable_flow_log ? 1 : 0
-}
-
 locals {
   enable_flow_log = var.create_vpc && var.enable_flow_log
 
@@ -21,10 +7,8 @@ locals {
   flow_log_destination_arn                  = local.create_flow_log_cloudwatch_log_group ? try(aws_cloudwatch_log_group.flow_log[0].arn, null) : var.flow_log_destination_arn
   flow_log_iam_role_arn                     = var.flow_log_destination_type != "s3" && local.create_flow_log_cloudwatch_iam_role ? try(aws_iam_role.vpc_flow_log_cloudwatch[0].arn, null) : var.flow_log_cloudwatch_iam_role_arn
   flow_log_cloudwatch_log_group_name_suffix = var.flow_log_cloudwatch_log_group_name_suffix == "" ? local.vpc_id : var.flow_log_cloudwatch_log_group_name_suffix
-  flow_log_group_arns = [
-    for log_group in aws_cloudwatch_log_group.flow_log :
-    "arn:${data.aws_partition.current[0].partition}:logs:${data.aws_region.current[0].region}:${data.aws_caller_identity.current[0].account_id}:log-group:${log_group.name}:*"
-  ]
+  flow_log_group_arns                       = compact([local.flow_log_destination_arn])
+  flow_log_stream_arns                      = formatlist("%s:*", local.flow_log_group_arns)
 }
 
 ################################################################################
@@ -135,17 +119,28 @@ data "aws_iam_policy_document" "vpc_flow_log_cloudwatch" {
   count = local.create_flow_log_cloudwatch_iam_role ? 1 : 0
 
   statement {
-    sid = "AWSVPCFlowLogsPushToCloudWatch"
+    sid = "AWSVPCFlowLogsDescribeCloudWatchLogGroup"
+
+    effect = "Allow"
+
+    actions = [
+      "logs:DescribeLogGroups",
+      "logs:DescribeLogStreams",
+    ]
+
+    resources = local.flow_log_group_arns
+  }
+
+  statement {
+    sid = "AWSVPCFlowLogsPushToCloudWatchLogStream"
 
     effect = "Allow"
 
     actions = [
       "logs:CreateLogStream",
       "logs:PutLogEvents",
-      "logs:DescribeLogGroups",
-      "logs:DescribeLogStreams",
     ]
 
-    resources = local.flow_log_group_arns
+    resources = local.flow_log_stream_arns
   }
 }

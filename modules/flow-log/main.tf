@@ -69,6 +69,9 @@ resource "aws_flow_log" "this" {
 locals {
   create_cloudwatch_log_group = var.create && var.create_cloudwatch_log_group && local.destination_is_cloudwatch
 
+  cloudwatch_log_group_arns  = local.create_cloudwatch_log_group ? aws_cloudwatch_log_group.this[*].arn : compact([var.log_destination])
+  cloudwatch_log_stream_arns = local.create_cloudwatch_log_group ? formatlist("%s:*", aws_cloudwatch_log_group.this[*].arn) : compact([var.log_destination])
+
   # Try to create a "sane" default log group name based on the resource the flow log is attached to
   eni_suffix        = var.eni_id != null ? "eni/${var.eni_id}" : null
   subnet_suffix     = var.subnet_id != null ? "subnet/${var.subnet_id}" : null
@@ -251,15 +254,27 @@ data "aws_iam_policy_document" "this" {
     for_each = local.destination_is_cloudwatch ? [1] : []
 
     content {
-      sid = "CloudWatch"
+      sid = "CloudWatchLogGroup"
       actions = [
-        "logs:CreateLogStream",
-        "logs:PutLogEvents",
         "logs:DescribeLogGroups",
         "logs:DescribeLogStreams",
       ]
 
-      resources = local.create_cloudwatch_log_group ? formatlist("%s:*", aws_cloudwatch_log_group.this[*].arn) : [var.log_destination]
+      resources = local.cloudwatch_log_group_arns
+    }
+  }
+
+  dynamic "statement" {
+    for_each = local.destination_is_cloudwatch ? [1] : []
+
+    content {
+      sid = "CloudWatchLogStream"
+      actions = [
+        "logs:CreateLogStream",
+        "logs:PutLogEvents",
+      ]
+
+      resources = local.cloudwatch_log_stream_arns
     }
   }
 
