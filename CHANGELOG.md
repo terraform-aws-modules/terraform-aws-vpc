@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [6.7.4](https://github.com/terraform-aws-modules/terraform-aws-vpc/compare/v6.7.3...v6.7.4) (2026-11-16)
+
+### Bug Fixes
+
+* Correct CloudWatch Flow Log IAM permissions by splitting Log Stream and Log Group permissions ([#1320](https://github.com/terraform-aws-modules/terraform-aws-vpc/issues/1320)) ([62417ba](https://github.com/terraform-aws-modules/terraform-aws-vpc/commit/62417bac63399480dde02063eea03ca3867ae792)), closes [#1319](https://github.com/terraform-aws-modules/terraform-aws-vpc/issues/1319)
+* Scope root VPC flow log DescribeLogGroups/DescribeLogStreams to the log group ARN ([#1321](https://github.com/terraform-aws-modules/terraform-aws-vpc/issues/1321)) ([ea3fe16](https://github.com/terraform-aws-modules/terraform-aws-vpc/commit/ea3fe16d06d62d426126eda4364fc4bdd43f51ae))
+
 ## [6.7.3](https://github.com/terraform-aws-modules/terraform-aws-vpc/compare/v6.7.2...v6.7.3) (2026-09-18)
 
 ### Bug Fixes
