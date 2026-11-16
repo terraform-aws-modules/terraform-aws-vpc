@@ -265,7 +265,7 @@ data "aws_iam_policy_document" "this" {
     for_each = local.destination_is_cloudwatch ? [1] : []
 
     content {
-      sid = "CloudwatchLogGroup"
+      sid = "CloudWatchLogGroup"
       actions = [
         "logs:DescribeLogGroups",
         "logs:DescribeLogStreams",
