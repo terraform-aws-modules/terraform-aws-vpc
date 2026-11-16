@@ -11,9 +11,9 @@ In addition to standard settings, new options for blocking public access have be
 To run this example you need to execute:
 
 ```bash
-$ terraform init
-$ terraform plan
-$ terraform apply
+terraform init
+terraform plan
+terraform apply
 ```
 
 Note that this example may create resources which can cost money (AWS Elastic IP, for example). Run `terraform destroy` when you don't need these resources.
@@ -95,6 +95,7 @@ aws ec2 --region eu-west-1 describe-vpc-block-public-access-exclusions --exclusi
 
 | Name | Source | Version |
 | ---- | ------ | ------- |
+| <a name="module_disabled"></a> [disabled](#module\_disabled) | ../../ | n/a |
 | <a name="module_vpc"></a> [vpc](#module\_vpc) | ../../ | n/a |
 
 ## Resources

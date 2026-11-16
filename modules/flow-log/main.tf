@@ -85,11 +85,13 @@ resource "aws_cloudwatch_log_group" "this" {
 
   region = var.region
 
-  name              = var.cloudwatch_log_group_use_name_prefix ? null : local.cloudwatch_log_group_name
-  name_prefix       = var.cloudwatch_log_group_use_name_prefix ? "${local.cloudwatch_log_group_name}-" : null
-  log_group_class   = var.cloudwatch_log_group_class
-  retention_in_days = var.cloudwatch_log_group_retention_in_days
-  kms_key_id        = var.cloudwatch_log_group_kms_key_id
+  name                        = var.cloudwatch_log_group_use_name_prefix ? null : local.cloudwatch_log_group_name
+  name_prefix                 = var.cloudwatch_log_group_use_name_prefix ? "${local.cloudwatch_log_group_name}-" : null
+  log_group_class             = var.cloudwatch_log_group_class
+  retention_in_days           = var.cloudwatch_log_group_retention_in_days
+  kms_key_id                  = var.cloudwatch_log_group_kms_key_id
+  skip_destroy                = var.cloudwatch_log_group_skip_destroy
+  deletion_protection_enabled = var.cloudwatch_log_group_deletion_protection_enabled
 
   tags = merge(
     var.tags,
@@ -249,15 +251,27 @@ data "aws_iam_policy_document" "this" {
     for_each = local.destination_is_cloudwatch ? [1] : []
 
     content {
-      sid = "CloudWatch"
+      sid = "CloudWatchLogStream"
       actions = [
         "logs:CreateLogStream",
         "logs:PutLogEvents",
+      ]
+
+      resources = local.create_cloudwatch_log_group ? formatlist("%s:*", aws_cloudwatch_log_group.this[*].arn) : ["${trimsuffix(var.log_destination, ":*")}:*"]
+    }
+  }
+
+  dynamic "statement" {
+    for_each = local.destination_is_cloudwatch ? [1] : []
+
+    content {
+      sid = "CloudWatchLogGroup"
+      actions = [
         "logs:DescribeLogGroups",
         "logs:DescribeLogStreams",
       ]
 
-      resources = local.create_cloudwatch_log_group ? formatlist("%s:*", aws_cloudwatch_log_group.this[*].arn) : [var.log_destination]
+      resources = local.create_cloudwatch_log_group ? aws_cloudwatch_log_group.this[*].arn : [trimsuffix(var.log_destination, ":*")]
     }
   }
 

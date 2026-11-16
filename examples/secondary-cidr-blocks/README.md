@@ -9,9 +9,9 @@ There is a public and private subnet created per availability zone in addition t
 To run this example you need to execute:
 
 ```bash
-$ terraform init
-$ terraform plan
-$ terraform apply
+terraform init
+terraform plan
+terraform apply
 ```
 
 Note that this example may create resources which can cost money (AWS Elastic IP, for example). Run `terraform destroy` when you don't need these resources.
@@ -34,6 +34,7 @@ Note that this example may create resources which can cost money (AWS Elastic IP
 
 | Name | Source | Version |
 | ---- | ------ | ------- |
+| <a name="module_disabled"></a> [disabled](#module\_disabled) | ../../ | n/a |
 | <a name="module_vpc"></a> [vpc](#module\_vpc) | ../../ | n/a |
 
 ## Resources

@@ -12,9 +12,9 @@ Configuration in this directory creates a set of VPC resources with VPC Flow Log
 To run this example you need to execute:
 
 ```bash
-$ terraform init
-$ terraform plan
-$ terraform apply
+terraform init
+terraform plan
+terraform apply
 ```
 
 Note that this example may create resources which can cost money (AWS Elastic IP, for example). Run `terraform destroy` when you don't need these resources.
@@ -40,19 +40,25 @@ Note that this example may create resources which can cost money (AWS Elastic IP
 | <a name="module_disabled"></a> [disabled](#module\_disabled) | ../../modules/flow-log | n/a |
 | <a name="module_flow_log"></a> [flow\_log](#module\_flow\_log) | ../../modules/flow-log | n/a |
 | <a name="module_flow_log_cloudwatch_external"></a> [flow\_log\_cloudwatch\_external](#module\_flow\_log\_cloudwatch\_external) | ../../modules/flow-log | n/a |
+| <a name="module_flow_log_eni"></a> [flow\_log\_eni](#module\_flow\_log\_eni) | ../../modules/flow-log | n/a |
+| <a name="module_flow_log_group"></a> [flow\_log\_group](#module\_flow\_log\_group) | terraform-aws-modules/cloudwatch/aws//modules/log-group | ~> 5.0 |
+| <a name="module_flow_log_role"></a> [flow\_log\_role](#module\_flow\_log\_role) | terraform-aws-modules/iam/aws//modules/iam-role | ~> 6.0 |
 | <a name="module_flow_log_s3"></a> [flow\_log\_s3](#module\_flow\_log\_s3) | ../../modules/flow-log | n/a |
 | <a name="module_flow_log_s3_parquet"></a> [flow\_log\_s3\_parquet](#module\_flow\_log\_s3\_parquet) | ../../modules/flow-log | n/a |
+| <a name="module_flow_log_subnet"></a> [flow\_log\_subnet](#module\_flow\_log\_subnet) | ../../modules/flow-log | n/a |
 | <a name="module_s3_bucket"></a> [s3\_bucket](#module\_s3\_bucket) | terraform-aws-modules/s3-bucket/aws | ~> 5.0 |
 | <a name="module_vpc"></a> [vpc](#module\_vpc) | ../../ | n/a |
+| <a name="module_vpc_flow_log_cloudwatch"></a> [vpc\_flow\_log\_cloudwatch](#module\_vpc\_flow\_log\_cloudwatch) | ../../ | n/a |
+| <a name="module_vpc_flow_log_cloudwatch_external"></a> [vpc\_flow\_log\_cloudwatch\_external](#module\_vpc\_flow\_log\_cloudwatch\_external) | ../../ | n/a |
+| <a name="module_vpc_flow_log_s3"></a> [vpc\_flow\_log\_s3](#module\_vpc\_flow\_log\_s3) | ../../ | n/a |
 
 ## Resources
 
 | Name | Type |
 | ---- | ---- |
-| [aws_cloudwatch_log_group.flow_log](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/cloudwatch_log_group) | resource |
-| [aws_iam_role.flow_log_cloudwatch](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_role) | resource |
-| [aws_iam_role_policy.flow_log_cloudwatch](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_role_policy) | resource |
+| [aws_network_interface.this](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/network_interface) | resource |
 | [aws_availability_zones.available](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/availability_zones) | data source |
+| [aws_caller_identity.current](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/caller_identity) | data source |
 
 ## Inputs
 

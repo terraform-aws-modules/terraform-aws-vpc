@@ -130,6 +130,22 @@ locals {
         ipv6_cidr_block = "::/0"
       },
     ]
+    database_inbound = [
+      {
+        rule_number = 100
+        rule_action = "allow"
+        from_port   = 3306
+        to_port     = 3306
+        protocol    = "tcp"
+        cidr_block  = "10.0.0.0/22"
+      },
+      {
+        rule_number = 200
+        rule_action = "deny"
+        protocol    = "-1"
+        cidr_block  = "0.0.0.0/0"
+      },
+    ]
     elasticache_outbound = [
       {
         rule_number = 100
@@ -181,14 +197,42 @@ module "vpc" {
   private_subnets     = [for k, v in local.azs : cidrsubnet(local.vpc_cidr, 8, k)]
   public_subnets      = [for k, v in local.azs : cidrsubnet(local.vpc_cidr, 8, k + 4)]
   elasticache_subnets = [for k, v in local.azs : cidrsubnet(local.vpc_cidr, 8, k + 8)]
+  database_subnets    = [for k, v in local.azs : cidrsubnet(local.vpc_cidr, 8, k + 12)]
+  redshift_subnets    = [for k, v in local.azs : cidrsubnet(local.vpc_cidr, 8, k + 16)]
+  intra_subnets       = [for k, v in local.azs : cidrsubnet(local.vpc_cidr, 8, k + 20)]
 
-  public_dedicated_network_acl   = true
-  public_inbound_acl_rules       = concat(local.network_acls["default_inbound"], local.network_acls["public_inbound"])
-  public_outbound_acl_rules      = concat(local.network_acls["default_outbound"], local.network_acls["public_outbound"])
+  # Each subnet tier takes its own dedicated ACL, so every tier's rule set is exercised
+  public_dedicated_network_acl      = true
+  private_dedicated_network_acl     = true
+  database_dedicated_network_acl    = true
+  redshift_dedicated_network_acl    = true
+  elasticache_dedicated_network_acl = true
+  intra_dedicated_network_acl       = true
+
+  public_inbound_acl_rules  = concat(local.network_acls["default_inbound"], local.network_acls["public_inbound"])
+  public_outbound_acl_rules = concat(local.network_acls["default_outbound"], local.network_acls["public_outbound"])
+
+  private_inbound_acl_rules  = local.network_acls["default_inbound"]
+  private_outbound_acl_rules = local.network_acls["default_outbound"]
+
+  database_inbound_acl_rules  = concat(local.network_acls["default_inbound"], local.network_acls["database_inbound"])
+  database_outbound_acl_rules = local.network_acls["default_outbound"]
+
+  redshift_inbound_acl_rules  = local.network_acls["default_inbound"]
+  redshift_outbound_acl_rules = local.network_acls["default_outbound"]
+
+  elasticache_inbound_acl_rules  = local.network_acls["default_inbound"]
   elasticache_outbound_acl_rules = concat(local.network_acls["default_outbound"], local.network_acls["elasticache_outbound"])
 
-  private_dedicated_network_acl     = false
-  elasticache_dedicated_network_acl = true
+  intra_inbound_acl_rules  = local.network_acls["default_inbound"]
+  intra_outbound_acl_rules = local.network_acls["default_outbound"]
+
+  public_acl_tags      = { Tier = "public" }
+  private_acl_tags     = { Tier = "private" }
+  database_acl_tags    = { Tier = "database" }
+  redshift_acl_tags    = { Tier = "redshift" }
+  elasticache_acl_tags = { Tier = "elasticache" }
+  intra_acl_tags       = { Tier = "intra" }
 
   manage_default_network_acl = true
 
@@ -196,6 +240,8 @@ module "vpc" {
 
   enable_nat_gateway = false
   single_nat_gateway = true
+
+  public_subnet_names = ["Public One", "Public Two", "Public Three"]
 
   public_subnet_tags = {
     Name = "overridden-name-public"
@@ -206,4 +252,14 @@ module "vpc" {
   vpc_tags = {
     Name = "vpc-name"
   }
+}
+
+################################################################################
+# Disabled
+################################################################################
+
+module "disabled" {
+  source = "../../"
+
+  create_vpc = false
 }

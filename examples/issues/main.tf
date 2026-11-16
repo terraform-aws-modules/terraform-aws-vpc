@@ -18,10 +18,12 @@ locals {
 }
 
 ################################################################################
-# Issue 44 - https://github.com/terraform-aws-modules/terraform-aws-vpc/issues/44
+# Asymmetrical Subnets
 ################################################################################
 
-module "vpc_issue_44" {
+# A different number of subnets per tier, which the module has to index independently
+# https://github.com/terraform-aws-modules/terraform-aws-vpc/issues/44
+module "asymmetrical_subnets" {
   source = "../../"
 
   name = "asymmetrical"
@@ -36,16 +38,17 @@ module "vpc_issue_44" {
   enable_nat_gateway           = true
 
   tags = merge({
-    Issue = "44"
-    Name  = "asymmetrical"
+    Name = "asymmetrical"
   }, local.tags)
 }
 
 ################################################################################
-# Issue 46 - https://github.com/terraform-aws-modules/terraform-aws-vpc/issues/46
+# No Private Subnets
 ################################################################################
 
-module "vpc_issue_46" {
+# Tiers that depend on the private tier still have to resolve when it is empty
+# https://github.com/terraform-aws-modules/terraform-aws-vpc/issues/46
+module "no_private_subnets" {
   source = "../../"
 
   name = "no-private-subnets"
@@ -62,16 +65,17 @@ module "vpc_issue_46" {
   enable_nat_gateway   = false
 
   tags = merge({
-    Issue = "46"
-    Name  = "no-private-subnets"
+    Name = "no-private-subnets"
   }, local.tags)
 }
 
 ################################################################################
-# Issue 108 - https://github.com/terraform-aws-modules/terraform-aws-vpc/issues/108
+# Overlapping Public Subnets
 ################################################################################
 
-module "vpc_issue_108" {
+# Public subnets carved from adjacent /28s, sharing a single NAT gateway
+# https://github.com/terraform-aws-modules/terraform-aws-vpc/issues/108
+module "overlapping_public_subnets" {
   source = "../../"
 
   name = "route-already-exists"
@@ -85,7 +89,16 @@ module "vpc_issue_108" {
   enable_nat_gateway = true
 
   tags = merge({
-    Issue = "108"
-    Name  = "route-already-exists"
+    Name = "route-already-exists"
   }, local.tags)
+}
+
+################################################################################
+# Disabled
+################################################################################
+
+module "disabled" {
+  source = "../../"
+
+  create_vpc = false
 }

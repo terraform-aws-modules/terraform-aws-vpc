@@ -9,12 +9,14 @@ This is not usual type of resource in Terraform, so use it carefully. More infor
 To run this example you need to execute:
 
 ```bash
-$ terraform init
-$ terraform plan
-$ terraform apply
+terraform init
+terraform plan
+terraform apply
 ```
 
 Run `terraform destroy` when you don't need these resources.
+
+Note that this example may create resources which cost money. Run `terraform destroy` when you don't need these resources.
 
 <!-- BEGIN_TF_DOCS -->
 ## Requirements
