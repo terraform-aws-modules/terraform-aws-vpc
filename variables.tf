@@ -285,8 +285,8 @@ variable "public_route_table_tags" {
   default     = {}
 }
 
-variable "public_enable_default_route" {
-  description = "Enable default route to internet gateway for public subnets"
+variable "create_public_internet_gateway_route" {
+  description = "Controls if the default routes (IPv4 and IPv6) to the internet gateway should be created for the public subnets"
   type        = bool
   default     = true
 }
