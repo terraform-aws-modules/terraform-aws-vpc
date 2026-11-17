@@ -19,6 +19,7 @@ module "wrapper" {
   create_multiple_intra_route_tables     = try(each.value.create_multiple_intra_route_tables, var.defaults.create_multiple_intra_route_tables, false)
   create_multiple_public_route_tables    = try(each.value.create_multiple_public_route_tables, var.defaults.create_multiple_public_route_tables, false)
   create_private_nat_gateway_route       = try(each.value.create_private_nat_gateway_route, var.defaults.create_private_nat_gateway_route, true)
+  create_public_internet_gateway_route   = try(each.value.create_public_internet_gateway_route, var.defaults.create_public_internet_gateway_route, true)
   create_redshift_subnet_group           = try(each.value.create_redshift_subnet_group, var.defaults.create_redshift_subnet_group, true)
   create_redshift_subnet_route_table     = try(each.value.create_redshift_subnet_route_table, var.defaults.create_redshift_subnet_route_table, false)
   create_vpc                             = try(each.value.create_vpc, var.defaults.create_vpc, true)

@@ -251,6 +251,18 @@ Disclosure: written by this module's maintainer, who also builds
 
 <!-- END_KNOWN_LIMITATIONS -->
 
+## Disable default route creation for public subnets
+
+Disabling the creation of the default can be used if you want have a default pointing to other gateways than the internet gateway(IGW)
+
+This is useful if you ex. would want to route all traffic through a AWS Network Firewall, but can also be useful for other purposes
+
+You disable the creation by setting the `create_public_internet_gateway_route` variable, e.g.
+
+```hcl
+  create_public_internet_gateway_route = false # <= By default it is true to maintain existing behavior
+```
+
 ## Examples
 
 - [Block Public Access](https://github.com/terraform-aws-modules/terraform-aws-vpc/tree/master/examples/block-public-access)
@@ -400,6 +412,7 @@ No modules.
 | <a name="input_create_multiple_intra_route_tables"></a> [create\_multiple\_intra\_route\_tables](#input\_create\_multiple\_intra\_route\_tables) | Indicates whether to create a separate route table for each intra subnet. Default: `false` | `bool` | `false` | no |
 | <a name="input_create_multiple_public_route_tables"></a> [create\_multiple\_public\_route\_tables](#input\_create\_multiple\_public\_route\_tables) | Indicates whether to create a separate route table for each public subnet. Default: `false` | `bool` | `false` | no |
 | <a name="input_create_private_nat_gateway_route"></a> [create\_private\_nat\_gateway\_route](#input\_create\_private\_nat\_gateway\_route) | Controls if a nat gateway route should be created to give internet access to the private subnets | `bool` | `true` | no |
+| <a name="input_create_public_internet_gateway_route"></a> [create\_public\_internet\_gateway\_route](#input\_create\_public\_internet\_gateway\_route) | Controls if the default routes (IPv4 and IPv6) to the internet gateway should be created for the public subnets | `bool` | `true` | no |
 | <a name="input_create_redshift_subnet_group"></a> [create\_redshift\_subnet\_group](#input\_create\_redshift\_subnet\_group) | Controls if redshift subnet group should be created | `bool` | `true` | no |
 | <a name="input_create_redshift_subnet_route_table"></a> [create\_redshift\_subnet\_route\_table](#input\_create\_redshift\_subnet\_route\_table) | Controls if separate route table for redshift should be created | `bool` | `false` | no |
 | <a name="input_create_vpc"></a> [create\_vpc](#input\_create\_vpc) | Controls if VPC should be created (it affects almost all resources) | `bool` | `true` | no |
