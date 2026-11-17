@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [6.8.0](https://github.com/terraform-aws-modules/terraform-aws-vpc/compare/v6.7.4...v6.8.0) (2026-11-17)
+
+### Features
+
+* Add toggle to disable default route creation for public route tables ([#1188](https://github.com/terraform-aws-modules/terraform-aws-vpc/issues/1188)) ([4ca30c3](https://github.com/terraform-aws-modules/terraform-aws-vpc/commit/4ca30c31fdd2ac60d29793bff77daf720e085540))
+
 ## [6.7.4](https://github.com/terraform-aws-modules/terraform-aws-vpc/compare/v6.7.3...v6.7.4) (2026-11-16)
 
 ### Bug Fixes
