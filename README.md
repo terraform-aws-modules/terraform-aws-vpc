@@ -170,7 +170,7 @@ It is possible to integrate this VPC module with [terraform-aws-transit-gateway 
 
 It is possible to have your VPC CIDR assigned from an [AWS IPAM Pool](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/vpc_ipam_pool). However, In order to build subnets within this module Terraform must know subnet CIDRs to properly plan the amount of resources to build. Since CIDR is derived by IPAM by calling CreateVpc this is not possible within a module unless cidr is known ahead of time. You can get around this by "previewing" the CIDR and then using that as the subnet values.
 
-_Note: Due to race conditions with `terraform plan`, it is not possible to use `ipv4_netmask_length` or a pools `allocation_default_netmask_length` within this module. You must explicitly set the CIDRs for a pool to use._
+_Note: In the IPv4 example below, subnet CIDRs must be known during planning. Do not rely on `ipv4_netmask_length` or a pool's `allocation_default_netmask_length`; preview the VPC CIDR and pass the subnet CIDRs explicitly._
 
 ```hcl
 # Find the pool RAM shared to your account
@@ -213,6 +213,32 @@ module "vpc_cidr_from_ipam" {
   public_subnets    = local.public_subnets
 }
 ```
+
+### Explicit IPv4 CIDR with IPv6 IPAM
+
+A VPC can keep an explicit IPv4 `cidr` while requesting an IPv6 `/56` from
+an IPAM pool. Leave `use_ipam_pool` unset (its default is `false`) so the
+module passes the explicit IPv4 CIDR to AWS. Set `ipv6_ipam_pool_id` and
+either `ipv6_cidr` for a specific range or `ipv6_netmask_length = 56` for a
+pool-selected range. When an IPv6 IPAM pool is set, the module does not
+request an Amazon-provided IPv6 CIDR.
+
+```hcl
+module "vpc" {
+  source = "terraform-aws-modules/vpc/aws"
+
+  name = "dual-stack-vpc"
+  cidr = var.ipv4_vpc_cidr
+
+  enable_ipv6       = true
+  ipv6_ipam_pool_id = var.ipv6_ipam_pool_id
+  ipv6_cidr         = var.ipv6_vpc_cidr
+}
+```
+
+For predictable IPv6 subnet CIDRs, request a specific `/56` from the pool
+and set fixed `*_subnet_ipv6_prefixes` indexes for its `/64` subnets. See the
+[IPv6 IPAM example](examples/ipv6-ipam) for a complete configuration.
 
 <!-- BEGIN_KNOWN_LIMITATIONS -->
 
@@ -270,6 +296,7 @@ You disable the creation by setting the `create_public_internet_gateway_route` v
 - [VPC w/ Flow Log](https://github.com/terraform-aws-modules/terraform-aws-vpc/tree/master/examples/flow-log)
 - [VPC using IPAM](https://github.com/terraform-aws-modules/terraform-aws-vpc/tree/master/examples/ipam)
 - [Dualstack IPv4/IPv6 VPC](https://github.com/terraform-aws-modules/terraform-aws-vpc/tree/master/examples/ipv6-dualstack)
+- [Explicit IPv4 CIDR with IPv6 IPAM](https://github.com/terraform-aws-modules/terraform-aws-vpc/tree/master/examples/ipv6-ipam)
 - [Edge Case Topologies](https://github.com/terraform-aws-modules/terraform-aws-vpc/tree/master/examples/issues) - shapes that have caused problems in the past
 - [IPv6 only subnets VPC](https://github.com/terraform-aws-modules/terraform-aws-vpc/tree/master/examples/ipv6-only)
 - [Manage Default VPC](https://github.com/terraform-aws-modules/terraform-aws-vpc/tree/master/examples/manage-default-vpc)
@@ -431,7 +458,7 @@ No modules.
 | <a name="input_database_subnet_group_name"></a> [database\_subnet\_group\_name](#input\_database\_subnet\_group\_name) | Name of database subnet group | `string` | `null` | no |
 | <a name="input_database_subnet_group_tags"></a> [database\_subnet\_group\_tags](#input\_database\_subnet\_group\_tags) | Additional tags for the database subnet group | `map(string)` | `{}` | no |
 | <a name="input_database_subnet_ipv6_native"></a> [database\_subnet\_ipv6\_native](#input\_database\_subnet\_ipv6\_native) | Indicates whether to create an IPv6-only subnet. Default: `false` | `bool` | `false` | no |
-| <a name="input_database_subnet_ipv6_prefixes"></a> [database\_subnet\_ipv6\_prefixes](#input\_database\_subnet\_ipv6\_prefixes) | Assigns IPv6 database subnet id based on the Amazon provided /56 prefix base 10 integer (0-256). Must be of equal length to the corresponding IPv4 subnet list | `list(string)` | `[]` | no |
+| <a name="input_database_subnet_ipv6_prefixes"></a> [database\_subnet\_ipv6\_prefixes](#input\_database\_subnet\_ipv6\_prefixes) | IPv6 /64 subnet indexes (0-255) within the VPC /56 for database subnets. When IPv4 subnets are present, provide one index per IPv4 subnet | `list(string)` | `[]` | no |
 | <a name="input_database_subnet_names"></a> [database\_subnet\_names](#input\_database\_subnet\_names) | Explicit values to use in the Name tag on database subnets. If empty, Name tags are generated | `list(string)` | `[]` | no |
 | <a name="input_database_subnet_private_dns_hostname_type_on_launch"></a> [database\_subnet\_private\_dns\_hostname\_type\_on\_launch](#input\_database\_subnet\_private\_dns\_hostname\_type\_on\_launch) | The type of hostnames to assign to instances in the subnet at launch. For IPv6-only subnets, an instance DNS name must be based on the instance ID. For dual-stack and IPv4-only subnets, you can specify whether DNS names use the instance IPv4 address or the instance ID. Valid values: `ip-name`, `resource-name` | `string` | `null` | no |
 | <a name="input_database_subnet_suffix"></a> [database\_subnet\_suffix](#input\_database\_subnet\_suffix) | Suffix to append to database subnets name | `string` | `"db"` | no |
@@ -472,7 +499,7 @@ No modules.
 | <a name="input_elasticache_subnet_group_name"></a> [elasticache\_subnet\_group\_name](#input\_elasticache\_subnet\_group\_name) | Name of elasticache subnet group | `string` | `null` | no |
 | <a name="input_elasticache_subnet_group_tags"></a> [elasticache\_subnet\_group\_tags](#input\_elasticache\_subnet\_group\_tags) | Additional tags for the elasticache subnet group | `map(string)` | `{}` | no |
 | <a name="input_elasticache_subnet_ipv6_native"></a> [elasticache\_subnet\_ipv6\_native](#input\_elasticache\_subnet\_ipv6\_native) | Indicates whether to create an IPv6-only subnet. Default: `false` | `bool` | `false` | no |
-| <a name="input_elasticache_subnet_ipv6_prefixes"></a> [elasticache\_subnet\_ipv6\_prefixes](#input\_elasticache\_subnet\_ipv6\_prefixes) | Assigns IPv6 elasticache subnet id based on the Amazon provided /56 prefix base 10 integer (0-256). Must be of equal length to the corresponding IPv4 subnet list | `list(string)` | `[]` | no |
+| <a name="input_elasticache_subnet_ipv6_prefixes"></a> [elasticache\_subnet\_ipv6\_prefixes](#input\_elasticache\_subnet\_ipv6\_prefixes) | IPv6 /64 subnet indexes (0-255) within the VPC /56 for elasticache subnets. When IPv4 subnets are present, provide one index per IPv4 subnet | `list(string)` | `[]` | no |
 | <a name="input_elasticache_subnet_names"></a> [elasticache\_subnet\_names](#input\_elasticache\_subnet\_names) | Explicit values to use in the Name tag on elasticache subnets. If empty, Name tags are generated | `list(string)` | `[]` | no |
 | <a name="input_elasticache_subnet_private_dns_hostname_type_on_launch"></a> [elasticache\_subnet\_private\_dns\_hostname\_type\_on\_launch](#input\_elasticache\_subnet\_private\_dns\_hostname\_type\_on\_launch) | The type of hostnames to assign to instances in the subnet at launch. For IPv6-only subnets, an instance DNS name must be based on the instance ID. For dual-stack and IPv4-only subnets, you can specify whether DNS names use the instance IPv4 address or the instance ID. Valid values: `ip-name`, `resource-name` | `string` | `null` | no |
 | <a name="input_elasticache_subnet_suffix"></a> [elasticache\_subnet\_suffix](#input\_elasticache\_subnet\_suffix) | Suffix to append to elasticache subnets name | `string` | `"elasticache"` | no |
@@ -482,7 +509,7 @@ No modules.
 | <a name="input_enable_dns_hostnames"></a> [enable\_dns\_hostnames](#input\_enable\_dns\_hostnames) | Should be true to enable DNS hostnames in the VPC | `bool` | `true` | no |
 | <a name="input_enable_dns_support"></a> [enable\_dns\_support](#input\_enable\_dns\_support) | Should be true to enable DNS support in the VPC | `bool` | `true` | no |
 | <a name="input_enable_flow_log"></a> [enable\_flow\_log](#input\_enable\_flow\_log) | Whether or not to enable VPC Flow Logs | `bool` | `false` | no |
-| <a name="input_enable_ipv6"></a> [enable\_ipv6](#input\_enable\_ipv6) | Requests an Amazon-provided IPv6 CIDR block with a /56 prefix length for the VPC. You cannot specify the range of IP addresses, or the size of the CIDR block | `bool` | `false` | no |
+| <a name="input_enable_ipv6"></a> [enable\_ipv6](#input\_enable\_ipv6) | Enables IPv6 subnet and route configuration. Requests an Amazon-provided VPC /56 when no IPv6 IPAM pool is set and use\_ipam\_pool is false | `bool` | `false` | no |
 | <a name="input_enable_nat_gateway"></a> [enable\_nat\_gateway](#input\_enable\_nat\_gateway) | Should be true if you want to provision NAT Gateways for each of your private networks | `bool` | `false` | no |
 | <a name="input_enable_network_address_usage_metrics"></a> [enable\_network\_address\_usage\_metrics](#input\_enable\_network\_address\_usage\_metrics) | Determines whether network address usage metrics are enabled for the VPC | `bool` | `null` | no |
 | <a name="input_enable_public_redshift"></a> [enable\_public\_redshift](#input\_enable\_public\_redshift) | Controls if redshift should have public routing table | `bool` | `false` | no |
@@ -518,7 +545,7 @@ No modules.
 | <a name="input_intra_subnet_enable_resource_name_dns_a_record_on_launch"></a> [intra\_subnet\_enable\_resource\_name\_dns\_a\_record\_on\_launch](#input\_intra\_subnet\_enable\_resource\_name\_dns\_a\_record\_on\_launch) | Indicates whether to respond to DNS queries for instance hostnames with DNS A records. Default: `false` | `bool` | `false` | no |
 | <a name="input_intra_subnet_enable_resource_name_dns_aaaa_record_on_launch"></a> [intra\_subnet\_enable\_resource\_name\_dns\_aaaa\_record\_on\_launch](#input\_intra\_subnet\_enable\_resource\_name\_dns\_aaaa\_record\_on\_launch) | Indicates whether to respond to DNS queries for instance hostnames with DNS AAAA records. Default: `true` | `bool` | `true` | no |
 | <a name="input_intra_subnet_ipv6_native"></a> [intra\_subnet\_ipv6\_native](#input\_intra\_subnet\_ipv6\_native) | Indicates whether to create an IPv6-only subnet. Default: `false` | `bool` | `false` | no |
-| <a name="input_intra_subnet_ipv6_prefixes"></a> [intra\_subnet\_ipv6\_prefixes](#input\_intra\_subnet\_ipv6\_prefixes) | Assigns IPv6 intra subnet id based on the Amazon provided /56 prefix base 10 integer (0-256). Must be of equal length to the corresponding IPv4 subnet list | `list(string)` | `[]` | no |
+| <a name="input_intra_subnet_ipv6_prefixes"></a> [intra\_subnet\_ipv6\_prefixes](#input\_intra\_subnet\_ipv6\_prefixes) | IPv6 /64 subnet indexes (0-255) within the VPC /56 for intra subnets. When IPv4 subnets are present, provide one index per IPv4 subnet | `list(string)` | `[]` | no |
 | <a name="input_intra_subnet_names"></a> [intra\_subnet\_names](#input\_intra\_subnet\_names) | Explicit values to use in the Name tag on intra subnets. If empty, Name tags are generated | `list(string)` | `[]` | no |
 | <a name="input_intra_subnet_private_dns_hostname_type_on_launch"></a> [intra\_subnet\_private\_dns\_hostname\_type\_on\_launch](#input\_intra\_subnet\_private\_dns\_hostname\_type\_on\_launch) | The type of hostnames to assign to instances in the subnet at launch. For IPv6-only subnets, an instance DNS name must be based on the instance ID. For dual-stack and IPv4-only subnets, you can specify whether DNS names use the instance IPv4 address or the instance ID. Valid values: `ip-name`, `resource-name` | `string` | `null` | no |
 | <a name="input_intra_subnet_suffix"></a> [intra\_subnet\_suffix](#input\_intra\_subnet\_suffix) | Suffix to append to intra subnets name | `string` | `"intra"` | no |
@@ -528,7 +555,7 @@ No modules.
 | <a name="input_ipv4_netmask_length"></a> [ipv4\_netmask\_length](#input\_ipv4\_netmask\_length) | (Optional) The netmask length of the IPv4 CIDR you want to allocate to this VPC. Requires specifying a ipv4\_ipam\_pool\_id | `number` | `null` | no |
 | <a name="input_ipv6_cidr"></a> [ipv6\_cidr](#input\_ipv6\_cidr) | (Optional) IPv6 CIDR block to request from an IPAM Pool. Can be set explicitly or derived from IPAM using `ipv6_netmask_length` | `string` | `null` | no |
 | <a name="input_ipv6_cidr_block_network_border_group"></a> [ipv6\_cidr\_block\_network\_border\_group](#input\_ipv6\_cidr\_block\_network\_border\_group) | By default when an IPv6 CIDR is assigned to a VPC a default ipv6\_cidr\_block\_network\_border\_group will be set to the region of the VPC. This can be changed to restrict advertisement of public addresses to specific Network Border Groups such as LocalZones | `string` | `null` | no |
-| <a name="input_ipv6_ipam_pool_id"></a> [ipv6\_ipam\_pool\_id](#input\_ipv6\_ipam\_pool\_id) | (Optional) IPAM Pool ID for a IPv6 pool. Conflicts with `assign_generated_ipv6_cidr_block` | `string` | `null` | no |
+| <a name="input_ipv6_ipam_pool_id"></a> [ipv6\_ipam\_pool\_id](#input\_ipv6\_ipam\_pool\_id) | (Optional) IPAM pool ID for the VPC IPv6 CIDR. When set, the module does not request a separate generated IPv6 CIDR | `string` | `null` | no |
 | <a name="input_ipv6_netmask_length"></a> [ipv6\_netmask\_length](#input\_ipv6\_netmask\_length) | (Optional) Netmask length to request from IPAM Pool. Conflicts with `ipv6_cidr_block`. This can be omitted if IPAM pool as a `allocation_default_netmask_length` set. Valid values: `56` | `number` | `null` | no |
 | <a name="input_manage_default_network_acl"></a> [manage\_default\_network\_acl](#input\_manage\_default\_network\_acl) | Should be true to adopt and manage Default Network ACL | `bool` | `true` | no |
 | <a name="input_manage_default_route_table"></a> [manage\_default\_route\_table](#input\_manage\_default\_route\_table) | Should be true to manage default route table | `bool` | `true` | no |
@@ -552,7 +579,7 @@ No modules.
 | <a name="input_outpost_subnet_enable_resource_name_dns_a_record_on_launch"></a> [outpost\_subnet\_enable\_resource\_name\_dns\_a\_record\_on\_launch](#input\_outpost\_subnet\_enable\_resource\_name\_dns\_a\_record\_on\_launch) | Indicates whether to respond to DNS queries for instance hostnames with DNS A records. Default: `false` | `bool` | `false` | no |
 | <a name="input_outpost_subnet_enable_resource_name_dns_aaaa_record_on_launch"></a> [outpost\_subnet\_enable\_resource\_name\_dns\_aaaa\_record\_on\_launch](#input\_outpost\_subnet\_enable\_resource\_name\_dns\_aaaa\_record\_on\_launch) | Indicates whether to respond to DNS queries for instance hostnames with DNS AAAA records. Default: `true` | `bool` | `true` | no |
 | <a name="input_outpost_subnet_ipv6_native"></a> [outpost\_subnet\_ipv6\_native](#input\_outpost\_subnet\_ipv6\_native) | Indicates whether to create an IPv6-only subnet. Default: `false` | `bool` | `false` | no |
-| <a name="input_outpost_subnet_ipv6_prefixes"></a> [outpost\_subnet\_ipv6\_prefixes](#input\_outpost\_subnet\_ipv6\_prefixes) | Assigns IPv6 outpost subnet id based on the Amazon provided /56 prefix base 10 integer (0-256). Must be of equal length to the corresponding IPv4 subnet list | `list(string)` | `[]` | no |
+| <a name="input_outpost_subnet_ipv6_prefixes"></a> [outpost\_subnet\_ipv6\_prefixes](#input\_outpost\_subnet\_ipv6\_prefixes) | IPv6 /64 subnet indexes (0-255) within the VPC /56 for outpost subnets. When IPv4 subnets are present, provide one index per IPv4 subnet | `list(string)` | `[]` | no |
 | <a name="input_outpost_subnet_names"></a> [outpost\_subnet\_names](#input\_outpost\_subnet\_names) | Explicit values to use in the Name tag on outpost subnets. If empty, Name tags are generated | `list(string)` | `[]` | no |
 | <a name="input_outpost_subnet_private_dns_hostname_type_on_launch"></a> [outpost\_subnet\_private\_dns\_hostname\_type\_on\_launch](#input\_outpost\_subnet\_private\_dns\_hostname\_type\_on\_launch) | The type of hostnames to assign to instances in the subnet at launch. For IPv6-only subnets, an instance DNS name must be based on the instance ID. For dual-stack and IPv4-only subnets, you can specify whether DNS names use the instance IPv4 address or the instance ID. Valid values: `ip-name`, `resource-name` | `string` | `null` | no |
 | <a name="input_outpost_subnet_suffix"></a> [outpost\_subnet\_suffix](#input\_outpost\_subnet\_suffix) | Suffix to append to outpost subnets name | `string` | `"outpost"` | no |
@@ -568,7 +595,7 @@ No modules.
 | <a name="input_private_subnet_enable_resource_name_dns_a_record_on_launch"></a> [private\_subnet\_enable\_resource\_name\_dns\_a\_record\_on\_launch](#input\_private\_subnet\_enable\_resource\_name\_dns\_a\_record\_on\_launch) | Indicates whether to respond to DNS queries for instance hostnames with DNS A records. Default: `false` | `bool` | `false` | no |
 | <a name="input_private_subnet_enable_resource_name_dns_aaaa_record_on_launch"></a> [private\_subnet\_enable\_resource\_name\_dns\_aaaa\_record\_on\_launch](#input\_private\_subnet\_enable\_resource\_name\_dns\_aaaa\_record\_on\_launch) | Indicates whether to respond to DNS queries for instance hostnames with DNS AAAA records. Default: `true` | `bool` | `true` | no |
 | <a name="input_private_subnet_ipv6_native"></a> [private\_subnet\_ipv6\_native](#input\_private\_subnet\_ipv6\_native) | Indicates whether to create an IPv6-only subnet. Default: `false` | `bool` | `false` | no |
-| <a name="input_private_subnet_ipv6_prefixes"></a> [private\_subnet\_ipv6\_prefixes](#input\_private\_subnet\_ipv6\_prefixes) | Assigns IPv6 private subnet id based on the Amazon provided /56 prefix base 10 integer (0-256). Must be of equal length to the corresponding IPv4 subnet list | `list(string)` | `[]` | no |
+| <a name="input_private_subnet_ipv6_prefixes"></a> [private\_subnet\_ipv6\_prefixes](#input\_private\_subnet\_ipv6\_prefixes) | IPv6 /64 subnet indexes (0-255) within the VPC /56 for private subnets. When IPv4 subnets are present, provide one index per IPv4 subnet | `list(string)` | `[]` | no |
 | <a name="input_private_subnet_names"></a> [private\_subnet\_names](#input\_private\_subnet\_names) | Explicit values to use in the Name tag on private subnets. If empty, Name tags are generated | `list(string)` | `[]` | no |
 | <a name="input_private_subnet_private_dns_hostname_type_on_launch"></a> [private\_subnet\_private\_dns\_hostname\_type\_on\_launch](#input\_private\_subnet\_private\_dns\_hostname\_type\_on\_launch) | The type of hostnames to assign to instances in the subnet at launch. For IPv6-only subnets, an instance DNS name must be based on the instance ID. For dual-stack and IPv4-only subnets, you can specify whether DNS names use the instance IPv4 address or the instance ID. Valid values: `ip-name`, `resource-name` | `string` | `null` | no |
 | <a name="input_private_subnet_suffix"></a> [private\_subnet\_suffix](#input\_private\_subnet\_suffix) | Suffix to append to private subnets name | `string` | `"private"` | no |
@@ -588,7 +615,7 @@ No modules.
 | <a name="input_public_subnet_enable_resource_name_dns_a_record_on_launch"></a> [public\_subnet\_enable\_resource\_name\_dns\_a\_record\_on\_launch](#input\_public\_subnet\_enable\_resource\_name\_dns\_a\_record\_on\_launch) | Indicates whether to respond to DNS queries for instance hostnames with DNS A records. Default: `false` | `bool` | `false` | no |
 | <a name="input_public_subnet_enable_resource_name_dns_aaaa_record_on_launch"></a> [public\_subnet\_enable\_resource\_name\_dns\_aaaa\_record\_on\_launch](#input\_public\_subnet\_enable\_resource\_name\_dns\_aaaa\_record\_on\_launch) | Indicates whether to respond to DNS queries for instance hostnames with DNS AAAA records. Default: `true` | `bool` | `true` | no |
 | <a name="input_public_subnet_ipv6_native"></a> [public\_subnet\_ipv6\_native](#input\_public\_subnet\_ipv6\_native) | Indicates whether to create an IPv6-only subnet. Default: `false` | `bool` | `false` | no |
-| <a name="input_public_subnet_ipv6_prefixes"></a> [public\_subnet\_ipv6\_prefixes](#input\_public\_subnet\_ipv6\_prefixes) | Assigns IPv6 public subnet id based on the Amazon provided /56 prefix base 10 integer (0-256). Must be of equal length to the corresponding IPv4 subnet list | `list(string)` | `[]` | no |
+| <a name="input_public_subnet_ipv6_prefixes"></a> [public\_subnet\_ipv6\_prefixes](#input\_public\_subnet\_ipv6\_prefixes) | IPv6 /64 subnet indexes (0-255) within the VPC /56 for public subnets. When IPv4 subnets are present, provide one index per IPv4 subnet | `list(string)` | `[]` | no |
 | <a name="input_public_subnet_names"></a> [public\_subnet\_names](#input\_public\_subnet\_names) | Explicit values to use in the Name tag on public subnets. If empty, Name tags are generated | `list(string)` | `[]` | no |
 | <a name="input_public_subnet_private_dns_hostname_type_on_launch"></a> [public\_subnet\_private\_dns\_hostname\_type\_on\_launch](#input\_public\_subnet\_private\_dns\_hostname\_type\_on\_launch) | The type of hostnames to assign to instances in the subnet at launch. For IPv6-only subnets, an instance DNS name must be based on the instance ID. For dual-stack and IPv4-only subnets, you can specify whether DNS names use the instance IPv4 address or the instance ID. Valid values: `ip-name`, `resource-name` | `string` | `null` | no |
 | <a name="input_public_subnet_suffix"></a> [public\_subnet\_suffix](#input\_public\_subnet\_suffix) | Suffix to append to public subnets name | `string` | `"public"` | no |
@@ -608,7 +635,7 @@ No modules.
 | <a name="input_redshift_subnet_group_name"></a> [redshift\_subnet\_group\_name](#input\_redshift\_subnet\_group\_name) | Name of redshift subnet group | `string` | `null` | no |
 | <a name="input_redshift_subnet_group_tags"></a> [redshift\_subnet\_group\_tags](#input\_redshift\_subnet\_group\_tags) | Additional tags for the redshift subnet group | `map(string)` | `{}` | no |
 | <a name="input_redshift_subnet_ipv6_native"></a> [redshift\_subnet\_ipv6\_native](#input\_redshift\_subnet\_ipv6\_native) | Indicates whether to create an IPv6-only subnet. Default: `false` | `bool` | `false` | no |
-| <a name="input_redshift_subnet_ipv6_prefixes"></a> [redshift\_subnet\_ipv6\_prefixes](#input\_redshift\_subnet\_ipv6\_prefixes) | Assigns IPv6 redshift subnet id based on the Amazon provided /56 prefix base 10 integer (0-256). Must be of equal length to the corresponding IPv4 subnet list | `list(string)` | `[]` | no |
+| <a name="input_redshift_subnet_ipv6_prefixes"></a> [redshift\_subnet\_ipv6\_prefixes](#input\_redshift\_subnet\_ipv6\_prefixes) | IPv6 /64 subnet indexes (0-255) within the VPC /56 for redshift subnets. When IPv4 subnets are present, provide one index per IPv4 subnet | `list(string)` | `[]` | no |
 | <a name="input_redshift_subnet_names"></a> [redshift\_subnet\_names](#input\_redshift\_subnet\_names) | Explicit values to use in the Name tag on redshift subnets. If empty, Name tags are generated | `list(string)` | `[]` | no |
 | <a name="input_redshift_subnet_private_dns_hostname_type_on_launch"></a> [redshift\_subnet\_private\_dns\_hostname\_type\_on\_launch](#input\_redshift\_subnet\_private\_dns\_hostname\_type\_on\_launch) | The type of hostnames to assign to instances in the subnet at launch. For IPv6-only subnets, an instance DNS name must be based on the instance ID. For dual-stack and IPv4-only subnets, you can specify whether DNS names use the instance IPv4 address or the instance ID. Valid values: `ip-name`, `resource-name` | `string` | `null` | no |
 | <a name="input_redshift_subnet_suffix"></a> [redshift\_subnet\_suffix](#input\_redshift\_subnet\_suffix) | Suffix to append to redshift subnets name | `string` | `"redshift"` | no |
