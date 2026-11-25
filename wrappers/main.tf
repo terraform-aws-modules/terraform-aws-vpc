@@ -234,6 +234,7 @@ module "wrapper" {
   name                                                        = try(each.value.name, var.defaults.name, "")
   nat_eip_names                                               = try(each.value.nat_eip_names, var.defaults.nat_eip_names, [])
   nat_eip_tags                                                = try(each.value.nat_eip_tags, var.defaults.nat_eip_tags, {})
+  nat_gateway_connectivity_type                               = try(each.value.nat_gateway_connectivity_type, var.defaults.nat_gateway_connectivity_type, {})
   nat_gateway_destination_cidr_block                          = try(each.value.nat_gateway_destination_cidr_block, var.defaults.nat_gateway_destination_cidr_block, "0.0.0.0/0")
   nat_gateway_names                                           = try(each.value.nat_gateway_names, var.defaults.nat_gateway_names, [])
   nat_gateway_tags                                            = try(each.value.nat_gateway_tags, var.defaults.nat_gateway_tags, {})
