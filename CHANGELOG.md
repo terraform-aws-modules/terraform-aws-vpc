@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [6.9.0](https://github.com/terraform-aws-modules/terraform-aws-vpc/compare/v6.8.0...v6.9.0) (2026-11-25)
+
+### Features
+
+* Add per-index Name overrides for NAT gateways and their EIPs ([#1304](https://github.com/terraform-aws-modules/terraform-aws-vpc/issues/1304)) ([65a2d26](https://github.com/terraform-aws-modules/terraform-aws-vpc/commit/65a2d2692cfc1f469b5f070ee2c9afa15febc80d))
+
 ## [6.8.0](https://github.com/terraform-aws-modules/terraform-aws-vpc/compare/v6.7.4...v6.8.0) (2026-11-17)
 
 ### Features
