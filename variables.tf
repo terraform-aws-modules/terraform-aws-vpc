@@ -92,7 +92,7 @@ variable "ipv4_netmask_length" {
 }
 
 variable "enable_ipv6" {
-  description = "Requests an Amazon-provided IPv6 CIDR block with a /56 prefix length for the VPC. You cannot specify the range of IP addresses, or the size of the CIDR block"
+  description = "Enables IPv6 subnet and route configuration. Requests an Amazon-provided VPC /56 when no IPv6 IPAM pool is set and use_ipam_pool is false"
   type        = bool
   default     = false
 }
@@ -104,7 +104,7 @@ variable "ipv6_cidr" {
 }
 
 variable "ipv6_ipam_pool_id" {
-  description = "(Optional) IPAM Pool ID for a IPv6 pool. Conflicts with `assign_generated_ipv6_cidr_block`"
+  description = "(Optional) IPAM pool ID for the VPC IPv6 CIDR. When set, the module does not request a separate generated IPv6 CIDR"
   type        = string
   default     = null
 }
@@ -232,7 +232,7 @@ variable "create_multiple_public_route_tables" {
 }
 
 variable "public_subnet_ipv6_prefixes" {
-  description = "Assigns IPv6 public subnet id based on the Amazon provided /56 prefix base 10 integer (0-256). Must be of equal length to the corresponding IPv4 subnet list"
+  description = "IPv6 /64 subnet indexes (0-255) within the VPC /56 for public subnets. When IPv4 subnets are present, provide one index per IPv4 subnet"
   type        = list(string)
   default     = []
 }
@@ -372,7 +372,7 @@ variable "private_subnet_enable_resource_name_dns_a_record_on_launch" {
 }
 
 variable "private_subnet_ipv6_prefixes" {
-  description = "Assigns IPv6 private subnet id based on the Amazon provided /56 prefix base 10 integer (0-256). Must be of equal length to the corresponding IPv4 subnet list"
+  description = "IPv6 /64 subnet indexes (0-255) within the VPC /56 for private subnets. When IPv4 subnets are present, provide one index per IPv4 subnet"
   type        = list(string)
   default     = []
 }
@@ -506,7 +506,7 @@ variable "database_subnet_enable_resource_name_dns_a_record_on_launch" {
 }
 
 variable "database_subnet_ipv6_prefixes" {
-  description = "Assigns IPv6 database subnet id based on the Amazon provided /56 prefix base 10 integer (0-256). Must be of equal length to the corresponding IPv4 subnet list"
+  description = "IPv6 /64 subnet indexes (0-255) within the VPC /56 for database subnets. When IPv4 subnets are present, provide one index per IPv4 subnet"
   type        = list(string)
   default     = []
 }
@@ -664,7 +664,7 @@ variable "redshift_subnet_enable_resource_name_dns_a_record_on_launch" {
 }
 
 variable "redshift_subnet_ipv6_prefixes" {
-  description = "Assigns IPv6 redshift subnet id based on the Amazon provided /56 prefix base 10 integer (0-256). Must be of equal length to the corresponding IPv4 subnet list"
+  description = "IPv6 /64 subnet indexes (0-255) within the VPC /56 for redshift subnets. When IPv4 subnets are present, provide one index per IPv4 subnet"
   type        = list(string)
   default     = []
 }
@@ -816,7 +816,7 @@ variable "elasticache_subnet_enable_resource_name_dns_a_record_on_launch" {
 }
 
 variable "elasticache_subnet_ipv6_prefixes" {
-  description = "Assigns IPv6 elasticache subnet id based on the Amazon provided /56 prefix base 10 integer (0-256). Must be of equal length to the corresponding IPv4 subnet list"
+  description = "IPv6 /64 subnet indexes (0-255) within the VPC /56 for elasticache subnets. When IPv4 subnets are present, provide one index per IPv4 subnet"
   type        = list(string)
   default     = []
 }
@@ -968,7 +968,7 @@ variable "create_multiple_intra_route_tables" {
 }
 
 variable "intra_subnet_ipv6_prefixes" {
-  description = "Assigns IPv6 intra subnet id based on the Amazon provided /56 prefix base 10 integer (0-256). Must be of equal length to the corresponding IPv4 subnet list"
+  description = "IPv6 /64 subnet indexes (0-255) within the VPC /56 for intra subnets. When IPv4 subnets are present, provide one index per IPv4 subnet"
   type        = list(string)
   default     = []
 }
@@ -1102,7 +1102,7 @@ variable "outpost_subnet_enable_resource_name_dns_a_record_on_launch" {
 }
 
 variable "outpost_subnet_ipv6_prefixes" {
-  description = "Assigns IPv6 outpost subnet id based on the Amazon provided /56 prefix base 10 integer (0-256). Must be of equal length to the corresponding IPv4 subnet list"
+  description = "IPv6 /64 subnet indexes (0-255) within the VPC /56 for outpost subnets. When IPv4 subnets are present, provide one index per IPv4 subnet"
   type        = list(string)
   default     = []
 }
